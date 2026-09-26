@@ -1,0 +1,36 @@
+/*
+ * Windows Georgia does not contain several Vietnamese precomposed glyphs,
+ * including U+1EBF (ế). The browser then falls back per character, which
+ * makes accents appear detached in large headings. Keep the display style,
+ * but use a complete Vietnamese-capable face for every former Georgia rule.
+ */
+:root {
+  --display-font: "Times New Roman", "Segoe UI", serif;
+}
+
+.brand-mark,
+.topbar h1,
+.hero-copy h2,
+.roadmap-intro h2,
+.review-header h2,
+.page-intro h2,
+.hero-progress strong,
+.metric-card strong,
+.section-heading h3,
+.strip-number,
+.phase-label span,
+.phase-index,
+.phase-header h3,
+.detail-empty h3,
+.empty-state h3,
+.lesson-detail h2,
+.ask-box h4,
+.review-card h3,
+.exercise-card h3,
+.tool-card h3,
+.tool-symbol,
+.start-steps span,
+.portfolio-card h4,
+.context-result h4 {
+  font-family: var(--display-font);
+}

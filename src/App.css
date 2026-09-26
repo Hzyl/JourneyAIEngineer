@@ -45,6 +45,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .lesson-evidence small { color: var(--muted); font-size: 10px; }
 .checked-item { color: var(--teal-dark); text-decoration: line-through; text-decoration-color: #9dc8b1; }
 .warning-note { color: #9b5c34; background: #fff4e9; border-left: 3px solid var(--orange); padding: 8px 10px; font-size: 11px; line-height: 1.5; }
+.success-note { white-space: pre-line; }
 .linked-exercise { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #f5f7f3; border: 1px solid #e4e9e1; border-radius: 8px; padding: 10px; margin-top: 8px; }
 .linked-exercise strong, .linked-exercise small { display: block; }
 .linked-exercise strong { color: var(--teal-dark); font-size: 11px; }
@@ -98,3 +99,4 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 @media(max-width:620px) { .metric-grid { grid-template-columns: repeat(2, 1fr); } }
 @media(max-width:620px) { .portfolio-grid { grid-template-columns: 1fr; } }
 @media(max-width:850px) { .start-steps, .readiness-projects { grid-template-columns: 1fr; } .hiring-card { grid-column: auto; } }
+.context-result{margin-top:17px;padding-top:16px;border-top:1px solid var(--line)}.context-result .section-heading{align-items:center;margin-bottom:9px}.context-result h4{margin:3px 0 0;font:500 17px Georgia,serif}.context-preview{width:100%;min-height:260px;margin:0;border:1px solid #cbded1;border-radius:8px;padding:11px;resize:vertical;background:#f7faf6;color:var(--ink);font:10px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace}.context-path{display:block;margin-top:8px;color:var(--muted);font-size:10px;overflow-wrap:anywhere}.ask-card .warning-note{margin:11px 0 0!important;min-height:0!important;color:#a7664a!important;font-size:11px!important}

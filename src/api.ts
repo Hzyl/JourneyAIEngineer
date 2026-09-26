@@ -96,7 +96,14 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
   })
   if (!response.ok) {
     const message = await response.text()
-    throw new Error(message || `Request failed with ${response.status}`)
+    let detail = message
+    try {
+      const payload = JSON.parse(message) as { detail?: unknown }
+      if (typeof payload.detail === 'string') detail = payload.detail
+    } catch {
+      // Keep the raw response when it is not JSON.
+    }
+    throw new Error(detail || `Request failed with ${response.status}`)
   }
   return response.json() as Promise<T>
 }

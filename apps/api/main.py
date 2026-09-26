@@ -32,6 +32,9 @@ JOURNAL_ROOT = Path(os.environ.get("JOURNEY_JOURNAL_DIR", APP_ROOT / "journal" i
 FRONTEND_ROOT = Path(os.environ.get("JOURNEY_FRONTEND_DIR", BUNDLE_ROOT / "dist")).resolve()
 LESSON_CATALOG_PATH = CONTENT_ROOT / "lessons.json"
 SAFE_SLUG = re.compile(r"^[a-z0-9][a-z0-9-]*$")
+SUBPROCESS_OPTIONS: dict[str, Any] = {}
+if os.name == "nt":
+    SUBPROCESS_OPTIONS["creationflags"] = getattr(subprocess, "CREATE_NO_WINDOW", 0)
 
 
 def now_iso() -> str:
@@ -686,25 +689,49 @@ def require_slug(slug: str) -> None:
         raise HTTPException(400, "Invalid slug")
 
 
+def ensure_workspace_files(path: Path, exercise: sqlite3.Row) -> bool:
+    """Create missing workspace files without overwriting a learner's code."""
+
+    path.mkdir(parents=True, exist_ok=True)
+    repaired = False
+    starter = path / "starter.py"
+    if not starter.exists():
+        starter.write_text(exercise["starter_code"], encoding="utf-8")
+        repaired = True
+    readme = path / "README.md"
+    if not readme.exists():
+        readme.write_text(
+            f"# {exercise['title_vi']}\n\n{exercise['description_vi']}\n\n## Test\n\n```powershell\n{exercise['test_command']}\n```\n",
+            encoding="utf-8",
+        )
+        repaired = True
+    return repaired
+
+
 @app.post("/api/exercises/{slug}/workspace")
 def create_workspace(slug: str) -> dict[str, Any]:
     require_slug(slug)
+    workspace_root = WORKSPACE_ROOT.resolve()
+    path = (workspace_root / slug).resolve()
+    if workspace_root not in path.parents:
+        raise HTTPException(400, "Invalid workspace path")
     with connect() as db:
         exercise = db.execute("SELECT * FROM exercises WHERE slug=?", (slug,)).fetchone()
         if not exercise:
             raise HTTPException(404, "Exercise not found")
         existing = db.execute("SELECT * FROM workspaces WHERE exercise_id=?", (exercise["id"],)).fetchone()
         if existing:
-            return {"workspace": dict(existing), "created": False}
-        path = (WORKSPACE_ROOT / slug).resolve()
-        if WORKSPACE_ROOT.resolve() not in path.parents:
-            raise HTTPException(400, "Invalid workspace path")
-        path.mkdir(parents=True, exist_ok=True)
-        (path / "starter.py").write_text(exercise["starter_code"], encoding="utf-8")
-        (path / "README.md").write_text(f"# {exercise['title_vi']}\n\n{exercise['description_vi']}\n\n## Test\n\n```powershell\n{exercise['test_command']}\n```\n", encoding="utf-8")
+            existing_path = Path(existing["path"]).resolve()
+            if workspace_root not in existing_path.parents:
+                raise HTTPException(400, "Invalid workspace path")
+            if existing_path.exists() and not existing_path.is_dir():
+                raise HTTPException(409, "Workspace path is not a directory")
+            repaired = ensure_workspace_files(existing_path, exercise)
+            return {"workspace": dict(existing), "created": False, "repaired": repaired}
+        ensure_workspace_files(path, exercise)
         workspace_id = db.execute("INSERT INTO workspaces(exercise_id,path,created_at) VALUES(?,?,?)", (exercise["id"], str(path), now_iso())).lastrowid
         row = db.execute("SELECT * FROM workspaces WHERE id=?", (workspace_id,)).fetchone()
-    return {"workspace": dict(row), "created": True}
+    return {"workspace": dict(row), "created": True, "repaired": False}
 
 
 @app.post("/api/workspaces/{workspace_id}/open")
@@ -717,7 +744,7 @@ def open_workspace(workspace_id: int) -> dict[str, Any]:
     if not code_cli:
         return {"opened": False, "path": workspace["path"], "message": "VS Code CLI not found; open this path manually."}
     try:
-        subprocess.Popen([code_cli, "--reuse-window", workspace["path"]], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.Popen([code_cli, "--reuse-window", workspace["path"]], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, **SUBPROCESS_OPTIONS)
     except OSError as error:
         return {"opened": False, "path": workspace["path"], "message": str(error)}
     return {"opened": True, "path": workspace["path"]}
@@ -726,9 +753,17 @@ def open_workspace(workspace_id: int) -> dict[str, Any]:
 @app.post("/api/workspaces/{workspace_id}/run")
 def run_workspace(workspace_id: int) -> dict[str, Any]:
     with connect() as db:
-        row = db.execute("""SELECT w.*,e.test_command FROM workspaces w JOIN exercises e ON e.id=w.exercise_id WHERE w.id=?""", (workspace_id,)).fetchone()
+        row = db.execute("""SELECT w.*,e.test_command,e.starter_code,e.title_vi,e.description_vi FROM workspaces w JOIN exercises e ON e.id=w.exercise_id WHERE w.id=?""", (workspace_id,)).fetchone()
     if not row:
         raise HTTPException(404, "Workspace not found")
+    workspace_root = WORKSPACE_ROOT.resolve()
+    workspace_path = Path(row["path"]).resolve()
+    if workspace_root not in workspace_path.parents:
+        raise HTTPException(400, "Invalid workspace path")
+    try:
+        ensure_workspace_files(workspace_path, row)
+    except OSError as error:
+        raise HTTPException(500, f"Could not prepare workspace: {error}") from error
     command = row["test_command"]
     args = shlex.split(command, posix=False)
     allowed = {"python", "py", "pytest", "uv"}
@@ -740,7 +775,7 @@ def run_workspace(workspace_id: int) -> dict[str, Any]:
     status = "passed"
     exit_code: int | None = None
     try:
-        result = subprocess.run([executable_path, *args[1:]], cwd=row["path"], capture_output=True, text=True, timeout=20, shell=False)
+        result = subprocess.run([executable_path, *args[1:]], cwd=str(workspace_path), capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=20, shell=False, **SUBPROCESS_OPTIONS)
         exit_code = result.returncode
         output = redact_secrets((result.stdout + result.stderr)[-12000:])
         if exit_code != 0:
@@ -842,7 +877,7 @@ def create_note(payload: NoteCreate) -> dict[str, Any]:
 def git_status() -> dict[str, Any]:
     def run(args: list[str]) -> tuple[str, int]:
         try:
-            result = subprocess.run(["git", "-C", str(PROJECT_ROOT), *args], capture_output=True, text=True, timeout=10, shell=False)
+            result = subprocess.run(["git", "-C", str(PROJECT_ROOT), *args], capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=10, shell=False, **SUBPROCESS_OPTIONS)
             return result.stdout.strip(), result.returncode
         except (OSError, subprocess.TimeoutExpired):
             return "", 1
@@ -850,20 +885,20 @@ def git_status() -> dict[str, Any]:
     status, _ = run(["status", "--short"])
     remote, _ = run(["remote", "-v"])
     last_commit, _ = run(["log", "-1", "--oneline"])
-    return {"root": str(PROJECT_ROOT), "branch": branch, "status": status, "remote": remote, "last_commit": last_commit}
+    return {"root": str(PROJECT_ROOT), "branch": branch, "status": status, "remote": redact_secrets(remote), "last_commit": last_commit}
 
 
 @app.get("/api/git/diff")
 def git_diff() -> dict[str, str]:
     try:
-        result = subprocess.run(["git", "-C", str(PROJECT_ROOT), "diff", "HEAD", "--", "."], capture_output=True, text=True, timeout=10, shell=False)
+        result = subprocess.run(["git", "-C", str(PROJECT_ROOT), "diff", "HEAD", "--", "."], capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=10, shell=False, **SUBPROCESS_OPTIONS)
         if result.returncode != 0:
-            staged = subprocess.run(["git", "-C", str(PROJECT_ROOT), "diff", "--cached", "--", "."], capture_output=True, text=True, timeout=10, shell=False)
-            unstaged = subprocess.run(["git", "-C", str(PROJECT_ROOT), "diff", "--", "."], capture_output=True, text=True, timeout=10, shell=False)
-            result.stdout = "\n".join(part for part in (staged.stdout, unstaged.stdout) if part)
+            staged = subprocess.run(["git", "-C", str(PROJECT_ROOT), "diff", "--cached", "--", "."], capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=10, shell=False, **SUBPROCESS_OPTIONS)
+            unstaged = subprocess.run(["git", "-C", str(PROJECT_ROOT), "diff", "--", "."], capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=10, shell=False, **SUBPROCESS_OPTIONS)
+            result.stdout = "\n".join(part for part in (staged.stdout or "", unstaged.stdout or "") if part)
         if not result.stdout:
-            result = subprocess.run(["git", "-C", str(PROJECT_ROOT), "diff", "--", "."], capture_output=True, text=True, timeout=10, shell=False)
-        return {"diff": redact_secrets(result.stdout[-30000:])}
+            result = subprocess.run(["git", "-C", str(PROJECT_ROOT), "diff", "--", "."], capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=10, shell=False, **SUBPROCESS_OPTIONS)
+        return {"diff": redact_secrets((result.stdout or "")[-30000:])}
     except (OSError, subprocess.TimeoutExpired):
         return {"diff": ""}
 
@@ -889,19 +924,33 @@ def suggested_commit() -> dict[str, Any]:
 @app.post("/api/journal/export")
 def export_journal() -> dict[str, Any]:
     stamp = datetime.now().astimezone()
-    week = stamp.strftime("%G-W%V")
+    iso_calendar = stamp.isocalendar()
+    week = f"{iso_calendar.year:04d}-W{iso_calendar.week:02d}"
     path = JOURNAL_ROOT / "weekly" / f"{week}.md"
     path.parent.mkdir(parents=True, exist_ok=True)
     with connect() as db:
         completed = db.execute("""SELECT l.title_vi FROM lessons l JOIN progress p ON p.lesson_id=l.id WHERE p.status='completed' ORDER BY p.completed_at DESC LIMIT 20""").fetchall()
         minutes = db.execute("SELECT COALESCE(SUM(minutes),0) AS n FROM study_sessions WHERE created_at >= ?", ((stamp - timedelta(days=7)).astimezone(timezone.utc).isoformat(),)).fetchone()["n"]
     content = f"# Week {week}\n\n## Đã học\n\n- Tổng thời gian ghi nhận: **{minutes} phút**\n\n## Bài đã hoàn thành\n\n" + "\n".join(f"- {row['title_vi']}" for row in completed) + "\n\n## Điều chưa hiểu\n\n- Ghi thêm tại đây.\n\n## Kế hoạch tuần tới\n\n- Chọn lesson tiếp theo trong app.\n"
+    preserved = False
+    if path.exists():
+        existing = path.read_text(encoding="utf-8")
+        first_reflection_heading = "## \u0110i\u1ec1u ch\u01b0a hi\u1ec3u"
+        if first_reflection_heading in existing:
+            generated_head = content[:content.index(first_reflection_heading)].rstrip()
+            preserved_tail = existing[existing.index(first_reflection_heading):].strip()
+            content = f"{generated_head}\n\n{preserved_tail}\n"
+            preserved = True
     path.write_text(content, encoding="utf-8")
-    return {"path": str(path), "week": week}
+    return {"path": str(path), "week": week, "preserved_reflections": preserved}
 
 
 @app.post("/api/context/export")
 def export_context(payload: ContextRequest) -> dict[str, Any]:
+    if payload.lesson_slug:
+        require_slug(payload.lesson_slug)
+    if payload.exercise_slug:
+        require_slug(payload.exercise_slug)
     lesson = None
     exercise = None
     progress = None
@@ -909,16 +958,23 @@ def export_context(payload: ContextRequest) -> dict[str, Any]:
     if payload.lesson_slug:
         with connect() as db:
             lesson = db.execute("SELECT * FROM lessons WHERE slug=?", (payload.lesson_slug,)).fetchone()
-            if lesson:
-                progress = db.execute("SELECT * FROM progress WHERE lesson_id=?", (lesson["id"],)).fetchone()
-                note = db.execute("SELECT title,body,updated_at FROM notes WHERE lesson_id=? ORDER BY updated_at DESC LIMIT 1", (lesson["id"],)).fetchone()
+            if not lesson:
+                raise HTTPException(404, "Lesson not found")
+            progress = db.execute("SELECT * FROM progress WHERE lesson_id=?", (lesson["id"],)).fetchone()
+            note = db.execute("SELECT title,body,updated_at FROM notes WHERE lesson_id=? ORDER BY updated_at DESC LIMIT 1", (lesson["id"],)).fetchone()
     if payload.exercise_slug:
         with connect() as db:
             exercise = db.execute("SELECT * FROM exercises WHERE slug=?", (payload.exercise_slug,)).fetchone()
+            if not exercise:
+                raise HTTPException(404, "Exercise not found")
     context_dir = JOURNAL_ROOT / "context"
     context_dir.mkdir(parents=True, exist_ok=True)
-    filename = datetime.now().strftime("%Y%m%d-%H%M%S-context.md")
-    path = context_dir / filename
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S-%f")
+    path = context_dir / f"{timestamp}-context.md"
+    suffix = 1
+    while path.exists():
+        path = context_dir / f"{timestamp}-{suffix}-context.md"
+        suffix += 1
     lesson_title = lesson["title_vi"] if lesson else "Chưa chọn lesson"
     exercise_title = exercise["title_vi"] if exercise else "Chưa chọn exercise"
     progress_status = progress["status"] if progress else "not_started"

@@ -1,5 +1,9 @@
 import importlib
+import shutil
 import sys
+from pathlib import Path
+
+import pytest
 
 
 def load_module(tmp_path, monkeypatch):
@@ -42,6 +46,24 @@ def test_lesson_schema_and_settings(tmp_path, monkeypatch):
     assert updated["onboarding_complete"] is True
 
 
+def test_git_commands_hide_windows(tmp_path, monkeypatch):
+    module = load_module(tmp_path, monkeypatch)
+    calls = []
+
+    def fake_run(*args, **kwargs):
+        calls.append(kwargs)
+        return module.subprocess.CompletedProcess(args, 0, stdout="", stderr="")
+
+    monkeypatch.setattr(module.subprocess, "run", fake_run)
+    module.git_status()
+    module.git_diff()
+
+    expected_flag = getattr(module.subprocess, "CREATE_NO_WINDOW", 0)
+    assert calls
+    assert all(call.get("creationflags", 0) == expected_flag for call in calls)
+    assert all(call.get("encoding") == "utf-8" and call.get("errors") == "replace" for call in calls)
+
+
 def test_progress_and_review_flow(tmp_path, monkeypatch):
     module = load_module(tmp_path, monkeypatch)
     slug = "phase-00-onboarding-environment-1"
@@ -70,7 +92,16 @@ def test_workspace_creation_and_runner(tmp_path, monkeypatch):
     workspace_id = workspace["workspace"]["id"]
     result = module.run_workspace(workspace_id)
     assert result["status"] == "passed"
-    assert (tmp_path / ".data" / "workspaces" / exercise["slug"] / "starter.py").exists()
+    workspace_path = tmp_path / ".data" / "workspaces" / exercise["slug"]
+    assert (workspace_path / "starter.py").exists()
+    shutil.rmtree(workspace_path)
+    repaired_run = module.run_workspace(workspace_id)
+    assert repaired_run["status"] == "passed"
+    (workspace_path / "README.md").unlink()
+    repaired = module.create_workspace(exercise["slug"])
+    assert repaired["created"] is False
+    assert repaired["repaired"] is True
+    assert (workspace_path / "README.md").exists()
 
 
 def test_journal_and_context_exports(tmp_path, monkeypatch):
@@ -78,11 +109,26 @@ def test_journal_and_context_exports(tmp_path, monkeypatch):
     module.create_note(module.NoteCreate(lesson_slug="phase-00-onboarding-environment-1", title="Insight", body="Tôi cần hiểu rõ environment."))
     module.update_progress("phase-00-onboarding-environment-1", module.ProgressUpdate(status="in_progress", minutes_spent=20))
     journal = module.export_journal()
+    journal_path = Path(journal["path"])
+    journal_path.write_text(journal_path.read_text(encoding="utf-8") + "\nMy manual reflection.\n", encoding="utf-8")
+    refreshed_journal = module.export_journal()
+    assert refreshed_journal["preserved_reflections"] is True
+    assert "My manual reflection." in journal_path.read_text(encoding="utf-8")
     context = module.export_context(module.ContextRequest(lesson_slug="phase-00-onboarding-environment-1", question="Giải thích gradient descent từng bước."))
     assert journal["path"].endswith(".md")
     assert context["path"].endswith("-context.md")
     assert "gradient descent" in context["content"]
     assert "in_progress" in context["content"]
     assert "environment" in context["content"]
+    second_context = module.export_context(module.ContextRequest(lesson_slug="phase-00-onboarding-environment-1", question="Một câu hỏi khác."))
+    assert second_context["path"] != context["path"]
+    assert Path(context["path"]).exists()
+    assert Path(second_context["path"]).exists()
+    with pytest.raises(module.HTTPException) as missing_lesson:
+        module.export_context(module.ContextRequest(lesson_slug="missing-lesson", question="test"))
+    assert missing_lesson.value.status_code == 404
+    with pytest.raises(module.HTTPException) as missing_exercise:
+        module.export_context(module.ContextRequest(exercise_slug="missing-exercise", question="test"))
+    assert missing_exercise.value.status_code == 404
     assert "***REDACTED***" in module.redact_secrets("api_key=do-not-export")
     assert "do-not-export" not in module.redact_secrets("Authorization: Bearer do-not-export")
