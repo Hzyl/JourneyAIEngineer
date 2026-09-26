@@ -1,0 +1,720 @@
+{
+  "program": {
+    "title_vi": "Journey AI Engineer",
+    "title_en": "Journey AI Engineer",
+    "description_vi": "Chương trình học thực hành từ nền tảng đến khả năng xây dựng, đánh giá và triển khai hệ thống AI.",
+    "description_en": "A hands-on program from foundations to building, evaluating and deploying AI systems.",
+    "standard_weeks": 53,
+    "accelerated_weeks": 26,
+    "portfolio_projects": [
+      {
+        "slug": "tabular-ml",
+        "title_vi": "End-to-End Tabular ML",
+        "title_en": "End-to-End Tabular ML",
+        "phase_id": "phase-03-classical-ml",
+        "problem_vi": "Dự đoán churn, gian lận hoặc nhu cầu với pipeline có thể tái lập.",
+        "problem_en": "Predict churn, fraud or demand with a reproducible ML pipeline.",
+        "stack": [
+          "Python",
+          "pandas",
+          "scikit-learn",
+          "pytest"
+        ],
+        "deliverables": [
+          "data dictionary",
+          "baseline",
+          "pipeline",
+          "error analysis",
+          "model card",
+          "README"
+        ],
+        "evaluation": "Hold-out test, cross-validation, metric rationale and error slices.",
+        "github_path": "projects/tabular-ml",
+        "estimated_weeks": 3
+      },
+      {
+        "slug": "deep-learning",
+        "title_vi": "Deep Learning Classifier",
+        "title_en": "Deep Learning Classifier",
+        "phase_id": "phase-04-deep-learning",
+        "problem_vi": "Huấn luyện một model vision hoặc NLP, phân tích overfitting và checkpoint.",
+        "problem_en": "Train a vision or NLP model, analyze overfitting and manage checkpoints.",
+        "stack": [
+          "PyTorch",
+          "NumPy",
+          "TensorBoard or MLflow"
+        ],
+        "deliverables": [
+          "training loop",
+          "dataset card",
+          "confusion matrix",
+          "checkpoint",
+          "experiment report"
+        ],
+        "evaluation": "Validation protocol, ablation or optimizer comparison, failure analysis.",
+        "github_path": "projects/deep-learning",
+        "estimated_weeks": 4
+      },
+      {
+        "slug": "vietnamese-rag",
+        "title_vi": "Vietnamese Document Assistant",
+        "title_en": "Vietnamese Document Assistant",
+        "phase_id": "phase-06-nlp-llm-rag",
+        "problem_vi": "Hỏi đáp tài liệu tiếng Việt có retrieval, citation và từ chối khi thiếu bằng chứng.",
+        "problem_en": "Answer questions over Vietnamese documents with retrieval, citations and abstention.",
+        "stack": [
+          "FastAPI",
+          "sentence-transformers",
+          "FAISS",
+          "LLM provider or Ollama"
+        ],
+        "deliverables": [
+          "chunking policy",
+          "evaluation set",
+          "retrieval metrics",
+          "citation UI",
+          "cost and latency log"
+        ],
+        "evaluation": "Retrieval recall, answer faithfulness, abstention quality, latency and cost.",
+        "github_path": "projects/vietnamese-rag",
+        "estimated_weeks": 5
+      },
+      {
+        "slug": "capstone-ai-product",
+        "title_vi": "Capstone AI Product",
+        "title_en": "Capstone AI Product",
+        "phase_id": "phase-07-capstone-career",
+        "problem_vi": "Chọn một người dùng thật, xây MVP AI có architecture, evaluation và demo.",
+        "problem_en": "Choose a real user, build an AI MVP with architecture, evaluation and demo.",
+        "stack": [
+          "Python",
+          "FastAPI",
+          "Docker",
+          "GitHub Actions"
+        ],
+        "deliverables": [
+          "problem statement",
+          "architecture",
+          "MVP",
+          "evaluation report",
+          "demo video",
+          "interview story"
+        ],
+        "evaluation": "User value, reliability, reproducibility, observability and clear trade-offs.",
+        "github_path": "projects/capstone-ai-product",
+        "estimated_weeks": 6
+      }
+    ],
+    "career_checklist": [
+      "Có README cho ba project chính và một capstone có architecture diagram.",
+      "Có ít nhất một project chạy bằng Docker và một API inference có test.",
+      "Có evaluation report nêu metric, baseline, error analysis và giới hạn.",
+      "Có Git history đều đặn với weekly journal và commit message rõ ràng.",
+      "Có CV một trang, demo link và câu chuyện trả lời phỏng vấn cho từng project.",
+      "Luyện được Python, SQL, ML fundamentals, debugging và AI system design."
+    ]
+  },
+  "phases": [
+    {
+      "slug": "phase-00-onboarding",
+      "order": 0,
+      "duration_weeks": 1,
+      "title_vi": "Onboarding và đánh giá đầu vào",
+      "title_en": "Onboarding and baseline assessment",
+      "summary_vi": "Thiết lập môi trường, kiểm tra đầu vào và học cách sử dụng app như một learning operating system.",
+      "summary_en": "Set up the environment, assess your baseline and learn to use the app as a learning operating system.",
+      "modules": [
+        {
+          "slug": "environment",
+          "title_vi": "Môi trường học",
+          "title_en": "Learning environment",
+          "lessons": [
+            "Cài Python và kiểm tra phiên bản",
+            "Thiết lập VS Code và terminal",
+            "Tạo virtual environment đầu tiên",
+            "Jupyter, Colab và khi nào dùng chúng"
+          ]
+        },
+        {
+          "slug": "baseline",
+          "title_vi": "Đánh giá đầu vào",
+          "title_en": "Baseline assessment",
+          "lessons": [
+            "Bài kiểm tra Python cơ bản",
+            "Bài kiểm tra toán và logic",
+            "Bài kiểm tra Git và terminal",
+            "Đọc kết quả và chọn nhịp học"
+          ]
+        },
+        {
+          "slug": "learning-system",
+          "title_vi": "Hệ thống học",
+          "title_en": "Learning system",
+          "lessons": [
+            "Cách dùng roadmap và checkpoint",
+            "Cách ghi study session",
+            "Cách viết journal tuần",
+            "Dùng ChatGPT/Codex để học có kiểm soát"
+          ]
+        }
+      ],
+      "resources": [
+        {
+          "title": "Python Tutorial",
+          "url": "https://docs.python.org/3/tutorial/",
+          "language": "en"
+        },
+        {
+          "title": "Visual Studio Code Python",
+          "url": "https://code.visualstudio.com/docs/languages/python",
+          "language": "en"
+        }
+      ]
+    },
+    {
+      "slug": "phase-01-python-software",
+      "order": 1,
+      "duration_weeks": 6,
+      "title_vi": "Python và Software Engineering",
+      "title_en": "Python and Software Engineering",
+      "summary_vi": "Viết Python có cấu trúc, test được và có thể đưa vào một service.",
+      "summary_en": "Write structured, testable Python that can become a service.",
+      "modules": [
+        {
+          "slug": "python-core",
+          "title_vi": "Python core",
+          "title_en": "Python core",
+          "lessons": [
+            "Kiểu dữ liệu và biến",
+            "Control flow và comprehension",
+            "Function, scope và typing",
+            "Class và object-oriented design"
+          ]
+        },
+        {
+          "slug": "reliable-code",
+          "title_vi": "Code đáng tin cậy",
+          "title_en": "Reliable code",
+          "lessons": [
+            "Module và package",
+            "Exception và logging",
+            "Debugging có giả thuyết",
+            "pytest và test boundary"
+          ]
+        },
+        {
+          "slug": "data-files",
+          "title_vi": "File và dữ liệu",
+          "title_en": "Files and data",
+          "lessons": [
+            "CSV và JSON",
+            "Parquet và columnar data",
+            "CLI với argparse",
+            "Validate schema và dữ liệu thiếu"
+          ]
+        },
+        {
+          "slug": "developer-tools",
+          "title_vi": "Developer workflow",
+          "title_en": "Developer workflow",
+          "lessons": [
+            "Git add, diff và commit",
+            "Branch và pull request",
+            "Terminal PowerShell/Linux",
+            "HTTP, REST và JSON"
+          ]
+        },
+        {
+          "slug": "sql-structures",
+          "title_vi": "SQL và cấu trúc dữ liệu",
+          "title_en": "SQL and data structures",
+          "lessons": [
+            "SELECT, JOIN và GROUP BY",
+            "Subquery và window function",
+            "List, dict, set và queue",
+            "Big-O và trade-off"
+          ]
+        }
+      ],
+      "resources": [
+        {
+          "title": "Python Tutorial",
+          "url": "https://docs.python.org/3/tutorial/",
+          "language": "en"
+        },
+        {
+          "title": "pytest documentation",
+          "url": "https://docs.pytest.org/en/stable/",
+          "language": "en"
+        },
+        {
+          "title": "PostgreSQL documentation",
+          "url": "https://www.postgresql.org/docs/",
+          "language": "en"
+        }
+      ]
+    },
+    {
+      "slug": "phase-02-math-ml",
+      "order": 2,
+      "duration_weeks": 6,
+      "title_vi": "Toán cho AI và Machine Learning",
+      "title_en": "Mathematics for AI and Machine Learning",
+      "summary_vi": "Học toán qua code để hiểu dữ liệu, gradient và quá trình tối ưu.",
+      "summary_en": "Learn mathematics through code to understand data, gradients and optimization.",
+      "modules": [
+        {
+          "slug": "linear-algebra",
+          "title_vi": "Đại số tuyến tính",
+          "title_en": "Linear algebra",
+          "lessons": [
+            "Vector và không gian",
+            "Matrix multiplication",
+            "Dot product, norm và distance",
+            "Eigenvalue, eigenvector và PCA"
+          ]
+        },
+        {
+          "slug": "calculus",
+          "title_vi": "Giải tích và gradient",
+          "title_en": "Calculus and gradients",
+          "lessons": [
+            "Hàm số và đạo hàm",
+            "Partial derivative",
+            "Gradient và level set",
+            "Chain rule trong neural network"
+          ]
+        },
+        {
+          "slug": "probability",
+          "title_vi": "Xác suất",
+          "title_en": "Probability",
+          "lessons": [
+            "Biến ngẫu nhiên và phân phối",
+            "Kỳ vọng và phương sai",
+            "Conditional probability và Bayes",
+            "Sampling và luật số lớn"
+          ]
+        },
+        {
+          "slug": "optimization",
+          "title_vi": "Thống kê và tối ưu",
+          "title_en": "Statistics and optimization",
+          "lessons": [
+            "Bias, variance và overfitting",
+            "Maximum likelihood",
+            "Gradient descent",
+            "SGD, momentum và Adam"
+          ]
+        }
+      ],
+      "resources": [
+        {
+          "title": "NumPy Learn",
+          "url": "https://numpy.org/learn/",
+          "language": "en"
+        },
+        {
+          "title": "Mathematics for Machine Learning book",
+          "url": "https://mml-book.github.io/",
+          "language": "en"
+        }
+      ]
+    },
+    {
+      "slug": "phase-03-classical-ml",
+      "order": 3,
+      "duration_weeks": 8,
+      "title_vi": "Machine Learning cổ điển",
+      "title_en": "Classical Machine Learning",
+      "summary_vi": "Từ framing bài toán đến pipeline có metric, error analysis và reproducibility.",
+      "summary_en": "From problem framing to pipelines with metrics, error analysis and reproducibility.",
+      "modules": [
+        {
+          "slug": "ml-framing",
+          "title_vi": "Framing và dữ liệu",
+          "title_en": "Framing and data",
+          "lessons": [
+            "Supervised và unsupervised",
+            "Dataset, feature và label",
+            "Train validation test split",
+            "Data leakage và baseline"
+          ]
+        },
+        {
+          "slug": "models",
+          "title_vi": "Mô hình cốt lõi",
+          "title_en": "Core models",
+          "lessons": [
+            "Linear regression",
+            "Logistic regression",
+            "Decision tree và random forest",
+            "Gradient boosting"
+          ]
+        },
+        {
+          "slug": "preprocessing",
+          "title_vi": "Preprocessing",
+          "title_en": "Preprocessing",
+          "lessons": [
+            "Missing data",
+            "Categorical data",
+            "Scaling và transformation",
+            "Feature engineering"
+          ]
+        },
+        {
+          "slug": "evaluation",
+          "title_vi": "Đánh giá mô hình",
+          "title_en": "Model evaluation",
+          "lessons": [
+            "Classification metrics",
+            "Regression metrics",
+            "Cross-validation",
+            "Hyperparameter tuning"
+          ]
+        },
+        {
+          "slug": "analysis",
+          "title_vi": "Phân tích và đóng gói",
+          "title_en": "Analysis and packaging",
+          "lessons": [
+            "Imbalanced data",
+            "Calibration",
+            "Error analysis",
+            "Model interpretation và serialization"
+          ]
+        }
+      ],
+      "resources": [
+        {
+          "title": "scikit-learn User Guide",
+          "url": "https://scikit-learn.org/stable/user_guide.html",
+          "language": "en"
+        },
+        {
+          "title": "pandas User Guide",
+          "url": "https://pandas.pydata.org/docs/user_guide/",
+          "language": "en"
+        }
+      ]
+    },
+    {
+      "slug": "phase-04-deep-learning",
+      "order": 4,
+      "duration_weeks": 8,
+      "title_vi": "Deep Learning với PyTorch",
+      "title_en": "Deep Learning with PyTorch",
+      "summary_vi": "Tự viết training loop, hiểu tensor, debug gradient và dùng transfer learning.",
+      "summary_en": "Write training loops, reason about tensors, debug gradients and use transfer learning.",
+      "modules": [
+        {
+          "slug": "pytorch-core",
+          "title_vi": "PyTorch core",
+          "title_en": "PyTorch core",
+          "lessons": [
+            "Tensor và shape",
+            "Broadcasting",
+            "Dataset và DataLoader",
+            "Autograd và computational graph"
+          ]
+        },
+        {
+          "slug": "training",
+          "title_vi": "Training loop",
+          "title_en": "Training loop",
+          "lessons": [
+            "Forward pass và loss",
+            "Backward pass",
+            "Optimizer và learning rate",
+            "Validation và checkpoint"
+          ]
+        },
+        {
+          "slug": "generalization",
+          "title_vi": "Generalization",
+          "title_en": "Generalization",
+          "lessons": [
+            "Overfitting và regularization",
+            "Dropout và batch normalization",
+            "Data augmentation",
+            "Early stopping và resume"
+          ]
+        },
+        {
+          "slug": "vision-nlp",
+          "title_vi": "CV và NLP nền tảng",
+          "title_en": "Foundational CV and NLP",
+          "lessons": [
+            "CNN và image classifier",
+            "Transfer learning",
+            "Embedding và text classifier",
+            "Attention và Transformer overview"
+          ]
+        },
+        {
+          "slug": "debugging",
+          "title_vi": "Debug và experiment",
+          "title_en": "Debugging and experiments",
+          "lessons": [
+            "Shape error",
+            "NaN và exploding gradient",
+            "GPU memory",
+            "Experiment logging"
+          ]
+        }
+      ],
+      "resources": [
+        {
+          "title": "PyTorch Tutorials",
+          "url": "https://pytorch.org/tutorials/",
+          "language": "en"
+        },
+        {
+          "title": "Dive into Deep Learning",
+          "url": "https://d2l.ai/",
+          "language": "en"
+        }
+      ]
+    },
+    {
+      "slug": "phase-05-mlops",
+      "order": 5,
+      "duration_weeks": 8,
+      "title_vi": "Deployment và MLOps",
+      "title_en": "Deployment and MLOps",
+      "summary_vi": "Biến notebook thành API có test, Docker, tracking và quan sát được.",
+      "summary_en": "Turn a notebook into a tested, containerized, observable API.",
+      "modules": [
+        {
+          "slug": "api",
+          "title_vi": "Inference API",
+          "title_en": "Inference API",
+          "lessons": [
+            "Package code và configuration",
+            "FastAPI route",
+            "Request response validation",
+            "Batch inference"
+          ]
+        },
+        {
+          "slug": "containers",
+          "title_vi": "Container và CI",
+          "title_en": "Containers and CI",
+          "lessons": [
+            "Docker image",
+            "Docker compose basics",
+            "Unit và integration test",
+            "CI pipeline"
+          ]
+        },
+        {
+          "slug": "tracking",
+          "title_vi": "Tracking và versioning",
+          "title_en": "Tracking and versioning",
+          "lessons": [
+            "Model versioning",
+            "Data versioning",
+            "MLflow tracking",
+            "Reproducibility"
+          ]
+        },
+        {
+          "slug": "observability",
+          "title_vi": "Observability",
+          "title_en": "Observability",
+          "lessons": [
+            "Structured logging",
+            "Latency p50/p95",
+            "Data drift",
+            "Concept drift và rollback"
+          ]
+        },
+        {
+          "slug": "security",
+          "title_vi": "An toàn hệ thống",
+          "title_en": "System safety",
+          "lessons": [
+            "Environment variables",
+            "Input limits",
+            "Dependency hygiene",
+            "PII và secret redaction"
+          ]
+        }
+      ],
+      "resources": [
+        {
+          "title": "FastAPI documentation",
+          "url": "https://fastapi.tiangolo.com/",
+          "language": "en"
+        },
+        {
+          "title": "Docker Get Started",
+          "url": "https://docs.docker.com/get-started/",
+          "language": "en"
+        },
+        {
+          "title": "MLflow Tracking",
+          "url": "https://mlflow.org/docs/latest/ml/tracking/",
+          "language": "en"
+        }
+      ]
+    },
+    {
+      "slug": "phase-06-llm-rag",
+      "order": 6,
+      "duration_weeks": 10,
+      "title_vi": "NLP, LLM và RAG",
+      "title_en": "NLP, LLMs and RAG",
+      "summary_vi": "Hiểu embedding, Transformer, retrieval, đánh giá và xây trợ lý tài liệu tiếng Việt.",
+      "summary_en": "Understand embeddings, Transformers, retrieval, evaluation and build a Vietnamese document assistant.",
+      "modules": [
+        {
+          "slug": "nlp-foundations",
+          "title_vi": "NLP foundations",
+          "title_en": "NLP foundations",
+          "lessons": [
+            "Tokenization",
+            "Word và sentence embedding",
+            "Language model",
+            "Context window"
+          ]
+        },
+        {
+          "slug": "transformers",
+          "title_vi": "Transformer và prompting",
+          "title_en": "Transformers and prompting",
+          "lessons": [
+            "Attention",
+            "Encoder và decoder",
+            "Prompt design",
+            "Structured output và function calling"
+          ]
+        },
+        {
+          "slug": "retrieval",
+          "title_vi": "Retrieval",
+          "title_en": "Retrieval",
+          "lessons": [
+            "Vector search",
+            "Chunking",
+            "Metadata filter",
+            "Reranking và hybrid retrieval"
+          ]
+        },
+        {
+          "slug": "rag",
+          "title_vi": "RAG architecture",
+          "title_en": "RAG architecture",
+          "lessons": [
+            "RAG pipeline",
+            "Citation",
+            "Không đủ bằng chứng",
+            "RAG failure analysis"
+          ]
+        },
+        {
+          "slug": "quality-safety",
+          "title_vi": "Quality và safety",
+          "title_en": "Quality and safety",
+          "lessons": [
+            "Evaluation set",
+            "Hallucination",
+            "Prompt injection",
+            "Latency và token cost"
+          ]
+        },
+        {
+          "slug": "adaptation",
+          "title_vi": "Adaptation và agents",
+          "title_en": "Adaptation and agents",
+          "lessons": [
+            "Fine-tuning khi nào",
+            "LoRA và PEFT",
+            "Quantization",
+            "Tool-using agent có điều kiện dừng"
+          ]
+        }
+      ],
+      "resources": [
+        {
+          "title": "Hugging Face NLP Course",
+          "url": "https://huggingface.co/learn/nlp-course/chapter1/1",
+          "language": "en"
+        },
+        {
+          "title": "Transformers documentation",
+          "url": "https://huggingface.co/docs/transformers/index",
+          "language": "en"
+        }
+      ]
+    },
+    {
+      "slug": "phase-07-capstone-career",
+      "order": 7,
+      "duration_weeks": 6,
+      "title_vi": "Capstone, portfolio và xin việc",
+      "title_en": "Capstone, portfolio and career",
+      "summary_vi": "Hoàn thiện sản phẩm có demo, documentation, evaluation và luyện phỏng vấn.",
+      "summary_en": "Ship a documented, evaluated product and prepare for interviews.",
+      "modules": [
+        {
+          "slug": "problem",
+          "title_vi": "Problem và architecture",
+          "title_en": "Problem and architecture",
+          "lessons": [
+            "Chọn domain",
+            "Viết problem statement",
+            "Xác định user và metric",
+            "Thiết kế architecture"
+          ]
+        },
+        {
+          "slug": "ship",
+          "title_vi": "Build và ship",
+          "title_en": "Build and ship",
+          "lessons": [
+            "Baseline và MVP",
+            "Evaluation report",
+            "Demo và README",
+            "Limitations và roadmap"
+          ]
+        },
+        {
+          "slug": "portfolio",
+          "title_vi": "Portfolio",
+          "title_en": "Portfolio",
+          "lessons": [
+            "Project README",
+            "Architecture diagram",
+            "Video demo",
+            "GitHub profile"
+          ]
+        },
+        {
+          "slug": "career",
+          "title_vi": "Career readiness",
+          "title_en": "Career readiness",
+          "lessons": [
+            "CV AI Engineer",
+            "Trình bày project",
+            "ML interview questions",
+            "AI system design"
+          ]
+        }
+      ],
+      "resources": [
+        {
+          "title": "Google Machine Learning Crash Course",
+          "url": "https://developers.google.com/machine-learning/crash-course",
+          "language": "en"
+        },
+        {
+          "title": "ML system design overview",
+          "url": "https://madewithml.com/",
+          "language": "en"
+        }
+      ]
+    }
+  ]
+}

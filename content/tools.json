@@ -1,0 +1,166 @@
+[
+  {
+    "slug": "python",
+    "name": "Python",
+    "category": "Foundation",
+    "when_vi": "Ngôn ngữ chính cho data, ML và backend.",
+    "how_vi": "Tạo environment riêng, viết script và test trước khi mở rộng.",
+    "commands": [
+      "python --version",
+      "python -m venv .venv",
+      "python -m pytest"
+    ],
+    "when_not_vi": "Đừng dùng một environment chung cho mọi project hoặc chạy code tải từ nguồn không rõ.",
+    "install_vi": "Cài Python 3.11+ từ python.org, sau đó kiểm tra python --version.",
+    "error_vi": "Kiểm tra PATH, phiên bản Python và chạy lại python -m venv .venv.",
+    "combine_vi": "Kết hợp với VS Code, pytest và Git; notebook chỉ dùng cho khám phá.",
+    "risks_vi": "Dependency khác phiên bản, chạy nhầm interpreter và commit .venv.",
+    "lesson_refs": [
+      "phase-00-onboarding-environment-1",
+      "phase-01-python-software-python-core-1"
+    ],
+    "when_en": "Ngôn ngữ chính cho data, ML và backend.",
+    "how_en": "Tạo environment riêng, viết script và test trước khi mở rộng.",
+    "when_not_en": "Đừng dùng một environment chung cho mọi project hoặc chạy code tải từ nguồn không rõ.",
+    "install_en": "Cài Python 3.11+ từ python.org, sau đó kiểm tra python --version.",
+    "error_en": "Kiểm tra PATH, phiên bản Python và chạy lại python -m venv .venv.",
+    "combine_en": "Kết hợp với VS Code, pytest và Git; notebook chỉ dùng cho khám phá.",
+    "risks_en": "Dependency khác phiên bản, chạy nhầm interpreter và commit .venv."
+  },
+  {
+    "slug": "vscode",
+    "name": "VS Code",
+    "category": "Development",
+    "when_vi": "Viết code, debug, quản lý workspace và xem Git diff.",
+    "how_vi": "Mở từng exercise bằng workspace riêng; dùng terminal tích hợp để chạy test.",
+    "commands": [
+      "code .",
+      "code --reuse-window <path>"
+    ],
+    "when_not_vi": "Không mở trực tiếp workspace chứa secret hoặc chạy extension chưa tin cậy.",
+    "install_vi": "Cài VS Code và Python extension chính thức; bật format/lint cho workspace.",
+    "error_vi": "Kiểm tra interpreter ở status bar, terminal profile và quyền gọi code.",
+    "combine_vi": "Mở workspace từ app, chạy test trong terminal rồi review Git diff.",
+    "risks_vi": "Extension tự chạy code, chọn nhầm interpreter và terminal không đúng thư mục.",
+    "lesson_refs": [
+      "phase-00-onboarding-environment-2",
+      "phase-01-python-software-developer-tools-3"
+    ],
+    "when_en": "Viết code, debug, quản lý workspace và xem Git diff.",
+    "how_en": "Mở từng exercise bằng workspace riêng; dùng terminal tích hợp để chạy test.",
+    "when_not_en": "Không mở trực tiếp workspace chứa secret hoặc chạy extension chưa tin cậy.",
+    "install_en": "Cài VS Code và Python extension chính thức; bật format/lint cho workspace.",
+    "error_en": "Kiểm tra interpreter ở status bar, terminal profile và quyền gọi code.",
+    "combine_en": "Mở workspace từ app, chạy test trong terminal rồi review Git diff.",
+    "risks_en": "Extension tự chạy code, chọn nhầm interpreter và terminal không đúng thư mục."
+  },
+  {
+    "slug": "git",
+    "name": "Git/GitHub",
+    "category": "Workflow",
+    "when_vi": "Lưu mốc học tập, review diff và công khai portfolio.",
+    "how_vi": "Commit theo một thay đổi nhỏ; không commit secrets hoặc database runtime.",
+    "commands": [
+      "git status",
+      "git diff",
+      "git add <path>",
+      "git commit -m \"learn: ...\"",
+      "git push"
+    ],
+    "when_not_vi": "Không commit database runtime, .env, token hoặc thay đổi chưa review diff.",
+    "install_vi": "Cài Git, cấu hình identity cá nhân và xác nhận git remote -v trước khi push.",
+    "error_vi": "Đọc git status, xem branch/remote, giải quyết conflict rồi mới commit.",
+    "combine_vi": "Mỗi lần học tạo một artifact nhỏ, journal và commit message có scope rõ.",
+    "risks_vi": "Lộ secret, force push nhầm branch và commit quá lớn khó review.",
+    "lesson_refs": [
+      "phase-00-onboarding-baseline-3",
+      "phase-01-python-software-developer-tools-1"
+    ],
+    "when_en": "Lưu mốc học tập, review diff và công khai portfolio.",
+    "how_en": "Commit theo một thay đổi nhỏ; không commit secrets hoặc database runtime.",
+    "when_not_en": "Không commit database runtime, .env, token hoặc thay đổi chưa review diff.",
+    "install_en": "Cài Git, cấu hình identity cá nhân và xác nhận git remote -v trước khi push.",
+    "error_en": "Đọc git status, xem branch/remote, giải quyết conflict rồi mới commit.",
+    "combine_en": "Mỗi lần học tạo một artifact nhỏ, journal và commit message có scope rõ.",
+    "risks_en": "Lộ secret, force push nhầm branch và commit quá lớn khó review."
+  },
+  {
+    "slug": "jupyter",
+    "name": "Jupyter/Colab",
+    "category": "Exploration",
+    "when_vi": "Khám phá dữ liệu, trực quan hóa và thử công thức nhanh.",
+    "how_vi": "Sau khi hiểu ý tưởng, chuyển logic ổn định vào package/script có test.",
+    "commands": [
+      "jupyter lab"
+    ],
+    "when_not_vi": "Không dùng notebook làm nơi duy nhất chứa logic production hoặc đánh giá model.",
+    "install_vi": "Cài Jupyter trong .venv, chạy jupyter lab tại root project.",
+    "error_vi": "Kiểm tra kernel đang trỏ đúng .venv và restart kernel khi state bị bẩn.",
+    "combine_vi": "Khám phá trong notebook, sau đó chuyển logic ổn định sang package có test.",
+    "risks_vi": "State ẩn, chạy cell sai thứ tự và kết quả không reproducible.",
+    "lesson_refs": [
+      "phase-00-onboarding-environment-4",
+      "phase-02-math-ml-linear-algebra-1"
+    ],
+    "when_en": "Khám phá dữ liệu, trực quan hóa và thử công thức nhanh.",
+    "how_en": "Sau khi hiểu ý tưởng, chuyển logic ổn định vào package/script có test.",
+    "when_not_en": "Không dùng notebook làm nơi duy nhất chứa logic production hoặc đánh giá model.",
+    "install_en": "Cài Jupyter trong .venv, chạy jupyter lab tại root project.",
+    "error_en": "Kiểm tra kernel đang trỏ đúng .venv và restart kernel khi state bị bẩn.",
+    "combine_en": "Khám phá trong notebook, sau đó chuyển logic ổn định sang package có test.",
+    "risks_en": "State ẩn, chạy cell sai thứ tự và kết quả không reproducible."
+  },
+  {
+    "slug": "docker",
+    "name": "Docker",
+    "category": "Deployment",
+    "when_vi": "Đóng gói API và môi trường chạy lặp lại được.",
+    "how_vi": "Bắt đầu bằng Dockerfile tối giản, không đưa secret vào image.",
+    "commands": [
+      "docker build -t journey-api .",
+      "docker run --rm -p 8000:8000 journey-api"
+    ],
+    "when_not_vi": "Không đưa secret vào image, không chạy container privileged nếu không cần.",
+    "install_vi": "Cài Docker Desktop, kiểm tra docker version và bật Linux containers.",
+    "error_vi": "Đọc build log, kiểm tra port, context và quyền truy cập Docker daemon.",
+    "combine_vi": "Đóng gói FastAPI, chạy integration test trong container và đo latency.",
+    "risks_vi": "Image phình to, cache dependency cũ và port mở ngoài ý muốn.",
+    "lesson_refs": [
+      "phase-05-mlops-containers-1",
+      "phase-05-mlops-api-2"
+    ],
+    "when_en": "Đóng gói API và môi trường chạy lặp lại được.",
+    "how_en": "Bắt đầu bằng Dockerfile tối giản, không đưa secret vào image.",
+    "when_not_en": "Không đưa secret vào image, không chạy container privileged nếu không cần.",
+    "install_en": "Cài Docker Desktop, kiểm tra docker version và bật Linux containers.",
+    "error_en": "Đọc build log, kiểm tra port, context và quyền truy cập Docker daemon.",
+    "combine_en": "Đóng gói FastAPI, chạy integration test trong container và đo latency.",
+    "risks_en": "Image phình to, cache dependency cũ và port mở ngoài ý muốn."
+  },
+  {
+    "slug": "chatgpt-codex",
+    "name": "ChatGPT/Codex",
+    "category": "Learning assistant",
+    "when_vi": "Giải thích lỗi, chất vấn giả thuyết và review code sau khi tự thử.",
+    "how_vi": "Luôn gửi context, lỗi, giả thuyết và yêu cầu gợi ý từng bước thay vì xin lời giải ngay.",
+    "commands": [
+      "Tạo context từ lesson hoặc exercise trong app"
+    ],
+    "when_not_vi": "Không gửi credential, dữ liệu cá nhân hoặc yêu cầu lời giải ngay khi chưa tự thử.",
+    "install_vi": "MVP không cần API key; dùng nút Context export để tạo Markdown.",
+    "error_vi": "Nếu câu trả lời mơ hồ, bổ sung lỗi, giả thuyết, code tối thiểu và yêu cầu gợi ý từng bước.",
+    "combine_vi": "Tự thử → ghi giả thuyết → gửi context → sửa code → chạy test → ghi journal.",
+    "risks_vi": "Hallucination, phụ thuộc quá mức và paste dữ liệu bí mật.",
+    "lesson_refs": [
+      "phase-00-onboarding-learning-system-4",
+      "phase-06-llm-rag-quality-safety-2"
+    ],
+    "when_en": "Giải thích lỗi, chất vấn giả thuyết và review code sau khi tự thử.",
+    "how_en": "Luôn gửi context, lỗi, giả thuyết và yêu cầu gợi ý từng bước thay vì xin lời giải ngay.",
+    "when_not_en": "Không gửi credential, dữ liệu cá nhân hoặc yêu cầu lời giải ngay khi chưa tự thử.",
+    "install_en": "MVP không cần API key; dùng nút Context export để tạo Markdown.",
+    "error_en": "Nếu câu trả lời mơ hồ, bổ sung lỗi, giả thuyết, code tối thiểu và yêu cầu gợi ý từng bước.",
+    "combine_en": "Tự thử → ghi giả thuyết → gửi context → sửa code → chạy test → ghi journal.",
+    "risks_en": "Hallucination, phụ thuộc quá mức và paste dữ liệu bí mật."
+  }
+]
