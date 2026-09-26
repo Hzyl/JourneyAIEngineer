@@ -11,6 +11,18 @@ Một chương trình học AI Engineer chạy local: roadmap 53 tuần, lesson 
 
 Sau đó mở frontend tại http://127.0.0.1:5173.
 
+## Đóng gói thành một file `.exe`
+
+Nếu muốn mở app bằng double-click thay vì chạy hai development server, chạy:
+
+```powershell
+.\scripts\build_exe.ps1
+```
+
+Script sẽ build frontend production, cài PyInstaller vào `.venv` nếu máy chưa có, rồi tạo `JourneyAIEngineer.exe` ngay tại thư mục project. Double-click file này để app tự khởi động API, phục vụ giao diện local và mở trình duyệt. App chọn port trống bắt đầu từ `8765` nên không bị phụ thuộc vào development server.
+
+Database, workspace bài tập và journal của bản `.exe` được giữ trong `.data` và `journal` cạnh file executable. Vì vậy rebuild hoặc thay file `.exe` không làm mất tiến trình. Sau mỗi thay đổi source, chạy lại `scripts\build_exe.ps1` để tạo executable mới; file `.exe` được ignore và không push vào GitHub.
+
 ## Thành phần
 
 - `apps/api`: FastAPI + SQLite, seed curriculum từ `content/curriculum.json`.

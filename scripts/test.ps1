@@ -3,7 +3,7 @@ $ProjectRoot = Split-Path -Parent $PSScriptRoot
 Set-Location $ProjectRoot
 $Python = Join-Path $ProjectRoot '.venv\Scripts\python.exe'
 if (-not (Test-Path $Python)) { $Python = 'python' }
-& $Python -m py_compile apps/api/main.py
+& $Python -m py_compile apps/api/main.py packaging/launcher.py
 & $Python scripts/validate_content.py
 & $Python -m pytest -q
 npm run lint

@@ -15,15 +15,21 @@ from typing import Any
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DATA_ROOT = Path(os.environ.get("JOURNEY_DATA_DIR", PROJECT_ROOT / ".data"))
+IS_FROZEN = bool(getattr(sys, "frozen", False))
+BUNDLE_ROOT = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parents[2])).resolve()
+APP_ROOT = Path(sys.executable).resolve().parent if IS_FROZEN else BUNDLE_ROOT
+PROJECT_ROOT = Path(os.environ.get("JOURNEY_PROJECT_ROOT", APP_ROOT if (APP_ROOT / ".git").exists() else BUNDLE_ROOT)).resolve()
+DATA_ROOT = Path(os.environ.get("JOURNEY_DATA_DIR", APP_ROOT / ".data" if IS_FROZEN else BUNDLE_ROOT / ".data")).resolve()
 DB_PATH = DATA_ROOT / "journey.db"
-CONTENT_ROOT = PROJECT_ROOT / "content"
+CONTENT_ROOT = Path(os.environ.get("JOURNEY_CONTENT_DIR", BUNDLE_ROOT / "content")).resolve()
 WORKSPACE_ROOT = DATA_ROOT / "workspaces"
-JOURNAL_ROOT = PROJECT_ROOT / "journal"
+JOURNAL_ROOT = Path(os.environ.get("JOURNEY_JOURNAL_DIR", APP_ROOT / "journal" if IS_FROZEN else BUNDLE_ROOT / "journal")).resolve()
+FRONTEND_ROOT = Path(os.environ.get("JOURNEY_FRONTEND_DIR", BUNDLE_ROOT / "dist")).resolve()
 LESSON_CATALOG_PATH = CONTENT_ROOT / "lessons.json"
 SAFE_SLUG = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 
@@ -927,6 +933,30 @@ def export_context(payload: ContextRequest) -> dict[str, Any]:
     body = redact_secrets(f"""# Journey AI Engineer Context\n\n## Lesson\n{lesson_title}\n\n## Lesson progress\n- Status: {progress_status}\n- Minutes recorded: {progress_minutes}\n\n## Exercise\n{exercise_title}\n- Workspace: {exercise_path}\n\n## Latest note\n{note_block}\n\n## Câu hỏi\n{payload.question}\n\n## Cách trả lời mong muốn\n- Giải thích bằng tiếng Việt, giữ thuật ngữ English trong ngoặc.\n- Cho tôi gợi ý từng bước trước khi đưa lời giải hoàn chỉnh.\n- Chỉ ra giả định, edge case và cách tự kiểm tra.\n- Không yêu cầu hoặc hiển thị API key, token hay dữ liệu bí mật.\n\n## Lời nhắc\nTôi đang học để trở thành AI Engineer. Hãy ưu tiên giúp tôi hiểu và tự làm được.\n""")
     path.write_text(body, encoding="utf-8")
     return {"path": str(path), "content": body}
+
+
+if FRONTEND_ROOT.exists():
+    assets_root = FRONTEND_ROOT / "assets"
+    if assets_root.is_dir():
+        app.mount("/assets", StaticFiles(directory=assets_root), name="frontend-assets")
+
+
+@app.get("/{full_path:path}", include_in_schema=False)
+def serve_frontend(full_path: str) -> FileResponse:
+    """Serve the production SPA when the API is running from the packaged executable."""
+
+    if full_path == "api" or full_path.startswith("api/"):
+        raise HTTPException(404, "API endpoint not found")
+    frontend_root = FRONTEND_ROOT.resolve()
+    requested = (frontend_root / full_path).resolve()
+    if frontend_root not in requested.parents and requested != frontend_root:
+        raise HTTPException(404, "Frontend file not found")
+    if requested.is_file():
+        return FileResponse(requested)
+    index = frontend_root / "index.html"
+    if index.is_file():
+        return FileResponse(index)
+    raise HTTPException(404, "Frontend build not found; run npm run build first")
 
 
 if __name__ == "__main__":

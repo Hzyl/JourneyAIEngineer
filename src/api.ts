@@ -1,4 +1,5 @@
-const API_BASE = import.meta.env.VITE_API_BASE ?? 'http://127.0.0.1:8000/api'
+// A relative API path works for the packaged desktop app and is proxied by Vite during development.
+const API_BASE = import.meta.env.VITE_API_BASE ?? '/api'
 
 export type Dashboard = {
   total_lessons: number

@@ -33,5 +33,9 @@ __pycache__/
 *.py[cod]
 pytest_cache/
 
+# Local Windows package output
+JourneyAIEngineer.exe
+.build/
+
 # Generated journal context can contain private debugging details
 journal/context/
