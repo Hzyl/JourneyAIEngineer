@@ -100,3 +100,5 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 @media(max-width:620px) { .portfolio-grid { grid-template-columns: 1fr; } }
 @media(max-width:850px) { .start-steps, .readiness-projects { grid-template-columns: 1fr; } .hiring-card { grid-column: auto; } }
 .context-result{margin-top:17px;padding-top:16px;border-top:1px solid var(--line)}.context-result .section-heading{align-items:center;margin-bottom:9px}.context-result h4{margin:3px 0 0;font:500 17px Georgia,serif}.context-preview{width:100%;min-height:260px;margin:0;border:1px solid #cbded1;border-radius:8px;padding:11px;resize:vertical;background:#f7faf6;color:var(--ink);font:10px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace}.context-path{display:block;margin-top:8px;color:var(--muted);font-size:10px;overflow-wrap:anywhere}.ask-card .warning-note{margin:11px 0 0!important;min-height:0!important;color:#a7664a!important;font-size:11px!important}
+.loading-state.compact { min-height: 420px; }
+.error-banner .text-button { margin-left: 10px; color: #874f34; text-decoration: underline; text-underline-offset: 3px; }
