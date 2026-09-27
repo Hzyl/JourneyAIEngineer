@@ -23,6 +23,9 @@ def test_curriculum_is_seeded(tmp_path, monkeypatch):
         assert db.execute("SELECT COUNT(*) FROM lessons").fetchone()[0] == 148
         assert db.execute("SELECT COUNT(*) FROM exercises").fetchone()[0] == 37
         assert db.execute("SELECT COUNT(*) FROM review_items").fetchone()[0] == 148
+        exercise = db.execute("SELECT test_command,starter_code FROM exercises LIMIT 1").fetchone()
+        assert "test_exercise.py" in exercise["test_command"]
+        assert "NotImplementedError" in exercise["starter_code"]
 
 
 def test_lesson_schema_and_settings(tmp_path, monkeypatch):
@@ -33,10 +36,17 @@ def test_lesson_schema_and_settings(tmp_path, monkeypatch):
         "learning_objectives", "prerequisites", "keywords", "concept_notes_vi", "concept_notes_en",
         "formulas", "code_examples", "resources", "exercise_ids", "review_item_ids",
         "estimated_minutes", "completion_checklist", "common_mistakes", "next_lessons",
+        "why_it_matters_vi", "why_it_matters_en", "study_steps_vi", "study_steps_en",
+        "practice_plan", "interview_questions", "guide",
     }
     assert required.issubset(lesson)
     assert lesson["code_examples"]
     assert lesson["resources"]
+    assert len(lesson["study_steps_vi"]) >= 4
+    assert lesson["practice_plan"]["vi"]["task"]
+    assert len(lesson["interview_questions"]["vi"]) >= 3
+    assert any(resource.get("url", "").startswith("http") for resource in lesson["resources"])
+    assert any(resource.get("kind") == "in_app" for resource in lesson["resources"])
     assert module.get_settings()["track"] == "standard"
     assert module.get_settings()["target_role"] == "internship"
     updated = module.update_settings(module.SettingsUpdate(track="accelerated", weekly_goal_minutes=900, target_role="junior", experience_level="intermediate", onboarding_complete=True))
@@ -90,18 +100,121 @@ def test_workspace_creation_and_runner(tmp_path, monkeypatch):
     exercise = module.exercises()["exercises"][0]
     workspace = module.create_workspace(exercise["slug"])
     workspace_id = workspace["workspace"]["id"]
-    result = module.run_workspace(workspace_id)
-    assert result["status"] == "passed"
     workspace_path = tmp_path / ".data" / "workspaces" / exercise["slug"]
     assert (workspace_path / "starter.py").exists()
+    assert (workspace_path / "test_exercise.py").exists()
+    first_run = module.run_workspace(workspace_id)
+    assert first_run["status"] == "failed"
+    (workspace_path / "starter.py").write_text(
+        "def solve():\n    return {'result': 'ok', 'explanation': 'verified'}\n",
+        encoding="utf-8",
+    )
+    result = module.run_workspace(workspace_id)
+    assert result["status"] == "passed"
     shutil.rmtree(workspace_path)
     repaired_run = module.run_workspace(workspace_id)
-    assert repaired_run["status"] == "passed"
+    assert repaired_run["status"] == "failed"
     (workspace_path / "README.md").unlink()
     repaired = module.create_workspace(exercise["slug"])
     assert repaired["created"] is False
     assert repaired["repaired"] is True
     assert (workspace_path / "README.md").exists()
+
+
+def test_workspace_folder_export_and_secret_guard(tmp_path, monkeypatch):
+    module = load_module(tmp_path, monkeypatch)
+    exercise = module.exercises()["exercises"][0]
+    workspace = module.create_workspace(exercise["slug"])
+    workspace_id = workspace["workspace"]["id"]
+    popen_calls = []
+
+    def fake_popen(*args, **kwargs):
+        popen_calls.append((args, kwargs))
+
+    monkeypatch.setattr(module.subprocess, "Popen", fake_popen)
+    opened = module.open_workspace_folder(workspace_id)
+    assert opened["opened"] is True
+    assert popen_calls
+    assert popen_calls[0][1].get("creationflags", 0) == getattr(module.subprocess, "CREATE_NO_WINDOW", 0)
+
+    project_root = tmp_path / "repo"
+    project_root.mkdir()
+    module.PROJECT_ROOT = project_root
+    exported = module.export_workspace(workspace_id)
+    artifact = project_root / "exercises" / exercise["slug"]
+    assert exported["artifact_path"] == f"exercises/{exercise['slug']}"
+    assert (artifact / "starter.py").exists()
+    assert (artifact / "README.md").exists()
+
+    workspace_path = Path(workspace["workspace"]["path"])
+    (workspace_path / "starter.py").write_text('api_key = "real-looking-secret-value"\n', encoding="utf-8")
+    with pytest.raises(module.HTTPException) as secret_error:
+        module.export_workspace(workspace_id)
+    assert secret_error.value.status_code == 422
+    assert "starter.py" in str(secret_error.value.detail)
+
+
+def test_publish_requires_confirmation_and_pushes_only_selected_artifact(tmp_path, monkeypatch):
+    module = load_module(tmp_path, monkeypatch)
+    project_root = tmp_path / "repo"
+    artifact = project_root / "exercises" / "python-functions"
+    artifact.mkdir(parents=True)
+    (artifact / "starter.py").write_text("print('practice')\n", encoding="utf-8")
+    module.PROJECT_ROOT = project_root
+
+    with pytest.raises(module.HTTPException) as missing_confirmation:
+        module.publish_git(module.GitPublishRequest(paths=["exercises/python-functions"], message="learn: practice", confirm=False))
+    assert missing_confirmation.value.status_code == 400
+    with pytest.raises(module.HTTPException) as blank_message:
+        module.publish_git(module.GitPublishRequest(paths=["exercises/python-functions"], message="     ", confirm=True))
+    assert blank_message.value.status_code == 400
+
+    calls = []
+
+    def fake_git(args, timeout=15):
+        calls.append(args)
+        if args == ["rev-parse", "--show-toplevel"]:
+            return module.subprocess.CompletedProcess(args, 0, stdout=str(project_root), stderr="")
+        if args == ["diff", "--cached", "--name-only"]:
+            return module.subprocess.CompletedProcess(args, 0, stdout="", stderr="")
+        if args[:2] == ["add", "--"]:
+            return module.subprocess.CompletedProcess(args, 0, stdout="", stderr="")
+        if args == ["diff", "--cached", "--binary"]:
+            return module.subprocess.CompletedProcess(args, 0, stdout="diff --git a/exercises/python-functions/starter.py b/exercises/python-functions/starter.py", stderr="")
+        if args[:2] == ["commit", "-m"]:
+            return module.subprocess.CompletedProcess(args, 0, stdout="[main abc1234] learn: practice", stderr="")
+        if args == ["branch", "--show-current"]:
+            return module.subprocess.CompletedProcess(args, 0, stdout="main", stderr="")
+        if args == ["remote", "get-url", "origin"]:
+            return module.subprocess.CompletedProcess(args, 0, stdout="https://github.com/Hzyl/JouneyAIEngineer.git", stderr="")
+        if args == ["rev-parse", "--short", "HEAD"]:
+            return module.subprocess.CompletedProcess(args, 0, stdout="abc1234", stderr="")
+        if args == ["push", "origin", "main"]:
+            return module.subprocess.CompletedProcess(args, 0, stdout="", stderr="")
+        if args[:2] == ["reset", "--"]:
+            return module.subprocess.CompletedProcess(args, 0, stdout="", stderr="")
+        if args == ["diff", "--cached", "--name-only"]:
+            return module.subprocess.CompletedProcess(args, 0, stdout="exercises/python-functions/starter.py\n", stderr="")
+        raise AssertionError(args)
+
+    # The first cached-name call is empty; the second one is the post-add verification.
+    cached_calls = 0
+
+    def fake_git_with_stage(args, timeout=15):
+        nonlocal cached_calls
+        if args == ["diff", "--cached", "--name-only"]:
+            cached_calls += 1
+            output = "" if cached_calls == 1 else "exercises/python-functions/starter.py\n"
+            calls.append(args)
+            return module.subprocess.CompletedProcess(args, 0, stdout=output, stderr="")
+        return fake_git(args, timeout)
+
+    monkeypatch.setattr(module, "run_git", fake_git_with_stage)
+    result = module.publish_git(module.GitPublishRequest(paths=["exercises/python-functions"], message="learn: practice", confirm=True))
+    assert result["pushed"] is True
+    assert result["branch"] == "main"
+    assert result["files"] == ["exercises/python-functions/starter.py"]
+    assert ["push", "origin", "main"] in calls
 
 
 def test_journal_and_context_exports(tmp_path, monkeypatch):

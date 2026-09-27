@@ -31,6 +31,7 @@ WORKSPACE_ROOT = DATA_ROOT / "workspaces"
 JOURNAL_ROOT = Path(os.environ.get("JOURNEY_JOURNAL_DIR", APP_ROOT / "journal" if IS_FROZEN else BUNDLE_ROOT / "journal")).resolve()
 FRONTEND_ROOT = Path(os.environ.get("JOURNEY_FRONTEND_DIR", BUNDLE_ROOT / "dist")).resolve()
 LESSON_CATALOG_PATH = CONTENT_ROOT / "lessons.json"
+MODULE_GUIDES_PATH = CONTENT_ROOT / "module_guides.json"
 SAFE_SLUG = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 SUBPROCESS_OPTIONS: dict[str, Any] = {}
 if os.name == "nt":
@@ -65,6 +66,63 @@ def read_lesson_catalog() -> dict[str, dict[str, Any]]:
         return {}
     payload = json.loads(LESSON_CATALOG_PATH.read_text(encoding="utf-8"))
     return {item["lesson_id"]: item for item in payload.get("lessons", [])}
+
+
+def read_module_guides() -> dict[str, dict[str, Any]]:
+    if not MODULE_GUIDES_PATH.exists():
+        return {}
+    payload = json.loads(MODULE_GUIDES_PATH.read_text(encoding="utf-8"))
+    return payload.get("modules", {})
+
+
+EXERCISE_TEST_CODE = '''import unittest
+
+from starter import solve
+
+
+class ExerciseContractTest(unittest.TestCase):
+    def test_solution_returns_reviewable_evidence(self):
+        evidence = solve()
+        self.assertIsInstance(evidence, dict)
+        self.assertTrue(str(evidence.get("result", "")).strip(), "result must contain the computed outcome")
+        self.assertTrue(str(evidence.get("explanation", "")).strip(), "explanation must describe the reasoning")
+
+
+if __name__ == "__main__":
+    unittest.main()
+'''
+
+
+def exercise_material(module: dict[str, Any], guides: dict[str, dict[str, Any]]) -> dict[str, str]:
+    guide = guides.get(module["slug"], {})
+    practice_vi = guide.get("practice_vi", f"Áp dụng module {module['title_vi']} vào một bài toán nhỏ.")
+    practice_en = guide.get("practice_en", f"Apply {module['title_en']} to a small problem.")
+    checkpoint_vi = guide.get("checkpoint_vi", "Giải thích được giả định, edge case và cách kiểm tra kết quả.")
+    checkpoint_en = guide.get("checkpoint_en", "Explain assumptions, edge cases, and how to verify the result.")
+    starter = f'''"""Practice: {module["title_vi"]}
+
+Đọc README, làm task bên dưới và trả về evidence có thể review.
+Task: {practice_vi}
+"""
+
+
+def solve() -> dict[str, str]:
+    """Return the computed result and a short explanation of your reasoning."""
+    # TODO: implement the module task; do not copy a tutorial without explaining it.
+    raise NotImplementedError("Implement solve() before running the exercise test")
+
+
+if __name__ == "__main__":
+    print(solve())
+'''
+    description_vi = f"{practice_vi}\n\nCheckpoint: {checkpoint_vi}"
+    description_en = f"{practice_en}\n\nCheckpoint: {checkpoint_en}"
+    return {
+        "description_vi": description_vi,
+        "description_en": description_en,
+        "starter_code": starter,
+        "test_command": "python -m unittest -v test_exercise.py",
+    }
 
 
 def json_text(value: Any) -> str:
@@ -114,6 +172,63 @@ def redact_secrets(text: str) -> str:
     for pattern in patterns:
         redacted = pattern.sub(lambda match: f"{match.group(1)}{match.group(2) if match.lastindex and match.lastindex >= 2 and match.group(2) in ':=' else ''}***REDACTED***", redacted)
     return redacted
+
+
+SECRET_SCAN_PATTERNS = (
+    re.compile(r"(?i)\b(?:api[_-]?key|secret|token|password)\b\s*[:=]\s*[\"']?[^\s\"']{8,}"),
+    re.compile(r"(?i)\bgh[pousr]_[A-Za-z0-9_\-]{20,}\b"),
+    re.compile(r"\bsk-[A-Za-z0-9]{20,}\b"),
+    re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
+    re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
+)
+PUBLISH_ROOTS = {"exercises", "projects", "journal"}
+WORKSPACE_IGNORES = {".git", ".venv", "__pycache__", ".pytest_cache", "node_modules"}
+
+
+def contains_secret(text: str) -> bool:
+    return any(pattern.search(text) for pattern in SECRET_SCAN_PATTERNS)
+
+
+def run_git(args: list[str], timeout: int = 15) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        ["git", "-C", str(PROJECT_ROOT), *args],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        timeout=timeout,
+        shell=False,
+        **SUBPROCESS_OPTIONS,
+    )
+
+
+def project_relative_path(raw_path: str) -> tuple[Path, str]:
+    candidate_text = raw_path.strip().replace("\\", "/")
+    if not candidate_text or Path(candidate_text).is_absolute():
+        raise HTTPException(400, "Artifact path must be a relative repository path")
+    candidate = (PROJECT_ROOT / candidate_text).resolve()
+    project_root = PROJECT_ROOT.resolve()
+    if candidate == project_root or project_root not in candidate.parents:
+        raise HTTPException(400, "Artifact path escapes the project root")
+    relative = candidate.relative_to(project_root)
+    if not relative.parts or relative.parts[0] not in PUBLISH_ROOTS:
+        raise HTTPException(400, "Only exercises, projects, and journal artifacts can be published")
+    return candidate, relative.as_posix()
+
+
+def scan_workspace_files(workspace_path: Path) -> tuple[list[Path], list[str]]:
+    files: list[Path] = []
+    skipped: list[str] = []
+    for path in sorted(workspace_path.rglob("*")):
+        relative = path.relative_to(workspace_path)
+        if any(part in WORKSPACE_IGNORES or part.startswith(".env") for part in relative.parts) or path.suffix.lower() in {".db", ".sqlite", ".sqlite3"}:
+            skipped.append(relative.as_posix())
+            continue
+        if path.is_symlink() or not path.is_file():
+            skipped.append(relative.as_posix())
+            continue
+        files.append(path)
+    return files, skipped
 
 
 def ensure_schema(db: sqlite3.Connection) -> None:
@@ -271,6 +386,7 @@ def init_db() -> None:
         ensure_schema(db)
     seed_content()
     hydrate_lesson_catalog()
+    hydrate_exercises()
 
 
 
@@ -280,6 +396,7 @@ def seed_content() -> None:
         return
     curriculum = json.loads(curriculum_path.read_text(encoding="utf-8"))
     catalog = read_lesson_catalog()
+    guides = read_module_guides()
     with connect() as db:
         phase_count = db.execute("SELECT COUNT(*) AS n FROM phases").fetchone()["n"]
         if phase_count:
@@ -376,6 +493,7 @@ def solve():
 if __name__ == "__main__":
     print(solve())
 '''
+                material = exercise_material(module, guides)
                 db.execute(
                     """INSERT INTO exercises(module_id,slug,title_vi,title_en,description_vi,description_en,difficulty,estimated_minutes,test_command,starter_code,hints_json)
                     VALUES(?,?,?,?,?,?,?,?,?,?,?)""",
@@ -384,12 +502,12 @@ if __name__ == "__main__":
                         f"exercise-{phase['order']}-{module['slug']}",
                         f"Bài thực hành: {module['title_vi']}",
                         f"Practice: {module['title_en']}",
-                        f"Xây một bài thực hành nhỏ áp dụng module {module['title_vi']}. Viết code, test và ghi lại trade-off.",
-                        f"Build a small practice task applying {module['title_en']}. Write code, tests and record trade-offs.",
+                        material["description_vi"],
+                        material["description_en"],
                         "starter" if phase["order"] < 3 else "intermediate",
                         90,
-                        f"{shlex.quote(sys.executable)} -m py_compile starter.py",
-                        starter,
+                        material["test_command"],
+                        material["starter_code"],
                         json_text(["Bắt đầu bằng input/output rõ ràng.", "Viết một test cho case bình thường và một edge case.", "Ghi lại điều bạn chưa hiểu trong journal."]),
                     ),
                 )
@@ -441,6 +559,23 @@ def hydrate_lesson_catalog() -> None:
             )
 
 
+def hydrate_exercises() -> None:
+    """Upgrade legacy compile-only exercises without touching learner files."""
+
+    guides = read_module_guides()
+    with connect() as db:
+        rows = db.execute(
+            """SELECT e.id,e.starter_code,m.slug,m.title_vi,m.title_en
+            FROM exercises e JOIN modules m ON m.id=e.module_id"""
+        ).fetchall()
+        for row in rows:
+            material = exercise_material(dict(row), guides)
+            db.execute(
+                """UPDATE exercises SET description_vi=?,description_en=?,test_command=?,starter_code=? WHERE id=?""",
+                (material["description_vi"], material["description_en"], material["test_command"], material["starter_code"], row["id"]),
+            )
+
+
 class ProgressUpdate(BaseModel):
     status: str = Field(pattern="^(not_started|in_progress|blocked|completed|needs_review)$")
     minutes_spent: int = Field(default=0, ge=0, le=1440)
@@ -472,6 +607,12 @@ class SettingsUpdate(BaseModel):
     target_role: str | None = Field(default=None, pattern="^(internship|junior|career_switch)$")
     experience_level: str | None = Field(default=None, pattern="^(beginner|intermediate|advanced)$")
     onboarding_complete: bool | None = None
+
+
+class GitPublishRequest(BaseModel):
+    paths: list[str] = Field(min_length=1, max_length=20)
+    message: str = Field(min_length=5, max_length=120)
+    confirm: bool = False
 
 
 class ContextRequest(BaseModel):
@@ -564,6 +705,14 @@ def lesson_detail(slug: str) -> dict[str, Any]:
         reviews = db.execute("SELECT * FROM review_items WHERE lesson_id=?", (row["id"],)).fetchall()
         exercises = db.execute("SELECT * FROM exercises WHERE module_id=?", (row["module_id"],)).fetchall()
     result = dict(row)
+    guide_fallbacks: dict[str, Any] = {
+        "why_it_matters_vi": "",
+        "why_it_matters_en": "",
+        "study_steps_vi": [],
+        "study_steps_en": [],
+        "practice_plan": {"vi": {}, "en": {}},
+        "interview_questions": {"vi": [], "en": []},
+    }
     for key in (
         "objectives_json",
         "prerequisites_json",
@@ -579,6 +728,18 @@ def lesson_detail(slug: str) -> dict[str, Any]:
         result[key.removesuffix("_json")] = loads(result.pop(key))
     result["reviews"] = [dict(item) for item in reviews]
     result["exercises"] = [dict(item) for item in exercises]
+    catalog_item = read_lesson_catalog().get(slug, {})
+    if catalog_item.get("resources"):
+        result["resources"] = catalog_item["resources"]
+    for key in (
+        "why_it_matters_vi",
+        "why_it_matters_en",
+        "study_steps_vi",
+        "study_steps_en",
+        "practice_plan",
+        "interview_questions",
+    ):
+        result[key] = catalog_item.get(key, guide_fallbacks[key])
     result["lesson_id"] = result["slug"]
     result["phase_id"] = result["phase_slug"]
     result["module_id"] = result["module_slug"]
@@ -586,6 +747,14 @@ def lesson_detail(slug: str) -> dict[str, Any]:
     result["completion_checklist"] = result["checklist"]
     result["exercise_ids"] = [item["slug"] for item in exercises]
     result["review_item_ids"] = [item["id"] for item in reviews]
+    result["guide"] = {
+        "why_it_matters_vi": result["why_it_matters_vi"],
+        "why_it_matters_en": result["why_it_matters_en"],
+        "study_steps_vi": result["study_steps_vi"],
+        "study_steps_en": result["study_steps_en"],
+        "practice_plan": result["practice_plan"],
+        "interview_questions": result["interview_questions"],
+    }
     return result
 
 
@@ -698,13 +867,34 @@ def ensure_workspace_files(path: Path, exercise: sqlite3.Row) -> bool:
     if not starter.exists():
         starter.write_text(exercise["starter_code"], encoding="utf-8")
         repaired = True
+    else:
+        try:
+            existing_starter = starter.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            existing_starter = ""
+        if "return \"your solution\"" in existing_starter and "TODO" in existing_starter:
+            starter.write_text(exercise["starter_code"], encoding="utf-8")
+            repaired = True
+    test_file = path / "test_exercise.py"
+    if not test_file.exists():
+        test_file.write_text(EXERCISE_TEST_CODE, encoding="utf-8")
+        repaired = True
+    exercise_contract = f"""\n\n## Exercise contract\n\n1. Implement `solve()` in `starter.py`; return a dictionary with non-empty `result` and `explanation` fields.\n2. Run `{exercise['test_command']}`. The first run is expected to fail while the TODO remains.\n3. Change one assumption, add an edge-case check, then run the test again.\n4. Save the final code and a short note explaining the trade-off before exporting the artifact.\n\n## Checkpoint\n\n{exercise['description_vi']}\n"""
     readme = path / "README.md"
     if not readme.exists():
         readme.write_text(
-            f"# {exercise['title_vi']}\n\n{exercise['description_vi']}\n\n## Test\n\n```powershell\n{exercise['test_command']}\n```\n",
+            f"# {exercise['title_vi']}\n\n{exercise['description_vi']}\n\n## Test\n\n```powershell\n{exercise['test_command']}\n```\n{exercise_contract}",
             encoding="utf-8",
         )
         repaired = True
+    else:
+        try:
+            readme_text = readme.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            readme_text = ""
+        if "## Exercise contract" not in readme_text:
+            readme.write_text(readme_text.rstrip() + exercise_contract + "\n", encoding="utf-8")
+            repaired = True
     return repaired
 
 
@@ -748,6 +938,92 @@ def open_workspace(workspace_id: int) -> dict[str, Any]:
     except OSError as error:
         return {"opened": False, "path": workspace["path"], "message": str(error)}
     return {"opened": True, "path": workspace["path"]}
+
+
+def workspace_row(workspace_id: int) -> sqlite3.Row:
+    with connect() as db:
+        row = db.execute(
+            """SELECT w.*,e.slug AS exercise_slug,e.title_vi,e.description_vi,e.starter_code,e.test_command
+            FROM workspaces w JOIN exercises e ON e.id=w.exercise_id WHERE w.id=?""",
+            (workspace_id,),
+        ).fetchone()
+    if not row:
+        raise HTTPException(404, "Workspace not found")
+    workspace_root = WORKSPACE_ROOT.resolve()
+    workspace_path = Path(row["path"]).resolve()
+    if workspace_root not in workspace_path.parents or workspace_path == workspace_root:
+        raise HTTPException(400, "Invalid workspace path")
+    if workspace_path.exists() and not workspace_path.is_dir():
+        raise HTTPException(409, "Workspace path is not a directory")
+    return row
+
+
+@app.post("/api/workspaces/{workspace_id}/open-folder")
+def open_workspace_folder(workspace_id: int) -> dict[str, Any]:
+    row = workspace_row(workspace_id)
+    workspace_path = Path(row["path"]).resolve()
+    try:
+        workspace_path.mkdir(parents=True, exist_ok=True)
+        if os.name == "nt":
+            subprocess.Popen(["explorer.exe", str(workspace_path)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, **SUBPROCESS_OPTIONS)
+        else:
+            opener = shutil.which("xdg-open") or shutil.which("open")
+            if not opener:
+                return {"opened": False, "path": str(workspace_path), "message": "No folder opener was found; open this path manually."}
+            subprocess.Popen([opener, str(workspace_path)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, **SUBPROCESS_OPTIONS)
+    except OSError as error:
+        return {"opened": False, "path": str(workspace_path), "message": str(error)}
+    return {"opened": True, "path": str(workspace_path)}
+
+
+def safe_file_contains_secret(path: Path) -> bool:
+    try:
+        text = path.read_bytes().decode("utf-8", errors="ignore")
+    except OSError:
+        return False
+    return contains_secret(text)
+
+
+@app.post("/api/workspaces/{workspace_id}/export")
+def export_workspace(workspace_id: int) -> dict[str, Any]:
+    row = workspace_row(workspace_id)
+    workspace_path = Path(row["path"]).resolve()
+    try:
+        ensure_workspace_files(workspace_path, row)
+    except OSError as error:
+        raise HTTPException(500, f"Could not prepare workspace: {error}") from error
+
+    files, skipped = scan_workspace_files(workspace_path)
+    secret_files = [path.relative_to(workspace_path).as_posix() for path in files if safe_file_contains_secret(path)]
+    if secret_files:
+        raise HTTPException(422, {"message": "Artifact contains a possible secret; remove it before exporting.", "secret_files": secret_files})
+
+    exercise_slug = row["exercise_slug"]
+    require_slug(exercise_slug)
+    target_root = (PROJECT_ROOT / "exercises" / exercise_slug).resolve()
+    exercises_root = (PROJECT_ROOT / "exercises").resolve()
+    if exercises_root not in target_root.parents:
+        raise HTTPException(400, "Invalid artifact path")
+    try:
+        target_root.mkdir(parents=True, exist_ok=True)
+        copied: list[str] = []
+        for source in files:
+            relative = source.relative_to(workspace_path)
+            target = (target_root / relative).resolve()
+            if target_root not in target.parents and target != target_root:
+                raise HTTPException(400, "Invalid workspace file path")
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source, target)
+            copied.append(relative.as_posix())
+    except OSError as error:
+        raise HTTPException(500, f"Could not export workspace: {error}") from error
+    return {
+        "workspace_id": workspace_id,
+        "artifact_path": target_root.relative_to(PROJECT_ROOT).as_posix(),
+        "files": copied,
+        "skipped": skipped,
+        "secret_files": [],
+    }
 
 
 @app.post("/api/workspaces/{workspace_id}/run")
@@ -919,6 +1195,108 @@ def suggested_commit() -> dict[str, Any]:
     else:
         message = "learn: update journey artifacts"
     return {"message": message, "files": paths, "requires_confirmation": True}
+
+
+@app.post("/api/git/publish")
+def publish_git(payload: GitPublishRequest) -> dict[str, Any]:
+    """Commit and push explicitly selected learning artifacts.
+
+    The endpoint deliberately accepts only learner-owned artifact roots and refuses to
+    touch an already staged worktree. This keeps an exercise publish from accidentally
+    committing application code or an unrelated change.
+    """
+
+    if not payload.confirm:
+        raise HTTPException(400, "Review the diff and confirm before publishing to GitHub.")
+    message = payload.message.strip()
+    if len(message) < 5:
+        raise HTTPException(400, "Commit message must contain at least five non-space characters")
+    if "\n" in message or "\r" in message or "\x00" in message:
+        raise HTTPException(400, "Commit message must be a single line")
+
+    root_check = run_git(["rev-parse", "--show-toplevel"])
+    if root_check.returncode != 0:
+        raise HTTPException(409, "This folder is not a Git repository")
+
+    normalized: list[str] = []
+    candidates: list[Path] = []
+    for raw_path in payload.paths:
+        candidate, relative = project_relative_path(raw_path)
+        if relative in normalized:
+            raise HTTPException(400, "Duplicate artifact path")
+        if not candidate.exists():
+            raise HTTPException(404, f"Artifact path does not exist: {relative}")
+        normalized.append(relative)
+        candidates.append(candidate)
+
+    staged_before = run_git(["diff", "--cached", "--name-only"])
+    if staged_before.returncode != 0:
+        raise HTTPException(500, redact_secrets(staged_before.stderr or "Could not inspect the Git index"))
+    if staged_before.stdout.strip():
+        raise HTTPException(409, "The Git index already contains staged changes; review and clear them first.")
+
+    secret_files: list[str] = []
+    for candidate in candidates:
+        paths = [candidate] if candidate.is_file() else [path for path in candidate.rglob("*") if path.is_file()]
+        for path in paths:
+            relative_parts = path.relative_to(PROJECT_ROOT).parts
+            if path.is_symlink() or any(part in WORKSPACE_IGNORES or part.startswith(".env") for part in relative_parts) or path.suffix.lower() in {".db", ".sqlite", ".sqlite3"}:
+                raise HTTPException(400, f"Artifact contains a blocked file: {path.relative_to(PROJECT_ROOT).as_posix()}")
+            if safe_file_contains_secret(path):
+                secret_files.append(path.relative_to(PROJECT_ROOT).as_posix())
+    if secret_files:
+        raise HTTPException(422, {"message": "Artifact contains a possible secret; remove it before publishing.", "secret_files": sorted(secret_files)})
+
+    add_result = run_git(["add", "--", *normalized])
+    if add_result.returncode != 0:
+        raise HTTPException(500, redact_secrets(add_result.stderr or "Git add failed"))
+
+    def reset_selected_paths() -> None:
+        run_git(["reset", "--", *normalized])
+
+    staged_paths_result = run_git(["diff", "--cached", "--name-only"])
+    staged_paths = [line.strip().replace("\\", "/") for line in staged_paths_result.stdout.splitlines() if line.strip()]
+    unexpected = [
+        path for path in staged_paths
+        if not any(path == requested or path.startswith(requested.rstrip("/") + "/") for requested in normalized)
+    ]
+    if staged_paths_result.returncode != 0 or unexpected or not staged_paths:
+        reset_selected_paths()
+        raise HTTPException(409, "Git staged files do not match the selected artifact paths.")
+
+    cached_diff = run_git(["diff", "--cached", "--binary"])
+    if cached_diff.returncode != 0 or contains_secret(cached_diff.stdout or ""):
+        reset_selected_paths()
+        raise HTTPException(422, "The staged artifact looks like it contains a secret; nothing was committed.")
+
+    commit_result = run_git(["commit", "-m", message])
+    if commit_result.returncode != 0:
+        reset_selected_paths()
+        raise HTTPException(409, redact_secrets(commit_result.stderr or "Git commit failed"))
+
+    branch_result = run_git(["branch", "--show-current"])
+    branch = branch_result.stdout.strip()
+    if not branch:
+        raise HTTPException(409, "The repository is in detached HEAD; choose a branch before pushing.")
+    remote_result = run_git(["remote", "get-url", "origin"])
+    remote = redact_secrets(remote_result.stdout.strip())
+    if remote_result.returncode != 0 or not remote:
+        raise HTTPException(409, "GitHub remote 'origin' is not configured; the commit was kept locally.")
+    commit_hash_result = run_git(["rev-parse", "--short", "HEAD"])
+    commit_hash = commit_hash_result.stdout.strip() or "unknown"
+    push_result = run_git(["push", "origin", branch], timeout=60)
+    if push_result.returncode != 0:
+        detail = redact_secrets((push_result.stderr or push_result.stdout or "Git push failed").strip())
+        raise HTTPException(502, f"Commit {commit_hash} was created locally, but push failed: {detail}")
+    return {
+        "committed": True,
+        "pushed": True,
+        "commit": commit_hash,
+        "branch": branch,
+        "remote": remote,
+        "files": staged_paths,
+        "message": message,
+    }
 
 
 @app.post("/api/journal/export")

@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { api, type AppSettings, type Dashboard, type Exercise, type Lesson } from './api'
 import './App.css'
 import './typography.css'
+import './learning-workflow.css'
 
 type View = 'dashboard' | 'roadmap' | 'review' | 'exercises' | 'tools' | 'journal' | 'settings'
 type ContextExport = { path: string; content: string }
@@ -160,8 +161,17 @@ function LessonDetail({ lesson, language, onProgress, onOpenLesson, onOpenExerci
   const [checklistNudge, setChecklistNudge] = useState(false)
   const [progressError, setProgressError] = useState('')
   const vi = language === 'vi'
+  const detailRef = useRef<HTMLDivElement>(null)
+  const guide = lesson.guide ?? lesson
+  const studySteps = vi ? guide.study_steps_vi : guide.study_steps_en
+  const practicePlan = guide.practice_plan?.[vi ? 'vi' : 'en']
+  const interviewQuestions = vi ? guide.interview_questions?.vi ?? [] : guide.interview_questions?.en ?? []
   const completedCount = checked.filter(Boolean).length
   const checklistComplete = completedCount === lesson.checklist.length
+  useEffect(() => {
+    detailRef.current?.parentElement?.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+    detailRef.current?.focus({ preventScroll: true })
+  }, [lesson.slug])
   useEffect(() => {
     try {
       window.localStorage.setItem('journey-checklist:' + lesson.slug, JSON.stringify(checked))
@@ -199,7 +209,7 @@ function LessonDetail({ lesson, language, onProgress, onOpenLesson, onOpenExerci
       setProgressError(vi ? 'Chưa lưu được tiến độ. Hãy kiểm tra backend rồi thử lại.' : 'Progress was not saved. Check the backend and try again.')
     }
   }
-  return <div className="lesson-detail">
+  return <div ref={detailRef} className="lesson-detail" tabIndex={-1}>
     <span className="eyebrow accent">{vi ? lesson.phase_title_vi : lesson.phase_title_en} · {vi ? lesson.module_title_vi : lesson.module_title_en}</span>
     <h2>{vi ? lesson.title_vi : lesson.title_en}</h2>
     <p className="lead">{vi ? lesson.summary_vi : lesson.summary_en}</p>
@@ -207,6 +217,8 @@ function LessonDetail({ lesson, language, onProgress, onOpenLesson, onOpenExerci
     <div className="lesson-evidence"><div className="section-heading"><strong>{vi ? 'Bằng chứng đã làm' : 'Evidence completed'}</strong><span>{completedCount}/{lesson.checklist.length}</span></div><div className="session-progress" role="progressbar" aria-label={vi ? 'Tiến độ checklist lesson' : 'Lesson checklist progress'} aria-valuemin={0} aria-valuemax={lesson.checklist.length} aria-valuenow={completedCount}><span style={{ width: String(lesson.checklist.length ? Math.round((completedCount / lesson.checklist.length) * 100) : 0) + '%' }} /></div><small>{vi ? 'Hoàn thiện checklist trước khi đánh dấu lesson để tránh học lướt.' : 'Finish the checklist before marking the lesson complete.'}</small></div>
     <div className="detail-section"><h4>{vi ? 'Mục tiêu đầu ra' : 'Learning outcomes'}</h4><ul>{lesson.objectives[language].map((item) => <li key={item}>{item}</li>)}</ul></div>
     <div className="detail-section"><h4>{vi ? 'Giải thích cốt lõi' : 'Concept notes'}</h4><p className="concept-notes">{vi ? lesson.concept_notes_vi : lesson.concept_notes_en}</p>{lesson.formulas.length > 0 && <div className="formula-list">{lesson.formulas.map((formula) => <code key={formula}>{formula}</code>)}</div>}</div>
+    <section className="lesson-playbook" aria-labelledby="lesson-playbook-title"><div className="playbook-intro"><span className="eyebrow accent">LEARNING PLAYBOOK</span><h4 id="lesson-playbook-title">{vi ? 'Học theo một quy trình có thể lặp lại' : 'Follow a repeatable study process'}</h4><p>{vi ? guide.why_it_matters_vi : guide.why_it_matters_en}</p></div><ol className="study-step-list">{studySteps.map((step, index) => <li key={step}><span>{String(index + 1).padStart(2, '0')}</span><p>{step}</p></li>)}</ol><div className="practice-plan-grid"><article className="practice-plan"><span className="eyebrow">PRACTICE</span><strong>{practicePlan?.task}</strong><h5>{vi ? 'Bằng chứng cần lưu' : 'Evidence to save'}</h5><ul>{(practicePlan?.deliverables ?? []).map((item) => <li key={item}>{item}</li>)}</ul></article><article className="practice-plan checkpoint"><span className="eyebrow">CHECKPOINT</span><strong>{practicePlan?.checkpoint}</strong><h5>{vi ? 'Thử thách thêm' : 'Stretch task'}</h5><p>{practicePlan?.stretch}</p></article></div><div className="interview-questions"><h5>{vi ? 'Câu hỏi phỏng vấn cần tự trả lời' : 'Interview questions to answer aloud'}</h5><ul>{interviewQuestions.map((question) => <li key={question}>{question}</li>)}</ul></div></section>
+    <div className="detail-section rich-resources"><h4>{vi ? 'Tài liệu có hướng dẫn đọc' : 'Guided resources'}</h4><div className="rich-resource-list">{lesson.resources.map((resource, index) => resource.kind === 'in_app' || !resource.url ? <article className="lesson-resource resource-internal" key={`${resource.title}-${index}`}><div className="resource-heading"><span className="resource-language">{resource.language === 'en' ? 'EN' : 'VI'}</span><strong>{resource.title}</strong><span className="resource-required">{vi ? 'Đọc trong app' : 'In-app'}</span></div><p>{vi ? resource.purpose_vi : resource.purpose_en}</p><small>{vi ? resource.read_vi : resource.read_en}</small></article> : <a className="lesson-resource resource-link" href={resource.url} target="_blank" rel="noreferrer" key={`${resource.url}-${index}`}><div className="resource-heading"><span className="resource-language">{resource.language === 'en' ? 'EN' : 'VI'}</span><strong>{resource.title}</strong>{resource.required && <span className="resource-required">{vi ? 'Bắt buộc' : 'Required'}</span>}</div><p>{vi ? resource.purpose_vi : resource.purpose_en}</p><small>{vi ? resource.read_vi : resource.read_en}</small><code className="resource-url">{resource.url}</code><b>Mở tài liệu ↗</b></a>)}</div></div>
     <div className="detail-section"><h4>Code example</h4>{lesson.code_examples.map((example) => <div className="code-example" key={example.title}><strong>{example.title}</strong><pre><code>{example.code}</code></pre><p className="muted">{vi ? example.explanation_vi : example.explanation_en}</p></div>)}</div>
     <div className="detail-section"><h4>{vi ? 'Prerequisites và tiêu chí hoàn thành' : 'Prerequisites and completion criteria'}</h4>{lesson.prerequisites.length > 0 && <ul>{lesson.prerequisites.map((item) => <li key={item}>{item}</li>)}</ul>}<ul>{lesson.completion_criteria.map((item) => <li key={item}>{item}</li>)}</ul></div>
     <div className="detail-section"><h4>{vi ? 'Lỗi thường gặp' : 'Common mistakes'}</h4><ul>{lesson.common_mistakes.map((item) => <li key={item}>{item}</li>)}</ul></div>
@@ -235,9 +247,11 @@ function ReviewView({ reviews, onAnswer, onOpenLesson }: { reviews: any[]; onAns
 }
 
 function WeakTopics({ topics, onOpenLesson }: { topics: any[]; onOpenLesson: (slug: string) => void }) { return <section className="section-card weak-topics"><div className="section-heading"><h3>Chủ đề cần quay lại</h3><span className="tag">Weak topics</span></div>{topics.slice(0, 6).map((topic) => <p key={topic.lesson_slug}><button className="text-button" onClick={() => onOpenLesson(topic.lesson_slug)} aria-label={`Mở lại lesson ${topic.title_vi}`}><strong>{topic.title_vi}</strong></button> · {topic.hard_attempts}/{topic.attempts} lần hard/again</p>)}</section> }
+
 function ExercisesView({ exercises, onRefresh }: { exercises: Exercise[]; onRefresh: () => Promise<void> }) {
   const [running, setRunning] = useState<number | null>(null)
   const [preparing, setPreparing] = useState<number | null>(null)
+  const [working, setWorking] = useState<number | null>(null)
   const [output, setOutput] = useState('')
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
@@ -245,54 +259,88 @@ function ExercisesView({ exercises, onRefresh }: { exercises: Exercise[]; onRefr
   const [difficulty, setDifficulty] = useState('all')
   const [history, setHistory] = useState<Record<number, any[]>>({})
   const [historyFor, setHistoryFor] = useState<number | null>(null)
+  const [workspaceIds, setWorkspaceIds] = useState<Record<number, number>>({})
+  const [exportedPaths, setExportedPaths] = useState<Record<number, string>>({})
+  const [publishTarget, setPublishTarget] = useState<{ exercise: Exercise; path: string } | null>(null)
+  const [publishMessage, setPublishMessage] = useState('')
+  const [publishConfirmed, setPublishConfirmed] = useState(false)
+  const [publishing, setPublishing] = useState(false)
+
   const visibleExercises = exercises.filter((exercise) => {
     const matchesQuery = `${exercise.title_vi} ${exercise.title_en} ${exercise.description_vi}`.toLowerCase().includes(query.toLowerCase())
     return matchesQuery && (difficulty === 'all' || exercise.difficulty.toLowerCase() === difficulty)
   })
+  const workspaceIdFor = (exercise: Exercise) => workspaceIds[exercise.id] ?? exercise.workspace_id ?? null
+  const clearMessages = () => { setError(''); setNotice('') }
+  const ensureWorkspace = async (exercise: Exercise) => {
+    const result = await api.createWorkspace(exercise.slug)
+    setWorkspaceIds((current) => ({ ...current, [exercise.id]: result.workspace.id }))
+    await onRefresh()
+    return result.workspace
+  }
   const prepare = async (exercise: Exercise) => {
-    setPreparing(exercise.id)
-    setError('')
-    setNotice('')
+    setPreparing(exercise.id); clearMessages()
     try {
-      const result = await api.createWorkspace(exercise.slug)
-      const open = await api.openWorkspace(result.workspace.id)
-      if (!open.opened) setNotice(`${open.message ?? 'Mở VS Code thủ công'}\n${open.path}`)
-      await onRefresh()
+      const workspace = await ensureWorkspace(exercise)
+      const opened = await api.openWorkspace(workspace.id)
+      setNotice(opened.opened ? `VS Code đang mở: ${opened.path}` : `${opened.message ?? 'Mở VS Code thủ công'}\n${opened.path}`)
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'Không tạo hoặc mở được workspace.')
-    } finally {
-      setPreparing(null)
-    }
+    } finally { setPreparing(null) }
   }
-  const loadHistory = async (exercise: Exercise) => {
-    if (!exercise.workspace_id) return
+  const openFolder = async (exercise: Exercise) => {
+    setWorking(exercise.id); clearMessages()
     try {
-      const result = await api.workspaceRuns(exercise.workspace_id)
+      const id = workspaceIdFor(exercise) ?? (await ensureWorkspace(exercise)).id
+      const opened = await api.openFolder(id)
+      setNotice(opened.opened ? `Đã mở thư mục: ${opened.path}` : `${opened.message ?? 'Mở thư mục thủ công'}\n${opened.path}`)
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'Không mở được thư mục workspace.')
+    } finally { setWorking(null) }
+  }
+  const loadHistory = async (exercise: Exercise, id = workspaceIdFor(exercise)) => {
+    if (!id) return
+    try {
+      const result = await api.workspaceRuns(id)
       setHistory((current) => ({ ...current, [exercise.id]: result.runs }))
       setHistoryFor(exercise.id)
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : 'Không tải được lịch sử chạy bài.')
-    }
+    } catch (cause) { setError(cause instanceof Error ? cause.message : 'Không tải được lịch sử chạy bài.') }
   }
   const run = async (exercise: Exercise) => {
-    if (!exercise.workspace_id) {
-      await prepare(exercise)
-      return
-    }
-    setRunning(exercise.id)
-    setError('')
-    setNotice('')
+    setRunning(exercise.id); clearMessages()
     try {
-      const result = await api.runWorkspace(exercise.workspace_id)
+      const id = workspaceIdFor(exercise) ?? (await ensureWorkspace(exercise)).id
+      const result = await api.runWorkspace(id)
       setOutput(`${result.status.toUpperCase()} · ${result.duration_ms}ms\n\n${result.output}`)
-      await loadHistory(exercise)
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : 'Không chạy được bài tập.')
-    } finally {
-      setRunning(null)
-    }
+      await loadHistory(exercise, id)
+    } catch (cause) { setError(cause instanceof Error ? cause.message : 'Không chạy được bài tập.') }
+    finally { setRunning(null) }
   }
-  return <div><div className="page-intro"><div><span className="eyebrow accent">PRACTICE LAB</span><h2>Bài tập để biến<br /><em>kiến thức thành cơ.</em></h2></div><p>Mỗi module có một workspace riêng. Viết code, chạy test và để Git ghi lại quá trình trưởng thành của bạn.</p></div><div className="filter-bar"><input aria-label="Tìm bài tập" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Tìm bài tập..." /><select aria-label="Lọc theo độ khó" value={difficulty} onChange={(event) => setDifficulty(event.target.value)}><option value="all">Mọi độ khó</option><option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option></select><span className="muted">{visibleExercises.length}/{exercises.length} bài</span></div>{notice && <p className="success-note" role="status">{notice}</p>}{error && <p className="warning-note" role="alert">{error}</p>}<div className="exercise-grid">{visibleExercises.map((exercise) => <article className="exercise-card" key={exercise.slug}><div className="exercise-top"><span className="tag">{exercise.difficulty}</span><span>{exercise.estimated_minutes} phút</span></div><h3>{exercise.title_vi}</h3><p>{exercise.description_vi}</p><div className="exercise-actions"><button className="secondary-button" disabled={preparing !== null || running !== null} onClick={() => void prepare(exercise)}>{preparing === exercise.id ? 'Đang mở…' : exercise.workspace_id ? 'Mở workspace' : 'Tạo workspace'}</button><button className="icon-button" aria-label="Chạy bài tập" disabled={preparing !== null || running !== null} onClick={() => void run(exercise)}>{running === exercise.id ? '…' : '▶'}</button><button className="text-button" onClick={() => void loadHistory(exercise)}>Lịch sử</button></div>{exercise.workspace_path && <small className="path-label">{exercise.workspace_path}</small>}{historyFor === exercise.id && <div className="run-history">{history[exercise.id]?.length ? history[exercise.id].slice(0, 5).map((runItem) => <p key={runItem.id}><strong>{runItem.status}</strong> · {runItem.duration_ms}ms · {new Date(runItem.created_at).toLocaleString()}</p>) : <p className="muted">Chưa có lần chạy.</p>}</div>}</article>)}</div>{output && <pre className="run-output">{output}</pre>}</div>
+  const exportArtifact = async (exercise: Exercise) => {
+    setWorking(exercise.id); clearMessages()
+    try {
+      const id = workspaceIdFor(exercise) ?? (await ensureWorkspace(exercise)).id
+      const result = await api.exportWorkspace(id)
+      setExportedPaths((current) => ({ ...current, [exercise.id]: result.artifact_path }))
+      setPublishTarget({ exercise, path: result.artifact_path })
+      setPublishMessage(`learn(${exercise.slug}): save practice evidence`)
+      setPublishConfirmed(false)
+      setNotice(`Đã lưu artifact vào ${result.artifact_path}. Hãy review diff trước khi push.`)
+    } catch (cause) { setError(cause instanceof Error ? cause.message : 'Không lưu được artifact an toàn.') }
+    finally { setWorking(null) }
+  }
+  const publishArtifact = async () => {
+    if (!publishTarget || publishMessage.trim().length < 5 || !publishConfirmed) return
+    setPublishing(true); clearMessages()
+    try {
+      const result = await api.publishGit({ paths: [publishTarget.path], message: publishMessage.trim(), confirm: true })
+      setNotice(`Đã push ${result.commit} lên ${result.remote} (${result.branch}).`)
+      setPublishTarget(null); setPublishConfirmed(false); setPublishMessage('')
+      await onRefresh()
+    } catch (cause) { setError(cause instanceof Error ? cause.message : 'Không push được GitHub. Commit local vẫn cần được kiểm tra.') }
+    finally { setPublishing(false) }
+  }
+  return <div><div className="page-intro"><div><span className="eyebrow accent">PRACTICE LAB</span><h2>Bài tập để biến<br /><em>kiến thức thành cơ.</em></h2></div><p>Mỗi module có một workspace riêng. Viết code trong VS Code, lưu bằng Ctrl+S, chạy test, rồi xuất artifact để review trước khi push GitHub.</p></div><div className="workspace-flow"><div><span>01</span><strong>Mở VS Code</strong><small>Sửa đúng thư mục workspace</small></div><div><span>02</span><strong>Chạy test</strong><small>Đọc output và sửa lỗi</small></div><div><span>03</span><strong>Lưu artifact</strong><small>Copy bản sạch vào exercises/</small></div><div><span>04</span><strong>Review & push</strong><small>Chỉ push sau khi xác nhận</small></div></div><div className="filter-bar"><input aria-label="Tìm bài tập" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Tìm bài tập..." /><select aria-label="Lọc theo độ khó" value={difficulty} onChange={(event) => setDifficulty(event.target.value)}><option value="all">Mọi độ khó</option><option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option></select><span className="muted">{visibleExercises.length}/{exercises.length} bài</span></div>{notice && <p className="success-note" role="status">{notice}</p>}{error && <p className="warning-note" role="alert">{error}</p>}<div className="exercise-grid">{visibleExercises.map((exercise) => { const id = workspaceIdFor(exercise); const exported = exportedPaths[exercise.id]; return <article className="exercise-card" key={exercise.slug}><div className="exercise-top"><span className="tag">{exercise.difficulty}</span><span>{exercise.estimated_minutes} phút</span></div><h3>{exercise.title_vi}</h3><p>{exercise.description_vi}</p><div className="exercise-actions workspace-actions"><button className="secondary-button" disabled={preparing !== null || running !== null || working !== null} onClick={() => void prepare(exercise)}>{preparing === exercise.id ? 'Đang mở…' : id ? 'Mở VS Code' : 'Tạo & mở VS Code'}</button><button className="text-button" disabled={working !== null} onClick={() => void openFolder(exercise)}>Mở thư mục</button><button className="secondary-button" disabled={preparing !== null || running !== null || working !== null} onClick={() => void run(exercise)}>{running === exercise.id ? 'Đang chạy…' : 'Chạy test'}</button><button className="text-button" disabled={working !== null} onClick={() => void exportArtifact(exercise)}>Lưu artifact</button><button className="text-button" onClick={() => void loadHistory(exercise)}>Lịch sử</button></div>{exercise.workspace_path && <small className="path-label">Workspace: {exercise.workspace_path}</small>}{exported && <p className="artifact-path">Artifact: <code>{exported}</code></p>}{historyFor === exercise.id && <div className="run-history">{history[exercise.id]?.length ? history[exercise.id].slice(0, 5).map((runItem) => <p key={runItem.id}><strong>{runItem.status}</strong> · {runItem.duration_ms}ms · {new Date(runItem.created_at).toLocaleString()}</p>) : <p className="muted">Chưa có lần chạy.</p>}</div>}</article> })}</div>{output && <pre className="run-output">{output}</pre>}{publishTarget && <section className="publish-panel" aria-labelledby="publish-title"><div className="section-heading"><div><span className="eyebrow accent">GITHUB CHECKPOINT</span><h3 id="publish-title">Review rồi mới push</h3></div><button className="text-button" onClick={() => { setPublishTarget(null); setPublishConfirmed(false) }}>Hủy</button></div><p>Artifact đã được copy vào <code>{publishTarget.path}</code>. Mở Journal & Git để xem diff, sau đó dùng nút này khi bạn đã tự đọc thay đổi.</p><label>Commit message<input value={publishMessage} onChange={(event) => setPublishMessage(event.target.value)} maxLength={120} /></label><pre className="publish-preview">git add {publishTarget.path}{'\n'}git commit -m "{publishMessage || 'your message'}"{'\n'}git push origin &lt;current-branch&gt;</pre><label className="publish-confirm"><input type="checkbox" checked={publishConfirmed} onChange={(event) => setPublishConfirmed(event.target.checked)} /> Tôi đã review diff và muốn push artifact này lên GitHub.</label><button className="primary-button" disabled={publishing || !publishConfirmed || publishMessage.trim().length < 5} onClick={() => void publishArtifact()}>{publishing ? 'Đang push…' : 'Xác nhận & push GitHub'}</button></section>}</div>
 }
 
 function ToolsView({ tools }: { tools: any[] }) {

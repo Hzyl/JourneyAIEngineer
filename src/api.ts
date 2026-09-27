@@ -30,6 +30,13 @@ export type PortfolioProject = {
   estimated_weeks: number
 }
 
+export type LessonPracticePlan = {
+  vi?: { task?: string; deliverables?: string[]; checkpoint?: string; stretch?: string }
+  en?: { task?: string; deliverables?: string[]; checkpoint?: string; stretch?: string }
+}
+
+export type LessonInterviewQuestions = { vi?: string[]; en?: string[] }
+
 export type Lesson = {
   slug: string
   title_vi: string
@@ -45,7 +52,17 @@ export type Lesson = {
   concept_notes_en: string
   formulas: string[]
   code_examples: Array<{ language: string; title: string; code: string; explanation_vi: string; explanation_en: string }>
-  resources: Array<{ title: string; url: string; language: string }>
+  resources: Array<{
+    title: string
+    url: string
+    language: string
+    kind?: 'official' | 'in_app'
+    required?: boolean
+    purpose_vi?: string
+    purpose_en?: string
+    read_vi?: string
+    read_en?: string
+  }>
   checklist: string[]
   completion_checklist: string[]
   completion_criteria: string[]
@@ -62,6 +79,20 @@ export type Lesson = {
   module_title_en: string
   reviews: Array<{ id: number; question_vi: string; question_en: string; answer_vi: string; answer_en: string }>
   exercises: Exercise[]
+  why_it_matters_vi: string
+  why_it_matters_en: string
+  study_steps_vi: string[]
+  study_steps_en: string[]
+  practice_plan: LessonPracticePlan
+  interview_questions: LessonInterviewQuestions
+  guide?: {
+    why_it_matters_vi: string
+    why_it_matters_en: string
+    study_steps_vi: string[]
+    study_steps_en: string[]
+    practice_plan: LessonPracticePlan
+    interview_questions: LessonInterviewQuestions
+  }
 }
 
 export type Exercise = {
@@ -77,6 +108,24 @@ export type Exercise = {
   workspace_id?: number | null
   workspace_path?: string | null
   hints: string[]
+}
+
+export type WorkspaceExport = {
+  workspace_id: number
+  artifact_path: string
+  files: string[]
+  skipped: string[]
+  secret_files: string[]
+}
+
+export type GitPublishResult = {
+  committed: boolean
+  pushed: boolean
+  commit: string
+  branch: string
+  remote: string
+  files: string[]
+  message: string
 }
 
 export type AppSettings = {
@@ -121,6 +170,8 @@ export const api = {
   exercises: () => request<{ exercises: Exercise[] }>('/exercises'),
   createWorkspace: (slug: string) => request<{ workspace: { id: number; path: string }; created: boolean }>(`/exercises/${slug}/workspace`, { method: 'POST' }),
   openWorkspace: (id: number) => request<{ opened: boolean; path: string; message?: string }>(`/workspaces/${id}/open`, { method: 'POST' }),
+  openFolder: (id: number) => request<{ opened: boolean; path: string; message?: string }>(`/workspaces/${id}/open-folder`, { method: 'POST' }),
+  exportWorkspace: (id: number) => request<WorkspaceExport>(`/workspaces/${id}/export`, { method: 'POST' }),
   runWorkspace: (id: number) => request<{ status: string; output: string; duration_ms: number }>(`/workspaces/${id}/run`, { method: 'POST' }),
   workspaceRuns: (id: number) => request<{ runs: Array<any>; count: number }>(`/workspaces/${id}/runs`),
   tools: () => request<{ tools: Array<any> }>('/tools'),
@@ -131,6 +182,7 @@ export const api = {
   gitStatus: () => request<{ root: string; branch: string; status: string; remote: string; last_commit: string }>('/git/status'),
   gitDiff: () => request<{ diff: string }>('/git/diff'),
   suggestedCommit: () => request<{ message: string; files: string[]; requires_confirmation: boolean }>('/git/suggested-commit'),
+  publishGit: (payload: { paths: string[]; message: string; confirm: boolean }) => request<GitPublishResult>('/git/publish', { method: 'POST', body: JSON.stringify(payload) }),
   exportJournal: () => request<{ path: string; week: string }>('/journal/export', { method: 'POST' }),
   exportContext: (payload: { lesson_slug?: string; exercise_slug?: string; question: string }) => request<{ path: string; content: string }>('/context/export', { method: 'POST', body: JSON.stringify(payload) }),
 }

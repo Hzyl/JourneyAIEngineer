@@ -16,6 +16,17 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 CURRICULUM_PATH = ROOT / "content" / "curriculum.json"
 OUTPUT_PATH = ROOT / "content" / "lessons.json"
+MODULE_GUIDES_PATH = ROOT / "content" / "module_guides.json"
+
+
+def load_module_guides() -> dict[str, dict[str, Any]]:
+    if not MODULE_GUIDES_PATH.exists():
+        return {}
+    payload = json.loads(MODULE_GUIDES_PATH.read_text(encoding="utf-8"))
+    return payload.get("modules", {})
+
+
+MODULE_GUIDES = load_module_guides()
 
 
 TOPIC_EN = {
@@ -215,6 +226,133 @@ RESOURCE_BY_PHASE: dict[int, list[dict[str, str]]] = {
 }
 
 
+SPECIFIC_RESOURCES: list[tuple[tuple[str, ...], dict[str, str]]] = [
+    (("cài python", "python"), {"title": "Python downloads", "url": "https://www.python.org/downloads/", "language": "en", "purpose_vi": "Trang tải Python chính thức; dùng để cài đúng bản stable.", "read_vi": "Chọn Windows installer 64-bit, kiểm tra Add Python to PATH và xác nhận bằng python --version.", "purpose_en": "Official Python downloads; use it to install a stable release.", "read_en": "Choose the 64-bit Windows installer, enable PATH, and verify with python --version."}),
+    (("vs code", "terminal"), {"title": "VS Code Getting Started", "url": "https://code.visualstudio.com/docs/getstarted/getting-started", "language": "en", "purpose_vi": "Hướng dẫn chính thức để mở folder, terminal và workspace.", "read_vi": "Đọc phần mở folder và integrated terminal trước khi làm exercise.", "purpose_en": "Official guide for folders, terminals, and workspaces.", "read_en": "Read the folder and integrated-terminal sections before the exercise."}),
+    (("virtual environment", "venv"), {"title": "Python venv", "url": "https://docs.python.org/3/library/venv.html", "language": "en", "purpose_vi": "Tài liệu chính thức cho môi trường phụ thuộc tách biệt.", "read_vi": "Tập trung vào tạo, activate, deactivate và cách kiểm tra interpreter.", "purpose_en": "Official reference for isolated Python environments.", "read_en": "Focus on create, activate, deactivate, and interpreter verification."}),
+    (("jupyter", "colab"), {"title": "Jupyter Documentation", "url": "https://docs.jupyter.org/en/latest/", "language": "en", "purpose_vi": "Hiểu notebook, kernel và lúc nào notebook phù hợp.", "read_vi": "Đọc phần bắt đầu rồi so sánh notebook với package Python trong workspace.", "purpose_en": "Understand notebooks, kernels, and when notebooks fit.", "read_en": "Read the getting-started section and compare notebooks with a Python package."}),
+    (("pytest", "test boundary"), {"title": "pytest Getting Started", "url": "https://docs.pytest.org/en/stable/getting-started.html", "language": "en", "purpose_vi": "Viết test dễ đọc và chạy được từ terminal.", "read_vi": "Đọc test discovery, assert và fixture cơ bản.", "purpose_en": "Write readable tests that run from a terminal.", "read_en": "Read test discovery, assertions, and basic fixtures."}),
+    (("exception", "logging"), {"title": "Python logging", "url": "https://docs.python.org/3/library/logging.html", "language": "en", "purpose_vi": "Ghi context có cấu trúc khi debug và chạy production.", "read_vi": "Đọc levels, logger, handler; không log secret hoặc dữ liệu PII.", "purpose_en": "Add structured context for debugging and production.", "read_en": "Read levels, loggers, and handlers; never log secrets or PII."}),
+    (("csv", "json"), {"title": "Python CSV and JSON", "url": "https://docs.python.org/3/library/csv.html", "language": "en", "purpose_vi": "Đọc/ghi dữ liệu tabular và cấu trúc với thư viện chuẩn.", "read_vi": "Đọc dialect, DictReader/DictWriter và kiểm tra encoding.", "purpose_en": "Read and write tabular and structured data with the standard library.", "read_en": "Focus on dialects, DictReader/DictWriter, and encoding."}),
+    (("argparse", "cli"), {"title": "argparse Documentation", "url": "https://docs.python.org/3/library/argparse.html", "language": "en", "purpose_vi": "Biến script thành CLI có help và input rõ ràng.", "read_vi": "Đọc positional, optional arguments, type và error message.", "purpose_en": "Turn a script into a CLI with explicit help and inputs.", "read_en": "Read positional/optional arguments, types, and errors."}),
+    (("git add", "branch", "pull request"), {"title": "Git Book: Branching", "url": "https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell", "language": "en", "purpose_vi": "Hiểu branch, diff và commit trước khi đưa artifact lên GitHub.", "read_vi": "Đọc branch, staging area và cách review diff trước push.", "purpose_en": "Understand branches, diffs, and commits before publishing artifacts.", "read_en": "Read branches, the staging area, and reviewing a diff before push."}),
+    (("http", "rest", "json"), {"title": "MDN HTTP Overview", "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview", "language": "en", "purpose_vi": "Nắm request, response, method, status và JSON boundary.", "read_vi": "Đọc request/response cycle, status code và content type.", "purpose_en": "Learn request, response, methods, status codes, and JSON boundaries.", "read_en": "Read the request/response cycle, status codes, and content types."}),
+    (("matrix", "vector", "pca"), {"title": "NumPy Quickstart", "url": "https://numpy.org/doc/stable/user/quickstart.html", "language": "en", "purpose_vi": "Thực hành array, shape và phép toán vector bằng NumPy.", "read_vi": "Đọc array shape, indexing và broadcasting rồi in shape ở mỗi bước.", "purpose_en": "Practice arrays, shapes, and vector operations with NumPy.", "read_en": "Read array shapes, indexing, and broadcasting; print every shape."}),
+    (("probability", "bayes", "sampling", "variance"), {"title": "SciPy Statistics Reference", "url": "https://docs.scipy.org/doc/scipy/reference/stats.html", "language": "en", "purpose_vi": "Tra cứu phân phối và phép thống kê để kiểm chứng mô phỏng.", "read_vi": "Chọn một distribution, ghi tham số và so sánh lý thuyết với sample.", "purpose_en": "Reference distributions and statistics for simulation checks.", "read_en": "Choose one distribution, record parameters, and compare theory with samples."}),
+    (("gradient descent", "optimization", "maximum likelihood"), {"title": "SciPy Optimize Tutorial", "url": "https://docs.scipy.org/doc/scipy/tutorial/optimize.html", "language": "en", "purpose_vi": "Liên hệ objective, gradient và optimizer với bài toán tối ưu.", "read_vi": "Đọc minimize và callback; ghi rõ objective, điểm bắt đầu và điều kiện dừng.", "purpose_en": "Connect objectives, gradients, and optimizers to optimization problems.", "read_en": "Read minimize and callbacks; record the objective, start point, and stopping rule."}),
+    (("train validation test", "cross-validation", "metric", "calibration"), {"title": "scikit-learn Model Evaluation", "url": "https://scikit-learn.org/stable/modules/model_evaluation.html", "language": "en", "purpose_vi": "Chọn metric và cách đánh giá theo chi phí sai lầm.", "read_vi": "Đọc metric classification/regression, scorer và cross-validation.", "purpose_en": "Choose metrics and evaluation procedures based on error cost.", "read_en": "Read classification/regression metrics, scorers, and cross-validation."}),
+    (("missing data", "categorical", "preprocessing", "feature engineering"), {"title": "scikit-learn Preprocessing", "url": "https://scikit-learn.org/stable/modules/preprocessing.html", "language": "en", "purpose_vi": "Đặt imputation, encoding và scaling trong pipeline chống leakage.", "read_vi": "Đọc transformer, ColumnTransformer và fit/transform boundary.", "purpose_en": "Use leakage-safe imputation, encoding, and scaling in pipelines.", "read_en": "Read transformers, ColumnTransformer, and the fit/transform boundary."}),
+    (("tensor", "pytorch", "dataloader"), {"title": "PyTorch Fundamentals", "url": "https://pytorch.org/tutorials/beginner/basics/intro.html", "language": "en", "purpose_vi": "Học tensor, Dataset, DataLoader và training loop theo flow chính thức.", "read_vi": "Đọc data, model, autograd và optimization theo thứ tự.", "purpose_en": "Learn tensors, datasets, dataloaders, and loops from the official flow.", "read_en": "Read data, models, autograd, and optimization in that order."}),
+    (("autograd", "backward", "chain rule"), {"title": "PyTorch Autograd", "url": "https://pytorch.org/tutorials/beginner/basics/autogradqs_tutorial.html", "language": "en", "purpose_vi": "Đối chiếu gradient tự tính với computational graph.", "read_vi": "Đọc requires_grad, backward và gradient accumulation.", "purpose_en": "Compare hand-computed gradients with the computational graph.", "read_en": "Read requires_grad, backward, and gradient accumulation."}),
+    (("cnn", "image classifier", "transfer learning"), {"title": "PyTorch Transfer Learning", "url": "https://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html", "language": "en", "purpose_vi": "Xây image classifier thực tế mà không train từ đầu mù quáng.", "read_vi": "Đọc data augmentation, pretrained model và đánh giá validation.", "purpose_en": "Build a practical image classifier without blindly training from scratch.", "read_en": "Read augmentation, pretrained models, and validation evaluation."}),
+    (("fastapi", "request response", "batch inference"), {"title": "FastAPI Tutorial", "url": "https://fastapi.tiangolo.com/tutorial/", "language": "en", "purpose_vi": "Đóng gói inference thành API có schema và docs tự sinh.", "read_vi": "Đọc path operation, Pydantic body và response model.", "purpose_en": "Package inference as an API with schemas and generated docs.", "read_en": "Read path operations, Pydantic bodies, and response models."}),
+    (("docker", "compose"), {"title": "Docker Get Started", "url": "https://docs.docker.com/get-started/", "language": "en", "purpose_vi": "Đóng gói service và kiểm tra nó trong môi trường sạch.", "read_vi": "Đọc image, container, volume và health check.", "purpose_en": "Package a service and verify it in a clean environment.", "read_en": "Read images, containers, volumes, and health checks."}),
+    (("ci", "pipeline"), {"title": "GitHub Actions Documentation", "url": "https://docs.github.com/en/actions", "language": "en", "purpose_vi": "Tự động chạy quality gate trước khi merge hoặc push artifact.", "read_vi": "Đọc workflow, runner, secrets và artifact.", "purpose_en": "Automate quality gates before merging or publishing artifacts.", "read_en": "Read workflows, runners, secrets, and artifacts."}),
+    (("mlflow", "tracking", "experiment"), {"title": "MLflow Tracking", "url": "https://mlflow.org/docs/latest/ml/tracking/", "language": "en", "purpose_vi": "Lưu params, metrics, model và run metadata để tái lập.", "read_vi": "Đọc experiment, run, params, metrics và artifacts.", "purpose_en": "Store params, metrics, models, and run metadata for reproducibility.", "read_en": "Read experiments, runs, params, metrics, and artifacts."}),
+    (("tokenization", "token", "context window"), {"title": "Hugging Face Tokenizers", "url": "https://huggingface.co/docs/transformers/main/en/tokenizer_summary", "language": "en", "purpose_vi": "Đo token thật trước khi nói về context và cost.", "read_vi": "Đọc tokenizer, special tokens và truncation/padding.", "purpose_en": "Measure real tokens before reasoning about context and cost.", "read_en": "Read tokenizers, special tokens, and truncation/padding."}),
+    (("embedding", "sentence"), {"title": "Sentence Transformers", "url": "https://www.sbert.net/", "language": "en", "purpose_vi": "Tạo sentence embedding và đánh giá similarity trên câu tiếng Việt.", "read_vi": "Đọc semantic search và similarity; ghi rõ model embedding đã chọn.", "purpose_en": "Create sentence embeddings and evaluate similarity on Vietnamese text.", "read_en": "Read semantic search and similarity; record the embedding model."}),
+    (("vector search", "faiss", "reranking"), {"title": "FAISS Documentation", "url": "https://faiss.ai/", "language": "en", "purpose_vi": "Thử index và top-k retrieval trước khi thêm generation.", "read_vi": "Đọc index, distance metric và kiểm tra hit@k.", "purpose_en": "Try indexing and top-k retrieval before adding generation.", "read_en": "Read indexes, distance metrics, and hit@k evaluation."}),
+    (("rag", "citation", "hallucination", "prompt injection"), {"title": "Hugging Face NLP Course", "url": "https://huggingface.co/learn/nlp-course/chapter1/1", "language": "en", "purpose_vi": "Đặt nền tảng transformer và đánh giá an toàn cho ứng dụng NLP/LLM.", "read_vi": "Đọc chương liên quan, sau đó ghi lại assumption và failure case cho lesson.", "purpose_en": "Build transformer and safety foundations for NLP/LLM applications.", "read_en": "Read the relevant chapter, then record assumptions and failure cases."}),
+    (("github profile", "project readme", "architecture diagram"), {"title": "GitHub Documentation", "url": "https://docs.github.com/en", "language": "en", "purpose_vi": "Chuẩn hóa repo, README và artifact để người khác review được.", "read_vi": "Đọc phần README/repository và đối chiếu với portfolio của bạn.", "purpose_en": "Make repositories, READMEs, and artifacts reviewable by others.", "read_en": "Read repository and README guidance and compare it with your portfolio."}),
+]
+
+
+def resource_matches(title: str, tokens: tuple[str, ...]) -> bool:
+    lowered = title.lower()
+    return any(token in lowered for token in tokens)
+
+
+def enriched_resources(title: str, phase_resources: list[dict[str, str]]) -> list[dict[str, Any]]:
+    result: list[dict[str, Any]] = []
+    seen: set[str] = set()
+
+    def add(resource: dict[str, Any], required: bool = False) -> None:
+        key = resource.get("url") or f"internal:{resource.get('title')}"
+        if key in seen:
+            return
+        seen.add(key)
+        item = dict(resource)
+        item.setdefault("kind", "official")
+        item.setdefault("required", required)
+        item.setdefault("purpose_vi", "Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong lesson.")
+        item.setdefault("purpose_en", "Official reference to verify the lesson concept.")
+        item.setdefault("read_vi", "Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.")
+        item.setdefault("read_en", "Read the relevant section, run a small example, and record one verified insight.")
+        result.append(item)
+
+    for resource in phase_resources:
+        add(resource, required=False)
+    for tokens, resource in SPECIFIC_RESOURCES:
+        if resource_matches(title, tokens):
+            add(resource, required=True)
+            break
+    add(
+        {
+            "title": "Giải thích tiếng Việt và checklist của lesson",
+            "url": "",
+            "language": "vi",
+            "kind": "in_app",
+            "purpose_vi": "Phần giải thích, code example, checklist và tiêu chí hoàn thành ngay trong app.",
+            "purpose_en": "The explanation, code example, checklist, and completion criteria inside the app.",
+            "read_vi": "Đọc theo thứ tự Study plan → Concept notes → Code example → Practice plan.",
+            "read_en": "Follow Study plan → Concept notes → Code example → Practice plan.",
+        },
+        required=True,
+    )
+    return result
+
+
+def lesson_guide(title: str, title_en: str, module: dict[str, Any], kind: str, resources: list[dict[str, Any]]) -> dict[str, Any]:
+    guide = MODULE_GUIDES.get(module["slug"], {})
+    focus_vi = guide.get("focus_vi", f"Hiểu {title.lower()} bằng trực giác, code chạy được và bằng chứng có thể review.")
+    focus_en = guide.get("focus_en", f"Understand {title_en.lower()} through intuition, executable code, and reviewable evidence.")
+    practice_vi = guide.get("practice_vi", f"Áp dụng {title.lower()} vào một bài toán nhỏ trong workspace, rồi kiểm tra bằng test hoặc output có expected result.")
+    practice_en = guide.get("practice_en", f"Apply {title_en.lower()} to a small workspace task, then verify it with a test or an expected output.")
+    checkpoint_vi = guide.get("checkpoint_vi", "Bạn giải thích được quyết định, giả định, edge case và cách kiểm tra kết quả.")
+    checkpoint_en = guide.get("checkpoint_en", "You can explain the decision, assumptions, edge cases, and how to verify the result.")
+    external = next((item for item in resources if item.get("kind") != "in_app"), None)
+    first_resource_vi = external.get("title") if external else "tài liệu tham khảo"
+    first_resource_en = external.get("title") if external else "the reference material"
+    study_steps_vi = [
+        f"Đọc phần Concept notes để trả lời: {focus_vi}",
+        f"Mở {first_resource_vi}, đọc đúng mục Read this lesson và ghi lại một ví dụ hoặc định nghĩa đã kiểm chứng.",
+        "Mở Practice Lab, bấm Tạo & mở VS Code, lưu bằng Ctrl+S, thay một tham số rồi chạy lại test.",
+        f"Làm bài thực hành: {practice_vi}",
+        "Trả lời review card không nhìn gợi ý, hoàn thiện checklist và lưu một artifact có thể đưa lên GitHub.",
+    ]
+    study_steps_en = [
+        f"Read the concept notes and answer: {focus_en}",
+        f"Open {first_resource_en}, read the section marked Read this lesson, and record one verified example or definition.",
+        "Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the test.",
+        f"Complete the practice task: {practice_en}",
+        "Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact.",
+    ]
+    deliverables_vi = guide.get("deliverables_vi", ["Một file code chạy được", "Một test hoặc output expected", "Một note nêu edge case và trade-off"])
+    deliverables_en = guide.get("deliverables_en", ["One executable code file", "One test or expected output", "One note describing an edge case and trade-off"])
+    return {
+        "why_it_matters_vi": focus_vi,
+        "why_it_matters_en": focus_en,
+        "study_steps_vi": study_steps_vi,
+        "study_steps_en": study_steps_en,
+        "practice_plan": {
+            "vi": {"task": practice_vi, "deliverables": deliverables_vi, "checkpoint": checkpoint_vi, "stretch": f"Viết thêm một failure test cho {title.lower()} và giải thích kết quả."},
+            "en": {"task": practice_en, "deliverables": deliverables_en, "checkpoint": checkpoint_en, "stretch": f"Add a failure test for {title_en.lower()} and explain the result."},
+        },
+        "interview_questions": {
+            "vi": [
+                f"Bạn sẽ giải thích {title.lower()} cho một đồng đội mới như thế nào?",
+                f"Một assumption nào của {title.lower()} có thể sai trong production?",
+                "Bạn sẽ chọn metric hoặc test nào để chứng minh kết quả đáng tin?",
+            ],
+            "en": [
+                f"How would you explain {title_en.lower()} to a new teammate?",
+                f"Which assumption behind {title_en.lower()} could fail in production?",
+                "Which metric or test would prove the result is trustworthy?",
+            ],
+        },
+    }
+
+
 def kind_for(title: str, phase_order: int) -> str:
     text = title.lower()
     if phase_order == 2 or any(word in text for word in ("vector", "matrix", "gradient", "probability", "bayes", "variance", "likelihood", "sampling", "eigen", "pca", "calculus")):
@@ -317,14 +455,8 @@ def build() -> list[dict[str, Any]]:
                 if order > 0:
                     prerequisites.append(f"phase-{order - 1:02d}")
                 resources = list(dict.fromkeys(tuple(sorted(item.items())) for item in phase_resources))
-                resource_list = [dict(item) for item in resources]
-                resource_list.append(
-                    {
-                        "title": "Ghi chú tiếng Việt trong Journey AI Engineer",
-                        "url": "https://github.com/Hzyl/JouneyAIEngineer",
-                        "language": "vi",
-                    }
-                )
+                resource_list = enriched_resources(title_vi, [dict(item) for item in resources])
+                guide = lesson_guide(title_vi, title_en, module, kind, resource_list)
                 record = {
                     "lesson_id": slug,
                     "phase_id": phase["slug"],
@@ -347,6 +479,12 @@ def build() -> list[dict[str, Any]]:
                     "key_terms": terms_for(title_vi, module, kind),
                     "concept_notes_vi": f"{title_vi} là một mảnh ghép của module {module['title_vi']}. Hãy bắt đầu bằng câu hỏi: dữ liệu hoặc tín hiệu nào đi vào, phép biến đổi nào diễn ra, và đầu ra được dùng để quyết định điều gì? Sau đó chạy ví dụ nhỏ trước khi tối ưu hoặc mở rộng.\n\nTrong công việc AI Engineer, khái niệm này thường xuất hiện cùng kiểm thử, đo lường và phân tích lỗi. Đừng chỉ ghi nhớ định nghĩa: hãy viết lại bằng lời của bạn, thay đổi một giả định và quan sát kết quả.",
                     "concept_notes_en": f"{title_en} is one building block of {module['title_en']}. Start by asking what enters the computation, what transformation happens, and how the output supports a decision. Run a small example before scaling it.\n\nIn AI engineering this concept is tied to testing, measurement and error analysis. Do not stop at the definition: restate it, change one assumption and observe the result.",
+                    "why_it_matters_vi": guide["why_it_matters_vi"],
+                    "why_it_matters_en": guide["why_it_matters_en"],
+                    "study_steps_vi": guide["study_steps_vi"],
+                    "study_steps_en": guide["study_steps_en"],
+                    "practice_plan": guide["practice_plan"],
+                    "interview_questions": guide["interview_questions"],
                     "formulas": formula_for(kind, title_vi),
                     "code_examples": [code_example(kind, title_vi)],
                     "resources": resource_list,

@@ -1,0 +1,301 @@
+{
+  "schema_version": "1.0",
+  "modules": {
+    "environment": {
+      "focus_vi": "Biến Windows thành một môi trường Python có thể lặp lại, biết kiểm tra phiên bản và biết tìm lỗi từ terminal.",
+      "focus_en": "Turn Windows into a reproducible Python environment and learn to verify tools from the terminal.",
+      "practice_vi": "Tạo một thư mục repository, tạo .venv, chạy một script Python từ VS Code và ghi lại kết quả kiểm tra phiên bản.",
+      "practice_en": "Create a repository folder, create a .venv, run a Python script from VS Code, and record the version checks.",
+      "checkpoint_vi": "Bạn có thể clone lại project, tạo môi trường mới và chạy script mà không cần đoán lệnh.",
+      "checkpoint_en": "You can recreate the environment from a clean clone and run the script without guessing commands."
+    },
+    "baseline": {
+      "focus_vi": "Đo nền tảng hiện tại một cách trung thực để chọn nhịp học, không biến bài đánh giá thành bài học thuộc lòng.",
+      "focus_en": "Measure your current baseline honestly so the learning pace follows evidence rather than confidence.",
+      "practice_vi": "Làm bài kiểm tra không xem tài liệu, chấm theo checklist, sau đó ghi ba lỗ hổng và một kế hoạch bù.",
+      "practice_en": "Take the assessment without references, score it with the checklist, then record three gaps and a recovery plan.",
+      "checkpoint_vi": "Bạn giải thích được vì sao mình chọn track 6 tháng hoặc 12–15 tháng bằng dữ liệu của chính mình.",
+      "checkpoint_en": "You can justify the six-month or 12–15-month track using your own evidence."
+    },
+    "learning-system": {
+      "focus_vi": "Xây hệ thống học có bằng chứng: session, journal, review và checkpoint thay vì chỉ đánh dấu đã đọc.",
+      "focus_en": "Build an evidence-based learning system with sessions, journals, reviews, and checkpoints instead of passive reading.",
+      "practice_vi": "Chạy trọn một vòng học 45–60 phút: đọc, tự làm, chạy test, review card và ghi một insight vào journal.",
+      "practice_en": "Run one complete 45–60 minute loop: read, attempt, test, answer a review card, and record one journal insight.",
+      "checkpoint_vi": "Mỗi tuần bạn có thể chỉ ra artifact nào chứng minh mình tiến bộ và phần nào vẫn yếu.",
+      "checkpoint_en": "Each week you can point to an artifact that proves progress and a topic that remains weak."
+    },
+    "python-core": {
+      "focus_vi": "Nắm Python đủ chắc để đọc code AI, viết hàm nhỏ có kiểm thử và không phụ thuộc vào notebook.",
+      "focus_en": "Build enough Python fluency to read AI code, write small tested functions, and work beyond notebooks.",
+      "practice_vi": "Viết một package nhỏ có hàm thuần, type hint, xử lý input xấu và test cho cả happy path lẫn edge case.",
+      "practice_en": "Write a small package with pure functions, type hints, invalid-input handling, and happy-path plus edge-case tests.",
+      "checkpoint_vi": "Bạn có thể giải thích từng dòng quan trọng và sửa yêu cầu mới mà không copy nguyên tutorial.",
+      "checkpoint_en": "You can explain the important lines and change a requirement without copying a tutorial wholesale."
+    },
+    "reliable-code": {
+      "focus_vi": "Biến code chạy được thành code đáng tin bằng module boundary, logging, exception và test boundary rõ ràng.",
+      "focus_en": "Turn working code into reliable code with module boundaries, logging, exceptions, and explicit test boundaries.",
+      "practice_vi": "Cố tình tạo lỗi, ghi giả thuyết, dùng debugger/log để tìm nguyên nhân rồi viết regression test cho lỗi đó.",
+      "practice_en": "Introduce a failure, write a hypothesis, use logs or a debugger to find the cause, then add a regression test.",
+      "checkpoint_vi": "Bạn phân biệt được lỗi do input, lỗi logic và lỗi môi trường, đồng thời biết test nào ngăn lỗi quay lại.",
+      "checkpoint_en": "You can distinguish input, logic, and environment failures and know which test prevents a regression."
+    },
+    "data-files": {
+      "focus_vi": "Đọc và ghi dữ liệu có schema, xử lý thiếu dữ liệu và tạo CLI có input/output kiểm tra được.",
+      "focus_en": "Read and write data with schemas, handle missing values, and create CLIs with inspectable inputs and outputs.",
+      "practice_vi": "Xây pipeline CSV/JSON nhỏ: validate schema, báo dòng lỗi, tạo output sạch và chạy lại được từ terminal.",
+      "practice_en": "Build a small CSV/JSON pipeline that validates schema, reports bad rows, writes clean output, and reruns from a terminal.",
+      "checkpoint_vi": "Bạn biết dữ liệu nào được giữ, loại bỏ hoặc sửa và có lý do cho từng quyết định.",
+      "checkpoint_en": "You can explain which data is kept, dropped, or repaired and why each decision is safe."
+    },
+    "developer-tools": {
+      "focus_vi": "Dùng Git, terminal và HTTP như công cụ hàng ngày để tái hiện, review và giao tiếp với hệ thống.",
+      "focus_en": "Use Git, terminals, and HTTP as daily tools for reproduction, review, and system communication.",
+      "practice_vi": "Tạo branch, xem diff, gọi một API, lưu response và viết commit message mô tả đúng thay đổi.",
+      "practice_en": "Create a branch, inspect a diff, call an API, save its response, and write a commit message that matches the change.",
+      "checkpoint_vi": "Bạn có thể khôi phục trạng thái trước đó và giải thích một thay đổi bằng diff thay vì chỉ nói đã sửa.",
+      "checkpoint_en": "You can recover an earlier state and explain a change from its diff instead of saying only that it was fixed."
+    },
+    "sql-structures": {
+      "focus_vi": "Tư duy dữ liệu có cấu trúc: query đúng, hiểu quan hệ và cân nhắc chi phí thuật toán.",
+      "focus_en": "Develop structured-data thinking: write correct queries, understand relations, and reason about algorithmic cost.",
+      "practice_vi": "Tạo database nhỏ cho learning log, viết query tổng hợp tuần và so sánh hai cách truy vấn trên cùng dữ liệu.",
+      "practice_en": "Create a small learning-log database, write weekly aggregates, and compare two queries over the same data.",
+      "checkpoint_vi": "Bạn giải thích được grain của bảng, khóa liên kết, kết quả JOIN và độ phức tạp của cấu trúc dữ liệu.",
+      "checkpoint_en": "You can explain table grain, keys, JOIN results, and the complexity of the chosen data structure."
+    },
+    "linear-algebra": {
+      "focus_vi": "Liên hệ vector, ma trận, khoảng cách và PCA với tensor shape và biểu diễn dữ liệu trong model.",
+      "focus_en": "Connect vectors, matrices, distances, and PCA to tensor shapes and model representations.",
+      "practice_vi": "Tính tay một ví dụ nhỏ, viết lại bằng NumPy, in shape ở từng bước và giải thích ý nghĩa hình học.",
+      "practice_en": "Work one small example by hand, reimplement it in NumPy, print every shape, and explain the geometry.",
+      "checkpoint_vi": "Bạn phát hiện được shape mismatch trước khi chạy model và biết PCA đang loại bỏ thông tin nào.",
+      "checkpoint_en": "You can spot a shape mismatch before training and explain which information PCA removes."
+    },
+    "calculus": {
+      "focus_vi": "Hiểu đạo hàm, gradient và chain rule như cơ chế cập nhật tham số, không học công thức rời rạc.",
+      "focus_en": "Understand derivatives, gradients, and the chain rule as parameter-update mechanisms rather than isolated formulas.",
+      "practice_vi": "Vẽ loss một biến, tính gradient tay, kiểm tra bằng finite difference rồi đối chiếu với autograd.",
+      "practice_en": "Plot a one-variable loss, calculate the gradient by hand, check it with finite differences, then compare autograd.",
+      "checkpoint_vi": "Bạn giải thích được dấu của gradient, learning rate và vì sao gradient sai làm training thất bại.",
+      "checkpoint_en": "You can explain gradient sign, learning rate, and why a wrong gradient breaks training."
+    },
+    "probability": {
+      "focus_vi": "Dùng xác suất và thống kê để định lượng bất định, sampling và độ tin cậy của kết luận.",
+      "focus_en": "Use probability and statistics to quantify uncertainty, sampling, and the reliability of conclusions.",
+      "practice_vi": "Mô phỏng một phân phối, thay đổi kích thước mẫu, vẽ histogram và ghi rõ giả định trước khi kết luận.",
+      "practice_en": "Simulate a distribution, vary sample size, plot a histogram, and state assumptions before drawing conclusions.",
+      "checkpoint_vi": "Bạn phân biệt được xác suất có điều kiện, expectation, variance và sample noise trong một ví dụ ML.",
+      "checkpoint_en": "You can distinguish conditional probability, expectation, variance, and sampling noise in an ML example."
+    },
+    "optimization": {
+      "focus_vi": "Hiểu objective, loss landscape, regularization và optimizer để biết model đang tối ưu điều gì.",
+      "focus_en": "Understand objectives, loss landscapes, regularization, and optimizers so you know what a model is optimizing.",
+      "practice_vi": "Cài linear/logistic regression tối giản, vẽ loss curve và so sánh learning rate, SGD, momentum và Adam.",
+      "practice_en": "Implement minimal linear/logistic regression, plot loss curves, and compare learning rate, SGD, momentum, and Adam.",
+      "checkpoint_vi": "Bạn dự đoán được dấu hiệu underfit, overfit, exploding update và biết chọn metric để kiểm tra.",
+      "checkpoint_en": "You can predict signs of underfitting, overfitting, exploding updates, and choose a metric to verify them."
+    },
+    "ml-framing": {
+      "focus_vi": "Đặt đúng bài toán trước khi chọn model: user, label, split, baseline và rủi ro leakage.",
+      "focus_en": "Frame the problem before choosing a model: user, label, split, baseline, and leakage risks.",
+      "practice_vi": "Viết data dictionary, xác định target và baseline ngây thơ, sau đó lập bảng các điểm có thể leakage.",
+      "practice_en": "Write a data dictionary, define the target and a naive baseline, then list every possible leakage point.",
+      "checkpoint_vi": "Bạn bảo vệ được cách split và metric trước một reviewer, kể cả khi score thấp.",
+      "checkpoint_en": "You can defend the split and metric to a reviewer even when the score is low."
+    },
+    "models": {
+      "focus_vi": "So sánh model bằng giả định, độ phức tạp và error pattern thay vì chạy nhiều model không có baseline.",
+      "focus_en": "Compare models by assumptions, complexity, and error patterns instead of trying many models without a baseline.",
+      "practice_vi": "Huấn luyện model đơn giản trước, thêm tree/boosting, ghi metric và một ví dụ lỗi tiêu biểu cho từng model.",
+      "practice_en": "Train a simple model first, add trees/boosting, and record metrics plus a representative error for each model.",
+      "checkpoint_vi": "Bạn giải thích được trade-off giữa interpretability, latency, data size và quality.",
+      "checkpoint_en": "You can explain trade-offs among interpretability, latency, data size, and quality."
+    },
+    "preprocessing": {
+      "focus_vi": "Xây preprocessing nhất quán, chống leakage và biến dữ liệu bẩn thành feature có thể tái lập.",
+      "focus_en": "Build consistent, leakage-safe preprocessing that turns messy data into reproducible features.",
+      "practice_vi": "Đặt imputation, encoding và scaling trong Pipeline, fit chỉ trên train rồi kiểm tra bằng một case dữ liệu thiếu.",
+      "practice_en": "Put imputation, encoding, and scaling in a Pipeline, fit only on train, and test a missing-data case.",
+      "checkpoint_vi": "Bạn có thể serialize pipeline và chạy cùng preprocessing ở training lẫn inference.",
+      "checkpoint_en": "You can serialize the pipeline and reuse identical preprocessing during training and inference."
+    },
+    "evaluation": {
+      "focus_vi": "Chọn metric theo chi phí sai lầm, dùng cross-validation và tuning mà không nhìn trộm test set.",
+      "focus_en": "Choose metrics by error cost, use cross-validation, and tune without peeking at the test set.",
+      "practice_vi": "Viết metric decision table, chạy cross-validation, tune một hyperparameter và lưu kết quả vào bảng.",
+      "practice_en": "Write a metric decision table, run cross-validation, tune one hyperparameter, and record results in a table.",
+      "checkpoint_vi": "Bạn giải thích được khi nào accuracy, F1, PR-AUC, MAE hoặc calibration là lựa chọn hợp lý.",
+      "checkpoint_en": "You can explain when accuracy, F1, PR-AUC, MAE, or calibration is the right choice."
+    },
+    "analysis": {
+      "focus_vi": "Đi từ một score tổng hợp tới error analysis, calibration, model card và artifact có thể tải lại.",
+      "focus_en": "Move from one aggregate score to error analysis, calibration, a model card, and reloadable artifacts.",
+      "practice_vi": "Chia lỗi theo nhóm, đọc confusion matrix, lưu model/pipeline và viết model card nêu giới hạn.",
+      "practice_en": "Slice errors by group, inspect a confusion matrix, save the model/pipeline, and write a model card with limits.",
+      "checkpoint_vi": "Bạn biết model sai ở đâu, sai với ai và không dùng score cao để che giấu giới hạn.",
+      "checkpoint_en": "You know where and for whom the model fails and do not use a high score to hide limitations."
+    },
+    "pytorch-core": {
+      "focus_vi": "Đọc tensor shape, dataset và autograd để tự viết được training loop nhỏ bằng PyTorch.",
+      "focus_en": "Read tensor shapes, datasets, and autograd well enough to write a small PyTorch training loop.",
+      "practice_vi": "Tạo Dataset giả, DataLoader, in batch shape và kiểm tra gradient của một layer bằng tay.",
+      "practice_en": "Create a toy Dataset and DataLoader, print batch shapes, and inspect a layer's gradient manually.",
+      "checkpoint_vi": "Bạn giải thích được batch dimension, train/eval mode, dtype và device của từng tensor.",
+      "checkpoint_en": "You can explain batch dimension, train/eval mode, dtype, and device for every tensor."
+    },
+    "training": {
+      "focus_vi": "Tách forward, loss, backward, optimizer, validation và checkpoint thành một vòng lặp có thể debug.",
+      "focus_en": "Separate forward, loss, backward, optimizer, validation, and checkpoint into a debuggable loop.",
+      "practice_vi": "Viết training loop, log train/validation loss, lưu best checkpoint và resume từ checkpoint đó.",
+      "practice_en": "Write a training loop, log train/validation loss, save the best checkpoint, and resume from it.",
+      "checkpoint_vi": "Bạn biết model nào được lưu, vì sao lưu, và có thể tái tạo metric từ checkpoint.",
+      "checkpoint_en": "You know which model is saved and why, and can reproduce metrics from its checkpoint."
+    },
+    "generalization": {
+      "focus_vi": "Chẩn đoán overfitting và cải thiện generalization bằng regularization, augmentation và early stopping.",
+      "focus_en": "Diagnose overfitting and improve generalization with regularization, augmentation, and early stopping.",
+      "practice_vi": "Cố tình overfit một dataset nhỏ, thử một thay đổi mỗi lần và vẽ train/validation curves.",
+      "practice_en": "Overfit a tiny dataset on purpose, change one thing at a time, and plot train/validation curves.",
+      "checkpoint_vi": "Bạn phân biệt được cải thiện thật với việc chỉ làm train score đẹp hơn.",
+      "checkpoint_en": "You can distinguish real improvement from simply making the training score look better."
+    },
+    "vision-nlp": {
+      "focus_vi": "Hiểu CNN, transfer learning, embedding và attention ở mức đủ để chọn hướng CV hoặc NLP.",
+      "focus_en": "Understand CNNs, transfer learning, embeddings, and attention well enough to choose a CV or NLP path.",
+      "practice_vi": "Chọn một dataset nhỏ, train baseline, dùng transfer learning hoặc embedding, rồi phân tích confusion matrix.",
+      "practice_en": "Choose a small dataset, train a baseline, try transfer learning or embeddings, and inspect a confusion matrix.",
+      "checkpoint_vi": "Bạn giải thích được representation nào đang được học và lỗi nào còn do dữ liệu.",
+      "checkpoint_en": "You can explain which representation is learned and which errors still come from the data."
+    },
+    "debugging": {
+      "focus_vi": "Debug shape, NaN, GPU memory và experiment tracking bằng log có đủ context.",
+      "focus_en": "Debug shape errors, NaNs, GPU memory, and experiment tracking with contextual logs.",
+      "practice_vi": "Tạo từng lỗi một, ghi symptom, hypothesis, smallest reproduction và fix; lưu run metadata.",
+      "practice_en": "Create one failure at a time and record its symptom, hypothesis, smallest reproduction, and fix with run metadata.",
+      "checkpoint_vi": "Bạn không chữa NaN bằng cách giảm learning rate một cách mù quáng; bạn tìm nguyên nhân trước.",
+      "checkpoint_en": "You do not blindly lower the learning rate for NaNs; you find the cause first."
+    },
+    "api": {
+      "focus_vi": "Đóng gói model thành inference service có config, schema request/response và batch path rõ ràng.",
+      "focus_en": "Package a model as an inference service with configuration, request/response schemas, and a clear batch path.",
+      "practice_vi": "Tách model loader, service và route; thêm health check, version model và test request hợp lệ/không hợp lệ.",
+      "practice_en": "Separate model loading, service, and routes; add health checks, model versioning, and valid/invalid request tests.",
+      "checkpoint_vi": "Bạn thay model mà không sửa toàn bộ API và biết lỗi nằm ở input, model hay server.",
+      "checkpoint_en": "You can replace the model without rewriting the API and locate input, model, or server failures."
+    },
+    "containers": {
+      "focus_vi": "Đóng gói môi trường bằng Docker và CI để người khác clone rồi chạy được cùng một service.",
+      "focus_en": "Package the environment with Docker and CI so another engineer can run the same service from a clone.",
+      "practice_vi": "Viết Dockerfile nhỏ, build image, chạy container, gọi health check và tạo CI chạy test.",
+      "practice_en": "Write a small Dockerfile, build the image, run the container, call its health check, and add CI tests.",
+      "checkpoint_vi": "Bạn biết image chứa gì, thiếu gì, và có thể rollback về tag trước khi release.",
+      "checkpoint_en": "You know what the image contains, what it omits, and how to roll back to an earlier tag."
+    },
+    "tracking": {
+      "focus_vi": "Theo dõi model, data, experiment và seed để kết quả có thể tái lập và so sánh.",
+      "focus_en": "Track models, data, experiments, and seeds so results are reproducible and comparable.",
+      "practice_vi": "Ghi params, metrics, artifact path và git commit cho hai run khác nhau; so sánh bằng bảng.",
+      "practice_en": "Log parameters, metrics, artifact paths, and the git commit for two runs, then compare them in a table.",
+      "checkpoint_vi": "Bạn có thể trả lời run nào tạo ra model đang phục vụ và vì sao chọn nó.",
+      "checkpoint_en": "You can identify which run produced the served model and why it was selected."
+    },
+    "observability": {
+      "focus_vi": "Đo latency, drift và lỗi production để biết service đang hỏng ở đâu trước khi người dùng báo.",
+      "focus_en": "Measure latency, drift, and production errors so you find failures before users report them.",
+      "practice_vi": "Thêm structured log, đo p50/p95, tạo một drift report và viết runbook rollback.",
+      "practice_en": "Add structured logs, measure p50/p95, create a drift report, and write a rollback runbook.",
+      "checkpoint_vi": "Bạn phân biệt data drift, concept drift và latency regression bằng số liệu.",
+      "checkpoint_en": "You can distinguish data drift, concept drift, and latency regression with measurements."
+    },
+    "security": {
+      "focus_vi": "Bảo vệ inference service khỏi secret leak, input quá lớn, dependency rủi ro và PII.",
+      "focus_en": "Protect the inference service from secret leaks, oversized input, risky dependencies, and PII exposure.",
+      "practice_vi": "Viết input limits, secret redaction và dependency check; thử một payload xấu nhưng không dùng secret thật.",
+      "practice_en": "Add input limits, secret redaction, and dependency checks; test a malicious payload without real secrets.",
+      "checkpoint_vi": "Bạn biết log nào cần ẩn, giới hạn nào cần enforce và cách báo cáo rủi ro.",
+      "checkpoint_en": "You know which logs to redact, which limits to enforce, and how to report a risk."
+    },
+    "nlp-foundations": {
+      "focus_vi": "Hiểu token, embedding, language model và context window trước khi xây ứng dụng LLM.",
+      "focus_en": "Understand tokens, embeddings, language models, and context windows before building LLM applications.",
+      "practice_vi": "Tokenize câu tiếng Việt, đếm token, so sánh embedding gần/xa và ghi giới hạn context.",
+      "practice_en": "Tokenize Vietnamese text, count tokens, compare near/far embeddings, and record context limits.",
+      "checkpoint_vi": "Bạn giải thích được embedding không phải là sự thật, và context window ảnh hưởng cost/quality ra sao.",
+      "checkpoint_en": "You can explain that embeddings are not truth and how context windows affect cost and quality."
+    },
+    "transformers": {
+      "focus_vi": "Đi từ attention tới prompt và structured output, luôn kiểm tra schema thay vì tin raw text.",
+      "focus_en": "Move from attention to prompts and structured outputs while validating schemas instead of trusting raw text.",
+      "practice_vi": "Viết prompt có input/output contract, thử case thiếu dữ liệu và validate JSON trước khi dùng downstream.",
+      "practice_en": "Write a prompt with an input/output contract, test missing data, and validate JSON before downstream use.",
+      "checkpoint_vi": "Bạn nhận diện được prompt ambiguity, output invalid và injection trong một flow cụ thể.",
+      "checkpoint_en": "You can identify prompt ambiguity, invalid output, and injection in a concrete flow."
+    },
+    "retrieval": {
+      "focus_vi": "Thiết kế retrieval có chunk, metadata, vector search và reranking để đo được recall trước generation.",
+      "focus_en": "Design retrieval with chunks, metadata, vector search, and reranking so recall is measured before generation.",
+      "practice_vi": "Tạo 10 document chunks, viết 10 query có đáp án biết trước, đo hit@k và đọc các false negative.",
+      "practice_en": "Create ten document chunks and ten known-answer queries, measure hit@k, and inspect false negatives.",
+      "checkpoint_vi": "Bạn biết RAG fail do retrieval hay generation và có evidence cho kết luận đó.",
+      "checkpoint_en": "You can tell whether RAG failed during retrieval or generation and show evidence for the conclusion."
+    },
+    "rag": {
+      "focus_vi": "Xây RAG có citation, refusal khi thiếu bằng chứng và error analysis thay vì chỉ demo câu trả lời hay.",
+      "focus_en": "Build RAG with citations, evidence-based refusal, and error analysis instead of only a polished demo.",
+      "practice_vi": "Tạo evaluation set 30 câu, lưu retrieved chunks, đối chiếu citation và phân loại từng lỗi.",
+      "practice_en": "Create a 30-question evaluation set, save retrieved chunks, verify citations, and label each failure.",
+      "checkpoint_vi": "Bạn biết câu trả lời nào có căn cứ, câu nào phải từ chối và vì sao.",
+      "checkpoint_en": "You can tell which answers are grounded, which must be refused, and why."
+    },
+    "quality-safety": {
+      "focus_vi": "Đo quality, latency, cost và safety cùng lúc; coi hallucination/injection là test case chứ không phải chuyện bất ngờ.",
+      "focus_en": "Measure quality, latency, cost, and safety together; treat hallucinations and injection as test cases.",
+      "practice_vi": "Tạo rubric, golden set, adversarial set, cost log và dashboard lỗi theo loại.",
+      "practice_en": "Create a rubric, golden set, adversarial set, cost log, and an error dashboard by category.",
+      "checkpoint_vi": "Bạn bảo vệ được một thay đổi model bằng số liệu quality–latency–cost, không chỉ cảm nhận.",
+      "checkpoint_en": "You can defend a model change with quality–latency–cost evidence rather than intuition."
+    },
+    "adaptation": {
+      "focus_vi": "Biết khi nào RAG đủ, khi nào fine-tune/LoRA/quantization hợp lý và agent cần stop condition.",
+      "focus_en": "Know when RAG is enough, when fine-tuning/LoRA/quantization is justified, and why agents need stop conditions.",
+      "practice_vi": "Viết decision record so sánh RAG, prompt, fine-tune và model nhỏ theo data, cost, latency và risk.",
+      "practice_en": "Write a decision record comparing RAG, prompting, fine-tuning, and small models by data, cost, latency, and risk.",
+      "checkpoint_vi": "Bạn không fine-tune chỉ vì prompt chưa được debug, và agent không chạy vô hạn.",
+      "checkpoint_en": "You do not fine-tune before debugging the prompt, and your agent cannot run forever."
+    },
+    "problem": {
+      "focus_vi": "Chọn vấn đề có người dùng thật, metric đo được và architecture giải thích được trong phỏng vấn.",
+      "focus_en": "Choose a real user problem with measurable metrics and an architecture you can defend in an interview.",
+      "practice_vi": "Viết problem statement một trang, user journey, non-goals, constraints và architecture diagram.",
+      "practice_en": "Write a one-page problem statement, user journey, non-goals, constraints, and architecture diagram.",
+      "checkpoint_vi": "Reviewer hiểu bạn xây gì, cho ai và thế nào là thành công trong chưa đầy hai phút.",
+      "checkpoint_en": "A reviewer understands what you build, for whom, and what success means in under two minutes."
+    },
+    "ship": {
+      "focus_vi": "Biến capstone thành sản phẩm có baseline, evaluation, demo, README và giới hạn được nói rõ.",
+      "focus_en": "Turn the capstone into a product with a baseline, evaluation, demo, README, and explicit limitations.",
+      "practice_vi": "Ship một vertical slice chạy local, ghi test/evaluation, quay demo ngắn và mở issue cho phần chưa làm.",
+      "practice_en": "Ship one local vertical slice, record tests/evaluation, make a short demo, and open issues for unfinished work.",
+      "checkpoint_vi": "Người khác clone repo và chạy demo theo README mà không cần bạn hướng dẫn trực tiếp.",
+      "checkpoint_en": "Another person can clone the repo and run the demo from the README without your help."
+    },
+    "portfolio": {
+      "focus_vi": "Kể câu chuyện kỹ thuật bằng README, architecture diagram, video và GitHub profile có chọn lọc.",
+      "focus_en": "Tell the technical story through a README, architecture diagram, video, and a curated GitHub profile.",
+      "practice_vi": "Chuẩn hóa README theo problem→data→model→evaluation→deployment→limitations và link evidence.",
+      "practice_en": "Standardize the README around problem→data→model→evaluation→deployment→limitations and link evidence.",
+      "checkpoint_vi": "Mỗi project có một đóng góp riêng, metric rõ và một trade-off bạn sẵn sàng bảo vệ.",
+      "checkpoint_en": "Each project has a distinct contribution, clear metrics, and a trade-off you can defend."
+    },
+    "career": {
+      "focus_vi": "Chuyển năng lực thành CV, câu chuyện phỏng vấn và system design có cấu trúc.",
+      "focus_en": "Turn your skills into a focused CV, interview stories, and structured AI system design answers.",
+      "practice_vi": "Luyện giới thiệu project 90 giây, viết STAR story cho một bug và thiết kế một hệ thống inference.",
+      "practice_en": "Practice a 90-second project pitch, write a STAR story for a bug, and design an inference system.",
+      "checkpoint_vi": "Bạn nói được mình đã quyết định gì, đo gì, sai ở đâu và học được gì từ mỗi project.",
+      "checkpoint_en": "You can explain your decisions, measurements, failures, and lessons from every project."
+    }
+  }
+}

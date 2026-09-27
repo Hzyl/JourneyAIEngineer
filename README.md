@@ -86,6 +86,16 @@ python scripts/validate_content.py
 
 ## GitHub journey
 
+### Luồng bài tập → VS Code → artifact → GitHub
+
+Trong **Practice Lab**, mỗi bài có workspace riêng tại `.data/workspaces/<exercise-slug>`. Chọn **Tạo & mở VS Code** để app tự trỏ VS Code vào đúng thư mục; sửa `starter.py`, lưu bằng `Ctrl+S`, rồi chọn **Chạy test** để xem output và lịch sử chạy. **Mở thư mục** mở Explorer khi cần kiểm tra file bằng mắt.
+
+Workspace mới luôn có `starter.py`, `test_exercise.py` và README riêng. Test đầu tiên có thể **fail có chủ đích** vì `solve()` còn `NotImplementedError`; hãy implement để trả về `result` và `explanation`, chạy lại đến khi pass, rồi thêm một edge case trước khi xuất artifact. Cách này biến bài tập thành một vòng red → implement → green thay vì chỉ kiểm tra syntax.
+
+Khi bài đã đạt checkpoint, chọn **Lưu artifact**. App copy các file an toàn sang `exercises/<exercise-slug>/`, bỏ qua `.venv`, `__pycache__`, `.env`, database và symlink, đồng thời từ chối export nếu phát hiện chuỗi có vẻ là API key, token, password hoặc private key. Đây là bước tạo bằng chứng có thể review, không phải push tự động.
+
+Sau đó mở **Journal & Git**, xem diff và quay lại panel **Review rồi mới push**. Nhập commit message, tick xác nhận đã đọc diff rồi bấm **Xác nhận & push GitHub**. Backend chỉ cho phép publish dưới `exercises/`, `projects/` hoặc `journal/`, từ chối nếu Git index đã có staged change, scan secret lần nữa và giữ commit local nếu push thất bại. App không lưu credential và không push khi chưa có checkbox xác nhận.
+
 Remote mặc định của project là repository private `Hzyl/JouneyAIEngineer`. Chỉ các artifact học tập mới nên được commit:
 
 ```text

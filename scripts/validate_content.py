@@ -13,6 +13,8 @@ required_lesson_fields = {
     "learning_objectives", "prerequisites", "key_terms", "concept_notes_vi", "concept_notes_en",
     "formulas", "code_examples", "resources", "exercise_ids", "review_item_ids", "estimated_minutes",
     "completion_checklist", "completion_criteria", "common_mistakes", "next_lessons",
+    "why_it_matters_vi", "why_it_matters_en", "study_steps_vi", "study_steps_en",
+    "practice_plan", "interview_questions",
 }
 required_tool_fields = {
     "slug", "name", "category", "when_vi", "when_en", "when_not_vi", "when_not_en",
@@ -44,11 +46,24 @@ def main() -> None:
         assert item["completion_checklist"] and item["completion_criteria"]
         assert item["exercise_ids"] and item["review_item_ids"]
         assert item["code_examples"], f"no code example for {item['lesson_id']}"
+        assert len(item["study_steps_vi"]) >= 4 and len(item["study_steps_en"]) >= 4, f"study plan is too short for {item['lesson_id']}"
+        assert item["practice_plan"].get("vi", {}).get("task") and item["practice_plan"].get("en", {}).get("task")
+        assert len(item["interview_questions"].get("vi", [])) >= 3
         assert any(resource.get("language") == "en" for resource in item["resources"]), f"no English resource for {item['lesson_id']}"
         assert any(resource.get("language") == "vi" for resource in item["resources"]), f"no Vietnamese support resource for {item['lesson_id']}"
         for resource in item["resources"]:
-            parsed = urlparse(resource["url"])
-            assert parsed.scheme in {"http", "https"} and parsed.netloc, f"invalid resource URL: {resource['url']}"
+            assert resource.get("purpose_vi") and resource.get("read_vi"), f"resource guidance missing for {item['lesson_id']}"
+            if resource.get("kind") == "in_app":
+                assert not resource.get("url"), f"internal resource must not have an external URL: {item['lesson_id']}"
+            else:
+                parsed = urlparse(resource["url"])
+                assert parsed.scheme in {"http", "https"} and parsed.netloc, f"invalid resource URL: {resource['url']}"
+                assert resource["url"] != "https://github.com/Hzyl/JouneyAIEngineer", "generic repository link is not a study resource"
+    guides = json.loads((ROOT / "content" / "module_guides.json").read_text(encoding="utf-8"))
+    module_slugs = {module["slug"] for phase in phases for module in phase["modules"]}
+    assert module_slugs == set(guides.get("modules", {})), "every curriculum module needs a module guide"
+    guide_fields = {"focus_vi", "focus_en", "practice_vi", "practice_en", "checkpoint_vi", "checkpoint_en"}
+    assert all(guide_fields.issubset(value) for value in guides["modules"].values()), "module guide fields are incomplete"
     tools = json.loads((ROOT / "content" / "tools.json").read_text(encoding="utf-8"))
     assert tools and all(required_tool_fields.issubset(tool) for tool in tools), "tool guide fields are incomplete"
     program = curriculum["program"]
