@@ -1,4 +1,27 @@
 /* Guided learning and artifact workflow. Kept separate so the shell styles remain easy to edit. */
+.roadmap-layout { display: block; }
+.roadmap-list { max-width: 1100px; }
+.phase-block { max-width: 1040px; }
+.lesson-row { min-height: 43px; padding: 10px 12px; border: 1px solid transparent; border-radius: 8px; transition: background .18s ease, border-color .18s ease, transform .18s ease; }
+.lesson-row:hover { border-color: #cfe2d4; transform: translateX(2px); }
+
+.lesson-page { max-width: 1120px; margin: 0 auto; }
+.lesson-page-toolbar { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 16px; margin-bottom: 17px; padding: 2px 0 15px; border-bottom: 1px solid var(--line); }
+.back-button { display: inline-flex; align-items: center; gap: 7px; border: 1px solid #d4e2d7; border-radius: 8px; padding: 9px 12px; background: #eff5ef; color: var(--teal-dark); font-size: 11px; font-weight: 700; white-space: nowrap; }
+.back-button:hover { border-color: #a9cdb8; background: #e5f0e8; }
+.lesson-page-context { display: grid; gap: 5px; min-width: 0; }
+.lesson-page-context > span:last-child { overflow: hidden; color: var(--muted); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.lesson-page-meta { color: var(--teal-dark); border: 1px solid #d6e6da; border-radius: 20px; background: #f0f7f1; padding: 7px 10px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+.lesson-page-shell { max-width: 980px; margin: 0 auto; border: 1px solid var(--line); border-radius: 17px; background: var(--surface); box-shadow: 0 16px 45px rgba(41,58,51,.07); }
+.lesson-page-shell .lesson-detail { padding: clamp(28px, 5vw, 58px); }
+.lesson-page-shell .lesson-detail h2 { max-width: 820px; font-size: clamp(36px, 5vw, 58px); line-height: 1.03; }
+.lesson-page-shell .lesson-detail .lead { max-width: 800px; font-size: 15px; line-height: 1.75; }
+.lesson-page-shell .detail-section { padding: 25px 0; }
+.lesson-page-shell .detail-section h4 { font-size: 14px; }
+.lesson-page-shell .detail-section li, .lesson-page-shell .concept-notes { font-size: 13px; line-height: 1.8; }
+.lesson-page-loading { min-height: 56vh; border: 1px solid var(--line); border-radius: 17px; background: var(--surface); }
+.lesson-page-loading .loading-state { min-height: 56vh; }
+
 .lesson-detail-pane {
   min-height: 0;
   max-height: calc(100vh - 160px);
@@ -61,11 +84,18 @@
 .publish-confirm input { margin-top: 2px; accent-color: var(--teal); }
 
 @media (max-width: 850px) {
+  .lesson-page-toolbar { grid-template-columns: auto minmax(0, 1fr); }
+  .lesson-page-meta { grid-column: 2; justify-self: start; }
+  .lesson-page-shell .lesson-detail { padding: 28px; }
   .lesson-detail-pane { max-height: none; overflow: visible; scrollbar-gutter: auto; }
   .practice-plan-grid, .workspace-flow { grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 620px) {
+  .lesson-page-toolbar { gap: 10px; }
+  .back-button span { display: none; }
+  .lesson-page-shell { border-radius: 12px; }
+  .lesson-page-shell .lesson-detail { padding: 22px 18px; }
   .practice-plan-grid, .workspace-flow { grid-template-columns: 1fr; }
   .workspace-actions { align-items: stretch; }
   .workspace-actions button { flex: 1 1 auto; }
