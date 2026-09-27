@@ -82,7 +82,7 @@ python scripts/build_lesson_catalog.py
 python scripts/validate_content.py
 ```
 
-`scripts/test.ps1` chạy validation nội dung, backend pytest và frontend build. Database local được migration additive khi khởi động để không làm mất progress, review history, notes hoặc settings.
+`scripts/test.ps1` chạy validation nội dung, backend pytest và frontend build. Database local được migration additive khi khởi động để không làm mất progress, review history, notes hoặc settings. Startup cũng đồng bộ bổ sung phase/module/lesson/exercise/review mới từ curriculum mà không reset dữ liệu cũ; nội dung đã bỏ khỏi roadmap không bị xóa tự động để giữ liên kết với lịch sử học tập.
 
 ## GitHub journey
 

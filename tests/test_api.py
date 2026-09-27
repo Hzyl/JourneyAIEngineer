@@ -1,4 +1,5 @@
 import importlib
+import json
 import shutil
 import sys
 from pathlib import Path
@@ -26,6 +27,47 @@ def test_curriculum_is_seeded(tmp_path, monkeypatch):
         exercise = db.execute("SELECT test_command,starter_code FROM exercises LIMIT 1").fetchone()
         assert "test_exercise.py" in exercise["test_command"]
         assert "NotImplementedError" in exercise["starter_code"]
+
+
+def test_curriculum_sync_adds_new_records_without_resetting_progress(tmp_path, monkeypatch):
+    module = load_module(tmp_path, monkeypatch)
+    lesson_slug = "phase-00-onboarding-environment-1"
+    module.update_progress(lesson_slug, module.ProgressUpdate(status="completed", minutes_spent=42))
+    module.create_note(module.NoteCreate(lesson_slug=lesson_slug, title="Keep this note", body="Do not lose my progress."))
+
+    source_content = module.CONTENT_ROOT
+    curriculum = json.loads((source_content / "curriculum.json").read_text(encoding="utf-8"))
+    first_phase = curriculum["phases"][0]
+    first_phase["modules"].append(
+        {
+            "slug": "startup-sync-regression",
+            "title_vi": "Kiểm tra đồng bộ startup",
+            "title_en": "Startup sync regression",
+            "lessons": ["Additive content sync"],
+        }
+    )
+    content_root = tmp_path / "content-update"
+    content_root.mkdir()
+    (content_root / "curriculum.json").write_text(json.dumps(curriculum, ensure_ascii=False), encoding="utf-8")
+    for filename in ("lessons.json", "module_guides.json"):
+        shutil.copy2(source_content / filename, content_root / filename)
+    monkeypatch.setattr(module, "CONTENT_ROOT", content_root)
+
+    module.seed_content()
+
+    with module.connect() as db:
+        assert db.execute("SELECT COUNT(*) FROM phases").fetchone()[0] == 8
+        assert db.execute("SELECT COUNT(*) FROM modules").fetchone()[0] == 38
+        assert db.execute("SELECT COUNT(*) FROM lessons").fetchone()[0] == 149
+        assert db.execute("SELECT COUNT(*) FROM exercises").fetchone()[0] == 38
+        assert db.execute("SELECT COUNT(*) FROM review_items").fetchone()[0] == 149
+        progress = db.execute("SELECT status,minutes_spent FROM progress WHERE lesson_id=(SELECT id FROM lessons WHERE slug=?)", (lesson_slug,)).fetchone()
+        assert progress["status"] == "completed"
+        assert progress["minutes_spent"] == 42
+        assert db.execute("SELECT COUNT(*) FROM notes WHERE lesson_id=(SELECT id FROM lessons WHERE slug=?)", (lesson_slug,)).fetchone()[0] == 1
+
+    new_lesson = module.lesson_detail("phase-00-onboarding-startup-sync-regression-1")
+    assert new_lesson["title_vi"] == "Additive content sync"
 
 
 def test_lesson_schema_and_settings(tmp_path, monkeypatch):

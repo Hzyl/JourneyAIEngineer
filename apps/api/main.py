@@ -398,19 +398,41 @@ def seed_content() -> None:
     catalog = read_lesson_catalog()
     guides = read_module_guides()
     with connect() as db:
-        phase_count = db.execute("SELECT COUNT(*) AS n FROM phases").fetchone()["n"]
-        if phase_count:
-            return
         for phase in curriculum["phases"]:
-            phase_id = db.execute(
-                "INSERT INTO phases(slug,title_vi,title_en,summary_vi,summary_en,duration_weeks,order_index) VALUES(?,?,?,?,?,?,?)",
-                (phase["slug"], phase["title_vi"], phase["title_en"], phase["summary_vi"], phase["summary_en"], phase["duration_weeks"], phase["order"]),
-            ).lastrowid
-            for module_index, module in enumerate(phase["modules"]):
-                module_id = db.execute(
-                    "INSERT INTO modules(phase_id,slug,title_vi,title_en,order_index) VALUES(?,?,?,?,?)",
-                    (phase_id, module["slug"], module["title_vi"], module["title_en"], module_index),
+            phase_values = (
+                phase["title_vi"],
+                phase["title_en"],
+                phase["summary_vi"],
+                phase["summary_en"],
+                phase["duration_weeks"],
+                phase["order"],
+            )
+            existing_phase = db.execute("SELECT id FROM phases WHERE slug=?", (phase["slug"],)).fetchone()
+            if existing_phase:
+                phase_id = existing_phase["id"]
+                db.execute(
+                    "UPDATE phases SET title_vi=?,title_en=?,summary_vi=?,summary_en=?,duration_weeks=?,order_index=? WHERE id=?",
+                    (*phase_values, phase_id),
+                )
+            else:
+                phase_id = db.execute(
+                    "INSERT INTO phases(slug,title_vi,title_en,summary_vi,summary_en,duration_weeks,order_index) VALUES(?,?,?,?,?,?,?)",
+                    (phase["slug"], *phase_values),
                 ).lastrowid
+            for module_index, module in enumerate(phase["modules"]):
+                module_values = (phase_id, module["title_vi"], module["title_en"], module_index)
+                existing_module = db.execute("SELECT id FROM modules WHERE slug=?", (module["slug"],)).fetchone()
+                if existing_module:
+                    module_id = existing_module["id"]
+                    db.execute(
+                        "UPDATE modules SET phase_id=?,title_vi=?,title_en=?,order_index=? WHERE id=?",
+                        (*module_values, module_id),
+                    )
+                else:
+                    module_id = db.execute(
+                        "INSERT INTO modules(phase_id,slug,title_vi,title_en,order_index) VALUES(?,?,?,?,?)",
+                        (phase_id, module["slug"], module["title_vi"], module["title_en"], module_index),
+                    ).lastrowid
                 for lesson_index, lesson_title in enumerate(module["lessons"]):
                     slug = f"{phase['slug']}-{module['slug']}-{lesson_index + 1}"
                     lesson_data = catalog.get(slug, {})
@@ -433,32 +455,40 @@ def seed_content() -> None:
                             "Recognize when to use it and diagnose common mistakes.",
                         ],
                     )
-                    lesson_id = db.execute(
-                        """INSERT INTO lessons(module_id,slug,title_vi,title_en,summary_vi,summary_en,objectives_json,prerequisites_json,keywords_json,resources_json,checklist_json,concept_notes_vi,concept_notes_en,formulas_json,code_examples_json,common_mistakes_json,next_lessons_json,completion_criteria_json,estimated_minutes,order_index)
-                        VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
-                        (
-                            module_id,
-                            slug,
-                            lesson_title,
-                            lesson_title_en,
-                            lesson_data.get("summary_vi", f"Học {lesson_title.lower()} qua lý thuyết ngắn, code và câu hỏi tự kiểm tra."),
-                            lesson_data.get("summary_en", f"Learn {lesson_title_en.lower()} through concise theory, code and self-check questions."),
-                            json_text({"vi": objectives_vi, "en": objectives_en}),
-                            json_text(lesson_data.get("prerequisites", [])),
-                            json_text(lesson_data.get("key_terms", keywords)),
-                            json_text(resources),
-                            json_text(lesson_data.get("completion_checklist", ["Đọc phần giải thích", "Chạy ví dụ", "Tự làm exercise", "Trả lời review card"])),
-                            lesson_data.get("concept_notes_vi", ""),
-                            lesson_data.get("concept_notes_en", ""),
-                            json_text(lesson_data.get("formulas", [])),
-                            json_text(lesson_data.get("code_examples", [])),
-                            json_text(lesson_data.get("common_mistakes", [])),
-                            json_text(lesson_data.get("next_lessons", [])),
-                            json_text(lesson_data.get("completion_criteria", lesson_data.get("completion_checklist", []))),
-                            lesson_data.get("estimated_minutes", 45 if phase["order"] < 3 else 60),
-                            lesson_index,
-                        ),
-                    ).lastrowid
+                    lesson_values = (
+                        module_id,
+                        lesson_title,
+                        lesson_title_en,
+                        lesson_data.get("summary_vi", f"Học {lesson_title.lower()} qua lý thuyết ngắn, code và câu hỏi tự kiểm tra."),
+                        lesson_data.get("summary_en", f"Learn {lesson_title_en.lower()} through concise theory, code and self-check questions."),
+                        json_text({"vi": objectives_vi, "en": objectives_en}),
+                        json_text(lesson_data.get("prerequisites", [])),
+                        json_text(lesson_data.get("key_terms", keywords)),
+                        json_text(resources),
+                        json_text(lesson_data.get("completion_checklist", ["Đọc phần giải thích", "Chạy ví dụ", "Tự làm exercise", "Trả lời review card"])),
+                        lesson_data.get("concept_notes_vi", ""),
+                        lesson_data.get("concept_notes_en", ""),
+                        json_text(lesson_data.get("formulas", [])),
+                        json_text(lesson_data.get("code_examples", [])),
+                        json_text(lesson_data.get("common_mistakes", [])),
+                        json_text(lesson_data.get("next_lessons", [])),
+                        json_text(lesson_data.get("completion_criteria", lesson_data.get("completion_checklist", []))),
+                        lesson_data.get("estimated_minutes", 45 if phase["order"] < 3 else 60),
+                        lesson_index,
+                    )
+                    existing_lesson = db.execute("SELECT id FROM lessons WHERE slug=?", (slug,)).fetchone()
+                    if existing_lesson:
+                        lesson_id = existing_lesson["id"]
+                        db.execute(
+                            """UPDATE lessons SET module_id=?,title_vi=?,title_en=?,summary_vi=?,summary_en=?,objectives_json=?,prerequisites_json=?,keywords_json=?,resources_json=?,checklist_json=?,concept_notes_vi=?,concept_notes_en=?,formulas_json=?,code_examples_json=?,common_mistakes_json=?,next_lessons_json=?,completion_criteria_json=?,estimated_minutes=?,order_index=? WHERE id=?""",
+                            (*lesson_values, lesson_id),
+                        )
+                    else:
+                        lesson_id = db.execute(
+                            """INSERT INTO lessons(module_id,slug,title_vi,title_en,summary_vi,summary_en,objectives_json,prerequisites_json,keywords_json,resources_json,checklist_json,concept_notes_vi,concept_notes_en,formulas_json,code_examples_json,common_mistakes_json,next_lessons_json,completion_criteria_json,estimated_minutes,order_index)
+                            VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                            (module_id, slug, *lesson_values[1:]),
+                        ).lastrowid
                     question_vi = lesson_data.get(
                         "review_question_vi",
                         f"Bạn hãy giải thích {lesson_title.lower()} bằng lời của mình và đưa ra một ví dụ khi làm AI Engineer.",
@@ -475,42 +505,44 @@ def seed_content() -> None:
                         "review_answer_en",
                         f"Include the definition, intuition, a code or data example, and one common failure mode for {lesson_title_en.lower()}.",
                     )
-                    due = now_iso() if lesson_id <= 12 else (datetime.now(timezone.utc) + timedelta(days=lesson_id % 7 + 1)).isoformat()
-                    db.execute(
-                        "INSERT INTO review_items(lesson_id,question_vi,question_en,answer_vi,answer_en,due_at) VALUES(?,?,?,?,?,?)",
-                        (lesson_id, question_vi, question_en, answer_vi, answer_en, due),
-                    )
-                starter = f'''"""Exercise: {module["title_vi"]}
-
-Hãy đọc README và thay thế TODO bằng lời giải của bạn.
-"""
-
-def solve():
-    # TODO: implement the exercise for {module["title_vi"]}
-    return "your solution"
-
-
-if __name__ == "__main__":
-    print(solve())
-'''
+                    review = db.execute("SELECT id FROM review_items WHERE lesson_id=?", (lesson_id,)).fetchone()
+                    if review:
+                        db.execute(
+                            "UPDATE review_items SET question_vi=?,question_en=?,answer_vi=?,answer_en=? WHERE id=?",
+                            (question_vi, question_en, answer_vi, answer_en, review["id"]),
+                        )
+                    else:
+                        due = now_iso() if lesson_id <= 12 else (datetime.now(timezone.utc) + timedelta(days=lesson_id % 7 + 1)).isoformat()
+                        db.execute(
+                            "INSERT INTO review_items(lesson_id,question_vi,question_en,answer_vi,answer_en,due_at) VALUES(?,?,?,?,?,?)",
+                            (lesson_id, question_vi, question_en, answer_vi, answer_en, due),
+                        )
                 material = exercise_material(module, guides)
-                db.execute(
-                    """INSERT INTO exercises(module_id,slug,title_vi,title_en,description_vi,description_en,difficulty,estimated_minutes,test_command,starter_code,hints_json)
-                    VALUES(?,?,?,?,?,?,?,?,?,?,?)""",
-                    (
-                        module_id,
-                        f"exercise-{phase['order']}-{module['slug']}",
-                        f"Bài thực hành: {module['title_vi']}",
-                        f"Practice: {module['title_en']}",
-                        material["description_vi"],
-                        material["description_en"],
-                        "starter" if phase["order"] < 3 else "intermediate",
-                        90,
-                        material["test_command"],
-                        material["starter_code"],
-                        json_text(["Bắt đầu bằng input/output rõ ràng.", "Viết một test cho case bình thường và một edge case.", "Ghi lại điều bạn chưa hiểu trong journal."]),
-                    ),
+                exercise_slug = f"exercise-{phase['order']}-{module['slug']}"
+                exercise_values = (
+                    module_id,
+                    f"Bài thực hành: {module['title_vi']}",
+                    f"Practice: {module['title_en']}",
+                    material["description_vi"],
+                    material["description_en"],
+                    "starter" if phase["order"] < 3 else "intermediate",
+                    90,
+                    material["test_command"],
+                    material["starter_code"],
+                    json_text(["Bắt đầu bằng input/output rõ ràng.", "Viết một test cho case bình thường và một edge case.", "Ghi lại điều bạn chưa hiểu trong journal."]),
                 )
+                existing_exercise = db.execute("SELECT id FROM exercises WHERE slug=?", (exercise_slug,)).fetchone()
+                if existing_exercise:
+                    db.execute(
+                        """UPDATE exercises SET module_id=?,title_vi=?,title_en=?,description_vi=?,description_en=?,difficulty=?,estimated_minutes=?,test_command=?,starter_code=?,hints_json=? WHERE id=?""",
+                        (*exercise_values, existing_exercise["id"]),
+                    )
+                else:
+                    db.execute(
+                        """INSERT INTO exercises(module_id,slug,title_vi,title_en,description_vi,description_en,difficulty,estimated_minutes,test_command,starter_code,hints_json)
+                        VALUES(?,?,?,?,?,?,?,?,?,?,?)""",
+                        (module_id, exercise_slug, *exercise_values[1:]),
+                    )
 
 
 def hydrate_lesson_catalog() -> None:
