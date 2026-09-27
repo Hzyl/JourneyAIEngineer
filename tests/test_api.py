@@ -2,6 +2,7 @@ import importlib
 import json
 import shutil
 import sys
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import pytest
@@ -135,6 +136,23 @@ def test_progress_and_review_flow(tmp_path, monkeypatch):
     module.init_db()
     assert module.dashboard()["completed_lessons"] == 1
     assert module.review_history()["count"] == 1
+
+
+def test_study_streak_uses_local_calendar_days(tmp_path, monkeypatch):
+    module = load_module(tmp_path, monkeypatch)
+    vietnam_timezone = timezone(timedelta(hours=7))
+    monkeypatch.setattr(module, "local_timezone", lambda: vietnam_timezone)
+    local_yesterday = datetime.now(vietnam_timezone).replace(hour=0, minute=30, second=0, microsecond=0) - timedelta(days=1)
+    stored_utc_timestamp = local_yesterday.astimezone(timezone.utc).isoformat()
+    with module.connect() as db:
+        db.execute(
+            "INSERT INTO study_sessions(lesson_id,minutes,note,created_at) VALUES(NULL,?,?,?)",
+            (25, "local midnight boundary", stored_utc_timestamp),
+        )
+
+    assert module.local_day_for_iso(stored_utc_timestamp, vietnam_timezone) == local_yesterday.date()
+    with module.connect() as db:
+        assert module.study_streak(db) == 1
 
 
 def test_workspace_creation_and_runner(tmp_path, monkeypatch):

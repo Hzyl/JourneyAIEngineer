@@ -64,7 +64,7 @@ Không đặt API key trong `.env` hoặc source. MVP không gọi model cloud; 
 
 Mỗi tuần nên đi theo một vòng lặp cố định: mở lesson và đọc mục tiêu, tự làm ví dụ trong workspace, chạy test, đánh dấu tiến độ, trả lời review card bằng lời của mình, rồi ghi lại một insight trong Journal. Khi bị kẹt, hãy tự thử trước, ghi giả thuyết và lỗi đã thấy, sau đó dùng **Journal & Git → Context bridge** để tạo một gói context có lesson, progress và note. Gói này không chứa API key; bạn có thể copy sang ChatGPT/Codex để nhận gợi ý từng bước.
 
-Dashboard theo dõi tổng tiến độ, thời gian học trong tuần, mục tiêu tuần, số lesson đã học và streak. Roadmap có bộ lọc theo phase, trạng thái và từ khóa. Review dùng bốn mức `again`, `hard`, `good`, `easy`, lưu lịch sử và chỉ ra chủ đề yếu. Exercises tạo workspace trong `.data/workspaces`, mở bằng VS Code, chạy command kiểm thử được khai báo trong exercise manifest và lưu lịch sử chạy.
+Dashboard theo dõi tổng tiến độ, thời gian học trong tuần, mục tiêu tuần, số lesson đã học và streak. Timestamp vẫn được lưu ở UTC, còn streak và ngày trên lịch học được quy đổi theo timezone local của máy để phiên học gần nửa đêm không bị tính sai ngày. Roadmap có bộ lọc theo phase, trạng thái và từ khóa. Review dùng bốn mức `again`, `hard`, `good`, `easy`, lưu lịch sử và chỉ ra chủ đề yếu. Exercises tạo workspace trong `.data/workspaces`, mở bằng VS Code, chạy command kiểm thử được khai báo trong exercise manifest và lưu lịch sử chạy.
 
 ## Hai nhịp học
 

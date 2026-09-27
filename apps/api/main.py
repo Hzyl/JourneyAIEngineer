@@ -9,7 +9,7 @@ import sqlite3
 import subprocess
 import sys
 from contextlib import asynccontextmanager
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone, tzinfo
 from pathlib import Path
 from typing import Any
 
@@ -147,17 +147,42 @@ def settings_payload(db: sqlite3.Connection) -> dict[str, str]:
     return values
 
 
+def local_timezone() -> tzinfo:
+    """Return the machine timezone used for calendar-facing learning metrics."""
+
+    return datetime.now().astimezone().tzinfo or timezone.utc
+
+
+def local_day_for_iso(value: str | None, target_timezone: tzinfo | None = None) -> date | None:
+    """Convert a stored timestamp into the user's local calendar day safely."""
+
+    if not value:
+        return None
+    try:
+        parsed = datetime.fromisoformat(value)
+    except (TypeError, ValueError):
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(target_timezone or local_timezone()).date()
+
+
 def study_streak(db: sqlite3.Connection) -> int:
-    rows = db.execute("SELECT DISTINCT substr(created_at,1,10) AS day FROM study_sessions ORDER BY day DESC").fetchall()
-    days = {row["day"] for row in rows}
-    cursor = datetime.now(timezone.utc).date()
+    rows = db.execute("SELECT created_at FROM study_sessions").fetchall()
+    target_timezone = local_timezone()
+    days = {
+        day
+        for row in rows
+        if (day := local_day_for_iso(row["created_at"], target_timezone)) is not None
+    }
+    cursor = datetime.now(target_timezone).date()
     streak = 0
-    while cursor.isoformat() in days:
+    while cursor in days:
         streak += 1
         cursor -= timedelta(days=1)
     if streak == 0:
-        cursor = datetime.now(timezone.utc).date() - timedelta(days=1)
-        while cursor.isoformat() in days:
+        cursor = datetime.now(target_timezone).date() - timedelta(days=1)
+        while cursor in days:
             streak += 1
             cursor -= timedelta(days=1)
     return streak
