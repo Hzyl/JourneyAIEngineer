@@ -1,6 +1,6 @@
 # Journey AI Engineer
 
-Một chương trình học AI Engineer chạy local: roadmap 53 tuần, lesson song ngữ, review cards, bài tập mở trong VS Code, journal và Git context bridge.
+Một chương trình học AI Engineer chạy local: roadmap core 53 tuần + 15 chặng GenAI (68 tuần nếu học đầy đủ), lesson song ngữ, review cards, bài tập mở trong VS Code, journal và Git context bridge.
 
 ## Chạy nhanh trên Windows
 
@@ -23,11 +23,14 @@ Script sẽ build frontend production, cài PyInstaller vào `.venv` nếu máy 
 
 Database, workspace bài tập và journal của bản `.exe` được giữ trong `.data` và `journal` cạnh file executable. Vì vậy rebuild hoặc thay file `.exe` không làm mất tiến trình. Sau mỗi thay đổi source, chạy lại `scripts\build_exe.ps1` để tạo executable mới; file `.exe` được ignore và không push vào GitHub.
 
+Bản packaged chạy nền không hiện terminal. Mỗi browser tab gửi heartbeat local; khi tab cuối cùng đóng, app gửi `disconnect` bằng `sendBeacon` và launcher chờ một khoảng an toàn khoảng 15–20 giây trước khi tự tắt. Progress, study session, settings, review history và checklist đã lưu được ghi ngay vào SQLite/localStorage; ghi chú đang soạn chỉ được ghi khi bấm **Lưu ghi chú**. Khi mở lại shortcut, app sẽ khởi động một process sạch và mở tab mới.
+
 ## Thành phần
 
 - `apps/api`: FastAPI + SQLite, seed curriculum từ `content/curriculum.json`.
 - `src`: React/Vite UI.
 - `content`: chương trình học và hướng dẫn công cụ, được version-control.
+- `content/resources.json`: thư viện 50 nguồn sách, course, documentation và repository; có mapping theo phase, cách đọc và link gốc.
 - `.data`: database, workspace bài tập và output runtime; không commit.
 - `journal`: weekly reflection và artifact có thể push lên GitHub.
 
@@ -39,11 +42,28 @@ Database, workspace bài tập và journal của bản `.exe` được giữ tro
 4. Chạy test trong app; runner chỉ chạy command do exercise manifest khai báo.
 5. Ôn card trong **Ôn tập**.
 6. Export journal hoặc context ở **Journal & Git**.
-7. Review `git diff`, sau đó tự commit/push khi đã kiểm tra.
+7. Mở **Tài liệu** để lọc nguồn theo phase, loại tài liệu hoặc từ khóa; ưu tiên đọc một nguồn rồi quay lại làm bài.
+8. Review `git diff`, sau đó tự commit/push khi đã kiểm tra.
 
 ## Nội dung học
 
-Curriculum gồm 8 phase từ onboarding đến capstone: Python/software engineering, toán ML, classical ML, PyTorch, MLOps, NLP/LLM/RAG và portfolio/career. Mỗi module có lesson, exercise và review item seed tự động.
+Curriculum gồm 8 phase core từ onboarding đến capstone, sau đó nối thêm 15 chặng GenAI: Python/software engineering, toán ML, classical ML, PyTorch, MLOps, NLP/LLM/RAG, LLM application, RAG nâng cao, agents, evaluation, observability, production và system design. Mỗi module có lesson, exercise và review item seed tự động.
+
+Trang **Tài liệu** là thư viện tham khảo riêng, không thay thế lesson. Nguồn community [`AI Engineering from Scratch`](https://github.com/rohitg00/ai-engineering-from-scratch) được giữ đúng URL bạn cung cấp và đặt cạnh các nguồn official như Python, NumPy, scikit-learn, PyTorch, FastAPI, Docker, MLflow, Hugging Face, Google ML, Stanford CS229, D2L và Full Stack Deep Learning. Các chặng GenAI bổ sung thêm nguồn cho function calling, JSON Schema, MCP, RAG evaluation, OpenTelemetry, Prometheus, Langfuse, Redis, vLLM, Ollama, PEFT và system design. Khi một nguồn community không truy cập được, dùng nguồn official cùng phase để tiếp tục học.
+
+## GenAI specialization
+
+Sau 8 phase core, roadmap có 15 chặng chuyên sâu bám theo năng lực GenAI đi làm: Software Engineering, ML fundamentals, Transformer, LLM application, RAG, Advanced RAG, Tool Calling, Agents, MCP, Evaluation, Observability, Production Engineering, Fine-tuning, Local LLM và AI System Design. Mỗi chặng có 4 lesson, bài thực hành, review card, nguồn đọc và checkpoint; tổng cộng thêm 60 lesson.
+
+Sáu project mới được seed sẵn để tạo portfolio theo chuỗi tăng dần: **LLM Chat API**, **Document Intelligence System**, **Advanced RAG System**, **AI Assistant với Database & API**, **Research Assistant Agent** và **End-to-End Production GenAI System**. Mỗi project có stack, deliverables, evaluation, đường dẫn GitHub và số tuần dự kiến.
+
+Nếu cần tạo lại dữ liệu curriculum sau khi chỉnh nội dung, chạy:
+
+```powershell
+python scripts/seed_genai_track.py
+python scripts/build_lesson_catalog.py
+python scripts/validate_content.py
+```
 
 Để biến roadmap thành năng lực có thể trình bày khi xin việc, đọc thêm [`content/study-playbook.md`](content/study-playbook.md). File này quy định nhịp 12–15 giờ mỗi tuần, vòng lặp của một lesson, chuẩn evidence cho project, cách luyện phỏng vấn và cách dùng trợ lý AI mà vẫn tự làm chủ code.
 
@@ -68,10 +88,11 @@ Dashboard theo dõi tổng tiến độ, thời gian học trong tuần, mục t
 
 ## Hai nhịp học
 
-- **12–15 tháng / 53 tuần:** nhịp chuẩn cho sinh viên năm cuối, khoảng 12–15 giờ mỗi tuần.
-- **6 tháng / 26 tuần:** nhịp tăng tốc, dùng khi cần chuẩn bị portfolio hoặc xin thực tập sớm.
+- **Core 53 tuần:** nền tảng bắt buộc từ onboarding đến capstone/career, khoảng 12–15 giờ mỗi tuần.
+- **Core + GenAI 68 tuần:** nhịp đầy đủ để đi từ nền tảng đến vận hành hệ thống GenAI production.
+- **Tăng tốc 34 tuần:** học các lesson và project theo thứ tự ưu tiên, dùng khi cần chuẩn bị portfolio sớm.
 
-Chọn nhịp trong **Settings**. Nội dung vẫn là cùng một curriculum bảy chặng chuyên môn cộng onboarding: Python/software engineering, toán và statistics cho ML, classical ML, PyTorch, deployment/MLOps, NLP/LLM/RAG, capstone và career.
+Chọn nhịp trong **Settings**. Nội dung core vẫn đi qua onboarding và 7 phase chuyên môn; track mở rộng thêm 15 chặng GenAI. App lưu progress ở SQLite local nên có thể dừng, đổi nhịp và tiếp tục mà không mất dữ liệu.
 
 ## Content và kiểm tra chất lượng
 

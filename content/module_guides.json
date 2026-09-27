@@ -296,6 +296,276 @@
       "practice_en": "Practice a 90-second project pitch, write a STAR story for a bug, and design an inference system.",
       "checkpoint_vi": "Bạn nói được mình đã quyết định gì, đo gì, sai ở đâu và học được gì từ mỗi project.",
       "checkpoint_en": "You can explain your decisions, measurements, failures, and lessons from every project."
+    },
+    "genai-software-foundations": {
+      "focus_vi": "Một AI Engineer phải kiểm soát boundary của service, dependency và release trước khi tối ưu model.",
+      "focus_en": "An AI Engineer must control service boundaries, dependencies, and releases before optimizing a model.",
+      "practice_vi": "Đóng gói một endpoint AI giả lập bằng FastAPI, Docker và GitHub Actions; ghi lại contract, health check và lệnh rollback.",
+      "practice_en": "Package a stub AI endpoint with FastAPI, Docker, and GitHub Actions; document its contract, health check, and rollback command.",
+      "checkpoint_vi": "Clone trên máy sạch, chạy test và container bằng một chuỗi lệnh; giải thích được lỗi thuộc code, môi trường hay deployment.",
+      "checkpoint_en": "From a clean clone, run tests and the container with one command sequence and distinguish code, environment, and deployment failures.",
+      "deliverables_vi": [
+        "Một implementation nhỏ chạy được",
+        "Một test hoặc benchmark",
+        "Một note về failure mode và trade-off"
+      ],
+      "deliverables_en": [
+        "One working implementation",
+        "One test or benchmark",
+        "One note on failure modes and trade-offs"
+      ]
+    },
+    "genai-ml-fundamentals": {
+      "focus_vi": "Embedding và metric là cầu nối giữa dữ liệu của người dùng với retrieval, clustering và model quality.",
+      "focus_en": "Embeddings and metrics connect user data to retrieval, clustering, and model quality.",
+      "practice_vi": "Tạo một embedding benchmark nhỏ: split dữ liệu, đo cosine similarity, kiểm tra leakage và vẽ loss curve.",
+      "practice_en": "Build a small embedding benchmark: split data, measure cosine similarity, check leakage, and plot a loss curve.",
+      "checkpoint_vi": "Bạn giải thích được một similarity score, một split hợp lệ và cách overfitting làm kết quả retrieval kém đi.",
+      "checkpoint_en": "You can explain a similarity score, a valid split, and how overfitting degrades retrieval.",
+      "deliverables_vi": [
+        "Một implementation nhỏ chạy được",
+        "Một test hoặc benchmark",
+        "Một note về failure mode và trade-off"
+      ],
+      "deliverables_en": [
+        "One working implementation",
+        "One test or benchmark",
+        "One note on failure modes and trade-offs"
+      ]
+    },
+    "genai-transformers": {
+      "focus_vi": "Transformer chỉ trở nên dễ hiểu khi theo dõi tensor shape, attention weights và chi phí inference.",
+      "focus_en": "Transformers become understandable when you trace tensor shapes, attention weights, and inference cost.",
+      "practice_vi": "Tự viết attention tối giản bằng PyTorch/NumPy, đo shape và so sánh inference có/không có cache.",
+      "practice_en": "Implement minimal attention with PyTorch/NumPy, inspect shapes, and compare inference with and without caching.",
+      "checkpoint_vi": "Bạn vẽ được luồng Q/K/V, giải thích encoder/decoder và định lượng vì sao KV cache giảm latency.",
+      "checkpoint_en": "You can draw the Q/K/V flow, explain encoder/decoder roles, and quantify why KV cache reduces latency.",
+      "deliverables_vi": [
+        "Một implementation nhỏ chạy được",
+        "Một test hoặc benchmark",
+        "Một note về failure mode và trade-off"
+      ],
+      "deliverables_en": [
+        "One working implementation",
+        "One test or benchmark",
+        "One note on failure modes and trade-offs"
+      ]
+    },
+    "llm-application": {
+      "focus_vi": "LLM application engineering là thiết kế contract và failure boundary quanh model, không phải chỉ viết một prompt dài.",
+      "focus_en": "LLM application engineering designs contracts and failure boundaries around a model, not just a long prompt.",
+      "practice_vi": "Xây LLM Chat API có schema request/response, streaming giả lập, retry có backoff và token budget.",
+      "practice_en": "Build an LLM Chat API with request/response schemas, simulated streaming, backoff retries, and a token budget.",
+      "checkpoint_vi": "Một client khác có thể gọi API mà không biết prompt nội bộ; output sai schema và rate limit đều có test riêng.",
+      "checkpoint_en": "Another client can call the API without knowing internal prompts, and schema failures plus rate limits have dedicated tests.",
+      "deliverables_vi": [
+        "Một implementation nhỏ chạy được",
+        "Một test hoặc benchmark",
+        "Một note về failure mode và trade-off"
+      ],
+      "deliverables_en": [
+        "One working implementation",
+        "One test or benchmark",
+        "One note on failure modes and trade-offs"
+      ]
+    },
+    "rag-foundations": {
+      "focus_vi": "RAG tách retrieval khỏi generation để câu trả lời có thể truy nguồn và từ chối khi không có bằng chứng.",
+      "focus_en": "RAG separates retrieval from generation so answers can be sourced and can abstain without evidence.",
+      "practice_vi": "Xây ingestion pipeline cho tài liệu tiếng Việt, lưu metadata, benchmark top-k và trả lời kèm các chunk evidence.",
+      "practice_en": "Build an ingestion pipeline for Vietnamese documents, preserve metadata, benchmark top-k, and answer with evidence chunks.",
+      "checkpoint_vi": "Bạn chỉ ra được lỗi do parsing, chunking, retrieval hay generation bằng một evaluation case cụ thể.",
+      "checkpoint_en": "You can attribute a failure to parsing, chunking, retrieval, or generation with a concrete evaluation case.",
+      "deliverables_vi": [
+        "Một implementation nhỏ chạy được",
+        "Một test hoặc benchmark",
+        "Một note về failure mode và trade-off"
+      ],
+      "deliverables_en": [
+        "One working implementation",
+        "One test or benchmark",
+        "One note on failure modes and trade-offs"
+      ]
+    },
+    "advanced-rag": {
+      "focus_vi": "Advanced RAG phải cải thiện retrieval bằng số liệu chứ không chỉ thêm nhiều component.",
+      "focus_en": "Advanced RAG should improve retrieval with measurements rather than simply adding components.",
+      "practice_vi": "Tạo evaluation set 30 câu, so sánh vector/BM25/hybrid, thêm reranker và phân tích failure theo query type.",
+      "practice_en": "Create a 30-question evaluation set, compare vector/BM25/hybrid retrieval, add a reranker, and slice failures by query type.",
+      "checkpoint_vi": "Bạn biết retrieval fail ở recall hay ranking, citation có đủ evidence không và thay đổi nào đáng giữ.",
+      "checkpoint_en": "You can tell whether retrieval failed on recall or ranking, whether citations support claims, and which change is worth keeping.",
+      "deliverables_vi": [
+        "Một implementation nhỏ chạy được",
+        "Một test hoặc benchmark",
+        "Một note về failure mode và trade-off"
+      ],
+      "deliverables_en": [
+        "One working implementation",
+        "One test or benchmark",
+        "One note on failure modes and trade-offs"
+      ]
+    },
+    "tool-calling": {
+      "focus_vi": "Tool calling biến output model thành hành động nên cần contract chặt hơn chat thông thường.",
+      "focus_en": "Tool calling turns model output into actions, so its contracts must be stricter than ordinary chat.",
+      "practice_vi": "Xây tool đọc database giả lập với schema validation, timeout, retry có giới hạn và audit log không chứa secret.",
+      "practice_en": "Build a mock database tool with schema validation, bounded retries, timeouts, and an audit log without secrets.",
+      "checkpoint_vi": "Tool sai input không thể chạy side effect; retry không nhân đôi giao dịch và lỗi được trả về có thể sửa.",
+      "checkpoint_en": "Invalid tool input cannot cause side effects, retries do not duplicate transactions, and errors are actionable.",
+      "deliverables_vi": [
+        "Một implementation nhỏ chạy được",
+        "Một test hoặc benchmark",
+        "Một note về failure mode và trade-off"
+      ],
+      "deliverables_en": [
+        "One working implementation",
+        "One test or benchmark",
+        "One note on failure modes and trade-offs"
+      ]
+    },
+    "ai-agents": {
+      "focus_vi": "Agent là một vòng lặp điều khiển có state và side effect; độ tin cậy đến từ giới hạn và quan sát được.",
+      "focus_en": "An agent is a control loop with state and side effects; reliability comes from limits and observability.",
+      "practice_vi": "Xây research agent tối giản có max steps, tool allowlist, memory state và bước phê duyệt trước side effect.",
+      "practice_en": "Build a minimal research agent with max steps, a tool allowlist, memory state, and approval before side effects.",
+      "checkpoint_vi": "Agent dừng đúng khi đạt mục tiêu hoặc gặp guardrail; mọi tool call có lý do, input và output để review.",
+      "checkpoint_en": "The agent stops when it reaches the goal or a guardrail, and every tool call has reviewable intent, input, and output.",
+      "deliverables_vi": [
+        "Một implementation nhỏ chạy được",
+        "Một test hoặc benchmark",
+        "Một note về failure mode và trade-off"
+      ],
+      "deliverables_en": [
+        "One working implementation",
+        "One test or benchmark",
+        "One note on failure modes and trade-offs"
+      ]
+    },
+    "mcp": {
+      "focus_vi": "MCP chuẩn hóa cách model khám phá context và capability, nhưng không loại bỏ trách nhiệm về quyền truy cập.",
+      "focus_en": "MCP standardizes how models discover context and capabilities without removing access-control responsibility.",
+      "practice_vi": "Viết MCP server local cung cấp một resource và một tool read-only, kiểm tra schema và quyền truy cập.",
+      "practice_en": "Write a local MCP server exposing one resource and one read-only tool, then test schemas and access control.",
+      "checkpoint_vi": "Bạn vẽ được flow client/server, phân biệt tool với resource/prompt và nêu được threat model tối thiểu.",
+      "checkpoint_en": "You can draw the client/server flow, distinguish tools from resources/prompts, and state a minimum threat model.",
+      "deliverables_vi": [
+        "Một implementation nhỏ chạy được",
+        "Một test hoặc benchmark",
+        "Một note về failure mode và trade-off"
+      ],
+      "deliverables_en": [
+        "One working implementation",
+        "One test or benchmark",
+        "One note on failure modes and trade-offs"
+      ]
+    },
+    "genai-evaluation": {
+      "focus_vi": "Evaluation là cách phân biệt demo nghe hay với hệ thống đáng tin và có thể cải thiện.",
+      "focus_en": "Evaluation distinguishes a fluent demo from a trustworthy system that can improve.",
+      "practice_vi": "Tạo golden set, rubric và regression suite cho RAG/agent; lưu cả lỗi và chi phí mỗi run.",
+      "practice_en": "Create a golden set, rubric, and regression suite for RAG/agents, recording failures and cost for every run.",
+      "checkpoint_vi": "Bạn biết metric nào đo retrieval, metric nào đo grounded answer và khi nào human review bắt buộc.",
+      "checkpoint_en": "You can identify retrieval metrics, grounded-answer metrics, and when human review is required.",
+      "deliverables_vi": [
+        "Một implementation nhỏ chạy được",
+        "Một test hoặc benchmark",
+        "Một note về failure mode và trade-off"
+      ],
+      "deliverables_en": [
+        "One working implementation",
+        "One test or benchmark",
+        "One note on failure modes and trade-offs"
+      ]
+    },
+    "genai-observability": {
+      "focus_vi": "Không có telemetry thì không biết lỗi nằm ở model, retrieval, provider hay hạ tầng.",
+      "focus_en": "Without telemetry you cannot tell whether a failure is in the model, retrieval, provider, or infrastructure.",
+      "practice_vi": "Instrument một request end-to-end với trace id, token/cost fields, p50/p95 latency và alert budget.",
+      "practice_en": "Instrument an end-to-end request with a trace ID, token/cost fields, p50/p95 latency, and a budget alert.",
+      "checkpoint_vi": "Từ một trace bạn tìm được nguyên nhân của latency/cost spike mà không log prompt nhạy cảm.",
+      "checkpoint_en": "From one trace you can identify a latency or cost spike without logging sensitive prompts.",
+      "deliverables_vi": [
+        "Một implementation nhỏ chạy được",
+        "Một test hoặc benchmark",
+        "Một note về failure mode và trade-off"
+      ],
+      "deliverables_en": [
+        "One working implementation",
+        "One test or benchmark",
+        "One note on failure modes and trade-offs"
+      ]
+    },
+    "genai-production": {
+      "focus_vi": "Production quality là behavior khi provider chậm, lỗi, đắt hoặc traffic tăng chứ không chỉ happy path.",
+      "focus_en": "Production quality is behavior when providers are slow, failing, expensive, or traffic grows—not just the happy path.",
+      "practice_vi": "Thiết kế service có cache policy, provider fallback, queue worker và load test đơn giản với SLO rõ ràng.",
+      "practice_en": "Design a service with a cache policy, provider fallback, queue worker, and a small load test with explicit SLOs.",
+      "checkpoint_vi": "Bạn giải thích được trade-off consistency, latency, cost và availability bằng số liệu đo được.",
+      "checkpoint_en": "You can explain consistency, latency, cost, and availability trade-offs with measured evidence.",
+      "deliverables_vi": [
+        "Một implementation nhỏ chạy được",
+        "Một test hoặc benchmark",
+        "Một note về failure mode và trade-off"
+      ],
+      "deliverables_en": [
+        "One working implementation",
+        "One test or benchmark",
+        "One note on failure modes and trade-offs"
+      ]
+    },
+    "fine-tuning": {
+      "focus_vi": "Fine-tuning chỉ đáng làm khi data và evaluation chứng minh prompting/RAG chưa giải quyết được vấn đề.",
+      "focus_en": "Fine-tuning is justified only when data and evaluation show prompting/RAG are insufficient.",
+      "practice_vi": "Chuẩn bị dataset có split và license rõ ràng, chạy LoRA nhỏ, so sánh baseline và đo memory/quality.",
+      "practice_en": "Prepare a dataset with explicit splits and licensing, run a small LoRA experiment, and compare memory and quality to baseline.",
+      "checkpoint_vi": "Bạn bảo vệ được quyết định fine-tune hay không bằng quality, cost, data volume và maintenance risk.",
+      "checkpoint_en": "You can defend whether to fine-tune using quality, cost, data volume, and maintenance risk.",
+      "deliverables_vi": [
+        "Một implementation nhỏ chạy được",
+        "Một test hoặc benchmark",
+        "Một note về failure mode và trade-off"
+      ],
+      "deliverables_en": [
+        "One working implementation",
+        "One test or benchmark",
+        "One note on failure modes and trade-offs"
+      ]
+    },
+    "local-llm": {
+      "focus_vi": "Local LLM giúp hiểu rõ memory, throughput và trade-off giữa model size, quality và privacy.",
+      "focus_en": "Local LLMs expose the trade-offs among memory, throughput, model size, quality, and privacy.",
+      "practice_vi": "Chạy một model nhỏ local, đo cold/warm latency, tokens/sec, VRAM và so sánh quantized với full precision.",
+      "practice_en": "Run a small local model, measure cold/warm latency, tokens/sec, VRAM, and compare quantized with full precision.",
+      "checkpoint_vi": "Bạn chọn được runtime theo hardware, workload và privacy requirement thay vì chọn theo trend.",
+      "checkpoint_en": "You can choose a runtime from hardware, workload, and privacy requirements rather than hype.",
+      "deliverables_vi": [
+        "Một implementation nhỏ chạy được",
+        "Một test hoặc benchmark",
+        "Một note về failure mode và trade-off"
+      ],
+      "deliverables_en": [
+        "One working implementation",
+        "One test or benchmark",
+        "One note on failure modes and trade-offs"
+      ]
+    },
+    "genai-system-design": {
+      "focus_vi": "Senior AI Engineer phải giải thích quyết định hệ thống qua user value, reliability, security và cost.",
+      "focus_en": "A senior AI Engineer explains system decisions through user value, reliability, security, and cost.",
+      "practice_vi": "Viết design doc cho Production GenAI System, có data flow, SLO, threat model, cost estimate và rollout plan.",
+      "practice_en": "Write a design document for a Production GenAI System with data flow, SLOs, threat model, cost estimate, and rollout plan.",
+      "checkpoint_vi": "Reviewer có thể lần theo từng quyết định, failure mode, metric và kế hoạch rollback trong design doc.",
+      "checkpoint_en": "A reviewer can trace every decision, failure mode, metric, and rollback plan in the design document.",
+      "deliverables_vi": [
+        "Một implementation nhỏ chạy được",
+        "Một test hoặc benchmark",
+        "Một note về failure mode và trade-off"
+      ],
+      "deliverables_en": [
+        "One working implementation",
+        "One test or benchmark",
+        "One note on failure modes and trade-offs"
+      ]
     }
   }
 }

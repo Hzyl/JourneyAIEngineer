@@ -20,11 +20,14 @@ def load_module(tmp_path, monkeypatch):
 
 def test_curriculum_is_seeded(tmp_path, monkeypatch):
     module = load_module(tmp_path, monkeypatch)
+    curriculum = json.loads((module.CONTENT_ROOT / "curriculum.json").read_text(encoding="utf-8"))
+    expected_modules = sum(len(phase["modules"]) for phase in curriculum["phases"])
+    expected_lessons = sum(len(module_item["lessons"]) for phase in curriculum["phases"] for module_item in phase["modules"])
     with module.connect() as db:
-        assert db.execute("SELECT COUNT(*) FROM phases").fetchone()[0] == 8
-        assert db.execute("SELECT COUNT(*) FROM lessons").fetchone()[0] == 148
-        assert db.execute("SELECT COUNT(*) FROM exercises").fetchone()[0] == 37
-        assert db.execute("SELECT COUNT(*) FROM review_items").fetchone()[0] == 148
+        assert db.execute("SELECT COUNT(*) FROM phases").fetchone()[0] == len(curriculum["phases"])
+        assert db.execute("SELECT COUNT(*) FROM lessons").fetchone()[0] == expected_lessons
+        assert db.execute("SELECT COUNT(*) FROM exercises").fetchone()[0] == expected_modules
+        assert db.execute("SELECT COUNT(*) FROM review_items").fetchone()[0] == expected_lessons
         exercise = db.execute("SELECT test_command,starter_code FROM exercises LIMIT 1").fetchone()
         assert "test_exercise.py" in exercise["test_command"]
         assert "NotImplementedError" in exercise["starter_code"]
@@ -38,6 +41,8 @@ def test_curriculum_sync_adds_new_records_without_resetting_progress(tmp_path, m
 
     source_content = module.CONTENT_ROOT
     curriculum = json.loads((source_content / "curriculum.json").read_text(encoding="utf-8"))
+    expected_modules = sum(len(phase["modules"]) for phase in curriculum["phases"])
+    expected_lessons = sum(len(module_item["lessons"]) for phase in curriculum["phases"] for module_item in phase["modules"])
     first_phase = curriculum["phases"][0]
     first_phase["modules"].append(
         {
@@ -57,11 +62,11 @@ def test_curriculum_sync_adds_new_records_without_resetting_progress(tmp_path, m
     module.seed_content()
 
     with module.connect() as db:
-        assert db.execute("SELECT COUNT(*) FROM phases").fetchone()[0] == 8
-        assert db.execute("SELECT COUNT(*) FROM modules").fetchone()[0] == 38
-        assert db.execute("SELECT COUNT(*) FROM lessons").fetchone()[0] == 149
-        assert db.execute("SELECT COUNT(*) FROM exercises").fetchone()[0] == 38
-        assert db.execute("SELECT COUNT(*) FROM review_items").fetchone()[0] == 149
+        assert db.execute("SELECT COUNT(*) FROM phases").fetchone()[0] == len(curriculum["phases"])
+        assert db.execute("SELECT COUNT(*) FROM modules").fetchone()[0] == expected_modules + 1
+        assert db.execute("SELECT COUNT(*) FROM lessons").fetchone()[0] == expected_lessons + 1
+        assert db.execute("SELECT COUNT(*) FROM exercises").fetchone()[0] == expected_modules + 1
+        assert db.execute("SELECT COUNT(*) FROM review_items").fetchone()[0] == expected_lessons + 1
         progress = db.execute("SELECT status,minutes_spent FROM progress WHERE lesson_id=(SELECT id FROM lessons WHERE slug=?)", (lesson_slug,)).fetchone()
         assert progress["status"] == "completed"
         assert progress["minutes_spent"] == 42
@@ -97,6 +102,45 @@ def test_lesson_schema_and_settings(tmp_path, monkeypatch):
     assert updated["weekly_goal_minutes"] == 900
     assert updated["target_role"] == "junior"
     assert updated["onboarding_complete"] is True
+
+
+def test_reference_library_contains_requested_repo_and_phase_filters(tmp_path, monkeypatch):
+    module = load_module(tmp_path, monkeypatch)
+    result = module.resources()
+    assert result["total"] >= 20
+    requested = next(item for item in result["resources"] if item["slug"] == "ai-engineering-from-scratch")
+    assert requested["url"] == "https://github.com/rohitg00/ai-engineering-from-scratch"
+    assert {"phase-00", "phase-08", "phase-22"}.issubset(requested["phase_ids"])
+    phase_result = module.resources(phase="phase-06")
+    assert phase_result["count"] > 0
+    assert all("phase-06" in item["phase_ids"] for item in phase_result["resources"])
+    genai_result = module.resources(phase="phase-16")
+    assert genai_result["count"] >= 3
+    assert all("phase-16" in item["phase_ids"] for item in genai_result["resources"])
+    query_result = module.resources(query="pytorch")
+    assert query_result["count"] >= 2
+    roadmap = module.roadmap()
+    genai_phases = [phase for phase in roadmap["phases"] if phase["track"] == "genai-specialization"]
+    assert len(roadmap["phases"]) == 23
+    assert len(genai_phases) == 15
+    assert sum(len(module_item["lessons"]) for phase in genai_phases for module_item in phase["modules"]) == 60
+    assert len(roadmap["program"]["portfolio_projects"]) == 10
+    assert any(project["slug"] == "production-genai-system" for project in roadmap["program"]["portfolio_projects"])
+
+
+def test_runtime_heartbeat_disconnect_and_expiry(tmp_path, monkeypatch):
+    module = load_module(tmp_path, monkeypatch)
+    client_id = "test-runtime-client-123"
+    module._RUNTIME_CLIENTS.clear()
+    heartbeat = module.runtime_heartbeat(module.RuntimeClientRequest(client_id=client_id))
+    assert heartbeat["ok"] is True
+    assert module.runtime_has_active_clients() is True
+    disconnected = module.runtime_disconnect(module.RuntimeClientRequest(client_id=client_id))
+    assert disconnected["active_clients"] == 0
+    assert module.runtime_has_active_clients() is False
+    with module._RUNTIME_LOCK:
+        module._RUNTIME_CLIENTS[client_id] = module.time.monotonic() - module.RUNTIME_HEARTBEAT_TIMEOUT_SECONDS - 1
+    assert module.runtime_has_active_clients() is False
 
 
 def test_git_commands_hide_windows(tmp_path, monkeypatch):

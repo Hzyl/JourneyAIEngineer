@@ -180,6 +180,71 @@ TOPIC_EN = {
     "AI system design": "AI system design",
 }
 
+# The GenAI specialization is kept as a separate vocabulary block so the core
+# curriculum remains easy to scan and future stages can be added safely.
+TOPIC_EN.update({
+    "Python cho AI service và typed contract": "Python for AI services and typed contracts",
+    "Linux shell và môi trường tái lập": "Linux shell and reproducible environments",
+    "REST API, SQL và Docker cho AI": "REST APIs, SQL and Docker for AI",
+    "CI/CD và cloud căn bản": "CI/CD and cloud fundamentals",
+    "Supervised và unsupervised learning": "Supervised and unsupervised learning",
+    "Embedding và similarity search": "Embeddings and similarity search",
+    "Train, validation, test và leakage": "Train, validation, test, and leakage",
+    "Loss function, optimizer và overfitting": "Loss functions, optimizers, and overfitting",
+    "Neural network và backpropagation": "Neural networks and backpropagation",
+    "Self-attention và scaled dot product": "Self-attention and scaled dot product",
+    "Transformer encoder và decoder": "Transformer encoders and decoders",
+    "KV cache và inference efficiency": "KV cache and inference efficiency",
+    "Chat completion và message lifecycle": "Chat completion and message lifecycle",
+    "System prompt và user prompt": "System prompts and user prompts",
+    "Structured output và JSON Schema": "Structured outputs and JSON Schema",
+    "Streaming, rate limit và retry": "Streaming, rate limits, and retries",
+    "Document parsing và ingestion": "Document parsing and ingestion",
+    "Chunking, metadata và context": "Chunking, metadata, and context",
+    "Embedding và vector database": "Embeddings and vector databases",
+    "Retriever, context và LLM": "Retrievers, context, and the LLM",
+    "Hybrid search: BM25 và vector search": "Hybrid search: BM25 and vector search",
+    "Reranking và top-k selection": "Reranking and top-k selection",
+    "Query rewrite và metadata filtering": "Query rewriting and metadata filtering",
+    "Citation, faithfulness và evaluation": "Citations, faithfulness, and evaluation",
+    "Function calling và tool schema": "Function calling and tool schemas",
+    "Tool validation và argument policy": "Tool validation and argument policies",
+    "Retry, timeout và idempotency": "Retries, timeouts, and idempotency",
+    "Error handling và secure tool execution": "Error handling and secure tool execution",
+    "Planning và task decomposition": "Planning and task decomposition",
+    "Memory: state, history và retrieval": "Memory: state, history, and retrieval",
+    "Agent loop và điều kiện dừng": "Agent loops and stop conditions",
+    "Human in the loop và guardrails": "Human in the loop and guardrails",
+    "MCP architecture và message flow": "MCP architecture and message flow",
+    "MCP client và server": "MCP clients and servers",
+    "MCP tools và resources": "MCP tools and resources",
+    "MCP prompts và security": "MCP prompts and security",
+    "LLM evaluation và test set": "LLM evaluation and test sets",
+    "RAG evaluation: retrieval và answer": "RAG evaluation: retrieval and answers",
+    "Agent evaluation và trajectory": "Agent evaluation and trajectories",
+    "Hallucination, faithfulness và metrics": "Hallucination, faithfulness, and metrics",
+    "Structured logging và tracing": "Structured logging and tracing",
+    "Token usage và latency": "Token usage and latency",
+    "Cost monitoring và budget": "Cost monitoring and budgets",
+    "Dashboard, alert và incident": "Dashboards, alerts, and incidents",
+    "Streaming và caching": "Streaming and caching",
+    "Retry, fallback và rate limit": "Retries, fallbacks, and rate limits",
+    "Queue và worker": "Queues and workers",
+    "High availability và capacity": "High availability and capacity",
+    "Dataset preparation và SFT": "Dataset preparation and SFT",
+    "LoRA, QLoRA và PEFT": "LoRA, QLoRA, and PEFT",
+    "Fine-tuning evaluation": "Fine-tuning evaluation",
+    "Quantization và model trade-offs": "Quantization and model trade-offs",
+    "Transformers và PyTorch inference": "Transformers and PyTorch inference",
+    "vLLM và serving throughput": "vLLM and serving throughput",
+    "GGUF, quantization và Ollama": "GGUF, quantization, and Ollama",
+    "GPU optimization và inference benchmark": "GPU optimization and inference benchmarks",
+    "Architecture end-to-end cho AI product": "End-to-end architecture for an AI product",
+    "Scalability, reliability và failure modes": "Scalability, reliability, and failure modes",
+    "Security, cost optimization và model selection": "Security, cost optimization, and model selection",
+    "Design review và capstone proposal": "Design review and capstone proposal",
+})
+
 
 RESOURCE_BY_PHASE: dict[int, list[dict[str, str]]] = {
     0: [
@@ -224,6 +289,84 @@ RESOURCE_BY_PHASE: dict[int, list[dict[str, str]]] = {
         {"title": "The Twelve-Factor App", "url": "https://12factor.net/", "language": "en"},
     ],
 }
+
+RESOURCE_BY_PHASE.update({
+    8: [
+        {"title": "FastAPI Documentation", "url": "https://fastapi.tiangolo.com/", "language": "en"},
+        {"title": "GitHub Actions Documentation", "url": "https://docs.github.com/en/actions", "language": "en"},
+        {"title": "Docker Get Started", "url": "https://docs.docker.com/get-started/", "language": "en"},
+    ],
+    9: [
+        {"title": "Google Machine Learning Crash Course", "url": "https://developers.google.com/machine-learning/crash-course", "language": "en"},
+        {"title": "scikit-learn User Guide", "url": "https://scikit-learn.org/stable/user_guide.html", "language": "en"},
+        {"title": "Sentence Transformers", "url": "https://www.sbert.net/", "language": "en"},
+    ],
+    10: [
+        {"title": "PyTorch Tutorials", "url": "https://pytorch.org/tutorials/", "language": "en"},
+        {"title": "The Illustrated Transformer", "url": "https://jalammar.github.io/illustrated-transformer/", "language": "en"},
+        {"title": "Attention Is All You Need", "url": "https://arxiv.org/abs/1706.03762", "language": "en"},
+    ],
+    11: [
+        {"title": "OpenAI Function Calling Guide", "url": "https://platform.openai.com/docs/guides/function-calling", "language": "en"},
+        {"title": "JSON Schema", "url": "https://json-schema.org/learn/getting-started-step-by-step", "language": "en"},
+        {"title": "OpenAI Cookbook", "url": "https://cookbook.openai.com/", "language": "en"},
+    ],
+    12: [
+        {"title": "Qdrant Concepts", "url": "https://qdrant.tech/documentation/concepts/", "language": "en"},
+        {"title": "FAISS Getting Started", "url": "https://github.com/facebookresearch/faiss/wiki/Getting-started", "language": "en"},
+        {"title": "Hugging Face NLP Course", "url": "https://huggingface.co/learn/nlp-course/chapter1/1", "language": "en"},
+    ],
+    13: [
+        {"title": "Elasticsearch Reference", "url": "https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html", "language": "en"},
+        {"title": "Ragas Documentation", "url": "https://docs.ragas.io/en/stable/", "language": "en"},
+        {"title": "Qdrant Hybrid Search", "url": "https://qdrant.tech/documentation/concepts/hybrid-queries/", "language": "en"},
+    ],
+    14: [
+        {"title": "OpenAI Function Calling Guide", "url": "https://platform.openai.com/docs/guides/function-calling", "language": "en"},
+        {"title": "JSON Schema", "url": "https://json-schema.org/learn/getting-started-step-by-step", "language": "en"},
+        {"title": "Tenacity Documentation", "url": "https://tenacity.readthedocs.io/en/latest/", "language": "en"},
+    ],
+    15: [
+        {"title": "Building Effective Agents", "url": "https://www.anthropic.com/research/building-effective-agents", "language": "en"},
+        {"title": "LangGraph Documentation", "url": "https://langchain-ai.github.io/langgraph/", "language": "en"},
+        {"title": "OpenAI Cookbook", "url": "https://cookbook.openai.com/", "language": "en"},
+    ],
+    16: [
+        {"title": "MCP Getting Started", "url": "https://modelcontextprotocol.io/docs/getting-started/intro", "language": "en"},
+        {"title": "MCP Specification", "url": "https://modelcontextprotocol.io/specification/2025-06-18", "language": "en"},
+        {"title": "MCP Python SDK", "url": "https://github.com/modelcontextprotocol/python-sdk", "language": "en"},
+    ],
+    17: [
+        {"title": "OpenAI Evals", "url": "https://github.com/openai/evals", "language": "en"},
+        {"title": "Ragas Documentation", "url": "https://docs.ragas.io/en/stable/", "language": "en"},
+        {"title": "DeepEval Documentation", "url": "https://deepeval.com/docs/getting-started", "language": "en"},
+    ],
+    18: [
+        {"title": "OpenTelemetry Python", "url": "https://opentelemetry.io/docs/languages/python/", "language": "en"},
+        {"title": "Prometheus Overview", "url": "https://prometheus.io/docs/introduction/overview/", "language": "en"},
+        {"title": "Langfuse Documentation", "url": "https://langfuse.com/docs", "language": "en"},
+    ],
+    19: [
+        {"title": "Redis Documentation", "url": "https://redis.io/docs/latest/", "language": "en"},
+        {"title": "Celery Documentation", "url": "https://docs.celeryq.dev/en/stable/", "language": "en"},
+        {"title": "Kubernetes Basics", "url": "https://kubernetes.io/docs/tutorials/kubernetes-basics/", "language": "en"},
+    ],
+    20: [
+        {"title": "Hugging Face PEFT", "url": "https://huggingface.co/docs/peft/index", "language": "en"},
+        {"title": "Hugging Face TRL", "url": "https://huggingface.co/docs/trl/index", "language": "en"},
+        {"title": "bitsandbytes Documentation", "url": "https://huggingface.co/docs/bitsandbytes/main/en/index", "language": "en"},
+    ],
+    21: [
+        {"title": "vLLM Documentation", "url": "https://docs.vllm.ai/en/latest/", "language": "en"},
+        {"title": "Ollama Documentation", "url": "https://docs.ollama.com/", "language": "en"},
+        {"title": "llama.cpp", "url": "https://github.com/ggml-org/llama.cpp", "language": "en"},
+    ],
+    22: [
+        {"title": "Google Rules of Machine Learning", "url": "https://developers.google.com/machine-learning/guides/rules-of-ml", "language": "en"},
+        {"title": "Full Stack Deep Learning", "url": "https://fullstackdeeplearning.com/", "language": "en"},
+        {"title": "Machine Learning Systems Design", "url": "https://github.com/chiphuyen/machine-learning-systems-design", "language": "en"},
+    ],
+})
 
 
 SPECIFIC_RESOURCES: list[tuple[tuple[str, ...], dict[str, str]]] = [
@@ -355,6 +498,14 @@ def lesson_guide(title: str, title_en: str, module: dict[str, Any], kind: str, r
 
 def kind_for(title: str, phase_order: int) -> str:
     text = title.lower()
+    if phase_order in {10}:
+        return "deep"
+    if phase_order in {11, 12, 13, 14, 15, 16, 17, 20, 21}:
+        return "llm"
+    if phase_order in {18, 19, 22}:
+        return "mlops"
+    if phase_order == 9:
+        return "ml"
     if phase_order == 2 or any(word in text for word in ("vector", "matrix", "gradient", "probability", "bayes", "variance", "likelihood", "sampling", "eigen", "pca", "calculus")):
         return "math"
     if phase_order == 3 or any(word in text for word in ("regression", "classification", "tree", "forest", "boosting", "metric", "cross-validation", "model", "feature", "leakage", "calibration")):

@@ -1,9 +1,10 @@
-"""Start the packaged Journey AI Engineer app and open it in the default browser."""
+"""Start the packaged Journey AI Engineer app without leaving a console behind."""
 
 from __future__ import annotations
 
 import os
 import socket
+import sys
 import threading
 import time
 import traceback
@@ -11,10 +12,12 @@ import webbrowser
 
 import uvicorn
 
-from apps.api.main import DATA_ROOT, app, init_db
+from apps.api.main import DATA_ROOT, app, init_db, runtime_has_active_clients
 
 
 DEFAULT_PORT = 8765
+STARTUP_GRACE_SECONDS = 20.0
+DISCONNECT_GRACE_SECONDS = 15.0
 
 
 def choose_port(preferred: int = DEFAULT_PORT) -> int:
@@ -36,6 +39,25 @@ def open_browser_later(url: str) -> None:
     webbrowser.open(url, new=2)
 
 
+def shutdown_watchdog(server: uvicorn.Server) -> None:
+    """Stop the packaged server after its last browser tab disconnects.
+
+    The grace period covers a normal page reload and the short delay before a
+    browser's ``pagehide``/heartbeat request reaches the local API. Development
+    servers are not wired to this watchdog, so ``uvicorn --reload`` keeps its
+    usual lifecycle.
+    """
+
+    deadline = time.monotonic() + STARTUP_GRACE_SECONDS
+    while not server.should_exit:
+        if runtime_has_active_clients():
+            deadline = time.monotonic() + DISCONNECT_GRACE_SECONDS
+        elif time.monotonic() >= deadline:
+            server.should_exit = True
+            return
+        time.sleep(2.0)
+
+
 def write_startup_error() -> None:
     try:
         DATA_ROOT.mkdir(parents=True, exist_ok=True)
@@ -54,9 +76,16 @@ def main() -> None:
         port = choose_port(preferred_port)
         init_db()
         url = f"http://127.0.0.1:{port}"
-        threading.Thread(target=open_browser_later, args=(url,), daemon=True).start()
-        # Windowed PyInstaller builds do not expose a console stream with isatty().
-        uvicorn.run(app, host="127.0.0.1", port=port, log_config=None, access_log=False)
+        if os.environ.get("JOURNEY_NO_BROWSER") != "1":
+            threading.Thread(target=open_browser_later, args=(url,), daemon=True).start()
+
+        config = uvicorn.Config(app, host="127.0.0.1", port=port, log_config=None, access_log=False)
+        server = uvicorn.Server(config)
+        # Only a frozen desktop build owns the browser lifecycle. Keeping this
+        # opt-in prevents the development server from shutting down unexpectedly.
+        if getattr(sys, "frozen", False) or os.environ.get("JOURNEY_ENABLE_WATCHDOG") == "1":
+            threading.Thread(target=shutdown_watchdog, args=(server,), daemon=True).start()
+        server.run()
     except Exception:
         write_startup_error()
         raise

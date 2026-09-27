@@ -2,10 +2,10 @@
   "program": {
     "title_vi": "Journey AI Engineer",
     "title_en": "Journey AI Engineer",
-    "description_vi": "Chương trình học thực hành từ nền tảng đến khả năng xây dựng, đánh giá và triển khai hệ thống AI.",
-    "description_en": "A hands-on program from foundations to building, evaluating and deploying AI systems.",
-    "standard_weeks": 53,
-    "accelerated_weeks": 26,
+    "description_vi": "Chương trình core 8 phase và GenAI specialization 15 giai đoạn, đi từ nền tảng đến xây dựng, đánh giá và vận hành hệ thống AI production.",
+    "description_en": "An 8-phase core plus a 15-stage GenAI specialization, from foundations to building, evaluating, and operating production AI systems.",
+    "standard_weeks": 68,
+    "accelerated_weeks": 34,
     "portfolio_projects": [
       {
         "slug": "tabular-ml",
@@ -103,6 +103,160 @@
         "evaluation": "User value, reliability, reproducibility, observability and clear trade-offs.",
         "github_path": "projects/capstone-ai-product",
         "estimated_weeks": 6
+      },
+      {
+        "slug": "llm-chat-api",
+        "title_vi": "LLM Chat API",
+        "title_en": "LLM Chat API",
+        "phase_id": "phase-11-llm-application",
+        "problem_vi": "Xây API chat có prompt boundary, structured output, streaming, rate limit và fallback.",
+        "problem_en": "Build a chat API with prompt boundaries, structured output, streaming, rate limits, and fallback.",
+        "stack": [
+          "Python",
+          "FastAPI",
+          "JSON Schema",
+          "Docker"
+        ],
+        "deliverables": [
+          "API contract",
+          "streaming demo",
+          "rate-limit test",
+          "cost log",
+          "README"
+        ],
+        "evaluation": "Schema validity, latency, retry behavior, rate-limit correctness, and cost per request.",
+        "github_path": "projects/llm-chat-api",
+        "estimated_weeks": 3,
+        "track": "genai-specialization"
+      },
+      {
+        "slug": "document-intelligence",
+        "title_vi": "Document Intelligence System",
+        "title_en": "Document Intelligence System",
+        "phase_id": "phase-12-genai-rag",
+        "problem_vi": "Parse tài liệu tiếng Việt, trích xuất thông tin và trả lời có evidence.",
+        "problem_en": "Parse Vietnamese documents, extract information, and answer with evidence.",
+        "stack": [
+          "Python",
+          "FastAPI",
+          "PyMuPDF",
+          "FAISS"
+        ],
+        "deliverables": [
+          "ingestion pipeline",
+          "chunking policy",
+          "metadata schema",
+          "evidence API",
+          "evaluation set"
+        ],
+        "evaluation": "Parsing coverage, retrieval recall, grounded answer rate, and abstention quality.",
+        "github_path": "projects/document-intelligence",
+        "estimated_weeks": 4,
+        "track": "genai-specialization"
+      },
+      {
+        "slug": "advanced-rag-system",
+        "title_vi": "Advanced RAG System",
+        "title_en": "Advanced RAG System",
+        "phase_id": "phase-13-genai-advanced-rag",
+        "problem_vi": "So sánh BM25, vector, hybrid, reranking và query rewrite trên evaluation set cố định.",
+        "problem_en": "Compare BM25, vector, hybrid retrieval, reranking, and query rewriting on a fixed evaluation set.",
+        "stack": [
+          "Python",
+          "FAISS",
+          "BM25",
+          "Reranker",
+          "Ragas"
+        ],
+        "deliverables": [
+          "retrieval benchmark",
+          "failure slices",
+          "citation policy",
+          "quality report",
+          "latency report"
+        ],
+        "evaluation": "Recall@k, MRR, answer faithfulness, citation coverage, latency, and cost.",
+        "github_path": "projects/advanced-rag-system",
+        "estimated_weeks": 5,
+        "track": "genai-specialization"
+      },
+      {
+        "slug": "ai-database-api-assistant",
+        "title_vi": "AI Assistant với Database và API",
+        "title_en": "AI Assistant with Database and APIs",
+        "phase_id": "phase-14-genai-tool-calling",
+        "problem_vi": "Cho model gọi database/API qua tool schema có validation, timeout, retry và audit.",
+        "problem_en": "Let a model call databases/APIs through validated tool schemas with timeouts, retries, and audit logs.",
+        "stack": [
+          "FastAPI",
+          "SQLite/PostgreSQL",
+          "Pydantic",
+          "Tool calling"
+        ],
+        "deliverables": [
+          "tool registry",
+          "validation tests",
+          "idempotency key",
+          "audit log",
+          "security notes"
+        ],
+        "evaluation": "Invalid-call rejection, side-effect safety, timeout behavior, and trace completeness.",
+        "github_path": "projects/ai-database-api-assistant",
+        "estimated_weeks": 4,
+        "track": "genai-specialization"
+      },
+      {
+        "slug": "research-assistant-agent",
+        "title_vi": "Research Assistant Agent",
+        "title_en": "Research Assistant Agent",
+        "phase_id": "phase-15-genai-agents",
+        "problem_vi": "Agent lập kế hoạch, tìm evidence, dùng tool có giới hạn và yêu cầu người duyệt trước side effect.",
+        "problem_en": "An agent plans, gathers evidence, uses bounded tools, and requests approval before side effects.",
+        "stack": [
+          "Python",
+          "FastAPI",
+          "RAG",
+          "MCP",
+          "OpenTelemetry"
+        ],
+        "deliverables": [
+          "agent loop",
+          "trajectory log",
+          "human approval",
+          "guardrail tests",
+          "evaluation report"
+        ],
+        "evaluation": "Task success, tool-call correctness, stop-condition compliance, faithfulness, and cost.",
+        "github_path": "projects/research-assistant-agent",
+        "estimated_weeks": 5,
+        "track": "genai-specialization"
+      },
+      {
+        "slug": "production-genai-system",
+        "title_vi": "End-to-End Production GenAI System",
+        "title_en": "End-to-End Production GenAI System",
+        "phase_id": "phase-22-genai-system-design",
+        "problem_vi": "Thiết kế và triển khai hệ thống GenAI có observability, evaluation, security, cost và rollback.",
+        "problem_en": "Design and ship a GenAI system with observability, evaluation, security, cost controls, and rollback.",
+        "stack": [
+          "FastAPI",
+          "Docker",
+          "Redis",
+          "MLflow/Langfuse",
+          "GitHub Actions"
+        ],
+        "deliverables": [
+          "architecture ADR",
+          "SLO/SLA",
+          "threat model",
+          "load test",
+          "dashboard",
+          "demo video"
+        ],
+        "evaluation": "End-to-end reliability, reproducibility, p95 latency, cost budget, security, and rollback readiness.",
+        "github_path": "projects/production-genai-system",
+        "estimated_weeks": 8,
+        "track": "genai-specialization"
       }
     ],
     "career_checklist": [
@@ -111,7 +265,11 @@
       "Có evaluation report nêu metric, baseline, error analysis và giới hạn.",
       "Có Git history đều đặn với weekly journal và commit message rõ ràng.",
       "Có CV một trang, demo link và câu chuyện trả lời phỏng vấn cho từng project.",
-      "Luyện được Python, SQL, ML fundamentals, debugging và AI system design."
+      "Luyện được Python, SQL, ML fundamentals, debugging và AI system design.",
+      "Có LLM Chat API, Document Intelligence và Advanced RAG với evaluation set rõ ràng.",
+      "Có một tool-calling/agent project ghi trajectory, guardrail và human approval.",
+      "Có MCP hoặc local LLM lab kèm threat model, hardware context và benchmark.",
+      "Có production GenAI design doc nêu SLO, cost budget, observability và rollback."
     ]
   },
   "phases": [
@@ -715,6 +873,366 @@
           "language": "en"
         }
       ]
+    },
+    {
+      "slug": "phase-08-genai-software",
+      "order": 8,
+      "duration_weeks": 1,
+      "track": "genai-specialization",
+      "title_vi": "Software Engineering cho GenAI",
+      "title_en": "Software Engineering for GenAI",
+      "summary_vi": "Củng cố nền tảng để biến prototype GenAI thành service có test, container và pipeline.",
+      "summary_en": "Strengthen the foundations needed to turn a GenAI prototype into a tested service with a container and delivery pipeline.",
+      "modules": [
+        {
+          "slug": "genai-software-foundations",
+          "title_vi": "GenAI software foundations",
+          "title_en": "GenAI software foundations",
+          "lessons": [
+            "Python cho AI service và typed contract",
+            "Linux shell và môi trường tái lập",
+            "REST API, SQL và Docker cho AI",
+            "CI/CD và cloud căn bản"
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "slug": "phase-09-genai-ml-fundamentals",
+      "order": 9,
+      "duration_weeks": 1,
+      "track": "genai-specialization",
+      "title_vi": "Machine Learning Fundamentals cho GenAI",
+      "title_en": "Machine Learning Fundamentals for GenAI",
+      "summary_vi": "Hiểu dữ liệu, embedding, similarity và tối ưu để không dùng LLM như một hộp đen.",
+      "summary_en": "Understand data, embeddings, similarity, and optimization so an LLM is not treated as a black box.",
+      "modules": [
+        {
+          "slug": "genai-ml-fundamentals",
+          "title_vi": "GenAI ML fundamentals",
+          "title_en": "GenAI ML fundamentals",
+          "lessons": [
+            "Supervised và unsupervised learning",
+            "Embedding và similarity search",
+            "Train, validation, test và leakage",
+            "Loss function, optimizer và overfitting"
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "slug": "phase-10-genai-transformers",
+      "order": 10,
+      "duration_weeks": 1,
+      "track": "genai-specialization",
+      "title_vi": "Deep Learning và Transformer",
+      "title_en": "Deep Learning and Transformers",
+      "summary_vi": "Đi từ neural network và backpropagation đến self-attention, encoder/decoder và KV cache.",
+      "summary_en": "Move from neural networks and backpropagation to self-attention, encoder/decoder models, and KV cache.",
+      "modules": [
+        {
+          "slug": "genai-transformers",
+          "title_vi": "Deep learning and Transformers",
+          "title_en": "Deep learning and Transformers",
+          "lessons": [
+            "Neural network và backpropagation",
+            "Self-attention và scaled dot product",
+            "Transformer encoder và decoder",
+            "KV cache và inference efficiency"
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "slug": "phase-11-llm-application",
+      "order": 11,
+      "duration_weeks": 1,
+      "track": "genai-specialization",
+      "title_vi": "LLM Application Engineering",
+      "title_en": "LLM Application Engineering",
+      "summary_vi": "Xây ứng dụng gọi model có prompt boundary, output schema, streaming và giới hạn vận hành.",
+      "summary_en": "Build model-powered applications with prompt boundaries, output schemas, streaming, and operational limits.",
+      "modules": [
+        {
+          "slug": "llm-application",
+          "title_vi": "LLM application contracts",
+          "title_en": "LLM application contracts",
+          "lessons": [
+            "Chat completion và message lifecycle",
+            "System prompt và user prompt",
+            "Structured output và JSON Schema",
+            "Streaming, rate limit và retry"
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "slug": "phase-12-genai-rag",
+      "order": 12,
+      "duration_weeks": 1,
+      "track": "genai-specialization",
+      "title_vi": "RAG nền tảng",
+      "title_en": "RAG Foundations",
+      "summary_vi": "Xây pipeline từ document parsing đến chunking, embedding, vector database, retriever và grounded answer.",
+      "summary_en": "Build the pipeline from document parsing through chunking, embeddings, a vector database, retrieval, and grounded answers.",
+      "modules": [
+        {
+          "slug": "rag-foundations",
+          "title_vi": "RAG foundations",
+          "title_en": "RAG foundations",
+          "lessons": [
+            "Document parsing và ingestion",
+            "Chunking, metadata và context",
+            "Embedding và vector database",
+            "Retriever, context và LLM"
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "slug": "phase-13-genai-advanced-rag",
+      "order": 13,
+      "duration_weeks": 1,
+      "track": "genai-specialization",
+      "title_vi": "Advanced RAG",
+      "title_en": "Advanced RAG",
+      "summary_vi": "Nâng chất lượng retrieval bằng hybrid search, reranking, query rewrite, filtering, citation và evaluation.",
+      "summary_en": "Improve retrieval with hybrid search, reranking, query rewriting, filtering, citations, and evaluation.",
+      "modules": [
+        {
+          "slug": "advanced-rag",
+          "title_vi": "Advanced retrieval",
+          "title_en": "Advanced retrieval",
+          "lessons": [
+            "Hybrid search: BM25 và vector search",
+            "Reranking và top-k selection",
+            "Query rewrite và metadata filtering",
+            "Citation, faithfulness và evaluation"
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "slug": "phase-14-genai-tool-calling",
+      "order": 14,
+      "duration_weeks": 1,
+      "track": "genai-specialization",
+      "title_vi": "Tool Calling",
+      "title_en": "Tool Calling",
+      "summary_vi": "Cho model dùng API và database bên ngoài với schema, validation, retry, timeout và error handling an toàn.",
+      "summary_en": "Let a model use external APIs and databases with safe schemas, validation, retries, timeouts, and error handling.",
+      "modules": [
+        {
+          "slug": "tool-calling",
+          "title_vi": "Tool calling contracts",
+          "title_en": "Tool calling contracts",
+          "lessons": [
+            "Function calling và tool schema",
+            "Tool validation và argument policy",
+            "Retry, timeout và idempotency",
+            "Error handling và secure tool execution"
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "slug": "phase-15-genai-agents",
+      "order": 15,
+      "duration_weeks": 1,
+      "track": "genai-specialization",
+      "title_vi": "AI Agents",
+      "title_en": "AI Agents",
+      "summary_vi": "Thiết kế agent loop có planning, memory, tool use, human approval và guardrails kiểm soát được.",
+      "summary_en": "Design a controllable agent loop with planning, memory, tool use, human approval, and guardrails.",
+      "modules": [
+        {
+          "slug": "ai-agents",
+          "title_vi": "Agent loops and guardrails",
+          "title_en": "Agent loops and guardrails",
+          "lessons": [
+            "Planning và task decomposition",
+            "Memory: state, history và retrieval",
+            "Agent loop và điều kiện dừng",
+            "Human in the loop và guardrails"
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "slug": "phase-16-genai-mcp",
+      "order": 16,
+      "duration_weeks": 1,
+      "track": "genai-specialization",
+      "title_vi": "Model Context Protocol (MCP)",
+      "title_en": "Model Context Protocol (MCP)",
+      "summary_vi": "Hiểu kiến trúc MCP, client/server, tools, resources, prompts và security boundary.",
+      "summary_en": "Understand MCP architecture, clients/servers, tools, resources, prompts, and security boundaries.",
+      "modules": [
+        {
+          "slug": "mcp",
+          "title_vi": "MCP architecture",
+          "title_en": "MCP architecture",
+          "lessons": [
+            "MCP architecture và message flow",
+            "MCP client và server",
+            "MCP tools và resources",
+            "MCP prompts và security"
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "slug": "phase-17-genai-evaluation",
+      "order": 17,
+      "duration_weeks": 1,
+      "track": "genai-specialization",
+      "title_vi": "Evaluation cho LLM, RAG và Agent",
+      "title_en": "Evaluation for LLMs, RAG, and Agents",
+      "summary_vi": "Đo quality, hallucination, faithfulness và metrics để mỗi thay đổi có bằng chứng.",
+      "summary_en": "Measure quality, hallucination, faithfulness, and metrics so every change has evidence.",
+      "modules": [
+        {
+          "slug": "genai-evaluation",
+          "title_vi": "GenAI evaluation",
+          "title_en": "GenAI evaluation",
+          "lessons": [
+            "LLM evaluation và test set",
+            "RAG evaluation: retrieval và answer",
+            "Agent evaluation và trajectory",
+            "Hallucination, faithfulness và metrics"
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "slug": "phase-18-genai-observability",
+      "order": 18,
+      "duration_weeks": 1,
+      "track": "genai-specialization",
+      "title_vi": "Observability cho hệ thống AI",
+      "title_en": "Observability for AI Systems",
+      "summary_vi": "Theo dõi logging, tracing, token usage, latency, cost, dashboard và alert trong runtime.",
+      "summary_en": "Track logging, tracing, token usage, latency, cost, dashboards, and alerts at runtime.",
+      "modules": [
+        {
+          "slug": "genai-observability",
+          "title_vi": "AI observability",
+          "title_en": "AI observability",
+          "lessons": [
+            "Structured logging và tracing",
+            "Token usage và latency",
+            "Cost monitoring và budget",
+            "Dashboard, alert và incident"
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "slug": "phase-19-genai-production",
+      "order": 19,
+      "duration_weeks": 1,
+      "track": "genai-specialization",
+      "title_vi": "Production Engineering cho GenAI",
+      "title_en": "Production Engineering for GenAI",
+      "summary_vi": "Đưa hệ thống lên production với caching, fallback, queue, worker, scaling và availability.",
+      "summary_en": "Take the system to production with caching, fallbacks, queues, workers, scaling, and availability.",
+      "modules": [
+        {
+          "slug": "genai-production",
+          "title_vi": "Production GenAI systems",
+          "title_en": "Production GenAI systems",
+          "lessons": [
+            "Streaming và caching",
+            "Retry, fallback và rate limit",
+            "Queue và worker",
+            "High availability và capacity"
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "slug": "phase-20-genai-finetuning",
+      "order": 20,
+      "duration_weeks": 1,
+      "track": "genai-specialization",
+      "title_vi": "Fine-tuning và PEFT",
+      "title_en": "Fine-tuning and PEFT",
+      "summary_vi": "Biết khi nào fine-tune, chuẩn bị dataset, SFT/LoRA/QLoRA, evaluation và quantization.",
+      "summary_en": "Know when to fine-tune, prepare datasets, use SFT/LoRA/QLoRA, evaluate, and quantize.",
+      "modules": [
+        {
+          "slug": "fine-tuning",
+          "title_vi": "Fine-tuning decisions",
+          "title_en": "Fine-tuning decisions",
+          "lessons": [
+            "Dataset preparation và SFT",
+            "LoRA, QLoRA và PEFT",
+            "Fine-tuning evaluation",
+            "Quantization và model trade-offs"
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "slug": "phase-21-genai-local-llm",
+      "order": 21,
+      "duration_weeks": 1,
+      "track": "genai-specialization",
+      "title_vi": "Local LLM và inference",
+      "title_en": "Local LLMs and Inference",
+      "summary_vi": "Chạy model local với Transformers, PyTorch, vLLM, GGUF và tối ưu GPU/inference.",
+      "summary_en": "Run models locally with Transformers, PyTorch, vLLM, GGUF, and GPU/inference optimization.",
+      "modules": [
+        {
+          "slug": "local-llm",
+          "title_vi": "Local LLM serving",
+          "title_en": "Local LLM serving",
+          "lessons": [
+            "Transformers và PyTorch inference",
+            "vLLM và serving throughput",
+            "GGUF, quantization và Ollama",
+            "GPU optimization và inference benchmark"
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "slug": "phase-22-genai-system-design",
+      "order": 22,
+      "duration_weeks": 1,
+      "track": "genai-specialization",
+      "title_vi": "AI System Design",
+      "title_en": "AI System Design",
+      "summary_vi": "Tổng hợp architecture, scalability, security, cost, model selection và thiết kế end-to-end.",
+      "summary_en": "Synthesize architecture, scalability, security, cost, model selection, and end-to-end design.",
+      "modules": [
+        {
+          "slug": "genai-system-design",
+          "title_vi": "AI system design",
+          "title_en": "AI system design",
+          "lessons": [
+            "Architecture end-to-end cho AI product",
+            "Scalability, reliability và failure modes",
+            "Security, cost optimization và model selection",
+            "Design review và capstone proposal"
+          ]
+        }
+      ],
+      "resources": []
     }
   ]
 }

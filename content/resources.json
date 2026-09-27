@@ -1,0 +1,960 @@
+{
+  "resources": [
+    {
+      "slug": "ai-engineering-from-scratch",
+      "title_vi": "AI Engineering from Scratch",
+      "title_en": "AI Engineering from Scratch",
+      "provider": "Rohit G",
+      "url": "https://github.com/rohitg00/ai-engineering-from-scratch",
+      "type": "GitHub repo",
+      "language": "en",
+      "level": "beginner-intermediate",
+      "official": false,
+      "featured": true,
+      "phase_ids": [
+        "phase-00",
+        "phase-01",
+        "phase-02",
+        "phase-03",
+        "phase-04",
+        "phase-05",
+        "phase-06",
+        "phase-07",
+        "phase-08",
+        "phase-09",
+        "phase-10",
+        "phase-11",
+        "phase-12",
+        "phase-13",
+        "phase-14",
+        "phase-15",
+        "phase-16",
+        "phase-17",
+        "phase-18",
+        "phase-19",
+        "phase-20",
+        "phase-21",
+        "phase-22"
+      ],
+      "description_vi": "Một repository học AI Engineering từ nền tảng đến hệ thống; dùng như bản đồ tham khảo và đối chiếu với lesson trong app.",
+      "description_en": "A community repository covering AI Engineering foundations through systems; use it as a reference map alongside this app's lessons.",
+      "how_to_use_vi": "Mỗi tuần chọn đúng một chủ đề đang học, đọc mục tương ứng, ghi lại nguồn đã kiểm chứng và làm bài trong workspace. Nếu liên kết không mở được, chuyển sang nguồn official cùng phase.",
+      "how_to_use_en": "Pick one topic that matches your current lesson, record what you verified, and implement it in the workspace. If the link is unavailable, use the official source mapped to the same phase."
+    },
+    {
+      "slug": "python-tutorial",
+      "title_vi": "Python Tutorial",
+      "title_en": "Python Tutorial",
+      "provider": "Python Software Foundation",
+      "url": "https://docs.python.org/3/tutorial/",
+      "type": "Official docs",
+      "language": "en",
+      "level": "beginner",
+      "official": true,
+      "phase_ids": [
+        "phase-00",
+        "phase-01"
+      ],
+      "description_vi": "Tutorial chính thức về syntax, data structures, modules, errors, classes và virtual environments.",
+      "description_en": "The official tutorial for syntax, data structures, modules, errors, classes, and virtual environments.",
+      "how_to_use_vi": "Đọc sau khi xem concept notes; chạy lại mọi ví dụ bằng file .py trong workspace thay vì chỉ đọc notebook.",
+      "how_to_use_en": "Read it after the lesson notes and re-run every example in a .py workspace file instead of only reading a notebook."
+    },
+    {
+      "slug": "python-packaging-user-guide",
+      "title_vi": "Python Packaging User Guide",
+      "title_en": "Python Packaging User Guide",
+      "provider": "Python Packaging Authority",
+      "url": "https://packaging.python.org/en/latest/",
+      "type": "Official docs",
+      "language": "en",
+      "level": "beginner-intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-01",
+        "phase-05"
+      ],
+      "description_vi": "Hướng dẫn virtual environment, dependency, pyproject và đóng gói project Python.",
+      "description_en": "Guidance for virtual environments, dependencies, pyproject, and packaging Python projects.",
+      "how_to_use_vi": "Dùng khi chuyển từ script sang package có thể cài và chạy lại trên máy khác.",
+      "how_to_use_en": "Use it when moving from scripts to an installable package that another machine can reproduce."
+    },
+    {
+      "slug": "numpy-user-guide",
+      "title_vi": "NumPy User Guide",
+      "title_en": "NumPy User Guide",
+      "provider": "NumPy",
+      "url": "https://numpy.org/doc/stable/user/",
+      "type": "Official docs",
+      "language": "en",
+      "level": "beginner-intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-02",
+        "phase-03"
+      ],
+      "description_vi": "Tài liệu chính thức về ndarray, broadcasting, linear algebra, random và performance.",
+      "description_en": "Official documentation for ndarray, broadcasting, linear algebra, random, and performance.",
+      "how_to_use_vi": "Mở cùng Math for ML Lab; luôn ghi shape của tensor trước khi nhân hoặc broadcast.",
+      "how_to_use_en": "Open it with the Math for ML Lab and write down tensor shapes before multiplication or broadcasting."
+    },
+    {
+      "slug": "pandas-getting-started",
+      "title_vi": "pandas Getting Started",
+      "title_en": "pandas Getting Started",
+      "provider": "pandas",
+      "url": "https://pandas.pydata.org/docs/getting_started/intro_tutorials/",
+      "type": "Official docs",
+      "language": "en",
+      "level": "beginner",
+      "official": true,
+      "phase_ids": [
+        "phase-01",
+        "phase-03"
+      ],
+      "description_vi": "Chuỗi tutorial thực hành đọc, lọc, nối, tổng hợp và trực quan hóa dữ liệu bảng.",
+      "description_en": "Hands-on tutorials for reading, filtering, joining, aggregating, and inspecting tabular data.",
+      "how_to_use_vi": "Dùng để xây data cleaning CLI và kiểm tra từng bước preprocessing bằng bảng mẫu nhỏ.",
+      "how_to_use_en": "Use it to build the data-cleaning CLI and inspect every preprocessing step on a small sample."
+    },
+    {
+      "slug": "scikit-learn-user-guide",
+      "title_vi": "scikit-learn User Guide",
+      "title_en": "scikit-learn User Guide",
+      "provider": "scikit-learn",
+      "url": "https://scikit-learn.org/stable/user_guide.html",
+      "type": "Official docs",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-02",
+        "phase-03"
+      ],
+      "description_vi": "Reference về estimator, pipeline, preprocessing, metrics, model selection và inspection.",
+      "description_en": "Reference for estimators, pipelines, preprocessing, metrics, model selection, and inspection.",
+      "how_to_use_vi": "Tra cứu API sau khi tự giải thích được baseline và metric; không copy pipeline mà không biết leakage nằm ở đâu.",
+      "how_to_use_en": "Use it as API reference after explaining your baseline and metric; never copy a pipeline without checking leakage."
+    },
+    {
+      "slug": "google-ml-crash-course",
+      "title_vi": "Machine Learning Crash Course",
+      "title_en": "Machine Learning Crash Course",
+      "provider": "Google for Developers",
+      "url": "https://developers.google.com/machine-learning/crash-course",
+      "type": "Course",
+      "language": "en",
+      "level": "beginner-intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-02",
+        "phase-03"
+      ],
+      "description_vi": "Course có visualizations và bài tập về regression, classification, data và fairness.",
+      "description_en": "A course with visualizations and exercises for regression, classification, data, and fairness.",
+      "how_to_use_vi": "Dùng làm vòng giải thích thứ hai sau Math for ML Lab; hoàn thành bài tập rồi ghi lại một lỗi trực giác.",
+      "how_to_use_en": "Use it as a second explanation after the Math for ML Lab, then record one intuition failure from the exercises."
+    },
+    {
+      "slug": "mathematics-for-machine-learning-book",
+      "title_vi": "Mathematics for Machine Learning",
+      "title_en": "Mathematics for Machine Learning",
+      "provider": "Deisenroth, Faisal & Ong",
+      "url": "https://mml-book.github.io/",
+      "type": "Book",
+      "language": "en",
+      "level": "intermediate",
+      "official": false,
+      "phase_ids": [
+        "phase-02"
+      ],
+      "description_vi": "Sách tham khảo về linear algebra, analytic geometry, calculus, probability và optimization cho ML.",
+      "description_en": "A reference book on linear algebra, analytic geometry, calculus, probability, and optimization for ML.",
+      "how_to_use_vi": "Đọc từng chương ngắn gắn với notebook; tự viết lại công thức bằng NumPy và kiểm tra bằng finite differences.",
+      "how_to_use_en": "Read one chapter section with the notebook, reimplement formulas in NumPy, and verify gradients with finite differences."
+    },
+    {
+      "slug": "stanford-cs229-notes",
+      "title_vi": "CS229 Machine Learning Notes",
+      "title_en": "CS229 Machine Learning Notes",
+      "provider": "Stanford University",
+      "url": "https://cs229.stanford.edu/notes2022fall/main_notes.pdf",
+      "type": "Course notes",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-02",
+        "phase-03"
+      ],
+      "description_vi": "Lecture notes đại học về supervised learning, generative models, learning theory và unsupervised learning.",
+      "description_en": "University lecture notes covering supervised learning, generative models, learning theory, and unsupervised learning.",
+      "how_to_use_vi": "Chỉ mở sau khi đã làm lab; dùng để trả lời vì sao thuật toán hoạt động, không dùng để học thuộc chứng minh.",
+      "how_to_use_en": "Open it after the lab to answer why an algorithm works, rather than memorizing proofs in isolation."
+    },
+    {
+      "slug": "dive-into-deep-learning",
+      "title_vi": "Dive into Deep Learning",
+      "title_en": "Dive into Deep Learning",
+      "provider": "D2L community",
+      "url": "https://d2l.ai/",
+      "type": "Book + notebooks",
+      "language": "en",
+      "level": "intermediate",
+      "official": false,
+      "phase_ids": [
+        "phase-02",
+        "phase-04",
+        "phase-06"
+      ],
+      "description_vi": "Sách tương tác kết hợp toán, code và notebook cho deep learning, CNN, attention và Transformer.",
+      "description_en": "An interactive book combining math, code, and notebooks for deep learning, CNNs, attention, and Transformers.",
+      "how_to_use_vi": "Chạy notebook, sau đó viết lại một phần training loop bằng PyTorch mà không nhìn lời giải.",
+      "how_to_use_en": "Run the notebook, then rewrite one part of the training loop in PyTorch without looking at the answer."
+    },
+    {
+      "slug": "pytorch-tutorials",
+      "title_vi": "PyTorch Tutorials",
+      "title_en": "PyTorch Tutorials",
+      "provider": "PyTorch",
+      "url": "https://pytorch.org/tutorials/",
+      "type": "Official docs",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-04"
+      ],
+      "description_vi": "Tutorial chính thức về tensors, datasets, training loop, transfer learning và production recipes.",
+      "description_en": "Official tutorials for tensors, datasets, training loops, transfer learning, and production recipes.",
+      "how_to_use_vi": "Mỗi tutorial phải có một biến thể nhỏ trên dữ liệu của bạn và có checkpoint/test đi kèm.",
+      "how_to_use_en": "Make a small variant of each tutorial on your own data and add a checkpoint or test."
+    },
+    {
+      "slug": "pytorch-60-minute-blitz",
+      "title_vi": "PyTorch 60 Minute Blitz",
+      "title_en": "PyTorch 60 Minute Blitz",
+      "provider": "PyTorch",
+      "url": "https://pytorch.org/tutorials/beginner/deep_learning_60min_blitz.html",
+      "type": "Course",
+      "language": "en",
+      "level": "beginner-intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-04"
+      ],
+      "description_vi": "Lộ trình ngắn để đi từ tensor đến neural network, classifier và training.",
+      "description_en": "A compact path from tensors to neural networks, classifiers, and training.",
+      "how_to_use_vi": "Dùng trong tuần đầu Phase 4 để có vòng lặp chạy được trước khi tối ưu model.",
+      "how_to_use_en": "Use it in the first week of Phase 4 to get a working loop before optimizing the model."
+    },
+    {
+      "slug": "hugging-face-nlp-course",
+      "title_vi": "Natural Language Processing Course",
+      "title_en": "Natural Language Processing Course",
+      "provider": "Hugging Face",
+      "url": "https://huggingface.co/learn/nlp-course/chapter1/1",
+      "type": "Course",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-04",
+        "phase-06"
+      ],
+      "description_vi": "Course thực hành về Transformers, tokenizers, datasets, fine-tuning và sharing model.",
+      "description_en": "Hands-on course on Transformers, tokenizers, datasets, fine-tuning, and model sharing.",
+      "how_to_use_vi": "Đọc phần tokenization trước, sau đó fine-tune một model nhỏ và ghi rõ data split, metric và giới hạn.",
+      "how_to_use_en": "Read tokenization first, then fine-tune a small model and document splits, metrics, and limitations."
+    },
+    {
+      "slug": "hugging-face-transformers-docs",
+      "title_vi": "Transformers Documentation",
+      "title_en": "Transformers Documentation",
+      "provider": "Hugging Face",
+      "url": "https://huggingface.co/docs/transformers/index",
+      "type": "Official docs",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-06"
+      ],
+      "description_vi": "API reference cho pretrained models, pipelines, tokenizers, generation và training.",
+      "description_en": "API reference for pretrained models, pipelines, tokenizers, generation, and training.",
+      "how_to_use_vi": "Tra cứu sau khi hiểu attention; lưu phiên bản model và tokenizer vào README để tái lập.",
+      "how_to_use_en": "Use it after understanding attention and record model and tokenizer versions for reproducibility."
+    },
+    {
+      "slug": "fastapi-docs",
+      "title_vi": "FastAPI Documentation",
+      "title_en": "FastAPI Documentation",
+      "provider": "FastAPI",
+      "url": "https://fastapi.tiangolo.com/",
+      "type": "Official docs",
+      "language": "en",
+      "level": "beginner-intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-01",
+        "phase-05"
+      ],
+      "description_vi": "Documentation về path operation, Pydantic schema, dependency injection, testing và deployment.",
+      "description_en": "Documentation for path operations, Pydantic schemas, dependency injection, testing, and deployment.",
+      "how_to_use_vi": "Dùng khi biến model thành endpoint; viết request/response contract và test lỗi input trước.",
+      "how_to_use_en": "Use it when turning a model into an endpoint; define request/response contracts and test invalid input first."
+    },
+    {
+      "slug": "docker-get-started",
+      "title_vi": "Docker Get Started",
+      "title_en": "Docker Get Started",
+      "provider": "Docker",
+      "url": "https://docs.docker.com/get-started/",
+      "type": "Official docs",
+      "language": "en",
+      "level": "beginner-intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-05"
+      ],
+      "description_vi": "Chuỗi tutorial về image, container, Dockerfile, compose và chia sẻ ứng dụng.",
+      "description_en": "Tutorials for images, containers, Dockerfiles, Compose, and sharing applications.",
+      "how_to_use_vi": "Đóng gói API inference sau khi chạy local; kiểm tra container từ một thư mục sạch.",
+      "how_to_use_en": "Containerize the inference API after it works locally and verify it from a clean directory."
+    },
+    {
+      "slug": "mlflow-docs",
+      "title_vi": "MLflow Documentation",
+      "title_en": "MLflow Documentation",
+      "provider": "MLflow",
+      "url": "https://mlflow.org/docs/latest/ml/tracking/",
+      "type": "Official docs",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-05"
+      ],
+      "description_vi": "Tracking parameters, metrics, artifacts, model versions và registry cho thí nghiệm ML.",
+      "description_en": "Tracking for parameters, metrics, artifacts, model versions, and registries for ML experiments.",
+      "how_to_use_vi": "Log cùng một experiment với baseline và model tốt nhất; so sánh metric và config từ UI.",
+      "how_to_use_en": "Log a baseline and best model in the same experiment and compare metrics with configuration."
+    },
+    {
+      "slug": "google-rules-of-ml",
+      "title_vi": "Rules of Machine Learning",
+      "title_en": "Rules of Machine Learning",
+      "provider": "Google for Developers",
+      "url": "https://developers.google.com/machine-learning/guides/rules-of-ml",
+      "type": "Engineering guide",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-03",
+        "phase-05",
+        "phase-07"
+      ],
+      "description_vi": "Các nguyên tắc thực tế để xây pipeline, metric, feedback loop và hệ thống ML có thể phát triển.",
+      "description_en": "Practical principles for building pipelines, metrics, feedback loops, and evolvable ML systems.",
+      "how_to_use_vi": "Đọc trước mỗi project để kiểm tra baseline, instrumentation, data dependency và rollback plan.",
+      "how_to_use_en": "Read before each project to check baselines, instrumentation, data dependencies, and rollback plans."
+    },
+    {
+      "slug": "full-stack-deep-learning",
+      "title_vi": "Full Stack Deep Learning",
+      "title_en": "Full Stack Deep Learning",
+      "provider": "FSDL community",
+      "url": "https://fullstackdeeplearning.com/",
+      "type": "Course",
+      "language": "en",
+      "level": "intermediate-advanced",
+      "official": false,
+      "phase_ids": [
+        "phase-04",
+        "phase-05",
+        "phase-07"
+      ],
+      "description_vi": "Course về lifecycle từ problem definition, data, training, deployment đến monitoring và product.",
+      "description_en": "A course covering the lifecycle from problem definition and data through training, deployment, monitoring, and product.",
+      "how_to_use_vi": "Dùng như checklist capstone; mỗi tuần phải tạo một artifact có thể review.",
+      "how_to_use_en": "Use it as a capstone checklist and produce one reviewable artifact each week."
+    },
+    {
+      "slug": "made-with-ml",
+      "title_vi": "Made With ML",
+      "title_en": "Made With ML",
+      "provider": "Goku Mohandas",
+      "url": "https://madewithml.com/",
+      "type": "Course",
+      "language": "en",
+      "level": "intermediate",
+      "official": false,
+      "phase_ids": [
+        "phase-03",
+        "phase-05",
+        "phase-07"
+      ],
+      "description_vi": "Hướng dẫn end-to-end về data, training, serving, testing, monitoring và MLOps.",
+      "description_en": "End-to-end guides for data, training, serving, testing, monitoring, and MLOps.",
+      "how_to_use_vi": "Chọn một module áp dụng trực tiếp cho tabular project hoặc Production ML API, không đọc dàn trải.",
+      "how_to_use_en": "Choose one module to apply directly to the tabular project or Production ML API instead of reading broadly."
+    },
+    {
+      "slug": "machine-learning-systems-design",
+      "title_vi": "Machine Learning Systems Design",
+      "title_en": "Machine Learning Systems Design",
+      "provider": "Chip Huyen",
+      "url": "https://github.com/chiphuyen/machine-learning-systems-design",
+      "type": "GitHub notes",
+      "language": "en",
+      "level": "intermediate-advanced",
+      "official": false,
+      "phase_ids": [
+        "phase-05",
+        "phase-07"
+      ],
+      "description_vi": "Bộ câu hỏi và ghi chú thiết kế hệ thống ML, phù hợp để luyện phỏng vấn và architecture.",
+      "description_en": "Questions and notes for ML system design, useful for interviews and architecture practice.",
+      "how_to_use_vi": "Sau mỗi project, vẽ lại data flow, failure modes, latency và scaling trade-off bằng một ADR ngắn.",
+      "how_to_use_en": "After each project, redraw data flow, failure modes, latency, and scaling trade-offs in a short ADR."
+    },
+    {
+      "slug": "openai-cookbook",
+      "title_vi": "OpenAI Cookbook",
+      "title_en": "OpenAI Cookbook",
+      "provider": "OpenAI",
+      "url": "https://cookbook.openai.com/",
+      "type": "Engineering recipes",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-06",
+        "phase-07"
+      ],
+      "description_vi": "Recipe thực hành cho structured output, retrieval, evaluation và production LLM patterns.",
+      "description_en": "Practical recipes for structured output, retrieval, evaluation, and production LLM patterns.",
+      "how_to_use_vi": "Chỉ mở sau khi viết baseline RAG; biến mỗi recipe thành một test hoặc evaluation case của bạn.",
+      "how_to_use_en": "Open it after writing a baseline RAG system and turn each recipe into a test or evaluation case."
+    },
+    {
+      "slug": "hugging-face-peft",
+      "title_vi": "PEFT Documentation",
+      "title_en": "PEFT Documentation",
+      "provider": "Hugging Face",
+      "url": "https://huggingface.co/docs/peft/index",
+      "type": "Official docs",
+      "language": "en",
+      "level": "advanced",
+      "official": true,
+      "phase_ids": [
+        "phase-06"
+      ],
+      "description_vi": "Tài liệu parameter-efficient fine-tuning, LoRA và adapter cho model lớn.",
+      "description_en": "Documentation for parameter-efficient fine-tuning, LoRA, and adapters for large models.",
+      "how_to_use_vi": "Đọc sau khi có baseline prompting/RAG; đo quality, memory và cost trước khi fine-tune.",
+      "how_to_use_en": "Read after a prompting/RAG baseline and measure quality, memory, and cost before fine-tuning."
+    },
+    {
+      "slug": "faiss-getting-started",
+      "title_vi": "Faiss Documentation",
+      "title_en": "Faiss Documentation",
+      "provider": "Meta AI",
+      "url": "https://github.com/facebookresearch/faiss/wiki/Getting-started",
+      "type": "GitHub docs",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-06"
+      ],
+      "description_vi": "Tìm kiếm similarity trên vector và các khái niệm index cơ bản cho retrieval.",
+      "description_en": "Similarity search over vectors and core index concepts for retrieval systems.",
+      "how_to_use_vi": "Dùng để benchmark retrieval nhỏ trước khi chọn vector database; giữ tập evaluation cố định.",
+      "how_to_use_en": "Use it to benchmark small retrieval workloads before choosing a vector database with a fixed evaluation set."
+    },
+    {
+      "slug": "qdrant-rag-concepts",
+      "title_vi": "Qdrant RAG Concepts",
+      "title_en": "Qdrant RAG Concepts",
+      "provider": "Qdrant",
+      "url": "https://qdrant.tech/documentation/concepts/",
+      "type": "Official docs",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-06"
+      ],
+      "description_vi": "Concept và API về collections, points, payload, filtering và vector search.",
+      "description_en": "Concepts and APIs for collections, points, payloads, filtering, and vector search.",
+      "how_to_use_vi": "Dùng sau khi hiểu embedding; viết retrieval contract gồm top-k, filter và lý do trả về.",
+      "how_to_use_en": "Use it after understanding embeddings and define a retrieval contract for top-k, filters, and evidence."
+    },
+    {
+      "slug": "rules-of-ml-paper",
+      "title_vi": "Designing Machine Learning Systems",
+      "title_en": "Designing Machine Learning Systems",
+      "provider": "Chip Huyen",
+      "url": "https://www.oreilly.com/library/view/designing-machine-learning/9781098107956/",
+      "type": "Book",
+      "language": "en",
+      "level": "advanced",
+      "official": false,
+      "phase_ids": [
+        "phase-05",
+        "phase-07"
+      ],
+      "description_vi": "Sách về data distribution, training-serving skew, deployment, monitoring và system design.",
+      "description_en": "A book on data distribution, training-serving skew, deployment, monitoring, and system design.",
+      "how_to_use_vi": "Đọc từng chương khi capstone gặp đúng vấn đề; ghi trade-off và quyết định kiến trúc vào ADR.",
+      "how_to_use_en": "Read chapters when the capstone meets the problem and record trade-offs in an architecture decision record."
+    },
+    {
+      "slug": "hands-on-machine-learning-code",
+      "title_vi": "Hands-On Machine Learning code",
+      "title_en": "Hands-On Machine Learning code",
+      "provider": "Aurélien Géron",
+      "url": "https://github.com/ageron/handson-ml3",
+      "type": "GitHub notebooks",
+      "language": "en",
+      "level": "intermediate",
+      "official": false,
+      "phase_ids": [
+        "phase-03",
+        "phase-04"
+      ],
+      "description_vi": "Notebook và code đi kèm sách thực hành ML, hữu ích để so sánh implementation và experiment.",
+      "description_en": "Notebooks and code accompanying a hands-on ML book for comparing implementations and experiments.",
+      "how_to_use_vi": "Chỉ xem sau khi tự làm baseline; ghi rõ đoạn nào bạn hiểu và đoạn nào cần quay lại lesson.",
+      "how_to_use_en": "Look only after building your baseline and record what you understand versus what needs review."
+    },
+    {
+      "slug": "made-with-ml-rag",
+      "title_vi": "Retrieval augmented generation guide",
+      "title_en": "Retrieval augmented generation guide",
+      "provider": "Made With ML",
+      "url": "https://madewithml.com/courses/llms/rag/",
+      "type": "Course",
+      "language": "en",
+      "level": "intermediate",
+      "official": false,
+      "phase_ids": [
+        "phase-06"
+      ],
+      "description_vi": "Giải thích RAG từ chunking, embeddings, retrieval đến evaluation và failure analysis.",
+      "description_en": "A practical RAG guide from chunking and embeddings through retrieval, evaluation, and failure analysis.",
+      "how_to_use_vi": "Dùng để kiểm tra từng thành phần Vietnamese Document Assistant, không đánh giá chỉ bằng cảm giác câu trả lời.",
+      "how_to_use_en": "Use it to inspect each Vietnamese Document Assistant component and evaluate evidence, not just answer fluency."
+    },
+    {
+      "slug": "google-ml-testing",
+      "title_vi": "Testing and monitoring ML systems",
+      "title_en": "Testing and monitoring ML systems",
+      "provider": "Google for Developers",
+      "url": "https://developers.google.com/machine-learning/testing-debugging",
+      "type": "Engineering guide",
+      "language": "en",
+      "level": "intermediate-advanced",
+      "official": true,
+      "phase_ids": [
+        "phase-05",
+        "phase-07"
+      ],
+      "description_vi": "Hướng dẫn test dữ liệu, model, training và serving để tìm regression sớm.",
+      "description_en": "Guidance for testing data, models, training, and serving to catch regressions early.",
+      "how_to_use_vi": "Chuyển mỗi failure mode của project thành một test hoặc monitor có ngưỡng rõ ràng.",
+      "how_to_use_en": "Turn each project failure mode into a test or monitor with an explicit threshold."
+    },
+    {
+      "slug": "mlops-guide",
+      "title_vi": "MLOps: Continuous delivery and automation",
+      "title_en": "MLOps: Continuous delivery and automation",
+      "provider": "Google Cloud",
+      "url": "https://cloud.google.com/architecture/mlops-continuous-delivery-and-automation-pipelines-in-machine-learning",
+      "type": "Architecture guide",
+      "language": "en",
+      "level": "advanced",
+      "official": true,
+      "phase_ids": [
+        "phase-05",
+        "phase-07"
+      ],
+      "description_vi": "Architecture guide về CI/CD, data validation, model validation và pipeline automation.",
+      "description_en": "Architecture guidance for CI/CD, data validation, model validation, and pipeline automation.",
+      "how_to_use_vi": "Dùng khi thiết kế capstone production; tách những gì cần ngay local khỏi phần có thể mở rộng sau.",
+      "how_to_use_en": "Use it when designing the production capstone and separate local essentials from future scale-out work."
+    },
+    {
+      "slug": "anthropic-effective-agents",
+      "title_vi": "Building effective agents",
+      "title_en": "Building effective agents",
+      "provider": "Anthropic",
+      "url": "https://www.anthropic.com/research/building-effective-agents",
+      "type": "Engineering guide",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-15",
+        "phase-22"
+      ],
+      "description_vi": "Bài viết chính thức về khi nào dùng workflow hay agent và cách giữ hệ thống đơn giản.",
+      "description_en": "Official guidance on when to use workflows or agents and how to keep systems simple.",
+      "how_to_use_vi": "Đọc trước khi thiết kế agent loop; ghi rõ lý do agent cần thiết.",
+      "how_to_use_en": "Read before designing an agent loop and write down why an agent is necessary."
+    },
+    {
+      "slug": "openai-function-calling",
+      "title_vi": "Function calling guide",
+      "title_en": "Function calling guide",
+      "provider": "OpenAI",
+      "url": "https://platform.openai.com/docs/guides/function-calling",
+      "type": "Official docs",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-11",
+        "phase-14"
+      ],
+      "description_vi": "Tài liệu về gọi function, tool schema và structured arguments.",
+      "description_en": "Documentation for function calling, tool schemas, and structured arguments.",
+      "how_to_use_vi": "Dùng để viết contract tool và test invalid arguments.",
+      "how_to_use_en": "Use it to define tool contracts and test invalid arguments."
+    },
+    {
+      "slug": "json-schema-learning",
+      "title_vi": "JSON Schema getting started",
+      "title_en": "JSON Schema getting started",
+      "provider": "JSON Schema",
+      "url": "https://json-schema.org/learn/getting-started-step-by-step",
+      "type": "Official docs",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-11",
+        "phase-14"
+      ],
+      "description_vi": "Nền tảng schema để kiểm tra structured output và tool input.",
+      "description_en": "Schema foundations for validating structured outputs and tool inputs.",
+      "how_to_use_vi": "Viết schema trước code; tạo test cho field thiếu, sai kiểu và giá trị ngoài miền.",
+      "how_to_use_en": "Write the schema before code and test missing fields, wrong types, and out-of-range values."
+    },
+    {
+      "slug": "model-context-protocol",
+      "title_vi": "MCP getting started",
+      "title_en": "MCP getting started",
+      "provider": "Model Context Protocol",
+      "url": "https://modelcontextprotocol.io/docs/getting-started/intro",
+      "type": "Official docs",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-16"
+      ],
+      "description_vi": "Giới thiệu kiến trúc MCP, client, server và capability discovery.",
+      "description_en": "Introduction to MCP architecture, clients, servers, and capability discovery.",
+      "how_to_use_vi": "Đọc message flow rồi làm MCP server read-only local.",
+      "how_to_use_en": "Read the message flow before building a local read-only MCP server."
+    },
+    {
+      "slug": "mcp-specification",
+      "title_vi": "MCP specification",
+      "title_en": "MCP specification",
+      "provider": "Model Context Protocol",
+      "url": "https://modelcontextprotocol.io/specification/2025-06-18",
+      "type": "Specification",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-16"
+      ],
+      "description_vi": "Đặc tả nguồn để kiểm tra tools, resources, prompts và security boundary.",
+      "description_en": "Normative reference for tools, resources, prompts, and security boundaries.",
+      "how_to_use_vi": "Dùng khi cần phân biệt capability và quyền truy cập; không copy config mà không hiểu.",
+      "how_to_use_en": "Use it to distinguish capabilities from access rights; do not copy configuration blindly."
+    },
+    {
+      "slug": "mcp-python-sdk",
+      "title_vi": "MCP Python SDK",
+      "title_en": "MCP Python SDK",
+      "provider": "Model Context Protocol",
+      "url": "https://github.com/modelcontextprotocol/python-sdk",
+      "type": "GitHub repo",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-16"
+      ],
+      "description_vi": "SDK Python để thực hành MCP client/server local.",
+      "description_en": "Python SDK for practicing local MCP clients and servers.",
+      "how_to_use_vi": "Chọn một example nhỏ, thêm validation và test quyền truy cập.",
+      "how_to_use_en": "Choose one small example and add validation plus access-control tests."
+    },
+    {
+      "slug": "ragas-docs",
+      "title_vi": "Ragas documentation",
+      "title_en": "Ragas documentation",
+      "provider": "Ragas",
+      "url": "https://docs.ragas.io/en/stable/",
+      "type": "Official docs",
+      "language": "en",
+      "level": "intermediate",
+      "official": false,
+      "phase_ids": [
+        "phase-13",
+        "phase-17"
+      ],
+      "description_vi": "Framework đánh giá RAG với dataset, metrics và experiment.",
+      "description_en": "A framework for RAG evaluation with datasets, metrics, and experiments.",
+      "how_to_use_vi": "Dùng sau khi có golden set; lưu version metric cùng report.",
+      "how_to_use_en": "Use it after creating a golden set and version the metrics with the report."
+    },
+    {
+      "slug": "openai-evals",
+      "title_vi": "OpenAI Evals",
+      "title_en": "OpenAI Evals",
+      "provider": "OpenAI",
+      "url": "https://github.com/openai/evals",
+      "type": "GitHub repo",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-17"
+      ],
+      "description_vi": "Framework và pattern để xây evaluation suite cho model.",
+      "description_en": "Framework and patterns for building model evaluation suites.",
+      "how_to_use_vi": "Bắt đầu với evaluator deterministic trước khi thêm LLM judge.",
+      "how_to_use_en": "Start with deterministic evaluators before adding an LLM judge."
+    },
+    {
+      "slug": "opentelemetry-python",
+      "title_vi": "OpenTelemetry Python",
+      "title_en": "OpenTelemetry Python",
+      "provider": "OpenTelemetry",
+      "url": "https://opentelemetry.io/docs/languages/python/",
+      "type": "Official docs",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-18",
+        "phase-19"
+      ],
+      "description_vi": "Instrumentation chuẩn mở cho traces, metrics và logs.",
+      "description_en": "Open instrumentation standard for traces, metrics, and logs.",
+      "how_to_use_vi": "Thêm trace id vào một request end-to-end và redact prompt nhạy cảm.",
+      "how_to_use_en": "Add a trace ID to one end-to-end request and redact sensitive prompts."
+    },
+    {
+      "slug": "prometheus-overview",
+      "title_vi": "Prometheus overview",
+      "title_en": "Prometheus overview",
+      "provider": "Prometheus",
+      "url": "https://prometheus.io/docs/introduction/overview/",
+      "type": "Official docs",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-18",
+        "phase-19"
+      ],
+      "description_vi": "Metrics time series và alerting cho service production.",
+      "description_en": "Time-series metrics and alerting for production services.",
+      "how_to_use_vi": "Chọn ba metric có action rõ ràng: latency, errors và cost/budget.",
+      "how_to_use_en": "Choose three actionable metrics: latency, errors, and cost/budget."
+    },
+    {
+      "slug": "langfuse-docs",
+      "title_vi": "Langfuse documentation",
+      "title_en": "Langfuse documentation",
+      "provider": "Langfuse",
+      "url": "https://langfuse.com/docs",
+      "type": "Official docs",
+      "language": "en",
+      "level": "intermediate",
+      "official": false,
+      "phase_ids": [
+        "phase-17",
+        "phase-18"
+      ],
+      "description_vi": "Tracing, prompt/version management và LLM cost observability.",
+      "description_en": "Tracing, prompt/version management, and LLM cost observability.",
+      "how_to_use_vi": "Dùng để soi một trace lỗi; không log PII hoặc secret.",
+      "how_to_use_en": "Use it to inspect a failed trace without logging PII or secrets."
+    },
+    {
+      "slug": "redis-docs",
+      "title_vi": "Redis documentation",
+      "title_en": "Redis documentation",
+      "provider": "Redis",
+      "url": "https://redis.io/docs/latest/",
+      "type": "Official docs",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-19"
+      ],
+      "description_vi": "Cache, queue primitives và rate-limit building blocks.",
+      "description_en": "Cache, queue primitives, and rate-limit building blocks.",
+      "how_to_use_vi": "So sánh cache key, TTL và failure behavior trước khi đưa vào API.",
+      "how_to_use_en": "Compare cache keys, TTLs, and failure behavior before adding it to the API."
+    },
+    {
+      "slug": "celery-docs",
+      "title_vi": "Celery documentation",
+      "title_en": "Celery documentation",
+      "provider": "Celery",
+      "url": "https://docs.celeryq.dev/en/stable/",
+      "type": "Official docs",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-19"
+      ],
+      "description_vi": "Task queue/worker pattern cho job inference hoặc ingestion dài.",
+      "description_en": "Task queue and worker patterns for long inference or ingestion jobs.",
+      "how_to_use_vi": "Vẽ retry/idempotency trước khi chạy worker thật.",
+      "how_to_use_en": "Draw retry and idempotency behavior before running a real worker."
+    },
+    {
+      "slug": "kubernetes-basics",
+      "title_vi": "Kubernetes basics",
+      "title_en": "Kubernetes basics",
+      "provider": "Kubernetes",
+      "url": "https://kubernetes.io/docs/tutorials/kubernetes-basics/",
+      "type": "Official docs",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-19",
+        "phase-22"
+      ],
+      "description_vi": "Khái niệm deployment, service, scaling và rollout.",
+      "description_en": "Concepts for deployments, services, scaling, and rollouts.",
+      "how_to_use_vi": "Chỉ học sau Docker; map từng object với một nhu cầu production cụ thể.",
+      "how_to_use_en": "Study it after Docker and map each object to a concrete production need."
+    },
+    {
+      "slug": "hugging-face-trl",
+      "title_vi": "TRL documentation",
+      "title_en": "TRL documentation",
+      "provider": "Hugging Face",
+      "url": "https://huggingface.co/docs/trl/index",
+      "type": "Official docs",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-20"
+      ],
+      "description_vi": "Thư viện training và alignment cho SFT, preference optimization.",
+      "description_en": "Training and alignment library for SFT and preference optimization.",
+      "how_to_use_vi": "Đọc data collator và evaluation trước khi chạy fine-tuning.",
+      "how_to_use_en": "Read the data collator and evaluation sections before fine-tuning."
+    },
+    {
+      "slug": "hugging-face-bitsandbytes",
+      "title_vi": "bitsandbytes documentation",
+      "title_en": "bitsandbytes documentation",
+      "provider": "Hugging Face",
+      "url": "https://huggingface.co/docs/bitsandbytes/main/en/index",
+      "type": "Official docs",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-20",
+        "phase-21"
+      ],
+      "description_vi": "Quantization và optimizer 8-bit/4-bit cho model lớn.",
+      "description_en": "Quantization and 8-bit/4-bit optimizers for larger models.",
+      "how_to_use_vi": "Đo quality và memory trước/sau quantization; lưu hardware context.",
+      "how_to_use_en": "Measure quality and memory before and after quantization and record hardware context."
+    },
+    {
+      "slug": "vllm-docs",
+      "title_vi": "vLLM documentation",
+      "title_en": "vLLM documentation",
+      "provider": "vLLM",
+      "url": "https://docs.vllm.ai/en/latest/",
+      "type": "Official docs",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-21",
+        "phase-22"
+      ],
+      "description_vi": "Serving LLM high-throughput với batching và OpenAI-compatible API.",
+      "description_en": "High-throughput LLM serving with batching and an OpenAI-compatible API.",
+      "how_to_use_vi": "Benchmark tokens/sec và p95 trên cùng prompt set với runtime khác.",
+      "how_to_use_en": "Benchmark tokens/sec and p95 on the same prompt set against another runtime."
+    },
+    {
+      "slug": "ollama-docs",
+      "title_vi": "Ollama documentation",
+      "title_en": "Ollama documentation",
+      "provider": "Ollama",
+      "url": "https://docs.ollama.com/",
+      "type": "Official docs",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-21"
+      ],
+      "description_vi": "Cách chạy model local nhanh để học inference và prototyping.",
+      "description_en": "A fast way to run local models for inference learning and prototyping.",
+      "how_to_use_vi": "Dùng model nhỏ, ghi rõ RAM/VRAM và không coi kết quả local là production benchmark.",
+      "how_to_use_en": "Use a small model, record RAM/VRAM, and do not treat local results as production benchmarks."
+    },
+    {
+      "slug": "llama-cpp",
+      "title_vi": "llama.cpp",
+      "title_en": "llama.cpp",
+      "provider": "ggml-org",
+      "url": "https://github.com/ggml-org/llama.cpp",
+      "type": "GitHub repo",
+      "language": "en",
+      "level": "intermediate",
+      "official": false,
+      "phase_ids": [
+        "phase-21"
+      ],
+      "description_vi": "Runtime C/C++ phổ biến cho model GGUF và local inference.",
+      "description_en": "A popular C/C++ runtime for GGUF models and local inference.",
+      "how_to_use_vi": "Đọc quantization/runtime trade-off rồi chạy một model nhỏ.",
+      "how_to_use_en": "Read the quantization/runtime trade-offs before running a small model."
+    },
+    {
+      "slug": "elasticsearch-bm25",
+      "title_vi": "Elasticsearch text relevance",
+      "title_en": "Elasticsearch text relevance",
+      "provider": "Elastic",
+      "url": "https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html",
+      "type": "Official docs",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-13"
+      ],
+      "description_vi": "Reference cho inverted index, BM25 và text retrieval.",
+      "description_en": "Reference for inverted indexes, BM25, and text retrieval.",
+      "how_to_use_vi": "Dùng để giải thích vì sao hybrid search bổ sung lexical signal cho vector.",
+      "how_to_use_en": "Use it to explain why hybrid search adds lexical signals to vectors."
+    }
+  ]
+}

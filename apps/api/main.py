@@ -8,6 +8,8 @@ import shutil
 import sqlite3
 import subprocess
 import sys
+import threading
+import time
 from contextlib import asynccontextmanager
 from datetime import date, datetime, timedelta, timezone, tzinfo
 from pathlib import Path
@@ -32,10 +34,19 @@ JOURNAL_ROOT = Path(os.environ.get("JOURNEY_JOURNAL_DIR", APP_ROOT / "journal" i
 FRONTEND_ROOT = Path(os.environ.get("JOURNEY_FRONTEND_DIR", BUNDLE_ROOT / "dist")).resolve()
 LESSON_CATALOG_PATH = CONTENT_ROOT / "lessons.json"
 MODULE_GUIDES_PATH = CONTENT_ROOT / "module_guides.json"
+RESOURCE_LIBRARY_PATH = CONTENT_ROOT / "resources.json"
 SAFE_SLUG = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 SUBPROCESS_OPTIONS: dict[str, Any] = {}
 if os.name == "nt":
     SUBPROCESS_OPTIONS["creationflags"] = getattr(subprocess, "CREATE_NO_WINDOW", 0)
+
+
+# The packaged launcher uses these timestamps to determine whether a browser tab
+# is still connected. This state intentionally lives in memory: it is a runtime
+# signal, not learning data, and must never be persisted in the user's database.
+RUNTIME_HEARTBEAT_TIMEOUT_SECONDS = 12.0
+_RUNTIME_CLIENTS: dict[str, float] = {}
+_RUNTIME_LOCK = threading.Lock()
 
 
 def now_iso() -> str:
@@ -73,6 +84,34 @@ def read_module_guides() -> dict[str, dict[str, Any]]:
         return {}
     payload = json.loads(MODULE_GUIDES_PATH.read_text(encoding="utf-8"))
     return payload.get("modules", {})
+
+
+def read_resource_library() -> list[dict[str, Any]]:
+    """Read the curated reference library from editable version-controlled JSON."""
+
+    if not RESOURCE_LIBRARY_PATH.exists():
+        return []
+    payload = json.loads(RESOURCE_LIBRARY_PATH.read_text(encoding="utf-8"))
+    return payload.get("resources", [])
+
+
+def _prune_runtime_clients(now: float | None = None) -> int:
+    current = now if now is not None else time.monotonic()
+    expired = [
+        client_id
+        for client_id, last_seen in _RUNTIME_CLIENTS.items()
+        if current - last_seen > RUNTIME_HEARTBEAT_TIMEOUT_SECONDS
+    ]
+    for client_id in expired:
+        _RUNTIME_CLIENTS.pop(client_id, None)
+    return len(_RUNTIME_CLIENTS)
+
+
+def runtime_has_active_clients() -> bool:
+    """Return whether at least one browser tab recently checked in."""
+
+    with _RUNTIME_LOCK:
+        return _prune_runtime_clients() > 0
 
 
 EXERCISE_TEST_CODE = '''import unittest
@@ -678,6 +717,10 @@ class ContextRequest(BaseModel):
     question: str = Field(default="Hãy giúp tôi hiểu phần này bằng gợi ý từng bước.", max_length=4000)
 
 
+class RuntimeClientRequest(BaseModel):
+    client_id: str = Field(min_length=8, max_length=120)
+
+
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     init_db()
@@ -700,7 +743,7 @@ def phase_payload(db: sqlite3.Connection, phase: sqlite3.Row) -> dict[str, Any]:
             "id": module["id"], "slug": module["slug"], "title_vi": module["title_vi"], "title_en": module["title_en"],
             "lessons": [dict(lesson) for lesson in lessons],
         })
-    return {**dict(phase), "modules": modules}
+    return {**dict(phase), "track": "genai-specialization" if phase["order_index"] >= 8 else "core", "modules": modules}
 
 
 @app.get("/api/health")
@@ -708,11 +751,55 @@ def health() -> dict[str, Any]:
     return {"status": "ok", "service": "journey-ai-engineer-api", "database": str(DB_PATH)}
 
 
+@app.post("/api/runtime/heartbeat")
+def runtime_heartbeat(payload: RuntimeClientRequest) -> dict[str, Any]:
+    """Register a live browser tab without touching durable learning data."""
+
+    with _RUNTIME_LOCK:
+        _RUNTIME_CLIENTS[payload.client_id] = time.monotonic()
+        active_clients = _prune_runtime_clients()
+    return {"ok": True, "active_clients": active_clients}
+
+
+@app.post("/api/runtime/disconnect")
+def runtime_disconnect(payload: RuntimeClientRequest) -> dict[str, Any]:
+    """Remove a tab immediately when pagehide/sendBeacon is available."""
+
+    with _RUNTIME_LOCK:
+        _RUNTIME_CLIENTS.pop(payload.client_id, None)
+        active_clients = _prune_runtime_clients()
+    return {"ok": True, "active_clients": active_clients}
+
+
 @app.get("/api/roadmap")
 def roadmap() -> dict[str, Any]:
     with connect() as db:
         phases = [phase_payload(db, phase) for phase in db.execute("SELECT * FROM phases ORDER BY order_index").fetchall()]
     return {"program": json.loads((CONTENT_ROOT / "curriculum.json").read_text(encoding="utf-8"))["program"], "phases": phases}
+
+
+@app.get("/api/resources")
+def resources(query: str | None = None, phase: str | None = None, resource_type: str | None = None) -> dict[str, Any]:
+    """Return the searchable, phase-aware reference library."""
+
+    items = read_resource_library()
+    normalized_query = (query or "").strip().casefold()
+    normalized_phase = (phase or "").strip().casefold()
+    normalized_type = (resource_type or "").strip().casefold()
+    if normalized_query:
+        items = [
+            item
+            for item in items
+            if normalized_query in " ".join(
+                str(item.get(field, ""))
+                for field in ("title_vi", "title_en", "provider", "description_vi", "description_en", "type")
+            ).casefold()
+        ]
+    if normalized_phase and normalized_phase != "all":
+        items = [item for item in items if normalized_phase in {str(value).casefold() for value in item.get("phase_ids", [])}]
+    if normalized_type and normalized_type != "all":
+        items = [item for item in items if str(item.get("type", "")).casefold() == normalized_type]
+    return {"resources": items, "count": len(items), "total": len(read_resource_library())}
 
 
 @app.get("/api/dashboard")

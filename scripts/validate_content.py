@@ -21,6 +21,10 @@ required_tool_fields = {
     "install_vi", "install_en", "how_vi", "how_en", "commands", "error_vi", "error_en",
     "combine_vi", "combine_en", "risks_vi", "risks_en", "lesson_refs",
 }
+required_resource_fields = {
+    "slug", "title_vi", "title_en", "provider", "url", "type", "language", "level",
+    "official", "phase_ids", "description_vi", "description_en", "how_to_use_vi", "how_to_use_en",
+}
 
 
 def main() -> None:
@@ -28,8 +32,10 @@ def main() -> None:
     catalog = json.loads((ROOT / "content" / "lessons.json").read_text(encoding="utf-8"))
     phases = curriculum.get("phases", [])
     lessons = catalog.get("lessons", [])
-    assert len(phases) == 8, f"expected 8 phases, got {len(phases)}"
-    assert len(lessons) == 148, f"expected 148 lessons, got {len(lessons)}"
+    assert len(phases) == 23, f"expected 23 phases (core + 15 GenAI stages), got {len(phases)}"
+    assert sum(1 for phase in phases if phase.get("track") == "genai-specialization") == 15, "GenAI specialization stages are incomplete"
+    expected_lesson_count = sum(len(module["lessons"]) for phase in phases for module in phase["modules"])
+    assert len(lessons) == expected_lesson_count, f"expected {expected_lesson_count} lessons, got {len(lessons)}"
     assert len({item["lesson_id"] for item in lessons}) == len(lessons), "lesson ids must be unique"
     expected_ids = {
         f"{phase['slug']}-{module['slug']}-{lesson_index + 1}"
@@ -66,12 +72,25 @@ def main() -> None:
     assert all(guide_fields.issubset(value) for value in guides["modules"].values()), "module guide fields are incomplete"
     tools = json.loads((ROOT / "content" / "tools.json").read_text(encoding="utf-8"))
     assert tools and all(required_tool_fields.issubset(tool) for tool in tools), "tool guide fields are incomplete"
+    resources_path = ROOT / "content" / "resources.json"
+    resources = json.loads(resources_path.read_text(encoding="utf-8")).get("resources", [])
+    assert len(resources) >= 20, "reference library should contain at least 20 sources"
+    assert len({item["slug"] for item in resources}) == len(resources), "resource slugs must be unique"
+    phase_slugs = {f"phase-{index:02d}" for index, _ in enumerate(phases)}
+    missing_resources = {item["slug"]: sorted(required_resource_fields - item.keys()) for item in resources if required_resource_fields - item.keys()}
+    assert not missing_resources, f"missing resource fields: {missing_resources}"
+    for item in resources:
+        parsed = urlparse(item["url"])
+        assert parsed.scheme in {"http", "https"} and parsed.netloc, f"invalid resource URL: {item['url']}"
+        assert item["phase_ids"] and set(item["phase_ids"]).issubset(phase_slugs), f"invalid phase mapping: {item['slug']}"
+        assert item["description_vi"] and item["how_to_use_vi"], f"resource guidance missing: {item['slug']}"
+    assert any(item["url"] == "https://github.com/rohitg00/ai-engineering-from-scratch" for item in resources), "requested AI Engineering from Scratch reference is missing"
     program = curriculum["program"]
     projects = program.get("portfolio_projects", [])
     assert len(projects) >= 4 and len({project["slug"] for project in projects}) == len(projects), "portfolio projects are incomplete"
     assert all(project.get("deliverables") and project.get("evaluation") for project in projects), "portfolio project evidence is incomplete"
     assert len(program.get("career_checklist", [])) >= 6, "career checklist is incomplete"
-    print(f"Content valid: {len(phases)} phases, {len(lessons)} structured lessons, {len(tools)} tool guides")
+    print(f"Content valid: {len(phases)} phases, {len(lessons)} structured lessons, {len(tools)} tool guides, {len(resources)} reference sources")
 
 
 if __name__ == "__main__":

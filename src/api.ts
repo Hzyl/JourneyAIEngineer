@@ -30,6 +30,24 @@ export type PortfolioProject = {
   estimated_weeks: number
 }
 
+export type ReferenceResource = {
+  slug: string
+  title_vi: string
+  title_en: string
+  provider: string
+  url: string
+  type: string
+  language: string
+  level: string
+  official: boolean
+  featured?: boolean
+  phase_ids: string[]
+  description_vi: string
+  description_en: string
+  how_to_use_vi: string
+  how_to_use_en: string
+}
+
 export type LessonPracticePlan = {
   vi?: { task?: string; deliverables?: string[]; checkpoint?: string; stretch?: string }
   en?: { task?: string; deliverables?: string[]; checkpoint?: string; stretch?: string }
@@ -160,6 +178,7 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
 export const api = {
   dashboard: () => request<Dashboard>('/dashboard'),
   roadmap: () => request<{ program: { title_vi: string; title_en: string; description_vi: string; description_en: string; standard_weeks: number; accelerated_weeks: number; portfolio_projects: PortfolioProject[]; career_checklist: string[] }; phases: any[] }>('/roadmap'),
+  resources: () => request<{ resources: ReferenceResource[]; count: number; total: number }>('/resources'),
   lesson: (slug: string) => request<Lesson>(`/lessons/${slug}`),
   updateProgress: (slug: string, status: string, minutes_spent = 0) => request(`/lessons/${slug}/progress`, { method: 'PATCH', body: JSON.stringify({ status, minutes_spent }) }),
   createSession: (payload: { lesson_slug?: string; minutes: number; note?: string }) => request('/study-sessions', { method: 'POST', body: JSON.stringify(payload) }),
@@ -185,4 +204,13 @@ export const api = {
   publishGit: (payload: { paths: string[]; message: string; confirm: boolean }) => request<GitPublishResult>('/git/publish', { method: 'POST', body: JSON.stringify(payload) }),
   exportJournal: () => request<{ path: string; week: string }>('/journal/export', { method: 'POST' }),
   exportContext: (payload: { lesson_slug?: string; exercise_slug?: string; question: string }) => request<{ path: string; content: string }>('/context/export', { method: 'POST', body: JSON.stringify(payload) }),
+  runtimeHeartbeat: (clientId: string) => request<{ ok: boolean; active_clients: number }>('/runtime/heartbeat', { method: 'POST', body: JSON.stringify({ client_id: clientId }) }),
+  runtimeDisconnect: (clientId: string) => {
+    const body = JSON.stringify({ client_id: clientId })
+    if (typeof navigator !== 'undefined' && typeof navigator.sendBeacon === 'function') {
+      const accepted = navigator.sendBeacon(`${API_BASE}/runtime/disconnect`, new Blob([body], { type: 'application/json' }))
+      if (accepted) return Promise.resolve({ ok: true, active_clients: 0 })
+    }
+    return request<{ ok: boolean; active_clients: number }>('/runtime/disconnect', { method: 'POST', body, keepalive: true })
+  },
 }
