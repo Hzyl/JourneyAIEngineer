@@ -79,7 +79,11 @@ function App() {
 }
 
 function LoadingState({ message = 'Đang nạp chương trình học...', compact = false }: { message?: string; compact?: boolean }) { return <div className={`loading-state ${compact ? 'compact' : ''}`} role="status" aria-live="polite"><div className="loading-orb" aria-hidden="true" /><p>{message}</p></div> }
-function Metric({ label, value, detail, tone, action }: { label: string; value: string; detail: string; tone: string; action?: () => void }) { return <button className={`metric-card ${tone}`} onClick={action}><span>{label}</span><strong>{value}</strong><small>{detail}</small></button> }
+function Metric({ label, value, detail, tone, action }: { label: string; value: string; detail: string; tone: string; action?: () => void }) {
+  const content = <><span>{label}</span><strong>{value}</strong><small>{detail}</small></>
+  if (action) return <button type="button" className={`metric-card ${tone}`} onClick={action} aria-label={`${label}: ${value}. ${detail}`}>{content}</button>
+  return <div className={`metric-card ${tone}`} role="group" aria-label={`${label}: ${value}. ${detail}`}>{content}</div>
+}
 
 function DashboardView({ dashboard, program, onOpenLesson, onNavigate, onRecordSession }: { dashboard: Dashboard | null; program?: any; onOpenLesson: (slug: string) => void; onNavigate: (view: View) => void; onRecordSession: (minutes: number, note: string) => Promise<void> }) {
   if (!dashboard) return <EmptyState title="Chưa có dashboard" description="Khởi động backend để nạp curriculum." />
