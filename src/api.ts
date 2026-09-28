@@ -171,6 +171,33 @@ export type FeedbackItem = {
   updated_at: string
 }
 
+export type SecurityFinding = {
+  id: string
+  severity: 'critical' | 'high' | 'medium' | 'low' | 'info'
+  status: 'candidate' | 'needs_human_review' | 'verified_control'
+  title_vi: string
+  evidence: string
+  remediation_vi: string
+  path: string | null
+  methods: string[]
+  source_file: string | null
+  source_line: number | null
+}
+
+export type SecurityAuditReport = {
+  mode: 'passive'
+  safe_mode: boolean
+  network_requests: number
+  payloads_sent: number
+  external_tools: string[]
+  source_root: string
+  route_count: number
+  routes: Array<{ path: string; methods: string[]; name: string; endpoint: string; operation_id: string | null; mutating: boolean; body_model: string | null; unbounded_string_fields: string[]; source_file: string | null; source_line: number | null }>
+  findings: SecurityFinding[]
+  summary: { status_counts: Record<string, number>; severity_counts: Record<string, number>; candidate_count: number; needs_human_review: number; verified_controls: number }
+  limitations_vi: string[]
+}
+
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`, {
     headers: { 'Content-Type': 'application/json', ...(options?.headers ?? {}) },
@@ -196,6 +223,7 @@ export const api = {
   resources: () => request<{ resources: ReferenceResource[]; count: number; total: number }>('/resources'),
   feedback: (lessonSlug?: string) => request<{ items: FeedbackItem[]; count: number }>(`/feedback${lessonSlug ? `?lesson_slug=${encodeURIComponent(lessonSlug)}` : ''}`),
   createFeedback: (payload: { lesson_slug: string; kind: FeedbackKind; body: string; display_name?: string }) => request<{ feedback: FeedbackItem; message: string }>('/feedback', { method: 'POST', body: JSON.stringify(payload) }),
+  securityAudit: () => request<SecurityAuditReport>('/security/audit'),
   lesson: (slug: string) => request<Lesson>(`/lessons/${slug}`),
   updateProgress: (slug: string, status: string, minutes_spent = 0) => request(`/lessons/${slug}/progress`, { method: 'PATCH', body: JSON.stringify({ status, minutes_spent }) }),
   createSession: (payload: { lesson_slug?: string; minutes: number; note?: string }) => request('/study-sessions', { method: 'POST', body: JSON.stringify(payload) }),

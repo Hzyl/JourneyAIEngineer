@@ -22,6 +22,8 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
+from apps.api.security_audit import audit_app
+
 
 IS_FROZEN = bool(getattr(sys, "frozen", False))
 BUNDLE_ROOT = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parents[2])).resolve()
@@ -809,6 +811,17 @@ def phase_payload(db: sqlite3.Connection, phase: sqlite3.Row) -> dict[str, Any]:
 @app.get("/api/health")
 def health() -> dict[str, Any]:
     return {"status": "ok", "service": "journey-ai-engineer-api", "database": str(DB_PATH)}
+
+
+@app.get("/api/security/audit")
+def security_audit(request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
+    """Run a passive local source/endpoint review without network or payloads."""
+
+    if request is not None:
+        client_host = request.client.host if request.client else ""
+        if client_host not in {"127.0.0.1", "::1", "localhost"}:
+            raise HTTPException(403, "Passive security audit is local-only")
+    return audit_app(app, PROJECT_ROOT)
 
 
 @app.post("/api/runtime/heartbeat")

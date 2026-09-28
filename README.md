@@ -70,9 +70,22 @@ Invoke-RestMethod "http://127.0.0.1:8000/api/feedback/1/moderation" -Method Patc
 
 ## RedAmon và kiểm thử bảo mật có ủy quyền
 
-RedAmon ([`samugit83/redamon`](https://github.com/samugit83/redamon)) được ghi trong **Công cụ** như một security lab tham khảo, không được nhúng hoặc tự chạy trong Journey. Có thể dùng nó để kiểm tra sản phẩm của chính bạn sau khi tạo staging cô lập, dữ liệu giả, allowlist target và văn bản ủy quyền rõ ràng. Luồng nên là dependency/SAST → unit/integration test → OWASP ZAP baseline trên staging → RedAmon phạm vi hẹp → triage → sửa → regression test → security report.
+RedAmon ([`samugit83/redamon`](https://github.com/samugit83/redamon)) được ghi trong **Công cụ** như một security lab tham khảo, không được nhúng hoặc tự chạy trong Journey. Có thể dùng nó để kiểm tra sản phẩm của chính bạn sau khi tạo staging cô lập, dữ liệu giả, allowlist target và văn bản ủy quyền rõ ràng. Luồng nên bắt đầu bằng **Journey Passive Security Audit** → dependency/SAST → unit/integration test → staging có ủy quyền → chỉ khi thật sự cần mới cân nhắc tool bên ngoài → triage → sửa → regression test → security report.
 
 Không trỏ RedAmon vào production/public target hoặc hệ thống của người khác; không đưa credential thật; không expose dashboard ra Internet; không auto-merge CodeFix. README của công cụ cảnh báo về reconnaissance/exploitation, lưu dữ liệu trong database, gửi dữ liệu tới LLM/API bên thứ ba và khả năng token/API key được lưu plaintext. Hãy xem tài liệu và license hiện hành trước mỗi lần dùng, pin version/image, chạy Docker/WSL2 trong filesystem Linux riêng và xóa dữ liệu thử nghiệm sau khi review.
+
+### Passive Endpoint Security Review (safe mode)
+
+Journey có một lớp review thụ động trong **Security Lab** và trong tester. Lớp này chỉ đọc route table của FastAPI, Pydantic body schema và một số pattern trong source; nó **không gửi network request, không gọi handler, không tạo payload, không clone/cài/chạy RedAmon**. Mục tiêu là lập inventory và đưa ra finding để bạn đọc code, không phải khẳng định endpoint đã bị khai thác.
+
+Chạy từ thư mục project:
+
+```powershell
+python scripts/security_audit.py --format summary
+python scripts/security_audit.py --format json > .data/security-audit.json
+```
+
+Report phân biệt `needs_human_review` với `verified_control`. Với finding cần review, đọc handler và schema, viết test control trong local/staging có ủy quyền, xác nhận có lỗi thật hay false positive, rồi sửa và chạy lại regression test. UI chỉ hiển thị đường dẫn source tương đối để không làm lộ profile máy. Nếu sau này mở app online, endpoint review này phải được giữ local-only hoặc đặt sau auth; không public inventory source cho người lạ.
 
 ## Nội dung học
 

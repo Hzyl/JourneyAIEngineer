@@ -427,3 +427,34 @@ def test_feedback_is_moderated_and_public_data_is_filtered(tmp_path, monkeypatch
             FakeRequest("local-review-token"),
         )
     assert invalid_transition.value.status_code == 409
+
+
+def test_passive_security_audit_is_read_only_and_reports_evidence(tmp_path, monkeypatch):
+    module = load_module(tmp_path, monkeypatch)
+    report = module.security_audit()
+    assert report["mode"] == "passive"
+    assert report["safe_mode"] is True
+    assert report["network_requests"] == 0
+    assert report["payloads_sent"] == 0
+    assert report["external_tools"] == []
+    assert report["source_root"] == "project"
+    assert report["route_count"] >= 1
+    assert any(route["path"] == "/api/security/audit" for route in report["routes"])
+    assert any(route["path"] == "/api/feedback" and "POST" in route["methods"] for route in report["routes"])
+    assert all("source" not in route for route in report["routes"])
+    assert all(not Path(route["source_file"]).is_absolute() for route in report["routes"] if route["source_file"])
+    assert all(not Path(finding["source_file"]).is_absolute() for finding in report["findings"] if finding["source_file"])
+    assert any(finding["id"] == "control-no-shell-true" and finding["status"] == "verified_control" for finding in report["findings"])
+    assert report["summary"]["needs_human_review"] >= 1
+    assert any("không gửi request" in limitation for limitation in report["limitations_vi"])
+
+
+def test_passive_security_audit_rejects_non_local_request(tmp_path, monkeypatch):
+    module = load_module(tmp_path, monkeypatch)
+
+    class RemoteRequest:
+        client = type("Client", (), {"host": "192.0.2.10"})()
+
+    with pytest.raises(module.HTTPException) as denied:
+        module.security_audit(RemoteRequest())
+    assert denied.value.status_code == 403

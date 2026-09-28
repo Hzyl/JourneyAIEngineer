@@ -1,11 +1,11 @@
 /* oxlint-disable react(set-state-in-effect) */
 import { useEffect, useRef, useState } from 'react'
-import { api, type AppSettings, type Dashboard, type Exercise, type FeedbackItem, type FeedbackKind, type Lesson, type ReferenceResource } from './api'
+import { api, type AppSettings, type Dashboard, type Exercise, type FeedbackItem, type FeedbackKind, type Lesson, type ReferenceResource, type SecurityAuditReport, type SecurityFinding } from './api'
 import './App.css'
 import './typography.css'
 import './learning-workflow.css'
 
-type View = 'dashboard' | 'roadmap' | 'lesson' | 'review' | 'exercises' | 'tools' | 'resources' | 'community' | 'journal' | 'settings'
+type View = 'dashboard' | 'roadmap' | 'lesson' | 'review' | 'exercises' | 'tools' | 'security' | 'resources' | 'community' | 'journal' | 'settings'
 type ContextExport = { path: string; content: string }
 const navItems: Array<{ id: View; label: string; icon: string; hint: string }> = [
   { id: 'dashboard', label: 'Tổng quan', icon: '◐', hint: 'Nhịp học hôm nay' },
@@ -13,6 +13,7 @@ const navItems: Array<{ id: View; label: string; icon: string; hint: string }> =
   { id: 'review', label: 'Ôn tập', icon: '↻', hint: 'Nhớ lâu hơn' },
   { id: 'exercises', label: 'Bài tập', icon: '⌘', hint: 'Mở bằng VS Code' },
   { id: 'tools', label: 'Công cụ', icon: '◇', hint: 'Dùng đúng lúc' },
+  { id: 'security', label: 'Security Lab', icon: '⌁', hint: 'Passive endpoint review' },
   { id: 'resources', label: 'Tài liệu', icon: '▤', hint: 'Sách · course · docs' },
   { id: 'community', label: 'Cộng đồng', icon: '✦', hint: 'Góp ý · cải thiện bài học' },
   { id: 'journal', label: 'Journal & Git', icon: '✎', hint: 'Ghi lại hành trình' },
@@ -102,7 +103,7 @@ function App() {
 
   return <div className="app-shell"><a className="skip-link" href="#main-content">Bỏ qua đến nội dung chính</a>
     <aside className="sidebar"><div className="brand-lockup"><div className="brand-mark">J</div><div><strong>Journey</strong><span>AI Engineer</span></div></div><div className="sidebar-intro">Một chương trình học có nhịp, có bằng chứng và có sản phẩm.</div><nav aria-label="Điều hướng chính" className="nav-list">{navItems.map((item) => <button className={`nav-item ${(view === item.id || (view === 'lesson' && item.id === 'roadmap')) ? 'active' : ''}`} key={item.id} onClick={() => setView(item.id)} aria-current={(view === item.id || (view === 'lesson' && item.id === 'roadmap')) ? 'page' : undefined}><span className="nav-icon" aria-hidden="true">{item.icon}</span><span><strong>{item.label}</strong><small>{item.hint}</small></span></button>)}</nav><div className="sidebar-footer"><div className="status-dot"><span /> Local workspace</div><small>Progress được lưu trên máy của bạn</small><small>Đóng tab sẽ tắt app nền sau khoảng 15–20 giây.</small></div></aside>
-    <main className="main-area" id="main-content" aria-busy={loading || lessonLoading}><header className="topbar"><div><span className="eyebrow">PERSONAL LEARNING OS</span><h1>{view === 'dashboard' ? 'Hôm nay học gì?' : view === 'lesson' ? 'Lesson workspace' : navItems.find((item) => item.id === view)?.label}</h1></div><div className="topbar-actions"><button className="language-chip" onClick={() => void changeLanguage()} aria-label="Đổi ngôn ngữ">{settings.language === 'vi' ? 'VI' : 'EN'} <i>·</i> {settings.language === 'vi' ? 'EN' : 'VI'}</button><button className="refresh-button" onClick={retry} disabled={loading} aria-busy={loading} aria-label={loading ? 'Đang làm mới dữ liệu' : 'Làm mới dữ liệu'}>↻</button></div></header>{error && <div className="error-banner" role="alert" aria-live="assertive"><strong>Có lỗi khi tải dữ liệu.</strong> {error} <button className="text-button" onClick={retry}>Thử lại</button></div>}{loading && !dashboard ? <LoadingState /> : <div className="page-content">{view === 'dashboard' && <DashboardView dashboard={dashboard} program={roadmap?.program} onOpenLesson={openLesson} onNavigate={setView} onRecordSession={async (minutes, note) => { await api.createSession({ minutes, note }); await refresh() }} />}{view === 'roadmap' && <RoadmapView roadmap={roadmap} language={settings.language} track={settings.track} onTrackChange={(value) => void changeTrack(value)} onOpenLesson={openLesson} />}{view === 'lesson' && <LessonPage lesson={lesson} lessonLoading={lessonLoading} language={settings.language} onBack={closeLesson} onProgress={updateProgress} onOpenLesson={openLesson} onOpenExercises={() => setView('exercises')} />}{view === 'review' && <ReviewView reviews={reviews} onAnswer={async (id, rating, thoughtSeconds, answerText) => { await api.answerReview(id, rating, thoughtSeconds, answerText); const next = await api.reviews(); setReviews(next.items); await refresh() }} onOpenLesson={openLesson} />}{view === 'exercises' && <ExercisesView exercises={exercises} onRefresh={refresh} />}{view === 'tools' && <ToolsView tools={tools} />}{view === 'resources' && <ResourcesView resources={resources} language={settings.language} />}{view === 'community' && <CommunityView onOpenLesson={openLesson} />}{view === 'settings' && <SettingsView settings={settings} onSave={async (next) => setSettings(await api.updateSettings(next))} />}{view === 'journal' && <JournalView onExportContext={(question) => api.exportContext({ lesson_slug: lesson?.slug, question })} />}</div>}</main>
+    <main className="main-area" id="main-content" aria-busy={loading || lessonLoading}><header className="topbar"><div><span className="eyebrow">PERSONAL LEARNING OS</span><h1>{view === 'dashboard' ? 'Hôm nay học gì?' : view === 'lesson' ? 'Lesson workspace' : navItems.find((item) => item.id === view)?.label}</h1></div><div className="topbar-actions"><button className="language-chip" onClick={() => void changeLanguage()} aria-label="Đổi ngôn ngữ">{settings.language === 'vi' ? 'VI' : 'EN'} <i>·</i> {settings.language === 'vi' ? 'EN' : 'VI'}</button><button className="refresh-button" onClick={retry} disabled={loading} aria-busy={loading} aria-label={loading ? 'Đang làm mới dữ liệu' : 'Làm mới dữ liệu'}>↻</button></div></header>{error && <div className="error-banner" role="alert" aria-live="assertive"><strong>Có lỗi khi tải dữ liệu.</strong> {error} <button className="text-button" onClick={retry}>Thử lại</button></div>}{loading && !dashboard ? <LoadingState /> : <div className="page-content">{view === 'dashboard' && <DashboardView dashboard={dashboard} program={roadmap?.program} onOpenLesson={openLesson} onNavigate={setView} onRecordSession={async (minutes, note) => { await api.createSession({ minutes, note }); await refresh() }} />}{view === 'roadmap' && <RoadmapView roadmap={roadmap} language={settings.language} track={settings.track} onTrackChange={(value) => void changeTrack(value)} onOpenLesson={openLesson} />}{view === 'lesson' && <LessonPage lesson={lesson} lessonLoading={lessonLoading} language={settings.language} onBack={closeLesson} onProgress={updateProgress} onOpenLesson={openLesson} onOpenExercises={() => setView('exercises')} />}{view === 'review' && <ReviewView reviews={reviews} onAnswer={async (id, rating, thoughtSeconds, answerText) => { await api.answerReview(id, rating, thoughtSeconds, answerText); const next = await api.reviews(); setReviews(next.items); await refresh() }} onOpenLesson={openLesson} />}{view === 'exercises' && <ExercisesView exercises={exercises} onRefresh={refresh} />}{view === 'tools' && <ToolsView tools={tools} />}{view === 'security' && <SecurityLabView />}{view === 'resources' && <ResourcesView resources={resources} language={settings.language} />}{view === 'community' && <CommunityView onOpenLesson={openLesson} />}{view === 'settings' && <SettingsView settings={settings} onSave={async (next) => setSettings(await api.updateSettings(next))} />}{view === 'journal' && <JournalView onExportContext={(question) => api.exportContext({ lesson_slug: lesson?.slug, question })} />}</div>}</main>
   </div>
 }
 
@@ -406,6 +407,90 @@ function CommunityView({ onOpenLesson }: { onOpenLesson: (slug: string) => void 
   }, [])
   const visible = kind === 'all' ? items : items.filter((item) => item.kind === kind)
   return <div className="community-layout"><section className="community-hero"><span className="eyebrow accent">LEARNING COMMUNITY</span><h2>Học cùng nhau,<br /><em>sửa bằng chứng.</em></h2><p>Đây là nơi các nhận xét đã được duyệt trở thành tín hiệu để cải thiện lesson, ví dụ và bài tập. Bạn có thể gửi góp ý ngay trong từng bài học.</p><div className="community-boundary"><strong>Public beta</strong><span>Chỉ hiển thị góp ý đã duyệt · không hiển thị email, tiến độ hay ghi chú riêng.</span></div></section><section className="section-card community-feed"><div className="section-heading"><div><span className="eyebrow">APPROVED FEEDBACK</span><h3>Nhận xét gần đây</h3></div><label className="community-filter"><span className="sr-only">Lọc loại góp ý</span><select value={kind} onChange={(event) => setKind(event.target.value as FeedbackKind | 'all')}><option value="all">Mọi loại</option>{(Object.keys(feedbackKindLabels) as FeedbackKind[]).map((option) => <option key={option} value={option}>{feedbackKindLabels[option]}</option>)}</select></label></div>{error && <p className="warning-note" role="alert">{error}</p>}{loading ? <LoadingState compact message="Đang tải góp ý đã duyệt…" /> : visible.length === 0 ? <EmptyState title="Chưa có nhận xét phù hợp" description="Mở một lesson để gửi góp ý đầu tiên cho chương trình." /> : <div className="community-feed-list">{visible.map((item) => <article className="community-feedback-card" key={item.id}><div className="feedback-item-meta"><span className="tag">{feedbackKindLabels[item.kind]}</span><span>{feedbackDate(item.created_at)}{item.display_name ? ` · ${item.display_name}` : ''}</span></div><p>{item.body}</p><button className="text-button" onClick={() => onOpenLesson(item.lesson_slug)}>Mở lesson: {item.lesson_title_vi} →</button>{item.status === 'implemented' && <small className="feedback-implemented">✓ Đã cập nhật</small>}</article>)}</div>}</section></div>
+}
+
+const securitySeverityLabels: Record<SecurityFinding['severity'], string> = {
+  critical: 'Critical',
+  high: 'High',
+  medium: 'Medium',
+  low: 'Low',
+  info: 'Đã kiểm chứng',
+}
+
+const securityStatusLabels: Record<SecurityFinding['status'], string> = {
+  candidate: 'Ứng viên cần xem',
+  needs_human_review: 'Cần người kiểm tra',
+  verified_control: 'Guardrail đã kiểm chứng',
+}
+
+function SecurityLabView() {
+  const [report, setReport] = useState<SecurityAuditReport | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+  const [severity, setSeverity] = useState<'all' | SecurityFinding['severity']>('all')
+  const [status, setStatus] = useState<'all' | SecurityFinding['status']>('all')
+
+  const load = async () => {
+    setLoading(true)
+    setError('')
+    try {
+      setReport(await api.securityAudit())
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'Không chạy được passive security review.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // The audit is read-only and intentionally runs only when this view opens or is refreshed.
+  useEffect(() => { const timer = window.setTimeout(() => { void load() }, 0); return () => window.clearTimeout(timer) }, [])
+
+  const visibleFindings = (report?.findings ?? []).filter((finding) => {
+    const severityMatches = severity === 'all' || finding.severity === severity
+    const statusMatches = status === 'all' || finding.status === status
+    return severityMatches && statusMatches
+  })
+
+  return <div className="security-layout">
+    <section className="security-hero">
+      <div>
+        <span className="eyebrow accent">PASSIVE SECURITY REVIEW</span>
+        <h2>Tìm dấu hiệu rủi ro,<br /><em>không gửi payload.</em></h2>
+        <p>Security Lab đọc route FastAPI, schema input và một số guardrail trong source để lập danh sách cần xem. Nó không gọi endpoint, không thử khai thác và không clone hoặc chạy RedAmon.</p>
+      </div>
+      <div className="security-safe-panel" aria-label="Trạng thái safe mode">
+        <strong>SAFE MODE</strong>
+        <span>0 network requests</span>
+        <span>0 payloads sent</span>
+        <span>0 external tools</span>
+      </div>
+    </section>
+
+    {error && <div className="error-banner" role="alert"><strong>Review chưa chạy được.</strong> {error} <button className="text-button" onClick={() => void load()}>Thử lại</button></div>}
+    {loading && !report ? <LoadingState message="Đang lập inventory endpoint an toàn…" /> : report && <>
+      <section className="security-summary" aria-label="Tóm tắt security review">
+        <div className="security-stat"><span>Endpoint đã lập inventory</span><strong>{report.route_count}</strong><small>Chỉ route /api trong app local</small></div>
+        <div className="security-stat warning"><span>Cần human review</span><strong>{report.summary.needs_human_review}</strong><small>Không đồng nghĩa endpoint đã bị khai thác</small></div>
+        <div className="security-stat safe"><span>Guardrail đã kiểm chứng</span><strong>{report.summary.verified_controls}</strong><small>Static check trong source hiện tại</small></div>
+        <button className="secondary-button security-refresh" disabled={loading} onClick={() => void load()}>{loading ? 'Đang quét…' : 'Quét lại source'}</button>
+      </section>
+
+      <section className="security-method-card">
+        <div><span className="eyebrow">QUY TRÌNH AN TOÀN</span><h3>Đọc → kiểm chứng → sửa → test</h3></div>
+        <p>Finding chỉ là tín hiệu. Với mỗi endpoint, hãy đọc handler và model, viết test control ở local/staging có ủy quyền, xác nhận kết quả, rồi mới sửa và chạy lại test. App không tự biến finding thành exploit.</p>
+        <div className="security-steps"><span><b>01</b> Inventory</span><span><b>02</b> Human review</span><span><b>03</b> Fix + regression test</span></div>
+      </section>
+
+      <section className="section-card security-findings-card">
+        <div className="section-heading"><div><span className="eyebrow">REVIEW QUEUE</span><h3>Dấu hiệu cần đọc trong code</h3></div><span className="tag">{visibleFindings.length}/{report.findings.length}</span></div>
+        <div className="security-filters"><label>Severity<select aria-label="Lọc severity" value={severity} onChange={(event) => setSeverity(event.target.value as 'all' | SecurityFinding['severity'])}><option value="all">Mọi mức</option><option value="critical">Critical</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option><option value="info">Đã kiểm chứng</option></select></label><label>Trạng thái<select aria-label="Lọc trạng thái" value={status} onChange={(event) => setStatus(event.target.value as 'all' | SecurityFinding['status'])}><option value="all">Mọi trạng thái</option><option value="needs_human_review">Cần người kiểm tra</option><option value="candidate">Ứng viên cần xem</option><option value="verified_control">Guardrail đã kiểm chứng</option></select></label></div>
+        {visibleFindings.length === 0 ? <EmptyState title="Không có finding phù hợp" description="Thử bỏ bớt bộ lọc hoặc quét lại source." /> : <div className="security-finding-list">{visibleFindings.map((finding) => <article className={`security-finding security-${finding.status}`} key={finding.id}><div className="security-finding-top"><div className="security-finding-tags"><span className={`security-severity severity-${finding.severity}`}>{securitySeverityLabels[finding.severity]}</span><span className="security-status">{securityStatusLabels[finding.status]}</span></div>{finding.path && <code>{finding.methods.join(' / ')} {finding.path}</code>}</div><h4>{finding.title_vi}</h4><p className="security-evidence"><strong>Bằng chứng:</strong> {finding.evidence}</p><p className="security-remediation"><strong>Bước tiếp theo:</strong> {finding.remediation_vi}</p>{finding.source_file && <small className="security-source">{finding.source_file}{finding.source_line ? `:${finding.source_line}` : ''}</small>}</article>)}</div>}
+      </section>
+
+      <details className="security-details"><summary>Endpoint inventory ({report.route_count})</summary><p className="muted">Đây là metadata đọc từ FastAPI route table; handler không được gọi trong lúc lập inventory.</p><div className="security-route-list">{report.routes.map((route) => <div className="security-route" key={`${route.path}-${route.methods.join(',')}`}><div><code>{route.methods.join(' / ')} {route.path}</code><small>{route.name}{route.body_model ? ` · body ${route.body_model}` : ''}</small></div><span className={route.mutating ? 'security-route-write' : 'security-route-read'}>{route.mutating ? 'ghi dữ liệu' : 'read-only'}</span></div>)}</div></details>
+      <details className="security-details"><summary>Giới hạn và cách đọc kết quả</summary><ul>{report.limitations_vi.map((limitation) => <li key={limitation}>{limitation}</li>)}</ul><p className="muted">Source root: <code>{report.source_root}</code>. Đường dẫn source trong report là đường dẫn tương đối để không lộ profile máy.</p></details>
+    </>}
+  </div>
 }
 
 function ReviewView({ reviews, onAnswer, onOpenLesson }: { reviews: any[]; onAnswer: (id: number, rating: string, thoughtSeconds?: number, answerText?: string) => Promise<void>; onOpenLesson: (slug: string) => void }) {
