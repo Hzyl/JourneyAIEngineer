@@ -156,6 +156,21 @@ export type AppSettings = {
   onboarding_complete: boolean
 }
 
+export type FeedbackKind = 'unclear' | 'incorrect' | 'missing_example' | 'missing_resource' | 'broken_link' | 'typo' | 'exercise_problem' | 'feature_request'
+
+export type FeedbackItem = {
+  id: number
+  lesson_slug: string
+  lesson_title_vi: string
+  lesson_title_en: string
+  kind: FeedbackKind
+  body: string
+  status: 'accepted' | 'implemented' | 'pending' | 'triaged' | 'rejected' | 'drafted'
+  display_name: string | null
+  created_at: string
+  updated_at: string
+}
+
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`, {
     headers: { 'Content-Type': 'application/json', ...(options?.headers ?? {}) },
@@ -179,6 +194,8 @@ export const api = {
   dashboard: () => request<Dashboard>('/dashboard'),
   roadmap: () => request<{ program: { title_vi: string; title_en: string; description_vi: string; description_en: string; standard_weeks: number; accelerated_weeks: number; portfolio_projects: PortfolioProject[]; career_checklist: string[] }; phases: any[] }>('/roadmap'),
   resources: () => request<{ resources: ReferenceResource[]; count: number; total: number }>('/resources'),
+  feedback: (lessonSlug?: string) => request<{ items: FeedbackItem[]; count: number }>(`/feedback${lessonSlug ? `?lesson_slug=${encodeURIComponent(lessonSlug)}` : ''}`),
+  createFeedback: (payload: { lesson_slug: string; kind: FeedbackKind; body: string; display_name?: string }) => request<{ feedback: FeedbackItem; message: string }>('/feedback', { method: 'POST', body: JSON.stringify(payload) }),
   lesson: (slug: string) => request<Lesson>(`/lessons/${slug}`),
   updateProgress: (slug: string, status: string, minutes_spent = 0) => request(`/lessons/${slug}/progress`, { method: 'PATCH', body: JSON.stringify({ status, minutes_spent }) }),
   createSession: (payload: { lesson_slug?: string; minutes: number; note?: string }) => request('/study-sessions', { method: 'POST', body: JSON.stringify(payload) }),

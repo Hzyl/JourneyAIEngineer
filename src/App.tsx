@@ -1,11 +1,11 @@
 /* oxlint-disable react(set-state-in-effect) */
 import { useEffect, useRef, useState } from 'react'
-import { api, type AppSettings, type Dashboard, type Exercise, type Lesson, type ReferenceResource } from './api'
+import { api, type AppSettings, type Dashboard, type Exercise, type FeedbackItem, type FeedbackKind, type Lesson, type ReferenceResource } from './api'
 import './App.css'
 import './typography.css'
 import './learning-workflow.css'
 
-type View = 'dashboard' | 'roadmap' | 'lesson' | 'review' | 'exercises' | 'tools' | 'resources' | 'journal' | 'settings'
+type View = 'dashboard' | 'roadmap' | 'lesson' | 'review' | 'exercises' | 'tools' | 'resources' | 'community' | 'journal' | 'settings'
 type ContextExport = { path: string; content: string }
 const navItems: Array<{ id: View; label: string; icon: string; hint: string }> = [
   { id: 'dashboard', label: 'Tổng quan', icon: '◐', hint: 'Nhịp học hôm nay' },
@@ -14,6 +14,7 @@ const navItems: Array<{ id: View; label: string; icon: string; hint: string }> =
   { id: 'exercises', label: 'Bài tập', icon: '⌘', hint: 'Mở bằng VS Code' },
   { id: 'tools', label: 'Công cụ', icon: '◇', hint: 'Dùng đúng lúc' },
   { id: 'resources', label: 'Tài liệu', icon: '▤', hint: 'Sách · course · docs' },
+  { id: 'community', label: 'Cộng đồng', icon: '✦', hint: 'Góp ý · cải thiện bài học' },
   { id: 'journal', label: 'Journal & Git', icon: '✎', hint: 'Ghi lại hành trình' },
   { id: 'settings', label: 'Cài đặt', icon: '⚙', hint: 'Nhịp học cá nhân' },
 ]
@@ -101,7 +102,7 @@ function App() {
 
   return <div className="app-shell"><a className="skip-link" href="#main-content">Bỏ qua đến nội dung chính</a>
     <aside className="sidebar"><div className="brand-lockup"><div className="brand-mark">J</div><div><strong>Journey</strong><span>AI Engineer</span></div></div><div className="sidebar-intro">Một chương trình học có nhịp, có bằng chứng và có sản phẩm.</div><nav aria-label="Điều hướng chính" className="nav-list">{navItems.map((item) => <button className={`nav-item ${(view === item.id || (view === 'lesson' && item.id === 'roadmap')) ? 'active' : ''}`} key={item.id} onClick={() => setView(item.id)} aria-current={(view === item.id || (view === 'lesson' && item.id === 'roadmap')) ? 'page' : undefined}><span className="nav-icon" aria-hidden="true">{item.icon}</span><span><strong>{item.label}</strong><small>{item.hint}</small></span></button>)}</nav><div className="sidebar-footer"><div className="status-dot"><span /> Local workspace</div><small>Progress được lưu trên máy của bạn</small><small>Đóng tab sẽ tắt app nền sau khoảng 15–20 giây.</small></div></aside>
-    <main className="main-area" id="main-content" aria-busy={loading || lessonLoading}><header className="topbar"><div><span className="eyebrow">PERSONAL LEARNING OS</span><h1>{view === 'dashboard' ? 'Hôm nay học gì?' : view === 'lesson' ? 'Lesson workspace' : navItems.find((item) => item.id === view)?.label}</h1></div><div className="topbar-actions"><button className="language-chip" onClick={() => void changeLanguage()} aria-label="Đổi ngôn ngữ">{settings.language === 'vi' ? 'VI' : 'EN'} <i>·</i> {settings.language === 'vi' ? 'EN' : 'VI'}</button><button className="refresh-button" onClick={retry} disabled={loading} aria-busy={loading} aria-label={loading ? 'Đang làm mới dữ liệu' : 'Làm mới dữ liệu'}>↻</button></div></header>{error && <div className="error-banner" role="alert" aria-live="assertive"><strong>Có lỗi khi tải dữ liệu.</strong> {error} <button className="text-button" onClick={retry}>Thử lại</button></div>}{loading && !dashboard ? <LoadingState /> : <div className="page-content">{view === 'dashboard' && <DashboardView dashboard={dashboard} program={roadmap?.program} onOpenLesson={openLesson} onNavigate={setView} onRecordSession={async (minutes, note) => { await api.createSession({ minutes, note }); await refresh() }} />}{view === 'roadmap' && <RoadmapView roadmap={roadmap} language={settings.language} track={settings.track} onTrackChange={(value) => void changeTrack(value)} onOpenLesson={openLesson} />}{view === 'lesson' && <LessonPage lesson={lesson} lessonLoading={lessonLoading} language={settings.language} onBack={closeLesson} onProgress={updateProgress} onOpenLesson={openLesson} onOpenExercises={() => setView('exercises')} />}{view === 'review' && <ReviewView reviews={reviews} onAnswer={async (id, rating, thoughtSeconds, answerText) => { await api.answerReview(id, rating, thoughtSeconds, answerText); const next = await api.reviews(); setReviews(next.items); await refresh() }} onOpenLesson={openLesson} />}{view === 'exercises' && <ExercisesView exercises={exercises} onRefresh={refresh} />}{view === 'tools' && <ToolsView tools={tools} />}{view === 'resources' && <ResourcesView resources={resources} language={settings.language} />}{view === 'settings' && <SettingsView settings={settings} onSave={async (next) => setSettings(await api.updateSettings(next))} />}{view === 'journal' && <JournalView onExportContext={(question) => api.exportContext({ lesson_slug: lesson?.slug, question })} />}</div>}</main>
+    <main className="main-area" id="main-content" aria-busy={loading || lessonLoading}><header className="topbar"><div><span className="eyebrow">PERSONAL LEARNING OS</span><h1>{view === 'dashboard' ? 'Hôm nay học gì?' : view === 'lesson' ? 'Lesson workspace' : navItems.find((item) => item.id === view)?.label}</h1></div><div className="topbar-actions"><button className="language-chip" onClick={() => void changeLanguage()} aria-label="Đổi ngôn ngữ">{settings.language === 'vi' ? 'VI' : 'EN'} <i>·</i> {settings.language === 'vi' ? 'EN' : 'VI'}</button><button className="refresh-button" onClick={retry} disabled={loading} aria-busy={loading} aria-label={loading ? 'Đang làm mới dữ liệu' : 'Làm mới dữ liệu'}>↻</button></div></header>{error && <div className="error-banner" role="alert" aria-live="assertive"><strong>Có lỗi khi tải dữ liệu.</strong> {error} <button className="text-button" onClick={retry}>Thử lại</button></div>}{loading && !dashboard ? <LoadingState /> : <div className="page-content">{view === 'dashboard' && <DashboardView dashboard={dashboard} program={roadmap?.program} onOpenLesson={openLesson} onNavigate={setView} onRecordSession={async (minutes, note) => { await api.createSession({ minutes, note }); await refresh() }} />}{view === 'roadmap' && <RoadmapView roadmap={roadmap} language={settings.language} track={settings.track} onTrackChange={(value) => void changeTrack(value)} onOpenLesson={openLesson} />}{view === 'lesson' && <LessonPage lesson={lesson} lessonLoading={lessonLoading} language={settings.language} onBack={closeLesson} onProgress={updateProgress} onOpenLesson={openLesson} onOpenExercises={() => setView('exercises')} />}{view === 'review' && <ReviewView reviews={reviews} onAnswer={async (id, rating, thoughtSeconds, answerText) => { await api.answerReview(id, rating, thoughtSeconds, answerText); const next = await api.reviews(); setReviews(next.items); await refresh() }} onOpenLesson={openLesson} />}{view === 'exercises' && <ExercisesView exercises={exercises} onRefresh={refresh} />}{view === 'tools' && <ToolsView tools={tools} />}{view === 'resources' && <ResourcesView resources={resources} language={settings.language} />}{view === 'community' && <CommunityView onOpenLesson={openLesson} />}{view === 'settings' && <SettingsView settings={settings} onSave={async (next) => setSettings(await api.updateSettings(next))} />}{view === 'journal' && <JournalView onExportContext={(question) => api.exportContext({ lesson_slug: lesson?.slug, question })} />}</div>}</main>
   </div>
 }
 
@@ -319,9 +320,92 @@ function LessonDetail({ lesson, language, onProgress, onOpenLesson, onOpenExerci
     <div className="detail-section"><h4>{vi ? 'Tài liệu song song' : 'Resources'}</h4><div className="resource-list">{lesson.resources.map((resource) => <a href={resource.url} target="_blank" rel="noreferrer" key={resource.url}><span>{resource.language === 'en' ? 'EN' : 'VI'}</span>{resource.title}<b>↗</b></a>)}</div></div>
     <div className="detail-section"><h4>{vi ? 'Tự kiểm tra' : 'Self-check'}</h4>{lesson.reviews.map((review) => <div className="review-prompt" key={review.id}><p>{vi ? review.question_vi : review.question_en}</p><details><summary>{vi ? 'Hiện gợi ý đáp án' : 'Show answer hint'}</summary><p>{vi ? review.answer_vi : review.answer_en}</p></details></div>)}</div>
     <div className="detail-section note-editor"><h4>{vi ? 'Ghi chú của bạn' : 'Your note'}</h4><textarea aria-label={vi ? 'Ghi chú của bạn' : 'Your note'} value={noteBody} onChange={(event) => setNoteBody(event.target.value)} placeholder={vi ? 'Viết insight, lỗi gặp phải hoặc điều cần ôn lại...' : 'Write an insight, failure or topic to revisit...'} /><button className="secondary-button" disabled={!noteBody.trim()} onClick={() => void saveNote()}>{vi ? 'Lưu ghi chú' : 'Save note'}</button>{noteSaved && <p className="success-note" role="status">{vi ? 'Đã lưu vào Journal.' : 'Saved to Journal.'}</p>}{noteError && <p className="warning-note" role="alert">{noteError}</p>}</div>
+    <FeedbackPanel lesson={lesson} language={language} />
     <div className="detail-actions"><label className="session-minutes">Phút học<input type="number" min="1" max="1440" value={sessionMinutes} onChange={(event) => setSessionMinutes(event.target.value)} /></label><button className="primary-button" onClick={() => void markProgress()}>{lesson.status === 'completed' ? (vi ? 'Đánh dấu cần ôn' : 'Mark for review') : (vi ? 'Đánh dấu hoàn thành' : 'Mark complete')} <span>✓</span></button></div>{progressError && <p className="warning-note" role="alert">{progressError}</p>}
     <div className="ask-box"><span className="eyebrow">ASK YOUR ASSISTANT</span><h4>{vi ? 'Đang vướng ở đâu?' : 'Where are you stuck?'}</h4><p>Context export ở Journal sẽ đưa lesson, mục tiêu và câu hỏi sang ChatGPT/Codex.</p></div>
   </div>
+}
+
+const feedbackKindLabels: Record<FeedbackKind, string> = {
+  unclear: 'Chưa rõ / cần giải thích thêm',
+  incorrect: 'Có vẻ chưa chính xác',
+  missing_example: 'Thiếu ví dụ thực hành',
+  missing_resource: 'Thiếu tài liệu tham khảo',
+  broken_link: 'Liên kết bị hỏng',
+  typo: 'Lỗi chính tả / hiển thị',
+  exercise_problem: 'Bài tập có vấn đề',
+  feature_request: 'Đề xuất tính năng',
+}
+
+function feedbackDate(value: string): string {
+  const date = new Date(value)
+  return Number.isNaN(date.getTime()) ? 'Mới cập nhật' : new Intl.DateTimeFormat('vi-VN', { dateStyle: 'medium' }).format(date)
+}
+
+function FeedbackPanel({ lesson, language }: { lesson: Lesson; language: 'vi' | 'en' }) {
+  const [items, setItems] = useState<FeedbackItem[]>([])
+  const [kind, setKind] = useState<FeedbackKind>('unclear')
+  const [body, setBody] = useState('')
+  const [displayName, setDisplayName] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [submitting, setSubmitting] = useState(false)
+  const [message, setMessage] = useState('')
+  const [error, setError] = useState('')
+  const vi = language === 'vi'
+
+  useEffect(() => {
+    let active = true
+    void api.feedback(lesson.slug).then((result) => {
+      if (active) setItems(result.items)
+    }).catch((cause) => {
+      if (active) setError(cause instanceof Error ? cause.message : (vi ? 'Chưa tải được góp ý.' : 'Feedback could not be loaded.'))
+    }).finally(() => {
+      if (active) setLoading(false)
+    })
+    return () => { active = false }
+  }, [lesson.slug, vi])
+
+  const submit = async () => {
+    const trimmed = body.trim()
+    if (trimmed.length < 5) {
+      setError(vi ? 'Góp ý cần ít nhất 5 ký tự để người viết có thể kiểm tra.' : 'Feedback needs at least 5 characters.')
+      return
+    }
+    setSubmitting(true)
+    setError('')
+    setMessage('')
+    try {
+      const result = await api.createFeedback({ lesson_slug: lesson.slug, kind, body: trimmed, display_name: displayName.trim() || undefined })
+      setBody('')
+      setMessage(result.message)
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : (vi ? 'Chưa gửi được góp ý.' : 'Feedback could not be sent.'))
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  return <section className="feedback-panel" aria-labelledby="feedback-panel-title"><div className="section-heading"><div><span className="eyebrow accent">LEARNING FEEDBACK</span><h4 id="feedback-panel-title">{vi ? 'Giúp bài học tốt hơn' : 'Help improve this lesson'}</h4></div><span className="tag">{items.length} {vi ? 'đã duyệt' : 'approved'}</span></div><p className="muted">{vi ? 'Góp ý sẽ được xem trước khi xuất hiện công khai. Không nhập email, API key hoặc dữ liệu riêng tư.' : 'Suggestions are reviewed before they become public. Do not include email, API keys or private data.'}</p><form className="feedback-form" onSubmit={(event) => { event.preventDefault(); void submit() }}><label>{vi ? 'Loại góp ý' : 'Feedback type'}<select value={kind} onChange={(event) => setKind(event.target.value as FeedbackKind)}>{(Object.keys(feedbackKindLabels) as FeedbackKind[]).map((option) => <option key={option} value={option}>{feedbackKindLabels[option]}</option>)}</select></label><label>{vi ? 'Tên hiển thị (tuỳ chọn)' : 'Display name (optional)'}<input value={displayName} onChange={(event) => setDisplayName(event.target.value)} maxLength={80} placeholder={vi ? 'Ví dụ: Huy' : 'For example: Huy'} /></label><label className="feedback-body-field">{vi ? 'Góp ý cụ thể' : 'Specific feedback'}<textarea value={body} onChange={(event) => setBody(event.target.value)} minLength={5} maxLength={2000} required placeholder={vi ? 'Bạn bị vướng ở bước nào? Có thể đề xuất ví dụ, tài liệu hoặc cách sửa.' : 'Which step is unclear? Suggest an example, resource or fix.'} /><small>{body.length}/2000</small></label><button className="secondary-button" type="submit" disabled={submitting || body.trim().length < 5}>{submitting ? (vi ? 'Đang gửi…' : 'Sending…') : (vi ? 'Gửi góp ý để review' : 'Send for review')}</button></form>{message && <p className="success-note" role="status">{message}</p>}{error && <p className="warning-note" role="alert">{error}</p>}<div className="feedback-list" aria-live="polite">{loading ? <p className="muted">{vi ? 'Đang tải góp ý đã duyệt…' : 'Loading approved feedback…'}</p> : items.length === 0 ? <p className="muted">{vi ? 'Chưa có góp ý công khai cho lesson này.' : 'No public feedback for this lesson yet.'}</p> : items.map((item) => <article className="feedback-item" key={item.id}><div className="feedback-item-meta"><span className="tag">{feedbackKindLabels[item.kind]}</span><span>{feedbackDate(item.created_at)}{item.display_name ? ` · ${item.display_name}` : ''}</span></div><p>{item.body}</p>{item.status === 'implemented' && <small className="feedback-implemented">✓ {vi ? 'Đã phản ánh vào chương trình' : 'Reflected in the curriculum'}</small>}</article>)}</div></section>
+}
+
+function CommunityView({ onOpenLesson }: { onOpenLesson: (slug: string) => void }) {
+  const [items, setItems] = useState<FeedbackItem[]>([])
+  const [kind, setKind] = useState<FeedbackKind | 'all'>('all')
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+  useEffect(() => {
+    let active = true
+    void api.feedback().then((result) => {
+      if (active) setItems(result.items)
+    }).catch((cause) => {
+      if (active) setError(cause instanceof Error ? cause.message : 'Chưa tải được cộng đồng góp ý.')
+    }).finally(() => {
+      if (active) setLoading(false)
+    })
+    return () => { active = false }
+  }, [])
+  const visible = kind === 'all' ? items : items.filter((item) => item.kind === kind)
+  return <div className="community-layout"><section className="community-hero"><span className="eyebrow accent">LEARNING COMMUNITY</span><h2>Học cùng nhau,<br /><em>sửa bằng chứng.</em></h2><p>Đây là nơi các nhận xét đã được duyệt trở thành tín hiệu để cải thiện lesson, ví dụ và bài tập. Bạn có thể gửi góp ý ngay trong từng bài học.</p><div className="community-boundary"><strong>Public beta</strong><span>Chỉ hiển thị góp ý đã duyệt · không hiển thị email, tiến độ hay ghi chú riêng.</span></div></section><section className="section-card community-feed"><div className="section-heading"><div><span className="eyebrow">APPROVED FEEDBACK</span><h3>Nhận xét gần đây</h3></div><label className="community-filter"><span className="sr-only">Lọc loại góp ý</span><select value={kind} onChange={(event) => setKind(event.target.value as FeedbackKind | 'all')}><option value="all">Mọi loại</option>{(Object.keys(feedbackKindLabels) as FeedbackKind[]).map((option) => <option key={option} value={option}>{feedbackKindLabels[option]}</option>)}</select></label></div>{error && <p className="warning-note" role="alert">{error}</p>}{loading ? <LoadingState compact message="Đang tải góp ý đã duyệt…" /> : visible.length === 0 ? <EmptyState title="Chưa có nhận xét phù hợp" description="Mở một lesson để gửi góp ý đầu tiên cho chương trình." /> : <div className="community-feed-list">{visible.map((item) => <article className="community-feedback-card" key={item.id}><div className="feedback-item-meta"><span className="tag">{feedbackKindLabels[item.kind]}</span><span>{feedbackDate(item.created_at)}{item.display_name ? ` · ${item.display_name}` : ''}</span></div><p>{item.body}</p><button className="text-button" onClick={() => onOpenLesson(item.lesson_slug)}>Mở lesson: {item.lesson_title_vi} →</button>{item.status === 'implemented' && <small className="feedback-implemented">✓ Đã cập nhật</small>}</article>)}</div>}</section></div>
 }
 
 function ReviewView({ reviews, onAnswer, onOpenLesson }: { reviews: any[]; onAnswer: (id: number, rating: string, thoughtSeconds?: number, answerText?: string) => Promise<void>; onOpenLesson: (slug: string) => void }) {

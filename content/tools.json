@@ -162,5 +162,36 @@
     "error_en": "Nếu câu trả lời mơ hồ, bổ sung lỗi, giả thuyết, code tối thiểu và yêu cầu gợi ý từng bước.",
     "combine_en": "Tự thử → ghi giả thuyết → gửi context → sửa code → chạy test → ghi journal.",
     "risks_en": "Hallucination, phụ thuộc quá mức và paste dữ liệu bí mật."
+  },
+  {
+    "slug": "redamon",
+    "name": "RedAmon (authorized security lab)",
+    "category": "Security",
+    "when_vi": "Đánh giá có kiểm soát một ứng dụng bạn sở hữu hoặc có văn bản cho phép kiểm thử, sau khi đã có staging cô lập.",
+    "how_vi": "Bắt đầu bằng dependency/SAST và test API; sau đó đặt allowlist target local, dùng dữ liệu giả, giới hạn phạm vi, ghi log và review từng phát hiện trước khi sửa.",
+    "commands": [
+      "Đọc README và kiểm tra license, scope, data flow trước khi cài",
+      "docker compose config",
+      "docker compose up -d",
+      "docker compose logs -f",
+      "docker compose down"
+    ],
+    "when_not_vi": "Không quét production/public target, hệ thống của người khác, hoặc endpoint chứa dữ liệu thật nếu chưa có ủy quyền rõ ràng. Không dùng làm CI scanner mặc định và không auto-merge CodeFix.",
+    "install_vi": "RedAmon là công cụ tham khảo ngoài app, không được cài vào Journey runtime. Với Windows, dùng Docker Desktop + WSL2 trong filesystem Linux riêng; tạo snapshot/backup trước khi thử.",
+    "error_vi": "Nếu container, LLM provider, database hoặc target không rõ scope thì dừng; kiểm tra logs, allowlist, network boundary và quay lại staging tối thiểu.",
+    "combine_vi": "Luồng an toàn: code review → dependency/SAST → unit/integration test → OWASP ZAP baseline trên staging → RedAmon ở phạm vi hẹp → triage → sửa → regression test → ghi security report.",
+    "risks_vi": "Tool có thể thực hiện reconnaissance/exploitation, lưu dữ liệu vào database và gửi dữ liệu sang LLM/API bên thứ ba. README cảnh báo token/API key có thể lưu plaintext; không đưa credential thật và không expose dashboard ra Internet.",
+    "lesson_refs": [
+      "phase-05-mlops-security-1",
+      "phase-05-mlops-security-2",
+      "phase-22-genai-system-design-genai-system-design-4"
+    ],
+    "when_en": "Assess an application you own or are explicitly authorized to test, after creating an isolated staging environment.",
+    "how_en": "Start with dependency/SAST and API tests; then allowlist a local target, use synthetic data, limit scope, keep logs, and review every finding before fixing it.",
+    "when_not_en": "Never scan production/public targets or systems you do not own without written authorization. Do not make it the default CI scanner or auto-merge CodeFix changes.",
+    "install_en": "RedAmon is an external reference tool, not part of the Journey runtime. On Windows use Docker Desktop + WSL2 in a Linux filesystem and take a snapshot/backup first.",
+    "error_en": "If the container, LLM provider, database, or target scope is unclear, stop; inspect logs, allowlists, network boundaries, and return to a minimal staging target.",
+    "combine_en": "Safe flow: code review → dependency/SAST → unit/integration tests → OWASP ZAP baseline on staging → narrowly scoped RedAmon run → triage → fix → regression test → security report.",
+    "risks_en": "The tool can perform reconnaissance/exploitation, persist data in databases, and send data to third-party LLM/APIs. Its README warns that tokens/API keys may be stored plaintext; never provide real credentials or expose its dashboard to the Internet."
   }
 ]

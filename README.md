@@ -45,6 +45,35 @@ Bản packaged chạy nền không hiện terminal. Mỗi browser tab gửi hear
 7. Mở **Tài liệu** để lọc nguồn theo phase, loại tài liệu hoặc từ khóa; ưu tiên đọc một nguồn rồi quay lại làm bài.
 8. Review `git diff`, sau đó tự commit/push khi đã kiểm tra.
 
+## Feedback và cộng đồng (local beta)
+
+Trong mỗi lesson có panel **Giúp bài học tốt hơn**. Bạn có thể báo phần khó hiểu, lỗi chính tả/link, thiếu ví dụ/tài liệu, vấn đề bài tập hoặc đề xuất tính năng. Nội dung được trim và giới hạn 2.000 ký tự, lưu vào SQLite ở trạng thái `pending`; React hiển thị plain text nên không biến nội dung góp ý thành HTML.
+
+Trang **Cộng đồng** chỉ đọc feedback có trạng thái `accepted` hoặc `implemented`. Email, tiến độ, Journal và ghi chú riêng không đi vào payload public. Bản local không cần tài khoản; nếu sau này mở beta online, lớp auth/RLS và moderation phải được thêm ở backend/cloud, không đặt admin token trong frontend.
+
+Moderation local chỉ mở khi người vận hành tự cấu hình token trong process backend:
+
+```powershell
+$env:JOURNEY_FEEDBACK_ADMIN_TOKEN = "tao-mot-token-dai-ngau-nhien"
+python -m uvicorn apps.api.main:app --reload --port 8000
+```
+
+Gọi `GET /api/feedback/moderation` hoặc `PATCH /api/feedback/{id}/moderation` bằng header `X-Journey-Admin-Token`. API fail-closed khi biến môi trường chưa có, kiểm tra transition trạng thái và không nhận token qua query string. Không commit token, `.data/journey.db` hoặc dữ liệu moderation lên GitHub. Khi mở public beta, nên chuyển feedback sang Postgres/RLS, thêm GitHub/email auth, rate limit, CAPTCHA/abuse review và quy trình export draft → người duyệt → commit thủ công.
+
+Ví dụ xem hàng chờ và duyệt một góp ý trong PowerShell (chỉ chạy trên máy quản trị):
+
+```powershell
+$headers = @{ "X-Journey-Admin-Token" = $env:JOURNEY_FEEDBACK_ADMIN_TOKEN }
+Invoke-RestMethod "http://127.0.0.1:8000/api/feedback/moderation?status=pending" -Headers $headers
+Invoke-RestMethod "http://127.0.0.1:8000/api/feedback/1/moderation" -Method Patch -Headers $headers -ContentType "application/json" -Body '{"status":"triaged","moderation_note":"Cần kiểm tra lại ví dụ."}'
+```
+
+## RedAmon và kiểm thử bảo mật có ủy quyền
+
+RedAmon ([`samugit83/redamon`](https://github.com/samugit83/redamon)) được ghi trong **Công cụ** như một security lab tham khảo, không được nhúng hoặc tự chạy trong Journey. Có thể dùng nó để kiểm tra sản phẩm của chính bạn sau khi tạo staging cô lập, dữ liệu giả, allowlist target và văn bản ủy quyền rõ ràng. Luồng nên là dependency/SAST → unit/integration test → OWASP ZAP baseline trên staging → RedAmon phạm vi hẹp → triage → sửa → regression test → security report.
+
+Không trỏ RedAmon vào production/public target hoặc hệ thống của người khác; không đưa credential thật; không expose dashboard ra Internet; không auto-merge CodeFix. README của công cụ cảnh báo về reconnaissance/exploitation, lưu dữ liệu trong database, gửi dữ liệu tới LLM/API bên thứ ba và khả năng token/API key được lưu plaintext. Hãy xem tài liệu và license hiện hành trước mỗi lần dùng, pin version/image, chạy Docker/WSL2 trong filesystem Linux riêng và xóa dữ liệu thử nghiệm sau khi review.
+
 ## Nội dung học
 
 Curriculum gồm 8 phase core từ onboarding đến capstone, sau đó nối thêm 15 chặng GenAI: Python/software engineering, toán ML, classical ML, PyTorch, MLOps, NLP/LLM/RAG, LLM application, RAG nâng cao, agents, evaluation, observability, production và system design. Mỗi module có lesson, exercise và review item seed tự động.

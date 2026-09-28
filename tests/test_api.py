@@ -349,3 +349,81 @@ def test_journal_and_context_exports(tmp_path, monkeypatch):
     assert missing_exercise.value.status_code == 404
     assert "***REDACTED***" in module.redact_secrets("api_key=do-not-export")
     assert "do-not-export" not in module.redact_secrets("Authorization: Bearer do-not-export")
+
+
+def test_feedback_is_moderated_and_public_data_is_filtered(tmp_path, monkeypatch):
+    module = load_module(tmp_path, monkeypatch)
+    lesson_slug = "phase-00-onboarding-environment-1"
+
+    pending = module.submit_feedback(module.FeedbackSubmission(
+        lesson_slug=lesson_slug,
+        kind="missing_example",
+        body="  Thêm ví dụ chạy trong PowerShell nhé.  ",
+        display_name="Học viên",
+    ))
+    accepted = module.submit_feedback(module.FeedbackSubmission(
+        lesson_slug=lesson_slug,
+        kind="unclear",
+        body="Phần này cần giải thích rõ hơn về PATH.",
+    ))
+    html_payload = module.submit_feedback(module.FeedbackSubmission(
+        lesson_slug=lesson_slug,
+        kind="typo",
+        body="<script>alert('x')</script>",
+    ))
+    assert pending["feedback"]["status"] == "pending"
+    assert pending["feedback"]["body"] == "Thêm ví dụ chạy trong PowerShell nhé."
+    assert "author_id" not in pending["feedback"]
+
+    with module.connect() as db:
+        db.execute("UPDATE feedback SET status='accepted' WHERE id=?", (accepted["feedback"]["id"],))
+        db.execute("UPDATE feedback SET status='accepted' WHERE id=?", (html_payload["feedback"]["id"],))
+
+    public = module.list_feedback(lesson_slug)
+    assert public["count"] == 2
+    assert any(item["id"] == accepted["feedback"]["id"] for item in public["items"])
+    assert next(item for item in public["items"] if item["id"] == html_payload["feedback"]["id"])["body"] == "<script>alert('x')</script>"
+    assert all(item["status"] in module.PUBLIC_FEEDBACK_STATUSES for item in public["items"])
+    assert "moderation_note" not in public["items"][0]
+
+    with pytest.raises(module.HTTPException) as too_short:
+        module.submit_feedback(module.FeedbackSubmission(lesson_slug=lesson_slug, kind="typo", body=" x "))
+    assert too_short.value.status_code == 400
+    with pytest.raises(module.HTTPException) as nul_byte:
+        module.submit_feedback(module.FeedbackSubmission(lesson_slug=lesson_slug, kind="typo", body="valid\x00comment"))
+    assert nul_byte.value.status_code == 400
+    with pytest.raises(module.HTTPException) as missing_lesson:
+        module.submit_feedback(module.FeedbackSubmission(lesson_slug="missing-lesson", kind="typo", body="A valid length comment"))
+    assert missing_lesson.value.status_code == 404
+    with pytest.raises(module.HTTPException) as invalid_limit:
+        module.list_feedback(limit=101)
+    assert invalid_limit.value.status_code == 400
+
+    class FakeRequest:
+        def __init__(self, token=""):
+            self.headers = {"X-Journey-Admin-Token": token}
+
+    with pytest.raises(module.HTTPException) as unconfigured:
+        module.feedback_moderation(FakeRequest())
+    assert unconfigured.value.status_code == 503
+    monkeypatch.setenv(module.FEEDBACK_ADMIN_TOKEN_ENV, "local-review-token")
+    with pytest.raises(module.HTTPException) as unauthorized:
+        module.feedback_moderation(FakeRequest("wrong"))
+    assert unauthorized.value.status_code == 403
+
+    moderation = module.feedback_moderation(FakeRequest("local-review-token"))
+    assert moderation["count"] == 3
+    updated = module.update_feedback_moderation(
+        pending["feedback"]["id"],
+        module.FeedbackModerationUpdate(status="triaged", moderation_note="Cần kiểm tra ví dụ."),
+        FakeRequest("local-review-token"),
+    )
+    assert updated["feedback"]["status"] == "triaged"
+    assert updated["feedback"]["moderation_note"] == "Cần kiểm tra ví dụ."
+    with pytest.raises(module.HTTPException) as invalid_transition:
+        module.update_feedback_moderation(
+            pending["feedback"]["id"],
+            module.FeedbackModerationUpdate(status="implemented"),
+            FakeRequest("local-review-token"),
+        )
+    assert invalid_transition.value.status_code == 409

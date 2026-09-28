@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hmac
 import json
 import os
 import re
@@ -15,7 +16,7 @@ from datetime import date, datetime, timedelta, timezone, tzinfo
 from pathlib import Path
 from typing import Any
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -248,6 +249,31 @@ SECRET_SCAN_PATTERNS = (
 PUBLISH_ROOTS = {"exercises", "projects", "journal"}
 WORKSPACE_IGNORES = {".git", ".venv", "__pycache__", ".pytest_cache", "node_modules"}
 
+# Feedback is deliberately a small, moderated boundary.  The local app can
+# collect suggestions without exposing private learner data or giving a public
+# caller any moderation capability.
+FEEDBACK_ADMIN_TOKEN_ENV = "JOURNEY_FEEDBACK_ADMIN_TOKEN"
+FEEDBACK_KINDS = frozenset({
+    "unclear",
+    "incorrect",
+    "missing_example",
+    "missing_resource",
+    "broken_link",
+    "typo",
+    "exercise_problem",
+    "feature_request",
+})
+FEEDBACK_STATUSES = frozenset({"pending", "triaged", "accepted", "rejected", "drafted", "implemented"})
+PUBLIC_FEEDBACK_STATUSES = frozenset({"accepted", "implemented"})
+FEEDBACK_TRANSITIONS: dict[str, frozenset[str]] = {
+    "pending": frozenset({"pending", "triaged", "rejected"}),
+    "triaged": frozenset({"triaged", "accepted", "rejected", "drafted"}),
+    "accepted": frozenset({"accepted", "drafted", "implemented", "rejected"}),
+    "drafted": frozenset({"drafted", "implemented", "rejected"}),
+    "implemented": frozenset({"implemented"}),
+    "rejected": frozenset({"rejected", "triaged"}),
+}
+
 
 def contains_secret(text: str) -> bool:
     return any(pattern.search(text) for pattern in SECRET_SCAN_PATTERNS)
@@ -332,6 +358,27 @@ def ensure_schema(db: sqlite3.Connection) -> None:
         )
         """
     )
+    db.execute(
+        """
+        CREATE TABLE IF NOT EXISTS feedback (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            lesson_id INTEGER NOT NULL REFERENCES lessons(id) ON DELETE CASCADE,
+            author_id TEXT,
+            display_name TEXT NOT NULL DEFAULT '',
+            kind TEXT NOT NULL,
+            body TEXT NOT NULL,
+            status TEXT NOT NULL DEFAULT 'pending',
+            moderation_note TEXT NOT NULL DEFAULT '',
+            resolved_commit TEXT NOT NULL DEFAULT '',
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL,
+            CHECK(kind IN ('unclear','incorrect','missing_example','missing_resource','broken_link','typo','exercise_problem','feature_request')),
+            CHECK(status IN ('pending','triaged','accepted','rejected','drafted','implemented'))
+        )
+        """
+    )
+    db.execute("CREATE INDEX IF NOT EXISTS idx_feedback_lesson_status ON feedback(lesson_id, status)")
+    db.execute("CREATE INDEX IF NOT EXISTS idx_feedback_status_updated ON feedback(status, updated_at DESC)")
 def init_db() -> None:
     DATA_ROOT.mkdir(parents=True, exist_ok=True)
     WORKSPACE_ROOT.mkdir(parents=True, exist_ok=True)
@@ -721,6 +768,19 @@ class RuntimeClientRequest(BaseModel):
     client_id: str = Field(min_length=8, max_length=120)
 
 
+class FeedbackSubmission(BaseModel):
+    lesson_slug: str = Field(min_length=1, max_length=200)
+    kind: str = Field(min_length=1, max_length=40)
+    body: str = Field(min_length=1, max_length=2000)
+    display_name: str | None = Field(default=None, max_length=80)
+
+
+class FeedbackModerationUpdate(BaseModel):
+    status: str = Field(min_length=1, max_length=20)
+    moderation_note: str = Field(default="", max_length=4000)
+    resolved_commit: str = Field(default="", max_length=120)
+
+
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     init_db()
@@ -800,6 +860,187 @@ def resources(query: str | None = None, phase: str | None = None, resource_type:
     if normalized_type and normalized_type != "all":
         items = [item for item in items if str(item.get("type", "")).casefold() == normalized_type]
     return {"resources": items, "count": len(items), "total": len(read_resource_library())}
+
+
+def _feedback_payload(row: sqlite3.Row, include_moderation: bool = False) -> dict[str, Any]:
+    """Serialize feedback without ever returning the private author identity."""
+
+    payload: dict[str, Any] = {
+        "id": row["id"],
+        "lesson_slug": row["lesson_slug"],
+        "lesson_title_vi": row["lesson_title_vi"],
+        "lesson_title_en": row["lesson_title_en"],
+        "kind": row["kind"],
+        "body": row["body"],
+        "status": row["status"],
+        "display_name": row["display_name"] or None,
+        "created_at": row["created_at"],
+        "updated_at": row["updated_at"],
+    }
+    if include_moderation:
+        payload.update({
+            "moderation_note": row["moderation_note"],
+            "resolved_commit": row["resolved_commit"],
+        })
+    return payload
+
+
+def _feedback_lesson(db: sqlite3.Connection, lesson_slug: str) -> sqlite3.Row:
+    lesson = db.execute(
+        "SELECT id,slug,title_vi,title_en FROM lessons WHERE slug=?",
+        (lesson_slug,),
+    ).fetchone()
+    if not lesson:
+        raise HTTPException(404, "Lesson not found")
+    return lesson
+
+
+def list_feedback(lesson_slug: str | None = None, limit: int = 50) -> dict[str, Any]:
+    """Return approved feedback only; this is the public/community contract."""
+
+    if limit < 1 or limit > 100:
+        raise HTTPException(400, "limit must be between 1 and 100")
+    clean_slug = (lesson_slug or "").strip()
+    if clean_slug and not SAFE_SLUG.fullmatch(clean_slug):
+        raise HTTPException(400, "Invalid lesson slug")
+    params: list[Any] = [*PUBLIC_FEEDBACK_STATUSES]
+    where = "f.status IN (?, ?)"
+    if clean_slug:
+        where += " AND l.slug=?"
+        params.append(clean_slug)
+    params.append(limit)
+    with connect() as db:
+        if clean_slug:
+            _feedback_lesson(db, clean_slug)
+        rows = db.execute(
+            f"""SELECT f.id,f.display_name,f.kind,f.body,f.status,f.created_at,f.updated_at,
+                l.slug AS lesson_slug,l.title_vi AS lesson_title_vi,l.title_en AS lesson_title_en,
+                f.moderation_note,f.resolved_commit
+                FROM feedback f JOIN lessons l ON l.id=f.lesson_id
+                WHERE {where}
+                ORDER BY f.created_at DESC, f.id DESC LIMIT ?""",
+            params,
+        ).fetchall()
+    return {"items": [_feedback_payload(row) for row in rows], "count": len(rows)}
+
+
+def submit_feedback(payload: FeedbackSubmission) -> dict[str, Any]:
+    """Store a plain-text suggestion as pending moderation."""
+
+    lesson_slug = payload.lesson_slug.strip()
+    kind = payload.kind.strip().casefold()
+    body = payload.body.strip()
+    display_name = (payload.display_name or "").strip()
+    if not SAFE_SLUG.fullmatch(lesson_slug):
+        raise HTTPException(400, "Invalid lesson slug")
+    if kind not in FEEDBACK_KINDS:
+        raise HTTPException(400, "Unsupported feedback kind")
+    if len(body) < 5:
+        raise HTTPException(400, "Feedback must contain at least 5 characters")
+    if len(body) > 2000:
+        raise HTTPException(400, "Feedback must contain at most 2000 characters")
+    if "\x00" in body or "\x00" in display_name:
+        raise HTTPException(400, "Feedback contains an invalid character")
+    if len(display_name) > 80:
+        raise HTTPException(400, "Display name must contain at most 80 characters")
+    timestamp = now_iso()
+    with connect() as db:
+        lesson = _feedback_lesson(db, lesson_slug)
+        cursor = db.execute(
+            """INSERT INTO feedback(lesson_id,display_name,kind,body,status,created_at,updated_at)
+            VALUES(?,?,?,?,?,?,?)""",
+            (lesson["id"], display_name, kind, body, "pending", timestamp, timestamp),
+        )
+        row = db.execute(
+            """SELECT f.id,f.display_name,f.kind,f.body,f.status,f.created_at,f.updated_at,
+                l.slug AS lesson_slug,l.title_vi AS lesson_title_vi,l.title_en AS lesson_title_en,
+                f.moderation_note,f.resolved_commit
+                FROM feedback f JOIN lessons l ON l.id=f.lesson_id WHERE f.id=?""",
+            (cursor.lastrowid,),
+        ).fetchone()
+    return {
+        "feedback": _feedback_payload(row),
+        "message": "Đã ghi nhận góp ý. Góp ý sẽ xuất hiện sau khi được duyệt.",
+    }
+
+
+def _require_feedback_admin(request: Request) -> None:
+    expected = os.environ.get(FEEDBACK_ADMIN_TOKEN_ENV, "").strip()
+    if not expected:
+        raise HTTPException(503, "Feedback moderation is not configured")
+    supplied = request.headers.get("X-Journey-Admin-Token", "")
+    if not supplied or not hmac.compare_digest(supplied, expected):
+        raise HTTPException(403, "Invalid feedback moderation token")
+
+
+@app.get("/api/feedback")
+def feedback(lesson_slug: str | None = None, limit: int = 50) -> dict[str, Any]:
+    return list_feedback(lesson_slug, limit)
+
+
+@app.post("/api/feedback", status_code=201)
+def create_feedback(payload: FeedbackSubmission) -> dict[str, Any]:
+    return submit_feedback(payload)
+
+
+@app.get("/api/feedback/moderation")
+def feedback_moderation(request: Request, status: str | None = None, limit: int = 100) -> dict[str, Any]:
+    _require_feedback_admin(request)
+    if limit < 1 or limit > 200:
+        raise HTTPException(400, "limit must be between 1 and 200")
+    clean_status = (status or "").strip().casefold()
+    if clean_status and clean_status not in FEEDBACK_STATUSES:
+        raise HTTPException(400, "Unsupported feedback status")
+    params: list[Any] = []
+    where = "1=1"
+    if clean_status:
+        where += " AND f.status=?"
+        params.append(clean_status)
+    params.append(limit)
+    with connect() as db:
+        rows = db.execute(
+            f"""SELECT f.id,f.display_name,f.kind,f.body,f.status,f.created_at,f.updated_at,
+                l.slug AS lesson_slug,l.title_vi AS lesson_title_vi,l.title_en AS lesson_title_en,
+                f.moderation_note,f.resolved_commit
+                FROM feedback f JOIN lessons l ON l.id=f.lesson_id
+                WHERE {where} ORDER BY f.updated_at ASC, f.id ASC LIMIT ?""",
+            params,
+        ).fetchall()
+    return {"items": [_feedback_payload(row, include_moderation=True) for row in rows], "count": len(rows)}
+
+
+@app.patch("/api/feedback/{feedback_id}/moderation")
+def update_feedback_moderation(feedback_id: int, payload: FeedbackModerationUpdate, request: Request) -> dict[str, Any]:
+    _require_feedback_admin(request)
+    next_status = payload.status.strip().casefold()
+    if next_status not in FEEDBACK_STATUSES:
+        raise HTTPException(400, "Unsupported feedback status")
+    moderation_note = payload.moderation_note.strip()
+    resolved_commit = payload.resolved_commit.strip()
+    with connect() as db:
+        row = db.execute(
+            """SELECT f.id,f.display_name,f.kind,f.body,f.status,f.created_at,f.updated_at,
+                l.slug AS lesson_slug,l.title_vi AS lesson_title_vi,l.title_en AS lesson_title_en,
+                f.moderation_note,f.resolved_commit
+                FROM feedback f JOIN lessons l ON l.id=f.lesson_id WHERE f.id=?""",
+            (feedback_id,),
+        ).fetchone()
+        if not row:
+            raise HTTPException(404, "Feedback not found")
+        if next_status not in FEEDBACK_TRANSITIONS[row["status"]]:
+            raise HTTPException(409, f"Cannot move feedback from {row['status']} to {next_status}")
+        db.execute(
+            "UPDATE feedback SET status=?,moderation_note=?,resolved_commit=?,updated_at=? WHERE id=?",
+            (next_status, moderation_note, resolved_commit, now_iso(), feedback_id),
+        )
+        updated = db.execute(
+            """SELECT f.id,f.display_name,f.kind,f.body,f.status,f.created_at,f.updated_at,
+                l.slug AS lesson_slug,l.title_vi AS lesson_title_vi,l.title_en AS lesson_title_en,
+                f.moderation_note,f.resolved_commit
+                FROM feedback f JOIN lessons l ON l.id=f.lesson_id WHERE f.id=?""",
+            (feedback_id,),
+        ).fetchone()
+    return {"feedback": _feedback_payload(updated, include_moderation=True)}
 
 
 @app.get("/api/dashboard")
