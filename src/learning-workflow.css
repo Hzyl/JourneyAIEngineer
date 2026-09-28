@@ -25,7 +25,7 @@
 .lesson-page-shell .detail-section li, .lesson-page-shell .concept-notes { font-size: 13px; line-height: 1.8; }
 .lesson-page-loading { min-height: 56vh; border: 1px solid var(--line); border-radius: 17px; background: var(--surface); }
 .lesson-page-loading .loading-state { min-height: 56vh; }
-.study-step-list li.study-step-item { display: block; padding: 0; }
+.study-step-list > li.study-step-item { display: block; padding: 0; }
 .study-step-toggle { display: grid; grid-template-columns: 30px minmax(0, 1fr) 28px; align-items: center; gap: 9px; width: 100%; border: 0; border-top: 1px solid #e1ebe2; padding: 13px 0; background: transparent; color: inherit; text-align: left; }
 .study-step-item:first-child .study-step-toggle { border-top: 0; }
 .study-step-toggle:hover { color: var(--teal-dark); }
@@ -70,8 +70,8 @@
 .playbook-intro h4 { margin: 7px 0; font: 500 20px/1.15 Georgia, serif; color: var(--teal-dark); }
 .playbook-intro p { margin: 0; color: #5d746b; font-size: 12px; line-height: 1.65; }
 .study-step-list { display: grid; gap: 7px; margin: 17px 0 0; padding: 0; list-style: none; counter-reset: study-step; }
-.study-step-list li { display: grid; grid-template-columns: 30px 1fr; align-items: start; gap: 9px; padding: 9px 0; border-top: 1px solid #e1ebe2; }
-.study-step-list li > span { color: var(--orange); font: 600 12px Georgia, serif; }
+.study-step-list > li { display: grid; grid-template-columns: 30px minmax(0, 1fr); align-items: start; gap: 9px; padding: 9px 0; border-top: 1px solid #e1ebe2; }
+.study-step-list > li > span { color: var(--orange); font: 600 12px Georgia, serif; }
 .study-step-list p { margin: 0; color: #506961; font-size: 11px; line-height: 1.55; }
 .practice-plan-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; margin-top: 14px; }
 .practice-plan { border: 1px solid #dce8dd; border-radius: 9px; padding: 12px; background: #fffefb; }
