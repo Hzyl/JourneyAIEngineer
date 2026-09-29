@@ -9,8 +9,8 @@ Windows PowerShell:
 ```powershell
 git clone https://github.com/Hzyl/JourneyAIEngineer.git
 Set-Location JourneyAIEngineer
-.scriptssetup.ps1
-.scriptsdev.ps1
+.\scripts\setup.ps1
+.\scripts\dev.ps1
 ```
 
 `setup.ps1` tạo `.venv`, cài dependency backend/frontend và thư mục dữ liệu local. Database runtime, progress cá nhân, `.env` và workspace bài tập không được commit.
@@ -48,7 +48,7 @@ Chạy các gate sau khi sửa:
 ```powershell
 python scripts/build_lesson_catalog.py
 python scripts/validate_content.py
-python -m pytest -q tests/test_content_foundation.py --basetemp .buildpytest-content -o cache_dir=.buildpytest-cache
+python -m pytest -q tests/test_content_foundation.py --basetemp .build\pytest-content -o cache_dir=.build\pytest-cache
 ```
 
 Nếu sửa curriculum cấp phase/module, kiểm tra cả `content/curriculum.json` và catalog generated trong cùng pull request. Validator sẽ kiểm tra ID, prerequisite graph, code Python runnable, resource/exercise/review reference và duplicate content.
@@ -58,7 +58,7 @@ Nếu sửa curriculum cấp phase/module, kiểm tra cả `content/curriculum.j
 Backend:
 
 ```powershell
-..venvScriptspython.exe -m pytest -q --basetemp .buildpytest-api -o cache_dir=.buildpytest-cache
+.\.venv\Scripts\python.exe -m pytest -q --basetemp .build\pytest-api -o cache_dir=.build\pytest-cache
 ```
 
 Frontend:

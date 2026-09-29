@@ -9,8 +9,8 @@ Yêu cầu: Windows 10/11, Python 3.11+, Node.js 20+, Git và VS Code. Docker kh
 ```powershell
 git clone https://github.com/Hzyl/JourneyAIEngineer.git
 Set-Location JourneyAIEngineer
-.scriptssetup.ps1
-.scriptsdev.ps1
+.\scripts\setup.ps1
+.\scripts\dev.ps1
 ```
 
 Mở `http://127.0.0.1:5173`. `dev.ps1` chạy API và Vite local. Nếu muốn chạy từng phần:
@@ -27,21 +27,21 @@ Dữ liệu runtime ở `.data/` (được ignore). Content source ở `content/
 Tải file ZIP từ GitHub Release, giải nén vào một thư mục bạn có quyền ghi và chạy `JourneyAIEngineer.exe`. App tự chọn loopback port, khởi động API, mở browser và tắt nền sau khi tab cuối cùng rời đi. SmartScreen có thể cảnh báo vì binary chưa được code-sign; kiểm tra `SHA256SUMS.txt` trước khi chạy.
 
 ```powershell
-Get-FileHash .JourneyAIEngineer.exe -Algorithm SHA256
+Get-FileHash .\JourneyAIEngineer.exe -Algorithm SHA256
 Get-Content .SHA256SUMS.txt
 ```
 
-Portable mode lưu progress mặc định trong `%LOCALAPPDATA%JourneyAIEngineer`. Có thể đổi data root:
+Portable mode lưu progress mặc định trong `%LOCALAPPDATA%\JourneyAIEngineer`. Có thể đổi data root:
 
 ```powershell
-$env:JOURNEY_DATA_DIR = "$env:USERPROFILEJourneyAIEngineerData"
-.JourneyAIEngineer.exe
+$env:JOURNEY_DATA_DIR = "$env:USERPROFILE\JourneyAIEngineerData"
+.\JourneyAIEngineer.exe
 ```
 
 Nếu muốn export artifact/Git, trỏ tới source clone trước khi mở app:
 
 ```powershell
-$env:JOURNEY_PROJECT_ROOT = "C:srcJourneyAIEngineer"
+$env:JOURNEY_PROJECT_ROOT = "C:\src\JourneyAIEngineer"
 ```
 
 Không có source clone thì app vẫn học và chạy workspace local, nhưng phải hiển thị local learning mode và tắt publish GitHub. Không copy `.data`, database hoặc journal riêng vào repository public.
@@ -60,7 +60,7 @@ Không có source clone thì app vẫn học và chạy workspace local, nhưng 
 ```powershell
 python scripts/build_lesson_catalog.py
 python scripts/validate_content.py
-python -m pytest -q --basetemp .buildpytest -o cache_dir=.buildpytest-cache
+python -m pytest -q --basetemp .build\pytest -o cache_dir=.build\pytest-cache
 npm ci
 npm run lint
 npm run build

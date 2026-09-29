@@ -33,7 +33,7 @@ JSON generated được commit để fresh clone chạy ngay, nhưng không đư
 
 ## Runtime data và portable mode
 
-Source clone dùng `.data/` trong project để thuận tiện backup local; portable executable dùng data root writable của user (`%LOCALAPPDATA%JourneyAIEngineer`) và có `JOURNEY_DATA_DIR` override. `JOURNEY_PROJECT_ROOT` trỏ tới clone repo khi cần export artifact/Git. Database, `.env`, token và journal riêng luôn ở ngoài source artifact.
+Source clone dùng `.data/` trong project để thuận tiện backup local; portable executable dùng data root writable của user (`%LOCALAPPDATA%\JourneyAIEngineer`) và có `JOURNEY_DATA_DIR` override. `JOURNEY_PROJECT_ROOT` trỏ tới clone repo khi cần export artifact/Git. Database, `.env`, token và journal riêng luôn ở ngoài source artifact.
 
 ## Local capability boundary
 
