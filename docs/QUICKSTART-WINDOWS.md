@@ -2,7 +2,7 @@
 
 Journey AI Engineer v0.1 có hai cách chạy. Chọn **source clone** nếu bạn muốn sửa lesson, làm bài, lưu artifact và push những gì đã review lên GitHub. Chọn **portable `.exe`** nếu chỉ muốn học local bằng double-click trên một máy Windows.
 
-## A. Source clone (khuyến nghị khi làm portfolio)
+## A. Source clone (khuyến nghị khi phát triển project)
 
 Yêu cầu: Windows 10/11, Python 3.11+, Node.js 20+, Git và VS Code. Docker không bắt buộc cho local v0.1.
 

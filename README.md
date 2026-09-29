@@ -1,5 +1,7 @@
 # Journey AI Engineer
 
+> A local-first, bilingual learning platform that turns an AI Engineer roadmap into verified lessons, VS Code labs, spaced review, journal entries and Git-ready project evidence.
+
 Journey AI Engineer là một **learning product local-first** dành cho sinh viên muốn đi từ nền tảng lập trình đến khả năng xây, đánh giá và vận hành hệ thống AI/GenAI. App không chỉ là bảng checklist: mỗi lesson có giải thích trong app, ví dụ, practice, tiêu chí hoàn thành, tài liệu đọc sâu và review card.
 
 Mục tiêu của v0.1:
@@ -7,10 +9,49 @@ Mục tiêu của v0.1:
 - học Python/software engineering, toán–thống kê, classical ML, deep learning, MLOps và LLM/RAG theo dependency rõ;
 - làm bài trong workspace mở bằng VS Code và chạy test có manifest;
 - lưu evidence, journal, review history và context để hỏi ChatGPT/Codex mà vẫn tự làm chủ code;
-- tạo portfolio artifact có README, evaluation, architecture decision và lessons learned;
+- tạo project artifact có README, evaluation, architecture decision và lessons learned;
 - clone/fork repository để học và đóng góp bằng pull request.
 
 > **Phạm vi cần hiểu rõ:** v0.1 chạy local cho một người dùng trên Windows. Chưa có đăng nhập, đồng bộ tiến độ, Postgres/RLS, API AI trả phí hay public multi-user hosting. Không expose FastAPI local ra Internet.
+
+## Sản phẩm này là gì?
+
+Journey AI Engineer biến một roadmap học AI Engineer dài hạn thành một **learning product có workflow thực thi được**. Người học không chỉ đọc danh sách chủ đề; họ đi qua một vòng lặp có thể kiểm chứng:
+
+```text
+Roadmap → Lesson → Practice Lab → Test → Review → Journal → Git artifact
+```
+
+Mỗi lesson giải thích khái niệm bằng tiếng Việt và thuật ngữ tiếng Anh, có ví dụ, bài thực hành, edge case, tiêu chí hoàn thành, câu hỏi review và tài liệu đọc sâu. Workspace tương ứng được tạo trong máy local để người học mở bằng VS Code, viết code, chạy test và lưu bằng chứng trước khi đánh dấu hoàn thành.
+
+Sản phẩm được thiết kế cho hai nhu cầu liên quan nhưng tách biệt:
+
+- **Học có hệ thống:** curriculum có prerequisite graph, track Standard/Accelerated, review queue và journal.
+- **Xây artifact thật:** exercise có test contract, project có README/evaluation/architecture decision, Git flow có diff review và secret redaction.
+
+## Giá trị kỹ thuật chính
+
+- **Content as source code:** lesson được viết bằng Markdown/YAML, build thành catalog JSON và được validator kiểm tra link, prerequisite, resource, exercise và review card.
+- **Local-first learning data:** tiến trình, notes, journal và review state nằm trong SQLite local; không cần tài khoản, API key hoặc cloud service để bắt đầu.
+- **Practice ngoài notebook:** workspace có starter, README, expected evidence và test manifest; bài làm được chạy bằng command allowlist với timeout và output cap.
+- **GitHub-ready workflow:** app đọc status/diff, gợi ý commit message, export journal/context và chỉ publish artifact sau khi người học xem diff và xác nhận.
+- **Release có thể lặp lại:** source clone dành cho phát triển; portable `.exe` dành cho học local; release ZIP có version và SHA-256 checksum.
+- **Ranh giới bảo mật rõ ràng:** API chỉ bind loopback, route filesystem/Git/subprocess có allowlist, secret redaction và không được dùng như public code-execution endpoint.
+
+## Kiến trúc ở mức cao
+
+```mermaid
+flowchart LR
+    UI[React + TypeScript + Vite] --> API[FastAPI local API]
+    API --> DB[(SQLite: progress, review, notes, journal)]
+    API --> CAT[Generated lesson catalog]
+    API --> WS[Workspace and test runner]
+    API --> GIT[Local Git/context bridge]
+    SRC[Markdown/YAML content] --> BUILD[Build and validation scripts]
+    BUILD --> CAT
+```
+
+Frontend chỉ gọi API local qua loopback. Nội dung curriculum là source có thể review trong Git; database runtime và journal cá nhân nằm ngoài source tree được commit. Thiết kế này giúp người khác fork repository để sửa lesson hoặc project mà không phải mang theo dữ liệu cá nhân của maintainer.
 
 ## Chọn cách dùng
 
@@ -88,11 +129,11 @@ Thứ tự được kiểm tra bằng prerequisite graph: software engineering �
 Hai nhịp học được seed thật:
 
 - **Standard:** khoảng 12–15 tháng, 12–15 giờ/tuần.
-- **Accelerated:** map lesson/project cụ thể để chuẩn bị portfolio sớm; không chỉ đổi tiêu đề tuần.
+- **Accelerated:** map lesson/project cụ thể để tạo evidence sớm; không chỉ đổi tiêu đề tuần.
 
 Lesson source ở content/lessons/*.md; JSON generated ở content/lessons.json để app chạy ngay sau fresh clone. Resource library có tài liệu official-first (Python, NumPy, scikit-learn, PyTorch, FastAPI, Docker, MLflow, Hugging Face, Google ML, Stanford CS229, D2L, Full Stack Deep Learning) và nguồn community được gắn nhãn. Ví dụ [AI Engineering from Scratch](https://github.com/rohitg00/ai-engineering-from-scratch) là tài liệu đọc thêm, không thay thế phần giải thích trong app.
 
-## Các project portfolio
+## Các project showcase
 
 Roadmap tăng dần qua:
 
@@ -103,7 +144,7 @@ Roadmap tăng dần qua:
 5. **Research Assistant Agent** — planning, memory, tool use, guardrails và human-in-the-loop.
 6. **End-to-End Production GenAI System** — architecture, observability, latency/cost, deployment và rollback.
 
-Mỗi project cần README, problem statement, baseline, metric, test, evaluation report, architecture decision và demo evidence. Star của repository là kết quả phụ; khả năng clone/chạy, chất lượng evidence và cách giải thích trade-off mới là phần hữu ích cho CV.
+Mỗi project cần README, problem statement, baseline, metric, test, evaluation report, architecture decision và demo evidence. Khả năng clone/chạy, chất lượng evidence và cách giải thích trade-off là tiêu chuẩn chính để người khác đánh giá project.
 
 ## Workspace, test và GitHub journey
 
@@ -160,14 +201,11 @@ npm run package:windows
 
 Output ở .build/releases/: executable copy, ZIP versioned và checksum. Chỉ maintainer tạo GitHub Release sau khi xem diff, secret/history scan và xác nhận thủ công. JourneyAIEngineer.exe và runtime state đã được ignore, nên không đưa executable/database cá nhân vào source PR.
 
-## Ghi vào CV thế nào?
+## Evidence và demo
 
-Có thể ghi project này vào CV nếu bạn trình bày **đúng phần kỹ thuật đã làm và có evidence**, ví dụ:
+Mỗi project trong roadmap được xem là hoàn chỉnh khi có README, problem statement, baseline, metric, test, evaluation report, architecture decision, lessons learned và demo evidence. Các artifact này giúp người dùng khác có thể kiểm tra kết quả, tái chạy workflow và hiểu rõ trade-off kỹ thuật.
 
-> **Journey AI Engineer — Open-source local-first AI engineering learning platform**
-> React/TypeScript + Vite, FastAPI, SQLite, content validation pipeline, PyTorch/ML/LLM/RAG curriculum, local VS Code exercise runner, review scheduling, Windows packaging và CI. Designed local security boundary, secret redaction and reproducible release workflow.
-
-Kèm GitHub URL, ảnh/demo ngắn, một project ML, một project deep learning và một project RAG có metric/evaluation. Không ghi app này là hosted SaaS hay hệ thống AI production multi-user khi v0.1 chưa có auth, cloud isolation và monitoring thật.
+Repository giữ phạm vi và giới hạn của v0.1 minh bạch: đây là learning product local-first single-user, không phải hosted SaaS hay hệ thống AI production multi-user. Những capability chưa có auth, cloud isolation hoặc monitoring thật không được mô tả vượt quá phạm vi đó.
 
 ## Roadmap
 

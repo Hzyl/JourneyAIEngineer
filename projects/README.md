@@ -1,8 +1,8 @@
-# Portfolio projects
+# Project showcase
 
-Đây là nơi lưu artifact đã chọn để trình bày khi xin việc. Workspace đang làm nằm trong .data/workspaces để không làm bẩn Git; khi một exercise hoặc project đạt tiêu chí, hãy copy phần source và README cần thiết vào thư mục tương ứng.
+Đây là nơi lưu artifact đã chọn để trình bày và kiểm chứng project. Workspace đang làm nằm trong .data/workspaces để không làm bẩn Git; khi một exercise hoặc project đạt tiêu chí, hãy copy phần source và README cần thiết vào thư mục tương ứng.
 
-## Mốc portfolio
+## Các mốc project showcase
 
 - projects/tabular-ml/: End-to-End Tabular ML — baseline, pipeline, metric rationale, error analysis và model card.
 - projects/deep-learning/: Deep Learning Classifier — training loop, checkpoint, experiment report và failure analysis.
