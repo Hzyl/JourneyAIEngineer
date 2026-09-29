@@ -36,12 +36,12 @@
 .study-step-chevron { display: grid; place-items: center; width: 25px; height: 25px; border: 1px solid #cfe2d4; border-radius: 50%; background: #f2f7f2; color: var(--teal); font-size: 17px; line-height: 1; }
 .study-step-item.open .study-step-chevron { border-color: #a9cdb8; background: var(--teal); color: #fff; }
 .study-step-detail { margin: 0 0 15px 39px; padding: 16px; border: 1px solid #cfe2d4; border-radius: 10px; background: #fbfdf9; }
-.study-step-detail h5 { margin: 0 0 7px; color: var(--teal-dark); font: 500 17px/1.25 var(--display-font); }
+.study-step-detail h3 { margin: 0 0 7px; color: var(--teal-dark); font: 500 20px/1.25 var(--display-font); }
 .study-step-explanation { margin: 0 0 13px; color: #5d746b; font-size: 11px; line-height: 1.65; }
 .study-step-content { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
 .study-step-card { min-width: 0; padding: 12px; border: 1px solid #e0e9e0; border-radius: 8px; background: #fffefb; }
 .study-step-card > strong { display: block; margin-top: 7px; color: var(--teal-dark); font-size: 12px; line-height: 1.45; }
-.study-step-card h6 { margin: 0 0 8px; color: var(--ink); font-size: 11px; }
+.study-step-card h4 { margin: 0 0 8px; color: var(--ink); font-size: 12px; }
 .study-step-card p, .study-step-card li, .study-step-answer p { color: var(--muted); font-size: 11px; line-height: 1.6; }
 .study-step-card p { margin: 7px 0 0; }
 .study-step-card ul { margin: 0; padding-left: 16px; }
@@ -80,13 +80,13 @@
 .practice-plan { border: 1px solid #dce8dd; border-radius: 9px; padding: 12px; background: #fffefb; }
 .practice-plan .eyebrow { font-size: 9px; }
 .practice-plan strong { display: block; margin-top: 7px; color: var(--teal-dark); font-size: 12px; line-height: 1.5; }
-.practice-plan h5, .interview-questions h5 { margin: 13px 0 6px; color: var(--ink); font-size: 11px; }
+.practice-plan h3, .interview-questions h3 { margin: 13px 0 6px; color: var(--ink); font-size: 11px; }
 .practice-plan p, .practice-plan li, .interview-questions li { color: var(--muted); font-size: 11px; line-height: 1.55; }
 .practice-plan ul, .interview-questions ul { margin: 0; padding-left: 16px; }
 .practice-plan li, .interview-questions li { margin: 4px 0; }
 .practice-plan.checkpoint { background: #fff8ef; border-color: #f0dcc8; }
 .interview-questions { margin-top: 14px; padding-top: 12px; border-top: 1px solid #e1ebe2; }
-.interview-questions h5 { margin-top: 0; }
+.interview-questions h3 { margin-top: 0; }
 .rich-resource-list { display: grid; gap: 9px; }
 .lesson-detail .resource-list:not(.rich-resource-list) { display: none; }
 .lesson-resource { display: block; padding: 12px; border: 1px solid #e0e9e0; border-radius: 9px; background: #f7f9f4; text-decoration: none; }
@@ -167,4 +167,343 @@
   .workspace-actions button { flex: 1 1 auto; }
   .code-example-guide { grid-template-columns: 1fr; gap: .15rem; }
   .code-example-guide dd { margin-bottom: .45rem; }
+}
+
+/* Lesson reading hierarchy -------------------------------------------------
+   The lesson is a study document first.  These rules give each learning
+   area a clear visual boundary while keeping long explanations and code in
+   one comfortable column.  The React view supplies the semantic section
+   classes/ids; the older detail-section rules remain a safe fallback for
+   existing catalogues. */
+.lesson-page,
+.lesson-page-shell,
+.lesson-detail {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.lesson-detail > h1,
+.lesson-detail > h2 {
+  scroll-margin-top: 148px;
+}
+
+.lesson-detail > h1:focus-visible,
+.lesson-detail > h2:focus-visible {
+  outline: 3px solid rgba(8, 127, 120, .32);
+  outline-offset: 7px;
+  border-radius: 4px;
+}
+
+.lesson-anchor-nav {
+  position: sticky;
+  top: 12px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  margin: 24px 0 20px;
+  padding: 7px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #a8c7b8 transparent;
+  border: 1px solid #d8e5da;
+  border-radius: 11px;
+  background: rgba(255, 254, 249, .96);
+  box-shadow: 0 8px 20px rgba(41, 58, 51, .06);
+  -webkit-overflow-scrolling: touch;
+}
+
+.lesson-anchor-label {
+  flex: 0 0 auto;
+  padding: 8px 9px;
+  color: #6d8178;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.lesson-anchor-nav a {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  min-height: 38px;
+  padding: 8px 11px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: #526c62;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.lesson-anchor-nav a:hover {
+  border-color: #cce0d0;
+  background: #edf6ef;
+  color: var(--teal-dark);
+}
+
+.lesson-anchor-nav a:focus-visible {
+  outline: 3px solid rgba(232, 125, 70, .45);
+  outline-offset: 2px;
+  background: #fff8ef;
+  color: var(--teal-dark);
+}
+
+/* A section wrapper may use either the explicit class or its stable anchor
+   id.  This keeps the style compatible while content is migrated in batches. */
+.lesson-section,
+.lesson-detail > .lesson-section-overview,
+.lesson-detail > .detail-section[id] {
+  min-width: 0;
+  margin: 18px 0;
+  padding: 23px;
+  border: 1px solid #dfe9df;
+  border-radius: 13px;
+  background: #fffefb;
+  scroll-margin-top: 148px;
+}
+
+.lesson-section > :is(h2, h3, h4):first-child,
+.lesson-section > .section-heading:first-child,
+.lesson-section-overview > .section-heading:first-child,
+.lesson-detail > .detail-section[id] > :is(h2, h3, h4):first-child {
+  scroll-margin-top: 148px;
+}
+
+.lesson-section > h2,
+.lesson-section > h3,
+.lesson-section > h4,
+.lesson-section-heading > h2,
+.lesson-section-heading > h3,
+.lesson-section-heading > h4,
+.lesson-detail > .detail-section[id] > h2,
+.lesson-detail > .detail-section[id] > h3,
+.lesson-detail > .detail-section[id] > h4 {
+  margin: 0 0 12px;
+  color: var(--teal-dark);
+  font-family: var(--display-font);
+  font-size: clamp(19px, 2.4vw, 26px);
+  font-weight: 500;
+  line-height: 1.16;
+  letter-spacing: -.025em;
+}
+
+.lesson-section .section-heading,
+.lesson-section-overview .section-heading {
+  margin-bottom: 8px;
+}
+
+.lesson-section .section-heading strong,
+.lesson-section-overview .section-heading strong {
+  color: var(--teal-dark);
+  font-size: 13px;
+}
+
+.lesson-section-overview,
+.lesson-section[id="overview"],
+.lesson-detail > .detail-section[id="overview"] {
+  border-color: #cfe3d4;
+  background: linear-gradient(145deg, #f0f8f1, #fffefb);
+}
+
+.lesson-section-concept,
+.lesson-section[id="concept"],
+.lesson-detail > .detail-section[id="concept"] {
+  border-color: #d5e1e7;
+  background: linear-gradient(145deg, #f5f8fa, #fffefb);
+}
+
+.lesson-section-practice,
+.lesson-section[id="practice"],
+.lesson-detail > .detail-section[id="practice"] {
+  border-color: #e7ddcf;
+  background: linear-gradient(145deg, #fffaf2, #fffefb);
+}
+
+.lesson-section-check,
+.lesson-section[id="check"],
+.lesson-detail > .detail-section[id="check"] {
+  border-color: #e0d9e8;
+  background: linear-gradient(145deg, #faf7fc, #fffefb);
+}
+
+.lesson-section-resources,
+.lesson-section[id="resources"],
+.lesson-detail > .detail-section[id="resources"] {
+  border-color: #d7e3d9;
+  background: linear-gradient(145deg, #f5faf5, #fffefb);
+}
+
+.lesson-section-notes,
+.lesson-section[id="notes"],
+.lesson-detail > .detail-section[id="notes"] {
+  border-color: #e7d9cf;
+  background: linear-gradient(145deg, #fff9f4, #fffefb);
+}
+
+.lesson-section > .detail-section,
+.lesson-section > .lesson-playbook,
+.lesson-section > .lesson-evidence {
+  margin: 18px 0 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.lesson-section > .detail-section:first-child,
+.lesson-section > .lesson-playbook:first-child,
+.lesson-section > .lesson-evidence:first-child {
+  margin-top: 0;
+}
+
+.lesson-section > .lesson-playbook {
+  box-shadow: none;
+}
+
+.lesson-section .detail-section + .detail-section {
+  border-top: 1px solid #e1ebe2;
+  padding-top: 18px;
+}
+
+.lesson-check-block + .lesson-check-block {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid #e1ebe2;
+}
+
+.lesson-check-block h3,
+.lesson-note-block h3 {
+  margin: 0 0 10px;
+  color: var(--teal-dark);
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.lesson-detail > .detail-section[id] > p,
+.lesson-section > p,
+.lesson-section .concept-notes {
+  max-width: 78ch;
+}
+
+.lesson-section .lesson-detail-pane,
+.lesson-page-shell .lesson-detail-pane {
+  max-height: none;
+  overflow: visible;
+  scrollbar-gutter: auto;
+}
+
+/* The accordion's default is deliberately one column.  Supporting cards
+   become two columns only on a genuinely wide desktop; code and long notes
+   remain full width even there. */
+.study-step-content {
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+}
+
+.study-step-card {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.study-step-card pre,
+.code-example pre,
+.formula-list code {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.study-step-toggle {
+  min-height: 48px;
+}
+
+@media (min-width: 1200px) {
+  .study-step-content {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .study-step-card:has(pre),
+  .study-step-card:has(.concept-notes),
+  .study-step-card:has(.formula-list),
+  .study-step-card:has(.code-example-guide) {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 850px) {
+  .lesson-anchor-nav {
+    top: 8px;
+    margin-inline: -2px;
+  }
+
+  .lesson-section,
+  .lesson-detail > .lesson-section-overview,
+  .lesson-detail > .detail-section[id] {
+    padding: 19px;
+  }
+
+  .study-step-content {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 390px) {
+  .lesson-page-shell .lesson-detail {
+    padding: 18px 13px;
+  }
+
+  .lesson-anchor-nav {
+    gap: 3px;
+    margin-top: 18px;
+    padding: 5px;
+  }
+
+  .lesson-anchor-label {
+    padding-inline: 7px;
+  }
+
+  .lesson-anchor-nav a {
+    min-height: 44px;
+    padding-inline: 9px;
+  }
+
+  .lesson-section,
+  .lesson-detail > .lesson-section-overview,
+  .lesson-detail > .detail-section[id] {
+    margin-block: 14px;
+    padding: 16px 13px;
+    border-radius: 11px;
+  }
+
+  .lesson-section > h2,
+  .lesson-section > h3,
+  .lesson-section > h4,
+  .lesson-detail > .detail-section[id] > h2,
+  .lesson-detail > .detail-section[id] > h3,
+  .lesson-detail > .detail-section[id] > h4 {
+    font-size: 20px;
+  }
+
+  .study-step-detail {
+    margin-inline: 0;
+    padding: 12px;
+  }
+
+  .study-step-card {
+    padding: 11px;
+  }
+
+  .study-step-card pre,
+  .code-example pre {
+    font-size: 9px;
+  }
 }
