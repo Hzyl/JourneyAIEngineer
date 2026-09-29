@@ -9,8 +9,11 @@ from __future__ import annotations
 
 import json
 import re
+import argparse
 from pathlib import Path
 from typing import Any
+
+import yaml
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -535,6 +538,30 @@ def terms_for(title: str, module: dict[str, Any], kind: str) -> list[str]:
 def formula_for(kind: str, title: str) -> list[str]:
     text = title.lower()
     if kind == "math":
+        if "eigen" in text or "eigenvector" in text or "pca" in text:
+            return ["Av = λv", "X = UΣVᵀ", "Z = XW_k"]
+        if "svd" in text:
+            return ["X = UΣVᵀ", "X_k = U_kΣ_kV_kᵀ"]
+        if "partial" in text or "đạo hàm riêng" in text:
+            return ["∂L/∂θ_i = lim_{h→0} [L(θ + h e_i) − L(θ)] / h"]
+        if "chain" in text or "chuỗi" in text:
+            return ["dL/dx = (dL/dy)(dy/dx)"]
+        if "đạo hàm" in text or "derivative" in text or "calculus" in text:
+            return ["f'(x) = lim_{h→0} [f(x+h) − f(x)] / h", "d(xⁿ)/dx = n·xⁿ⁻¹"]
+        if "maximum likelihood" in text or "likelihood" in text or "mle" in text:
+            return ["L(θ|D) = ∏ᵢ p(xᵢ|θ)", "θ_MLE = argmax_θ Σᵢ log p(xᵢ|θ)"]
+        if "sgd" in text or "momentum" in text or "adam" in text:
+            return ["g_t = ∇θ J(θ_t)", "m_t = β₁m_{t−1} + (1−β₁)g_t", "v_t = β₂v_{t−1} + (1−β₂)g_t²"]
+        if "regularization" in text or "regularisation" in text:
+            return ["J_reg(θ) = J(θ) + λ||θ||₂²", "∂J_reg/∂θ = ∂J/∂θ + 2λθ"]
+        if "confidence interval" in text or "sampling" in text:
+            return ["CI₉₅% = x̄ ± 1.96·s/√n", "SE(x̄) = s/√n"]
+        if "bias" in text or "variance" in text:
+            return ["E[(ŷ − y)²] = Bias² + Variance + Noise", "Var(X) = E[(X − E[X])²]"]
+        if "distribution" in text or "random variable" in text:
+            return ["E[X] = Σ_x x·P(X=x)", "Var(X) = E[(X − E[X])²]"]
+        if "convex" in text:
+            return ["f(αx + (1−α)y) ≤ αf(x) + (1−α)f(y)", "∇²f(x) ⪰ 0"]
         if "matrix" in text:
             return ["(AB)_{ij} = Σ_k A_{ik}B_{kj}"]
         if "gradient" in text or "descent" in text:
@@ -549,15 +576,29 @@ def formula_for(kind: str, title: str) -> list[str]:
             return ["σ(z) = 1 / (1 + e^(−z))", "precision = TP / (TP + FP)"]
         if "regression" in text:
             return ["MSE = (1/n) Σ_i (y_i − ŷ_i)²"]
-        return ["risk(f) = E[L(y, f(x))]", "score = metric(y_true, y_pred)"]
+        if any(term in text for term in ("framing", "baseline", "evaluation", "error", "generalization", "pipeline")):
+            return ["risk(f) = E[L(y, f(x))]", "score = metric(y_true, y_pred)"]
+        return []
     if kind == "deep":
         if "attention" in text:
             return ["Attention(Q,K,V) = softmax(QKᵀ / √d_k)V"]
         return ["z = Wx + b", "θ_{t+1} = θ_t − η ∇J(θ_t)"]
     if kind == "llm":
-        return ["similarity(a,b) = (a · b) / (||a||₂ ||b||₂)"]
+        if any(term in text for term in ("embedding", "similarity", "vector", "retrieval", "reranking")):
+            return ["similarity(a,b) = (a · b) / (||a||₂ ||b||₂)"]
+        if "attention" in text or "transformer" in text:
+            return ["Attention(Q,K,V) = softmax(QKᵀ / √d_k)V"]
+        if "token" in text or "context window" in text:
+            return ["tokens_total = tokens_input + tokens_output"]
+        if "cost" in text:
+            return ["cost = tokens / 1,000,000 × price_per_million_tokens"]
+        if "latency" in text:
+            return ["latency_total = queue + retrieval + generation"]
+        return []
     if kind == "mlops":
-        return ["p95 = percentile(latencies, 95)", "throughput = completed_requests / elapsed_seconds"]
+        if any(term in text for term in ("latency", "throughput", "monitor", "observability", "performance", "load")):
+            return ["p95 = percentile(latencies, 95)", "throughput = completed_requests / elapsed_seconds"]
+        return []
     return []
 
 
@@ -580,15 +621,62 @@ def code_example(kind: str, title: str) -> dict[str, str]:
     else:
         code = "from pathlib import Path\n\npath = Path('input.txt')\ntext = path.read_text(encoding='utf-8')\nlines = [line.strip() for line in text.splitlines() if line.strip()]\nprint(len(lines))"
         explanation = "Ví dụ nhỏ nên có input rõ ràng, xử lý edge case và output có thể kiểm tra."
-    return {"language": "python", "title": f"Minimal example: {TOPIC_EN.get(title, title)}", "code": code, "explanation_vi": explanation, "explanation_en": "Start with a small executable example whose assumptions and output are easy to inspect."}
+    status = "conceptual" if kind in {"ml", "mlops"} else "runnable"
+    return {
+        "language": "python", "title": f"Minimal example: {TOPIC_EN.get(title, title)}", "code": code,
+        "status": status, "purpose_vi": f"Minh họa đường đi input → output của {title.lower()}.",
+        "purpose_en": f"Illustrate the input-to-output path for {TOPIC_EN.get(title, title).lower()}.",
+        "setup": "Python 3.11; cài numpy/scikit-learn/torch/fastapi tùy kind." if kind in {"math", "ml", "deep", "mlops"} else "Python 3.11; không cần API key.",
+        "expected_output": "Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.",
+        "edge_case_vi": "Thử input rỗng, shape sai hoặc dữ liệu thiếu và ghi lại lỗi.",
+        "edge_case_en": "Try an empty input, a wrong shape or missing data and record the failure.",
+        "explanation_vi": explanation, "explanation_en": "Start with a small executable example whose assumptions and output are easy to inspect.",
+    }
 
 
-def build() -> list[dict[str, Any]]:
-    curriculum = json.loads(CURRICULUM_PATH.read_text(encoding="utf-8"))
-    all_slugs: list[str] = []
-    for phase in curriculum["phases"]:
-        for module in phase["modules"]:
-            all_slugs.extend(f"{phase['slug']}-{module['slug']}-{index + 1}" for index, _ in enumerate(module["lessons"]))
+LESSON_SOURCE_DIR = ROOT / "content" / "lessons"
+
+
+def lesson_slugs(curriculum: dict[str, Any]) -> list[str]:
+    return [
+        f"{phase['slug']}-{module['slug']}-{index + 1}"
+        for phase in curriculum["phases"]
+        for module in phase["modules"]
+        for index, _ in enumerate(module["lessons"])
+    ]
+
+
+def parse_lesson_source(path: Path) -> dict[str, Any]:
+    text = path.read_text(encoding="utf-8")
+    if not text.startswith("---\n"):
+        raise ValueError(f"lesson source must start with YAML frontmatter: {path}")
+    _, frontmatter, body = text.split("---", 2)
+    record = yaml.safe_load(frontmatter) or {}
+    if not isinstance(record, dict):
+        raise ValueError(f"lesson frontmatter must be a mapping: {path}")
+    record["_source_body"] = body.strip()
+    return record
+
+
+def load_sources(expected_slugs: list[str]) -> list[dict[str, Any]]:
+    paths = sorted(LESSON_SOURCE_DIR.glob("*.md"))
+    if not paths:
+        return []
+    records = [parse_lesson_source(path) for path in paths]
+    ids = [record.get("lesson_id") for record in records]
+    if ids != sorted(ids):
+        records.sort(key=lambda item: str(item.get("lesson_id", "")))
+    if set(ids) != set(expected_slugs):
+        missing = sorted(set(expected_slugs) - set(ids))
+        extra = sorted(set(ids) - set(expected_slugs))
+        raise ValueError(f"lesson sources do not match curriculum; missing={missing}, extra={extra}")
+    for record in records:
+        record.pop("_source_body", None)
+    return sorted(records, key=lambda item: expected_slugs.index(item["lesson_id"]))
+
+
+def build_legacy(curriculum: dict[str, Any]) -> list[dict[str, Any]]:
+    all_slugs = lesson_slugs(curriculum)
 
     records: list[dict[str, Any]] = []
     for phase in curriculum["phases"]:
@@ -604,7 +692,9 @@ def build() -> list[dict[str, Any]]:
                 following = all_slugs[all_slugs.index(slug) + 1 : all_slugs.index(slug) + 3]
                 prerequisites = [] if previous is None else [previous]
                 if order > 0:
-                    prerequisites.append(f"phase-{order - 1:02d}")
+                    prior_phase = curriculum["phases"][order - 1]
+                    prior_module = prior_phase["modules"][0]
+                    prerequisites.append(f"{prior_phase['slug']}-{prior_module['slug']}-1")
                 resources = list(dict.fromkeys(tuple(sorted(item.items())) for item in phase_resources))
                 resource_list = enriched_resources(title_vi, [dict(item) for item in resources])
                 guide = lesson_guide(title_vi, title_en, module, kind, resource_list)
@@ -640,7 +730,7 @@ def build() -> list[dict[str, Any]]:
                     "code_examples": [code_example(kind, title_vi)],
                     "resources": resource_list,
                     "exercise_ids": [exercise_id],
-                    "review_item_ids": [f"{slug}-review"],
+                    "review_item_ids": [f"{slug}-recall", f"{slug}-application", f"{slug}-debug", f"{slug}-interview"],
                     "estimated_minutes": 45 if order < 3 else 60,
                     "completion_checklist": [
                         "Tự giải thích được input, biến đổi và output.",
@@ -661,14 +751,62 @@ def build() -> list[dict[str, Any]]:
                     "next_lessons": following,
                     "review_question_vi": f"Hãy giải thích {title_vi.lower()} bằng lời của bạn, nêu một ví dụ AI Engineer và một lỗi thường gặp.",
                     "review_question_en": f"Explain {title_en.lower()} in your own words, give one AI engineering example and one common failure.",
-                    "review_answer_vi": "Một câu trả lời đạt yêu cầu cần có định nghĩa, trực giác, ví dụ code hoặc dữ liệu, giả định và cách kiểm tra lỗi.",
-                    "review_answer_en": "A useful answer includes the definition, intuition, a code or data example, assumptions and a way to test for failure.",
+                    "review_answer_vi": f"Một câu trả lời đạt yêu cầu cho {title_vi.lower()} cần có định nghĩa, trực giác, ví dụ code hoặc dữ liệu, giả định và cách kiểm tra lỗi trong lesson {slug}.",
+                    "review_answer_en": f"A useful answer for {title_en.lower()} includes the definition, intuition, a code or data example, assumptions and a way to test for failure in lesson {slug}.",
                 }
+                record["review_cards"] = [
+                    {
+                        "id": f"{slug}-recall", "type": "recall",
+                        "question_vi": f"Định nghĩa {title_vi.lower()} bằng lời của bạn. Input, biến đổi và output là gì?",
+                        "question_en": f"Define {title_en.lower()} in your own words. What are the input, transformation and output?",
+                        "answer_vi": f"Một câu trả lời tốt nêu rõ input, phép biến đổi, output và bối cảnh dùng {title_vi.lower()}.",
+                        "answer_en": f"A strong answer names the input, transformation, output and the context where {title_en.lower()} is used.",
+                        "hint_vi": "Bắt đầu bằng một ví dụ nhỏ có thể tính bằng tay.", "hint_en": "Start with a small example you can calculate by hand.",
+                    },
+                    {
+                        "id": f"{slug}-application", "type": "application",
+                        "question_vi": f"Viết một ví dụ code hoặc thiết kế nhỏ áp dụng {title_vi.lower()} cho bài toán AI Engineer.",
+                        "question_en": f"Write a small code example or design that applies {title_en.lower()} to an AI engineering problem.",
+                        "answer_vi": f"Ví dụ cho {title_vi.lower()} cần có input rõ ràng, output mong đợi và một cách chạy hoặc kiểm chứng ({slug}).", "answer_en": f"The {title_en.lower()} example should have an explicit input, expected output and a way to run or verify it ({slug}).",
+                        "hint_vi": "Dùng code example trong lesson rồi thay một giả định.", "hint_en": "Start from the lesson code example and change one assumption.",
+                    },
+                    {
+                        "id": f"{slug}-debug", "type": "debug",
+                        "question_vi": f"Nếu kết quả của {title_vi.lower()} sai hoặc metric giảm, bạn sẽ debug theo thứ tự nào?",
+                        "question_en": f"If {title_en.lower()} produces a wrong result or a metric drops, what would you debug first?",
+                        "answer_vi": f"Với {title_vi.lower()}, kiểm tra input/shape, preprocessing và baseline trước; sau đó cô lập lỗi bằng test nhỏ và error analysis ({slug}).", "answer_en": f"For {title_en.lower()}, check inputs/shapes, preprocessing and the baseline first; then isolate the failure with a small test and error analysis ({slug}).",
+                        "hint_vi": "Đừng bắt đầu bằng việc đổi model hoặc tăng độ phức tạp.", "hint_en": "Do not start by changing the model or adding complexity.",
+                    },
+                    {
+                        "id": f"{slug}-interview", "type": "interview",
+                        "question_vi": f"Trong phỏng vấn, bạn sẽ giải thích trade-off và một edge case của {title_vi.lower()} như thế nào?",
+                        "question_en": f"In an interview, how would you explain a trade-off and one edge case of {title_en.lower()}?",
+                        "answer_vi": f"Câu trả lời về {title_vi.lower()} cần nêu giả định, metric/chi phí, giới hạn và cách giảm rủi ro trong production ({slug}).", "answer_en": f"The answer about {title_en.lower()} should cover assumptions, metrics/cost, limitations and how to reduce production risk ({slug}).",
+                        "hint_vi": "Liên hệ với latency, chất lượng, chi phí hoặc khả năng quan sát nếu phù hợp.", "hint_en": "Relate it to latency, quality, cost or observability where relevant.",
+                    },
+                ]
                 records.append(record)
     return records
 
 
+def build(output_path: Path = OUTPUT_PATH) -> list[dict[str, Any]]:
+    curriculum = json.loads(CURRICULUM_PATH.read_text(encoding="utf-8"))
+    expected = lesson_slugs(curriculum)
+    records = load_sources(expected)
+    if not records:
+        records = build_legacy(curriculum)
+    else:
+        # The source files are canonical.  Their IDs and references still need
+        # to be ordered exactly as the curriculum so generated JSON is stable.
+        records = sorted(records, key=lambda item: expected.index(item["lesson_id"]))
+    payload = {"schema_version": "1.0", "lessons": records}
+    output_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return records
+
+
 if __name__ == "__main__":
-    records = build()
-    OUTPUT_PATH.write_text(json.dumps({"schema_version": "1.0", "lessons": records}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"Wrote {len(records)} structured lessons to {OUTPUT_PATH}")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path, default=OUTPUT_PATH)
+    args = parser.parse_args()
+    records = build(args.output)
+    print(f"Wrote {len(records)} structured lessons to {args.output}")

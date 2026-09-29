@@ -32,6 +32,10 @@ secrets/
 __pycache__/
 *.py[cod]
 pytest_cache/
+.pytest_cache/
+*.sqlite
+*.sqlite3
+.coverage
 
 # Local Windows package output
 JourneyAIEngineer*.exe

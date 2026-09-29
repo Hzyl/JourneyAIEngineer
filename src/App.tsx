@@ -1,12 +1,20 @@
 /* oxlint-disable react(set-state-in-effect) */
 import { useEffect, useRef, useState } from 'react'
-import { api, type AppSettings, type Dashboard, type Exercise, type FeedbackItem, type FeedbackKind, type Lesson, type ReferenceResource, type SecurityAuditReport, type SecurityFinding } from './api'
+import { api, type AppSettings, type BackupPayload, type Dashboard, type Exercise, type FeedbackItem, type FeedbackKind, type Lesson, type ReferenceResource, type SearchResult, type SecurityAuditReport, type SecurityFinding } from './api'
 import './App.css'
 import './typography.css'
 import './learning-workflow.css'
 
 type View = 'dashboard' | 'roadmap' | 'lesson' | 'review' | 'exercises' | 'tools' | 'security' | 'resources' | 'community' | 'journal' | 'settings'
 type ContextExport = { path: string; content: string }
+const viewIds = new Set<View>(['dashboard', 'roadmap', 'review', 'exercises', 'tools', 'security', 'resources', 'community', 'journal', 'settings'])
+function locationState(): { view: View; lesson: string | null } {
+  if (typeof window === 'undefined') return { view: 'dashboard', lesson: null }
+  const parts = window.location.pathname.split('/').filter(Boolean)
+  if (parts[0] === 'lesson' && parts[1]) return { view: 'lesson', lesson: decodeURIComponent(parts.slice(1).join('/')) }
+  const candidate = parts[0] as View | undefined
+  return { view: candidate && viewIds.has(candidate) ? candidate : 'dashboard', lesson: null }
+}
 const navItems: Array<{ id: View; label: string; icon: string; hint: string }> = [
   { id: 'dashboard', label: 'Tổng quan', icon: '◐', hint: 'Nhịp học hôm nay' },
   { id: 'roadmap', label: 'Lộ trình', icon: '◎', hint: '23 chặng · 68 tuần' },
@@ -21,7 +29,8 @@ const navItems: Array<{ id: View; label: string; icon: string; hint: string }> =
 ]
 
 function App() {
-  const [view, setView] = useState<View>('dashboard')
+  const initialLocation = locationState()
+  const [view, setView] = useState<View>(initialLocation.view)
   const [dashboard, setDashboard] = useState<Dashboard | null>(null)
   const [roadmap, setRoadmap] = useState<any | null>(null)
   const [reviews, setReviews] = useState<any[]>([])
@@ -29,19 +38,77 @@ function App() {
   const [tools, setTools] = useState<any[]>([])
   const [resources, setResources] = useState<ReferenceResource[]>([])
   const [settings, setSettings] = useState<AppSettings>({ language: 'vi', track: 'standard', weekly_goal_minutes: 720, show_completed_lessons: true, target_role: 'internship', experience_level: 'beginner', onboarding_complete: false })
-  const [selectedLesson, setSelectedLesson] = useState<string | null>(null)
+  const [selectedLesson, setSelectedLesson] = useState<string | null>(initialLocation.lesson)
   const [lessonReturnView, setLessonReturnView] = useState<View>('roadmap')
   const [lesson, setLesson] = useState<Lesson | null>(null)
   const [loading, setLoading] = useState(true)
   const [lessonLoading, setLessonLoading] = useState(false)
   const [lessonRetry, setLessonRetry] = useState(0)
   const [error, setError] = useState('')
+  const [gitPublishAvailable, setGitPublishAvailable] = useState(true)
+  const [mobileNavOpen, setMobileNavOpen] = useState(false)
+  const [globalQuery, setGlobalQuery] = useState('')
+  const [globalResults, setGlobalResults] = useState<SearchResult[]>([])
+  const [globalSearchOpen, setGlobalSearchOpen] = useState(false)
+  const [globalSearchBusy, setGlobalSearchBusy] = useState(false)
+  const globalSearchRef = useRef<HTMLInputElement>(null)
+
+  const navigate = (nextView: View) => {
+    setView(nextView)
+    if (nextView !== 'lesson') setSelectedLesson(null)
+    setMobileNavOpen(false)
+  }
+
+  useEffect(() => {
+    const onPopState = () => {
+      const next = locationState()
+      setView(next.view)
+      setSelectedLesson(next.lesson)
+      setLesson(null)
+      setLessonLoading(Boolean(next.lesson))
+      setMobileNavOpen(false)
+    }
+    window.addEventListener('popstate', onPopState)
+    return () => window.removeEventListener('popstate', onPopState)
+  }, [])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const nextPath = view === 'lesson' && selectedLesson ? `/lesson/${encodeURIComponent(selectedLesson)}` : view === 'dashboard' ? '/' : `/${view}`
+    if (window.location.pathname !== nextPath) window.history.pushState({ view, lesson: selectedLesson }, '', nextPath)
+  }, [view, selectedLesson])
+
+  useEffect(() => {
+    const onShortcut = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault()
+        setGlobalSearchOpen(true)
+        window.setTimeout(() => globalSearchRef.current?.focus(), 0)
+      }
+      if (event.key === 'Escape') setGlobalSearchOpen(false)
+    }
+    window.addEventListener('keydown', onShortcut)
+    return () => window.removeEventListener('keydown', onShortcut)
+  }, [])
+
+  useEffect(() => {
+    const query = globalQuery.trim()
+    if (query.length < 2) {
+      return
+    }
+    const timer = window.setTimeout(() => {
+      setGlobalSearchBusy(true)
+      void api.search(query, { limit: 12 }).then((result) => setGlobalResults(result.results ?? [])).catch(() => setGlobalResults([])).finally(() => setGlobalSearchBusy(false))
+    }, 220)
+    return () => window.clearTimeout(timer)
+  }, [globalQuery])
 
   const refresh = async () => {
     setLoading(true)
     try {
-      const [nextDashboard, nextRoadmap, nextReviews, nextExercises, nextTools, nextResources, nextSettings] = await Promise.all([api.dashboard(), api.roadmap(), api.reviews(), api.exercises(), api.tools(), api.resources(), api.settings()])
+      const [nextDashboard, nextRoadmap, nextReviews, nextExercises, nextTools, nextResources, nextSettings, health] = await Promise.all([api.dashboard(), api.roadmap(), api.reviews(), api.exercises(), api.tools(), api.resources(), api.settings(), api.health()])
       setDashboard(nextDashboard); setRoadmap(nextRoadmap); setReviews(nextReviews.items); setExercises(nextExercises.exercises); setTools(nextTools.tools); setResources(nextResources.resources); setSettings(nextSettings); setError('')
+      setGitPublishAvailable(health.git_publish_available)
     } catch (cause) { setError(cause instanceof Error ? cause.message : 'Không kết nối được backend') } finally { setLoading(false) }
   }
   // The effect is the boundary that synchronizes server state into the local UI.
@@ -82,8 +149,9 @@ function App() {
     setLessonRetry((current) => current + 1)
     setSelectedLesson(slug)
     setView('lesson')
+    setMobileNavOpen(false)
   }
-  const closeLesson = () => setView(lessonReturnView)
+  const closeLesson = () => navigate(lessonReturnView)
   const retry = () => { if (selectedLesson && !lesson) { setError(''); setLessonLoading(true); setLessonRetry((current) => current + 1) } else void refresh() }
   const changeLanguage = async () => {
     try {
@@ -101,9 +169,20 @@ function App() {
   }
   const updateProgress = async (slug: string, status: string, minutes = 0) => { await api.updateProgress(slug, status, minutes); await refresh(); if (selectedLesson) setLesson(await api.lesson(selectedLesson)) }
 
+  const lessonTitleMap: Record<string, string> = {}
+  roadmap?.phases?.forEach((phase: any) => phase.modules?.forEach((module: any) => module.lessons?.forEach((item: any) => { lessonTitleMap[item.slug] = settings.language === 'vi' ? item.title_vi : item.title_en })))
+  const selectSearchResult = (result: SearchResult) => {
+    setGlobalQuery('')
+    setGlobalSearchOpen(false)
+    if (result.type === 'lesson' && result.slug) openLesson(result.slug)
+    else if (result.type === 'resource') navigate('resources')
+    else if (result.type === 'exercise') navigate('exercises')
+    else navigate('roadmap')
+  }
   return <div className="app-shell"><a className="skip-link" href="#main-content">Bỏ qua đến nội dung chính</a>
-    <aside className="sidebar"><div className="brand-lockup"><div className="brand-mark">J</div><div><strong>Journey</strong><span>AI Engineer</span></div></div><div className="sidebar-intro">Một chương trình học có nhịp, có bằng chứng và có sản phẩm.</div><nav aria-label="Điều hướng chính" className="nav-list">{navItems.map((item) => <button className={`nav-item ${(view === item.id || (view === 'lesson' && item.id === 'roadmap')) ? 'active' : ''}`} key={item.id} onClick={() => setView(item.id)} aria-current={(view === item.id || (view === 'lesson' && item.id === 'roadmap')) ? 'page' : undefined}><span className="nav-icon" aria-hidden="true">{item.icon}</span><span><strong>{item.label}</strong><small>{item.hint}</small></span></button>)}</nav><div className="sidebar-footer"><div className="status-dot"><span /> Local workspace</div><small>Progress được lưu trên máy của bạn</small><small>Đóng tab sẽ tắt app nền sau khoảng 15–20 giây.</small></div></aside>
-    <main className="main-area" id="main-content" aria-busy={loading || lessonLoading}><header className="topbar"><div><span className="eyebrow">PERSONAL LEARNING OS</span><h1>{view === 'dashboard' ? 'Hôm nay học gì?' : view === 'lesson' ? 'Lesson workspace' : navItems.find((item) => item.id === view)?.label}</h1></div><div className="topbar-actions"><button className="language-chip" onClick={() => void changeLanguage()} aria-label="Đổi ngôn ngữ">{settings.language === 'vi' ? 'VI' : 'EN'} <i>·</i> {settings.language === 'vi' ? 'EN' : 'VI'}</button><button className="refresh-button" onClick={retry} disabled={loading} aria-busy={loading} aria-label={loading ? 'Đang làm mới dữ liệu' : 'Làm mới dữ liệu'}>↻</button></div></header>{error && <div className="error-banner" role="alert" aria-live="assertive"><strong>Có lỗi khi tải dữ liệu.</strong> {error} <button className="text-button" onClick={retry}>Thử lại</button></div>}{loading && !dashboard ? <LoadingState /> : <div className="page-content">{view === 'dashboard' && <DashboardView dashboard={dashboard} program={roadmap?.program} onOpenLesson={openLesson} onNavigate={setView} onRecordSession={async (minutes, note) => { await api.createSession({ minutes, note }); await refresh() }} />}{view === 'roadmap' && <RoadmapView roadmap={roadmap} language={settings.language} track={settings.track} onTrackChange={(value) => void changeTrack(value)} onOpenLesson={openLesson} />}{view === 'lesson' && <LessonPage lesson={lesson} lessonLoading={lessonLoading} language={settings.language} onBack={closeLesson} onProgress={updateProgress} onOpenLesson={openLesson} onOpenExercises={() => setView('exercises')} />}{view === 'review' && <ReviewView reviews={reviews} onAnswer={async (id, rating, thoughtSeconds, answerText) => { await api.answerReview(id, rating, thoughtSeconds, answerText); const next = await api.reviews(); setReviews(next.items); await refresh() }} onOpenLesson={openLesson} />}{view === 'exercises' && <ExercisesView exercises={exercises} onRefresh={refresh} />}{view === 'tools' && <ToolsView tools={tools} />}{view === 'security' && <SecurityLabView />}{view === 'resources' && <ResourcesView resources={resources} language={settings.language} />}{view === 'community' && <CommunityView onOpenLesson={openLesson} />}{view === 'settings' && <SettingsView settings={settings} onSave={async (next) => setSettings(await api.updateSettings(next))} />}{view === 'journal' && <JournalView onExportContext={(question) => api.exportContext({ lesson_slug: lesson?.slug, question })} />}</div>}</main>
+    <div className={`mobile-nav-scrim ${mobileNavOpen ? 'open' : ''}`} aria-hidden="true" onClick={() => setMobileNavOpen(false)} />
+    <aside className={`sidebar ${mobileNavOpen ? 'open' : ''}`}><div className="brand-lockup"><div className="brand-mark">J</div><div><strong>Journey</strong><span>AI Engineer</span></div><button className="mobile-nav-close" type="button" aria-label="Đóng menu điều hướng" onClick={() => setMobileNavOpen(false)}>×</button></div><div className="sidebar-intro">Một chương trình học có nhịp, có bằng chứng và có sản phẩm.</div><nav aria-label="Điều hướng chính" className="nav-list">{navItems.map((item) => <button className={`nav-item ${(view === item.id || (view === 'lesson' && item.id === 'roadmap')) ? 'active' : ''}`} key={item.id} onClick={() => navigate(item.id)} aria-current={(view === item.id || (view === 'lesson' && item.id === 'roadmap')) ? 'page' : undefined}><span className="nav-icon" aria-hidden="true">{item.icon}</span><span><strong>{item.label}</strong><small>{item.hint}</small></span></button>)}</nav><div className="sidebar-footer"><div className="status-dot"><span /> Local workspace</div><small>Progress được lưu trên máy của bạn</small><small>Đóng tab sẽ tắt app nền sau khoảng 15–20 giây.</small></div></aside>
+    <main className="main-area" id="main-content" aria-busy={loading || lessonLoading}><header className="topbar"><button className="mobile-nav-toggle" type="button" aria-label="Mở menu điều hướng" aria-expanded={mobileNavOpen} onClick={() => setMobileNavOpen(true)}><span aria-hidden="true">☰</span><span className="sr-only">Mở menu</span></button><div><span className="eyebrow">PERSONAL LEARNING OS</span><h1>{view === 'dashboard' ? 'Hôm nay học gì?' : view === 'lesson' ? 'Lesson workspace' : navItems.find((item) => item.id === view)?.label}</h1></div><div className="topbar-actions"><div className={`global-search ${globalSearchOpen ? 'open' : ''}`}><label className="sr-only" htmlFor="global-search-input">Tìm lesson, phase, tài liệu hoặc bài tập</label><input id="global-search-input" ref={globalSearchRef} type="search" value={globalQuery} onFocus={() => setGlobalSearchOpen(true)} onChange={(event) => { const value = event.target.value; setGlobalQuery(value); setGlobalSearchOpen(true); setGlobalSearchBusy(value.trim().length >= 2) }} placeholder="Tìm kiếm…" /><kbd>Ctrl K</kbd>{globalQuery && <button type="button" className="global-search-clear" aria-label="Xóa tìm kiếm" onClick={() => { setGlobalQuery(''); setGlobalSearchBusy(false); globalSearchRef.current?.focus() }}>×</button>}{globalSearchOpen && (globalQuery.trim().length >= 2 || globalSearchBusy) && <div className="global-search-results" role="listbox" aria-label="Kết quả tìm kiếm">{globalSearchBusy ? <p className="global-search-status">Đang tìm…</p> : globalResults.length ? globalResults.map((result) => <button type="button" role="option" className="global-search-result" key={`${result.type}-${result.id}`} onClick={() => selectSearchResult(result)}><strong>{result.title}</strong><small>{result.subtitle ?? result.type}</small></button>) : <p className="global-search-status">Không tìm thấy kết quả. Thử từ khóa khác.</p>}</div>}</div><button className="language-chip" onClick={() => void changeLanguage()} aria-label="Đổi ngôn ngữ">{settings.language === 'vi' ? 'VI' : 'EN'} <i>·</i> {settings.language === 'vi' ? 'EN' : 'VI'}</button><button className="refresh-button" onClick={retry} disabled={loading} aria-busy={loading} aria-label={loading ? 'Đang làm mới dữ liệu' : 'Làm mới dữ liệu'}>↻</button></div></header>{error && <div className="error-banner" role="alert" aria-live="assertive"><strong>Có lỗi khi tải dữ liệu.</strong> {error} <button className="text-button" onClick={retry}>Thử lại</button></div>}{loading && !dashboard ? <LoadingState /> : <div className="page-content">{view === 'dashboard' && <DashboardView dashboard={dashboard} program={roadmap?.program} onOpenLesson={openLesson} onNavigate={navigate} onRecordSession={async (minutes, note) => { await api.createSession({ minutes, note }); await refresh() }} />}{view === 'roadmap' && <RoadmapView roadmap={roadmap} language={settings.language} track={settings.track} showCompletedLessons={settings.show_completed_lessons} onTrackChange={(value) => void changeTrack(value)} onOpenLesson={openLesson} />}{view === 'lesson' && <LessonPage lesson={lesson} lessonLoading={lessonLoading} language={settings.language} onBack={closeLesson} onProgress={updateProgress} onOpenLesson={openLesson} nextLessonTitles={lessonTitleMap} onOpenExercises={() => navigate('exercises')} />}{view === 'review' && <ReviewView reviews={reviews} onAnswer={async (id, rating, thoughtSeconds, answerText) => { await api.answerReview(id, rating, thoughtSeconds, answerText); const next = await api.reviews(); setReviews(next.items); await refresh() }} onOpenLesson={openLesson} />}{view === 'exercises' && <ExercisesView exercises={exercises} gitPublishAvailable={gitPublishAvailable} onRefresh={refresh} />}{view === 'tools' && <ToolsView tools={tools} />}{view === 'security' && <SecurityLabView />}{view === 'resources' && <ResourcesView resources={resources} language={settings.language} />}{view === 'community' && <CommunityView onOpenLesson={openLesson} />}{view === 'settings' && <SettingsView settings={settings} onSave={async (next) => setSettings(await api.updateSettings(next))} />}{view === 'journal' && <JournalView onExportContext={(question) => api.exportContext({ lesson_slug: lesson?.slug, question })} />}</div>}</main>
   </div>
 }
 
@@ -158,23 +237,48 @@ function HiringReadinessCard({ dashboard, program }: { dashboard: Dashboard; pro
   return <section className="section-card hiring-card"><div className="section-heading"><div><span className="eyebrow accent">HIRING READINESS</span><h3>Bằng chứng để được nhận</h3></div><span className="tag">{score}% nền tảng</span></div><p className="muted">Nhà tuyển dụng cần thấy bạn biến kiến thức thành hệ thống có thể chạy, đo lường và giải thích.</p><div className="readiness-bar" role="progressbar" aria-label="Hiring readiness" aria-valuemin={0} aria-valuemax={100} aria-valuenow={score}><span style={{ width: String(score) + '%' }} /></div><div className="readiness-projects">{projects.map((project: any) => { const phase = dashboard.phases.find((item) => item.slug === project.phase_id); const ratio = phase && phase.lessons > 0 ? phase.completed / phase.lessons : 0; const status = ratio >= 1 ? 'Ready to publish' : ratio > 0 ? 'In progress' : 'Upcoming'; return <div className="readiness-project" key={project.slug}><div><strong>{project.title_vi}</strong><small>{project.github_path}</small></div><span className={ratio >= 1 ? 'ready' : ratio > 0 ? 'progress' : ''}>{status}</span></div>})}</div></section>
 }
 
-function RoadmapView({ roadmap, language, track, onTrackChange, onOpenLesson }: { roadmap: any; language: 'vi' | 'en'; track: 'standard' | 'accelerated'; onTrackChange: (track: 'standard' | 'accelerated') => void; onOpenLesson: (slug: string) => void }) {
+function RoadmapView({ roadmap, language, track, showCompletedLessons, onTrackChange, onOpenLesson }: { roadmap: any; language: 'vi' | 'en'; track: 'standard' | 'accelerated'; showCompletedLessons: boolean; onTrackChange: (track: 'standard' | 'accelerated') => void; onOpenLesson: (slug: string) => void }) {
   const vi = language === 'vi'
-  const [query, setQuery] = useState('')
-  const [phaseFilter, setPhaseFilter] = useState('all')
-  const [statusFilter, setStatusFilter] = useState('all')
+  const [query, setQuery] = useState(() => typeof window === 'undefined' ? '' : new URLSearchParams(window.location.search).get('q') ?? '')
+  const [phaseFilter, setPhaseFilter] = useState(() => typeof window === 'undefined' ? 'all' : new URLSearchParams(window.location.search).get('phase') ?? 'all')
+  const [statusFilter, setStatusFilter] = useState(() => typeof window === 'undefined' ? 'all' : new URLSearchParams(window.location.search).get('status') ?? 'all')
+  useEffect(() => {
+    const restore = () => {
+      const params = new URLSearchParams(window.location.search)
+      setQuery(params.get('q') ?? '')
+      setPhaseFilter(params.get('phase') ?? 'all')
+      setStatusFilter(params.get('status') ?? 'all')
+    }
+    window.addEventListener('popstate', restore)
+    return () => window.removeEventListener('popstate', restore)
+  }, [])
+  useEffect(() => {
+    if (window.location.pathname !== '/roadmap') return
+    const params = new URLSearchParams(window.location.search)
+    if (query.trim()) params.set('q', query.trim()); else params.delete('q')
+    if (phaseFilter !== 'all') params.set('phase', phaseFilter); else params.delete('phase')
+    if (statusFilter !== 'all') params.set('status', statusFilter); else params.delete('status')
+    const search = params.toString()
+    const nextUrl = `/roadmap${search ? `?${search}` : ''}`
+    if (`${window.location.pathname}${window.location.search}` !== nextUrl) window.history.replaceState(window.history.state, '', nextUrl)
+  }, [query, phaseFilter, statusFilter])
   if (!roadmap) return <EmptyState title="Chưa có roadmap" description="Khởi động backend để nạp curriculum." />
   const standardWeeks = Number(roadmap.program.standard_weeks ?? 53)
   const acceleratedWeeks = Number(roadmap.program.accelerated_weeks ?? 26)
-  const phaseNumber = (phase: any) => Number(phase.order ?? phase.order_index + 1)
+  const phaseNumber = (phase: any) => phase.order_index != null ? Number(phase.order_index) + 1 : Number(phase.order ?? 0) + 1
+  const visibleModules = (phase: any) => phase.modules.map((module: any) => ({ ...module, lessons: module.lessons.filter((item: any) => {
+    if (!showCompletedLessons && item.status === 'completed') return false
+    if (statusFilter !== 'all' && item.status !== statusFilter) return false
+    if (!query.trim()) return true
+    const haystack = `${phase.title_vi} ${phase.title_en} ${module.title_vi} ${module.title_en} ${item.title_vi} ${item.title_en} ${item.slug}`.toLowerCase()
+    return haystack.includes(query.trim().toLowerCase())
+  }) })).filter((module: any) => module.lessons.length > 0)
   const visiblePhase = (phase: any) => {
     if (phaseFilter !== 'all' && phase.slug !== phaseFilter) return false
-    const haystack = JSON.stringify(phase).toLowerCase()
-    if (query.trim() && !haystack.includes(query.trim().toLowerCase())) return false
-    if (statusFilter !== 'all' && !phase.modules.some((module: any) => module.lessons.some((item: any) => item.status === statusFilter))) return false
-    return true
+    return visibleModules(phase).length > 0
   }
-  return <div className="roadmap-layout"><div className="roadmap-list"><div className="roadmap-intro"><span className="eyebrow accent">CORE + GENAI SPECIALIZATION</span><h2>{vi ? <>{track === 'standard' ? `${standardWeeks} tuần để xây nền` : `${acceleratedWeeks} tuần tăng tốc`}<br /><em>và ship thật.</em></> : <>{track === 'standard' ? `${standardWeeks} weeks to build` : `${acceleratedWeeks} accelerated weeks`}<br /><em>and ship for real.</em></>}</h2><p>{vi ? roadmap.program.description_vi : roadmap.program.description_en}</p><div className="track-pills"><button className={track === 'standard' ? 'selected' : ''} onClick={() => onTrackChange('standard')}>{standardWeeks} tuần</button><button className={track === 'accelerated' ? 'selected' : ''} onClick={() => onTrackChange('accelerated')}>{acceleratedWeeks} tuần cấp tốc</button><span>Việt · English</span></div><div className="filter-bar"><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Tìm lesson, module..." /><select value={phaseFilter} onChange={(event) => setPhaseFilter(event.target.value)}><option value="all">Tất cả phase</option>{roadmap.phases.map((phase: any) => <option key={phase.slug} value={phase.slug}>{phaseNumber(phase)}. {phase.title_vi}</option>)}</select><select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)}><option value="all">Mọi trạng thái</option><option value="not_started">Chưa bắt đầu</option><option value="in_progress">Đang học</option><option value="completed">Hoàn thành</option><option value="needs_review">Cần ôn</option></select></div></div><PortfolioBoard program={roadmap.program} language={language} />{roadmap.phases.filter((phase: any) => visiblePhase(phase)).map((phase: any) => <div className={`phase-block ${phase.track === 'genai-specialization' ? 'genai-phase-block' : ''}`} key={phase.slug}><div className="phase-header"><div className="phase-index">{String(phaseNumber(phase)).padStart(2, '0')}</div><div><h3>{vi ? phase.title_vi : phase.title_en}</h3><p>{phase.duration_weeks} {vi ? 'tuần' : 'weeks'} · {phase.modules.reduce((sum: number, module: any) => sum + module.lessons.length, 0)} lessons {phase.track === 'genai-specialization' ? '· GenAI' : ''}</p></div></div>{phase.modules.map((module: any) => <div className="module-block" key={module.slug}><span className="module-title">{vi ? module.title_vi : module.title_en}</span>{module.lessons.map((item: any) => <button className={`lesson-row ${item.status === 'completed' ? 'done' : ''}`} key={item.slug} onClick={() => onOpenLesson(item.slug)}><span className="lesson-check">{item.status === 'completed' ? '✓' : item.status === 'in_progress' ? '◐' : '○'}</span><span>{vi ? item.title_vi : item.title_en}</span><small>{item.estimated_minutes}m</small></button>)}</div>)}</div>)}</div></div>
+  const visibleCount = roadmap.phases.reduce((sum: number, phase: any) => sum + visibleModules(phase).reduce((moduleSum: number, module: any) => moduleSum + module.lessons.length, 0), 0)
+  return <div className="roadmap-layout"><div className="roadmap-list"><div className="roadmap-intro"><span className="eyebrow accent">CORE + GENAI SPECIALIZATION</span><h2>{vi ? <>{track === 'standard' ? `${standardWeeks} tuần để xây nền` : `${acceleratedWeeks} tuần tăng tốc`}<br /><em>và ship thật.</em></> : <>{track === 'standard' ? `${standardWeeks} weeks to build` : `${acceleratedWeeks} accelerated weeks`}<br /><em>and ship for real.</em></>}</h2><p>{vi ? roadmap.program.description_vi : roadmap.program.description_en}</p><div className="track-pills"><button className={track === 'standard' ? 'selected' : ''} onClick={() => onTrackChange('standard')}>{standardWeeks} tuần</button><button className={track === 'accelerated' ? 'selected' : ''} onClick={() => onTrackChange('accelerated')}>{acceleratedWeeks} tuần cấp tốc</button><span>Việt · English</span></div><div className="filter-bar" role="search"><label className="sr-only" htmlFor="roadmap-query">Tìm lesson hoặc module</label><input id="roadmap-query" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Tìm lesson, module..." /><label className="sr-only" htmlFor="roadmap-phase">Lọc theo phase</label><select id="roadmap-phase" aria-label="Lọc theo phase" value={phaseFilter} onChange={(event) => setPhaseFilter(event.target.value)}><option value="all">Tất cả phase</option>{roadmap.phases.map((phase: any) => <option key={phase.slug} value={phase.slug}>{phaseNumber(phase)}. {phase.title_vi}</option>)}</select><label className="sr-only" htmlFor="roadmap-status">Lọc theo trạng thái</label><select id="roadmap-status" aria-label="Lọc theo trạng thái" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)}><option value="all">Mọi trạng thái</option><option value="not_started">Chưa bắt đầu</option><option value="in_progress">Đang học</option><option value="completed">Hoàn thành</option><option value="needs_review">Cần ôn</option></select><span className="filter-count" role="status">{visibleCount} lesson</span></div><p className="filter-note">{showCompletedLessons ? 'Đang hiển thị cả lesson đã hoàn thành.' : 'Đang ẩn lesson đã hoàn thành theo cài đặt.'}</p></div><PortfolioBoard program={roadmap.program} language={language} />{roadmap.phases.filter((phase: any) => visiblePhase(phase)).map((phase: any) => { const modules = visibleModules(phase); return <div className={`phase-block ${phase.track === 'genai-specialization' ? 'genai-phase-block' : ''}`} key={phase.slug}><div className="phase-header"><div className="phase-index">{String(phaseNumber(phase)).padStart(2, '0')}</div><div><h3>{vi ? phase.title_vi : phase.title_en}</h3><p>{phase.duration_weeks} {vi ? 'tuần' : 'weeks'} · {modules.reduce((sum: number, module: any) => sum + module.lessons.length, 0)} lessons {phase.track === 'genai-specialization' ? '· GenAI' : ''}</p></div></div>{modules.map((module: any) => <div className="module-block" key={module.slug}><span className="module-title">{vi ? module.title_vi : module.title_en}</span>{module.lessons.map((item: any) => <button className={`lesson-row ${item.status === 'completed' ? 'done' : ''}`} key={item.slug} onClick={() => onOpenLesson(item.slug)}><span className="lesson-check" aria-hidden="true">{item.status === 'completed' ? '✓' : item.status === 'in_progress' ? '◐' : '○'}</span><span>{vi ? item.title_vi : item.title_en}</span><small>{item.estimated_minutes}m</small></button>)}</div>)}</div> })}</div></div>
 }
 
 function PortfolioBoard({ program, language }: { program: any; language: 'vi' | 'en' }) {
@@ -194,7 +298,7 @@ function readChecklist(slug: string, count: number): boolean[] {
   }
 }
 
-function LessonPage({ lesson, lessonLoading, language, onBack, onProgress, onOpenLesson, onOpenExercises }: { lesson: Lesson | null; lessonLoading: boolean; language: 'vi' | 'en'; onBack: () => void; onProgress: (slug: string, status: string, minutes?: number) => Promise<void>; onOpenLesson: (slug: string) => void; onOpenExercises: () => void }) {
+function LessonPage({ lesson, lessonLoading, language, onBack, onProgress, onOpenLesson, nextLessonTitles, onOpenExercises }: { lesson: Lesson | null; lessonLoading: boolean; language: 'vi' | 'en'; onBack: () => void; onProgress: (slug: string, status: string, minutes?: number) => Promise<void>; onOpenLesson: (slug: string) => void; nextLessonTitles: Record<string, string>; onOpenExercises: () => void }) {
   const vi = language === 'vi'
   return <section className="lesson-page" aria-label={vi ? 'Trang bài học' : 'Lesson page'}>
     <div className="lesson-page-toolbar">
@@ -202,17 +306,20 @@ function LessonPage({ lesson, lessonLoading, language, onBack, onProgress, onOpe
       <div className="lesson-page-context"><span className="eyebrow accent">LESSON WORKSPACE</span>{lesson && <span>{vi ? lesson.module_title_vi : lesson.module_title_en}</span>}</div>
       {lesson && <span className="lesson-page-meta">{lesson.estimated_minutes} {vi ? 'phút học' : 'min study'}</span>}
     </div>
-    {lessonLoading ? <div className="lesson-page-loading"><LoadingState compact message={vi ? 'Đang mở bài học…' : 'Loading lesson…'} /></div> : lesson ? <div className="lesson-page-shell"><LessonDetail key={lesson.slug} lesson={lesson} language={language} onProgress={onProgress} onOpenLesson={onOpenLesson} onOpenExercises={onOpenExercises} /></div> : <EmptyState title={vi ? 'Chưa tải được lesson' : 'Lesson unavailable'} description={vi ? 'Hãy dùng nút thử lại ở phía trên rồi mở lesson một lần nữa.' : 'Use the retry button above and open the lesson again.'} />}
+    {lessonLoading ? <div className="lesson-page-loading"><LoadingState compact message={vi ? 'Đang mở bài học…' : 'Loading lesson…'} /></div> : lesson ? <div className="lesson-page-shell"><LessonDetail key={lesson.slug} lesson={lesson} language={language} onProgress={onProgress} onOpenLesson={onOpenLesson} nextLessonTitles={nextLessonTitles} onOpenExercises={onOpenExercises} /></div> : <EmptyState title={vi ? 'Chưa tải được lesson' : 'Lesson unavailable'} description={vi ? 'Hãy dùng nút thử lại ở phía trên rồi mở lesson một lần nữa.' : 'Use the retry button above and open the lesson again.'} />}
   </section>
 }
 
 function StudyStepAccordion({ step, index, lesson, language }: { step: string; index: number; lesson: Lesson; language: 'vi' | 'en' }) {
   const [open, setOpen] = useState(false)
   const vi = language === 'vi'
-  const stage = index % 5
-  const resource = lesson.resources.length > 0 ? lesson.resources[index % lesson.resources.length] : undefined
-  const codeExample = lesson.code_examples.length > 0 ? lesson.code_examples[index % lesson.code_examples.length] : undefined
-  const review = lesson.reviews.length > 0 ? lesson.reviews[index % lesson.reviews.length] : undefined
+  const stage = Math.min(index, 4)
+  // A step may optionally carry explicit content references. The semantic fallback keeps
+  // old catalogues useful without rotating unrelated resources into every step.
+  const stepRef = lesson.study_step_refs?.[index]
+  const resource = typeof stepRef?.resource_index === 'number' ? lesson.resources[stepRef.resource_index] : index === 1 ? lesson.resources[0] : undefined
+  const codeExample = typeof stepRef?.code_example_index === 'number' ? lesson.code_examples[stepRef.code_example_index] : index === 2 ? lesson.code_examples[0] : undefined
+  const review = typeof stepRef?.review_id === 'number' ? lesson.reviews.find((item) => item.id === stepRef.review_id) : index === 4 ? lesson.reviews[0] : undefined
   const panelId = `study-step-${lesson.slug}-${index}`
   const titles = vi
     ? ['Nắm ý chính trước khi làm', 'Đọc tài liệu có mục tiêu', 'Biến lý thuyết thành code', 'Tạo bằng chứng có thể kiểm tra', 'Tự gọi lại và sửa lỗ hổng']
@@ -230,7 +337,7 @@ function StudyStepAccordion({ step, index, lesson, language }: { step: string; i
     <div className="study-step-card"><span className="eyebrow">READ THIS</span>{resource ? <><strong>{resource.title}</strong><p>{vi ? resource.purpose_vi : resource.purpose_en}</p><small>{vi ? resource.read_vi : resource.read_en}</small>{resource.url && <a href={resource.url} target="_blank" rel="noreferrer">{vi ? 'Mở tài liệu' : 'Open resource'} ↗</a>}</> : <p>{vi ? 'Lesson này chưa có resource riêng.' : 'This lesson has no dedicated resource yet.'}</p>}</div>
     <div className="study-step-card"><h6>{vi ? 'Cách biết mình đọc đúng hướng' : 'How to know you are on track'}</h6><ul>{lesson.completion_criteria.slice(0, 3).map((item) => <li key={item}>{item}</li>)}</ul></div>
   </> : stage === 2 ? <>
-    <div className="study-step-card">{codeExample ? <><span className="eyebrow">EXAMPLE</span><strong>{codeExample.title}</strong><pre><code>{codeExample.code}</code></pre><p>{vi ? codeExample.explanation_vi : codeExample.explanation_en}</p></> : <p>{vi ? 'Chưa có code example riêng; hãy dùng checklist để tạo một ví dụ tối thiểu.' : 'There is no dedicated code example; use the checklist to create a minimal example.'}</p>}</div>
+    <div className="study-step-card">{codeExample ? <><span className="eyebrow">EXAMPLE · {codeExample.status ?? 'runnable'}</span><strong>{codeExample.title}</strong>{(codeExample.purpose_vi || codeExample.purpose_en) && <p className="muted">{vi ? codeExample.purpose_vi : codeExample.purpose_en}</p>}<pre><code>{codeExample.code}</code></pre><p>{vi ? codeExample.explanation_vi : codeExample.explanation_en}</p><dl className="code-example-guide">{codeExample.setup && <><dt>{vi ? 'Chuẩn bị' : 'Setup'}</dt><dd>{codeExample.setup}</dd></>}{codeExample.expected_output && <><dt>{vi ? 'Kết quả mong đợi' : 'Expected output'}</dt><dd>{codeExample.expected_output}</dd></>}{(codeExample.edge_case_vi || codeExample.edge_case_en) && <><dt>{vi ? 'Edge case' : 'Edge case'}</dt><dd>{vi ? codeExample.edge_case_vi : codeExample.edge_case_en}</dd></>}</dl></> : <p>{vi ? 'Chưa có code example riêng; hãy dùng checklist để tạo một ví dụ tối thiểu.' : 'There is no dedicated code example; use the checklist to create a minimal example.'}</p>}</div>
     <div className="study-step-card"><h6>{vi ? 'Bài thực hành liên quan' : 'Related practice'}</h6>{lesson.exercises.length > 0 ? <ul>{lesson.exercises.slice(0, 3).map((exercise) => <li key={exercise.slug}>{vi ? exercise.title_vi : exercise.title_en} · {exercise.estimated_minutes}m</li>)}</ul> : <p>{vi ? 'Chưa có exercise riêng cho lesson này.' : 'No dedicated exercise is linked yet.'}</p>}</div>
   </> : stage === 3 ? <>
     <div className="study-step-card"><span className="eyebrow">EVIDENCE</span><h6>{vi ? 'Checklist nên hoàn thành' : 'Checklist to complete'}</h6><ul>{lesson.checklist.slice(0, 5).map((item) => <li key={item}>{item}</li>)}</ul></div>
@@ -244,7 +351,7 @@ function StudyStepAccordion({ step, index, lesson, language }: { step: string; i
   </li>
 }
 
-function LessonDetail({ lesson, language, onProgress, onOpenLesson, onOpenExercises }: { lesson: Lesson; language: 'vi' | 'en'; onProgress: (slug: string, status: string, minutes?: number) => Promise<void>; onOpenLesson: (slug: string) => void; onOpenExercises: () => void }) {
+function LessonDetail({ lesson, language, onProgress, onOpenLesson, nextLessonTitles, onOpenExercises }: { lesson: Lesson; language: 'vi' | 'en'; onProgress: (slug: string, status: string, minutes?: number) => Promise<void>; onOpenLesson: (slug: string) => void; nextLessonTitles: Record<string, string>; onOpenExercises: () => void }) {
   const [noteBody, setNoteBody] = useState('')
   const [noteSaved, setNoteSaved] = useState(false)
   const [noteError, setNoteError] = useState('')
@@ -316,9 +423,9 @@ function LessonDetail({ lesson, language, onProgress, onOpenLesson, onOpenExerci
     <div className="detail-section"><h4>{vi ? 'Prerequisites và tiêu chí hoàn thành' : 'Prerequisites and completion criteria'}</h4>{lesson.prerequisites.length > 0 && <ul>{lesson.prerequisites.map((item) => <li key={item}>{item}</li>)}</ul>}<ul>{lesson.completion_criteria.map((item) => <li key={item}>{item}</li>)}</ul></div>
     <div className="detail-section"><h4>{vi ? 'Lỗi thường gặp' : 'Common mistakes'}</h4><ul>{lesson.common_mistakes.map((item) => <li key={item}>{item}</li>)}</ul></div>
     <div className="detail-section"><h4>{vi ? 'Bài tập liên quan' : 'Practice exercise'}</h4>{lesson.exercises.length > 0 ? <><p className="muted">{vi ? 'Viết code trong workspace để tạo bằng chứng có thể đưa vào GitHub.' : 'Use the workspace to create evidence you can show on GitHub.'}</p>{lesson.exercises.map((exercise) => <div className="linked-exercise" key={exercise.slug}><div><strong>{vi ? exercise.title_vi : exercise.title_en}</strong><small>{exercise.difficulty} · {exercise.estimated_minutes} phút</small></div><button className="secondary-button" onClick={onOpenExercises}>{vi ? 'Mở Practice Lab' : 'Open Practice Lab'}</button></div>)}</> : <p className="muted">{vi ? 'Chưa có exercise riêng cho lesson này.' : 'No dedicated exercise is linked yet.'}</p>}</div>
-    <div className="detail-section"><h4>{vi ? 'Bài tiếp theo' : 'Next lessons'}</h4><div className="next-lesson-list">{lesson.next_lessons.map((slug) => <button className="text-button" key={slug} onClick={() => onOpenLesson(slug)}>{slug} →</button>)}</div></div>
+    <div className="detail-section"><h4>{vi ? 'Bài tiếp theo' : 'Next lessons'}</h4><div className="next-lesson-list">{lesson.next_lessons.map((slug) => <button className="text-button" key={slug} onClick={() => onOpenLesson(slug)}>{nextLessonTitles[slug] ?? slug} <small>({slug})</small> →</button>)}</div></div>
     <div className="detail-section"><h4>{vi ? 'Checklist thực hành' : 'Practice checklist'}</h4><div className="checklist">{lesson.checklist.map((item, index) => <label key={item}><input type="checkbox" checked={checked[index] ?? false} onChange={() => toggleChecklist(index)} /> <span className={checked[index] ? 'checked-item' : ''}>{item}</span></label>)}</div>{checklistNudge && <p className="warning-note" role="status">{vi ? 'Hãy hoàn thiện các mục checklist trước khi đánh dấu hoàn thành.' : 'Finish every checklist item before marking this lesson complete.'}</p>}</div>
-    <div className="detail-section"><h4>{vi ? 'Tài liệu song song' : 'Resources'}</h4><div className="resource-list">{lesson.resources.map((resource) => <a href={resource.url} target="_blank" rel="noreferrer" key={resource.url}><span>{resource.language === 'en' ? 'EN' : 'VI'}</span>{resource.title}<b>↗</b></a>)}</div></div>
+    <div className="detail-section"><h4>{vi ? 'Tài liệu song song' : 'Resources'}</h4><div className="resource-list">{lesson.resources.map((resource, index) => resource.kind === 'in_app' || !resource.url ? <div className="resource-list-internal" key={`${resource.title}-${index}`}><span>{resource.language === 'en' ? 'EN' : 'VI'}</span>{resource.title}<small>{vi ? 'Đọc trong nội dung lesson' : 'Read in this lesson'}</small></div> : <a href={resource.url} target="_blank" rel="noreferrer" key={`${resource.url}-${index}`}><span>{resource.language === 'en' ? 'EN' : 'VI'}</span>{resource.title}<b>↗</b></a>)}</div></div>
     <div className="detail-section"><h4>{vi ? 'Tự kiểm tra' : 'Self-check'}</h4>{lesson.reviews.map((review) => <div className="review-prompt" key={review.id}><p>{vi ? review.question_vi : review.question_en}</p><details><summary>{vi ? 'Hiện gợi ý đáp án' : 'Show answer hint'}</summary><p>{vi ? review.answer_vi : review.answer_en}</p></details></div>)}</div>
     <div className="detail-section note-editor"><h4>{vi ? 'Ghi chú của bạn' : 'Your note'}</h4><textarea aria-label={vi ? 'Ghi chú của bạn' : 'Your note'} value={noteBody} onChange={(event) => setNoteBody(event.target.value)} placeholder={vi ? 'Viết insight, lỗi gặp phải hoặc điều cần ôn lại...' : 'Write an insight, failure or topic to revisit...'} /><button className="secondary-button" disabled={!noteBody.trim()} onClick={() => void saveNote()}>{vi ? 'Lưu ghi chú' : 'Save note'}</button>{noteSaved && <p className="success-note" role="status">{vi ? 'Đã lưu vào Journal.' : 'Saved to Journal.'}</p>}{noteError && <p className="warning-note" role="alert">{noteError}</p>}</div>
     <FeedbackPanel lesson={lesson} language={language} />
@@ -508,7 +615,7 @@ function ReviewView({ reviews, onAnswer, onOpenLesson }: { reviews: any[]; onAns
 
 function WeakTopics({ topics, onOpenLesson }: { topics: any[]; onOpenLesson: (slug: string) => void }) { return <section className="section-card weak-topics"><div className="section-heading"><h3>Chủ đề cần quay lại</h3><span className="tag">Weak topics</span></div>{topics.slice(0, 6).map((topic) => <p key={topic.lesson_slug}><button className="text-button" onClick={() => onOpenLesson(topic.lesson_slug)} aria-label={`Mở lại lesson ${topic.title_vi}`}><strong>{topic.title_vi}</strong></button> · {topic.hard_attempts}/{topic.attempts} lần hard/again</p>)}</section> }
 
-function ExercisesView({ exercises, onRefresh }: { exercises: Exercise[]; onRefresh: () => Promise<void> }) {
+function ExercisesView({ exercises, gitPublishAvailable, onRefresh }: { exercises: Exercise[]; gitPublishAvailable: boolean; onRefresh: () => Promise<void> }) {
   const [running, setRunning] = useState<number | null>(null)
   const [preparing, setPreparing] = useState<number | null>(null)
   const [working, setWorking] = useState<number | null>(null)
@@ -577,6 +684,10 @@ function ExercisesView({ exercises, onRefresh }: { exercises: Exercise[]; onRefr
     finally { setRunning(null) }
   }
   const exportArtifact = async (exercise: Exercise) => {
+    if (!gitPublishAvailable) {
+      setError('Đang ở local learning mode: hãy trỏ JOURNEY_PROJECT_ROOT tới một clone Git để lưu artifact và push GitHub.')
+      return
+    }
     setWorking(exercise.id); clearMessages()
     try {
       const id = workspaceIdFor(exercise) ?? (await ensureWorkspace(exercise)).id
@@ -600,7 +711,7 @@ function ExercisesView({ exercises, onRefresh }: { exercises: Exercise[]; onRefr
     } catch (cause) { setError(cause instanceof Error ? cause.message : 'Không push được GitHub. Commit local vẫn cần được kiểm tra.') }
     finally { setPublishing(false) }
   }
-  return <div><div className="page-intro"><div><span className="eyebrow accent">PRACTICE LAB</span><h2>Bài tập để biến<br /><em>kiến thức thành cơ.</em></h2></div><p>Mỗi module có một workspace riêng. Viết code trong VS Code, lưu bằng Ctrl+S, chạy test, rồi xuất artifact để review trước khi push GitHub.</p></div><div className="workspace-flow"><div><span>01</span><strong>Mở VS Code</strong><small>Sửa đúng thư mục workspace</small></div><div><span>02</span><strong>Chạy test</strong><small>Đọc output và sửa lỗi</small></div><div><span>03</span><strong>Lưu artifact</strong><small>Copy bản sạch vào exercises/</small></div><div><span>04</span><strong>Review & push</strong><small>Chỉ push sau khi xác nhận</small></div></div><div className="filter-bar"><input aria-label="Tìm bài tập" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Tìm bài tập..." /><select aria-label="Lọc theo độ khó" value={difficulty} onChange={(event) => setDifficulty(event.target.value)}><option value="all">Mọi độ khó</option><option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option></select><span className="muted">{visibleExercises.length}/{exercises.length} bài</span></div>{notice && <p className="success-note" role="status">{notice}</p>}{error && <p className="warning-note" role="alert">{error}</p>}<div className="exercise-grid">{visibleExercises.map((exercise) => { const id = workspaceIdFor(exercise); const exported = exportedPaths[exercise.id]; return <article className="exercise-card" key={exercise.slug}><div className="exercise-top"><span className="tag">{exercise.difficulty}</span><span>{exercise.estimated_minutes} phút</span></div><h3>{exercise.title_vi}</h3><p>{exercise.description_vi}</p><div className="exercise-actions workspace-actions"><button className="secondary-button" disabled={preparing !== null || running !== null || working !== null} onClick={() => void prepare(exercise)}>{preparing === exercise.id ? 'Đang mở…' : id ? 'Mở VS Code' : 'Tạo & mở VS Code'}</button><button className="text-button" disabled={working !== null} onClick={() => void openFolder(exercise)}>Mở thư mục</button><button className="secondary-button" disabled={preparing !== null || running !== null || working !== null} onClick={() => void run(exercise)}>{running === exercise.id ? 'Đang chạy…' : 'Chạy test'}</button><button className="text-button" disabled={working !== null} onClick={() => void exportArtifact(exercise)}>Lưu artifact</button><button className="text-button" onClick={() => void loadHistory(exercise)}>Lịch sử</button></div>{exercise.workspace_path && <small className="path-label">Workspace: {exercise.workspace_path}</small>}{exported && <p className="artifact-path">Artifact: <code>{exported}</code></p>}{historyFor === exercise.id && <div className="run-history">{history[exercise.id]?.length ? history[exercise.id].slice(0, 5).map((runItem) => <p key={runItem.id}><strong>{runItem.status}</strong> · {runItem.duration_ms}ms · {new Date(runItem.created_at).toLocaleString()}</p>) : <p className="muted">Chưa có lần chạy.</p>}</div>}</article> })}</div>{output && <pre className="run-output">{output}</pre>}{publishTarget && <section className="publish-panel" aria-labelledby="publish-title"><div className="section-heading"><div><span className="eyebrow accent">GITHUB CHECKPOINT</span><h3 id="publish-title">Review rồi mới push</h3></div><button className="text-button" onClick={() => { setPublishTarget(null); setPublishConfirmed(false) }}>Hủy</button></div><p>Artifact đã được copy vào <code>{publishTarget.path}</code>. Mở Journal & Git để xem diff, sau đó dùng nút này khi bạn đã tự đọc thay đổi.</p><label>Commit message<input value={publishMessage} onChange={(event) => setPublishMessage(event.target.value)} maxLength={120} /></label><pre className="publish-preview">git add {publishTarget.path}{'\n'}git commit -m "{publishMessage || 'your message'}"{'\n'}git push origin &lt;current-branch&gt;</pre><label className="publish-confirm"><input type="checkbox" checked={publishConfirmed} onChange={(event) => setPublishConfirmed(event.target.checked)} /> Tôi đã review diff và muốn push artifact này lên GitHub.</label><button className="primary-button" disabled={publishing || !publishConfirmed || publishMessage.trim().length < 5} onClick={() => void publishArtifact()}>{publishing ? 'Đang push…' : 'Xác nhận & push GitHub'}</button></section>}</div>
+  return <div><div className="page-intro"><div><span className="eyebrow accent">PRACTICE LAB</span><h2>Bài tập để biến<br /><em>kiến thức thành cơ.</em></h2></div><p>Mỗi module có một workspace riêng. Viết code trong VS Code, lưu bằng Ctrl+S, chạy test, rồi xuất artifact để review trước khi push GitHub.</p></div>{!gitPublishAvailable && <p className="warning-note" role="status">Local learning mode: workspace và test vẫn dùng được. Để lưu artifact/push GitHub, hãy cấu hình <code>JOURNEY_PROJECT_ROOT</code> tới clone repo.</p>}<div className="workspace-flow"><div><span>01</span><strong>Mở VS Code</strong><small>Sửa đúng thư mục workspace</small></div><div><span>02</span><strong>Chạy test</strong><small>Đọc output và sửa lỗi</small></div><div><span>03</span><strong>Lưu artifact</strong><small>Copy bản sạch vào exercises/</small></div><div><span>04</span><strong>Review & push</strong><small>Chỉ push sau khi xác nhận</small></div></div><div className="filter-bar"><input aria-label="Tìm bài tập" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Tìm bài tập..." /><select aria-label="Lọc theo độ khó" value={difficulty} onChange={(event) => setDifficulty(event.target.value)}><option value="all">Mọi độ khó</option><option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option></select><span className="muted">{visibleExercises.length}/{exercises.length} bài</span></div>{notice && <p className="success-note" role="status">{notice}</p>}{error && <p className="warning-note" role="alert">{error}</p>}<div className="exercise-grid">{visibleExercises.map((exercise) => { const id = workspaceIdFor(exercise); const exported = exportedPaths[exercise.id]; return <article className="exercise-card" key={exercise.slug}><div className="exercise-top"><span className="tag">{exercise.difficulty}</span><span>{exercise.estimated_minutes} phút</span></div><h3>{exercise.title_vi}</h3><p>{exercise.description_vi}</p><div className="exercise-actions workspace-actions"><button className="secondary-button" disabled={preparing !== null || running !== null || working !== null} onClick={() => void prepare(exercise)}>{preparing === exercise.id ? 'Đang mở…' : id ? 'Mở VS Code' : 'Tạo & mở VS Code'}</button><button className="text-button" disabled={working !== null} onClick={() => void openFolder(exercise)}>Mở thư mục</button><button className="secondary-button" disabled={preparing !== null || running !== null || working !== null} onClick={() => void run(exercise)}>{running === exercise.id ? 'Đang chạy…' : 'Chạy test'}</button><button className="text-button" disabled={working !== null || !gitPublishAvailable} onClick={() => void exportArtifact(exercise)}>Lưu artifact</button><button className="text-button" onClick={() => void loadHistory(exercise)}>Lịch sử</button></div>{exercise.workspace_path && <small className="path-label">Workspace: {exercise.workspace_path}</small>}{exported && <p className="artifact-path">Artifact: <code>{exported}</code></p>}{historyFor === exercise.id && <div className="run-history">{history[exercise.id]?.length ? history[exercise.id].slice(0, 5).map((runItem) => <p key={runItem.id}><strong>{runItem.status}</strong> · {runItem.duration_ms}ms · {new Date(runItem.created_at).toLocaleString()}</p>) : <p className="muted">Chưa có lần chạy.</p>}</div>}</article> })}</div>{output && <pre className="run-output">{output}</pre>}{publishTarget && <section className="publish-panel" aria-labelledby="publish-title"><div className="section-heading"><div><span className="eyebrow accent">GITHUB CHECKPOINT</span><h3 id="publish-title">Review rồi mới push</h3></div><button className="text-button" onClick={() => { setPublishTarget(null); setPublishConfirmed(false) }}>Hủy</button></div><p>Artifact đã được copy vào <code>{publishTarget.path}</code>. Mở Journal & Git để xem diff, sau đó dùng nút này khi bạn đã tự đọc thay đổi.</p><label>Commit message<input value={publishMessage} onChange={(event) => setPublishMessage(event.target.value)} maxLength={120} /></label><pre className="publish-preview">git add {publishTarget.path}{'\n'}git commit -m "{publishMessage || 'your message'}"{'\n'}git push origin &lt;current-branch&gt;</pre><label className="publish-confirm"><input type="checkbox" checked={publishConfirmed} onChange={(event) => setPublishConfirmed(event.target.checked)} /> Tôi đã review diff và muốn push artifact này lên GitHub.</label><button className="primary-button" disabled={publishing || !publishConfirmed || publishMessage.trim().length < 5} onClick={() => void publishArtifact()}>{publishing ? 'Đang push…' : 'Xác nhận & push GitHub'}</button></section>}</div>
 }
 
 function ToolsView({ tools }: { tools: any[] }) {
@@ -609,9 +720,29 @@ function ToolsView({ tools }: { tools: any[] }) {
 
 function ResourcesView({ resources, language }: { resources: ReferenceResource[]; language: 'vi' | 'en' }) {
   const vi = language === 'vi'
-  const [query, setQuery] = useState('')
-  const [phase, setPhase] = useState('all')
-  const [type, setType] = useState('all')
+  const [query, setQuery] = useState(() => typeof window === 'undefined' ? '' : new URLSearchParams(window.location.search).get('q') ?? '')
+  const [phase, setPhase] = useState(() => typeof window === 'undefined' ? 'all' : new URLSearchParams(window.location.search).get('phase') ?? 'all')
+  const [type, setType] = useState(() => typeof window === 'undefined' ? 'all' : new URLSearchParams(window.location.search).get('type') ?? 'all')
+  useEffect(() => {
+    const restore = () => {
+      const params = new URLSearchParams(window.location.search)
+      setQuery(params.get('q') ?? '')
+      setPhase(params.get('phase') ?? 'all')
+      setType(params.get('type') ?? 'all')
+    }
+    window.addEventListener('popstate', restore)
+    return () => window.removeEventListener('popstate', restore)
+  }, [])
+  useEffect(() => {
+    if (window.location.pathname !== '/resources') return
+    const params = new URLSearchParams(window.location.search)
+    if (query.trim()) params.set('q', query.trim()); else params.delete('q')
+    if (phase !== 'all') params.set('phase', phase); else params.delete('phase')
+    if (type !== 'all') params.set('type', type); else params.delete('type')
+    const search = params.toString()
+    const nextUrl = `/resources${search ? `?${search}` : ''}`
+    if (`${window.location.pathname}${window.location.search}` !== nextUrl) window.history.replaceState(window.history.state, '', nextUrl)
+  }, [query, phase, type])
   const visible = resources.filter((resource) => {
     const haystack = `${resource.title_vi} ${resource.title_en} ${resource.provider} ${resource.description_vi} ${resource.description_en}`.toLowerCase()
     return (!query.trim() || haystack.includes(query.trim().toLowerCase())) && (phase === 'all' || resource.phase_ids.includes(phase)) && (type === 'all' || resource.type === type)
@@ -642,7 +773,7 @@ function ResourcesView({ resources, language }: { resources: ReferenceResource[]
     'phase-21': 'GenAI 14 · Local LLM',
     'phase-22': 'GenAI 15 · AI System Design',
   }
-  return <div><div className="page-intro resources-intro"><div><span className="eyebrow accent">REFERENCE LIBRARY</span><h2>Học từ nguồn<br /><em>có thể kiểm chứng.</em></h2></div><p>{vi ? 'Sách, course, documentation và repository được gắn với phase. Đọc theo mục tiêu của lesson, ghi lại điều đã kiểm chứng rồi quay về làm bài.' : 'Books, courses, documentation and repositories mapped to each phase. Read with a lesson goal, verify what you learn, then return to practice.'}</p></div><section className="resource-library-card"><div className="resource-library-header"><div><span className="eyebrow">{resources.length} SOURCES</span><h3>{vi ? 'Thư viện tài liệu AI Engineer' : 'AI Engineer reference library'}</h3></div><p>{vi ? 'Nguồn community như AI Engineering from Scratch được giữ lại để bạn tham khảo; nguồn official giúp kiểm tra API và chuẩn kỹ thuật.' : 'Community references such as AI Engineering from Scratch sit alongside official sources for API and engineering verification.'}</p></div><div className="filter-bar resource-filters"><input aria-label={vi ? 'Tìm tài liệu' : 'Search resources'} value={query} onChange={(event) => setQuery(event.target.value)} placeholder={vi ? 'Tìm theo tên, tác giả, chủ đề...' : 'Search by title, provider or topic...'} /><select aria-label={vi ? 'Lọc theo phase' : 'Filter by phase'} value={phase} onChange={(event) => setPhase(event.target.value)}><option value="all">{vi ? 'Tất cả phase' : 'All phases'}</option>{Object.entries(phaseLabels).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select><select aria-label={vi ? 'Lọc theo loại' : 'Filter by type'} value={type} onChange={(event) => setType(event.target.value)}><option value="all">{vi ? 'Mọi loại nguồn' : 'All types'}</option>{types.map((item) => <option key={item} value={item}>{item}</option>)}</select><span className="muted">{visible.length}/{resources.length}</span></div><div className="resource-grid">{visible.map((resource) => <article className={`resource-card ${resource.featured ? 'featured' : ''}`} key={resource.slug}><div className="resource-card-top"><span className="tag">{resource.type}</span><span className="resource-language">{resource.language.toUpperCase()}</span></div><h4>{vi ? resource.title_vi : resource.title_en}</h4><p className="resource-provider">{resource.provider} {resource.official ? '· Official' : '· Community reference'}</p><p>{vi ? resource.description_vi : resource.description_en}</p><div className="resource-phases">{resource.phase_ids.map((phaseId) => <span key={phaseId}>{phaseLabels[phaseId]?.split(' · ')[0] ?? phaseId}</span>)}</div><div className="resource-how"><strong>{vi ? 'Cách dùng trong lộ trình' : 'How to use it'}</strong><p>{vi ? resource.how_to_use_vi : resource.how_to_use_en}</p></div><a className="resource-link" href={resource.url} target="_blank" rel="noreferrer">{vi ? 'Mở nguồn tham khảo' : 'Open reference'} <span>↗</span></a></article>)}</div>{visible.length === 0 && <EmptyState title={vi ? 'Không tìm thấy tài liệu' : 'No resources found'} description={vi ? 'Thử từ khóa khác hoặc bỏ bộ lọc phase.' : 'Try another keyword or clear the phase filter.'} />}</section></div>
+  return <div><div className="page-intro resources-intro"><div><span className="eyebrow accent">REFERENCE LIBRARY</span><h2>Học từ nguồn<br /><em>có thể kiểm chứng.</em></h2></div><p>{vi ? 'Sách, course, documentation và repository được gắn với phase. Đọc theo mục tiêu của lesson, ghi lại điều đã kiểm chứng rồi quay về làm bài.' : 'Books, courses, documentation and repositories mapped to each phase. Read with a lesson goal, verify what you learn, then return to practice.'}</p></div><section className="resource-library-card"><div className="resource-library-header"><div><span className="eyebrow">{resources.length} SOURCES</span><h3>{vi ? 'Thư viện tài liệu AI Engineer' : 'AI Engineer reference library'}</h3></div><p>{vi ? 'Nguồn community như AI Engineering from Scratch được giữ lại để bạn tham khảo; nguồn official giúp kiểm tra API và chuẩn kỹ thuật.' : 'Community references such as AI Engineering from Scratch sit alongside official sources for API and engineering verification.'}</p></div><div className="filter-bar resource-filters"><label className="sr-only" htmlFor="resource-query">{vi ? 'Tìm tài liệu' : 'Search resources'}</label><input id="resource-query" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={vi ? 'Tìm theo tên, tác giả, chủ đề...' : 'Search by title, provider or topic...'} /><label className="sr-only" htmlFor="resource-phase">{vi ? 'Lọc theo phase' : 'Filter by phase'}</label><select id="resource-phase" aria-label={vi ? 'Lọc theo phase' : 'Filter by phase'} value={phase} onChange={(event) => setPhase(event.target.value)}><option value="all">{vi ? 'Tất cả phase' : 'All phases'}</option>{Object.entries(phaseLabels).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select><label className="sr-only" htmlFor="resource-type">{vi ? 'Lọc theo loại' : 'Filter by type'}</label><select id="resource-type" aria-label={vi ? 'Lọc theo loại' : 'Filter by type'} value={type} onChange={(event) => setType(event.target.value)}><option value="all">{vi ? 'Mọi loại nguồn' : 'All types'}</option>{types.map((item) => <option key={item} value={item}>{item}</option>)}</select><span className="muted" role="status">{visible.length}/{resources.length}</span></div><div className="resource-grid">{visible.map((resource) => <article className={`resource-card ${resource.featured ? 'featured' : ''}`} key={resource.slug}><div className="resource-card-top"><span className="tag">{resource.type}</span><span className="resource-language">{resource.language.toUpperCase()}</span></div><h4>{vi ? resource.title_vi : resource.title_en}</h4><p className="resource-provider">{resource.provider} {resource.official ? '· Official' : '· Community reference'}</p><p>{vi ? resource.description_vi : resource.description_en}</p><div className="resource-phases">{resource.phase_ids.map((phaseId) => <span key={phaseId}>{phaseLabels[phaseId]?.split(' · ')[0] ?? phaseId}</span>)}</div><div className="resource-how"><strong>{vi ? 'Cách dùng trong lộ trình' : 'How to use it'}</strong><p>{vi ? resource.how_to_use_vi : resource.how_to_use_en}</p></div>{resource.url ? <a className="resource-link" href={resource.url} target="_blank" rel="noreferrer">{vi ? 'Mở nguồn tham khảo' : 'Open reference'} <span>↗</span></a> : <p className="resource-internal-note">{vi ? 'Nội dung này có sẵn trong app.' : 'This content is available in the app.'}</p>}</article>)}</div>{visible.length === 0 && <EmptyState title={vi ? 'Không tìm thấy tài liệu' : 'No resources found'} description={vi ? 'Thử từ khóa khác hoặc bỏ bộ lọc phase.' : 'Try another keyword or clear the phase filter.'} />}</section></div>
 }
 function JournalView({ onExportContext }: { onExportContext: (question: string) => Promise<ContextExport> }) {
   const [question, setQuestion] = useState('')
@@ -764,7 +895,48 @@ function SettingsView({ settings, onSave }: { settings: AppSettings; onSave: (ne
       {error && <p className="warning-note" role="alert">{error}</p>}
       {saved && <p className="success-note">Đã lưu cài đặt.</p>}
     </section>
+    <BackupSettings />
   </div>
+}
+
+function BackupSettings() {
+  const [backupText, setBackupText] = useState('')
+  const [preview, setPreview] = useState<{ valid: boolean; errors: string[]; counts: Record<string, number> } | null>(null)
+  const [busy, setBusy] = useState(false)
+  const [message, setMessage] = useState('')
+  const [error, setError] = useState('')
+  const exportBackup = async () => {
+    setBusy(true); setError(''); setMessage('')
+    try {
+      const result = await api.exportBackup()
+      const text = JSON.stringify(result.payload, null, 2)
+      setBackupText(text)
+      const link = document.createElement('a')
+      link.href = URL.createObjectURL(new Blob([text], { type: 'application/json' }))
+      link.download = 'journey-ai-engineer-backup.json'
+      link.click()
+      URL.revokeObjectURL(link.href)
+      setMessage(`Đã tạo backup JSON và manifest Markdown tại ${result.json_path}`)
+    } catch (cause) { setError(cause instanceof Error ? cause.message : 'Không export được backup.') } finally { setBusy(false) }
+  }
+  const previewBackup = async () => {
+    setError(''); setMessage('')
+    try {
+      const parsed = JSON.parse(backupText) as BackupPayload
+      setPreview(await api.previewBackup(parsed))
+    } catch (cause) { setPreview(null); setError(cause instanceof Error ? `JSON không hợp lệ: ${cause.message}` : 'JSON không hợp lệ.') }
+  }
+  const importBackup = async () => {
+    if (!preview?.valid || !window.confirm('Import sẽ thay thế progress, review state, notes và settings hiện tại. App sẽ tạo safety backup trước. Tiếp tục?')) return
+    setBusy(true); setError(''); setMessage('')
+    try {
+      const parsed = JSON.parse(backupText) as BackupPayload
+      const result = await api.importBackup(parsed)
+      setMessage(`Đã import. Safety backup: ${result.safety_backup_json}`)
+      setPreview(null)
+    } catch (cause) { setError(cause instanceof Error ? cause.message : 'Không import được backup.') } finally { setBusy(false) }
+  }
+  return <section className="section-card backup-card"><div className="section-heading"><div><span className="eyebrow">PORTABLE BACKUP</span><h3>Sao lưu và khôi phục</h3></div><span className="tag">JSON + Markdown</span></div><p className="muted">Backup progress, lịch ôn, notes, journal và settings để chuyển máy. Database, workspace và secret không được đưa vào file.</p><div className="backup-actions"><button className="secondary-button" disabled={busy} onClick={() => void exportBackup()}>{busy ? 'Đang xử lý…' : 'Export backup'}</button><button className="text-button" disabled={!backupText || busy} onClick={() => void previewBackup()}>Kiểm tra JSON</button><button className="primary-button" disabled={!preview?.valid || busy} onClick={() => void importBackup()}>Import sau khi preview</button></div><textarea className="backup-editor" aria-label="Nội dung backup JSON" value={backupText} onChange={(event) => { setBackupText(event.target.value); setPreview(null) }} placeholder="Dán file journey-ai-engineer-backup.json vào đây để kiểm tra…" />{preview && <p className={preview.valid ? 'success-note' : 'warning-note'} role="status">{preview.valid ? `Backup hợp lệ · ${preview.counts.progress ?? 0} progress, ${preview.counts.review_state ?? 0} review card state, ${preview.counts.notes ?? 0} notes.` : preview.errors.join(' ')}</p>}{message && <p className="success-note" role="status">{message}</p>}{error && <p className="warning-note" role="alert">{error}</p>}</section>
 }
 
 function EmptyState({ title, description }: { title: string; description: string }) { return <div className="empty-state"><div className="detail-mark">✦</div><h3>{title}</h3><p>{description}</p></div> }

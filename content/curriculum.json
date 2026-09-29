@@ -270,7 +270,1262 @@
       "Có một tool-calling/agent project ghi trajectory, guardrail và human approval.",
       "Có MCP hoặc local LLM lab kèm threat model, hardware context và benchmark.",
       "Có production GenAI design doc nêu SLO, cost budget, observability và rollback."
-    ]
+    ],
+    "accelerated_track": {
+      "weeks": 34,
+      "workload_minutes_total": 11760,
+      "weekly_workload_minutes": 346,
+      "lesson_map": [
+        {
+          "lesson_id": "phase-00-onboarding-environment-1",
+          "workload_minutes": 45,
+          "week": 1,
+          "order": 1
+        },
+        {
+          "lesson_id": "phase-00-onboarding-environment-2",
+          "workload_minutes": 45,
+          "week": 1,
+          "order": 2
+        },
+        {
+          "lesson_id": "phase-00-onboarding-environment-3",
+          "workload_minutes": 45,
+          "week": 1,
+          "order": 3
+        },
+        {
+          "lesson_id": "phase-00-onboarding-environment-4",
+          "workload_minutes": 45,
+          "week": 1,
+          "order": 4
+        },
+        {
+          "lesson_id": "phase-00-onboarding-baseline-1",
+          "workload_minutes": 45,
+          "week": 1,
+          "order": 5
+        },
+        {
+          "lesson_id": "phase-00-onboarding-baseline-2",
+          "workload_minutes": 45,
+          "week": 1,
+          "order": 6
+        },
+        {
+          "lesson_id": "phase-00-onboarding-baseline-3",
+          "workload_minutes": 45,
+          "week": 1,
+          "order": 7
+        },
+        {
+          "lesson_id": "phase-00-onboarding-baseline-4",
+          "workload_minutes": 45,
+          "week": 2,
+          "order": 8
+        },
+        {
+          "lesson_id": "phase-00-onboarding-learning-system-1",
+          "workload_minutes": 45,
+          "week": 2,
+          "order": 9
+        },
+        {
+          "lesson_id": "phase-00-onboarding-learning-system-2",
+          "workload_minutes": 45,
+          "week": 2,
+          "order": 10
+        },
+        {
+          "lesson_id": "phase-00-onboarding-learning-system-3",
+          "workload_minutes": 45,
+          "week": 2,
+          "order": 11
+        },
+        {
+          "lesson_id": "phase-00-onboarding-learning-system-4",
+          "workload_minutes": 45,
+          "week": 2,
+          "order": 12
+        },
+        {
+          "lesson_id": "phase-01-python-software-python-core-1",
+          "workload_minutes": 45,
+          "week": 2,
+          "order": 13
+        },
+        {
+          "lesson_id": "phase-01-python-software-python-core-2",
+          "workload_minutes": 45,
+          "week": 3,
+          "order": 14
+        },
+        {
+          "lesson_id": "phase-01-python-software-python-core-3",
+          "workload_minutes": 45,
+          "week": 3,
+          "order": 15
+        },
+        {
+          "lesson_id": "phase-01-python-software-python-core-4",
+          "workload_minutes": 45,
+          "week": 3,
+          "order": 16
+        },
+        {
+          "lesson_id": "phase-01-python-software-reliable-code-1",
+          "workload_minutes": 45,
+          "week": 3,
+          "order": 17
+        },
+        {
+          "lesson_id": "phase-01-python-software-reliable-code-2",
+          "workload_minutes": 45,
+          "week": 3,
+          "order": 18
+        },
+        {
+          "lesson_id": "phase-01-python-software-reliable-code-3",
+          "workload_minutes": 45,
+          "week": 3,
+          "order": 19
+        },
+        {
+          "lesson_id": "phase-01-python-software-reliable-code-4",
+          "workload_minutes": 45,
+          "week": 4,
+          "order": 20
+        },
+        {
+          "lesson_id": "phase-01-python-software-data-files-1",
+          "workload_minutes": 45,
+          "week": 4,
+          "order": 21
+        },
+        {
+          "lesson_id": "phase-01-python-software-data-files-2",
+          "workload_minutes": 45,
+          "week": 4,
+          "order": 22
+        },
+        {
+          "lesson_id": "phase-01-python-software-data-files-3",
+          "workload_minutes": 45,
+          "week": 4,
+          "order": 23
+        },
+        {
+          "lesson_id": "phase-01-python-software-data-files-4",
+          "workload_minutes": 45,
+          "week": 4,
+          "order": 24
+        },
+        {
+          "lesson_id": "phase-01-python-software-developer-tools-1",
+          "workload_minutes": 45,
+          "week": 4,
+          "order": 25
+        },
+        {
+          "lesson_id": "phase-01-python-software-developer-tools-2",
+          "workload_minutes": 45,
+          "week": 5,
+          "order": 26
+        },
+        {
+          "lesson_id": "phase-01-python-software-developer-tools-3",
+          "workload_minutes": 45,
+          "week": 5,
+          "order": 27
+        },
+        {
+          "lesson_id": "phase-01-python-software-developer-tools-4",
+          "workload_minutes": 45,
+          "week": 5,
+          "order": 28
+        },
+        {
+          "lesson_id": "phase-01-python-software-sql-structures-1",
+          "workload_minutes": 45,
+          "week": 5,
+          "order": 29
+        },
+        {
+          "lesson_id": "phase-01-python-software-sql-structures-2",
+          "workload_minutes": 45,
+          "week": 5,
+          "order": 30
+        },
+        {
+          "lesson_id": "phase-01-python-software-sql-structures-3",
+          "workload_minutes": 45,
+          "week": 5,
+          "order": 31
+        },
+        {
+          "lesson_id": "phase-01-python-software-sql-structures-4",
+          "workload_minutes": 45,
+          "week": 6,
+          "order": 32
+        },
+        {
+          "lesson_id": "phase-02-math-ml-linear-algebra-1",
+          "workload_minutes": 45,
+          "week": 6,
+          "order": 33
+        },
+        {
+          "lesson_id": "phase-02-math-ml-linear-algebra-2",
+          "workload_minutes": 45,
+          "week": 6,
+          "order": 34
+        },
+        {
+          "lesson_id": "phase-02-math-ml-linear-algebra-3",
+          "workload_minutes": 45,
+          "week": 6,
+          "order": 35
+        },
+        {
+          "lesson_id": "phase-02-math-ml-linear-algebra-4",
+          "workload_minutes": 45,
+          "week": 6,
+          "order": 36
+        },
+        {
+          "lesson_id": "phase-02-math-ml-calculus-1",
+          "workload_minutes": 45,
+          "week": 6,
+          "order": 37
+        },
+        {
+          "lesson_id": "phase-02-math-ml-calculus-2",
+          "workload_minutes": 45,
+          "week": 7,
+          "order": 38
+        },
+        {
+          "lesson_id": "phase-02-math-ml-calculus-3",
+          "workload_minutes": 45,
+          "week": 7,
+          "order": 39
+        },
+        {
+          "lesson_id": "phase-02-math-ml-calculus-4",
+          "workload_minutes": 45,
+          "week": 7,
+          "order": 40
+        },
+        {
+          "lesson_id": "phase-02-math-ml-probability-1",
+          "workload_minutes": 45,
+          "week": 7,
+          "order": 41
+        },
+        {
+          "lesson_id": "phase-02-math-ml-probability-2",
+          "workload_minutes": 45,
+          "week": 7,
+          "order": 42
+        },
+        {
+          "lesson_id": "phase-02-math-ml-probability-3",
+          "workload_minutes": 45,
+          "week": 7,
+          "order": 43
+        },
+        {
+          "lesson_id": "phase-02-math-ml-probability-4",
+          "workload_minutes": 45,
+          "week": 8,
+          "order": 44
+        },
+        {
+          "lesson_id": "phase-02-math-ml-optimization-1",
+          "workload_minutes": 45,
+          "week": 8,
+          "order": 45
+        },
+        {
+          "lesson_id": "phase-02-math-ml-optimization-2",
+          "workload_minutes": 45,
+          "week": 8,
+          "order": 46
+        },
+        {
+          "lesson_id": "phase-02-math-ml-optimization-3",
+          "workload_minutes": 45,
+          "week": 8,
+          "order": 47
+        },
+        {
+          "lesson_id": "phase-02-math-ml-optimization-4",
+          "workload_minutes": 45,
+          "week": 8,
+          "order": 48
+        },
+        {
+          "lesson_id": "phase-03-classical-ml-ml-framing-1",
+          "workload_minutes": 60,
+          "week": 8,
+          "order": 49
+        },
+        {
+          "lesson_id": "phase-03-classical-ml-ml-framing-2",
+          "workload_minutes": 60,
+          "week": 9,
+          "order": 50
+        },
+        {
+          "lesson_id": "phase-03-classical-ml-ml-framing-3",
+          "workload_minutes": 60,
+          "week": 9,
+          "order": 51
+        },
+        {
+          "lesson_id": "phase-03-classical-ml-ml-framing-4",
+          "workload_minutes": 60,
+          "week": 9,
+          "order": 52
+        },
+        {
+          "lesson_id": "phase-03-classical-ml-models-1",
+          "workload_minutes": 60,
+          "week": 9,
+          "order": 53
+        },
+        {
+          "lesson_id": "phase-03-classical-ml-models-2",
+          "workload_minutes": 60,
+          "week": 9,
+          "order": 54
+        },
+        {
+          "lesson_id": "phase-03-classical-ml-models-3",
+          "workload_minutes": 60,
+          "week": 9,
+          "order": 55
+        },
+        {
+          "lesson_id": "phase-03-classical-ml-models-4",
+          "workload_minutes": 60,
+          "week": 9,
+          "order": 56
+        },
+        {
+          "lesson_id": "phase-03-classical-ml-preprocessing-1",
+          "workload_minutes": 60,
+          "week": 10,
+          "order": 57
+        },
+        {
+          "lesson_id": "phase-03-classical-ml-preprocessing-2",
+          "workload_minutes": 60,
+          "week": 10,
+          "order": 58
+        },
+        {
+          "lesson_id": "phase-03-classical-ml-preprocessing-3",
+          "workload_minutes": 60,
+          "week": 10,
+          "order": 59
+        },
+        {
+          "lesson_id": "phase-03-classical-ml-preprocessing-4",
+          "workload_minutes": 60,
+          "week": 10,
+          "order": 60
+        },
+        {
+          "lesson_id": "phase-03-classical-ml-evaluation-1",
+          "workload_minutes": 60,
+          "week": 10,
+          "order": 61
+        },
+        {
+          "lesson_id": "phase-03-classical-ml-evaluation-2",
+          "workload_minutes": 60,
+          "week": 10,
+          "order": 62
+        },
+        {
+          "lesson_id": "phase-03-classical-ml-evaluation-3",
+          "workload_minutes": 60,
+          "week": 11,
+          "order": 63
+        },
+        {
+          "lesson_id": "phase-03-classical-ml-evaluation-4",
+          "workload_minutes": 60,
+          "week": 11,
+          "order": 64
+        },
+        {
+          "lesson_id": "phase-03-classical-ml-analysis-1",
+          "workload_minutes": 60,
+          "week": 11,
+          "order": 65
+        },
+        {
+          "lesson_id": "phase-03-classical-ml-analysis-2",
+          "workload_minutes": 60,
+          "week": 11,
+          "order": 66
+        },
+        {
+          "lesson_id": "phase-03-classical-ml-analysis-3",
+          "workload_minutes": 60,
+          "week": 11,
+          "order": 67
+        },
+        {
+          "lesson_id": "phase-03-classical-ml-analysis-4",
+          "workload_minutes": 60,
+          "week": 11,
+          "order": 68
+        },
+        {
+          "lesson_id": "phase-04-deep-learning-pytorch-core-1",
+          "workload_minutes": 60,
+          "week": 12,
+          "order": 69
+        },
+        {
+          "lesson_id": "phase-04-deep-learning-pytorch-core-2",
+          "workload_minutes": 60,
+          "week": 12,
+          "order": 70
+        },
+        {
+          "lesson_id": "phase-04-deep-learning-pytorch-core-3",
+          "workload_minutes": 60,
+          "week": 12,
+          "order": 71
+        },
+        {
+          "lesson_id": "phase-04-deep-learning-pytorch-core-4",
+          "workload_minutes": 60,
+          "week": 12,
+          "order": 72
+        },
+        {
+          "lesson_id": "phase-04-deep-learning-training-1",
+          "workload_minutes": 60,
+          "week": 12,
+          "order": 73
+        },
+        {
+          "lesson_id": "phase-04-deep-learning-training-2",
+          "workload_minutes": 60,
+          "week": 12,
+          "order": 74
+        },
+        {
+          "lesson_id": "phase-04-deep-learning-training-3",
+          "workload_minutes": 60,
+          "week": 13,
+          "order": 75
+        },
+        {
+          "lesson_id": "phase-04-deep-learning-training-4",
+          "workload_minutes": 60,
+          "week": 13,
+          "order": 76
+        },
+        {
+          "lesson_id": "phase-04-deep-learning-generalization-1",
+          "workload_minutes": 60,
+          "week": 13,
+          "order": 77
+        },
+        {
+          "lesson_id": "phase-04-deep-learning-generalization-2",
+          "workload_minutes": 60,
+          "week": 13,
+          "order": 78
+        },
+        {
+          "lesson_id": "phase-04-deep-learning-generalization-3",
+          "workload_minutes": 60,
+          "week": 13,
+          "order": 79
+        },
+        {
+          "lesson_id": "phase-04-deep-learning-generalization-4",
+          "workload_minutes": 60,
+          "week": 13,
+          "order": 80
+        },
+        {
+          "lesson_id": "phase-04-deep-learning-vision-nlp-1",
+          "workload_minutes": 60,
+          "week": 14,
+          "order": 81
+        },
+        {
+          "lesson_id": "phase-04-deep-learning-vision-nlp-2",
+          "workload_minutes": 60,
+          "week": 14,
+          "order": 82
+        },
+        {
+          "lesson_id": "phase-04-deep-learning-vision-nlp-3",
+          "workload_minutes": 60,
+          "week": 14,
+          "order": 83
+        },
+        {
+          "lesson_id": "phase-04-deep-learning-vision-nlp-4",
+          "workload_minutes": 60,
+          "week": 14,
+          "order": 84
+        },
+        {
+          "lesson_id": "phase-04-deep-learning-debugging-1",
+          "workload_minutes": 60,
+          "week": 14,
+          "order": 85
+        },
+        {
+          "lesson_id": "phase-04-deep-learning-debugging-2",
+          "workload_minutes": 60,
+          "week": 14,
+          "order": 86
+        },
+        {
+          "lesson_id": "phase-04-deep-learning-debugging-3",
+          "workload_minutes": 60,
+          "week": 15,
+          "order": 87
+        },
+        {
+          "lesson_id": "phase-04-deep-learning-debugging-4",
+          "workload_minutes": 60,
+          "week": 15,
+          "order": 88
+        },
+        {
+          "lesson_id": "phase-05-mlops-api-1",
+          "workload_minutes": 60,
+          "week": 15,
+          "order": 89
+        },
+        {
+          "lesson_id": "phase-05-mlops-api-2",
+          "workload_minutes": 60,
+          "week": 15,
+          "order": 90
+        },
+        {
+          "lesson_id": "phase-05-mlops-api-3",
+          "workload_minutes": 60,
+          "week": 15,
+          "order": 91
+        },
+        {
+          "lesson_id": "phase-05-mlops-api-4",
+          "workload_minutes": 60,
+          "week": 15,
+          "order": 92
+        },
+        {
+          "lesson_id": "phase-05-mlops-containers-1",
+          "workload_minutes": 60,
+          "week": 16,
+          "order": 93
+        },
+        {
+          "lesson_id": "phase-05-mlops-containers-2",
+          "workload_minutes": 60,
+          "week": 16,
+          "order": 94
+        },
+        {
+          "lesson_id": "phase-05-mlops-containers-3",
+          "workload_minutes": 60,
+          "week": 16,
+          "order": 95
+        },
+        {
+          "lesson_id": "phase-05-mlops-containers-4",
+          "workload_minutes": 60,
+          "week": 16,
+          "order": 96
+        },
+        {
+          "lesson_id": "phase-05-mlops-tracking-1",
+          "workload_minutes": 60,
+          "week": 16,
+          "order": 97
+        },
+        {
+          "lesson_id": "phase-05-mlops-tracking-2",
+          "workload_minutes": 60,
+          "week": 16,
+          "order": 98
+        },
+        {
+          "lesson_id": "phase-05-mlops-tracking-3",
+          "workload_minutes": 60,
+          "week": 17,
+          "order": 99
+        },
+        {
+          "lesson_id": "phase-05-mlops-tracking-4",
+          "workload_minutes": 60,
+          "week": 17,
+          "order": 100
+        },
+        {
+          "lesson_id": "phase-05-mlops-observability-1",
+          "workload_minutes": 60,
+          "week": 17,
+          "order": 101
+        },
+        {
+          "lesson_id": "phase-05-mlops-observability-2",
+          "workload_minutes": 60,
+          "week": 17,
+          "order": 102
+        },
+        {
+          "lesson_id": "phase-05-mlops-observability-3",
+          "workload_minutes": 60,
+          "week": 17,
+          "order": 103
+        },
+        {
+          "lesson_id": "phase-05-mlops-observability-4",
+          "workload_minutes": 60,
+          "week": 17,
+          "order": 104
+        },
+        {
+          "lesson_id": "phase-05-mlops-security-1",
+          "workload_minutes": 60,
+          "week": 18,
+          "order": 105
+        },
+        {
+          "lesson_id": "phase-05-mlops-security-2",
+          "workload_minutes": 60,
+          "week": 18,
+          "order": 106
+        },
+        {
+          "lesson_id": "phase-05-mlops-security-3",
+          "workload_minutes": 60,
+          "week": 18,
+          "order": 107
+        },
+        {
+          "lesson_id": "phase-05-mlops-security-4",
+          "workload_minutes": 60,
+          "week": 18,
+          "order": 108
+        },
+        {
+          "lesson_id": "phase-06-llm-rag-nlp-foundations-1",
+          "workload_minutes": 60,
+          "week": 18,
+          "order": 109
+        },
+        {
+          "lesson_id": "phase-06-llm-rag-nlp-foundations-2",
+          "workload_minutes": 60,
+          "week": 18,
+          "order": 110
+        },
+        {
+          "lesson_id": "phase-06-llm-rag-nlp-foundations-3",
+          "workload_minutes": 60,
+          "week": 18,
+          "order": 111
+        },
+        {
+          "lesson_id": "phase-06-llm-rag-nlp-foundations-4",
+          "workload_minutes": 60,
+          "week": 19,
+          "order": 112
+        },
+        {
+          "lesson_id": "phase-06-llm-rag-transformers-1",
+          "workload_minutes": 60,
+          "week": 19,
+          "order": 113
+        },
+        {
+          "lesson_id": "phase-06-llm-rag-transformers-2",
+          "workload_minutes": 60,
+          "week": 19,
+          "order": 114
+        },
+        {
+          "lesson_id": "phase-06-llm-rag-transformers-3",
+          "workload_minutes": 60,
+          "week": 19,
+          "order": 115
+        },
+        {
+          "lesson_id": "phase-06-llm-rag-transformers-4",
+          "workload_minutes": 60,
+          "week": 19,
+          "order": 116
+        },
+        {
+          "lesson_id": "phase-06-llm-rag-retrieval-1",
+          "workload_minutes": 60,
+          "week": 19,
+          "order": 117
+        },
+        {
+          "lesson_id": "phase-06-llm-rag-retrieval-2",
+          "workload_minutes": 60,
+          "week": 20,
+          "order": 118
+        },
+        {
+          "lesson_id": "phase-06-llm-rag-retrieval-3",
+          "workload_minutes": 60,
+          "week": 20,
+          "order": 119
+        },
+        {
+          "lesson_id": "phase-06-llm-rag-retrieval-4",
+          "workload_minutes": 60,
+          "week": 20,
+          "order": 120
+        },
+        {
+          "lesson_id": "phase-06-llm-rag-rag-1",
+          "workload_minutes": 60,
+          "week": 20,
+          "order": 121
+        },
+        {
+          "lesson_id": "phase-06-llm-rag-rag-2",
+          "workload_minutes": 60,
+          "week": 20,
+          "order": 122
+        },
+        {
+          "lesson_id": "phase-06-llm-rag-rag-3",
+          "workload_minutes": 60,
+          "week": 20,
+          "order": 123
+        },
+        {
+          "lesson_id": "phase-06-llm-rag-rag-4",
+          "workload_minutes": 60,
+          "week": 21,
+          "order": 124
+        },
+        {
+          "lesson_id": "phase-06-llm-rag-quality-safety-1",
+          "workload_minutes": 60,
+          "week": 21,
+          "order": 125
+        },
+        {
+          "lesson_id": "phase-06-llm-rag-quality-safety-2",
+          "workload_minutes": 60,
+          "week": 21,
+          "order": 126
+        },
+        {
+          "lesson_id": "phase-06-llm-rag-quality-safety-3",
+          "workload_minutes": 60,
+          "week": 21,
+          "order": 127
+        },
+        {
+          "lesson_id": "phase-06-llm-rag-quality-safety-4",
+          "workload_minutes": 60,
+          "week": 21,
+          "order": 128
+        },
+        {
+          "lesson_id": "phase-06-llm-rag-adaptation-1",
+          "workload_minutes": 60,
+          "week": 21,
+          "order": 129
+        },
+        {
+          "lesson_id": "phase-06-llm-rag-adaptation-2",
+          "workload_minutes": 60,
+          "week": 22,
+          "order": 130
+        },
+        {
+          "lesson_id": "phase-06-llm-rag-adaptation-3",
+          "workload_minutes": 60,
+          "week": 22,
+          "order": 131
+        },
+        {
+          "lesson_id": "phase-06-llm-rag-adaptation-4",
+          "workload_minutes": 60,
+          "week": 22,
+          "order": 132
+        },
+        {
+          "lesson_id": "phase-07-capstone-career-problem-1",
+          "workload_minutes": 60,
+          "week": 22,
+          "order": 133
+        },
+        {
+          "lesson_id": "phase-07-capstone-career-problem-2",
+          "workload_minutes": 60,
+          "week": 22,
+          "order": 134
+        },
+        {
+          "lesson_id": "phase-07-capstone-career-problem-3",
+          "workload_minutes": 60,
+          "week": 22,
+          "order": 135
+        },
+        {
+          "lesson_id": "phase-07-capstone-career-problem-4",
+          "workload_minutes": 60,
+          "week": 23,
+          "order": 136
+        },
+        {
+          "lesson_id": "phase-07-capstone-career-ship-1",
+          "workload_minutes": 60,
+          "week": 23,
+          "order": 137
+        },
+        {
+          "lesson_id": "phase-07-capstone-career-ship-2",
+          "workload_minutes": 60,
+          "week": 23,
+          "order": 138
+        },
+        {
+          "lesson_id": "phase-07-capstone-career-ship-3",
+          "workload_minutes": 60,
+          "week": 23,
+          "order": 139
+        },
+        {
+          "lesson_id": "phase-07-capstone-career-ship-4",
+          "workload_minutes": 60,
+          "week": 23,
+          "order": 140
+        },
+        {
+          "lesson_id": "phase-07-capstone-career-portfolio-1",
+          "workload_minutes": 60,
+          "week": 23,
+          "order": 141
+        },
+        {
+          "lesson_id": "phase-07-capstone-career-portfolio-2",
+          "workload_minutes": 60,
+          "week": 24,
+          "order": 142
+        },
+        {
+          "lesson_id": "phase-07-capstone-career-portfolio-3",
+          "workload_minutes": 60,
+          "week": 24,
+          "order": 143
+        },
+        {
+          "lesson_id": "phase-07-capstone-career-portfolio-4",
+          "workload_minutes": 60,
+          "week": 24,
+          "order": 144
+        },
+        {
+          "lesson_id": "phase-07-capstone-career-career-1",
+          "workload_minutes": 60,
+          "week": 24,
+          "order": 145
+        },
+        {
+          "lesson_id": "phase-07-capstone-career-career-2",
+          "workload_minutes": 60,
+          "week": 24,
+          "order": 146
+        },
+        {
+          "lesson_id": "phase-07-capstone-career-career-3",
+          "workload_minutes": 60,
+          "week": 24,
+          "order": 147
+        },
+        {
+          "lesson_id": "phase-07-capstone-career-career-4",
+          "workload_minutes": 60,
+          "week": 25,
+          "order": 148
+        },
+        {
+          "lesson_id": "phase-08-genai-software-genai-software-foundations-1",
+          "workload_minutes": 60,
+          "week": 25,
+          "order": 149
+        },
+        {
+          "lesson_id": "phase-08-genai-software-genai-software-foundations-2",
+          "workload_minutes": 60,
+          "week": 25,
+          "order": 150
+        },
+        {
+          "lesson_id": "phase-08-genai-software-genai-software-foundations-3",
+          "workload_minutes": 60,
+          "week": 25,
+          "order": 151
+        },
+        {
+          "lesson_id": "phase-08-genai-software-genai-software-foundations-4",
+          "workload_minutes": 60,
+          "week": 25,
+          "order": 152
+        },
+        {
+          "lesson_id": "phase-09-genai-ml-fundamentals-genai-ml-fundamentals-1",
+          "workload_minutes": 60,
+          "week": 25,
+          "order": 153
+        },
+        {
+          "lesson_id": "phase-09-genai-ml-fundamentals-genai-ml-fundamentals-2",
+          "workload_minutes": 60,
+          "week": 26,
+          "order": 154
+        },
+        {
+          "lesson_id": "phase-09-genai-ml-fundamentals-genai-ml-fundamentals-3",
+          "workload_minutes": 60,
+          "week": 26,
+          "order": 155
+        },
+        {
+          "lesson_id": "phase-09-genai-ml-fundamentals-genai-ml-fundamentals-4",
+          "workload_minutes": 60,
+          "week": 26,
+          "order": 156
+        },
+        {
+          "lesson_id": "phase-10-genai-transformers-genai-transformers-1",
+          "workload_minutes": 60,
+          "week": 26,
+          "order": 157
+        },
+        {
+          "lesson_id": "phase-10-genai-transformers-genai-transformers-2",
+          "workload_minutes": 60,
+          "week": 26,
+          "order": 158
+        },
+        {
+          "lesson_id": "phase-10-genai-transformers-genai-transformers-3",
+          "workload_minutes": 60,
+          "week": 26,
+          "order": 159
+        },
+        {
+          "lesson_id": "phase-10-genai-transformers-genai-transformers-4",
+          "workload_minutes": 60,
+          "week": 26,
+          "order": 160
+        },
+        {
+          "lesson_id": "phase-11-llm-application-llm-application-1",
+          "workload_minutes": 60,
+          "week": 27,
+          "order": 161
+        },
+        {
+          "lesson_id": "phase-11-llm-application-llm-application-2",
+          "workload_minutes": 60,
+          "week": 27,
+          "order": 162
+        },
+        {
+          "lesson_id": "phase-11-llm-application-llm-application-3",
+          "workload_minutes": 60,
+          "week": 27,
+          "order": 163
+        },
+        {
+          "lesson_id": "phase-11-llm-application-llm-application-4",
+          "workload_minutes": 60,
+          "week": 27,
+          "order": 164
+        },
+        {
+          "lesson_id": "phase-12-genai-rag-rag-foundations-1",
+          "workload_minutes": 60,
+          "week": 27,
+          "order": 165
+        },
+        {
+          "lesson_id": "phase-12-genai-rag-rag-foundations-2",
+          "workload_minutes": 60,
+          "week": 27,
+          "order": 166
+        },
+        {
+          "lesson_id": "phase-12-genai-rag-rag-foundations-3",
+          "workload_minutes": 60,
+          "week": 28,
+          "order": 167
+        },
+        {
+          "lesson_id": "phase-12-genai-rag-rag-foundations-4",
+          "workload_minutes": 60,
+          "week": 28,
+          "order": 168
+        },
+        {
+          "lesson_id": "phase-13-genai-advanced-rag-advanced-rag-1",
+          "workload_minutes": 60,
+          "week": 28,
+          "order": 169
+        },
+        {
+          "lesson_id": "phase-13-genai-advanced-rag-advanced-rag-2",
+          "workload_minutes": 60,
+          "week": 28,
+          "order": 170
+        },
+        {
+          "lesson_id": "phase-13-genai-advanced-rag-advanced-rag-3",
+          "workload_minutes": 60,
+          "week": 28,
+          "order": 171
+        },
+        {
+          "lesson_id": "phase-13-genai-advanced-rag-advanced-rag-4",
+          "workload_minutes": 60,
+          "week": 28,
+          "order": 172
+        },
+        {
+          "lesson_id": "phase-14-genai-tool-calling-tool-calling-1",
+          "workload_minutes": 60,
+          "week": 29,
+          "order": 173
+        },
+        {
+          "lesson_id": "phase-14-genai-tool-calling-tool-calling-2",
+          "workload_minutes": 60,
+          "week": 29,
+          "order": 174
+        },
+        {
+          "lesson_id": "phase-14-genai-tool-calling-tool-calling-3",
+          "workload_minutes": 60,
+          "week": 29,
+          "order": 175
+        },
+        {
+          "lesson_id": "phase-14-genai-tool-calling-tool-calling-4",
+          "workload_minutes": 60,
+          "week": 29,
+          "order": 176
+        },
+        {
+          "lesson_id": "phase-15-genai-agents-ai-agents-1",
+          "workload_minutes": 60,
+          "week": 29,
+          "order": 177
+        },
+        {
+          "lesson_id": "phase-15-genai-agents-ai-agents-2",
+          "workload_minutes": 60,
+          "week": 29,
+          "order": 178
+        },
+        {
+          "lesson_id": "phase-15-genai-agents-ai-agents-3",
+          "workload_minutes": 60,
+          "week": 30,
+          "order": 179
+        },
+        {
+          "lesson_id": "phase-15-genai-agents-ai-agents-4",
+          "workload_minutes": 60,
+          "week": 30,
+          "order": 180
+        },
+        {
+          "lesson_id": "phase-16-genai-mcp-mcp-1",
+          "workload_minutes": 60,
+          "week": 30,
+          "order": 181
+        },
+        {
+          "lesson_id": "phase-16-genai-mcp-mcp-2",
+          "workload_minutes": 60,
+          "week": 30,
+          "order": 182
+        },
+        {
+          "lesson_id": "phase-16-genai-mcp-mcp-3",
+          "workload_minutes": 60,
+          "week": 30,
+          "order": 183
+        },
+        {
+          "lesson_id": "phase-16-genai-mcp-mcp-4",
+          "workload_minutes": 60,
+          "week": 30,
+          "order": 184
+        },
+        {
+          "lesson_id": "phase-17-genai-evaluation-genai-evaluation-1",
+          "workload_minutes": 60,
+          "week": 31,
+          "order": 185
+        },
+        {
+          "lesson_id": "phase-17-genai-evaluation-genai-evaluation-2",
+          "workload_minutes": 60,
+          "week": 31,
+          "order": 186
+        },
+        {
+          "lesson_id": "phase-17-genai-evaluation-genai-evaluation-3",
+          "workload_minutes": 60,
+          "week": 31,
+          "order": 187
+        },
+        {
+          "lesson_id": "phase-17-genai-evaluation-genai-evaluation-4",
+          "workload_minutes": 60,
+          "week": 31,
+          "order": 188
+        },
+        {
+          "lesson_id": "phase-18-genai-observability-genai-observability-1",
+          "workload_minutes": 60,
+          "week": 31,
+          "order": 189
+        },
+        {
+          "lesson_id": "phase-18-genai-observability-genai-observability-2",
+          "workload_minutes": 60,
+          "week": 31,
+          "order": 190
+        },
+        {
+          "lesson_id": "phase-18-genai-observability-genai-observability-3",
+          "workload_minutes": 60,
+          "week": 32,
+          "order": 191
+        },
+        {
+          "lesson_id": "phase-18-genai-observability-genai-observability-4",
+          "workload_minutes": 60,
+          "week": 32,
+          "order": 192
+        },
+        {
+          "lesson_id": "phase-19-genai-production-genai-production-1",
+          "workload_minutes": 60,
+          "week": 32,
+          "order": 193
+        },
+        {
+          "lesson_id": "phase-19-genai-production-genai-production-2",
+          "workload_minutes": 60,
+          "week": 32,
+          "order": 194
+        },
+        {
+          "lesson_id": "phase-19-genai-production-genai-production-3",
+          "workload_minutes": 60,
+          "week": 32,
+          "order": 195
+        },
+        {
+          "lesson_id": "phase-19-genai-production-genai-production-4",
+          "workload_minutes": 60,
+          "week": 32,
+          "order": 196
+        },
+        {
+          "lesson_id": "phase-20-genai-finetuning-fine-tuning-1",
+          "workload_minutes": 60,
+          "week": 33,
+          "order": 197
+        },
+        {
+          "lesson_id": "phase-20-genai-finetuning-fine-tuning-2",
+          "workload_minutes": 60,
+          "week": 33,
+          "order": 198
+        },
+        {
+          "lesson_id": "phase-20-genai-finetuning-fine-tuning-3",
+          "workload_minutes": 60,
+          "week": 33,
+          "order": 199
+        },
+        {
+          "lesson_id": "phase-20-genai-finetuning-fine-tuning-4",
+          "workload_minutes": 60,
+          "week": 33,
+          "order": 200
+        },
+        {
+          "lesson_id": "phase-21-genai-local-llm-local-llm-1",
+          "workload_minutes": 60,
+          "week": 33,
+          "order": 201
+        },
+        {
+          "lesson_id": "phase-21-genai-local-llm-local-llm-2",
+          "workload_minutes": 60,
+          "week": 33,
+          "order": 202
+        },
+        {
+          "lesson_id": "phase-21-genai-local-llm-local-llm-3",
+          "workload_minutes": 60,
+          "week": 34,
+          "order": 203
+        },
+        {
+          "lesson_id": "phase-21-genai-local-llm-local-llm-4",
+          "workload_minutes": 60,
+          "week": 34,
+          "order": 204
+        },
+        {
+          "lesson_id": "phase-22-genai-system-design-genai-system-design-1",
+          "workload_minutes": 60,
+          "week": 34,
+          "order": 205
+        },
+        {
+          "lesson_id": "phase-22-genai-system-design-genai-system-design-2",
+          "workload_minutes": 60,
+          "week": 34,
+          "order": 206
+        },
+        {
+          "lesson_id": "phase-22-genai-system-design-genai-system-design-3",
+          "workload_minutes": 60,
+          "week": 34,
+          "order": 207
+        },
+        {
+          "lesson_id": "phase-22-genai-system-design-genai-system-design-4",
+          "workload_minutes": 60,
+          "week": 34,
+          "order": 208
+        }
+      ]
+    }
   },
   "phases": [
     {

@@ -11,6 +11,7 @@ import subprocess
 import sys
 import threading
 import time
+from urllib.parse import urlsplit, urlunsplit
 from contextlib import asynccontextmanager
 from datetime import date, datetime, timedelta, timezone, tzinfo
 from pathlib import Path
@@ -28,12 +29,25 @@ from apps.api.security_audit import audit_app
 IS_FROZEN = bool(getattr(sys, "frozen", False))
 BUNDLE_ROOT = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parents[2])).resolve()
 APP_ROOT = Path(sys.executable).resolve().parent if IS_FROZEN else BUNDLE_ROOT
-PROJECT_ROOT = Path(os.environ.get("JOURNEY_PROJECT_ROOT", APP_ROOT if (APP_ROOT / ".git").exists() else BUNDLE_ROOT)).resolve()
-DATA_ROOT = Path(os.environ.get("JOURNEY_DATA_DIR", APP_ROOT / ".data" if IS_FROZEN else BUNDLE_ROOT / ".data")).resolve()
+_PROJECT_ROOT_ENV = os.environ.get("JOURNEY_PROJECT_ROOT", "").strip()
+PROJECT_ROOT_CONFIGURED = bool(_PROJECT_ROOT_ENV)
+PROJECT_ROOT = Path(_PROJECT_ROOT_ENV or (APP_ROOT if (APP_ROOT / ".git").exists() else BUNDLE_ROOT)).resolve()
+_LEGACY_DATA_ROOT = APP_ROOT / ".data"
+_LOCAL_APP_DATA = Path(os.environ.get("LOCALAPPDATA") or (Path.home() / "AppData" / "Local")) / "JourneyAIEngineer"
+if os.environ.get("JOURNEY_DATA_DIR", "").strip():
+    DATA_ROOT = Path(os.environ["JOURNEY_DATA_DIR"]).resolve()
+elif IS_FROZEN and _LEGACY_DATA_ROOT.exists():
+    # Preserve the first portable build's adjacent data so an upgrade never
+    # silently starts from an empty progress database.
+    DATA_ROOT = _LEGACY_DATA_ROOT.resolve()
+elif IS_FROZEN:
+    DATA_ROOT = _LOCAL_APP_DATA.resolve()
+else:
+    DATA_ROOT = (BUNDLE_ROOT / ".data").resolve()
 DB_PATH = DATA_ROOT / "journey.db"
 CONTENT_ROOT = Path(os.environ.get("JOURNEY_CONTENT_DIR", BUNDLE_ROOT / "content")).resolve()
 WORKSPACE_ROOT = DATA_ROOT / "workspaces"
-JOURNAL_ROOT = Path(os.environ.get("JOURNEY_JOURNAL_DIR", APP_ROOT / "journal" if IS_FROZEN else BUNDLE_ROOT / "journal")).resolve()
+JOURNAL_ROOT = Path(os.environ.get("JOURNEY_JOURNAL_DIR", DATA_ROOT / "journal" if IS_FROZEN else BUNDLE_ROOT / "journal")).resolve()
 FRONTEND_ROOT = Path(os.environ.get("JOURNEY_FRONTEND_DIR", BUNDLE_ROOT / "dist")).resolve()
 LESSON_CATALOG_PATH = CONTENT_ROOT / "lessons.json"
 MODULE_GUIDES_PATH = CONTENT_ROOT / "module_guides.json"
@@ -50,6 +64,27 @@ if os.name == "nt":
 RUNTIME_HEARTBEAT_TIMEOUT_SECONDS = 12.0
 _RUNTIME_CLIENTS: dict[str, float] = {}
 _RUNTIME_LOCK = threading.Lock()
+SCHEMA_VERSION = 4
+LOCAL_ONLY_ENV = "JOURNEY_LOCAL_ONLY"
+
+
+def local_only_enabled() -> bool:
+    return os.environ.get(LOCAL_ONLY_ENV, "true").strip().casefold() not in {"0", "false", "no", "off"}
+
+
+def require_local_request(request: Request | None = None) -> None:
+    """Keep filesystem, subprocess, and Git capabilities on the local app boundary."""
+
+    if not local_only_enabled() or request is None:
+        return
+    client_host = request.client.host if request.client else ""
+    if client_host not in {"127.0.0.1", "::1", "localhost"}:
+        raise HTTPException(403, "This capability is local-only")
+    origin = request.headers.get("origin", "").strip()
+    if origin:
+        parsed = urlsplit(origin)
+        if parsed.scheme not in {"http", "https"} or parsed.hostname not in {"127.0.0.1", "localhost", "::1"}:
+            raise HTTPException(403, "This capability is local-only")
 
 
 def now_iso() -> str:
@@ -61,6 +96,14 @@ def connect() -> sqlite3.Connection:
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON")
+    conn.execute("PRAGMA busy_timeout = 5000")
+    # WAL is persistent per database and substantially reduces reader/writer lock
+    # contention for the local desktop app.  Ignore a read-only/filesystem failure
+    # here; the connection remains usable and migrations still report errors.
+    try:
+        conn.execute("PRAGMA journal_mode = WAL")
+    except sqlite3.DatabaseError:
+        pass
     return conn
 
 
@@ -241,6 +284,52 @@ def redact_secrets(text: str) -> str:
     return redacted
 
 
+def sanitize_remote(text: str) -> str:
+    """Remove embedded Git credentials while retaining a useful remote hint."""
+
+    value = text.strip()
+    if not value:
+        return ""
+    sanitized_lines: list[str] = []
+    for line in value.splitlines():
+        parts = line.split()
+        if len(parts) >= 2:
+            remote_url = parts[1]
+            try:
+                parsed = urlsplit(remote_url)
+                if parsed.scheme and parsed.netloc:
+                    hostname = parsed.hostname or ""
+                    port = f":{parsed.port}" if parsed.port else ""
+                    clean_url = urlunsplit((parsed.scheme, hostname + port, parsed.path, parsed.query, parsed.fragment))
+                    sanitized_lines.append(" ".join([parts[0], clean_url, *parts[2:]]))
+                    continue
+            except ValueError:
+                pass
+        sanitized_lines.append(redact_secrets(line))
+    return "\n".join(sanitized_lines)
+
+
+def data_root_writable() -> bool:
+    try:
+        DATA_ROOT.mkdir(parents=True, exist_ok=True)
+        probe = DATA_ROOT / ".journey-write-check"
+        probe.write_text("ok", encoding="utf-8")
+        probe.unlink(missing_ok=True)
+        return True
+    except OSError:
+        return False
+
+
+def git_publish_available() -> bool:
+    if not PROJECT_ROOT_CONFIGURED and not (PROJECT_ROOT / ".git").exists():
+        return False
+    try:
+        result = run_git(["rev-parse", "--show-toplevel"])
+        return result.returncode == 0
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+
+
 SECRET_SCAN_PATTERNS = (
     re.compile(r"(?i)\b(?:api[_-]?key|secret|token|password)\b\s*[:=]\s*[\"']?[^\s\"']{8,}"),
     re.compile(r"(?i)\bgh[pousr]_[A-Za-z0-9_\-]{20,}\b"),
@@ -326,6 +415,8 @@ def scan_workspace_files(workspace_path: Path) -> tuple[list[Path], list[str]]:
 def ensure_schema(db: sqlite3.Connection) -> None:
     """Apply additive migrations so an existing local database keeps its data."""
 
+    db.execute("CREATE TABLE IF NOT EXISTS schema_meta (key TEXT PRIMARY KEY, value TEXT NOT NULL)")
+
     columns = {
         "concept_notes_vi": "TEXT NOT NULL DEFAULT ''",
         "concept_notes_en": "TEXT NOT NULL DEFAULT ''",
@@ -351,6 +442,90 @@ def ensure_schema(db: sqlite3.Connection) -> None:
         )
         """
     )
+    # v4 removes the old one-card-per-lesson uniqueness constraint.  Existing
+    # local databases created during the v3 development window are rebuilt
+    # additively while their scheduling state is copied across.
+    card_indexes = db.execute("PRAGMA index_list('review_cards')").fetchall()
+    has_lesson_unique = False
+    for index in card_indexes:
+        if int(index[2]) == 1:
+            columns_for_index = db.execute(f"PRAGMA index_info('{index[1]}')").fetchall()
+            if [row[2] for row in columns_for_index] == ["lesson_id"]:
+                has_lesson_unique = True
+                break
+    if has_lesson_unique:
+        old_cards = db.execute("SELECT id,lesson_id,question_vi,question_en,answer_vi,answer_en,type,hint_vi,hint_en FROM review_cards").fetchall()
+        old_state = db.execute("SELECT card_id,due_at,interval_days,repetitions,ease_factor,lapses,leech,suspended,last_reviewed_at FROM review_state").fetchall() if db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='review_state'").fetchone() else []
+        db.execute("PRAGMA foreign_keys = OFF")
+        db.execute("DROP TABLE IF EXISTS review_state")
+        db.execute("DROP TABLE review_cards")
+        db.execute("""CREATE TABLE review_cards (id INTEGER PRIMARY KEY, lesson_id INTEGER NOT NULL REFERENCES lessons(id) ON DELETE CASCADE, question_vi TEXT NOT NULL, question_en TEXT NOT NULL, answer_vi TEXT NOT NULL, answer_en TEXT NOT NULL, type TEXT NOT NULL DEFAULT 'recall', hint_vi TEXT NOT NULL DEFAULT '', hint_en TEXT NOT NULL DEFAULT '')""")
+        db.executemany("INSERT INTO review_cards(id,lesson_id,question_vi,question_en,answer_vi,answer_en,type,hint_vi,hint_en) VALUES(?,?,?,?,?,?,?,?,?)", [tuple(row) for row in old_cards])
+        db.execute("PRAGMA foreign_keys = ON")
+    # v3 splits immutable prompt/answer content from mutable scheduling state.
+    # review_items remains as a compatibility mirror for older clients and data.
+    db.execute(
+        """
+        CREATE TABLE IF NOT EXISTS review_cards (
+            id INTEGER PRIMARY KEY,
+            lesson_id INTEGER NOT NULL REFERENCES lessons(id) ON DELETE CASCADE,
+            question_vi TEXT NOT NULL,
+            question_en TEXT NOT NULL,
+            answer_vi TEXT NOT NULL,
+            answer_en TEXT NOT NULL,
+            type TEXT NOT NULL DEFAULT 'recall',
+            hint_vi TEXT NOT NULL DEFAULT '',
+            hint_en TEXT NOT NULL DEFAULT ''
+        )
+        """
+    )
+    db.execute(
+        """
+        CREATE TABLE IF NOT EXISTS review_state (
+            card_id INTEGER PRIMARY KEY REFERENCES review_cards(id) ON DELETE CASCADE,
+            due_at TEXT NOT NULL,
+            interval_days INTEGER NOT NULL DEFAULT 0,
+            repetitions INTEGER NOT NULL DEFAULT 0,
+            ease_factor REAL NOT NULL DEFAULT 2.5,
+            lapses INTEGER NOT NULL DEFAULT 0,
+            leech INTEGER NOT NULL DEFAULT 0,
+            suspended INTEGER NOT NULL DEFAULT 0,
+            last_reviewed_at TEXT
+        )
+        """
+    )
+    if "old_state" in locals() and old_state:
+        db.executemany("INSERT OR IGNORE INTO review_state(card_id,due_at,interval_days,repetitions,ease_factor,lapses,leech,suspended,last_reviewed_at) VALUES(?,?,?,?,?,?,?,?,?)", [tuple(row) for row in old_state])
+    db.execute("CREATE INDEX IF NOT EXISTS idx_review_state_due ON review_state(suspended, due_at)")
+    for column, definition in {
+        "type": "TEXT NOT NULL DEFAULT 'recall'",
+        "hint_vi": "TEXT NOT NULL DEFAULT ''",
+        "hint_en": "TEXT NOT NULL DEFAULT ''",
+    }.items():
+        try:
+            db.execute(f"ALTER TABLE review_cards ADD COLUMN {column} {definition}")
+        except sqlite3.OperationalError as error:
+            if "duplicate column" not in str(error).lower():
+                raise
+    # Existing review_items IDs are retained so review_history and old clients
+    # continue to resolve the same cards after migration.
+    db.execute(
+        """
+        INSERT OR IGNORE INTO review_cards(id,lesson_id,question_vi,question_en,answer_vi,answer_en)
+        SELECT id,lesson_id,question_vi,question_en,answer_vi,answer_en FROM review_items
+        """
+    )
+    db.execute(
+        """
+        INSERT OR IGNORE INTO review_state(card_id,due_at,interval_days,repetitions,ease_factor,last_reviewed_at)
+        SELECT id,due_at,interval_days,repetitions,ease_factor,last_reviewed_at FROM review_items
+        """
+    )
+    db.execute(
+        "INSERT INTO schema_meta(key,value) VALUES('version',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value",
+        (str(SCHEMA_VERSION),),
+    )
+    db.execute(f"PRAGMA user_version = {SCHEMA_VERSION}")
     db.execute(
         """
         CREATE TABLE IF NOT EXISTS settings (
@@ -498,8 +673,23 @@ def init_db() -> None:
         )
         ensure_schema(db)
     seed_content()
+    sync_review_cards()
     hydrate_lesson_catalog()
     hydrate_exercises()
+
+
+def sync_review_cards() -> None:
+    """Synchronize legacy review_items into canonical cards and scheduling state."""
+
+    with connect() as db:
+        rows = db.execute("SELECT id,lesson_id,question_vi,question_en,answer_vi,answer_en,due_at,interval_days,repetitions,ease_factor,last_reviewed_at FROM review_items").fetchall()
+        for row in rows:
+            db.execute("""INSERT OR IGNORE INTO review_cards(id,lesson_id,question_vi,question_en,answer_vi,answer_en) VALUES(?,?,?,?,?,?)""",
+                       tuple(row[key] for key in ("id", "lesson_id", "question_vi", "question_en", "answer_vi", "answer_en")))
+            db.execute("""UPDATE review_cards SET lesson_id=?,question_vi=?,question_en=?,answer_vi=?,answer_en=? WHERE id=?""",
+                       (row["lesson_id"], row["question_vi"], row["question_en"], row["answer_vi"], row["answer_en"], row["id"]))
+            db.execute("""INSERT OR IGNORE INTO review_state(card_id,due_at,interval_days,repetitions,ease_factor,last_reviewed_at) VALUES(?,?,?,?,?,?)""",
+                       (row["id"], row["due_at"], row["interval_days"], row["repetitions"], row["ease_factor"], row["last_reviewed_at"]))
 
 
 
@@ -602,34 +792,37 @@ def seed_content() -> None:
                             VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
                             (module_id, slug, *lesson_values[1:]),
                         ).lastrowid
-                    question_vi = lesson_data.get(
-                        "review_question_vi",
-                        f"Bạn hãy giải thích {lesson_title.lower()} bằng lời của mình và đưa ra một ví dụ khi làm AI Engineer.",
-                    )
-                    answer_vi = lesson_data.get(
-                        "review_answer_vi",
-                        f"Cần nêu định nghĩa, trực giác, một ví dụ code hoặc dữ liệu, và một lỗi thường gặp khi dùng {lesson_title.lower()}.",
-                    )
-                    question_en = lesson_data.get(
-                        "review_question_en",
-                        f"Explain {lesson_title_en.lower()} in your own words and give one AI engineering example.",
-                    )
-                    answer_en = lesson_data.get(
-                        "review_answer_en",
-                        f"Include the definition, intuition, a code or data example, and one common failure mode for {lesson_title_en.lower()}.",
-                    )
-                    review = db.execute("SELECT id FROM review_items WHERE lesson_id=?", (lesson_id,)).fetchone()
-                    if review:
+                    legacy_card = {
+                        "id": f"{slug}-recall",
+                        "type": "recall",
+                        "question_vi": lesson_data.get("review_question_vi", f"Bạn hãy giải thích {lesson_title.lower()} bằng lời của mình và đưa ra một ví dụ khi làm AI Engineer."),
+                        "question_en": lesson_data.get("review_question_en", f"Explain {lesson_title_en.lower()} in your own words and give one AI engineering example."),
+                        "answer_vi": lesson_data.get("review_answer_vi", f"Cần nêu định nghĩa, trực giác, một ví dụ code hoặc dữ liệu, và một lỗi thường gặp khi dùng {lesson_title.lower()}."),
+                        "answer_en": lesson_data.get("review_answer_en", f"Include the definition, intuition, a code or data example, and one common failure mode for {lesson_title_en.lower()}."),
+                        "hint_vi": "Bắt đầu bằng một ví dụ nhỏ.", "hint_en": "Start with a small example.",
+                    }
+                    review_cards = lesson_data.get("review_cards") or [
+                        legacy_card,
+                        {**legacy_card, "id": f"{slug}-application", "type": "application", "question_vi": f"Viết một ví dụ code áp dụng {lesson_title.lower()}.", "question_en": f"Write a small code example applying {lesson_title_en.lower()}.", "hint_vi": "Bắt đầu bằng input và output tối thiểu.", "hint_en": "Start with the smallest input and output."},
+                        {**legacy_card, "id": f"{slug}-debug", "type": "debug", "question_vi": f"Bạn sẽ debug lỗi của {lesson_title.lower()} theo thứ tự nào?", "question_en": f"What would you debug first when {lesson_title_en.lower()} fails?", "hint_vi": "Kiểm tra input và baseline trước.", "hint_en": "Check the input and baseline first."},
+                        {**legacy_card, "id": f"{slug}-interview", "type": "interview", "question_vi": f"Nêu một trade-off của {lesson_title.lower()}.", "question_en": f"Name one trade-off of {lesson_title_en.lower()}.", "hint_vi": "Nói về chất lượng, chi phí hoặc độ trễ.", "hint_en": "Discuss quality, cost or latency."},
+                    ]
+                    existing_reviews = db.execute("SELECT * FROM review_items WHERE lesson_id=? ORDER BY id", (lesson_id,)).fetchall()
+                    for card_index, card in enumerate(review_cards):
+                        values = (card.get("question_vi", legacy_card["question_vi"]), card.get("question_en", legacy_card["question_en"]), card.get("answer_vi", legacy_card["answer_vi"]), card.get("answer_en", legacy_card["answer_en"]))
+                        if card_index < len(existing_reviews):
+                            review_id = existing_reviews[card_index]["id"]
+                            db.execute("UPDATE review_items SET question_vi=?,question_en=?,answer_vi=?,answer_en=? WHERE id=?", (*values, review_id))
+                        else:
+                            due = now_iso() if lesson_id <= 12 else (datetime.now(timezone.utc) + timedelta(days=lesson_id % 7 + card_index + 1)).isoformat()
+                            review_id = db.execute("INSERT INTO review_items(lesson_id,question_vi,question_en,answer_vi,answer_en,due_at) VALUES(?,?,?,?,?,?)", (lesson_id, *values, due)).lastrowid
                         db.execute(
-                            "UPDATE review_items SET question_vi=?,question_en=?,answer_vi=?,answer_en=? WHERE id=?",
-                            (question_vi, question_en, answer_vi, answer_en, review["id"]),
+                            "INSERT INTO review_cards(id,lesson_id,question_vi,question_en,answer_vi,answer_en,type,hint_vi,hint_en) VALUES(?,?,?,?,?,?,?,?,?) "
+                            "ON CONFLICT(id) DO UPDATE SET lesson_id=excluded.lesson_id,question_vi=excluded.question_vi,question_en=excluded.question_en,answer_vi=excluded.answer_vi,answer_en=excluded.answer_en,type=excluded.type,hint_vi=excluded.hint_vi,hint_en=excluded.hint_en",
+                            (review_id, lesson_id, *values, card.get("type", "recall"), card.get("hint_vi", ""), card.get("hint_en", "")),
                         )
-                    else:
-                        due = now_iso() if lesson_id <= 12 else (datetime.now(timezone.utc) + timedelta(days=lesson_id % 7 + 1)).isoformat()
-                        db.execute(
-                            "INSERT INTO review_items(lesson_id,question_vi,question_en,answer_vi,answer_en,due_at) VALUES(?,?,?,?,?,?)",
-                            (lesson_id, question_vi, question_en, answer_vi, answer_en, due),
-                        )
+                        review_row = db.execute("SELECT due_at,interval_days,repetitions,ease_factor,last_reviewed_at FROM review_items WHERE id=?", (review_id,)).fetchone()
+                        db.execute("INSERT OR IGNORE INTO review_state(card_id,due_at,interval_days,repetitions,ease_factor,last_reviewed_at) VALUES(?,?,?,?,?,?)", (review_id, review_row["due_at"], review_row["interval_days"], review_row["repetitions"], review_row["ease_factor"], review_row["last_reviewed_at"]))
                 material = exercise_material(module, guides)
                 exercise_slug = f"exercise-{phase['order']}-{module['slug']}"
                 exercise_values = (
@@ -766,6 +959,11 @@ class ContextRequest(BaseModel):
     question: str = Field(default="Hãy giúp tôi hiểu phần này bằng gợi ý từng bước.", max_length=4000)
 
 
+class BackupImportRequest(BaseModel):
+    payload: dict[str, Any]
+    confirm: bool = False
+
+
 class RuntimeClientRequest(BaseModel):
     client_id: str = Field(min_length=8, max_length=120)
 
@@ -810,7 +1008,34 @@ def phase_payload(db: sqlite3.Connection, phase: sqlite3.Row) -> dict[str, Any]:
 
 @app.get("/api/health")
 def health() -> dict[str, Any]:
-    return {"status": "ok", "service": "journey-ai-engineer-api", "database": str(DB_PATH)}
+    writable = data_root_writable()
+    return {
+        "status": "ok" if writable else "degraded",
+        "service": "journey-ai-engineer-api",
+        "mode": "packaged" if IS_FROZEN else "local",
+        "data_root_writable": writable,
+        "project_root_configured": PROJECT_ROOT_CONFIGURED,
+        "git_publish_available": git_publish_available(),
+        "local_only": local_only_enabled(),
+    }
+
+
+@app.get("/api/health/live")
+def health_live() -> dict[str, str]:
+    return {"status": "ok"}
+
+
+@app.get("/api/health/ready")
+def health_ready() -> dict[str, Any]:
+    ready = data_root_writable()
+    content_ready = LESSON_CATALOG_PATH.exists() and (CONTENT_ROOT / "curriculum.json").exists()
+    try:
+        with connect() as db:
+            db.execute("SELECT 1").fetchone()
+    except sqlite3.DatabaseError:
+        ready = False
+    ready = ready and content_ready
+    return {"status": "ready" if ready else "not_ready", "ready": ready, "content_ready": content_ready}
 
 
 @app.get("/api/security/audit")
@@ -873,6 +1098,88 @@ def resources(query: str | None = None, phase: str | None = None, resource_type:
     if normalized_type and normalized_type != "all":
         items = [item for item in items if str(item.get("type", "")).casefold() == normalized_type]
     return {"resources": items, "count": len(items), "total": len(read_resource_library())}
+
+
+@app.get("/api/search")
+def search(q: str = "", type: str = "all", phase: str = "all", status: str = "all", limit: int = 50) -> dict[str, Any]:
+    """Search local lessons, curated resources, and exercises with stable output."""
+
+    query = q.strip()
+    if len(query) > 120:
+        raise HTTPException(400, "q must contain at most 120 characters")
+    clean_type = type.strip().casefold() or "all"
+    allowed_types = {"all", "phases", "modules", "lessons", "resources", "exercises"}
+    if clean_type not in allowed_types:
+        raise HTTPException(400, "type must be phases, modules, lessons, resources, exercises, or all")
+    clean_phase = phase.strip().casefold() or "all"
+    if len(clean_phase) > 80:
+        raise HTTPException(400, "phase must contain at most 80 characters")
+    clean_status = status.strip().casefold() or "all"
+    allowed_statuses = {"all", "not_started", "in_progress", "blocked", "completed", "needs_review", "available"}
+    if clean_status not in allowed_statuses:
+        raise HTTPException(400, "Unsupported status")
+    if limit < 1 or limit > 100:
+        raise HTTPException(400, "limit must be between 1 and 100")
+    needle = query.casefold()
+    results: list[dict[str, Any]] = []
+
+    def matches(text: str) -> bool:
+        return not needle or needle in text.casefold()
+
+    with connect() as db:
+        if clean_type in {"all", "phases"}:
+            rows = db.execute("SELECT slug,title_vi,title_en,summary_vi,summary_en,order_index FROM phases ORDER BY order_index").fetchall()
+            for row in rows:
+                item = dict(row)
+                if not matches(" ".join(str(item.get(key, "")) for key in ("slug", "title_vi", "title_en", "summary_vi", "summary_en"))):
+                    continue
+                if clean_phase != "all" and clean_phase != item["slug"].casefold():
+                    continue
+                if clean_status not in {"all", "available"}:
+                    continue
+                results.append({"type": "phase", "id": item["slug"], "slug": item["slug"], "title": item["title_vi"], "title_en": item["title_en"], "subtitle": "Phase", "phase": item["slug"], "status": "available"})
+        if clean_type in {"all", "modules"}:
+            rows = db.execute("SELECT m.slug,m.title_vi,m.title_en,p.slug AS phase_slug FROM modules m JOIN phases p ON p.id=m.phase_id ORDER BY p.order_index,m.order_index").fetchall()
+            for row in rows:
+                item = dict(row)
+                if not matches(" ".join(str(item.get(key, "")) for key in ("slug", "title_vi", "title_en", "phase_slug"))):
+                    continue
+                if clean_phase != "all" and clean_phase != item["phase_slug"].casefold():
+                    continue
+                if clean_status not in {"all", "available"}:
+                    continue
+                results.append({"type": "module", "id": item["slug"], "slug": item["slug"], "title": item["title_vi"], "title_en": item["title_en"], "subtitle": item["phase_slug"], "phase": item["phase_slug"], "status": "available"})
+        if clean_type in {"all", "lessons"}:
+            rows = db.execute("""SELECT l.slug,l.title_vi,l.title_en,l.summary_vi,l.summary_en,
+                p.slug AS phase_slug,COALESCE(pr.status,'not_started') AS status
+                FROM lessons l JOIN modules m ON m.id=l.module_id JOIN phases p ON p.id=m.phase_id
+                LEFT JOIN progress pr ON pr.lesson_id=l.id ORDER BY p.order_index,m.order_index,l.order_index,l.id""").fetchall()
+            for row in rows:
+                item = dict(row)
+                haystack = " ".join(str(item.get(key, "")) for key in ("slug", "title_vi", "title_en", "summary_vi", "summary_en", "phase_slug"))
+                if (clean_phase != "all" and clean_phase not in item["phase_slug"].casefold()) or (clean_status not in {"all", item["status"]}) or not matches(haystack):
+                    continue
+                results.append({"type": "lesson", "id": item["slug"], "slug": item["slug"], "title": item["title_vi"], "title_en": item["title_en"], "phase": item["phase_slug"], "status": item["status"]})
+        if clean_type in {"all", "exercises"}:
+            rows = db.execute("""SELECT e.slug,e.title_vi,e.title_en,e.description_vi,e.description_en,
+                p.slug AS phase_slug FROM exercises e JOIN modules m ON m.id=e.module_id JOIN phases p ON p.id=m.phase_id
+                ORDER BY p.order_index,m.order_index,e.id""").fetchall()
+            for row in rows:
+                item = dict(row)
+                haystack = " ".join(str(item.get(key, "")) for key in ("slug", "title_vi", "title_en", "description_vi", "description_en", "phase_slug"))
+                if (clean_phase != "all" and clean_phase not in item["phase_slug"].casefold()) or (clean_status not in {"all", "available"}) or not matches(haystack):
+                    continue
+                results.append({"type": "exercise", "id": item["slug"], "slug": item["slug"], "title": item["title_vi"], "title_en": item["title_en"], "phase": item["phase_slug"], "status": "available"})
+    if clean_type in {"all", "resources"}:
+        for resource in read_resource_library():
+            phase_ids = [str(value) for value in resource.get("phase_ids", [])]
+            haystack = " ".join(str(resource.get(field, "")) for field in ("slug", "title_vi", "title_en", "provider", "description_vi", "description_en", "type"))
+            if (clean_phase != "all" and clean_phase not in {value.casefold() for value in phase_ids}) or (clean_status not in {"all", "available"}) or not matches(haystack):
+                continue
+            results.append({"type": "resource", "id": resource.get("slug", ""), "slug": resource.get("slug", ""), "title": resource.get("title_vi", resource.get("title_en", "")), "title_en": resource.get("title_en", ""), "phase": sorted(phase_ids), "status": "available", "url": resource.get("url", "")})
+    order = {"phase": 0, "module": 1, "lesson": 2, "resource": 3, "exercise": 4}
+    results.sort(key=lambda item: (order[item["type"]], str(item.get("id", ""))))
+    return {"query": query, "type": clean_type, "phase": clean_phase, "status": clean_status, "results": results[:limit], "count": min(len(results), limit), "total": len(results)}
 
 
 def _feedback_payload(row: sqlite3.Row, include_moderation: bool = False) -> dict[str, Any]:
@@ -1060,7 +1367,7 @@ def update_feedback_moderation(feedback_id: int, payload: FeedbackModerationUpda
 def dashboard() -> dict[str, Any]:
     with connect() as db:
         totals = db.execute("SELECT COUNT(*) AS total, SUM(CASE WHEN p.status='completed' THEN 1 ELSE 0 END) AS completed, SUM(CASE WHEN p.status='in_progress' THEN 1 ELSE 0 END) AS in_progress FROM lessons l LEFT JOIN progress p ON p.lesson_id=l.id").fetchone()
-        due = db.execute("SELECT COUNT(*) AS n FROM review_items WHERE due_at <= ?", (now_iso(),)).fetchone()["n"]
+        due = db.execute("SELECT COUNT(*) AS n FROM review_state WHERE due_at <= ? AND suspended=0", (now_iso(),)).fetchone()["n"]
         current = db.execute("""SELECT l.slug,l.title_vi,l.title_en,m.title_vi AS module_title,p.title_vi AS phase_title
             FROM lessons l JOIN modules m ON m.id=l.module_id JOIN phases p ON p.id=m.phase_id
             LEFT JOIN progress pr ON pr.lesson_id=l.id
@@ -1100,7 +1407,7 @@ def lesson_detail(slug: str) -> dict[str, Any]:
             FROM lessons l JOIN modules m ON m.id=l.module_id JOIN phases p ON p.id=m.phase_id LEFT JOIN progress pr ON pr.lesson_id=l.id WHERE l.slug=?""", (slug,)).fetchone()
         if not row:
             raise HTTPException(404, "Lesson not found")
-        reviews = db.execute("SELECT * FROM review_items WHERE lesson_id=?", (row["id"],)).fetchall()
+        reviews = db.execute("SELECT c.*,s.due_at,s.interval_days,s.repetitions,s.ease_factor,s.lapses,s.leech,s.suspended,s.last_reviewed_at FROM review_cards c JOIN review_state s ON s.card_id=c.id WHERE c.lesson_id=? ORDER BY c.id", (row["id"],)).fetchall()
         exercises = db.execute("SELECT * FROM exercises WHERE module_id=?", (row["module_id"],)).fetchall()
     result = dict(row)
     guide_fallbacks: dict[str, Any] = {
@@ -1187,28 +1494,58 @@ def create_session(payload: SessionCreate) -> dict[str, Any]:
 @app.get("/api/reviews/due")
 def due_reviews() -> dict[str, Any]:
     with connect() as db:
-        rows = db.execute("""SELECT r.*,l.slug AS lesson_slug,l.title_vi AS lesson_title_vi,l.title_en AS lesson_title_en,p.title_vi AS phase_title_vi
-            FROM review_items r JOIN lessons l ON l.id=r.lesson_id JOIN modules m ON m.id=l.module_id JOIN phases p ON p.id=m.phase_id
-            WHERE r.due_at <= ? ORDER BY r.due_at LIMIT 30""", (now_iso(),)).fetchall()
+        rows = db.execute("""SELECT c.*,s.due_at,s.interval_days,s.repetitions,s.ease_factor,s.lapses,s.leech,s.suspended,s.last_reviewed_at,
+            l.slug AS lesson_slug,l.title_vi AS lesson_title_vi,l.title_en AS lesson_title_en,p.title_vi AS phase_title_vi,e.slug AS related_exercise
+            FROM review_cards c JOIN review_state s ON s.card_id=c.id JOIN lessons l ON l.id=c.lesson_id
+            JOIN modules m ON m.id=l.module_id JOIN phases p ON p.id=m.phase_id
+            LEFT JOIN exercises e ON e.module_id=m.id
+            WHERE s.due_at <= ? AND s.suspended=0 ORDER BY s.due_at,c.id LIMIT 30""", (now_iso(),)).fetchall()
     return {"items": [dict(row) for row in rows], "count": len(rows)}
 
 
 @app.post("/api/reviews/{review_id}/answer")
 def answer_review(review_id: int, payload: ReviewAnswer) -> dict[str, Any]:
-    intervals = {"again": 1, "hard": 2, "good": 4, "easy": 7}
     with connect() as db:
-        review = db.execute("SELECT * FROM review_items WHERE id=?", (review_id,)).fetchone()
+        review = db.execute("SELECT c.*,s.* FROM review_cards c JOIN review_state s ON s.card_id=c.id WHERE c.id=?", (review_id,)).fetchone()
         if not review:
             raise HTTPException(404, "Review item not found")
-        repetitions = 0 if payload.rating == "again" else review["repetitions"] + 1
-        interval = intervals[payload.rating] if repetitions <= 1 else min(180, max(1, round(review["interval_days"] * (1.3 if payload.rating == "good" else 1.7 if payload.rating == "easy" else 1.05))))
+        rating = payload.rating
+        quality = {"again": 0, "hard": 3, "good": 4, "easy": 5}[rating]
+        ease = float(review["ease_factor"] or 2.5)
+        repetitions = int(review["repetitions"] or 0)
+        lapses = int(review["lapses"] or 0)
+        interval_before = int(review["interval_days"] or 0)
+        if quality < 3:
+            repetitions = 0
+            lapses += 1
+            ease = max(1.3, ease - 0.2)
+            interval = 1
+        else:
+            repetitions += 1
+            ease = max(1.3, ease + (0.15 if quality == 5 else -0.15 if quality == 3 else 0.0))
+            if rating == "hard":
+                interval = max(1, round((interval_before or 1) * 1.2))
+            elif repetitions == 1:
+                interval = 1
+            elif repetitions == 2:
+                interval = 6
+            else:
+                interval = max(1, round((interval_before or 1) * ease * (1.3 if rating == "easy" else 1.0)))
+        interval = min(365, interval)
+        leech = 1 if lapses >= 8 else int(review["leech"] or 0)
+        suspended = 1 if leech else int(review["suspended"] or 0)
         due = (datetime.now(timezone.utc) + timedelta(days=interval)).isoformat()
-        db.execute("UPDATE review_items SET due_at=?,interval_days=?,repetitions=?,last_reviewed_at=? WHERE id=?", (due, interval, repetitions, now_iso(), review_id))
+        reviewed_at = now_iso()
+        db.execute("""UPDATE review_state SET due_at=?,interval_days=?,repetitions=?,ease_factor=?,lapses=?,leech=?,suspended=?,last_reviewed_at=? WHERE card_id=?""",
+                   (due, interval, repetitions, ease, lapses, leech, suspended, reviewed_at, review_id))
+        db.execute("""UPDATE review_items SET due_at=?,interval_days=?,repetitions=?,ease_factor=?,last_reviewed_at=? WHERE id=?""",
+                   (due, interval, repetitions, ease, reviewed_at, review_id))
         history_id = db.execute(
             "INSERT INTO review_history(review_id,rating,thought_seconds,answer_text,created_at) VALUES(?,?,?,?,?)",
             (review_id, payload.rating, payload.thought_seconds, payload.answer_text, now_iso()),
         ).lastrowid
-    return {"review_id": review_id, "history_id": history_id, "next_due_at": due, "interval_days": interval}
+    return {"review_id": review_id, "history_id": history_id, "next_due_at": due, "interval_days": interval,
+            "ease_factor": ease, "repetitions": repetitions, "lapses": lapses, "leech": bool(leech), "suspended": bool(suspended)}
 
 
 @app.get("/api/reviews/history")
@@ -1217,7 +1554,7 @@ def review_history(limit: int = 50) -> dict[str, Any]:
     with connect() as db:
         rows = db.execute(
             """SELECT h.*,r.question_vi,r.question_en,l.slug AS lesson_slug,l.title_vi AS lesson_title_vi
-            FROM review_history h JOIN review_items r ON r.id=h.review_id JOIN lessons l ON l.id=r.lesson_id
+            FROM review_history h JOIN review_cards r ON r.id=h.review_id JOIN lessons l ON l.id=r.lesson_id
             ORDER BY h.created_at DESC LIMIT ?""",
             (bounded_limit,),
         ).fetchall()
@@ -1231,7 +1568,7 @@ def weak_topics() -> dict[str, Any]:
             """SELECT l.slug AS lesson_slug,l.title_vi,COUNT(h.id) AS attempts,
             SUM(CASE WHEN h.rating IN ('again','hard') THEN 1 ELSE 0 END) AS hard_attempts,
             MAX(h.created_at) AS last_reviewed_at
-            FROM review_items r JOIN lessons l ON l.id=r.lesson_id
+            FROM review_cards r JOIN lessons l ON l.id=r.lesson_id
             LEFT JOIN review_history h ON h.review_id=r.id
             GROUP BY l.id HAVING attempts > 0 ORDER BY hard_attempts DESC,attempts DESC LIMIT 12"""
         ).fetchall()
@@ -1297,7 +1634,8 @@ def ensure_workspace_files(path: Path, exercise: sqlite3.Row) -> bool:
 
 
 @app.post("/api/exercises/{slug}/workspace")
-def create_workspace(slug: str) -> dict[str, Any]:
+def create_workspace(slug: str, request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
+    require_local_request(request)
     require_slug(slug)
     workspace_root = WORKSPACE_ROOT.resolve()
     path = (workspace_root / slug).resolve()
@@ -1323,7 +1661,8 @@ def create_workspace(slug: str) -> dict[str, Any]:
 
 
 @app.post("/api/workspaces/{workspace_id}/open")
-def open_workspace(workspace_id: int) -> dict[str, Any]:
+def open_workspace(workspace_id: int, request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
+    require_local_request(request)
     with connect() as db:
         workspace = db.execute("SELECT * FROM workspaces WHERE id=?", (workspace_id,)).fetchone()
     if not workspace:
@@ -1357,7 +1696,8 @@ def workspace_row(workspace_id: int) -> sqlite3.Row:
 
 
 @app.post("/api/workspaces/{workspace_id}/open-folder")
-def open_workspace_folder(workspace_id: int) -> dict[str, Any]:
+def open_workspace_folder(workspace_id: int, request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
+    require_local_request(request)
     row = workspace_row(workspace_id)
     workspace_path = Path(row["path"]).resolve()
     try:
@@ -1383,7 +1723,8 @@ def safe_file_contains_secret(path: Path) -> bool:
 
 
 @app.post("/api/workspaces/{workspace_id}/export")
-def export_workspace(workspace_id: int) -> dict[str, Any]:
+def export_workspace(workspace_id: int, request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
+    require_local_request(request)
     row = workspace_row(workspace_id)
     workspace_path = Path(row["path"]).resolve()
     try:
@@ -1425,7 +1766,8 @@ def export_workspace(workspace_id: int) -> dict[str, Any]:
 
 
 @app.post("/api/workspaces/{workspace_id}/run")
-def run_workspace(workspace_id: int) -> dict[str, Any]:
+def run_workspace(workspace_id: int, request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
+    require_local_request(request)
     with connect() as db:
         row = db.execute("""SELECT w.*,e.test_command,e.starter_code,e.title_vi,e.description_vi FROM workspaces w JOIN exercises e ON e.id=w.exercise_id WHERE w.id=?""", (workspace_id,)).fetchone()
     if not row:
@@ -1467,7 +1809,8 @@ def run_workspace(workspace_id: int) -> dict[str, Any]:
 
 
 @app.get("/api/workspaces/{workspace_id}/runs")
-def workspace_runs(workspace_id: int, limit: int = 20) -> dict[str, Any]:
+def workspace_runs(workspace_id: int, limit: int = 20, request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
+    require_local_request(request)
     bounded_limit = max(1, min(limit, 100))
     with connect() as db:
         if not db.execute("SELECT 1 FROM workspaces WHERE id=?", (workspace_id,)).fetchone():
@@ -1548,7 +1891,8 @@ def create_note(payload: NoteCreate) -> dict[str, Any]:
 
 
 @app.get("/api/git/status")
-def git_status() -> dict[str, Any]:
+def git_status(request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
+    require_local_request(request)
     def run(args: list[str]) -> tuple[str, int]:
         try:
             result = subprocess.run(["git", "-C", str(PROJECT_ROOT), *args], capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=10, shell=False, **SUBPROCESS_OPTIONS)
@@ -1559,11 +1903,12 @@ def git_status() -> dict[str, Any]:
     status, _ = run(["status", "--short"])
     remote, _ = run(["remote", "-v"])
     last_commit, _ = run(["log", "-1", "--oneline"])
-    return {"root": str(PROJECT_ROOT), "branch": branch, "status": status, "remote": redact_secrets(remote), "last_commit": last_commit}
+    return {"root": "configured-project" if PROJECT_ROOT_CONFIGURED else "local-project", "branch": branch, "status": status, "remote": sanitize_remote(remote), "last_commit": last_commit}
 
 
 @app.get("/api/git/diff")
-def git_diff() -> dict[str, str]:
+def git_diff(request: Request = None) -> dict[str, str]:  # type: ignore[assignment]
+    require_local_request(request)
     try:
         result = subprocess.run(["git", "-C", str(PROJECT_ROOT), "diff", "HEAD", "--", "."], capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=10, shell=False, **SUBPROCESS_OPTIONS)
         if result.returncode != 0:
@@ -1578,7 +1923,8 @@ def git_diff() -> dict[str, str]:
 
 
 @app.get("/api/git/suggested-commit")
-def suggested_commit() -> dict[str, Any]:
+def suggested_commit(request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
+    require_local_request(request)
     status = git_status()["status"]
     paths = [line[3:].strip() for line in status.splitlines() if len(line) > 3]
     phases = sorted({match.group(1) for path in paths if (match := re.search(r"phase[-_](\d+)", path, re.IGNORECASE))})
@@ -1596,7 +1942,7 @@ def suggested_commit() -> dict[str, Any]:
 
 
 @app.post("/api/git/publish")
-def publish_git(payload: GitPublishRequest) -> dict[str, Any]:
+def publish_git(payload: GitPublishRequest, request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
     """Commit and push explicitly selected learning artifacts.
 
     The endpoint deliberately accepts only learner-owned artifact roots and refuses to
@@ -1604,6 +1950,7 @@ def publish_git(payload: GitPublishRequest) -> dict[str, Any]:
     committing application code or an unrelated change.
     """
 
+    require_local_request(request)
     if not payload.confirm:
         raise HTTPException(400, "Review the diff and confirm before publishing to GitHub.")
     message = payload.message.strip()
@@ -1691,14 +2038,15 @@ def publish_git(payload: GitPublishRequest) -> dict[str, Any]:
         "pushed": True,
         "commit": commit_hash,
         "branch": branch,
-        "remote": remote,
+        "remote": sanitize_remote(remote),
         "files": staged_paths,
         "message": message,
     }
 
 
 @app.post("/api/journal/export")
-def export_journal() -> dict[str, Any]:
+def export_journal(request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
+    require_local_request(request)
     stamp = datetime.now().astimezone()
     iso_calendar = stamp.isocalendar()
     week = f"{iso_calendar.year:04d}-W{iso_calendar.week:02d}"
@@ -1721,8 +2069,207 @@ def export_journal() -> dict[str, Any]:
     return {"path": str(path), "week": week, "preserved_reflections": preserved}
 
 
+BACKUP_SCHEMA_VERSION = 1
+BACKUP_STATUS_VALUES = {"not_started", "in_progress", "blocked", "completed", "needs_review"}
+BACKUP_REVIEW_RATINGS = {"again", "hard", "good", "easy"}
+
+
+def _backup_journal_files() -> list[dict[str, str]]:
+    """Collect text journal artifacts without copying databases, workspaces or secrets."""
+
+    if not JOURNAL_ROOT.exists():
+        return []
+    files: list[dict[str, str]] = []
+    for path in sorted(JOURNAL_ROOT.rglob("*")):
+        if path.is_symlink() or not path.is_file() or path.suffix.lower() not in {".md", ".json", ".txt"}:
+            continue
+        try:
+            relative = path.relative_to(JOURNAL_ROOT).as_posix()
+            content = redact_secrets(path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeError):
+            continue
+        if contains_secret(content):
+            continue
+        files.append({"path": relative, "content": content})
+    return files
+
+
+def _build_backup_payload() -> dict[str, Any]:
+    with connect() as db:
+        lesson_slugs = {row["id"]: row["slug"] for row in db.execute("SELECT id,slug FROM lessons").fetchall()}
+        card_rows = db.execute(
+            """SELECT rc.id, l.slug AS lesson_slug, rc.type, rs.due_at, rs.interval_days,
+               rs.repetitions, rs.ease_factor, rs.lapses, rs.leech, rs.suspended,
+               rs.last_reviewed_at
+               FROM review_cards rc JOIN lessons l ON l.id=rc.lesson_id
+               LEFT JOIN review_state rs ON rs.card_id=rc.id ORDER BY rc.id"""
+        ).fetchall()
+        progress = [dict(row) | {"lesson_slug": lesson_slugs.get(row["lesson_id"], "")} for row in db.execute("SELECT lesson_id,status,minutes_spent,completed_at,updated_at FROM progress ORDER BY lesson_id").fetchall()]
+        notes = [dict(row) | {"lesson_slug": lesson_slugs.get(row["lesson_id"], "") if row["lesson_id"] else None} for row in db.execute("SELECT lesson_id,title,body,created_at,updated_at FROM notes ORDER BY id").fetchall()]
+        sessions = [dict(row) | {"lesson_slug": lesson_slugs.get(row["lesson_id"], "") if row["lesson_id"] else None} for row in db.execute("SELECT lesson_id,minutes,note,created_at FROM study_sessions ORDER BY id").fetchall()]
+        history_rows = db.execute(
+            """SELECT rh.review_id, l.slug AS lesson_slug, rh.rating, rh.thought_seconds,
+               rh.answer_text, rh.created_at
+               FROM review_history rh JOIN review_cards rc ON rc.id=rh.review_id
+               JOIN lessons l ON l.id=rc.lesson_id ORDER BY rh.id"""
+        ).fetchall()
+        settings = {row["key"]: row["value"] for row in db.execute("SELECT key,value FROM settings").fetchall()}
+    review_state = [dict(row) for row in card_rows]
+    return {
+        "schema_version": BACKUP_SCHEMA_VERSION,
+        "app_version": "0.1.0",
+        "exported_at": now_iso(),
+        "settings": settings,
+        "progress": progress,
+        "review_state": review_state,
+        "review_history": [dict(row) for row in history_rows],
+        "notes": notes,
+        "study_sessions": sessions,
+        "journal_files": _backup_journal_files(),
+    }
+
+
+def _write_backup_files(payload: dict[str, Any]) -> tuple[Path, Path]:
+    backup_dir = DATA_ROOT / "backups"
+    backup_dir.mkdir(parents=True, exist_ok=True)
+    stamp = datetime.now().astimezone().strftime("%Y%m%d-%H%M%S")
+    json_path = backup_dir / f"journey-backup-{stamp}.json"
+    suffix = 1
+    while json_path.exists():
+        json_path = backup_dir / f"journey-backup-{stamp}-{suffix}.json"
+        suffix += 1
+    json_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    markdown_path = json_path.with_suffix(".md")
+    markdown = "\n".join([
+        "# Journey AI Engineer backup",
+        "",
+        f"- Exported: `{payload['exported_at']}`",
+        f"- Lessons with progress: **{len(payload['progress'])}**",
+        f"- Review cards: **{len(payload['review_state'])}**",
+        f"- Notes: **{len(payload['notes'])}**",
+        f"- Study sessions: **{len(payload['study_sessions'])}**",
+        f"- Journal files: **{len(payload['journal_files'])}**",
+        "",
+        "This file is a human-readable manifest. The JSON file beside it is the import source.",
+        "",
+    ])
+    markdown_path.write_text(markdown, encoding="utf-8")
+    return json_path, markdown_path
+
+
+def _validate_backup_payload(payload: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if payload.get("schema_version") != BACKUP_SCHEMA_VERSION:
+        errors.append(f"Unsupported backup schema_version: {payload.get('schema_version')!r}")
+    for key, expected in (("settings", dict), ("progress", list), ("review_state", list), ("review_history", list), ("notes", list), ("study_sessions", list), ("journal_files", list)):
+        if not isinstance(payload.get(key), expected):
+            errors.append(f"{key} must be a {expected.__name__}")
+    if errors:
+        return errors
+    with connect() as db:
+        lesson_slugs = {row["slug"] for row in db.execute("SELECT slug FROM lessons").fetchall()}
+        cards = {row["id"]: row["lesson_slug"] for row in db.execute("SELECT rc.id,l.slug AS lesson_slug FROM review_cards rc JOIN lessons l ON l.id=rc.lesson_id").fetchall()}
+    for index, row in enumerate(payload["progress"]):
+        if not isinstance(row, dict):
+            errors.append(f"progress[{index}] must be an object")
+            continue
+        if row.get("lesson_slug") not in lesson_slugs:
+            errors.append(f"progress[{index}] references an unknown lesson")
+        if row.get("status") not in BACKUP_STATUS_VALUES or not isinstance(row.get("minutes_spent"), int) or row.get("minutes_spent", -1) < 0:
+            errors.append(f"progress[{index}] has invalid status or minutes_spent")
+    for index, row in enumerate(payload["review_state"]):
+        if not isinstance(row, dict):
+            errors.append(f"review_state[{index}] must be an object")
+            continue
+        if row.get("id") not in cards or row.get("lesson_slug") != cards.get(row.get("id")):
+            errors.append(f"review_state[{index}] references an unknown card")
+        if not isinstance(row.get("interval_days"), int) or row.get("interval_days", -1) < 0 or not isinstance(row.get("repetitions"), int) or row.get("repetitions", -1) < 0:
+            errors.append(f"review_state[{index}] has invalid scheduling values")
+    for index, row in enumerate(payload["review_history"]):
+        if not isinstance(row, dict):
+            errors.append(f"review_history[{index}] must be an object")
+            continue
+        if row.get("review_id") not in cards or row.get("lesson_slug") != cards.get(row.get("review_id")) or row.get("rating") not in BACKUP_REVIEW_RATINGS:
+            errors.append(f"review_history[{index}] is invalid")
+    for group in ("notes", "study_sessions"):
+        for index, row in enumerate(payload[group]):
+            if not isinstance(row, dict):
+                errors.append(f"{group}[{index}] must be an object")
+                continue
+            if row.get("lesson_slug") is not None and row.get("lesson_slug") not in lesson_slugs:
+                errors.append(f"{group}[{index}] references an unknown lesson")
+    for index, row in enumerate(payload["journal_files"]):
+        relative = row.get("path") if isinstance(row, dict) else None
+        if not isinstance(relative, str) or not relative or Path(relative).is_absolute() or ".." in Path(relative).parts or Path(relative).suffix.lower() not in {".md", ".json", ".txt"}:
+            errors.append(f"journal_files[{index}] has an unsafe path")
+        elif not isinstance(row.get("content"), str) or contains_secret(row["content"]):
+            errors.append(f"journal_files[{index}] contains invalid or secret content")
+    return errors
+
+
+@app.post("/api/backup/export")
+def export_backup(request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
+    require_local_request(request)
+    payload = _build_backup_payload()
+    json_path, markdown_path = _write_backup_files(payload)
+    return {"payload": payload, "json_path": str(json_path), "markdown_path": str(markdown_path)}
+
+
+@app.post("/api/backup/preview")
+def preview_backup(request_data: BackupImportRequest, request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
+    require_local_request(request)
+    errors = _validate_backup_payload(request_data.payload)
+    return {"valid": not errors, "errors": errors, "counts": {key: len(request_data.payload.get(key, [])) for key in ("progress", "review_state", "review_history", "notes", "study_sessions", "journal_files")}}
+
+
+@app.post("/api/backup/import")
+def import_backup(request_data: BackupImportRequest, request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
+    require_local_request(request)
+    errors = _validate_backup_payload(request_data.payload)
+    if errors:
+        raise HTTPException(422, {"message": "Backup validation failed", "errors": errors})
+    if not request_data.confirm:
+        raise HTTPException(400, "Set confirm=true after reviewing the backup preview.")
+    safety_payload = _build_backup_payload()
+    safety_json, safety_markdown = _write_backup_files(safety_payload)
+    payload = request_data.payload
+    with connect() as db:
+        db.execute("BEGIN")
+        db.execute("DELETE FROM review_history")
+        db.execute("DELETE FROM review_state")
+        db.execute("DELETE FROM progress")
+        db.execute("DELETE FROM notes")
+        db.execute("DELETE FROM study_sessions")
+        db.execute("DELETE FROM settings")
+        lesson_ids = {row["slug"]: row["id"] for row in db.execute("SELECT id,slug FROM lessons").fetchall()}
+        for row in payload["progress"]:
+            db.execute("INSERT INTO progress(lesson_id,status,minutes_spent,completed_at,updated_at) VALUES(?,?,?,?,?)", (lesson_ids[row["lesson_slug"]], row["status"], row["minutes_spent"], row.get("completed_at"), row.get("updated_at") or now_iso()))
+        for row in payload["review_state"]:
+            db.execute("INSERT INTO review_state(card_id,due_at,interval_days,repetitions,ease_factor,lapses,leech,suspended,last_reviewed_at) VALUES(?,?,?,?,?,?,?,?,?)", (row["id"], row.get("due_at") or now_iso(), row.get("interval_days", 0), row.get("repetitions", 0), row.get("ease_factor", 2.5), row.get("lapses", 0), row.get("leech", 0), row.get("suspended", 0), row.get("last_reviewed_at")))
+        for row in payload["review_history"]:
+            db.execute("INSERT INTO review_history(review_id,rating,thought_seconds,answer_text,created_at) VALUES(?,?,?,?,?)", (row["review_id"], row["rating"], row.get("thought_seconds", 0), row.get("answer_text", ""), row.get("created_at") or now_iso()))
+        for row in payload["notes"]:
+            db.execute("INSERT INTO notes(lesson_id,title,body,created_at,updated_at) VALUES(?,?,?,?,?)", (lesson_ids.get(row.get("lesson_slug")) if row.get("lesson_slug") else None, row.get("title", "Imported note"), row.get("body", ""), row.get("created_at") or now_iso(), row.get("updated_at") or now_iso()))
+        for row in payload["study_sessions"]:
+            db.execute("INSERT INTO study_sessions(lesson_id,minutes,note,created_at) VALUES(?,?,?,?)", (lesson_ids.get(row.get("lesson_slug")) if row.get("lesson_slug") else None, row.get("minutes", 0), row.get("note", ""), row.get("created_at") or now_iso()))
+        for key, value in payload["settings"].items():
+            if isinstance(key, str) and isinstance(value, str) and len(key) <= 100 and len(value) <= 1000:
+                db.execute("INSERT INTO settings(key,value,updated_at) VALUES(?,?,?)", (key, value, now_iso()))
+    restored_files = 0
+    for row in payload["journal_files"]:
+        target = (JOURNAL_ROOT / row["path"]).resolve()
+        if JOURNAL_ROOT.resolve() not in target.parents:
+            continue
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(redact_secrets(row["content"]), encoding="utf-8")
+        restored_files += 1
+    sync_review_cards()
+    return {"imported": True, "safety_backup_json": str(safety_json), "safety_backup_markdown": str(safety_markdown), "restored_journal_files": restored_files}
+
+
 @app.post("/api/context/export")
-def export_context(payload: ContextRequest) -> dict[str, Any]:
+def export_context(payload: ContextRequest, request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
+    require_local_request(request)
     if payload.lesson_slug:
         require_slug(payload.lesson_slug)
     if payload.exercise_slug:

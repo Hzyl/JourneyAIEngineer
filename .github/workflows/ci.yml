@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install backend dependencies
+        shell: pwsh
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r apps/api/requirements-dev.txt
+          python -m pip check
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - name: Install frontend dependencies
+        run: npm ci
+      - name: Validate curriculum
+        run: npm run validate
+      - name: Run Python tests
+        shell: pwsh
+        run: python -m pytest -q --basetemp .build\pytest-ci -o cache_dir=.build\pytest-cache
+      - name: Run passive security inventory
+        shell: pwsh
+        run: python scripts/security_audit.py --format summary
+      - name: Lint frontend
+        run: npm run lint
+      - name: Build frontend
+        run: npm run build
+      - name: Scan tracked source for common secret markers
+        shell: pwsh
+        run: |
+          $patterns = 'BEGIN (RSA|OPENSSH|EC|DSA) PRIVATE KEY', 'AKIA[0-9A-Z]{16}', 'gh[pousr]_[A-Za-z0-9]{20,}', 'sk-[A-Za-z0-9]{20,}'
+          $files = git ls-files | Where-Object { $_ -notmatch '(^|/)(node_modules|\.venv|\.data|\.git)/' }
+          $matches = Select-String -Path $files -Pattern $patterns -AllMatches -ErrorAction SilentlyContinue
+          if ($matches) {
+            $matches | ForEach-Object { Write-Output $_.Line }
+            throw 'Potential secret marker found in tracked source.'
+          }

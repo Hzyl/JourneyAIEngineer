@@ -48,6 +48,29 @@ export type ReferenceResource = {
   how_to_use_en: string
 }
 
+export type SearchResult = {
+  type: 'lesson' | 'phase' | 'module' | 'resource' | 'exercise' | string
+  id: string
+  title: string
+  subtitle?: string
+  slug?: string
+  phase?: string | string[]
+  url?: string
+}
+
+export type BackupPayload = {
+  schema_version: number
+  app_version: string
+  exported_at: string
+  settings: Record<string, string>
+  progress: Array<Record<string, unknown>>
+  review_state: Array<Record<string, unknown>>
+  review_history: Array<Record<string, unknown>>
+  notes: Array<Record<string, unknown>>
+  study_sessions: Array<Record<string, unknown>>
+  journal_files: Array<{ path: string; content: string }>
+}
+
 export type LessonPracticePlan = {
   vi?: { task?: string; deliverables?: string[]; checkpoint?: string; stretch?: string }
   en?: { task?: string; deliverables?: string[]; checkpoint?: string; stretch?: string }
@@ -69,7 +92,7 @@ export type Lesson = {
   concept_notes_vi: string
   concept_notes_en: string
   formulas: string[]
-  code_examples: Array<{ language: string; title: string; code: string; explanation_vi: string; explanation_en: string }>
+  code_examples: Array<{ language: string; title: string; code: string; status?: 'runnable' | 'conceptual'; purpose_vi?: string; purpose_en?: string; setup?: string; expected_output?: string; edge_case_vi?: string; edge_case_en?: string; explanation_vi: string; explanation_en: string }>
   resources: Array<{
     title: string
     url: string
@@ -101,6 +124,7 @@ export type Lesson = {
   why_it_matters_en: string
   study_steps_vi: string[]
   study_steps_en: string[]
+  study_step_refs?: Array<{ resource_index?: number; code_example_index?: number; review_id?: number; exercise_slugs?: string[] }>
   practice_plan: LessonPracticePlan
   interview_questions: LessonInterviewQuestions
   guide?: {
@@ -198,6 +222,8 @@ export type SecurityAuditReport = {
   limitations_vi: string[]
 }
 
+export type HealthStatus = { status: string; project_root_configured: boolean; git_publish_available: boolean; local_only: boolean }
+
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`, {
     headers: { 'Content-Type': 'application/json', ...(options?.headers ?? {}) },
@@ -218,9 +244,18 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
 }
 
 export const api = {
+  health: () => request<HealthStatus>('/health'),
   dashboard: () => request<Dashboard>('/dashboard'),
   roadmap: () => request<{ program: { title_vi: string; title_en: string; description_vi: string; description_en: string; standard_weeks: number; accelerated_weeks: number; portfolio_projects: PortfolioProject[]; career_checklist: string[] }; phases: any[] }>('/roadmap'),
   resources: () => request<{ resources: ReferenceResource[]; count: number; total: number }>('/resources'),
+  search: (query: string, options?: { type?: string; phase?: string; status?: string; limit?: number }) => {
+    const params = new URLSearchParams({ q: query })
+    if (options?.type && options.type !== 'all') params.set('type', options.type)
+    if (options?.phase && options.phase !== 'all') params.set('phase', options.phase)
+    if (options?.status && options.status !== 'all') params.set('status', options.status)
+    if (options?.limit) params.set('limit', String(options.limit))
+    return request<{ results: SearchResult[]; count: number; query: string }>(`/search?${params.toString()}`)
+  },
   feedback: (lessonSlug?: string) => request<{ items: FeedbackItem[]; count: number }>(`/feedback${lessonSlug ? `?lesson_slug=${encodeURIComponent(lessonSlug)}` : ''}`),
   createFeedback: (payload: { lesson_slug: string; kind: FeedbackKind; body: string; display_name?: string }) => request<{ feedback: FeedbackItem; message: string }>('/feedback', { method: 'POST', body: JSON.stringify(payload) }),
   securityAudit: () => request<SecurityAuditReport>('/security/audit'),
@@ -249,6 +284,9 @@ export const api = {
   publishGit: (payload: { paths: string[]; message: string; confirm: boolean }) => request<GitPublishResult>('/git/publish', { method: 'POST', body: JSON.stringify(payload) }),
   exportJournal: () => request<{ path: string; week: string }>('/journal/export', { method: 'POST' }),
   exportContext: (payload: { lesson_slug?: string; exercise_slug?: string; question: string }) => request<{ path: string; content: string }>('/context/export', { method: 'POST', body: JSON.stringify(payload) }),
+  exportBackup: () => request<{ payload: BackupPayload; json_path: string; markdown_path: string }>('/backup/export', { method: 'POST' }),
+  previewBackup: (payload: BackupPayload) => request<{ valid: boolean; errors: string[]; counts: Record<string, number> }>('/backup/preview', { method: 'POST', body: JSON.stringify({ payload }) }),
+  importBackup: (payload: BackupPayload) => request<{ imported: boolean; safety_backup_json: string; safety_backup_markdown: string; restored_journal_files: number }>('/backup/import', { method: 'POST', body: JSON.stringify({ payload, confirm: true }) }),
   runtimeHeartbeat: (clientId: string) => request<{ ok: boolean; active_clients: number }>('/runtime/heartbeat', { method: 'POST', body: JSON.stringify({ client_id: clientId }) }),
   runtimeDisconnect: (clientId: string) => {
     const body = JSON.stringify({ client_id: clientId })

@@ -1,171 +1,178 @@
 # Journey AI Engineer
 
-Một chương trình học AI Engineer chạy local: roadmap core 53 tuần + 15 chặng GenAI (68 tuần nếu học đầy đủ), lesson song ngữ, review cards, bài tập mở trong VS Code, journal và Git context bridge.
+Journey AI Engineer là một **learning product local-first** dành cho sinh viên muốn đi từ nền tảng lập trình đến khả năng xây, đánh giá và vận hành hệ thống AI/GenAI. App không chỉ là bảng checklist: mỗi lesson có giải thích trong app, ví dụ, practice, tiêu chí hoàn thành, tài liệu đọc sâu và review card.
+
+Mục tiêu của v0.1:
+
+- học Python/software engineering, toán–thống kê, classical ML, deep learning, MLOps và LLM/RAG theo dependency rõ;
+- làm bài trong workspace mở bằng VS Code và chạy test có manifest;
+- lưu evidence, journal, review history và context để hỏi ChatGPT/Codex mà vẫn tự làm chủ code;
+- tạo portfolio artifact có README, evaluation, architecture decision và lessons learned;
+- clone/fork repository để học và đóng góp bằng pull request.
+
+> **Phạm vi cần hiểu rõ:** v0.1 chạy local cho một người dùng trên Windows. Chưa có đăng nhập, đồng bộ tiến độ, Postgres/RLS, API AI trả phí hay public multi-user hosting. Không expose FastAPI local ra Internet.
+
+## Chọn cách dùng
+
+| Mục đích | Cách dùng | Dữ liệu |
+| --- | --- | --- |
+| Học, sửa lesson, làm bài và push artifact lên GitHub | **Source clone** | .data/ trong clone; chỉ commit content/evidence đã review |
+| Học local bằng double-click, không cần Git | **Portable .exe** | %LOCALAPPDATA%/JourneyAIEngineer; không tự publish |
+| Muốn public web cho nhiều tài khoản | Chưa hỗ trợ trong v0.1 | Cần auth, Postgres/RLS, rate limit và tách local capabilities |
 
 ## Chạy nhanh trên Windows
 
-```powershell
+Yêu cầu: Windows 10/11, Python 3.11+, Node.js 20+, Git và VS Code. Docker không bắt buộc cho local v0.1.
+
+~~~powershell
+git clone https://github.com/Hzyl/JourneyAIEngineer.git
+Set-Location JourneyAIEngineer
 .\scripts\setup.ps1
 .\scripts\dev.ps1
-```
+~~~
 
-Sau đó mở frontend tại http://127.0.0.1:5173.
+Mở http://127.0.0.1:5173. Nếu muốn chạy thủ công:
 
-## Đóng gói thành một file `.exe`
-
-Nếu muốn mở app bằng double-click thay vì chạy hai development server, chạy:
-
-```powershell
-.\scripts\build_exe.ps1
-```
-
-Script sẽ build frontend production, cài PyInstaller vào `.venv` nếu máy chưa có, rồi tạo `JourneyAIEngineer.exe` ngay tại thư mục project. Double-click file này để app tự khởi động API, phục vụ giao diện local và mở trình duyệt. App chọn port trống bắt đầu từ `8765` nên không bị phụ thuộc vào development server.
-
-Database, workspace bài tập và journal của bản `.exe` được giữ trong `.data` và `journal` cạnh file executable. Vì vậy rebuild hoặc thay file `.exe` không làm mất tiến trình. Sau mỗi thay đổi source, chạy lại `scripts\build_exe.ps1` để tạo executable mới; file `.exe` được ignore và không push vào GitHub.
-
-Bản packaged chạy nền không hiện terminal. Mỗi browser tab gửi heartbeat local; khi tab cuối cùng đóng, app gửi `disconnect` bằng `sendBeacon` và launcher chờ một khoảng an toàn khoảng 15–20 giây trước khi tự tắt. Progress, study session, settings, review history và checklist đã lưu được ghi ngay vào SQLite/localStorage; ghi chú đang soạn chỉ được ghi khi bấm **Lưu ghi chú**. Khi mở lại shortcut, app sẽ khởi động một process sạch và mở tab mới.
-
-## Thành phần
-
-- `apps/api`: FastAPI + SQLite, seed curriculum từ `content/curriculum.json`.
-- `src`: React/Vite UI.
-- `content`: chương trình học và hướng dẫn công cụ, được version-control.
-- `content/resources.json`: thư viện 50 nguồn sách, course, documentation và repository; có mapping theo phase, cách đọc và link gốc.
-- `.data`: database, workspace bài tập và output runtime; không commit.
-- `journal`: weekly reflection và artifact có thể push lên GitHub.
-
-## Các luồng chính
-
-1. Mở **Lộ trình**, chọn lesson và đọc mục tiêu/checklist.
-2. Đánh dấu lesson hoàn thành sau khi tự làm exercise.
-3. Mở **Bài tập**, tạo workspace rồi mở bằng VS Code.
-4. Chạy test trong app; runner chỉ chạy command do exercise manifest khai báo.
-5. Ôn card trong **Ôn tập**.
-6. Export journal hoặc context ở **Journal & Git**.
-7. Mở **Tài liệu** để lọc nguồn theo phase, loại tài liệu hoặc từ khóa; ưu tiên đọc một nguồn rồi quay lại làm bài.
-8. Review `git diff`, sau đó tự commit/push khi đã kiểm tra.
-
-## Feedback và cộng đồng (local beta)
-
-Trong mỗi lesson có panel **Giúp bài học tốt hơn**. Bạn có thể báo phần khó hiểu, lỗi chính tả/link, thiếu ví dụ/tài liệu, vấn đề bài tập hoặc đề xuất tính năng. Nội dung được trim và giới hạn 2.000 ký tự, lưu vào SQLite ở trạng thái `pending`; React hiển thị plain text nên không biến nội dung góp ý thành HTML.
-
-Trang **Cộng đồng** chỉ đọc feedback có trạng thái `accepted` hoặc `implemented`. Email, tiến độ, Journal và ghi chú riêng không đi vào payload public. Bản local không cần tài khoản; nếu sau này mở beta online, lớp auth/RLS và moderation phải được thêm ở backend/cloud, không đặt admin token trong frontend.
-
-Moderation local chỉ mở khi người vận hành tự cấu hình token trong process backend:
-
-```powershell
-$env:JOURNEY_FEEDBACK_ADMIN_TOKEN = "tao-mot-token-dai-ngau-nhien"
-python -m uvicorn apps.api.main:app --reload --port 8000
-```
-
-Gọi `GET /api/feedback/moderation` hoặc `PATCH /api/feedback/{id}/moderation` bằng header `X-Journey-Admin-Token`. API fail-closed khi biến môi trường chưa có, kiểm tra transition trạng thái và không nhận token qua query string. Không commit token, `.data/journey.db` hoặc dữ liệu moderation lên GitHub. Khi mở public beta, nên chuyển feedback sang Postgres/RLS, thêm GitHub/email auth, rate limit, CAPTCHA/abuse review và quy trình export draft → người duyệt → commit thủ công.
-
-Ví dụ xem hàng chờ và duyệt một góp ý trong PowerShell (chỉ chạy trên máy quản trị):
-
-```powershell
-$headers = @{ "X-Journey-Admin-Token" = $env:JOURNEY_FEEDBACK_ADMIN_TOKEN }
-Invoke-RestMethod "http://127.0.0.1:8000/api/feedback/moderation?status=pending" -Headers $headers
-Invoke-RestMethod "http://127.0.0.1:8000/api/feedback/1/moderation" -Method Patch -Headers $headers -ContentType "application/json" -Body '{"status":"triaged","moderation_note":"Cần kiểm tra lại ví dụ."}'
-```
-
-## RedAmon và kiểm thử bảo mật có ủy quyền
-
-RedAmon ([`samugit83/redamon`](https://github.com/samugit83/redamon)) được ghi trong **Công cụ** như một security lab tham khảo, không được nhúng hoặc tự chạy trong Journey. Có thể dùng nó để kiểm tra sản phẩm của chính bạn sau khi tạo staging cô lập, dữ liệu giả, allowlist target và văn bản ủy quyền rõ ràng. Luồng nên bắt đầu bằng **Journey Passive Security Audit** → dependency/SAST → unit/integration test → staging có ủy quyền → chỉ khi thật sự cần mới cân nhắc tool bên ngoài → triage → sửa → regression test → security report.
-
-Không trỏ RedAmon vào production/public target hoặc hệ thống của người khác; không đưa credential thật; không expose dashboard ra Internet; không auto-merge CodeFix. README của công cụ cảnh báo về reconnaissance/exploitation, lưu dữ liệu trong database, gửi dữ liệu tới LLM/API bên thứ ba và khả năng token/API key được lưu plaintext. Hãy xem tài liệu và license hiện hành trước mỗi lần dùng, pin version/image, chạy Docker/WSL2 trong filesystem Linux riêng và xóa dữ liệu thử nghiệm sau khi review.
-
-### Passive Endpoint Security Review (safe mode)
-
-Journey có một lớp review thụ động trong **Security Lab** và trong tester. Lớp này chỉ đọc route table của FastAPI, Pydantic body schema và một số pattern trong source; nó **không gửi network request, không gọi handler, không tạo payload, không clone/cài/chạy RedAmon**. Mục tiêu là lập inventory và đưa ra finding để bạn đọc code, không phải khẳng định endpoint đã bị khai thác.
-
-Chạy từ thư mục project:
-
-```powershell
-python scripts/security_audit.py --format summary
-python scripts/security_audit.py --format json > .data/security-audit.json
-```
-
-Report phân biệt `needs_human_review` với `verified_control`. Với finding cần review, đọc handler và schema, viết test control trong local/staging có ủy quyền, xác nhận có lỗi thật hay false positive, rồi sửa và chạy lại regression test. UI chỉ hiển thị đường dẫn source tương đối để không làm lộ profile máy. Nếu sau này mở app online, endpoint review này phải được giữ local-only hoặc đặt sau auth; không public inventory source cho người lạ.
-
-## Nội dung học
-
-Curriculum gồm 8 phase core từ onboarding đến capstone, sau đó nối thêm 15 chặng GenAI: Python/software engineering, toán ML, classical ML, PyTorch, MLOps, NLP/LLM/RAG, LLM application, RAG nâng cao, agents, evaluation, observability, production và system design. Mỗi module có lesson, exercise và review item seed tự động.
-
-Trang **Tài liệu** là thư viện tham khảo riêng, không thay thế lesson. Nguồn community [`AI Engineering from Scratch`](https://github.com/rohitg00/ai-engineering-from-scratch) được giữ đúng URL bạn cung cấp và đặt cạnh các nguồn official như Python, NumPy, scikit-learn, PyTorch, FastAPI, Docker, MLflow, Hugging Face, Google ML, Stanford CS229, D2L và Full Stack Deep Learning. Các chặng GenAI bổ sung thêm nguồn cho function calling, JSON Schema, MCP, RAG evaluation, OpenTelemetry, Prometheus, Langfuse, Redis, vLLM, Ollama, PEFT và system design. Khi một nguồn community không truy cập được, dùng nguồn official cùng phase để tiếp tục học.
-
-## GenAI specialization
-
-Sau 8 phase core, roadmap có 15 chặng chuyên sâu bám theo năng lực GenAI đi làm: Software Engineering, ML fundamentals, Transformer, LLM application, RAG, Advanced RAG, Tool Calling, Agents, MCP, Evaluation, Observability, Production Engineering, Fine-tuning, Local LLM và AI System Design. Mỗi chặng có 4 lesson, bài thực hành, review card, nguồn đọc và checkpoint; tổng cộng thêm 60 lesson.
-
-Sáu project mới được seed sẵn để tạo portfolio theo chuỗi tăng dần: **LLM Chat API**, **Document Intelligence System**, **Advanced RAG System**, **AI Assistant với Database & API**, **Research Assistant Agent** và **End-to-End Production GenAI System**. Mỗi project có stack, deliverables, evaluation, đường dẫn GitHub và số tuần dự kiến.
-
-Nếu cần tạo lại dữ liệu curriculum sau khi chỉnh nội dung, chạy:
-
-```powershell
-python scripts/seed_genai_track.py
-python scripts/build_lesson_catalog.py
-python scripts/validate_content.py
-```
-
-Để biến roadmap thành năng lực có thể trình bày khi xin việc, đọc thêm [`content/study-playbook.md`](content/study-playbook.md). File này quy định nhịp 12–15 giờ mỗi tuần, vòng lặp của một lesson, chuẩn evidence cho project, cách luyện phỏng vấn và cách dùng trợ lý AI mà vẫn tự làm chủ code.
-
-## Backend thủ công
-
-```powershell
-python -m uvicorn apps.api.main:app --reload --port 8000
-```
-
-## Frontend thủ công
-
-```powershell
+~~~powershell
+python -m uvicorn apps.api.main:app --reload --host 127.0.0.1 --port 8000
 npm run dev
-```
+~~~
 
-Không đặt API key trong `.env` hoặc source. MVP không gọi model cloud; nút context export tạo Markdown để copy sang ChatGPT/Codex.
-## Cách học với app
+Setup tạo .venv, cài dependency backend/frontend theo lockfile, tạo .data/ và khởi tạo database. Không commit .data, .env, .venv, database hoặc journal riêng.
 
-Mỗi tuần nên đi theo một vòng lặp cố định: mở lesson và đọc mục tiêu, tự làm ví dụ trong workspace, chạy test, đánh dấu tiến độ, trả lời review card bằng lời của mình, rồi ghi lại một insight trong Journal. Khi bị kẹt, hãy tự thử trước, ghi giả thuyết và lỗi đã thấy, sau đó dùng **Journal & Git → Context bridge** để tạo một gói context có lesson, progress và note. Gói này không chứa API key; bạn có thể copy sang ChatGPT/Codex để nhận gợi ý từng bước.
+## Portable .exe
 
-Dashboard theo dõi tổng tiến độ, thời gian học trong tuần, mục tiêu tuần, số lesson đã học và streak. Timestamp vẫn được lưu ở UTC, còn streak và ngày trên lịch học được quy đổi theo timezone local của máy để phiên học gần nửa đêm không bị tính sai ngày. Roadmap có bộ lọc theo phase, trạng thái và từ khóa. Review dùng bốn mức `again`, `hard`, `good`, `easy`, lưu lịch sử và chỉ ra chủ đề yếu. Exercises tạo workspace trong `.data/workspaces`, mở bằng VS Code, chạy command kiểm thử được khai báo trong exercise manifest và lưu lịch sử chạy.
+Maintainer tạo bản phát hành bằng:
 
-## Hai nhịp học
+~~~powershell
+npm run package:windows
+~~~
 
-- **Core 53 tuần:** nền tảng bắt buộc từ onboarding đến capstone/career, khoảng 12–15 giờ mỗi tuần.
-- **Core + GenAI 68 tuần:** nhịp đầy đủ để đi từ nền tảng đến vận hành hệ thống GenAI production.
-- **Tăng tốc 34 tuần:** học các lesson và project theo thứ tự ưu tiên, dùng khi cần chuẩn bị portfolio sớm.
+Script chạy quality gates, build frontend, đóng gói JourneyAIEngineer.exe, tạo ZIP versioned và SHA256SUMS.txt. Người dùng tải ZIP từ GitHub Release, giải nén vào thư mục có quyền ghi và double-click executable. SmartScreen có thể cảnh báo vì binary chưa được code-sign; checksum giúp kiểm tra toàn vẹn nhưng không thay thế code signing.
 
-Chọn nhịp trong **Settings**. Nội dung core vẫn đi qua onboarding và 7 phase chuyên môn; track mở rộng thêm 15 chặng GenAI. App lưu progress ở SQLite local nên có thể dừng, đổi nhịp và tiếp tục mà không mất dữ liệu.
+Portable mode tự mở browser ở loopback, không hiện terminal và tự tắt nền sau khi tab cuối cùng rời đi. Data root mặc định là %LOCALAPPDATA%\JourneyAIEngineer; có thể đổi bằng:
 
-## Content và kiểm tra chất lượng
+~~~powershell
+$env:JOURNEY_DATA_DIR = "$env:USERPROFILE\JourneyAIEngineerData"
+.\JourneyAIEngineer.exe
+~~~
 
-`content/curriculum.json` là roadmap cấp phase/module. `content/lessons.json` là catalog song ngữ có objectives, prerequisites, key terms, concept notes, formulas, code examples, resources chính thức, exercise/review links, completion criteria, common mistakes và next lessons. Khi sửa roadmap, chạy:
+Muốn export artifact/Git từ bản portable, trỏ JOURNEY_PROJECT_ROOT tới source clone trước khi mở app:
 
-```powershell
+~~~powershell
+$env:JOURNEY_PROJECT_ROOT = "C:\src\JourneyAIEngineer"
+~~~
+
+Không có clone thì UI phải hiển thị local learning mode và tắt publish GitHub. Bản portable không chứa database runtime của maintainer.
+
+## Một vòng học có thể lặp lại
+
+1. Vào Roadmap, đọc mục tiêu, concept notes, formula/code example và completion criteria.
+2. Mở Practice Lab, tạo workspace cho exercise rồi mở đúng thư mục bằng VS Code.
+3. Tự làm trước, ghi input/output và giả thuyết khi có lỗi; chạy test theo manifest.
+4. Đánh dấu lesson sau khi có evidence, trả lời review card (again, hard, good, easy).
+5. Ghi một insight vào Journal. Khi bị kẹt, tạo context export có lesson/progress/note rồi dán sang ChatGPT/Codex.
+6. Review Git diff, redact secret và chỉ export hoặc push artifact được allowlist.
+
+App không tự gọi API AI và không cần API key ở MVP. Context bridge là file/clipboard Markdown, để người học giữ quyền kiểm soát dữ liệu và chi phí.
+
+## Curriculum
+
+Catalog hiện có **23 phase và 208 lesson**:
+
+- 8 phase core: onboarding, Python/software engineering, math for ML, classical ML, deep learning, MLOps/deployment, NLP/LLM/RAG và capstone/career.
+- 15 phase GenAI specialization: GenAI software foundations, ML/embedding, Transformer, LLM application engineering, RAG, advanced RAG, tool calling, agents, MCP, evaluation, observability, production engineering, fine-tuning, local LLM và AI system design.
+
+Thứ tự được kiểm tra bằng prerequisite graph: software engineering → math/statistics → classical ML → deep learning → Transformer/LLM → application/RAG → tools/agents → evaluation/observability → production hardening → specialization/system design. Mỗi lesson có Việt/English, objective, prerequisite, concept notes, walkthrough, practice, resource guidance, checklist, common mistakes, next lesson và review cards.
+
+Hai nhịp học được seed thật:
+
+- **Standard:** khoảng 12–15 tháng, 12–15 giờ/tuần.
+- **Accelerated:** map lesson/project cụ thể để chuẩn bị portfolio sớm; không chỉ đổi tiêu đề tuần.
+
+Lesson source ở content/lessons/*.md; JSON generated ở content/lessons.json để app chạy ngay sau fresh clone. Resource library có tài liệu official-first (Python, NumPy, scikit-learn, PyTorch, FastAPI, Docker, MLflow, Hugging Face, Google ML, Stanford CS229, D2L, Full Stack Deep Learning) và nguồn community được gắn nhãn. Ví dụ [AI Engineering from Scratch](https://github.com/rohitg00/ai-engineering-from-scratch) là tài liệu đọc thêm, không thay thế phần giải thích trong app.
+
+## Các project portfolio
+
+Roadmap tăng dần qua:
+
+1. **LLM Chat API** — request/response, structured output, streaming, retry và cost.
+2. **Document Intelligence System** — parsing, chunking, metadata, extraction và evaluation.
+3. **Advanced RAG System** — hybrid search, BM25/vector, reranking, citation và error analysis.
+4. **AI Assistant với Database & API** — tool schema, validation, timeout, auth boundary.
+5. **Research Assistant Agent** — planning, memory, tool use, guardrails và human-in-the-loop.
+6. **End-to-End Production GenAI System** — architecture, observability, latency/cost, deployment và rollback.
+
+Mỗi project cần README, problem statement, baseline, metric, test, evaluation report, architecture decision và demo evidence. Star của repository là kết quả phụ; khả năng clone/chạy, chất lượng evidence và cách giải thích trade-off mới là phần hữu ích cho CV.
+
+## Workspace, test và GitHub journey
+
+Mỗi exercise tạo .data/workspaces/<exercise-slug> với starter, test contract, README mục tiêu/input/output/edge case và expected evidence. Test runner chỉ chạy command được manifest cho phép với timeout/output cap. Nút Tạo & mở VS Code trỏ thẳng tới workspace, nên bạn có thể sửa và lưu bằng Ctrl+S.
+
+Khi hoàn thành:
+
+1. Chọn Lưu artifact để copy file an toàn sang exercises/, projects/ hoặc journal/.
+2. App bỏ qua .env, .db, .venv, symlink và pattern secret; vẫn phải xem diff bằng mắt.
+3. Trong Journal & Git, kiểm tra diff và commit message gợi ý.
+4. Tick xác nhận rồi mới publish. Push thất bại vẫn giữ commit local để xử lý credential/remote.
+
+Remote repository dùng đúng tên Hzyl/JourneyAIEngineer. Nếu bạn fork, hãy thay remote theo tài khoản của bạn. App không lưu credential và không tự push khi chưa có xác nhận.
+
+## Feedback, cộng đồng và cập nhật lesson
+
+Lesson có panel Giúp bài học tốt hơn cho lỗi nội dung, thiếu ví dụ/resource, broken link, exercise problem hoặc feature request. Local beta lưu feedback pending trong SQLite; community chỉ đọc feedback accepted/implemented. Email, progress và journal riêng không đi vào public payload. App không tự sửa hoặc push curriculum; maintainer review rồi cập nhật Markdown qua Git.
+
+Feedback online/public trong tương lai cần auth, moderation, rate limit, abuse control và Postgres/RLS. SQLite local không phải backend multi-tenant.
+
+## Security boundary và RedAmon
+
+scripts/security_audit.py --format summary là passive inventory: đọc route/schema/source pattern, không gửi network request, không gọi handler, không tạo payload và không clone/cài/chạy [RedAmon](https://github.com/samugit83/redamon). RedAmon chỉ là security lab tham khảo cho target do bạn sở hữu/được ủy quyền, trong staging cô lập và dữ liệu giả. Không quét production/public target hay hệ thống người khác.
+
+Local routes có path allowlist, timeout, output cap, origin/loopback guard và secret redaction. Không bind 0.0.0.0, forward port hoặc đặt admin token trong frontend. Xem [SECURITY.md](SECURITY.md) để biết boundary và cách báo cáo.
+
+## Quality gates cho contributor
+
+~~~powershell
 python scripts/build_lesson_catalog.py
 python scripts/validate_content.py
-```
+python -m pytest -q --basetemp .build\pytest -o cache_dir=.build\pytest-cache
+npm ci
+npm run lint
+npm run build
+~~~
 
-`scripts/test.ps1` chạy validation nội dung, backend pytest và frontend build. Database local được migration additive khi khởi động để không làm mất progress, review history, notes hoặc settings. Startup cũng đồng bộ bổ sung phase/module/lesson/exercise/review mới từ curriculum mà không reset dữ liệu cũ; nội dung đã bỏ khỏi roadmap không bị xóa tự động để giữ liên kết với lịch sử học tập.
+Hoặc chạy .\scripts\test.ps1 để dùng bộ kiểm tra chuẩn. CI trên GitHub chạy content validation, Python tests, pip check, npm lockfile install, lint và Vite build. Release script kiểm tra ZIP không chứa .data, database, .venv, node_modules, .env, secret hoặc cache.
 
-## GitHub journey
+Xem:
 
-### Luồng bài tập → VS Code → artifact → GitHub
+- [Windows quickstart](docs/QUICKSTART-WINDOWS.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Contributing](CONTRIBUTING.md)
+- [Security policy](SECURITY.md)
+- [Content source](content/lessons/)
+- [Study playbook](content/study-playbook.md)
 
-Trong **Practice Lab**, mỗi bài có workspace riêng tại `.data/workspaces/<exercise-slug>`. Chọn **Tạo & mở VS Code** để app tự trỏ VS Code vào đúng thư mục; sửa `starter.py`, lưu bằng `Ctrl+S`, rồi chọn **Chạy test** để xem output và lịch sử chạy. **Mở thư mục** mở Explorer khi cần kiểm tra file bằng mắt.
+## Phát hành local và GitHub
 
-Workspace mới luôn có `starter.py`, `test_exercise.py` và README riêng. Test đầu tiên có thể **fail có chủ đích** vì `solve()` còn `NotImplementedError`; hãy implement để trả về `result` và `explanation`, chạy lại đến khi pass, rồi thêm một edge case trước khi xuất artifact. Cách này biến bài tập thành một vòng red → implement → green thay vì chỉ kiểm tra syntax.
+~~~powershell
+npm run package:windows
+~~~
 
-Khi bài đã đạt checkpoint, chọn **Lưu artifact**. App copy các file an toàn sang `exercises/<exercise-slug>/`, bỏ qua `.venv`, `__pycache__`, `.env`, database và symlink, đồng thời từ chối export nếu phát hiện chuỗi có vẻ là API key, token, password hoặc private key. Đây là bước tạo bằng chứng có thể review, không phải push tự động.
+Output ở .build/releases/: executable copy, ZIP versioned và checksum. Chỉ maintainer tạo GitHub Release sau khi xem diff, secret/history scan và xác nhận thủ công. JourneyAIEngineer.exe và runtime state đã được ignore, nên không đưa executable/database cá nhân vào source PR.
 
-Sau đó mở **Journal & Git**, xem diff và quay lại panel **Review rồi mới push**. Nhập commit message, tick xác nhận đã đọc diff rồi bấm **Xác nhận & push GitHub**. Backend chỉ cho phép publish dưới `exercises/`, `projects/` hoặc `journal/`, từ chối nếu Git index đã có staged change, scan secret lần nữa và giữ commit local nếu push thất bại. App không lưu credential và không push khi chưa có checkbox xác nhận.
+## Ghi vào CV thế nào?
 
-Remote mặc định của project là repository private `Hzyl/JouneyAIEngineer`. Chỉ các artifact học tập mới nên được commit:
+Có thể ghi project này vào CV nếu bạn trình bày **đúng phần kỹ thuật đã làm và có evidence**, ví dụ:
 
-```text
-content/       # curriculum và lesson notes đã chọn
-exercises/     # bài làm có thể review
-journal/       # weekly reflection và export
-projects/      # portfolio, evaluation, architecture decision
-```
+> **Journey AI Engineer — Open-source local-first AI engineering learning platform**
+> React/TypeScript + Vite, FastAPI, SQLite, content validation pipeline, PyTorch/ML/LLM/RAG curriculum, local VS Code exercise runner, review scheduling, Windows packaging và CI. Designed local security boundary, secret redaction and reproducible release workflow.
 
-`.data/`, `.venv/`, `node_modules/`, database, secret và API key đã nằm trong `.gitignore`. App chỉ gợi ý commit message và hiển thị diff đã redact secret; nó không tự commit hoặc push. Trước khi push, hãy review diff và dùng các dạng message như `learn(phase-03): explain precision recall` hoặc `journal(week-08): record debugging lessons`.
+Kèm GitHub URL, ảnh/demo ngắn, một project ML, một project deep learning và một project RAG có metric/evaluation. Không ghi app này là hosted SaaS hay hệ thống AI production multi-user khi v0.1 chưa có auth, cloud isolation và monitoring thật.
+
+## Roadmap
+
+- **v0.1:** local-first single-user, bilingual curriculum, review, workspace, journal, Git context bridge, source clone và portable Windows package.
+- **v0.2:** public read-only learning hub/feedback moderation sau khi chốt auth/data isolation.
+- **v0.3:** optional hosted progress sync, account recovery và provider adapters; local export/import vẫn là đường lui.
+
+Apache-2.0 được dùng cho source code repository. Tài liệu, model, dataset và code bên thứ ba giữ license riêng; hãy xem attribution trước khi tái sử dụng.

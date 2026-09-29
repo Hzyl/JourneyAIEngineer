@@ -1,0 +1,43 @@
+name: Bug report
+description: Report a reproducible problem in the local learning product
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Không gửi token, database, journal riêng hoặc dữ liệu cá nhân vào issue.
+  - type: input
+    id: version
+    attributes:
+      label: Version/commit
+      description: Ví dụ v0.1.0 hoặc commit SHA
+    validations:
+      required: true
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Run mode
+      options:
+        - Source clone
+        - Portable .exe
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Các bước tối thiểu, input giả và behavior quan sát được
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Windows version, Python/Node version, browser viewport

@@ -27,7 +27,8 @@ def test_curriculum_is_seeded(tmp_path, monkeypatch):
         assert db.execute("SELECT COUNT(*) FROM phases").fetchone()[0] == len(curriculum["phases"])
         assert db.execute("SELECT COUNT(*) FROM lessons").fetchone()[0] == expected_lessons
         assert db.execute("SELECT COUNT(*) FROM exercises").fetchone()[0] == expected_modules
-        assert db.execute("SELECT COUNT(*) FROM review_items").fetchone()[0] == expected_lessons
+        assert db.execute("SELECT COUNT(*) FROM review_items").fetchone()[0] == expected_lessons * 4
+        assert db.execute("SELECT COUNT(*) FROM review_cards").fetchone()[0] == expected_lessons * 4
         exercise = db.execute("SELECT test_command,starter_code FROM exercises LIMIT 1").fetchone()
         assert "test_exercise.py" in exercise["test_command"]
         assert "NotImplementedError" in exercise["starter_code"]
@@ -66,7 +67,8 @@ def test_curriculum_sync_adds_new_records_without_resetting_progress(tmp_path, m
         assert db.execute("SELECT COUNT(*) FROM modules").fetchone()[0] == expected_modules + 1
         assert db.execute("SELECT COUNT(*) FROM lessons").fetchone()[0] == expected_lessons + 1
         assert db.execute("SELECT COUNT(*) FROM exercises").fetchone()[0] == expected_modules + 1
-        assert db.execute("SELECT COUNT(*) FROM review_items").fetchone()[0] == expected_lessons + 1
+        assert db.execute("SELECT COUNT(*) FROM review_items").fetchone()[0] == (expected_lessons + 1) * 4
+        assert db.execute("SELECT COUNT(*) FROM review_cards").fetchone()[0] == (expected_lessons + 1) * 4
         progress = db.execute("SELECT status,minutes_spent FROM progress WHERE lesson_id=(SELECT id FROM lessons WHERE slug=?)", (lesson_slug,)).fetchone()
         assert progress["status"] == "completed"
         assert progress["minutes_spent"] == 42
@@ -126,6 +128,53 @@ def test_reference_library_contains_requested_repo_and_phase_filters(tmp_path, m
     assert sum(len(module_item["lessons"]) for phase in genai_phases for module_item in phase["modules"]) == 60
     assert len(roadmap["program"]["portfolio_projects"]) == 10
     assert any(project["slug"] == "production-genai-system" for project in roadmap["program"]["portfolio_projects"])
+
+
+def test_health_search_and_review_cards_are_local_safe(tmp_path, monkeypatch):
+    module = load_module(tmp_path, monkeypatch)
+    health = module.health()
+    assert health["status"] == "ok"
+    assert "database" not in health
+    assert str(tmp_path) not in json.dumps(health)
+    assert module.health_live()["status"] == "ok"
+    assert module.health_ready()["ready"] is True
+    search_result = module.search(q="Python", type="lessons", limit=5)
+    assert search_result["count"] > 0
+    assert all(item["type"] == "lesson" for item in search_result["results"])
+    with module.connect() as db:
+        cards = db.execute("SELECT * FROM review_cards WHERE lesson_id=(SELECT id FROM lessons WHERE slug=?) ORDER BY id", ("phase-00-onboarding-environment-1",)).fetchall()
+    assert len(cards) == 4
+    assert {card["type"] for card in cards} == {"recall", "application", "debug", "interview"}
+    due = module.due_reviews()
+    assert due["count"] >= 4
+    assert all(item["lesson_slug"] for item in due["items"][:4])
+    assert "user:password" not in module.sanitize_remote("origin https://user:password@example.com/repo.git (fetch)")
+
+
+def test_backup_export_preview_and_import_keep_safety_snapshot(tmp_path, monkeypatch):
+    module = load_module(tmp_path, monkeypatch)
+    lesson_slug = "phase-00-onboarding-environment-1"
+    module.update_progress(lesson_slug, module.ProgressUpdate(status="completed", minutes_spent=42))
+    module.create_note(module.NoteCreate(lesson_slug=lesson_slug, title="Backup note", body="Keep this evidence."))
+    exported = module.export_backup()
+    payload = exported["payload"]
+    assert payload["schema_version"] == 1
+    assert any(row["lesson_slug"] == lesson_slug for row in payload["progress"])
+    assert Path(exported["json_path"]).exists()
+    preview = module.preview_backup(module.BackupImportRequest(payload=payload))
+    assert preview["valid"] is True
+    imported = module.import_backup(module.BackupImportRequest(payload=payload, confirm=True))
+    assert imported["imported"] is True
+    assert Path(imported["safety_backup_json"]).exists()
+    dashboard = module.dashboard()
+    assert dashboard["completed_lessons"] >= 1
+    unsafe = module.preview_backup(module.BackupImportRequest(payload={**payload, "journal_files": [{"path": "../escape.md", "content": "x"}]}))
+    assert unsafe["valid"] is False
+    assert any("unsafe path" in error for error in unsafe["errors"])
+    malformed = module.preview_backup(module.BackupImportRequest(payload={**payload, "progress": ["not-an-object"]}))
+    assert malformed["valid"] is False
+    assert any("must be an object" in error for error in malformed["errors"])
+    assert "https://example.com/repo.git" in module.sanitize_remote("origin https://user:password@example.com/repo.git (fetch)")
 
 
 def test_runtime_heartbeat_disconnect_and_expiry(tmp_path, monkeypatch):

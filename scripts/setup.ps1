@@ -11,7 +11,11 @@ if (-not (Test-Path '.venv')) { python -m venv .venv }
 $Python = Join-Path $ProjectRoot '.venv\Scripts\python.exe'
 & $Python -m pip install --upgrade pip | Out-Host
 & $Python -m pip install -r apps/api/requirements.txt | Out-Host
-npm install | Out-Host
+if (Test-Path -LiteralPath (Join-Path $ProjectRoot 'package-lock.json')) {
+    npm ci | Out-Host
+} else {
+    npm install | Out-Host
+}
 New-Item -ItemType Directory -Force '.data', 'journal\weekly', 'journal\context' | Out-Null
 & $Python -c "from apps.api.main import init_db; init_db(); print('Database seeded')"
 Write-Host 'Setup complete.' -ForegroundColor Green

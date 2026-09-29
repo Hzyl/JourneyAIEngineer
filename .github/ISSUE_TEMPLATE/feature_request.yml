@@ -1,0 +1,34 @@
+name: Feature request
+description: Suggest a focused improvement to the learning experience
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Hãy mô tả người học đang gặp vấn đề nào trước khi đề xuất UI hoặc dependency.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Learner problem
+      description: Ai gặp vấn đề gì và vì sao nó ảnh hưởng đến việc học?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: Luồng dùng, edge case và completion criteria
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: checkboxes
+    id: boundaries
+    attributes:
+      label: Boundary checks
+      options:
+        - label: Đề xuất không yêu cầu API key hoặc public filesystem/subprocess trong v0.1
+          required: true
