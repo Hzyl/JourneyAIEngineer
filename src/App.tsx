@@ -450,6 +450,61 @@ function feedbackDate(value: string): string {
   return Number.isNaN(date.getTime()) ? 'Mới cập nhật' : new Intl.DateTimeFormat('vi-VN', { dateStyle: 'medium' }).format(date)
 }
 
+const GITHUB_DISCUSSIONS_URL = 'https://github.com/Hzyl/JourneyAIEngineer/discussions'
+const FEEDBACK_SECRET_PATTERNS = [
+  /(?:sk|rk)-[A-Za-z0-9_-]{20,}/g,
+  /gh[pousr]_[A-Za-z0-9_]{20,}/g,
+  /AKIA[0-9A-Z]{16}/g,
+  /-----BEGIN [A-Z ]+ PRIVATE KEY-----[\s\S]*?-----END [A-Z ]+ PRIVATE KEY-----/g,
+]
+
+function redactFeedbackSecrets(value: string): string {
+  return FEEDBACK_SECRET_PATTERNS.reduce((result, pattern) => result.replace(pattern, '[REDACTED]'), value)
+}
+
+function feedbackReportText(lesson: Lesson, kind: FeedbackKind, body: string, displayName: string, language: 'vi' | 'en'): string {
+  const title = language === 'vi' ? lesson.title_vi : lesson.title_en
+  const lines = [
+    'Journey AI Engineer public beta feedback',
+    '',
+    'Version: v0.1.2',
+    'Mode: Local app',
+    `Lesson: ${title} (${lesson.slug})`,
+    `Feedback type: ${feedbackKindLabels[kind]}`,
+    displayName.trim() ? `Display name: ${redactFeedbackSecrets(displayName.trim())}` : '',
+    '',
+    'Feedback:',
+    redactFeedbackSecrets(body.trim()),
+    '',
+    'I checked that this report does not contain credentials or private data.',
+  ]
+  return lines.filter((line, index) => line || (index > 0 && lines[index - 1])).join('\n')
+}
+
+function FeedbackReportActions({ lesson, language, kind, body, displayName }: { lesson: Lesson; language: 'vi' | 'en'; kind: FeedbackKind; body: string; displayName: string }) {
+  const [report, setReport] = useState('')
+  const [copied, setCopied] = useState(false)
+  const vi = language === 'vi'
+
+  const copyReport = async (value: string) => {
+    setReport(value)
+    setCopied(false)
+    try {
+      await navigator.clipboard.writeText(value)
+      setCopied(true)
+    } catch {
+      // The preview remains available when clipboard permission is unavailable.
+    }
+  }
+
+  const createReport = () => {
+    if (body.trim().length < 5) return
+    void copyReport(feedbackReportText(lesson, kind, body, displayName, language))
+  }
+
+  return <div className="feedback-report-actions"><button type="button" className="text-button" disabled={body.trim().length < 5} onClick={createReport}>{vi ? 'Tạo report để gửi GitHub' : 'Create GitHub report'}</button>{report && <div className="feedback-report" aria-live="polite"><div className="feedback-report-heading"><strong>{vi ? 'Report vừa tạo' : 'Report ready'}</strong><div><button type="button" className="text-button" onClick={() => void copyReport(report)}>{copied ? (vi ? 'Đã copy ✓' : 'Copied ✓') : (vi ? 'Copy lại' : 'Copy again')}</button><a className="text-button" href={GITHUB_DISCUSSIONS_URL} target="_blank" rel="noreferrer">{vi ? 'Mở Discussions ↗' : 'Open Discussions ↗'}</a></div></div><textarea className="feedback-report-preview" aria-label={vi ? 'Report feedback vừa tạo' : 'Generated feedback report'} readOnly value={report} onFocus={(event) => event.currentTarget.select()} /><small>{vi ? 'Report được hiển thị để bạn kiểm tra trước khi gửi. Các mẫu credential phổ biến đã được che.' : 'Review the report before sending. Common credential patterns are redacted.'}</small></div>}</div>
+}
+
 function FeedbackPanel({ lesson, language }: { lesson: Lesson; language: 'vi' | 'en' }) {
   const [items, setItems] = useState<FeedbackItem[]>([])
   const [kind, setKind] = useState<FeedbackKind>('unclear')
@@ -493,7 +548,7 @@ function FeedbackPanel({ lesson, language }: { lesson: Lesson; language: 'vi' | 
     }
   }
 
-  return <section className="feedback-panel" aria-labelledby="feedback-panel-title"><div className="section-heading"><div><span className="eyebrow accent">LEARNING FEEDBACK</span><h4 id="feedback-panel-title">{vi ? 'Giúp bài học tốt hơn' : 'Help improve this lesson'}</h4></div><span className="tag">{items.length} {vi ? 'đã duyệt' : 'approved'}</span></div><p className="muted">{vi ? 'Góp ý sẽ được xem trước khi xuất hiện công khai. Không nhập email, API key hoặc dữ liệu riêng tư.' : 'Suggestions are reviewed before they become public. Do not include email, API keys or private data.'}</p><form className="feedback-form" onSubmit={(event) => { event.preventDefault(); void submit() }}><label>{vi ? 'Loại góp ý' : 'Feedback type'}<select value={kind} onChange={(event) => setKind(event.target.value as FeedbackKind)}>{(Object.keys(feedbackKindLabels) as FeedbackKind[]).map((option) => <option key={option} value={option}>{feedbackKindLabels[option]}</option>)}</select></label><label>{vi ? 'Tên hiển thị (tuỳ chọn)' : 'Display name (optional)'}<input value={displayName} onChange={(event) => setDisplayName(event.target.value)} maxLength={80} placeholder={vi ? 'Ví dụ: Huy' : 'For example: Huy'} /></label><label className="feedback-body-field">{vi ? 'Góp ý cụ thể' : 'Specific feedback'}<textarea value={body} onChange={(event) => setBody(event.target.value)} minLength={5} maxLength={2000} required placeholder={vi ? 'Bạn bị vướng ở bước nào? Có thể đề xuất ví dụ, tài liệu hoặc cách sửa.' : 'Which step is unclear? Suggest an example, resource or fix.'} /><small>{body.length}/2000</small></label><button className="secondary-button" type="submit" disabled={submitting || body.trim().length < 5}>{submitting ? (vi ? 'Đang gửi…' : 'Sending…') : (vi ? 'Gửi góp ý để review' : 'Send for review')}</button></form>{message && <p className="success-note" role="status">{message}</p>}{error && <p className="warning-note" role="alert">{error}</p>}<div className="feedback-list" aria-live="polite">{loading ? <p className="muted">{vi ? 'Đang tải góp ý đã duyệt…' : 'Loading approved feedback…'}</p> : items.length === 0 ? <p className="muted">{vi ? 'Chưa có góp ý công khai cho lesson này.' : 'No public feedback for this lesson yet.'}</p> : items.map((item) => <article className="feedback-item" key={item.id}><div className="feedback-item-meta"><span className="tag">{feedbackKindLabels[item.kind]}</span><span>{feedbackDate(item.created_at)}{item.display_name ? ` · ${item.display_name}` : ''}</span></div><p>{item.body}</p>{item.status === 'implemented' && <small className="feedback-implemented">✓ {vi ? 'Đã phản ánh vào chương trình' : 'Reflected in the curriculum'}</small>}</article>)}</div></section>
+  return <section className="feedback-panel" aria-labelledby="feedback-panel-title"><div className="section-heading"><div><span className="eyebrow accent">LEARNING FEEDBACK</span><h4 id="feedback-panel-title">{vi ? 'Giúp bài học tốt hơn' : 'Help improve this lesson'}</h4></div><span className="tag">{items.length} {vi ? 'đã duyệt' : 'approved'}</span></div><p className="muted">{vi ? 'Góp ý sẽ được xem trước khi xuất hiện công khai. Không nhập email, API key hoặc dữ liệu riêng tư.' : 'Suggestions are reviewed before they become public. Do not include email, API keys or private data.'}</p><form className="feedback-form" onSubmit={(event) => { event.preventDefault(); void submit() }}><label>{vi ? 'Loại góp ý' : 'Feedback type'}<select value={kind} onChange={(event) => setKind(event.target.value as FeedbackKind)}>{(Object.keys(feedbackKindLabels) as FeedbackKind[]).map((option) => <option key={option} value={option}>{feedbackKindLabels[option]}</option>)}</select></label><label>{vi ? 'Tên hiển thị (tuỳ chọn)' : 'Display name (optional)'}<input value={displayName} onChange={(event) => setDisplayName(event.target.value)} maxLength={80} placeholder={vi ? 'Ví dụ: Huy' : 'For example: Huy'} /></label><label className="feedback-body-field">{vi ? 'Góp ý cụ thể' : 'Specific feedback'}<textarea value={body} onChange={(event) => setBody(event.target.value)} minLength={5} maxLength={2000} required placeholder={vi ? 'Bạn bị vướng ở bước nào? Có thể đề xuất ví dụ, tài liệu hoặc cách sửa.' : 'Which step is unclear? Suggest an example, resource or fix.'} /><small>{body.length}/2000</small></label><button className="secondary-button" type="submit" disabled={submitting || body.trim().length < 5}>{submitting ? (vi ? 'Đang gửi…' : 'Sending…') : (vi ? 'Gửi góp ý để review' : 'Send for review')}</button></form><FeedbackReportActions lesson={lesson} language={language} kind={kind} body={body} displayName={displayName} />{message && <p className="success-note" role="status">{message}</p>}{error && <p className="warning-note" role="alert">{error}</p>}<div className="feedback-list" aria-live="polite">{loading ? <p className="muted">{vi ? 'Đang tải góp ý đã duyệt…' : 'Loading approved feedback…'}</p> : items.length === 0 ? <p className="muted">{vi ? 'Chưa có góp ý công khai cho lesson này.' : 'No public feedback for this lesson yet.'}</p> : items.map((item) => <article className="feedback-item" key={item.id}><div className="feedback-item-meta"><span className="tag">{feedbackKindLabels[item.kind]}</span><span>{feedbackDate(item.created_at)}{item.display_name ? ` · ${item.display_name}` : ''}</span></div><p>{item.body}</p>{item.status === 'implemented' && <small className="feedback-implemented">✓ {vi ? 'Đã phản ánh vào chương trình' : 'Reflected in the curriculum'}</small>}</article>)}</div></section>
 }
 
 function CommunityView({ onOpenLesson }: { onOpenLesson: (slug: string) => void }) {

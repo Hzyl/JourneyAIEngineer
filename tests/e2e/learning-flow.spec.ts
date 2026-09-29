@@ -21,6 +21,11 @@ test('lesson deep link renders content and preserves a single browser route', as
   await expect(page.getByText('Cài Python và kiểm tra phiên bản', { exact: true })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Giải thích cốt lõi' })).toBeVisible()
 
+  const feedback = page.getByRole('textbox', { name: 'Góp ý cụ thể' })
+  await feedback.fill('Thêm một ví dụ PowerShell có output expected. sk-abcdefghijklmnopqrstuvwxyz123456')
+  await page.getByRole('button', { name: 'Tạo report để gửi GitHub' }).click()
+  await expect(page.getByRole('textbox', { name: 'Report feedback vừa tạo' })).toHaveValue(/phase-00-onboarding-environment-1[\s\S]*\[REDACTED\]/)
+
   // The route is intentionally a real SPA deep link. Refreshing this URL is
   // covered by opening it directly above, so a hosted/local server must serve
   // the same app shell for `/lesson/*` instead of returning a 404.

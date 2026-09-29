@@ -1,6 +1,6 @@
 # Public beta guide
 
-Journey AI Engineer v0.1.1 là bản beta công khai hiện tại, bổ sung browser smoke test và hướng dẫn feedback đầy đủ. Mục tiêu của beta là kiểm tra ba điều với người dùng thật:
+Journey AI Engineer v0.1.2 là bản beta công khai hiện tại, bổ sung browser smoke test, hướng dẫn feedback và report bridge đầy đủ. Mục tiêu của beta là kiểm tra ba điều với người dùng thật:
 
 1. Người mới có thể cài và bắt đầu một lesson mà không cần maintainer hướng dẫn riêng.
 2. Vòng `lesson → practice → test → review → journal` giúp tạo bằng chứng học tập có thể kiểm tra.
@@ -18,7 +18,7 @@ Beta chạy **local-first trên Windows**. Mỗi người dùng có dữ liệu 
 
 ### Portable release
 
-1. Tải `JourneyAIEngineer-v0.1.1-windows-x64.zip` từ [GitHub Release](https://github.com/Hzyl/JourneyAIEngineer/releases/tag/v0.1.1).
+1. Tải `JourneyAIEngineer-v0.1.2-windows-x64.zip` từ [GitHub Release](https://github.com/Hzyl/JourneyAIEngineer/releases/tag/v0.1.2).
 2. Tải `SHA256SUMS.txt` cùng release và kiểm tra checksum trước khi chạy.
 3. Giải nén vào thư mục có quyền ghi rồi mở `JourneyAIEngineer.exe`.
 4. Nếu Windows SmartScreen cảnh báo, hãy kiểm tra nguồn tải và checksum. Binary v0.1 chưa được code-sign nên cảnh báo này có thể xuất hiện.
@@ -26,7 +26,7 @@ Beta chạy **local-first trên Windows**. Mỗi người dùng có dữ liệu 
 Checksum trong release áp dụng cho **file ZIP**:
 
 ```powershell
-Get-FileHash .\JourneyAIEngineer-v0.1.1-windows-x64.zip -Algorithm SHA256
+Get-FileHash .\JourneyAIEngineer-v0.1.2-windows-x64.zip -Algorithm SHA256
 Get-Content .\SHA256SUMS.txt
 ```
 
@@ -55,6 +55,7 @@ Hãy dùng dữ liệu giả, không đưa token hoặc journal riêng vào issu
 - [ ] Chạy được test theo manifest và nhìn thấy output/error có giới hạn.
 - [ ] Đánh dấu lesson, trả lời review card và thấy progress cập nhật.
 - [ ] Ghi journal hoặc tạo context export; context được hiển thị để xem lại trước khi copy.
+- [ ] Trong lesson, thử tạo feedback report; kiểm tra nội dung trước khi copy và mở GitHub Discussions.
 - [ ] Đóng rồi mở lại app; progress và review state vẫn còn.
 - [ ] Ở màn hình rộng khoảng 390px, không có horizontal overflow và menu vẫn truy cập được bằng bàn phím.
 - [ ] Journal & Git không mở một loạt terminal chớp tắt; nếu Git không khả dụng, app báo nguyên nhân có thể xử lý.
@@ -71,7 +72,7 @@ Nếu một mục không đạt, hãy ghi lại mode (`Source clone` hoặc `Por
 Một feedback tốt có dạng:
 
 ```text
-Version: v0.1.1
+Version: v0.1.2
 Mode: Portable .exe
 Environment: Windows 11 24H2, Chrome 131, viewport 390px
 Steps: 1. Mở Roadmap 2. Chọn Phase 1 3. Mở lesson ...

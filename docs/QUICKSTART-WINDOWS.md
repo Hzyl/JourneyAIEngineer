@@ -27,7 +27,7 @@ Dữ liệu runtime ở `.data/` (được ignore). Content source ở `content/
 Tải file ZIP từ GitHub Release, giải nén vào một thư mục bạn có quyền ghi và chạy `JourneyAIEngineer.exe`. App tự chọn loopback port, khởi động API, mở browser và tắt nền sau khi tab cuối cùng rời đi. SmartScreen có thể cảnh báo vì binary chưa được code-sign; kiểm tra `SHA256SUMS.txt` trước khi chạy.
 
 ```powershell
-Get-FileHash .\JourneyAIEngineer-v0.1.1-windows-x64.zip -Algorithm SHA256
+Get-FileHash .\JourneyAIEngineer-v0.1.2-windows-x64.zip -Algorithm SHA256
 Get-Content .\SHA256SUMS.txt
 ```
 

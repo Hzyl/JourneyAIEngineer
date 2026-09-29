@@ -7,7 +7,7 @@
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
 [![GitHub Discussions](https://img.shields.io/badge/feedback-GitHub%20Discussions-8250df)](https://github.com/Hzyl/JourneyAIEngineer/discussions)
 
-> **Public beta · v0.1.1** — Bản beta có thể tải về và dùng local trên Windows. Hãy thử một vòng học, báo lỗi cụ thể và chia sẻ điều gì giúp bạn học tốt hơn. Đây chưa phải hosted SaaS hay nền tảng đồng bộ tiến độ nhiều người dùng.
+> **Public beta · v0.1.2** — Bản beta có thể tải về và dùng local trên Windows. Hãy thử một vòng học, báo lỗi cụ thể và chia sẻ điều gì giúp bạn học tốt hơn. Đây chưa phải hosted SaaS hay nền tảng đồng bộ tiến độ nhiều người dùng.
 
 **Bắt đầu nhanh:** [Tải bản Windows portable](https://github.com/Hzyl/JourneyAIEngineer/releases/latest) · [Clone để phát triển](docs/QUICKSTART-WINDOWS.md) · [Xem hướng dẫn beta](docs/PUBLIC-BETA.md) · [Gửi feedback](https://github.com/Hzyl/JourneyAIEngineer/discussions)
 
@@ -172,7 +172,7 @@ Remote repository dùng đúng tên Hzyl/JourneyAIEngineer. Nếu bạn fork, h�
 
 Lesson có panel Giúp bài học tốt hơn cho lỗi nội dung, thiếu ví dụ/resource, broken link, exercise problem hoặc feature request. Local beta lưu feedback pending trong SQLite; community chỉ đọc feedback accepted/implemented. Email, progress và journal riêng không đi vào public payload. App không tự sửa hoặc push curriculum; maintainer review rồi cập nhật Markdown qua Git.
 
-Feedback online/public trong tương lai cần auth, moderation, rate limit, abuse control và Postgres/RLS. SQLite local không phải backend multi-tenant.
+Feedback online/public trong tương lai cần auth, moderation, rate limit, abuse control và Postgres/RLS. SQLite local không phải backend multi-tenant. Trong public beta, lesson có thể tạo một report đã redact mẫu credential, hiển thị để kiểm tra rồi mở GitHub Discussions; app không tự gửi nội dung ra ngoài.
 
 ## Security boundary và RedAmon
 
@@ -211,7 +211,7 @@ npm run package:windows
 
 Output ở .build/releases/: executable copy, ZIP versioned và checksum. Chỉ maintainer tạo GitHub Release sau khi xem diff, secret/history scan và xác nhận thủ công. JourneyAIEngineer.exe và runtime state đã được ignore, nên không đưa executable/database cá nhân vào source PR.
 
-Bản public beta hiện tại: [v0.1.1 Windows release](https://github.com/Hzyl/JourneyAIEngineer/releases/tag/v0.1.1). Release đính kèm ZIP và `SHA256SUMS.txt`; hãy kiểm tra checksum trước khi chạy binary chưa code-sign.
+Bản public beta hiện tại: [v0.1.2 Windows release](https://github.com/Hzyl/JourneyAIEngineer/releases/tag/v0.1.2). Release đính kèm ZIP và `SHA256SUMS.txt`; hãy kiểm tra checksum trước khi chạy binary chưa code-sign.
 
 ## Evidence và demo
 
