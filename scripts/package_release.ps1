@@ -57,7 +57,16 @@ New-Item -ItemType Directory -Path $Stage, $OutputDir -Force | Out-Null
 Copy-Item -LiteralPath $Exe -Destination (Join-Path $Stage "JourneyAIEngineer.exe")
 Copy-Item -LiteralPath (Join-Path $ProjectRoot "README.md") -Destination $Stage
 Copy-Item -LiteralPath (Join-Path $ProjectRoot "LICENSE") -Destination $Stage
-Copy-Item -LiteralPath (Join-Path $ProjectRoot "docs\QUICKSTART-WINDOWS.md") -Destination $Stage
+Copy-Item -LiteralPath (Join-Path $ProjectRoot "packaging\START-HERE.txt") -Destination $Stage
+Copy-Item -LiteralPath (Join-Path $ProjectRoot "SECURITY.md") -Destination $Stage
+Copy-Item -LiteralPath (Join-Path $ProjectRoot "CONTRIBUTING.md") -Destination $Stage
+$DocsStage = Join-Path $Stage "docs"
+$ContentStage = Join-Path $Stage "content"
+New-Item -ItemType Directory -Path $DocsStage, $ContentStage -Force | Out-Null
+foreach ($Doc in @("QUICKSTART-WINDOWS.md", "PUBLIC-BETA.md", "ARCHITECTURE.md")) {
+    Copy-Item -LiteralPath (Join-Path $ProjectRoot "docs\$Doc") -Destination $DocsStage
+}
+Copy-Item -LiteralPath (Join-Path $ProjectRoot "content\study-playbook.md") -Destination $ContentStage
 @"
 Journey AI Engineer $Version
 Build date (UTC): $([DateTime]::UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ"))

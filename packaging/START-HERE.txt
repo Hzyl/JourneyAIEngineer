@@ -1,0 +1,20 @@
+JOURNEY AI ENGINEER — PORTABLE WINDOWS BUILD
+=============================================
+
+1. Keep this file and JourneyAIEngineer.exe in the same folder after extracting
+   the ZIP.
+2. Double-click JourneyAIEngineer.exe. It starts the local app and opens the
+   browser automatically. This is a GUI executable; no terminal window is
+   required.
+3. When the last Journey AI Engineer browser tab is closed, the local server
+   exits after a short grace period.
+
+The app stores progress in:
+  %LOCALAPPDATA%\JourneyAIEngineer
+
+This portable build is for local learning. It does not publish to GitHub.
+Use a source clone when you need VS Code, Git diff, commits, or artifact
+publishing. See QUICKSTART-WINDOWS.md for the full workflow.
+
+If Windows SmartScreen warns about the unsigned executable, verify the ZIP
+against SHA256SUMS.txt before choosing the Windows option to continue.

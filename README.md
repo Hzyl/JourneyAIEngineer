@@ -1,186 +1,179 @@
 # Journey AI Engineer
 
-> A local-first, bilingual learning platform that turns an AI Engineer roadmap into verified lessons, VS Code labs, spaced review, journal entries and Git-ready project evidence.
+> **Local-first learning product cho AI Engineer** — học theo roadmap, làm bài trong VS Code, ôn tập có lịch, lưu journal và tạo project evidence có thể review.
 
 [![CI](https://github.com/Hzyl/JourneyAIEngineer/actions/workflows/ci.yml/badge.svg)](https://github.com/Hzyl/JourneyAIEngineer/actions/workflows/ci.yml)
 [![Latest release](https://img.shields.io/github/v/release/Hzyl/JourneyAIEngineer?display_name=tag)](https://github.com/Hzyl/JourneyAIEngineer/releases/latest)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
-[![GitHub Discussions](https://img.shields.io/badge/feedback-GitHub%20Discussions-8250df)](https://github.com/Hzyl/JourneyAIEngineer/discussions)
 
-> **Public beta · v0.1.2** — Bản beta có thể tải về và dùng local trên Windows. Hãy thử một vòng học, báo lỗi cụ thể và chia sẻ điều gì giúp bạn học tốt hơn. Đây chưa phải hosted SaaS hay nền tảng đồng bộ tiến độ nhiều người dùng.
+Journey AI Engineer biến việc học AI Engineer thành một vòng lặp có thể kiểm chứng:
 
-**Bắt đầu nhanh:** [Tải bản Windows portable](https://github.com/Hzyl/JourneyAIEngineer/releases/latest) · [Clone để phát triển](docs/QUICKSTART-WINDOWS.md) · [Xem hướng dẫn beta](docs/PUBLIC-BETA.md) · [Gửi feedback](https://github.com/Hzyl/JourneyAIEngineer/discussions)
+~~~text
+Roadmap → Lesson → Practice Lab → Test → Review → Journal → Git evidence
+~~~
 
-Journey AI Engineer là một **learning product local-first** dành cho sinh viên muốn đi từ nền tảng lập trình đến khả năng xây, đánh giá và vận hành hệ thống AI/GenAI. App không chỉ là bảng checklist: mỗi lesson có giải thích trong app, ví dụ, practice, tiêu chí hoàn thành, tài liệu đọc sâu và review card.
+Mục tiêu của sản phẩm là giúp người học đi từ Python/software engineering đến machine learning, deep learning, LLM/RAG, evaluation, observability và system design. Nội dung giải thích chính nằm trong app bằng tiếng Việt, thuật ngữ giữ bằng English và có resource chính thức để đọc sâu.
 
-Mục tiêu của v0.1:
+> **Phiên bản hiện tại: v0.1.2 public beta.** Đây là app local-first, single-user trên Windows. v0.1 chưa có tài khoản, cloud sync, public hosted API hay API AI trả phí. Đừng expose API local ra Internet.
 
-- học Python/software engineering, toán–thống kê, classical ML, deep learning, MLOps và LLM/RAG theo dependency rõ;
-- làm bài trong workspace mở bằng VS Code và chạy test có manifest;
-- lưu evidence, journal, review history và context để hỏi ChatGPT/Codex mà vẫn tự làm chủ code;
-- tạo project artifact có README, evaluation, architecture decision và lessons learned;
-- clone/fork repository để học và đóng góp bằng pull request.
-
-> **Phạm vi cần hiểu rõ:** v0.1 chạy local cho một người dùng trên Windows. Chưa có đăng nhập, đồng bộ tiến độ, Postgres/RLS, API AI trả phí hay public multi-user hosting. Không expose FastAPI local ra Internet.
-
-## Sản phẩm này là gì?
-
-Journey AI Engineer biến một roadmap học AI Engineer dài hạn thành một **learning product có workflow thực thi được**. Người học không chỉ đọc danh sách chủ đề; họ đi qua một vòng lặp có thể kiểm chứng:
-
-```text
-Roadmap → Lesson → Practice Lab → Test → Review → Journal → Git artifact
-```
-
-Mỗi lesson giải thích khái niệm bằng tiếng Việt và thuật ngữ tiếng Anh, có ví dụ, bài thực hành, edge case, tiêu chí hoàn thành, câu hỏi review và tài liệu đọc sâu. Workspace tương ứng được tạo trong máy local để người học mở bằng VS Code, viết code, chạy test và lưu bằng chứng trước khi đánh dấu hoàn thành.
-
-Sản phẩm được thiết kế cho hai nhu cầu liên quan nhưng tách biệt:
-
-- **Học có hệ thống:** curriculum có prerequisite graph, track Standard/Accelerated, review queue và journal.
-- **Xây artifact thật:** exercise có test contract, project có README/evaluation/architecture decision, Git flow có diff review và secret redaction.
-
-## Giá trị kỹ thuật chính
-
-- **Content as source code:** lesson được viết bằng Markdown/YAML, build thành catalog JSON và được validator kiểm tra link, prerequisite, resource, exercise và review card.
-- **Local-first learning data:** tiến trình, notes, journal và review state nằm trong SQLite local; không cần tài khoản, API key hoặc cloud service để bắt đầu.
-- **Practice ngoài notebook:** workspace có starter, README, expected evidence và test manifest; bài làm được chạy bằng command allowlist với timeout và output cap.
-- **GitHub-ready workflow:** app đọc status/diff, gợi ý commit message, export journal/context và chỉ publish artifact sau khi người học xem diff và xác nhận.
-- **Release có thể lặp lại:** source clone dành cho phát triển; portable `.exe` dành cho học local; release ZIP có version và SHA-256 checksum.
-- **Ranh giới bảo mật rõ ràng:** API chỉ bind loopback, route filesystem/Git/subprocess có allowlist, secret redaction và không được dùng như public code-execution endpoint.
-
-## Kiến trúc ở mức cao
-
-```mermaid
-flowchart LR
-    UI[React + TypeScript + Vite] --> API[FastAPI local API]
-    API --> DB[(SQLite: progress, review, notes, journal)]
-    API --> CAT[Generated lesson catalog]
-    API --> WS[Workspace and test runner]
-    API --> GIT[Local Git/context bridge]
-    SRC[Markdown/YAML content] --> BUILD[Build and validation scripts]
-    BUILD --> CAT
-```
-
-Frontend chỉ gọi API local qua loopback. Nội dung curriculum là source có thể review trong Git; database runtime và journal cá nhân nằm ngoài source tree được commit. Thiết kế này giúp người khác fork repository để sửa lesson hoặc project mà không phải mang theo dữ liệu cá nhân của maintainer.
+---
 
 ## Chọn cách dùng
 
-| Mục đích | Cách dùng | Dữ liệu |
-| --- | --- | --- |
-| Học, sửa lesson, làm bài và push artifact lên GitHub | **Source clone** | .data/ trong clone; chỉ commit content/evidence đã review |
-| Học local bằng double-click, không cần Git | **Portable .exe** | %LOCALAPPDATA%/JourneyAIEngineer; không tự publish |
-| Muốn public web cho nhiều tài khoản | Chưa hỗ trợ trong v0.1 | Cần auth, Postgres/RLS, rate limit và tách local capabilities |
+### Cách 1 — Portable .exe: dành cho người muốn tải về và học ngay
 
-## Chạy nhanh trên Windows
+Dùng cách này nếu bạn chỉ muốn thử app, không muốn cài Python/Node/Git và không cần sửa source code.
 
-Yêu cầu: Windows 10/11, Python 3.11+, Node.js 20+, Git và VS Code. Docker không bắt buộc cho local v0.1.
+1. Mở [GitHub Releases](https://github.com/Hzyl/JourneyAIEngineer/releases/latest).
+2. Tải **JourneyAIEngineer-v0.1.2-windows-x64.zip** và **SHA256SUMS.txt** trong cùng release.
+3. Kiểm tra checksum theo hướng dẫn bên dưới.
+4. Giải nén ZIP vào một thư mục riêng, ví dụ `C:\Users\<you>\Documents\JourneyAIEngineer`.
+5. Mở thư mục vừa giải nén và double-click **JourneyAIEngineer.exe**.
 
-~~~powershell
-git clone https://github.com/Hzyl/JourneyAIEngineer.git
-Set-Location JourneyAIEngineer
-.\scripts\setup.ps1
-.\scripts\dev.ps1
-~~~
+App sẽ tự khởi động server chỉ trên máy bạn, mở trình duyệt và không mở cửa sổ terminal. Khi tab cuối cùng đóng, server local sẽ tự dừng sau một khoảng ngắn.
 
-Mở http://127.0.0.1:5173. Nếu muốn chạy thủ công:
+Nếu Windows SmartScreen cảnh báo, hãy kiểm tra đúng nguồn tải và checksum. Binary beta chưa được code-sign nên cảnh báo này có thể xuất hiện.
 
-~~~powershell
-python -m uvicorn apps.api.main:app --reload --host 127.0.0.1 --port 8000
-npm run dev
-~~~
+### Kiểm tra SHA-256 trên PowerShell
 
-Setup tạo .venv, cài dependency backend/frontend theo lockfile, tạo .data/ và khởi tạo database. Không commit .data, .env, .venv, database hoặc journal riêng.
-
-## Portable .exe
-
-Maintainer tạo bản phát hành bằng:
+Chạy trong thư mục chứa ZIP và SHA256SUMS.txt:
 
 ~~~powershell
-npm run package:windows
+$zip = '.\JourneyAIEngineer-v0.1.2-windows-x64.zip'
+$expected = ((Get-Content '.\SHA256SUMS.txt' -Raw).Trim() -split '\s+')[0].ToLowerInvariant()
+$actual = (Get-FileHash $zip -Algorithm SHA256).Hash.ToLowerInvariant()
+
+if ($actual -ne $expected) {
+  throw 'Checksum không khớp. Xóa ZIP và tải lại từ GitHub Release.'
+}
+
+'Checksum OK: ' + $actual
 ~~~
 
-Script chạy quality gates, build frontend, đóng gói JourneyAIEngineer.exe, tạo ZIP versioned và SHA256SUMS.txt. Người dùng tải ZIP từ GitHub Release, giải nén vào thư mục có quyền ghi và double-click executable. SmartScreen có thể cảnh báo vì binary chưa được code-sign; checksum giúp kiểm tra toàn vẹn nhưng không thay thế code signing.
+Portable app lưu tiến trình ở:
 
-Portable mode tự mở browser ở loopback, không hiện terminal và tự tắt nền sau khi tab cuối cùng rời đi. Data root mặc định là %LOCALAPPDATA%\JourneyAIEngineer; có thể đổi bằng:
+~~~text
+%LOCALAPPDATA%\JourneyAIEngineer
+~~~
+
+Nơi này chứa database, review state, notes, journal và workspace local của **riêng người đang dùng máy**. Nó không được commit lên GitHub và không tự publish artifact.
+
+Có thể đổi data root trước khi mở app:
 
 ~~~powershell
 $env:JOURNEY_DATA_DIR = "$env:USERPROFILE\JourneyAIEngineerData"
 .\JourneyAIEngineer.exe
 ~~~
 
-Muốn export artifact/Git từ bản portable, trỏ JOURNEY_PROJECT_ROOT tới source clone trước khi mở app:
+### Cách 2 — Source clone: dành cho học viên muốn sửa code và push artifact
+
+Dùng cách này nếu bạn muốn sửa lesson, làm exercise trong VS Code, xem Git diff, tạo commit và đưa artifact lên fork/repository của mình.
+
+Source clone **không tự xuất hiện trên Desktop**. Git sẽ tạo folder ngay trong thư mục hiện tại của PowerShell. Ví dụ, để clone vào Desktop:
 
 ~~~powershell
-$env:JOURNEY_PROJECT_ROOT = "C:\src\JourneyAIEngineer"
+Set-Location "$env:USERPROFILE\Desktop"
+git clone https://github.com/Hzyl/JourneyAIEngineer.git
+Set-Location .\JourneyAIEngineer
 ~~~
 
-Không có clone thì UI phải hiển thị local learning mode và tắt publish GitHub. Bản portable không chứa database runtime của maintainer.
+Nếu repository đang private, tài khoản GitHub của bạn phải được cấp quyền trước khi clone. Khi repository public, mọi người có thể clone bằng lệnh trên.
 
-## Một vòng học có thể lặp lại
+Cài yêu cầu:
 
-1. Vào Roadmap, đọc mục tiêu, concept notes, formula/code example và completion criteria.
-2. Mở Practice Lab, tạo workspace cho exercise rồi mở đúng thư mục bằng VS Code.
-3. Tự làm trước, ghi input/output và giả thuyết khi có lỗi; chạy test theo manifest.
-4. Đánh dấu lesson sau khi có evidence, trả lời review card (again, hard, good, easy).
-5. Ghi một insight vào Journal. Khi bị kẹt, tạo context export có lesson/progress/note rồi dán sang ChatGPT/Codex.
-6. Review Git diff, redact secret và chỉ export hoặc push artifact được allowlist.
+- Windows 10/11
+- Python 3.11+
+- Node.js 20+
+- Git
+- VS Code (khuyến nghị cho exercise)
+- Docker **không bắt buộc** cho local v0.1
 
-App không tự gọi API AI và không cần API key ở MVP. Context bridge là file/clipboard Markdown, để người học giữ quyền kiểm soát dữ liệu và chi phí.
+Thiết lập và chạy:
 
-## Curriculum
+~~~powershell
+.\scripts\setup.ps1
+.\scripts\dev.ps1
+~~~
 
-Catalog hiện có **23 phase và 208 lesson**:
+Mở [http://127.0.0.1:5173](http://127.0.0.1:5173). Dữ liệu runtime của source clone nằm trong .data\; thư mục này đã được ignore.
 
-- 8 phase core: onboarding, Python/software engineering, math for ML, classical ML, deep learning, MLOps/deployment, NLP/LLM/RAG và capstone/career.
-- 15 phase GenAI specialization: GenAI software foundations, ML/embedding, Transformer, LLM application engineering, RAG, advanced RAG, tool calling, agents, MCP, evaluation, observability, production engineering, fine-tuning, local LLM và AI system design.
+Muốn dừng app dev, quay lại cửa sổ PowerShell đang chạy dev.ps1 và nhấn **Ctrl+C**.
 
-Thứ tự được kiểm tra bằng prerequisite graph: software engineering → math/statistics → classical ML → deep learning → Transformer/LLM → application/RAG → tools/agents → evaluation/observability → production hardening → specialization/system design. Mỗi lesson có Việt/English, objective, prerequisite, concept notes, walkthrough, practice, resource guidance, checklist, common mistakes, next lesson và review cards.
+### Portable và source clone khác nhau thế nào?
 
-Hai nhịp học được seed thật:
+| Bạn muốn làm gì? | Dùng | Dữ liệu | GitHub |
+| --- | --- | --- | --- |
+| Học ngay bằng double-click | Portable ZIP + .exe | `%LOCALAPPDATA%\JourneyAIEngineer` | Không tự push |
+| Sửa lesson/exercise, mở VS Code | Source clone | `.data\` trong clone | Có thể review diff rồi push |
+| Chia sẻ cho nhiều tài khoản qua web | Chưa hỗ trợ ở v0.1 | Cần hosted architecture | Cần auth, Postgres/RLS, rate limit |
 
-- **Standard:** khoảng 12–15 tháng, 12–15 giờ/tuần.
-- **Accelerated:** map lesson/project cụ thể để tạo evidence sớm; không chỉ đổi tiêu đề tuần.
+Portable build có thể dùng workspace local. Nếu muốn export artifact/Git từ portable, đặt biến môi trường tới một source clone mà bạn sở hữu **trước khi mở executable**:
 
-Lesson source ở content/lessons/*.md; JSON generated ở content/lessons.json để app chạy ngay sau fresh clone. Resource library có tài liệu official-first (Python, NumPy, scikit-learn, PyTorch, FastAPI, Docker, MLflow, Hugging Face, Google ML, Stanford CS229, D2L, Full Stack Deep Learning) và nguồn community được gắn nhãn. Ví dụ [AI Engineering from Scratch](https://github.com/rohitg00/ai-engineering-from-scratch) là tài liệu đọc thêm, không thay thế phần giải thích trong app.
+~~~powershell
+$env:JOURNEY_PROJECT_ROOT = 'C:\src\JourneyAIEngineer'
+.\JourneyAIEngineer.exe
+~~~
 
-## Các project showcase
+Không có source clone, app vẫn dùng được cho học, review và test local; UI sẽ tắt các thao tác publish GitHub thay vì báo lỗi mơ hồ.
 
-Roadmap tăng dần qua:
+---
 
-1. **LLM Chat API** — request/response, structured output, streaming, retry và cost.
-2. **Document Intelligence System** — parsing, chunking, metadata, extraction và evaluation.
-3. **Advanced RAG System** — hybrid search, BM25/vector, reranking, citation và error analysis.
-4. **AI Assistant với Database & API** — tool schema, validation, timeout, auth boundary.
-5. **Research Assistant Agent** — planning, memory, tool use, guardrails và human-in-the-loop.
-6. **End-to-End Production GenAI System** — architecture, observability, latency/cost, deployment và rollback.
+## Một vòng học mẫu
 
-Mỗi project cần README, problem statement, baseline, metric, test, evaluation report, architecture decision và demo evidence. Khả năng clone/chạy, chất lượng evidence và cách giải thích trade-off là tiêu chuẩn chính để người khác đánh giá project.
+1. Mở **Roadmap**, chọn phase và lesson phù hợp với prerequisite.
+2. Đọc concept notes, ví dụ, common mistakes và completion criteria ngay trong app.
+3. Từ **Practice Lab**, tạo workspace; app trỏ VS Code vào đúng thư mục.
+4. Tự làm trước, chạy test theo exercise manifest và lưu output/evidence.
+5. Đánh dấu lesson, trả lời review card (again, hard, good, easy).
+6. Ghi điều đã học vào **Journal**; khi bị kẹt, tạo context export rồi tự dán sang ChatGPT/Codex.
+7. Mở **Journal & Git**, đọc diff, kiểm tra secret và chỉ publish artifact sau khi xác nhận.
 
-## Workspace, test và GitHub journey
+App không gọi API AI trực tiếp ở v0.1 và không cần API key. Context bridge chỉ tạo Markdown để người học kiểm soát nội dung, chi phí và dữ liệu gửi ra ngoài.
 
-Mỗi exercise tạo .data/workspaces/<exercise-slug> với starter, test contract, README mục tiêu/input/output/edge case và expected evidence. Test runner chỉ chạy command được manifest cho phép với timeout/output cap. Nút Tạo & mở VS Code trỏ thẳng tới workspace, nên bạn có thể sửa và lưu bằng Ctrl+S.
+## Có gì trong sản phẩm?
 
-Khi hoàn thành:
+- **23 phase / 208 lesson** theo dependency graph từ software engineering đến AI system design.
+- Song ngữ Việt/English, objective, prerequisite, walkthrough, code example, practice, resource guidance và review cards.
+- Track **Standard** (12–15 tháng) và **Accelerated** (học để tạo evidence sớm).
+- Workspace và test contract cho exercise; có thể mở trực tiếp bằng VS Code.
+- Spaced review, weak-topic detection, notes, journal và context export.
+- Git status/diff, secret redaction, commit message gợi ý và publish sau xác nhận.
+- Backup/export progress và dữ liệu học local.
+- Resource library official-first; tài liệu community được gắn nhãn để phân biệt với nguồn chính thức.
 
-1. Chọn Lưu artifact để copy file an toàn sang exercises/, projects/ hoặc journal/.
-2. App bỏ qua .env, .db, .venv, symlink và pattern secret; vẫn phải xem diff bằng mắt.
-3. Trong Journal & Git, kiểm tra diff và commit message gợi ý.
-4. Tick xác nhận rồi mới publish. Push thất bại vẫn giữ commit local để xử lý credential/remote.
+Các project showcase gồm LLM Chat API, Document Intelligence, Advanced RAG, AI Assistant với database/API, Research Assistant Agent và End-to-End Production GenAI System.
 
-Remote repository dùng đúng tên Hzyl/JourneyAIEngineer. Nếu bạn fork, hãy thay remote theo tài khoản của bạn. App không lưu credential và không tự push khi chưa có xác nhận.
+---
 
-## Feedback, cộng đồng và cập nhật lesson
+## Dữ liệu, riêng tư và giới hạn
 
-Lesson có panel Giúp bài học tốt hơn cho lỗi nội dung, thiếu ví dụ/resource, broken link, exercise problem hoặc feature request. Local beta lưu feedback pending trong SQLite; community chỉ đọc feedback accepted/implemented. Email, progress và journal riêng không đi vào public payload. App không tự sửa hoặc push curriculum; maintainer review rồi cập nhật Markdown qua Git.
+- Source code, lesson Markdown và tài liệu có thể commit lên GitHub.
+- .data\, database, .env, .venv\, journal private, token và secret **không được commit**.
+- Portable runtime lưu trong %LOCALAPPDATA%\JourneyAIEngineer; xóa thư mục này có thể làm mất progress chưa backup.
+- Local API chỉ bind 127.0.0.1. Không forward port, không bind 0.0.0.0 và không dùng nó như public code-execution endpoint.
+- v0.1 chưa có login, password recovery, multi-user isolation, public progress sync hay cloud backup.
+- Nếu bạn muốn chia sẻ beta khi repository còn private, người thử cần được cấp quyền GitHub; Release/clone sẽ không mở cho người ngoài. Khi sẵn sàng public, hãy kiểm tra secret/history scan trước khi đổi visibility.
 
-Feedback online/public trong tương lai cần auth, moderation, rate limit, abuse control và Postgres/RLS. SQLite local không phải backend multi-tenant. Trong public beta, lesson có thể tạo một report đã redact mẫu credential, hiển thị để kiểm tra rồi mở GitHub Discussions; app không tự gửi nội dung ra ngoài.
+Xem [SECURITY.md](SECURITY.md) để hiểu local boundary và cách báo cáo lỗ hổng.
 
-## Security boundary và RedAmon
+Security audit trong repository là **passive inventory**: `scripts/security_audit.py` chỉ đọc route/schema/source pattern, không gửi request, không gọi handler, không tạo payload và không tự chạy RedAmon. Chỉ kiểm tra target mà bạn sở hữu hoặc được ủy quyền trong môi trường staging cô lập.
 
-scripts/security_audit.py --format summary là passive inventory: đọc route/schema/source pattern, không gửi network request, không gọi handler, không tạo payload và không clone/cài/chạy [RedAmon](https://github.com/samugit83/redamon). RedAmon chỉ là security lab tham khảo cho target do bạn sở hữu/được ủy quyền, trong staging cô lập và dữ liệu giả. Không quét production/public target hay hệ thống người khác.
+---
 
-Local routes có path allowlist, timeout, output cap, origin/loopback guard và secret redaction. Không bind 0.0.0.0, forward port hoặc đặt admin token trong frontend. Xem [SECURITY.md](SECURITY.md) để biết boundary và cách báo cáo.
+## Đóng góp và feedback
 
-## Quality gates cho contributor
+- Lỗi có thể tái hiện: dùng [Bug report](https://github.com/Hzyl/JourneyAIEngineer/issues/new?template=bug_report.yml).
+- Ý tưởng về lesson/UX: dùng [Feature request](https://github.com/Hzyl/JourneyAIEngineer/issues/new?template=feature_request.yml).
+- Trao đổi trải nghiệm beta: dùng [GitHub Discussions](https://github.com/Hzyl/JourneyAIEngineer/discussions).
+- Thay đổi code/content: đọc [CONTRIBUTING.md](CONTRIBUTING.md), tạo branch và mở pull request.
+
+Khi báo lỗi, hãy ghi mode (Portable hoặc Source clone), version/commit, Windows/browser, bước tái hiện, expected và actual behavior. Không gửi token, database, journal riêng hoặc file .env.
+
+---
+
+## Kiểm tra contributor
+
+Sau khi clone và chạy setup:
 
 ~~~powershell
 python scripts/build_lesson_catalog.py
@@ -189,40 +182,61 @@ python -m pytest -q --basetemp .build\pytest -o cache_dir=.build\pytest-cache
 npm ci
 npm run lint
 npm run build
+npm run test:e2e
 ~~~
 
-Hoặc chạy .\scripts\test.ps1 để dùng bộ kiểm tra chuẩn. CI trên GitHub chạy content validation, Python tests, pip check, npm lockfile install, lint, Vite build, browser smoke test và secret scan. Release script kiểm tra ZIP không chứa .data, database, .venv, node_modules, .env, secret hoặc cache.
+Hoặc dùng:
 
-Xem:
+~~~powershell
+.\scripts\test.ps1
+~~~
 
-- [Public beta guide](docs/PUBLIC-BETA.md)
-- [Windows quickstart](docs/QUICKSTART-WINDOWS.md)
-- [Architecture](docs/ARCHITECTURE.md)
-- [Contributing](CONTRIBUTING.md)
-- [Security policy](SECURITY.md)
-- [Content source](content/lessons/)
-- [Study playbook](content/study-playbook.md)
-
-## Phát hành local và GitHub
+Đóng gói bản Windows:
 
 ~~~powershell
 npm run package:windows
 ~~~
 
-Output ở .build/releases/: executable copy, ZIP versioned và checksum. Chỉ maintainer tạo GitHub Release sau khi xem diff, secret/history scan và xác nhận thủ công. JourneyAIEngineer.exe và runtime state đã được ignore, nên không đưa executable/database cá nhân vào source PR.
+Script sẽ chạy quality gates, build JourneyAIEngineer.exe, tạo ZIP versioned và SHA256SUMS.txt trong:
 
-Bản public beta hiện tại: [v0.1.2 Windows release](https://github.com/Hzyl/JourneyAIEngineer/releases/tag/v0.1.2). Release đính kèm ZIP và `SHA256SUMS.txt`; hãy kiểm tra checksum trước khi chạy binary chưa code-sign.
+~~~text
+.build\releases\
+~~~
 
-## Evidence và demo
+ZIP chỉ chứa executable và tài liệu tối thiểu; không chứa .data\, database, .venv\, node_modules, .env hoặc journal runtime.
 
-Mỗi project trong roadmap được xem là hoàn chỉnh khi có README, problem statement, baseline, metric, test, evaluation report, architecture decision, lessons learned và demo evidence. Các artifact này giúp người dùng khác có thể kiểm tra kết quả, tái chạy workflow và hiểu rõ trade-off kỹ thuật.
+---
 
-Repository giữ phạm vi và giới hạn của v0.1 minh bạch: đây là learning product local-first single-user, không phải hosted SaaS hay hệ thống AI production multi-user. Những capability chưa có auth, cloud isolation hoặc monitoring thật không được mô tả vượt quá phạm vi đó.
+## Kiến trúc ngắn gọn
+
+~~~mermaid
+flowchart LR
+    UI[React + TypeScript + Vite] --> API[FastAPI loopback]
+    API --> DB[(SQLite local)]
+    API --> CAT[Generated lesson catalog]
+    API --> WS[Workspace + test runner]
+    API --> GIT[Local Git/context bridge]
+    SRC[Markdown/YAML lessons] --> BUILD[Build + validation]
+    BUILD --> CAT
+~~~
+
+Markdown/YAML là source of truth cho lesson; content/lessons.json là catalog generated để app chạy nhanh sau fresh clone. Database runtime không nằm trong source tree public.
+
+Đọc thêm:
+
+- [Windows quickstart](docs/QUICKSTART-WINDOWS.md)
+- [Public beta guide](docs/PUBLIC-BETA.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Contributing](CONTRIBUTING.md)
+- [Security policy](SECURITY.md)
+- [Study playbook](content/study-playbook.md)
 
 ## Roadmap
 
-- **v0.1:** local-first single-user, bilingual curriculum, review, workspace, journal, Git context bridge, source clone và portable Windows package.
-- **v0.2:** public read-only learning hub/feedback moderation sau khi chốt auth/data isolation.
+- **v0.1:** local-first single-user, bilingual curriculum, review, workspace, journal, Git context bridge, source clone và Windows portable release.
+- **v0.2:** public read-only learning hub và feedback moderation sau khi chốt auth/data isolation.
 - **v0.3:** optional hosted progress sync, account recovery và provider adapters; local export/import vẫn là đường lui.
 
-Apache-2.0 được dùng cho source code repository. Tài liệu, model, dataset và code bên thứ ba giữ license riêng; hãy xem attribution trước khi tái sử dụng.
+## License
+
+Source code của repository dùng [Apache-2.0](LICENSE). Nội dung, dataset, model và code bên thứ ba giữ license riêng; hãy xem attribution trước khi tái sử dụng.
