@@ -34,6 +34,9 @@ jobs:
         run: npm ci
       - name: Validate curriculum
         run: npm run validate
+      - name: Prepare Python test directories
+        shell: pwsh
+        run: New-Item -ItemType Directory -Path .build -Force | Out-Null
       - name: Run Python tests
         shell: pwsh
         run: python -m pytest -q --basetemp .build\pytest-ci -o cache_dir=.build\pytest-cache
