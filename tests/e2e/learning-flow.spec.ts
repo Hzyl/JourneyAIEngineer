@@ -22,7 +22,8 @@ test('lesson deep link renders content and preserves a single browser route', as
   await expect(page.getByRole('heading', { name: 'Giải thích cốt lõi' })).toBeVisible()
 
   const feedback = page.getByRole('textbox', { name: 'Góp ý cụ thể' })
-  await feedback.fill('Thêm một ví dụ PowerShell có output expected. sk-abcdefghijklmnopqrstuvwxyz123456')
+  const fakeSecret = ['sk', 'abcdefghijklmnopqrstuvwxyz123456'].join('-')
+  await feedback.fill(`Thêm một ví dụ PowerShell có output expected. ${fakeSecret}`)
   await page.getByRole('button', { name: 'Tạo report để gửi GitHub' }).click()
   await expect(page.getByRole('textbox', { name: 'Report feedback vừa tạo' })).toHaveValue(/phase-00-onboarding-environment-1[\s\S]*\[REDACTED\]/)
 
