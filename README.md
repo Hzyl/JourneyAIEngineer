@@ -2,6 +2,15 @@
 
 > A local-first, bilingual learning platform that turns an AI Engineer roadmap into verified lessons, VS Code labs, spaced review, journal entries and Git-ready project evidence.
 
+[![CI](https://github.com/Hzyl/JourneyAIEngineer/actions/workflows/ci.yml/badge.svg)](https://github.com/Hzyl/JourneyAIEngineer/actions/workflows/ci.yml)
+[![Latest release](https://img.shields.io/github/v/release/Hzyl/JourneyAIEngineer?display_name=tag)](https://github.com/Hzyl/JourneyAIEngineer/releases/latest)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
+[![GitHub Discussions](https://img.shields.io/badge/feedback-GitHub%20Discussions-8250df)](https://github.com/Hzyl/JourneyAIEngineer/discussions)
+
+> **Public beta · v0.1.1** — Bản beta có thể tải về và dùng local trên Windows. Hãy thử một vòng học, báo lỗi cụ thể và chia sẻ điều gì giúp bạn học tốt hơn. Đây chưa phải hosted SaaS hay nền tảng đồng bộ tiến độ nhiều người dùng.
+
+**Bắt đầu nhanh:** [Tải bản Windows portable](https://github.com/Hzyl/JourneyAIEngineer/releases/latest) · [Clone để phát triển](docs/QUICKSTART-WINDOWS.md) · [Xem hướng dẫn beta](docs/PUBLIC-BETA.md) · [Gửi feedback](https://github.com/Hzyl/JourneyAIEngineer/discussions)
+
 Journey AI Engineer là một **learning product local-first** dành cho sinh viên muốn đi từ nền tảng lập trình đến khả năng xây, đánh giá và vận hành hệ thống AI/GenAI. App không chỉ là bảng checklist: mỗi lesson có giải thích trong app, ví dụ, practice, tiêu chí hoàn thành, tài liệu đọc sâu và review card.
 
 Mục tiêu của v0.1:
@@ -182,10 +191,11 @@ npm run lint
 npm run build
 ~~~
 
-Hoặc chạy .\scripts\test.ps1 để dùng bộ kiểm tra chuẩn. CI trên GitHub chạy content validation, Python tests, pip check, npm lockfile install, lint và Vite build. Release script kiểm tra ZIP không chứa .data, database, .venv, node_modules, .env, secret hoặc cache.
+Hoặc chạy .\scripts\test.ps1 để dùng bộ kiểm tra chuẩn. CI trên GitHub chạy content validation, Python tests, pip check, npm lockfile install, lint, Vite build, browser smoke test và secret scan. Release script kiểm tra ZIP không chứa .data, database, .venv, node_modules, .env, secret hoặc cache.
 
 Xem:
 
+- [Public beta guide](docs/PUBLIC-BETA.md)
 - [Windows quickstart](docs/QUICKSTART-WINDOWS.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Contributing](CONTRIBUTING.md)
@@ -200,6 +210,8 @@ npm run package:windows
 ~~~
 
 Output ở .build/releases/: executable copy, ZIP versioned và checksum. Chỉ maintainer tạo GitHub Release sau khi xem diff, secret/history scan và xác nhận thủ công. JourneyAIEngineer.exe và runtime state đã được ignore, nên không đưa executable/database cá nhân vào source PR.
+
+Bản public beta hiện tại: [v0.1.1 Windows release](https://github.com/Hzyl/JourneyAIEngineer/releases/tag/v0.1.1). Release đính kèm ZIP và `SHA256SUMS.txt`; hãy kiểm tra checksum trước khi chạy binary chưa code-sign.
 
 ## Evidence và demo
 

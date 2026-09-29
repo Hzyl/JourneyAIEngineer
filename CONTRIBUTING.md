@@ -67,7 +67,14 @@ Frontend:
 npm ci
 npm run lint
 npm run build
+npx playwright install chromium
+npm run test:e2e
 ```
+
+`test:e2e` starts a loopback FastAPI process and Vite dev server through
+`playwright.config.ts`, then checks the dashboard, primary navigation and a
+lesson deep link in Chromium. It does not call an external AI API. CI installs
+the browser before running the same command.
 
 Kiểm tra keyboard navigation, màn hình rộng 390px, focus state, text tiếng Việt có dấu và không để absolute path/credential lọt vào response. Thay đổi route local phải giữ loopback binding, path allowlist, timeout, secret redaction và confirmation trước Git publish.
 

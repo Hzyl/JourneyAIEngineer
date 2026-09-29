@@ -37,6 +37,11 @@ pytest_cache/
 *.sqlite3
 .coverage
 
+# Browser smoke-test artifacts
+test-results/
+playwright-report/
+blob-report/
+
 # Local Windows package output
 JourneyAIEngineer*.exe
 .build/

@@ -1,7 +1,7 @@
 {
   "name": "journey-ai-engineer",
   "private": false,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Local-first bilingual learning OS for becoming an AI Engineer.",
   "type": "module",
   "scripts": {
@@ -11,7 +11,7 @@
     "preview": "vite preview",
     "validate": "python scripts/validate_content.py",
     "test": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/test.ps1",
-    "test:e2e": "echo E2E smoke tests are run by the release workflow when browser tooling is installed",
+    "test:e2e": "playwright test",
     "package:windows": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/package_release.ps1"
   },
   "dependencies": {
@@ -19,6 +19,7 @@
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
