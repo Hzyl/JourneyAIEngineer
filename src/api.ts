@@ -110,7 +110,7 @@ export type Lesson = {
   common_mistakes: string[]
   next_lessons: string[]
   exercise_ids: string[]
-  review_item_ids: number[]
+  review_item_ids: Array<number | string>
   estimated_minutes: number
   status: string
   minutes_spent: number
@@ -118,7 +118,7 @@ export type Lesson = {
   phase_title_en: string
   module_title_vi: string
   module_title_en: string
-  reviews: Array<{ id: number; question_vi: string; question_en: string; answer_vi: string; answer_en: string }>
+  reviews: Array<{ id: number | string; question_vi: string; question_en: string; answer_vi: string; answer_en: string; type?: string; hint_vi?: string; hint_en?: string }>
   exercises: Exercise[]
   why_it_matters_vi: string
   why_it_matters_en: string
@@ -222,7 +222,7 @@ export type SecurityAuditReport = {
   limitations_vi: string[]
 }
 
-export type HealthStatus = { status: string; project_root_configured: boolean; git_publish_available: boolean; local_only: boolean }
+export type HealthStatus = { status: string; project_root_configured: boolean; git_publish_available: boolean; local_only: boolean; mode?: 'local' | 'hosted' }
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`, {
@@ -243,7 +243,7 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
   return response.json() as Promise<T>
 }
 
-export const api = {
+export const localApi = {
   health: () => request<HealthStatus>('/health'),
   dashboard: () => request<Dashboard>('/dashboard'),
   roadmap: () => request<{ program: { title_vi: string; title_en: string; description_vi: string; description_en: string; standard_weeks: number; accelerated_weeks: number; portfolio_projects: PortfolioProject[]; career_checklist: string[] }; phases: any[] }>('/roadmap'),
@@ -297,3 +297,7 @@ export const api = {
     return request<{ ok: boolean; active_clients: number }>('/runtime/disconnect', { method: 'POST', body, keepalive: true })
   },
 }
+
+// Compatibility export for local-only modules. The application selects the
+// runtime-specific client from src/platform/learning-client.ts.
+export const api = localApi

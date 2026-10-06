@@ -1,0 +1,3 @@
+-- Intentionally empty. The hosted beta ships no shared learner data:
+-- curriculum stays in the version-controlled static catalog and each learner
+-- creates private state through Supabase Auth plus RLS.

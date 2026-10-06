@@ -45,6 +45,8 @@ jobs:
         run: python scripts/security_audit.py --format summary
       - name: Lint frontend
         run: npm run lint
+      - name: Run frontend unit tests
+        run: npm run test:unit
       - name: Build frontend
         run: npm run build
       - name: Install Chromium for browser smoke test
@@ -62,3 +64,45 @@ jobs:
             $matches | ForEach-Object { Write-Output $_.Line }
             throw 'Potential secret marker found in tracked source.'
           }
+  hosted-database:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install frontend dependencies
+        run: npm ci
+      - name: Start Supabase and apply migrations
+        shell: bash
+        run: |
+          npx supabase start
+          npx supabase db reset
+      - name: Test schema, RLS and RPC boundary
+        run: npx supabase test db
+      - name: Verify generated database types
+        shell: bash
+        run: |
+          npm run supabase:types
+          git diff --exit-code -- src/platform/hosted/database.types.ts
+      - name: Capture local hosted test variables
+        shell: bash
+        run: |
+          eval "$(npx supabase status -o env)"
+          echo "VITE_SUPABASE_URL=$API_URL" >> "$GITHUB_ENV"
+          echo "VITE_SUPABASE_PUBLISHABLE_KEY=${PUBLISHABLE_KEY:-$ANON_KEY}" >> "$GITHUB_ENV"
+      - name: Build hosted frontend
+        shell: bash
+        run: VITE_APP_MODE=hosted npm run build
+      - name: Install Chromium for hosted smoke test
+        run: npx playwright install --with-deps chromium
+      - name: Run hosted browser boundary smoke
+        shell: bash
+        run: VITE_APP_MODE=hosted npm run test:e2e:hosted
+      - name: Stop local Supabase
+        if: always()
+        run: npx supabase stop --no-backup

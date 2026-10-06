@@ -41,6 +41,23 @@ Các route đọc Git, mở folder/VS Code, tạo workspace và chạy test là 
 
 Hosted v0.2+ phải tách các adapter này khỏi public API, thêm authentication, per-user isolation, Postgres/RLS, rate limit, audit log và secret management. Không triển khai public bằng cách expose FastAPI local hiện tại.
 
+## Web beta candidate
+
+Web beta is prepared as a separate runtime and is not a public FastAPI deployment:
+
+```text
+Cloudflare Pages (React/Vite static SPA)
+        │ Supabase JS with the learner's JWT
+        ▼
+Supabase Auth + Postgres + RLS
+        │
+        └── per-user progress, reviews, notes, journal, settings and sessions
+
+Desktop/local remains: React → FastAPI loopback → SQLite + workspace/Git adapters
+```
+
+The web runtime imports a static curriculum catalog and has no route to local filesystem, Git, VS Code, test runner, backup database or subprocess code. Web and desktop learning data are separate in beta; no automatic two-way migration is promised. See [WEB-BETA.md](WEB-BETA.md) for the deployment gate and [WEB-BETA-PRIVACY.md](WEB-BETA-PRIVACY.md) for data handling.
+
 ## Learning state
 
 Nội dung card (`review_cards`) bất biến; lịch học (`review_state`) lưu due time, interval, ease, repetitions, lapses và suspended/leech. Migration additive giữ progress/history cũ. SM-2 scheduler nhận `again`, `hard`, `good`, `easy`; review sai liên kết trở lại lesson/topic yếu.

@@ -9,5 +9,6 @@ if (-not (Test-Path $Python)) { $Python = 'python' }
 New-Item -ItemType Directory -Force '.build\pytest-test', '.build\pytest-cache' | Out-Null
 & $Python -m pytest -q --basetemp '.build\pytest-test' -o cache_dir='.build\pytest-cache'
 npm run lint
+npm run test:unit
 npm run build
 Write-Host 'Checks passed.' -ForegroundColor Green

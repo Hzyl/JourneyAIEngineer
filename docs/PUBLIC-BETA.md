@@ -2,6 +2,8 @@
 
 Journey AI Engineer v0.1.2 là bản beta **local-first trên Windows**. Mục tiêu của beta là kiểm tra app có giúp một người mới đi qua vòng Roadmap → Lesson → Practice → Review → Journal hay không, đồng thời thu thập feedback để sửa nội dung và UX.
 
+Web beta có đăng nhập và cloud sync đang được chuẩn bị trong source, nhưng chưa có public URL. Khi được mở, nó là một runtime riêng dùng Supabase Auth/Postgres/RLS và Cloudflare Pages; người dùng web sẽ không thể chạy exercise, mở VS Code hay gọi Git trên máy. Theo dõi [WEB-BETA.md](WEB-BETA.md) thay vì coi portable release hiện tại là web deployment.
+
 > **Beta không phải hosted web app.** Không có login, cloud sync, public execution server, API AI trả phí hay progress dùng chung giữa các tài khoản. Mỗi người chạy app trên máy của mình.
 
 ## Trước khi mời người thử
@@ -95,7 +97,7 @@ Dùng [GitHub Discussions](https://github.com/Hzyl/JourneyAIEngineer/discussions
 ## Ranh giới beta đã biết
 
 - Chỉ portable Windows được đóng gói trong v0.1. Source clone cần môi trường phát triển.
-- Tiến trình nằm local, không có account, sync hoặc recovery trên cloud.
+- Portable/source clone giữ tiến trình local, không có account, sync hoặc recovery trên cloud. Web beta sau này dùng account/cloud sync riêng, không tự merge dữ liệu SQLite local.
 - App không gọi AI provider trực tiếp; context bridge chỉ tạo Markdown để người dùng tự gửi.
 - Local workspace runner có allowlist, timeout và output cap; không phải dịch vụ chạy code công khai.
 - Feedback public cần maintainer review; app không tự sửa hoặc push curriculum.

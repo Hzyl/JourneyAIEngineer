@@ -72,3 +72,23 @@ def test_every_lesson_has_four_typed_review_cards() -> None:
         assert {card["type"] for card in cards} >= required_types
         assert lesson["review_item_ids"] == [card["id"] for card in cards]
         assert all(card["question_vi"] and card["answer_vi"] and card["hint_vi"] for card in cards)
+
+
+def test_exercise_catalog_is_deterministic_and_resolves_every_module(tmp_path: Path) -> None:
+    output = tmp_path / "exercises.json"
+    subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "build_exercise_catalog.py"), "--output", str(output)],
+        check=True,
+        cwd=ROOT,
+    )
+    generated = json.loads(output.read_text(encoding="utf-8"))
+    checked_in = json.loads((CONTENT / "exercises.json").read_text(encoding="utf-8"))
+    module_slugs = {
+        module["slug"]
+        for phase in json.loads((CONTENT / "curriculum.json").read_text(encoding="utf-8"))["phases"]
+        for module in phase["modules"]
+    }
+    assert generated == checked_in
+    assert {exercise["module_id"] for exercise in generated["exercises"]} == module_slugs
+    assert all(exercise["lesson_slugs"] for exercise in generated["exercises"])
+    assert all(exercise["description_vi"] and exercise["description_en"] for exercise in generated["exercises"])

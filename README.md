@@ -14,7 +14,7 @@ Roadmap → Lesson → Practice Lab → Test → Review → Journal → Git evid
 
 Mục tiêu của sản phẩm là giúp người học đi từ Python/software engineering đến machine learning, deep learning, LLM/RAG, evaluation, observability và system design. Nội dung giải thích chính nằm trong app bằng tiếng Việt, thuật ngữ giữ bằng English và có resource chính thức để đọc sâu.
 
-> **Phiên bản hiện tại: v0.1.2 public beta.** Đây là app local-first, single-user trên Windows. v0.1 chưa có tài khoản, cloud sync, public hosted API hay API AI trả phí. Đừng expose API local ra Internet.
+> **Bản phát hành hiện tại: v0.1.2.** Đây là app local-first, single-user trên Windows. Source code đang chuẩn bị cho web beta có đăng nhập và cloud sync, nhưng chưa có Supabase project, Cloudflare URL hoặc public web deployment. Đừng expose API local ra Internet.
 
 ---
 
@@ -105,7 +105,7 @@ Muốn dừng app dev, quay lại cửa sổ PowerShell đang chạy dev.ps1 và
 | --- | --- | --- | --- |
 | Học ngay bằng double-click | Portable ZIP + .exe | `%LOCALAPPDATA%\JourneyAIEngineer` | Không tự push |
 | Sửa lesson/exercise, mở VS Code | Source clone | `.data\` trong clone | Có thể review diff rồi push |
-| Chia sẻ cho nhiều tài khoản qua web | Chưa hỗ trợ ở v0.1 | Cần hosted architecture | Cần auth, Postgres/RLS, rate limit |
+| Học và sync bằng trình duyệt | Web beta (sắp mở) | Supabase Postgres, tách theo tài khoản | Không chạy code/Git trên web |
 
 Portable build có thể dùng workspace local. Nếu muốn export artifact/Git từ portable, đặt biến môi trường tới một source clone mà bạn sở hữu **trước khi mở executable**:
 
@@ -151,7 +151,7 @@ Các project showcase gồm LLM Chat API, Document Intelligence, Advanced RAG, A
 - .data\, database, .env, .venv\, journal private, token và secret **không được commit**.
 - Portable runtime lưu trong %LOCALAPPDATA%\JourneyAIEngineer; xóa thư mục này có thể làm mất progress chưa backup.
 - Local API chỉ bind 127.0.0.1. Không forward port, không bind 0.0.0.0 và không dùng nó như public code-execution endpoint.
-- v0.1 chưa có login, password recovery, multi-user isolation, public progress sync hay cloud backup.
+- Bản portable/source clone hiện tại chưa có login, password recovery, multi-user isolation, public progress sync hay cloud backup. Web beta là runtime riêng, chỉ được công bố sau khi RLS/two-user smoke test pass.
 - Nếu bạn muốn chia sẻ beta khi repository còn private, người thử cần được cấp quyền GitHub; Release/clone sẽ không mở cho người ngoài. Khi sẵn sàng public, hãy kiểm tra secret/history scan trước khi đổi visibility.
 
 Xem [SECURITY.md](SECURITY.md) để hiểu local boundary và cách báo cáo lỗ hổng.
@@ -227,6 +227,8 @@ Markdown/YAML là source of truth cho lesson; content/lessons.json là catalog g
 - [Windows quickstart](docs/QUICKSTART-WINDOWS.md)
 - [Public beta guide](docs/PUBLIC-BETA.md)
 - [Architecture](docs/ARCHITECTURE.md)
+- [Web beta deployment and boundaries](docs/WEB-BETA.md)
+- [Web beta privacy notice](docs/WEB-BETA-PRIVACY.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security policy](SECURITY.md)
 - [Study playbook](content/study-playbook.md)
@@ -234,8 +236,8 @@ Markdown/YAML là source of truth cho lesson; content/lessons.json là catalog g
 ## Roadmap
 
 - **v0.1:** local-first single-user, bilingual curriculum, review, workspace, journal, Git context bridge, source clone và Windows portable release.
-- **v0.2:** public read-only learning hub và feedback moderation sau khi chốt auth/data isolation.
-- **v0.3:** optional hosted progress sync, account recovery và provider adapters; local export/import vẫn là đường lui.
+- **Web beta candidate:** Supabase Auth/Postgres/RLS + Cloudflare Pages, login/recovery and per-user cloud sync after local and preview quality gates.
+- **Sau beta:** self-service account deletion, stronger hosted E2E/monitoring, optional provider adapters; local export/import vẫn là đường lui.
 
 ## License
 

@@ -33,3 +33,11 @@ Luồng an toàn: passive inventory → dependency/SAST → unit/integration tes
 ## Ranh giới hosted tương lai
 
 Nếu sau này có public web, phải tách public API khỏi filesystem/Git/subprocess, thêm authentication, per-user isolation, Postgres/RLS, rate limit, audit log, CSRF/origin policy và secret management. Không bật hosted mode bằng cách chỉ đổi CORS hoặc bind `0.0.0.0` trên code local hiện tại.
+
+## Web beta boundary
+
+The hosted candidate uses a static React/Vite frontend with Supabase Auth and Postgres RLS. The Supabase **publishable** key is allowed in the browser bundle; it is not a credential that bypasses RLS. Its safety depends on all user-data tables having RLS enabled and policies requiring `user_id = auth.uid()`.
+
+Never expose a Supabase `service_role`/`sb_secret_` key, database password, personal access token or local `.env` through Vite, Cloudflare Pages variables intended for the browser, Git history, screenshots or issue reports. The hosted build rejects the known secret-key prefix and generates CSP `connect-src` from the configured Supabase origin.
+
+Remote Supabase migrations must be additive and tested locally first. A future incident is repaired by a new migration and/or frontend rollback; do not rewrite applied production migration history or expose the local FastAPI service as a workaround.

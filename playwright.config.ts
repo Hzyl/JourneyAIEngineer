@@ -7,9 +7,13 @@ import { defineConfig, devices } from '@playwright/test'
  */
 export default defineConfig({
   testDir: './tests/e2e',
+  testIgnore: '**/hosted-learning-flow.spec.ts',
   timeout: 45_000,
   expect: { timeout: 10_000 },
-  fullyParallel: true,
+  // The local FastAPI/SQLite smoke environment has one shared runtime data
+  // root. Serial execution keeps Playwright artifacts and app state isolated.
+  fullyParallel: false,
+  workers: 1,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 2 : 0,
   reporter: process.env.CI ? 'github' : 'list',
