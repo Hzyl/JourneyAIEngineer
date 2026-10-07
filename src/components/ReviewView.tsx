@@ -24,7 +24,8 @@ export function ReviewView({ reviews, language, onAnswer, onOpenLesson }: Props)
   const vi = language === 'vi'
   const [answered, setAnswered] = useState<Set<number>>(() => new Set())
   const [answer, setAnswer] = useState('')
-  const [busy, setBusy] = useState(false)
+  const [pendingRating, setPendingRating] = useState<string | null>(null)
+  const busy = pendingRating !== null
   const [error, setError] = useState('')
   const [history, setHistory] = useState<History[]>([])
   const [weak, setWeak] = useState<Topic[]>([])
@@ -50,7 +51,7 @@ export function ReviewView({ reviews, language, onAnswer, onOpenLesson }: Props)
   const submit = async (rating: string, submittedAt: number) => {
     if (!item || submitting.current) return
     submitting.current = true
-    setBusy(true)
+    setPendingRating(rating)
     setError('')
     const previous = attempted.current
     const retry = previous?.id === item.id && previous.rating === rating && previous.answer === answer
@@ -67,7 +68,7 @@ export function ReviewView({ reviews, language, onAnswer, onOpenLesson }: Props)
       setError(cause instanceof Error ? cause.message : (vi ? 'Chưa lưu được câu trả lời.' : 'Answer not saved.'))
     } finally {
       submitting.current = false
-      setBusy(false)
+      setPendingRating(null)
     }
   }
 
@@ -96,7 +97,8 @@ export function ReviewView({ reviews, language, onAnswer, onOpenLesson }: Props)
       <div className="rating-row">
         <span>{vi ? 'Bạn nhớ được bao nhiêu?' : 'How well did you recall it?'}</span>
         {['again', 'hard', 'good', 'easy'].map((rating, index) => <button key={rating}
-          className={rating} disabled={busy} onClick={(event) => void submit(rating, event.timeStamp)}>
+          className={rating} disabled={busy} aria-busy={pendingRating === rating}
+          onClick={(event) => void submit(rating, event.timeStamp)}>
           {vi ? ['Chưa nhớ', 'Khó', 'Nhớ được', 'Dễ'][index] : rating}
         </button>)}
       </div>

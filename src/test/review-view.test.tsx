@@ -61,10 +61,13 @@ test('pending writes disable duplicate submissions and a failed save retains the
   })
   expect(answer).toHaveBeenCalledTimes(1)
   expect(host.querySelector<HTMLButtonElement>('button.good')!.disabled).toBe(true)
+  expect(host.querySelector('button.good')!.getAttribute('aria-busy')).toBe('true')
+  expect(host.querySelector('button.easy')!.getAttribute('aria-busy')).toBe('false')
   await act(async () => fail(new Error('Offline')))
   expect(host.querySelector('[role="alert"]')!.textContent).toBe('Offline')
   expect(host.querySelector('h3')!.textContent).toBe('Question 1')
   expect(host.querySelector<HTMLButtonElement>('button.good')!.disabled).toBe(false)
+  expect(host.querySelector('button.good')!.getAttribute('aria-busy')).toBe('false')
 })
 
 test('retry keeps the original elapsed time so the server recognizes the same review', async () => {

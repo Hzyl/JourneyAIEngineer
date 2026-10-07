@@ -1,7 +1,10 @@
 # Pending public-readiness release
 
-Status: local working-tree changes, not committed, pushed or deployed. The package version
-is still 0.1.2, an existing release; select a new version before publishing new assets.
+Status as of 2026-10-07: readiness commit `29b6baf` and theme commit `5e0e34a`
+are on `origin/main` (remote head verified). Interaction feedback and Journal VI/EN
+follow-up changes remain local. Cloudflare deployment and production migrations have
+not been reverified after those pushes. The package version is still 0.1.2, an
+existing release; select a new version before publishing new assets.
 See `PUBLIC-READINESS-IMPLEMENTATION.md` for evidence and outstanding checks.
 
 ## Supabase MCP and Docker have different jobs

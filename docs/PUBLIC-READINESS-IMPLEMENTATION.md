@@ -1,7 +1,7 @@
 # Public readiness implementation
 
 Approved scope: the 2026-10-07 audit and its four implementation stages.
-Existing user changes and the two unpublished auth commits must be preserved.
+Existing user changes and auth commits must be preserved.
 Status is evidence based; an unchecked item remains part of the active goal.
 
 ## Contracts and ownership
@@ -88,11 +88,12 @@ tests/test_curated_content.py, docs/CURRICULUM-STANDARDS.md. No other files.
 - 2026-10-07: implementation contracts recorded before independent work.
 
 
-## Verification checkpoint — 2026-10-07
+## Initial verification checkpoint — 2026-10-07
 
-Implemented does not mean deployed. The real Supabase project still has only the two
-20261006 migrations; MCP read-only inspection confirmed its URL and migration list.
-No commit, push, production migration, Auth-setting change or Edge deployment was performed.
+Implemented does not mean deployed. At this initial checkpoint, MCP read-only inspection
+showed only the two 20261006 migrations. No commit, push, production migration,
+Auth-setting change or Edge deployment had been performed at that checkpoint.
+See the follow-up below for subsequent Git and test status.
 
 - Current Python suite: **57 passed**; catalog/reference/fingerprint validation passed.
 - Current frontend suite: **25 passed**; lint exits successfully with 3 warnings.
@@ -121,7 +122,7 @@ No commit, push, production migration, Auth-setting change or Edge deployment wa
    the CI type-diff gate; do not generate from the old production schema.
 2. Run/check the Edge Function with its real Deno runtime and disposable Auth accounts;
    confirm origins, password reauthentication, failure behavior and account deletion.
-3. Complete remaining VI/EN strings (including exercise/journal screens),
+3. Complete remaining VI/EN strings beyond the verified Journal and exercise screens,
    keyboard/focus checks across routes and frontend load-time review.
 4. Verify Windows launch, missing-Python behavior, learner workspace and backup restore
    on a clean machine. The successful build on this development machine is insufficient.
@@ -151,3 +152,45 @@ The archive records its creation-time documentation; this verification entry was
 
 Measured theme pairs: body/white 15.81:1, muted/paper 6.73:1, white/primary button 6.66:1,
 sidebar hint/background 8.90:1. These pair checks do not certify the entire application.
+
+## Interaction and Journal follow-up — 2026-10-07
+
+- Remote `main` verified at `5e0e34af22fb02f7e0056a9013fe66cb292eb7e0`:
+  readiness and theme commits are pushed. This follow-up remains uncommitted locally.
+  Remote Git state does not establish Cloudflare or Supabase deployment state.
+- Added shared press feedback, pending indicators, duplicate-submit protection and
+  persistent save/error feedback; see `INTERACTIONS.md`.
+- Extracted Journal into dedicated components and VI/EN labels. User-authored text
+  remains unchanged. Hosted Journal never requests local Git APIs. Notes expose
+  English lesson-title metadata through an additive response field.
+- Current checks: 58 Python tests, 31 unit tests, 15 local Playwright tests and
+  6 hosted Playwright tests passed. After limiting button/navigation transitions to
+  movement and shadow, reran 6 interaction/Journal tests and all 6 hosted tests: passed.
+- Journal VI/EN checks cover context creation, clipboard failure with retained preview,
+  export feedback, mobile width 390px, and light/dark contrast. Stable screenshots
+  in `.build/journal-evidence/` were visually inspected; generated evidence stays ignored.
+  Hosted editor unit tests cover validation, pending state, duplicate clicks, retry,
+  draft preservation and language changes. These do not prove live cloud writes.
+- Production build passes; lint has no errors and 2 existing Fast Refresh warnings.
+  Bundle-size warnings remain. No new production DB/Auth changes or Windows packaging.
+
+The broader accessibility, release and deployment checklist remains open; these
+focused checks do not cover every route, real auth email, or clean-machine acceptance.
+
+## Exercise interaction follow-up — 2026-10-07
+
+- Exercise actions now show localized pending labels, prevent duplicate submissions,
+  preserve failed run output, and allow retry. Changing a publish message resets its
+  confirmation; controls stay locked while publication is pending.
+- Exercise labels, filters, empty states and run summaries support VI/EN. Hosted mode
+  exposes the manual guide without invoking local workspace or Git APIs.
+- Latest checks: 35 unit tests, 17 local Playwright tests and 6 hosted Playwright tests
+  passed. Production build passed; lint has no errors and 2 existing Fast Refresh
+  warnings. Bundle-size warnings remain. The earlier 58 Python tests were not rerun
+  for this frontend-only follow-up.
+- Mobile light/dark screenshots in `.build/exercise-evidence/` were inspected, with
+  pending-button contrast and horizontal-overflow checks. The skip link remains
+  keyboard accessible and is clipped when unfocused, including full-page screenshots.
+- Exercise browser tests mock workspace and Git operations; they do not launch VS Code,
+  run learner code or publish commits. No live DB/Auth or Windows acceptance is claimed.
+  These follow-ups remain local and uncommitted.

@@ -334,7 +334,13 @@ export const hostedApi = {
     if (error) errorMessage(error)
     return { ...defaults, ...(data as Partial<AppSettings>) }
   },
-  notes: async () => ({ notes: (await selectRows<any>('notes', 'id,lesson_slug,title,body,created_at,updated_at')).sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()) }),
+  notes: async () => {
+    const notes = await selectRows<any>('notes', 'id,lesson_slug,title,body,created_at,updated_at')
+    return { notes: notes.map((note) => {
+      const lesson = hostedCatalog.lessonBySlug(note.lesson_slug)
+      return { ...note, lesson_title_vi: lesson?.title_vi, lesson_title_en: lesson?.title_en }
+    }).sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()) }
+  },
   createNote: async (payload: { lesson_slug?: string; title: string; body: string }) => {
     const user = await requireHostedUser()
     const { data, error } = await requireSupabase().from('notes').insert({ user_id: user.id, lesson_slug: payload.lesson_slug ?? null, title: payload.title, body: payload.body }).select('id,lesson_slug,title,body,created_at,updated_at').single()

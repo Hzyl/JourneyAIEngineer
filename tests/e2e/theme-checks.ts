@@ -32,7 +32,7 @@ export async function checkThemeContrast(page: Page) {
     }
     const problems: string[] = []
     document.querySelectorAll('body *').forEach((element) => {
-      if (element.closest('.sr-only, .skip-link, [disabled], [aria-hidden="true"]')) return
+      if (element.closest('.sr-only, .skip-link, [disabled]:not([aria-busy="true"]), [aria-hidden="true"]')) return
       const box = element.getBoundingClientRect()
       if (!box.width || !box.height || box.right <= 0 || box.left >= innerWidth) return
       const style = getComputedStyle(element)

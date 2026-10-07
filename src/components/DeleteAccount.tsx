@@ -49,7 +49,7 @@ export function DeleteAccount({ language }: { language: 'vi' | 'en' }) {
       <div className="backup-actions">
         <button className="secondary-button" type="button" disabled={busy}
           onClick={() => { setExpanded(false); setPassword(''); setConfirmation('') }}>{vi ? 'Hủy' : 'Cancel'}</button>
-        <button className="danger-button" disabled={busy || confirmation !== 'DELETE' || !password}>
+        <button className="danger-button" aria-busy={busy} disabled={busy || confirmation !== 'DELETE' || !password}>
           {busy ? (vi ? 'Đang xóa…' : 'Deleting…') : (vi ? 'Xóa vĩnh viễn' : 'Delete permanently')}</button>
       </div>
     </form>}

@@ -1,0 +1,63 @@
+export const exerciseCopy = {
+  vi: {
+    title: 'Bài tập để biến', emphasis: 'kiến thức thành kỹ năng.',
+    intro: 'Mỗi module có workspace riêng. Viết code, lưu bằng Ctrl+S, chạy test rồi xuất artifact để review.',
+    webTitle: 'Xem đề bài,', webEmphasis: 'code ở local.',
+    webIntro: 'Web beta lưu tiến độ học. Dùng portable Windows hoặc source để mở VS Code và chạy bài tập.',
+    webBoundary: 'Workspace, chạy code và Git chỉ hoạt động trong bản local.',
+    localOnly: 'Workspace và test vẫn dùng được. Để lưu artifact và push GitHub, trỏ JOURNEY_PROJECT_ROOT tới clone Git.',
+    guide: 'Hướng dẫn thực hành local', verified: 'Có test hành vi', reflection: 'Tự đánh giá', minutes: 'phút',
+    search: 'Tìm bài tập', difficulty: 'Lọc theo độ khó', all: 'Mọi độ khó',
+    easy: 'Dễ', medium: 'Trung bình', hard: 'Khó', count: 'bài', empty: 'Không có bài tập phù hợp. Thử bỏ bớt bộ lọc.',
+    open: 'Mở VS Code', create: 'Tạo & mở VS Code', opening: 'Đang mở…', folder: 'Mở thư mục',
+    run: 'Chạy test', running: 'Đang chạy…', export: 'Lưu artifact', exporting: 'Đang lưu…',
+    history: 'Lịch sử', loading: 'Đang tải…', noRuns: 'Chưa có lần chạy.',
+    steps: ['Mở VS Code', 'Chạy test', 'Lưu artifact', 'Review & push'],
+    stepHints: ['Sửa đúng thư mục workspace', 'Đọc output và sửa lỗi', 'Copy bản sạch vào exercises/', 'Push sau khi xác nhận'],
+    opened: 'Đã mở VS Code:', folderOpened: 'Đã mở thư mục:', manualCode: 'Mở VS Code thủ công:',
+    manualFolder: 'Mở thư mục thủ công:', saved: 'Đã lưu artifact. Hãy review diff trước khi push:',
+    openError: 'Không tạo hoặc mở được workspace.', folderError: 'Không mở được thư mục workspace.',
+    runError: 'Không chạy được bài tập.', historyError: 'Không tải được lịch sử chạy bài.',
+    exportError: 'Không lưu được artifact an toàn.', publishError: 'Không push được GitHub. Hãy kiểm tra commit local.',
+    runVerified: 'Kiểm tra hành vi', runReflection: 'Kiểm tra tự đánh giá — chưa xác minh kỹ năng',
+    output: 'Kết quả chạy bài', passed: 'Đạt', failed: 'Chưa đạt', error: 'Lỗi', timeout: 'Hết thời gian',
+    publishTitle: 'Review rồi mới push', cancel: 'Hủy', commit: 'Nội dung commit',
+    publishInfo: 'Artifact đã được copy vào đường dẫn bên dưới. Mở Journal & Git để đọc diff trước khi xác nhận.',
+    confirm: 'Tôi đã review diff và muốn push artifact này lên GitHub.',
+    publish: 'Xác nhận & push GitHub', publishing: 'Đang push…', pushed: 'Đã push',
+  },
+  en: {
+    title: 'Practice turns', emphasis: 'knowledge into skills.',
+    intro: 'Each module has a workspace. Write code, save with Ctrl+S, run tests, then export an artifact for review.',
+    webTitle: 'Read the brief,', webEmphasis: 'code locally.',
+    webIntro: 'The web beta saves learning progress. Use portable Windows or the source to open VS Code and run exercises.',
+    webBoundary: 'Workspaces, code execution and Git are available only in the local app.',
+    localOnly: 'Workspaces and tests still work. To save artifacts and push to GitHub, point JOURNEY_PROJECT_ROOT to a Git clone.',
+    guide: 'Local practice guide', verified: 'Behavior tests', reflection: 'Self-assessment', minutes: 'min',
+    search: 'Search exercises', difficulty: 'Filter by difficulty', all: 'All difficulties',
+    easy: 'Easy', medium: 'Medium', hard: 'Hard', count: 'exercises', empty: 'No matching exercises. Try clearing the filters.',
+    open: 'Open VS Code', create: 'Create & open VS Code', opening: 'Opening…', folder: 'Open folder',
+    run: 'Run tests', running: 'Running…', export: 'Save artifact', exporting: 'Saving…',
+    history: 'History', loading: 'Loading…', noRuns: 'No runs yet.',
+    steps: ['Open VS Code', 'Run tests', 'Save artifact', 'Review & push'],
+    stepHints: ['Edit the workspace files', 'Read output and fix errors', 'Copy clean files to exercises/', 'Push after confirmation'],
+    opened: 'Opened VS Code:', folderOpened: 'Opened folder:', manualCode: 'Open VS Code manually:',
+    manualFolder: 'Open the folder manually:', saved: 'Artifact saved. Review the diff before pushing:',
+    openError: 'Could not create or open the workspace.', folderError: 'Could not open the workspace folder.',
+    runError: 'Could not run the exercise.', historyError: 'Could not load run history.',
+    exportError: 'Could not safely save the artifact.', publishError: 'Could not push to GitHub. Check the local commit.',
+    runVerified: 'Behavior tests', runReflection: 'Self-assessment check — skills not verified',
+    output: 'Exercise output', passed: 'Passed', failed: 'Failed', error: 'Error', timeout: 'Timed out',
+    publishTitle: 'Review before pushing', cancel: 'Cancel', commit: 'Commit message',
+    publishInfo: 'The artifact was copied to the path below. Open Journal & Git to read the diff before confirming.',
+    confirm: 'I reviewed the diff and want to push this artifact to GitHub.',
+    publish: 'Confirm & push to GitHub', publishing: 'Pushing…', pushed: 'Pushed',
+  },
+}
+
+export type ExerciseCopy = typeof exerciseCopy.vi
+
+export function runStatus(status: string, t: ExerciseCopy) {
+  const labels: Record<string, string> = { passed: t.passed, failed: t.failed, error: t.error, timeout: t.timeout }
+  return labels[status] ?? status
+}

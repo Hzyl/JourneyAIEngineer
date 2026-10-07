@@ -1910,7 +1910,10 @@ def update_settings(payload: SettingsUpdate) -> dict[str, Any]:
 @app.get("/api/notes")
 def list_notes() -> dict[str, Any]:
     with connect() as db:
-        rows = db.execute("""SELECT n.*,l.slug AS lesson_slug,l.title_vi AS lesson_title_vi FROM notes n LEFT JOIN lessons l ON l.id=n.lesson_id ORDER BY n.updated_at DESC""").fetchall()
+        rows = db.execute("""
+            SELECT n.*,l.slug AS lesson_slug,l.title_vi AS lesson_title_vi,l.title_en AS lesson_title_en
+            FROM notes n LEFT JOIN lessons l ON l.id=n.lesson_id ORDER BY n.updated_at DESC
+        """).fetchall()
     return {"notes": [dict(row) for row in rows]}
 
 

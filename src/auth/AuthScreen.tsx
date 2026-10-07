@@ -175,7 +175,7 @@ export function AuthScreen({ loading }: { loading: boolean }) {
         {(message || error) && <div className={error ? 'auth-notice is-error' : 'auth-notice is-success'} role={error ? 'alert' : 'status'} aria-live="polite">
           <span className="auth-notice-mark" aria-hidden="true">{error ? '!' : '✓'}</span>
           <div className="auth-notice-copy"><strong>{noticeTitle}</strong><span>{error || message}</span></div>
-          {awaitingConfirmation && <button type="button" className="secondary-button" onClick={() => void resendConfirmation()} disabled={disabled}>{resending ? 'Đang gửi…' : 'Gửi lại email xác nhận'}</button>}
+          {awaitingConfirmation && <button type="button" className="secondary-button" onClick={() => void resendConfirmation()} disabled={disabled} aria-busy={resending}>{resending ? 'Đang gửi…' : 'Gửi lại email xác nhận'}</button>}
         </div>}
 
         <form className="auth-form" onSubmit={(event) => void submit(event)} noValidate>
@@ -183,7 +183,7 @@ export function AuthScreen({ loading }: { loading: boolean }) {
           {mode !== 'reset' && <PasswordField label="Mật khẩu" value={password} onChange={setPassword} autoComplete={mode === 'sign_in' ? 'current-password' : 'new-password'} disabled={disabled} invalid={mode === 'sign_up' && confirmation.length > 0 && password !== confirmation} />}
           {mode === 'sign_up' && <PasswordField label="Nhập lại mật khẩu" value={confirmation} onChange={setConfirmation} autoComplete="new-password" disabled={disabled} invalid={confirmation.length > 0 && password !== confirmation} />}
           {mode === 'sign_up' && <p className="field-hint">Ít nhất 8 ký tự. Hãy dùng mật khẩu riêng, không dùng mật khẩu GitHub.</p>}
-          <button className={`primary-button auth-submit${mode === 'sign_up' ? ' auth-submit-signup' : ''}`} disabled={disabled} type="submit">{loading || busy ? 'Đang xử lý…' : mode === 'sign_in' ? 'Đăng nhập' : mode === 'sign_up' ? 'Tạo tài khoản và xác nhận email' : 'Gửi email khôi phục'}</button>
+          <button className={`primary-button auth-submit${mode === 'sign_up' ? ' auth-submit-signup' : ''}`} disabled={disabled} aria-busy={loading || busy} type="submit">{loading || busy ? 'Đang xử lý…' : mode === 'sign_in' ? 'Đăng nhập' : mode === 'sign_up' ? 'Tạo tài khoản và xác nhận email' : 'Gửi email khôi phục'}</button>
         </form>
 
         <div className="auth-secondary-actions">

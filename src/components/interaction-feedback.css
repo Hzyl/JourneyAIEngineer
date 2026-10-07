@@ -1,0 +1,76 @@
+:root {
+  --feedback-ring: color-mix(in srgb, var(--teal) 32%, transparent);
+}
+
+:where(button, a[href], summary) {
+  -webkit-tap-highlight-color: var(--feedback-ring);
+}
+
+:where(button, a[href], summary):not(:disabled):not([aria-disabled="true"]):active {
+  scale: 0.98;
+  box-shadow: inset 0 0 0 2px var(--feedback-ring);
+}
+
+button[aria-busy="true"],
+button[aria-busy="true"]:disabled {
+  cursor: progress;
+  opacity: 1;
+}
+
+button[aria-busy="true"]::after {
+  content: '';
+  display: inline-block;
+  width: 0.8em;
+  height: 0.8em;
+  margin-inline-start: 0.6em;
+  border: 2px solid currentColor;
+  border-inline-end-color: transparent;
+  border-radius: 50%;
+  vertical-align: -0.1em;
+  animation: feedback-spin 800ms linear infinite;
+}
+
+.refresh-button[aria-busy="true"]::after {
+  display: none;
+}
+
+.refresh-button[aria-busy="true"] {
+  animation: feedback-spin 800ms linear infinite;
+}
+
+.success-note[role="status"],
+.warning-note[role="alert"],
+.error-banner[role="alert"],
+.auth-notice {
+  animation: feedback-appear 160ms ease-out;
+}
+
+@keyframes feedback-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes feedback-appear {
+  from {
+    translate: 0 3px;
+  }
+  to {
+    translate: 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(button, a[href], summary):not(:disabled):not([aria-disabled="true"]):active {
+    scale: none;
+  }
+
+  button[aria-busy="true"]::after,
+  .refresh-button[aria-busy="true"],
+  .success-note[role="status"],
+  .warning-note[role="alert"],
+  .error-banner[role="alert"],
+  .auth-notice {
+    animation: none;
+  }
+}

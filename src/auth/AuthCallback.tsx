@@ -71,7 +71,7 @@ export function AuthCallback() {
           <form className="auth-form" onSubmit={(event) => void updatePassword(event)}>
             <label className="auth-field"><span>Mật khẩu mới</span><input type="password" autoComplete="new-password" value={password} onChange={(event) => setPassword(event.target.value)} minLength={8} disabled={busy} required /></label>
             <label className="auth-field"><span>Nhập lại mật khẩu</span><input type="password" autoComplete="new-password" value={confirmation} onChange={(event) => setConfirmation(event.target.value)} minLength={8} disabled={busy} required /></label>
-            <button className="primary-button" type="submit" disabled={busy || auth.state !== 'signed_in'}>{busy ? 'Đang lưu…' : 'Lưu mật khẩu mới'}</button>
+            <button className="primary-button" type="submit" aria-busy={busy} disabled={busy || auth.state !== 'signed_in'}>{busy ? 'Đang lưu…' : 'Lưu mật khẩu mới'}</button>
           </form>
           {auth.state === 'loading' && <p className="field-hint" role="status">Đang xác thực đường dẫn khôi phục…</p>}
           {auth.state === 'signed_out' && <p className="auth-notice is-error" role="alert">Đường dẫn khôi phục không còn hiệu lực. Hãy quay lại và yêu cầu email mới.</p>}

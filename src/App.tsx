@@ -1,3 +1,5 @@
+import { ExercisesView } from './components/ExercisesView'
+import { JournalView } from './components/JournalView'
 /* oxlint-disable react(set-state-in-effect) */
 import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { type AppSettings, type BackupPayload, type Dashboard, type Exercise, type FeedbackItem, type FeedbackKind, type Lesson, type ReferenceResource, type SearchResult, type SecurityAuditReport, type SecurityFinding } from './api'
@@ -21,12 +23,6 @@ const PublicExperience = lazy(() => import('./public/PublicExperience').then((mo
 })))
 
 type View = 'dashboard' | 'roadmap' | 'lesson' | 'review' | 'exercises' | 'tools' | 'security' | 'resources' | 'community' | 'journal' | 'settings'
-type ContextExport = { path: string; content: string }
-type HostedJournalEntry = { id: string; week_start: string; title: string; body: string; created_at: string; updated_at: string }
-type HostedJournalApi = {
-  journalEntries: () => Promise<{ entries: HostedJournalEntry[] }>
-  upsertJournalEntry: (payload: { week_start: string; title: string; body: string }) => Promise<HostedJournalEntry>
-}
 const viewIds = new Set<View>(['dashboard', 'roadmap', 'review', 'exercises', 'tools', 'security', 'resources', 'community', 'journal', 'settings'])
 function locationState(): { view: View; lesson: string | null } {
   if (typeof window === 'undefined') return { view: 'dashboard', lesson: null }
@@ -223,7 +219,7 @@ function App() {
   return <div className="app-shell"><a className="skip-link" href="#main-content">{vi ? 'Bỏ qua đến nội dung chính' : 'Skip to main content'}</a>
     <div className={`mobile-nav-scrim ${mobileNavOpen ? 'open' : ''}`} aria-hidden="true" onClick={() => setMobileNavOpen(false)} />
     <aside className={`sidebar ${mobileNavOpen ? 'open' : ''}`}><div className="brand-lockup"><div className="brand-mark">J</div><div><strong>Journey</strong><span>AI Engineer</span></div><button className="mobile-nav-close" type="button" aria-label={vi ? 'Đóng menu điều hướng' : 'Close navigation'} onClick={() => setMobileNavOpen(false)}>×</button></div><div className="sidebar-intro">{vi ? 'Học đều, thực hành và ghi lại bằng chứng.' : 'Learn steadily, practise and keep evidence.'}</div><nav aria-label={vi ? 'Điều hướng chính' : 'Primary navigation'} className="nav-list">{navItems.filter((item) => !hosted || item.id !== 'security').map((item) => <button className={`nav-item ${(view === item.id || (view === 'lesson' && item.id === 'roadmap')) ? 'active' : ''}`} key={item.id} onClick={() => navigate(item.id)} aria-current={(view === item.id || (view === 'lesson' && item.id === 'roadmap')) ? 'page' : undefined}><span className="nav-icon" aria-hidden="true">{item.icon}</span><span><strong>{item.label}</strong><small>{item.hint}</small></span></button>)}</nav><div className="sidebar-footer"><div className="status-dot"><span /> {hosted ? 'Cloud sync' : 'Local workspace'}</div><small>{hosted ? (vi ? 'Dữ liệu được lưu riêng theo tài khoản' : 'Learning data is private to your account') : (vi ? 'Tiến trình được lưu trên máy của bạn' : 'Progress is saved on this device')}</small><small>{hosted ? (vi ? 'VS Code, Git và test chỉ chạy trên bản local.' : 'VS Code, Git and tests are available in local mode.') : (vi ? 'Bản portable tự dừng khi đóng tab cuối.' : 'The portable app stops after its last tab closes.')}</small></div></aside>
-    <main className="main-area" id="main-content" aria-busy={loading || lessonLoading}><header className="topbar"><button className="mobile-nav-toggle" type="button" aria-label={vi ? 'Mở menu điều hướng' : 'Open navigation'} aria-expanded={mobileNavOpen} onClick={() => setMobileNavOpen(true)}><span aria-hidden="true">☰</span><span className="sr-only">{vi ? 'Mở menu' : 'Open menu'}</span></button><div><span className="eyebrow">PERSONAL LEARNING OS</span>{view === 'lesson' ? <div className="topbar-title">Lesson workspace</div> : <h1>{view === 'dashboard' ? (vi ? 'Hôm nay học gì?' : 'What will you learn today?') : navItems.find((item) => item.id === view)?.label}</h1>}</div><div className="topbar-actions"><ThemeToggle language={settings.language} /><div className={`global-search ${globalSearchOpen ? 'open' : ''}`}><label className="sr-only" htmlFor="global-search-input">{vi ? 'Tìm lesson, phase, tài liệu hoặc bài tập' : 'Search lessons, phases, resources or exercises'}</label><input id="global-search-input" ref={globalSearchRef} type="search" value={globalQuery} onFocus={() => setGlobalSearchOpen(true)} onChange={(event) => { const value = event.target.value; setGlobalQuery(value); setGlobalSearchOpen(true); setGlobalSearchBusy(value.trim().length >= 2) }} placeholder={vi ? 'Tìm kiếm…' : 'Search…'} /><kbd>Ctrl K</kbd>{globalQuery && <button type="button" className="global-search-clear" aria-label={vi ? 'Xóa tìm kiếm' : 'Clear search'} onClick={() => { setGlobalQuery(''); setGlobalSearchBusy(false); globalSearchRef.current?.focus() }}>×</button>}{globalSearchOpen && (globalQuery.trim().length >= 2 || globalSearchBusy) && <div className="global-search-results" role="listbox" aria-label={vi ? 'Kết quả tìm kiếm' : 'Search results'}>{globalSearchBusy ? <p className="global-search-status">{vi ? 'Đang tìm…' : 'Searching…'}</p> : globalResults.length ? globalResults.map((result) => <button type="button" role="option" className="global-search-result" key={`${result.type}-${result.id}`} onClick={() => selectSearchResult(result)}><strong>{result.title}</strong><small>{result.subtitle ?? result.type}</small></button>) : <p className="global-search-status">{vi ? 'Không tìm thấy kết quả. Thử từ khóa khác.' : 'No results. Try another search.'}</p>}</div>}</div><button className="language-chip" onClick={() => void changeLanguage()} aria-label={vi ? 'Đổi ngôn ngữ' : 'Change language'}>{settings.language === 'vi' ? 'VI' : 'EN'} <i>·</i> {settings.language === 'vi' ? 'EN' : 'VI'}</button>{hosted && <button className="text-button" onClick={() => void auth.signOut()}>{vi ? 'Đăng xuất' : 'Sign out'}</button>}<button className="refresh-button" onClick={retry} disabled={loading} aria-busy={loading} aria-label={loading ? (vi ? 'Đang làm mới dữ liệu' : 'Refreshing data') : (vi ? 'Làm mới dữ liệu' : 'Refresh data')}>↻</button></div></header>{error && <div className="error-banner" role="alert" aria-live="assertive"><strong>{vi ? 'Có lỗi khi tải dữ liệu.' : 'Could not reload data.'}</strong> {error} <button className="text-button" onClick={retry}>{vi ? 'Thử lại' : 'Retry'}</button></div>}{loading && !dashboard ? <LoadingState /> : <div className="page-content">{view === 'dashboard' && <TodayView dashboard={dashboard} language={settings.language} lessonTitle={dashboard?.current_lesson ? lessonTitleMap[dashboard.current_lesson.slug] : undefined} onOpenLesson={openLesson} onNavigate={navigate} onRecordSession={async (minutes, note) => { await api.createSession({ minutes, note }); await refresh() }} />}{view === 'roadmap' && <RoadmapView roadmap={roadmap} language={settings.language} showCompletedLessons={settings.show_completed_lessons} onOpenLesson={openLesson}>{roadmap && <PortfolioBoard program={roadmap.program} language={settings.language} />}</RoadmapView>}{view === 'lesson' && <LessonPage lesson={lesson} lessonLoading={lessonLoading} language={settings.language} onBack={closeLesson} onProgress={updateProgress} onOpenLesson={openLesson} nextLessonTitles={lessonTitleMap} onOpenExercises={() => navigate('exercises')} />}{view === 'review' && <ReviewView language={settings.language} reviews={reviews} onAnswer={async (id, rating, thoughtSeconds, answerText) => { await api.answerReview(id, rating, thoughtSeconds, answerText); setReviews((current) => current.filter((card) => card.id !== id)); await refresh() }} onOpenLesson={openLesson} />}{view === 'exercises' && <ExercisesView exercises={exercises} gitPublishAvailable={gitPublishAvailable} hosted={hosted} onRefresh={refresh} />}{view === 'tools' && <ToolsView tools={tools} />}{view === 'security' && !hosted && <SecurityLabView />}{view === 'resources' && <ResourcesView resources={resources} language={settings.language} />}{view === 'community' && <CommunityView onOpenLesson={openLesson} />}{view === 'settings' && <SettingsView settings={settings} hosted={hosted} onSave={async (next) => setSettings(await api.updateSettings(next))} />}{view === 'journal' && <JournalView hosted={hosted} onExportContext={(question) => api.exportContext({ lesson_slug: lesson?.slug, question })} />}</div>}</main>
+    <main className="main-area" id="main-content" aria-busy={loading || lessonLoading}><header className="topbar"><button className="mobile-nav-toggle" type="button" aria-label={vi ? 'Mở menu điều hướng' : 'Open navigation'} aria-expanded={mobileNavOpen} onClick={() => setMobileNavOpen(true)}><span aria-hidden="true">☰</span><span className="sr-only">{vi ? 'Mở menu' : 'Open menu'}</span></button><div><span className="eyebrow">PERSONAL LEARNING OS</span>{view === 'lesson' ? <div className="topbar-title">Lesson workspace</div> : <h1>{view === 'dashboard' ? (vi ? 'Hôm nay học gì?' : 'What will you learn today?') : navItems.find((item) => item.id === view)?.label}</h1>}</div><div className="topbar-actions"><ThemeToggle language={settings.language} /><div className={`global-search ${globalSearchOpen ? 'open' : ''}`}><label className="sr-only" htmlFor="global-search-input">{vi ? 'Tìm lesson, phase, tài liệu hoặc bài tập' : 'Search lessons, phases, resources or exercises'}</label><input id="global-search-input" ref={globalSearchRef} type="search" value={globalQuery} onFocus={() => setGlobalSearchOpen(true)} onChange={(event) => { const value = event.target.value; setGlobalQuery(value); setGlobalSearchOpen(true); setGlobalSearchBusy(value.trim().length >= 2) }} placeholder={vi ? 'Tìm kiếm…' : 'Search…'} /><kbd>Ctrl K</kbd>{globalQuery && <button type="button" className="global-search-clear" aria-label={vi ? 'Xóa tìm kiếm' : 'Clear search'} onClick={() => { setGlobalQuery(''); setGlobalSearchBusy(false); globalSearchRef.current?.focus() }}>×</button>}{globalSearchOpen && (globalQuery.trim().length >= 2 || globalSearchBusy) && <div className="global-search-results" role="listbox" aria-label={vi ? 'Kết quả tìm kiếm' : 'Search results'}>{globalSearchBusy ? <p className="global-search-status">{vi ? 'Đang tìm…' : 'Searching…'}</p> : globalResults.length ? globalResults.map((result) => <button type="button" role="option" className="global-search-result" key={`${result.type}-${result.id}`} onClick={() => selectSearchResult(result)}><strong>{result.title}</strong><small>{result.subtitle ?? result.type}</small></button>) : <p className="global-search-status">{vi ? 'Không tìm thấy kết quả. Thử từ khóa khác.' : 'No results. Try another search.'}</p>}</div>}</div><button className="language-chip" onClick={() => void changeLanguage()} aria-label={vi ? 'Đổi ngôn ngữ' : 'Change language'}>{settings.language === 'vi' ? 'VI' : 'EN'} <i>·</i> {settings.language === 'vi' ? 'EN' : 'VI'}</button>{hosted && <button className="text-button" onClick={() => void auth.signOut()}>{vi ? 'Đăng xuất' : 'Sign out'}</button>}<button className="refresh-button" onClick={retry} disabled={loading} aria-busy={loading} aria-label={loading ? (vi ? 'Đang làm mới dữ liệu' : 'Refreshing data') : (vi ? 'Làm mới dữ liệu' : 'Refresh data')}>↻</button></div></header>{error && <div className="error-banner" role="alert" aria-live="assertive"><strong>{vi ? 'Có lỗi khi tải dữ liệu.' : 'Could not reload data.'}</strong> {error} <button className="text-button" onClick={retry}>{vi ? 'Thử lại' : 'Retry'}</button></div>}{loading && !dashboard ? <LoadingState /> : <div className="page-content">{view === 'dashboard' && <TodayView dashboard={dashboard} language={settings.language} lessonTitle={dashboard?.current_lesson ? lessonTitleMap[dashboard.current_lesson.slug] : undefined} onOpenLesson={openLesson} onNavigate={navigate} onRecordSession={async (minutes, note) => { await api.createSession({ minutes, note }); await refresh() }} />}{view === 'roadmap' && <RoadmapView roadmap={roadmap} language={settings.language} showCompletedLessons={settings.show_completed_lessons} onOpenLesson={openLesson}>{roadmap && <PortfolioBoard program={roadmap.program} language={settings.language} />}</RoadmapView>}{view === 'lesson' && <LessonPage lesson={lesson} lessonLoading={lessonLoading} language={settings.language} onBack={closeLesson} onProgress={updateProgress} onOpenLesson={openLesson} nextLessonTitles={lessonTitleMap} onOpenExercises={() => navigate('exercises')} />}{view === 'review' && <ReviewView language={settings.language} reviews={reviews} onAnswer={async (id, rating, thoughtSeconds, answerText) => { await api.answerReview(id, rating, thoughtSeconds, answerText); setReviews((current) => current.filter((card) => card.id !== id)); await refresh() }} onOpenLesson={openLesson} />}{view === 'exercises' && <ExercisesView language={settings.language} exercises={exercises} gitPublishAvailable={gitPublishAvailable} hosted={hosted} onRefresh={refresh} />}{view === 'tools' && <ToolsView tools={tools} />}{view === 'security' && !hosted && <SecurityLabView />}{view === 'resources' && <ResourcesView resources={resources} language={settings.language} />}{view === 'community' && <CommunityView onOpenLesson={openLesson} />}{view === 'settings' && <SettingsView settings={settings} hosted={hosted} onSave={async (next) => setSettings(await api.updateSettings(next))} />}{view === 'journal' && <JournalView hosted={hosted} language={settings.language} onExportContext={(question) => api.exportContext({ lesson_slug: lesson?.slug, question })} />}</div>}</main>
   </div>
 }
 
@@ -317,10 +313,15 @@ function LessonDetail({ lesson: originalLesson, language, onProgress, onOpenLess
   const [noteBody, setNoteBody] = useState('')
   const [noteSaved, setNoteSaved] = useState(false)
   const [noteError, setNoteError] = useState('')
+  const [noteSaving, setNoteSaving] = useState(false)
+  const noteSubmitting = useRef(false)
   const [sessionMinutes, setSessionMinutes] = useState(String(Math.max(15, Math.min(lesson.estimated_minutes, 120))))
   const [checked, setChecked] = useState<boolean[]>(() => readChecklist(checklistStorageKey, lesson.checklist.length))
   const [checklistNudge, setChecklistNudge] = useState(false)
   const [progressError, setProgressError] = useState('')
+  const [progressSaving, setProgressSaving] = useState(false)
+  const [progressSaved, setProgressSaved] = useState(false)
+  const progressSubmitting = useRef(false)
   const vi = language === 'vi'
   const detailRef = useRef<HTMLDivElement>(null)
   const guide = lesson.guide ?? lesson
@@ -342,15 +343,20 @@ function LessonDetail({ lesson: originalLesson, language, onProgress, onOpenLess
     }
   }, [checked, checklistStorageKey])
   const saveNote = async () => {
-    if (!noteBody.trim()) return
+    if (!noteBody.trim() || noteSubmitting.current) return
+    noteSubmitting.current = true
+    setNoteSaving(true)
+    setNoteSaved(false)
     setNoteError('')
     try {
       await api.createNote({ lesson_slug: lesson.slug, title: 'Insight: ' + (vi ? lesson.title_vi : lesson.title_en), body: noteBody.trim() })
       setNoteBody('')
       setNoteSaved(true)
-      window.setTimeout(() => setNoteSaved(false), 2500)
     } catch (cause) {
       setNoteError(cause instanceof Error ? cause.message : (vi ? 'Chưa lưu được ghi chú.' : 'The note could not be saved.'))
+    } finally {
+      noteSubmitting.current = false
+      setNoteSaving(false)
     }
   }
   const toggleChecklist = (index: number) => {
@@ -358,6 +364,7 @@ function LessonDetail({ lesson: originalLesson, language, onProgress, onOpenLess
     setChecklistNudge(false)
   }
   const markProgress = async () => {
+    if (progressSubmitting.current) return
     const nextStatus = lesson.status === 'completed' ? 'needs_review' : 'completed'
     if (nextStatus === 'completed' && !checklistComplete) {
       setChecklistNudge(true)
@@ -365,10 +372,17 @@ function LessonDetail({ lesson: originalLesson, language, onProgress, onOpenLess
     }
     const minutes = Number(sessionMinutes)
     setProgressError('')
+    setProgressSaved(false)
+    progressSubmitting.current = true
+    setProgressSaving(true)
     try {
       await onProgress(lesson.slug, nextStatus, Number.isInteger(minutes) && minutes > 0 ? minutes : 0)
+      setProgressSaved(true)
     } catch {
       setProgressError(vi ? 'Chưa lưu được tiến độ. Hãy kiểm tra backend rồi thử lại.' : 'Progress was not saved. Check the backend and try again.')
+    } finally {
+      progressSubmitting.current = false
+      setProgressSaving(false)
     }
   }
   return <div ref={detailRef} className="lesson-detail" tabIndex={-1}>
@@ -393,10 +407,10 @@ function LessonDetail({ lesson: originalLesson, language, onProgress, onOpenLess
     <section className="detail-section lesson-section lesson-section-completion" aria-labelledby="lesson-next-title"><h2 id="lesson-next-title">{vi ? 'Bài tiếp theo' : 'Next lessons'}</h2><div className="next-lesson-list">{lesson.next_lessons.map((slug) => <button className="text-button" key={slug} onClick={() => onOpenLesson(slug)}>{nextLessonTitles[slug] ?? slug} <small>({slug})</small> →</button>)}</div></section>
     <section className="detail-section lesson-section lesson-section-check" aria-labelledby="lesson-checklist-title"><h2 id="lesson-checklist-title">{vi ? 'Checklist thực hành' : 'Practice checklist'}</h2><div className="checklist">{lesson.checklist.map((item, index) => <label key={item}><input type="checkbox" checked={checked[index] ?? false} onChange={() => toggleChecklist(index)} /> <span className={checked[index] ? 'checked-item' : ''}>{item}</span></label>)}</div>{checklistNudge && <p className="warning-note" role="status">{vi ? 'Hãy hoàn thiện các mục checklist trước khi đánh dấu hoàn thành.' : 'Finish every checklist item before marking this lesson complete.'}</p>}<div className="interview-questions"><h3>{vi ? 'Câu hỏi phỏng vấn cần tự trả lời' : 'Interview questions to answer aloud'}</h3><ul>{interviewQuestions.map((question) => <li key={question}>{question}</li>)}</ul></div>{lesson.reviews.length > 0 && <div className="lesson-review-list"><h3>{vi ? 'Câu hỏi tự kiểm tra' : 'Self-check questions'}</h3>{lesson.reviews.map((review) => <div className="review-prompt" key={review.id}><p>{vi ? review.question_vi : review.question_en}</p><details><summary>{vi ? 'Hiện gợi ý đáp án' : 'Show answer hint'}</summary><p>{vi ? review.answer_vi : review.answer_en}</p></details></div>)}</div>}</section>
     <section id="resources" className="detail-section rich-resources lesson-section lesson-section-resources" aria-labelledby="lesson-resources-title"><h2 id="lesson-resources-title">{vi ? 'Tài liệu có hướng dẫn đọc' : 'Guided resources'}</h2><div className="rich-resource-list">{lesson.resources.map((resource, index) => resource.kind === 'in_app' || !resource.url ? <article className="lesson-resource resource-internal" key={`${resource.title}-${index}`}><div className="resource-heading"><span className="resource-language">{resource.language === 'en' ? 'EN' : 'VI'}</span><strong>{resource.title}</strong><span className="resource-required">{vi ? 'Đọc trong app' : 'In-app'}</span></div><p>{vi ? resource.purpose_vi : resource.purpose_en}</p><small>{vi ? resource.read_vi : resource.read_en}</small></article> : <a className="lesson-resource resource-link" href={resource.url} target="_blank" rel="noreferrer" key={`${resource.url}-${index}`}><div className="resource-heading"><span className="resource-language">{resource.language === 'en' ? 'EN' : 'VI'}</span><strong>{resource.title}</strong>{resource.required && <span className="resource-required">{vi ? 'Bắt buộc' : 'Required'}</span>}</div><p>{vi ? resource.purpose_vi : resource.purpose_en}</p><small>{vi ? resource.read_vi : resource.read_en}</small><code className="resource-url">{resource.url}</code><b>Mở tài liệu ↗</b></a>)}</div></section>
-    <section id="notes" className="detail-section note-editor lesson-section lesson-section-notes" aria-labelledby="lesson-notes-title"><h2 id="lesson-notes-title">{vi ? 'Ghi chú và feedback' : 'Notes and feedback'}</h2><div className="lesson-note-block"><h3>{vi ? 'Ghi chú của bạn' : 'Your note'}</h3><textarea aria-label={vi ? 'Ghi chú của bạn' : 'Your note'} value={noteBody} onChange={(event) => setNoteBody(event.target.value)} placeholder={vi ? 'Viết insight, lỗi gặp phải hoặc điều cần ôn lại...' : 'Write an insight, failure or topic to revisit...'} /><button className="secondary-button" disabled={!noteBody.trim()} onClick={() => void saveNote()}>{vi ? 'Lưu ghi chú' : 'Save note'}</button>{noteSaved && <p className="success-note" role="status">{vi ? 'Đã lưu vào Journal.' : 'Saved to Journal.'}</p>}{noteError && <p className="warning-note" role="alert">{noteError}</p>}</div>
+    <section id="notes" className="detail-section note-editor lesson-section lesson-section-notes" aria-labelledby="lesson-notes-title"><h2 id="lesson-notes-title">{vi ? 'Ghi chú và feedback' : 'Notes and feedback'}</h2><div className="lesson-note-block"><h3>{vi ? 'Ghi chú của bạn' : 'Your note'}</h3><textarea aria-label={vi ? 'Ghi chú của bạn' : 'Your note'} value={noteBody} disabled={noteSaving} onChange={(event) => { setNoteBody(event.target.value); setNoteSaved(false) }} placeholder={vi ? 'Viết insight, lỗi gặp phải hoặc điều cần ôn lại...' : 'Write an insight, failure or topic to revisit...'} /><button className="secondary-button" disabled={!noteBody.trim() || noteSaving} aria-busy={noteSaving} onClick={() => void saveNote()}>{noteSaving ? (vi ? 'Đang lưu…' : 'Saving…') : (vi ? 'Lưu ghi chú' : 'Save note')}</button>{noteSaved && <p className="success-note" role="status">{vi ? 'Đã lưu vào Journal.' : 'Saved to Journal.'}</p>}{noteError && <p className="warning-note" role="alert">{noteError}</p>}</div>
     <FeedbackPanel lesson={lesson} language={language} />
     </section>
-    <div className="detail-actions"><label className="session-minutes">Phút học<input type="number" min="1" max="1440" value={sessionMinutes} onChange={(event) => setSessionMinutes(event.target.value)} /></label><button className="primary-button" onClick={() => void markProgress()}>{lesson.status === 'completed' ? (vi ? 'Đánh dấu cần ôn' : 'Mark for review') : (vi ? 'Đánh dấu hoàn thành' : 'Mark complete')} <span>✓</span></button></div>{progressError && <p className="warning-note" role="alert">{progressError}</p>}
+    <div className="detail-actions"><label className="session-minutes">Phút học<input type="number" min="1" max="1440" value={sessionMinutes} disabled={progressSaving} onChange={(event) => setSessionMinutes(event.target.value)} /></label><button className="primary-button" disabled={progressSaving} aria-busy={progressSaving} onClick={() => void markProgress()}>{progressSaving ? (vi ? 'Đang lưu…' : 'Saving…') : lesson.status === 'completed' ? (vi ? 'Đánh dấu cần ôn' : 'Mark for review') : (vi ? 'Đánh dấu hoàn thành' : 'Mark complete')} {!progressSaving && <span>✓</span>}</button></div>{progressSaved && <p className="success-note" role="status">{vi ? 'Đã lưu tiến độ.' : 'Progress saved.'}</p>}{progressError && <p className="warning-note" role="alert">{progressError}</p>}
     <div className="ask-box"><span className="eyebrow">ASK YOUR ASSISTANT</span><h4>{vi ? 'Đang vướng ở đâu?' : 'Where are you stuck?'}</h4><p>Context export ở Journal sẽ đưa lesson, mục tiêu và câu hỏi sang ChatGPT/Codex.</p></div>
   </div>
 }
@@ -622,107 +636,6 @@ function SecurityLabView() {
   </div>
 }
 
-function ExercisesView({ exercises, gitPublishAvailable, hosted, onRefresh }: { exercises: Exercise[]; gitPublishAvailable: boolean; hosted: boolean; onRefresh: () => Promise<void> }) {
-  const [running, setRunning] = useState<number | null>(null)
-  const [preparing, setPreparing] = useState<number | null>(null)
-  const [working, setWorking] = useState<number | null>(null)
-  const [output, setOutput] = useState('')
-  const [error, setError] = useState('')
-  const [notice, setNotice] = useState('')
-  const [query, setQuery] = useState('')
-  const [difficulty, setDifficulty] = useState('all')
-  const [history, setHistory] = useState<Record<number, any[]>>({})
-  const [historyFor, setHistoryFor] = useState<number | null>(null)
-  const [workspaceIds, setWorkspaceIds] = useState<Record<number, number>>({})
-  const [exportedPaths, setExportedPaths] = useState<Record<number, string>>({})
-  const [publishTarget, setPublishTarget] = useState<{ exercise: Exercise; path: string } | null>(null)
-  const [publishMessage, setPublishMessage] = useState('')
-  const [publishConfirmed, setPublishConfirmed] = useState(false)
-  const [publishing, setPublishing] = useState(false)
-
-  const visibleExercises = exercises.filter((exercise) => {
-    const matchesQuery = `${exercise.title_vi} ${exercise.title_en} ${exercise.description_vi}`.toLowerCase().includes(query.toLowerCase())
-    return matchesQuery && (difficulty === 'all' || exercise.difficulty.toLowerCase() === difficulty)
-  })
-  const workspaceIdFor = (exercise: Exercise) => workspaceIds[exercise.id] ?? exercise.workspace_id ?? null
-  const clearMessages = () => { setError(''); setNotice('') }
-  const ensureWorkspace = async (exercise: Exercise) => {
-    const result = await api.createWorkspace(exercise.slug)
-    setWorkspaceIds((current) => ({ ...current, [exercise.id]: result.workspace.id }))
-    await onRefresh()
-    return result.workspace
-  }
-  const prepare = async (exercise: Exercise) => {
-    setPreparing(exercise.id); clearMessages()
-    try {
-      const workspace = await ensureWorkspace(exercise)
-      const opened = await api.openWorkspace(workspace.id)
-      setNotice(opened.opened ? `VS Code đang mở: ${opened.path}` : `${opened.message ?? 'Mở VS Code thủ công'}\n${opened.path}`)
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : 'Không tạo hoặc mở được workspace.')
-    } finally { setPreparing(null) }
-  }
-  const openFolder = async (exercise: Exercise) => {
-    setWorking(exercise.id); clearMessages()
-    try {
-      const id = workspaceIdFor(exercise) ?? (await ensureWorkspace(exercise)).id
-      const opened = await api.openFolder(id)
-      setNotice(opened.opened ? `Đã mở thư mục: ${opened.path}` : `${opened.message ?? 'Mở thư mục thủ công'}\n${opened.path}`)
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : 'Không mở được thư mục workspace.')
-    } finally { setWorking(null) }
-  }
-  const loadHistory = async (exercise: Exercise, id = workspaceIdFor(exercise)) => {
-    if (!id) return
-    try {
-      const result = await api.workspaceRuns(id)
-      setHistory((current) => ({ ...current, [exercise.id]: result.runs }))
-      setHistoryFor(exercise.id)
-    } catch (cause) { setError(cause instanceof Error ? cause.message : 'Không tải được lịch sử chạy bài.') }
-  }
-  const run = async (exercise: Exercise) => {
-    setRunning(exercise.id); clearMessages()
-    try {
-      const id = workspaceIdFor(exercise) ?? (await ensureWorkspace(exercise)).id
-      const result = await api.runWorkspace(id)
-      const label = result.assessment_kind === 'verified' ? 'Kiểm tra hành vi' : 'Kiểm tra tự đánh giá — chưa xác minh kỹ năng'
-      setOutput(`${label} · ${result.status.toUpperCase()} · ${result.duration_ms}ms\n\n${result.output}`)
-      await loadHistory(exercise, id)
-    } catch (cause) { setError(cause instanceof Error ? cause.message : 'Không chạy được bài tập.') }
-    finally { setRunning(null) }
-  }
-  const exportArtifact = async (exercise: Exercise) => {
-    if (!gitPublishAvailable) {
-      setError('Đang ở local learning mode: hãy trỏ JOURNEY_PROJECT_ROOT tới một clone Git để lưu artifact và push GitHub.')
-      return
-    }
-    setWorking(exercise.id); clearMessages()
-    try {
-      const id = workspaceIdFor(exercise) ?? (await ensureWorkspace(exercise)).id
-      const result = await api.exportWorkspace(id)
-      setExportedPaths((current) => ({ ...current, [exercise.id]: result.artifact_path }))
-      setPublishTarget({ exercise, path: result.artifact_path })
-      setPublishMessage(`learn(${exercise.slug}): save practice evidence`)
-      setPublishConfirmed(false)
-      setNotice(`Đã lưu artifact vào ${result.artifact_path}. Hãy review diff trước khi push.`)
-    } catch (cause) { setError(cause instanceof Error ? cause.message : 'Không lưu được artifact an toàn.') }
-    finally { setWorking(null) }
-  }
-  const publishArtifact = async () => {
-    if (!publishTarget || publishMessage.trim().length < 5 || !publishConfirmed) return
-    setPublishing(true); clearMessages()
-    try {
-      const result = await api.publishGit({ paths: [publishTarget.path], message: publishMessage.trim(), confirm: true })
-      setNotice(`Đã push ${result.commit} lên ${result.remote} (${result.branch}).`)
-      setPublishTarget(null); setPublishConfirmed(false); setPublishMessage('')
-      await onRefresh()
-    } catch (cause) { setError(cause instanceof Error ? cause.message : 'Không push được GitHub. Commit local vẫn cần được kiểm tra.') }
-    finally { setPublishing(false) }
-  }
-  if (hosted) return <div><div className="page-intro"><div><span className="eyebrow accent">PRACTICE BRIEF</span><h2>Xem đề bài,<br /><em>code ở local.</em></h2></div><p>Web beta lưu tiến độ học. Để mở VS Code, chạy test, xuất artifact hoặc push GitHub, hãy dùng portable Windows hoặc source clone.</p></div><p className="warning-note" role="status">Workspace, subprocess và Git không chạy trong trình duyệt để bảo vệ máy và repository của bạn.</p><div className="exercise-grid">{visibleExercises.map((exercise) => <article className="exercise-card" key={exercise.slug}><div className="exercise-top"><span className="tag">{exercise.assessment_kind === 'verified' ? 'Có test hành vi' : 'Tự đánh giá'}</span><span>{exercise.estimated_minutes} phút</span></div><h3>{exercise.title_vi}</h3><p>{exercise.description_vi}</p><a className="resource-link" href="https://github.com/Hzyl/JourneyAIEngineer/blob/main/docs/QUICKSTART-WINDOWS.md" target="_blank" rel="noreferrer">Mở hướng dẫn thực hành local <span>↗</span></a></article>)}</div></div>
-  return <div><div className="page-intro"><div><span className="eyebrow accent">PRACTICE LAB</span><h2>Bài tập để biến<br /><em>kiến thức thành cơ.</em></h2></div><p>Mỗi module có một workspace riêng. Viết code trong VS Code, lưu bằng Ctrl+S, chạy test, rồi xuất artifact để review trước khi push GitHub.</p></div>{!gitPublishAvailable && <p className="warning-note" role="status">Local learning mode: workspace và test vẫn dùng được. Để lưu artifact/push GitHub, hãy cấu hình <code>JOURNEY_PROJECT_ROOT</code> tới clone repo.</p>}<div className="workspace-flow"><div><span>01</span><strong>Mở VS Code</strong><small>Sửa đúng thư mục workspace</small></div><div><span>02</span><strong>Chạy test</strong><small>Đọc output và sửa lỗi</small></div><div><span>03</span><strong>Lưu artifact</strong><small>Copy bản sạch vào exercises/</small></div><div><span>04</span><strong>Review & push</strong><small>Chỉ push sau khi xác nhận</small></div></div><div className="filter-bar"><input aria-label="Tìm bài tập" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Tìm bài tập..." /><select aria-label="Lọc theo độ khó" value={difficulty} onChange={(event) => setDifficulty(event.target.value)}><option value="all">Mọi độ khó</option><option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option></select><span className="muted">{visibleExercises.length}/{exercises.length} bài</span></div>{notice && <p className="success-note" role="status">{notice}</p>}{error && <p className="warning-note" role="alert">{error}</p>}<div className="exercise-grid">{visibleExercises.map((exercise) => { const id = workspaceIdFor(exercise); const exported = exportedPaths[exercise.id]; return <article className="exercise-card" key={exercise.slug}><div className="exercise-top"><span className="tag">{exercise.assessment_kind === 'verified' ? 'Có test hành vi' : 'Tự đánh giá'}</span><span>{exercise.estimated_minutes} phút</span></div><h3>{exercise.title_vi}</h3><p>{exercise.description_vi}</p><div className="exercise-actions workspace-actions"><button className="secondary-button" disabled={preparing !== null || running !== null || working !== null} onClick={() => void prepare(exercise)}>{preparing === exercise.id ? 'Đang mở…' : id ? 'Mở VS Code' : 'Tạo & mở VS Code'}</button><button className="text-button" disabled={working !== null} onClick={() => void openFolder(exercise)}>Mở thư mục</button><button className="secondary-button" disabled={preparing !== null || running !== null || working !== null} onClick={() => void run(exercise)}>{running === exercise.id ? 'Đang chạy…' : 'Chạy test'}</button><button className="text-button" disabled={working !== null || !gitPublishAvailable} onClick={() => void exportArtifact(exercise)}>Lưu artifact</button><button className="text-button" onClick={() => void loadHistory(exercise)}>Lịch sử</button></div>{exercise.workspace_path && <small className="path-label">Workspace: {exercise.workspace_path}</small>}{exported && <p className="artifact-path">Artifact: <code>{exported}</code></p>}{historyFor === exercise.id && <div className="run-history">{history[exercise.id]?.length ? history[exercise.id].slice(0, 5).map((runItem) => <p key={runItem.id}><strong>{runItem.status}</strong> · {runItem.duration_ms}ms · {new Date(runItem.created_at).toLocaleString()}</p>) : <p className="muted">Chưa có lần chạy.</p>}</div>}</article> })}</div>{output && <pre className="run-output">{output}</pre>}{publishTarget && <section className="publish-panel" aria-labelledby="publish-title"><div className="section-heading"><div><span className="eyebrow accent">GITHUB CHECKPOINT</span><h3 id="publish-title">Review rồi mới push</h3></div><button className="text-button" onClick={() => { setPublishTarget(null); setPublishConfirmed(false) }}>Hủy</button></div><p>Artifact đã được copy vào <code>{publishTarget.path}</code>. Mở Journal & Git để xem diff, sau đó dùng nút này khi bạn đã tự đọc thay đổi.</p><label>Commit message<input value={publishMessage} onChange={(event) => setPublishMessage(event.target.value)} maxLength={120} /></label><pre className="publish-preview">git add {publishTarget.path}{'\n'}git commit -m "{publishMessage || 'your message'}"{'\n'}git push origin &lt;current-branch&gt;</pre><label className="publish-confirm"><input type="checkbox" checked={publishConfirmed} onChange={(event) => setPublishConfirmed(event.target.checked)} /> Tôi đã review diff và muốn push artifact này lên GitHub.</label><button className="primary-button" disabled={publishing || !publishConfirmed || publishMessage.trim().length < 5} onClick={() => void publishArtifact()}>{publishing ? 'Đang push…' : 'Xác nhận & push GitHub'}</button></section>}</div>
-}
-
 function ToolsView({ tools }: { tools: any[] }) {
   return <div><div className="page-intro"><div><span className="eyebrow accent">TOOLKIT</span><h2>Dùng công cụ<br /><em>đúng lúc.</em></h2></div><p>Công cụ không thay thế tư duy. Mỗi tool ở đây gắn với một tình huống cụ thể trong hành trình học.</p></div><div className="tools-grid">{tools.map((tool) => <article className="tool-card" key={tool.slug}><div className="tool-symbol">{tool.name.slice(0, 1)}</div><div><span className="eyebrow">{tool.category}</span><h3>{tool.name}</h3><p>{tool.when_vi}</p><strong>Cài đặt</strong><p>{tool.install_vi}</p><strong>Cách dùng</strong><p>{tool.how_vi}</p><strong>Không nên dùng khi</strong><p>{tool.when_not_vi}</p><strong>Khi gặp lỗi</strong><p>{tool.error_vi}</p><strong>Kết hợp với</strong><p>{tool.combine_vi}</p><strong>Rủi ro</strong><p>{tool.risks_vi}</p><div className="command-list">{tool.commands.map((command: string) => <code key={command}>{command}</code>)}</div></div></article>)}</div></div>
 }
@@ -784,132 +697,29 @@ function ResourcesView({ resources, language }: { resources: ReferenceResource[]
   }
   return <div><div className="page-intro resources-intro"><div><span className="eyebrow accent">REFERENCE LIBRARY</span><h2>Học từ nguồn<br /><em>có thể kiểm chứng.</em></h2></div><p>{vi ? 'Sách, course, documentation và repository được gắn với phase. Đọc theo mục tiêu của lesson, ghi lại điều đã kiểm chứng rồi quay về làm bài.' : 'Books, courses, documentation and repositories mapped to each phase. Read with a lesson goal, verify what you learn, then return to practice.'}</p></div><section className="resource-library-card"><div className="resource-library-header"><div><span className="eyebrow">{resources.length} SOURCES</span><h3>{vi ? 'Thư viện tài liệu AI Engineer' : 'AI Engineer reference library'}</h3></div><p>{vi ? 'Nguồn community như AI Engineering from Scratch được giữ lại để bạn tham khảo; nguồn official giúp kiểm tra API và chuẩn kỹ thuật.' : 'Community references such as AI Engineering from Scratch sit alongside official sources for API and engineering verification.'}</p></div><div className="filter-bar resource-filters"><label className="sr-only" htmlFor="resource-query">{vi ? 'Tìm tài liệu' : 'Search resources'}</label><input id="resource-query" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={vi ? 'Tìm theo tên, tác giả, chủ đề...' : 'Search by title, provider or topic...'} /><label className="sr-only" htmlFor="resource-phase">{vi ? 'Lọc theo phase' : 'Filter by phase'}</label><select id="resource-phase" aria-label={vi ? 'Lọc theo phase' : 'Filter by phase'} value={phase} onChange={(event) => setPhase(event.target.value)}><option value="all">{vi ? 'Tất cả phase' : 'All phases'}</option>{Object.entries(phaseLabels).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select><label className="sr-only" htmlFor="resource-type">{vi ? 'Lọc theo loại' : 'Filter by type'}</label><select id="resource-type" aria-label={vi ? 'Lọc theo loại' : 'Filter by type'} value={type} onChange={(event) => setType(event.target.value)}><option value="all">{vi ? 'Mọi loại nguồn' : 'All types'}</option>{types.map((item) => <option key={item} value={item}>{item}</option>)}</select><span className="muted" role="status">{visible.length}/{resources.length}</span></div><div className="resource-grid">{visible.map((resource) => <article className={`resource-card ${resource.featured ? 'featured' : ''}`} key={resource.slug}><div className="resource-card-top"><span className="tag">{resource.type}</span><span className="resource-language">{resource.language.toUpperCase()}</span></div><h4>{vi ? resource.title_vi : resource.title_en}</h4><p className="resource-provider">{resource.provider} {resource.official ? '· Official' : '· Community reference'}</p><p>{vi ? resource.description_vi : resource.description_en}</p><div className="resource-phases">{resource.phase_ids.map((phaseId) => <span key={phaseId}>{phaseLabels[phaseId]?.split(' · ')[0] ?? phaseId}</span>)}</div><div className="resource-how"><strong>{vi ? 'Cách dùng trong lộ trình' : 'How to use it'}</strong><p>{vi ? resource.how_to_use_vi : resource.how_to_use_en}</p></div>{resource.url ? <a className="resource-link" href={resource.url} target="_blank" rel="noreferrer">{vi ? 'Mở nguồn tham khảo' : 'Open reference'} <span>↗</span></a> : <p className="resource-internal-note">{vi ? 'Nội dung này có sẵn trong app.' : 'This content is available in the app.'}</p>}</article>)}</div>{visible.length === 0 && <EmptyState title={vi ? 'Không tìm thấy tài liệu' : 'No resources found'} description={vi ? 'Thử từ khóa khác hoặc bỏ bộ lọc phase.' : 'Try another keyword or clear the phase filter.'} />}</section></div>
 }
-function JournalView({ hosted, onExportContext }: { hosted: boolean; onExportContext: (question: string) => Promise<ContextExport> }) {
-  const [question, setQuestion] = useState('')
-  const [git, setGit] = useState<any>(null)
-  const [diff, setDiff] = useState('')
-  const [suggested, setSuggested] = useState('')
-  const [notes, setNotes] = useState<any[]>([])
-  const [cloudJournal, setCloudJournal] = useState<HostedJournalEntry[]>([])
-  const [journalPath, setJournalPath] = useState('')
-  const [context, setContext] = useState<ContextExport | null>(null)
-  const [contextBusy, setContextBusy] = useState(false)
-  const [contextCopied, setContextCopied] = useState(false)
-  const [contextError, setContextError] = useState('')
-  const [journalBusy, setJournalBusy] = useState(false)
-  const [journalError, setJournalError] = useState('')
-  const load = async () => {
-    setJournalBusy(true)
-    setJournalError('')
-    try {
-      if (hosted) {
-        const cloudApi = api as unknown as HostedJournalApi
-        const [nextNotes, nextJournal] = await Promise.all([api.notes(), cloudApi.journalEntries()])
-        setNotes(nextNotes.notes); setCloudJournal(nextJournal.entries)
-        setGit(null); setDiff(''); setSuggested('Dùng source clone để review và commit Git.')
-      } else {
-        const [nextGit, nextNotes, nextDiff, nextSuggested] = await Promise.all([api.gitStatus(), api.notes(), api.gitDiff(), api.suggestedCommit()])
-        setGit(nextGit); setNotes(nextNotes.notes); setDiff(nextDiff.diff); setSuggested(nextSuggested.message)
-      }
-    } catch (cause) {
-      setJournalError(cause instanceof Error ? cause.message : 'Không tải được Journal hoặc Git snapshot.')
-    } finally {
-      setJournalBusy(false)
-    }
-  }
-  const createContext = async () => {
-    setContextBusy(true)
-    setContextError('')
-    setContextCopied(false)
-    try {
-      const result = await onExportContext(question.trim() || 'Hãy giúp tôi hiểu phần này bằng gợi ý từng bước.')
-      setContext(result)
-      try {
-        if (!navigator.clipboard) throw new Error('clipboard-unavailable')
-        await navigator.clipboard.writeText(result.content)
-        setContextCopied(true)
-        window.setTimeout(() => setContextCopied(false), 2200)
-      } catch {
-        setContextError('Không truy cập được clipboard. Context vẫn hiện bên dưới; bạn có thể bấm vào ô, Ctrl+A rồi Ctrl+C.')
-      }
-    } catch (cause) {
-      setContextError(cause instanceof Error ? cause.message : 'Không tạo được context. Hãy thử lại.')
-    } finally {
-      setContextBusy(false)
-    }
-  }
-  const copyContext = async () => {
-    if (!context) return
-    try {
-      if (!navigator.clipboard) throw new Error('clipboard-unavailable')
-      await navigator.clipboard.writeText(context.content)
-      setContextCopied(true)
-      setContextError('')
-      window.setTimeout(() => setContextCopied(false), 2200)
-    } catch {
-      setContextError('Không truy cập được clipboard. Bạn có thể bấm vào ô context, Ctrl+A rồi Ctrl+C.')
-    }
-  }
-  const exportJournal = async () => {
-    setJournalBusy(true)
-    setJournalError('')
-    try {
-      const result = await api.exportJournal()
-      setJournalPath(result.path)
-    } catch (cause) {
-      setJournalError(cause instanceof Error ? cause.message : 'Không export được journal tuần này.')
-    } finally {
-      setJournalBusy(false)
-    }
-  }
-  // oxlint-disable-next-line react(set-state-in-effect)
-  useEffect(() => { const timer = window.setTimeout(() => { void load() }, 0); return () => window.clearTimeout(timer) }, [])
-  return <div>
-    <div className="page-intro"><div><span className="eyebrow accent">EVIDENCE LOG</span><h2>Hành trình của bạn<br /><em>{hosted ? 'được đồng bộ.' : 'nằm trong Git.'}</em></h2></div><p>{hosted ? 'Notes và journal được đồng bộ theo tài khoản. Dùng source clone khi cần review diff và commit GitHub.' : 'Export journal mỗi tuần, review diff trước khi commit, và để README kể được câu chuyện kỹ thuật của bạn.'}</p></div>{journalError && <p className="warning-note" role="alert">{journalError}</p>}
-    <div className="journal-grid"><section className="section-card journal-card"><div className="section-heading"><div><span className="eyebrow">WEEKLY REFLECTION</span><h3>Journal tuần</h3></div><span className="tag">Markdown</span></div><p>{hosted ? 'Journal được tải xuống dưới dạng Markdown; progress và notes vẫn đồng bộ riêng theo tài khoản.' : 'File journal được ghi vào thư mục journal/weekly, sẵn sàng để bạn review và push lên GitHub.'}</p><button className="primary-button" disabled={journalBusy} onClick={() => void exportJournal()}>{journalBusy ? 'Đang export…' : 'Export tuần này →'}</button>{journalPath && <p className="success-note">Đã tạo {journalPath}</p>}</section>
-    {hosted && <HostedJournalEditor entries={cloudJournal} onSaved={async (payload) => { const saved = await (api as unknown as HostedJournalApi).upsertJournalEntry(payload); setCloudJournal((current) => [saved, ...current.filter((item) => item.week_start !== saved.week_start)]); }} />}
-    <section className="section-card ask-card"><div className="section-heading"><div><span className="eyebrow">CONTEXT BRIDGE</span><h3>Hỏi ChatGPT / Codex</h3></div><span className="tag">No API key</span></div><p>App tạo context có lesson, progress, note và nguyên tắc học để bạn dán sang trợ lý.</p><textarea value={question} onChange={(event) => setQuestion(event.target.value)} placeholder="Ví dụ: Vì sao validation loss của tôi tăng?" /><button className="secondary-button" disabled={contextBusy} onClick={() => void createContext()}>{contextBusy ? 'Đang tạo…' : 'Tạo context & copy'}</button>{contextError && <p className="warning-note" role="alert">{contextError}</p>}{context && <section className="context-result" aria-live="polite"><div className="section-heading"><div><span className="eyebrow accent">CONTEXT READY</span><h4>Context vừa tạo</h4></div><button className="text-button" onClick={() => void copyContext()}>{contextCopied ? 'Đã copy ✓' : 'Copy lại'}</button></div><textarea className="context-preview" aria-label="Context vừa tạo" readOnly value={context.content} onFocus={(event) => event.currentTarget.select()} /><small className="context-path">Đã lưu: {context.path}</small></section>}</section></div>
-    <section className="section-card notes-card"><div className="section-heading"><div><span className="eyebrow">YOUR NOTES</span><h3>Insight đã lưu</h3></div><button className="text-button" disabled={journalBusy} onClick={() => void load()}>Refresh</button></div>{notes.length ? <div className="saved-notes">{notes.slice(0, 12).map((note) => <article className="saved-note" key={note.id}><strong>{note.title}</strong><p>{note.body}</p><small>{note.lesson_title_vi ?? 'General note'} · {new Date(note.updated_at).toLocaleDateString()}</small></article>)}</div> : <p className="muted">Chưa có note. Mở một lesson và ghi lại điều bạn tự phát hiện.</p>}</section>
-    {!hosted && <section className="section-card git-card"><div className="section-heading"><div><span className="eyebrow">LOCAL REPOSITORY</span><h3>Git snapshot</h3></div><button className="text-button" disabled={journalBusy} onClick={() => void load()}>Refresh</button></div>{git ? <div className="git-details"><div><span>Branch</span><strong>{git.branch || 'chưa init'}</strong></div><div><span>Last commit</span><strong>{git.last_commit || 'chưa có commit'}</strong></div><div><span>Remote</span><strong>{git.remote || 'chưa cấu hình'}</strong></div></div> : <p className="muted">Đang đọc trạng thái Git...</p>}<p className="muted">Suggested commit: <code>{suggested}</code></p><pre className="git-output">{git?.status || 'Working tree sạch hoặc chưa được khởi tạo.'}</pre><details><summary>Xem diff đã redact secret</summary><pre className="git-output">{diff || 'Chưa có diff.'}</pre></details></section>}
-  </div>
-}
-function HostedJournalEditor({ entries, onSaved }: { entries: HostedJournalEntry[]; onSaved: (payload: { week_start: string; title: string; body: string }) => Promise<void> }) {
-  const today = new Date()
-  const monday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - ((today.getDay() + 6) % 7))
-  const defaultWeek = `${monday.getFullYear()}-${String(monday.getMonth() + 1).padStart(2, '0')}-${String(monday.getDate()).padStart(2, '0')}`
-  const [weekStart, setWeekStart] = useState(defaultWeek)
-  const [title, setTitle] = useState('Weekly reflection')
-  const [body, setBody] = useState('')
-  const [busy, setBusy] = useState(false)
-  const [error, setError] = useState('')
-  const [saved, setSaved] = useState(false)
-  const save = async () => {
-    setError('')
-    if (!title.trim() || !body.trim()) { setError('Hãy ghi tiêu đề và nội dung reflection trước khi lưu.'); return }
-    setBusy(true)
-    try {
-      await onSaved({ week_start: weekStart, title, body })
-      setSaved(true)
-      window.setTimeout(() => setSaved(false), 2200)
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : 'Không lưu được journal. Hãy thử lại.')
-    } finally { setBusy(false) }
-  }
-  return <section className="section-card journal-card"><div className="section-heading"><div><span className="eyebrow">CLOUD JOURNAL</span><h3>Reflection đồng bộ</h3></div><span className="tag">private</span></div><p className="muted">Mỗi tuần có một reflection. Chỉ tài khoản của bạn đọc được dữ liệu này qua Row Level Security.</p><label>Tuần bắt đầu<input type="date" value={weekStart} onChange={(event) => setWeekStart(event.target.value)} /></label><label>Tiêu đề<input maxLength={200} value={title} onChange={(event) => setTitle(event.target.value)} /></label><label>Reflection<textarea maxLength={50_000} value={body} onChange={(event) => setBody(event.target.value)} placeholder="Điều đã hiểu, lỗi đã gặp, bằng chứng đã tạo và việc sẽ làm tiếp theo…" /></label><button className="secondary-button" disabled={busy} onClick={() => void save()}>{busy ? 'Đang đồng bộ…' : 'Lưu reflection'}</button>{saved && <p className="success-note" role="status">Đã đồng bộ journal.</p>}{error && <p className="warning-note" role="alert">{error}</p>}{entries.length > 0 && <details><summary>{entries.length} reflection đã lưu</summary><div className="saved-notes">{entries.slice(0, 6).map((entry) => <article className="saved-note" key={entry.id}><strong>{entry.title}</strong><p>{entry.body}</p><small>Tuần từ {entry.week_start}</small></article>)}</div></details>}</section>
-}
 function SettingsView({ settings, hosted, onSave }: { settings: AppSettings; hosted: boolean; onSave: (next: Partial<AppSettings>) => Promise<void> }) {
   const vi = settings.language === 'vi'
   const [goal, setGoal] = useState(String(settings.weekly_goal_minutes))
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState('')
+  const [saving, setSaving] = useState(false)
+  const submitting = useRef(false)
   const save = async (next: Partial<AppSettings>): Promise<boolean> => {
+    if (submitting.current) return false
+    submitting.current = true
+    setSaving(true)
+    setSaved(false)
     setError('')
     try {
       await onSave(next)
+      setSaved(true)
       return true
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : (vi ? 'Không lưu được cài đặt.' : 'Could not save settings.'))
       return false
+    } finally {
+      submitting.current = false
+      setSaving(false)
     }
   }
   const saveGoal = async () => {
@@ -918,25 +728,21 @@ function SettingsView({ settings, hosted, onSave }: { settings: AppSettings; hos
       setError(vi ? 'Mục tiêu tuần phải là số nguyên từ 60 đến 10080 phút.' : 'Weekly goal must be a whole number from 60 to 10080 minutes.')
       return
     }
-    const didSave = await save({ weekly_goal_minutes: value })
-    if (didSave) {
-      setSaved(true)
-      window.setTimeout(() => setSaved(false), 2500)
-    }
+    await save({ weekly_goal_minutes: value })
   }
   return <div>
     <div className="page-intro"><div><span className="eyebrow accent">PERSONAL SETTINGS</span><h2>{vi ? 'Thiết kế nhịp học bền vững.' : 'Build a sustainable learning rhythm.'}</h2></div><p>{hosted ? (vi ? 'Cài đặt được lưu riêng theo tài khoản web.' : 'Settings are saved privately to your web account.') : (vi ? 'Cài đặt được lưu trong SQLite local.' : 'Settings are saved in local SQLite.')}</p></div>
     <section className="section-card settings-card">
-      <label>{vi ? 'Ngôn ngữ giao diện' : 'Interface language'}<select aria-label={vi ? 'Ngôn ngữ giao diện' : 'Interface language'} value={settings.language} onChange={(event) => void save({ language: event.target.value as AppSettings['language'] })}><option value="vi">Tiếng Việt + English terms</option><option value="en">English</option></select></label>
-      <label>{vi ? 'Mục tiêu nghề nghiệp' : 'Career goal'}<select aria-label={vi ? 'Mục tiêu nghề nghiệp' : 'Career goal'} value={settings.target_role} onChange={(event) => void save({ target_role: event.target.value as AppSettings['target_role'] })}><option value="internship">{vi ? 'Thực tập AI/ML Engineer' : 'AI/ML engineering internship'}</option><option value="junior">Junior AI Engineer</option><option value="career_switch">{vi ? 'Chuyển hướng sang AI Engineer' : 'Switching to AI engineering'}</option></select></label>
-      <label>{vi ? 'Nền tảng hiện tại' : 'Current experience'}<select aria-label={vi ? 'Nền tảng hiện tại' : 'Current experience'} value={settings.experience_level} onChange={(event) => void save({ experience_level: event.target.value as AppSettings['experience_level'] })}><option value="beginner">{vi ? 'Mới bắt đầu' : 'Beginner'}</option><option value="intermediate">{vi ? 'Đã có nền tảng' : 'Some experience'}</option><option value="advanced">{vi ? 'Đang cần portfolio sâu' : 'Building an advanced portfolio'}</option></select></label>
-      <label>{vi ? 'Learning track' : 'Study rhythm'}<select aria-label={vi ? 'Learning track' : 'Study rhythm'} value={settings.track} onChange={(event) => void save({ track: event.target.value as AppSettings['track'] })}><option value="standard">{vi ? 'Nhịp đều đặn' : 'Steady pace'}</option><option value="accelerated">{vi ? 'Nhịp tập trung' : 'Focused pace'}</option></select></label>
-      <label>{vi ? 'Mục tiêu mỗi tuần (phút)' : 'Weekly goal (minutes)'}<input aria-label={vi ? 'Mục tiêu mỗi tuần, tính bằng phút' : 'Weekly goal in minutes'} type="number" min="60" max="10080" value={goal} onChange={(event) => setGoal(event.target.value)} /></label>
-      <label className="setting-check"><input type="checkbox" checked={settings.show_completed_lessons} onChange={(event) => void save({ show_completed_lessons: event.target.checked })} /> {vi ? 'Hiển thị lesson đã hoàn thành trên roadmap' : 'Show completed lessons on the roadmap'}</label>
-      <label className="setting-check"><input type="checkbox" checked={settings.onboarding_complete} onChange={(event) => void save({ onboarding_complete: event.target.checked })} /> {vi ? 'Đã hoàn thành onboarding và baseline assessment' : 'Completed onboarding and baseline assessment'}</label>
-      <button className="primary-button" onClick={() => void saveGoal()}>{vi ? 'Lưu mục tiêu tuần' : 'Save weekly goal'}</button>
+      <label>{vi ? 'Ngôn ngữ giao diện' : 'Interface language'}<select disabled={saving} aria-label={vi ? 'Ngôn ngữ giao diện' : 'Interface language'} value={settings.language} onChange={(event) => void save({ language: event.target.value as AppSettings['language'] })}><option value="vi">Tiếng Việt + English terms</option><option value="en">English</option></select></label>
+      <label>{vi ? 'Mục tiêu nghề nghiệp' : 'Career goal'}<select disabled={saving} aria-label={vi ? 'Mục tiêu nghề nghiệp' : 'Career goal'} value={settings.target_role} onChange={(event) => void save({ target_role: event.target.value as AppSettings['target_role'] })}><option value="internship">{vi ? 'Thực tập AI/ML Engineer' : 'AI/ML engineering internship'}</option><option value="junior">Junior AI Engineer</option><option value="career_switch">{vi ? 'Chuyển hướng sang AI Engineer' : 'Switching to AI engineering'}</option></select></label>
+      <label>{vi ? 'Nền tảng hiện tại' : 'Current experience'}<select disabled={saving} aria-label={vi ? 'Nền tảng hiện tại' : 'Current experience'} value={settings.experience_level} onChange={(event) => void save({ experience_level: event.target.value as AppSettings['experience_level'] })}><option value="beginner">{vi ? 'Mới bắt đầu' : 'Beginner'}</option><option value="intermediate">{vi ? 'Đã có nền tảng' : 'Some experience'}</option><option value="advanced">{vi ? 'Đang cần portfolio sâu' : 'Building an advanced portfolio'}</option></select></label>
+      <label>{vi ? 'Learning track' : 'Study rhythm'}<select disabled={saving} aria-label={vi ? 'Learning track' : 'Study rhythm'} value={settings.track} onChange={(event) => void save({ track: event.target.value as AppSettings['track'] })}><option value="standard">{vi ? 'Nhịp đều đặn' : 'Steady pace'}</option><option value="accelerated">{vi ? 'Nhịp tập trung' : 'Focused pace'}</option></select></label>
+      <label>{vi ? 'Mục tiêu mỗi tuần (phút)' : 'Weekly goal (minutes)'}<input disabled={saving} aria-label={vi ? 'Mục tiêu mỗi tuần, tính bằng phút' : 'Weekly goal in minutes'} type="number" min="60" max="10080" value={goal} onChange={(event) => { setGoal(event.target.value); setSaved(false) }} /></label>
+      <label className="setting-check"><input disabled={saving} type="checkbox" checked={settings.show_completed_lessons} onChange={(event) => void save({ show_completed_lessons: event.target.checked })} /> {vi ? 'Hiển thị lesson đã hoàn thành trên roadmap' : 'Show completed lessons on the roadmap'}</label>
+      <label className="setting-check"><input disabled={saving} type="checkbox" checked={settings.onboarding_complete} onChange={(event) => void save({ onboarding_complete: event.target.checked })} /> {vi ? 'Đã hoàn thành onboarding và baseline assessment' : 'Completed onboarding and baseline assessment'}</label>
+      <button className="primary-button" disabled={saving} aria-busy={saving} onClick={() => void saveGoal()}>{saving ? (vi ? 'Đang lưu…' : 'Saving…') : (vi ? 'Lưu mục tiêu tuần' : 'Save weekly goal')}</button>
       {error && <p className="warning-note" role="alert">{error}</p>}
-      {saved && <p className="success-note">{vi ? 'Đã lưu cài đặt.' : 'Settings saved.'}</p>}
+      {saved && <p className="success-note" role="status">{vi ? 'Đã lưu cài đặt.' : 'Settings saved.'}</p>}
     </section>
     <BackupSettings hosted={hosted} language={settings.language} />
   </div>

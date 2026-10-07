@@ -37,7 +37,7 @@ export function CloudDataSettings({ language }: { language: 'vi' | 'en' }) {
       : 'Download this account’s progress, review history, study sessions, notes, journal and settings.'}</p>
     <p className="muted">{vi ? 'File có nội dung riêng tư. Đây là bản xuất dữ liệu web, chưa dùng để khôi phục SQLite hoặc nhập sang tài khoản khác.'
       : 'The file contains private content. This web export cannot yet restore SQLite or import into another account.'}</p>
-    <button className="secondary-button" disabled={busy} onClick={() => void download()}>
+    <button className="secondary-button" disabled={busy} aria-busy={busy} onClick={() => void download()}>
       {busy ? (vi ? 'Đang xuất…' : 'Exporting…') : (vi ? 'Tải dữ liệu JSON' : 'Download JSON export')}
     </button>
     {message && <p role="status" className="success-note">{message}</p>}

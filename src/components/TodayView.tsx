@@ -81,7 +81,7 @@ export function TodayView({ dashboard, language, lessonTitle, onOpenLesson, onNa
           onChange={(event) => setMinutes(event.target.value)} required /></label>
         <label>{vi ? 'Ghi chú' : 'Note'}<input value={note} onChange={(event) => setNote(event.target.value)}
           placeholder={vi ? 'Đã làm được gì? Còn vướng ở đâu?' : 'What worked? What is still unclear?'} /></label>
-        <button className="secondary-button" disabled={busy} type="submit">
+        <button className="secondary-button" disabled={busy} aria-busy={busy} type="submit">
           {busy ? (vi ? 'Đang lưu…' : 'Saving…') : (vi ? 'Lưu phiên học' : 'Save session')}
         </button>
       </form>
