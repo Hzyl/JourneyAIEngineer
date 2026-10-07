@@ -1,0 +1,234 @@
+.public-shell {
+  --public-ink: #172335;
+  --public-muted: #4a596c;
+  --public-accent: #08685e;
+  background: #faf9f5;
+  color: var(--public-ink);
+  min-height: 100vh;
+  font-size: 16px;
+  line-height: 1.65;
+}
+.public-shell button,
+.public-shell a,
+.public-auth button {
+  touch-action: manipulation;
+}
+.public-shell a {
+  color: #075f88;
+  text-underline-offset: 4px;
+}
+.public-shell :focus-visible,
+.public-auth :focus-visible {
+  outline: 3px solid #096fbd;
+  outline-offset: 4px;
+}
+.public-nav,
+.public-footer {
+  max-width: 1240px;
+  margin: auto;
+  padding: 24px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.public-nav {
+  border-bottom: 1px solid #d8dce0;
+}
+.public-nav button,
+.public-back {
+  color: #172335;
+  border: 0;
+  background: transparent;
+  padding: 10px 12px;
+  min-height: 44px;
+}
+.public-brand {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 18px;
+}
+.public-brand > span {
+  font-size: 25px;
+  font-weight: 800;
+  color: var(--public-accent);
+}
+.public-brand strong {
+  font-size: 12px;
+  font-weight: 500;
+}
+.public-nav nav {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.public-nav .public-login {
+  border: 1px solid #728091;
+  border-radius: 8px;
+  padding-inline: 18px;
+}
+.public-shell main {
+  max-width: 1240px;
+  margin: auto;
+  padding: 0 40px;
+}
+.public-shell h1,
+.public-shell h2,
+.public-shell h3 {
+  color: var(--public-ink);
+  line-height: 1.18;
+  letter-spacing: -0.035em;
+  font-family: var(--body-font, system-ui, sans-serif);
+}
+.public-shell h1 {
+  font-size: clamp(38px, 5.8vw, 76px);
+  margin: 20px 0 26px;
+  font-weight: 750;
+}
+.public-shell h2 {
+  font-size: clamp(27px, 3vw, 40px);
+  margin: 12px 0 24px;
+}
+.public-shell h3 {
+  font-size: 22px;
+}
+.public-shell .eyebrow {
+  font-size: 12px;
+  color: var(--public-muted);
+  letter-spacing: 0.09em;
+  font-weight: 650;
+}
+.public-hero {
+  padding: 78px 0 84px;
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  align-items: center;
+  gap: 64px;
+}
+.public-hero h1 em {
+  color: var(--public-accent);
+  font-style: normal;
+}
+.public-lead {
+  font-size: 19px;
+  color: var(--public-muted);
+  max-width: 58ch;
+}
+.public-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+.public-primary,
+.public-secondary {
+  padding: 13px 20px;
+  min-height: 48px;
+  border: 1px solid var(--public-accent);
+  border-radius: 8px;
+  font-weight: 650;
+}
+.public-primary {
+  background: var(--public-accent);
+  color: white;
+}
+.public-primary:hover {
+  background: #064e47;
+}
+.public-secondary {
+  background: transparent;
+  color: var(--public-accent);
+}
+.public-footnote {
+  color: var(--public-muted);
+  font-size: 14px;
+}
+.public-artifact {
+  border: 1px solid #bdc8cd;
+  border-radius: 16px;
+  background: #fff;
+  padding: 32px;
+  box-shadow: 8px 8px 0 #e2e8e6;
+}
+.public-artifact h2 {
+  font-size: 28px;
+  white-space: pre-line;
+}
+.artifact-filename {
+  padding: 10px 16px;
+  background: #e9eef2;
+  border-radius: 8px 8px 0 0;
+  font-family: monospace;
+  font-size: 13px;
+}
+.public-shell pre {
+  white-space: pre;
+  overflow-x: auto;
+  background: #172335;
+  color: #edf5fa;
+  border-radius: 8px;
+  padding: 20px;
+  line-height: 1.65;
+  font-size: 14px;
+  max-width: 100%;
+}
+.public-artifact pre {
+  margin-top: 0;
+  border-radius: 0 0 8px 8px;
+}
+.artifact-check {
+  color: #07594c;
+  font-size: 14px;
+  font-weight: 650;
+}
+.public-samples,
+.public-roadmap,
+.public-modes {
+  border-top: 1px solid #d0d7dc;
+  padding: 64px 0;
+}
+.public-section-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+}
+.public-section-heading > p {
+  max-width: 44ch;
+  color: var(--public-muted);
+}
+.public-lesson-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 36px;
+}
+.public-lesson-list button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 18px;
+  text-align: left;
+  border: 0;
+  border-top: 1px solid #d8dce0;
+  background: transparent;
+  padding: 20px 6px;
+  color: var(--public-ink);
+}
+.public-lesson-list button:hover {
+  background: #edf2ee;
+}
+.public-lesson-list button > span:last-child {
+  margin-left: auto;
+}
+.public-lesson-list small {
+  display: block;
+  color: var(--public-muted);
+  font-size: 13px;
+  margin-top: 6px;
+}
+.sample-number {
+  font-variant-numeric: tabular-nums;
+  color: var(--public-accent);
+}

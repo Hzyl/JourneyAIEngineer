@@ -1,4 +1,9 @@
 import { defineConfig, devices } from '@playwright/test'
+import { mkdtempSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+
+const dataRoot = mkdtempSync(join(tmpdir(), 'journey-e2e-'))
 
 /**
  * The smoke suite exercises the same local-only processes used by contributors:
@@ -18,7 +23,7 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   reporter: process.env.CI ? 'github' : 'list',
   use: {
-    baseURL: 'http://127.0.0.1:5173',
+    baseURL: 'http://127.0.0.1:5177',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     ...(process.env.PLAYWRIGHT_CHANNEL ? { channel: process.env.PLAYWRIGHT_CHANNEL } : {}),
@@ -26,16 +31,18 @@ export default defineConfig({
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: [
     {
-      command: 'python -m uvicorn apps.api.main:app --host 127.0.0.1 --port 8000',
-      url: 'http://127.0.0.1:8000/api/health/live',
+      command: 'python -m uvicorn apps.api.main:app --host 127.0.0.1 --port 8871',
+      url: 'http://127.0.0.1:8871/api/health/live',
+      env: { JOURNEY_DATA_DIR: dataRoot, JOURNEY_JOURNAL_DIR: join(dataRoot, 'journal') },
       timeout: 120_000,
-      reuseExistingServer: !process.env.CI,
+      reuseExistingServer: false,
     },
     {
-      command: 'npm run dev -- --host 127.0.0.1 --port 5173',
-      url: 'http://127.0.0.1:5173',
+      command: 'npm run dev -- --host 127.0.0.1 --port 5177 --strictPort',
+      url: 'http://127.0.0.1:5177',
+      env: { VITE_APP_MODE: 'local', JOURNEY_DEV_API_PORT: '8871' },
       timeout: 120_000,
-      reuseExistingServer: !process.env.CI,
+      reuseExistingServer: false,
     },
   ],
 })

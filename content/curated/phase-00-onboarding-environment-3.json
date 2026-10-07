@@ -1,0 +1,210 @@
+{
+  "lesson_id": "phase-00-onboarding-environment-3",
+  "phase_id": "phase-00-onboarding",
+  "module_id": "environment",
+  "title_vi": "Tạo virtual environment đầu tiên",
+  "title_en": "Create your first virtual environment",
+  "summary_vi": "Tạo .venv riêng cho project và kiểm tra pip thuộc đúng interpreter.",
+  "summary_en": "Create a project virtual environment and verify pip belongs to its interpreter.",
+  "learning_objectives": [
+    "Tạo được .venv trong folder bài tập.",
+    "Xác nhận isolated=True bằng interpreter của .venv.",
+    "Kiểm tra pip bằng chính interpreter đó."
+  ],
+  "learning_objectives_en": [
+    "Create .venv in the exercise folder.",
+    "Confirm isolated=True using the venv interpreter.",
+    "Check pip through that same interpreter."
+  ],
+  "prerequisites": [
+    "phase-00-onboarding-environment-2"
+  ],
+  "key_terms": [
+    "venv",
+    "pip",
+    "dependency isolation"
+  ],
+  "concept_notes_vi": "Virtual environment tách package giữa các project; nó không phải container hay cơ chế sandbox. sys.prefix khác sys.base_prefix cho biết interpreter đang ở venv.\nTrên Windows: py -3 -m venv .venv, rồi gọi .\\.venv\\Scripts\\python.exe trực tiếp. Không cần đổi execution policy để học bài này. Dùng python -m pip gắn pip với đúng interpreter; chỉ lưu tên/version dependency, không đưa cả .venv vào source ZIP.",
+  "concept_notes_en": "A virtual environment separates project packages; it is not a container or a security sandbox. sys.prefix differs from sys.base_prefix when the interpreter runs in a venv.\nOn Windows run py -3 -m venv .venv, then invoke .\\.venv\\Scripts\\python.exe directly. No execution-policy change is needed here. python -m pip selects pip through that interpreter; record dependencies rather than shipping the .venv folder.",
+  "why_it_matters_vi": "Virtual environment tách package giữa các project; nó không phải container hay cơ chế sandbox. sys.prefix khác sys.base_prefix cho biết interpreter đang ở venv.",
+  "why_it_matters_en": "A virtual environment separates project packages; it is not a container or a security sandbox. sys.prefix differs from sys.base_prefix when the interpreter runs in a venv.",
+  "study_steps_vi": [
+    "Mở terminal trong folder bài tập và chạy py -3 -m venv .venv.",
+    "Lưu ví dụ vào venv_check.py.",
+    "Chạy .\\.venv\\Scripts\\python.exe venv_check.py; macOS/Linux dùng .venv/bin/python.",
+    "Chạy .\\.venv\\Scripts\\python.exe -m pip --version và lưu output. Trên web, tự làm ở môi trường riêng."
+  ],
+  "study_steps_en": [
+    "Open a terminal in the exercise folder and run py -3 -m venv .venv.",
+    "Save the example as venv_check.py.",
+    "Run .\\.venv\\Scripts\\python.exe venv_check.py; use .venv/bin/python on macOS/Linux.",
+    "Run .\\.venv\\Scripts\\python.exe -m pip --version and save the output. On the web, use your own environment."
+  ],
+  "practice_plan": {
+    "vi": {
+      "task": "Chạy .\\.venv\\Scripts\\python.exe -m pip --version và lưu output. Trên web, tự làm ở môi trường riêng.",
+      "deliverables": [
+        "Tạo được .venv trong folder bài tập.",
+        "Xác nhận isolated=True bằng interpreter của .venv.",
+        "Kiểm tra pip bằng chính interpreter đó."
+      ],
+      "checkpoint": "Kiểm tra pip bằng chính interpreter đó.",
+      "stretch": "Vì sao venv_check.py in isolated=False?"
+    },
+    "en": {
+      "task": "Run .\\.venv\\Scripts\\python.exe -m pip --version and save the output. On the web, use your own environment.",
+      "deliverables": [
+        "Create .venv in the exercise folder.",
+        "Confirm isolated=True using the venv interpreter.",
+        "Check pip through that same interpreter."
+      ],
+      "checkpoint": "Check pip through that same interpreter.",
+      "stretch": "Why does venv_check.py print isolated=False?"
+    }
+  },
+  "interview_questions": {
+    "vi": [
+      "Lệnh nào kiểm tra pip của venv trên Windows?",
+      "Vì sao venv_check.py in isolated=False?",
+      "Nên gửi .venv cho đồng đội hay requirements?"
+    ],
+    "en": [
+      "Which command checks venv pip on Windows?",
+      "Why does venv_check.py print isolated=False?",
+      "Should you share .venv or dependency requirements?"
+    ]
+  },
+  "formulas": [],
+  "code_examples": [
+    {
+      "language": "python",
+      "title": "Create your first virtual environment",
+      "code": "import sys\n\nprint(f'isolated={sys.prefix != sys.base_prefix}')\nprint(f'prefix={sys.prefix}')\nprint(f'base={sys.base_prefix}')",
+      "status": "runnable",
+      "purpose_vi": "Tạo .venv riêng cho project và kiểm tra pip thuộc đúng interpreter.",
+      "purpose_en": "Create a project virtual environment and verify pip belongs to its interpreter.",
+      "setup": "Python 3.11+; chạy trong terminal hoặc notebook của bạn. Web chỉ hiển thị ví dụ.",
+      "expected_output": "isolated=True khi chạy bằng Python của .venv; prefix khác base.",
+      "edge_case_vi": "isolated=False nghĩa là đang chạy Python ngoài venv; kiểm tra executable.",
+      "edge_case_en": "isolated=False means the active Python is outside the venv; inspect the executable.",
+      "explanation_vi": "Virtual environment tách package giữa các project; nó không phải container hay cơ chế sandbox. sys.prefix khác sys.base_prefix cho biết interpreter đang ở venv.\nTrên Windows: py -3 -m venv .venv, rồi gọi .\\.venv\\Scripts\\python.exe trực tiếp. Không cần đổi execution policy để học bài này. Dùng python -m pip gắn pip với đúng interpreter; chỉ lưu tên/version dependency, không đưa cả .venv vào source ZIP.",
+      "explanation_en": "A virtual environment separates project packages; it is not a container or a security sandbox. sys.prefix differs from sys.base_prefix when the interpreter runs in a venv.\nOn Windows run py -3 -m venv .venv, then invoke .\\.venv\\Scripts\\python.exe directly. No execution-policy change is needed here. python -m pip selects pip through that interpreter; record dependencies rather than shipping the .venv folder."
+    }
+  ],
+  "resources": [
+    {
+      "title": "Python venv",
+      "url": "https://docs.python.org/3/library/venv.html",
+      "language": "en",
+      "kind": "official",
+      "required": true,
+      "purpose_vi": "Tạo được .venv trong folder bài tập.",
+      "purpose_en": "Create .venv in the exercise folder.",
+      "read_vi": "Đọc tạo môi trường và cách xác định đang chạy trong venv.",
+      "read_en": "Read environment creation and how to detect a running virtual environment."
+    },
+    {
+      "title": "Practice checkpoint / Thuc hanh",
+      "url": "",
+      "language": "vi",
+      "kind": "in_app",
+      "required": true,
+      "purpose_vi": "Chạy .\\.venv\\Scripts\\python.exe -m pip --version và lưu output. Trên web, tự làm ở môi trường riêng.",
+      "purpose_en": "Run .\\.venv\\Scripts\\python.exe -m pip --version and save the output. On the web, use your own environment.",
+      "read_vi": "Kiểm tra pip bằng chính interpreter đó.",
+      "read_en": "Check pip through that same interpreter."
+    }
+  ],
+  "exercise_ids": [
+    "exercise-0-environment"
+  ],
+  "review_item_ids": [
+    "phase-00-onboarding-environment-3-recall",
+    "phase-00-onboarding-environment-3-application",
+    "phase-00-onboarding-environment-3-debug",
+    "phase-00-onboarding-environment-3-interview"
+  ],
+  "estimated_minutes": 35,
+  "completion_checklist": [
+    "Tạo được .venv trong folder bài tập.",
+    "Xác nhận isolated=True bằng interpreter của .venv.",
+    "Kiểm tra pip bằng chính interpreter đó.",
+    "Lưu kết quả thực hành và một lỗi đã hiểu."
+  ],
+  "completion_criteria": [
+    "Tạo được .venv trong folder bài tập.",
+    "Xác nhận isolated=True bằng interpreter của .venv.",
+    "Kiểm tra pip bằng chính interpreter đó."
+  ],
+  "common_mistakes": [
+    "isolated=False nghĩa là đang chạy Python ngoài venv; kiểm tra executable.",
+    "pip độc lập có thể cài package vào interpreter khác."
+  ],
+  "next_lessons": [
+    "phase-00-onboarding-environment-4",
+    "phase-00-onboarding-baseline-1"
+  ],
+  "review_question_vi": "Venv có phải sandbox an toàn để chạy code lạ không?",
+  "review_question_en": "Is a venv a security sandbox for untrusted code?",
+  "review_answer_vi": "Không. Venv tách dependency nhưng code vẫn có quyền của process người dùng.",
+  "review_answer_en": "No. A venv separates dependencies while code retains the user process permissions.",
+  "review_cards": [
+    {
+      "id": "phase-00-onboarding-environment-3-recall",
+      "type": "recall",
+      "question_vi": "Venv có phải sandbox an toàn để chạy code lạ không?",
+      "question_en": "Is a venv a security sandbox for untrusted code?",
+      "answer_vi": "Không. Venv tách dependency nhưng code vẫn có quyền của process người dùng.",
+      "answer_en": "No. A venv separates dependencies while code retains the user process permissions.",
+      "hint_vi": "Package isolation khác permission isolation.",
+      "hint_en": "Package isolation differs from permission isolation."
+    },
+    {
+      "id": "phase-00-onboarding-environment-3-application",
+      "type": "application",
+      "question_vi": "Lệnh nào kiểm tra pip của venv trên Windows?",
+      "question_en": "Which command checks venv pip on Windows?",
+      "answer_vi": "Dùng .\\.venv\\Scripts\\python.exe -m pip --version và xem đường dẫn output.",
+      "answer_en": "Use .\\.venv\\Scripts\\python.exe -m pip --version and inspect the output path.",
+      "hint_vi": "Gọi module qua executable rõ ràng.",
+      "hint_en": "Invoke the module through an explicit executable."
+    },
+    {
+      "id": "phase-00-onboarding-environment-3-debug",
+      "type": "debug",
+      "question_vi": "Vì sao venv_check.py in isolated=False?",
+      "question_en": "Why does venv_check.py print isolated=False?",
+      "answer_vi": "Script đang chạy bằng interpreter ngoài .venv; đổi lệnh chạy hoặc interpreter của editor.",
+      "answer_en": "The script is using an interpreter outside .venv; change the command or editor interpreter.",
+      "hint_vi": "So sánh prefix/base và sys.executable.",
+      "hint_en": "Compare prefix/base and sys.executable."
+    },
+    {
+      "id": "phase-00-onboarding-environment-3-interview",
+      "type": "interview",
+      "question_vi": "Nên gửi .venv cho đồng đội hay requirements?",
+      "question_en": "Should you share .venv or dependency requirements?",
+      "answer_vi": "Chia sẻ source và dependency requirements; tạo lại venv ở máy đích để tránh đường dẫn/platform cũ.",
+      "answer_en": "Share source and dependency requirements; recreate the venv on the target machine to avoid stale paths/platform binaries.",
+      "hint_vi": "Venv thường chứa đường dẫn gắn với máy.",
+      "hint_en": "Virtual environments often contain machine-specific paths."
+    }
+  ],
+  "quality_status": "reviewed",
+  "reviewed_at": "2026-10-07",
+  "completion_checklist_en": [
+    "Create .venv in the exercise folder.",
+    "Confirm isolated=True using the venv interpreter.",
+    "Check pip through that same interpreter.",
+    "Save the practice result and one explained failure."
+  ],
+  "completion_criteria_en": [
+    "Create .venv in the exercise folder.",
+    "Confirm isolated=True using the venv interpreter.",
+    "Check pip through that same interpreter."
+  ],
+  "common_mistakes_en": [
+    "isolated=False means the active Python is outside the venv; inspect the executable.",
+    "A bare pip command can install into a different interpreter."
+  ]
+}

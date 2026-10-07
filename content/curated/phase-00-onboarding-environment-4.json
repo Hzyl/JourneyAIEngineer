@@ -1,0 +1,210 @@
+{
+  "lesson_id": "phase-00-onboarding-environment-4",
+  "phase_id": "phase-00-onboarding",
+  "module_id": "environment",
+  "title_vi": "Jupyter, Colab và khi nào dùng chúng",
+  "title_en": "Jupyter, Colab and when to use them",
+  "summary_vi": "Phân biệt notebook và script, rồi nhận diện state ẩn khi chạy cell lệch thứ tự.",
+  "summary_en": "Distinguish notebooks from scripts and identify hidden state from out-of-order execution.",
+  "learning_objectives": [
+    "Chọn notebook hoặc script theo nhu cầu chạy.",
+    "Giải thích được biến còn lại trong kernel.",
+    "Restart và chạy lại toàn bộ notebook từ đầu."
+  ],
+  "learning_objectives_en": [
+    "Choose a notebook or script for the execution task.",
+    "Explain variables retained by the kernel.",
+    "Restart and rerun the complete notebook from the beginning."
+  ],
+  "prerequisites": [
+    "phase-00-onboarding-environment-3"
+  ],
+  "key_terms": [
+    "notebook",
+    "kernel",
+    "reproducibility"
+  ],
+  "concept_notes_vi": "Notebook kết hợp code, output và giải thích, phù hợp khám phá dữ liệu. Script phù hợp chạy lặp bằng một lệnh. Kernel giữ biến giữa các cell, nên output đúng sau nhiều lần bấm chưa chứng minh notebook tái lập được.\nHãy restart kernel và Run All từ đầu trước khi chia sẻ. Runtime Colab có thể bị thu hồi; tải notebook và artifact cần giữ về. Đọc dataset công khai/synthetic cho buổi đầu; không dán credential vào notebook.",
+  "concept_notes_en": "A notebook combines code, output and explanation for exploration. A script is convenient for repeated command-line runs. The kernel retains variables across cells, so plausible output after repeated clicks does not prove reproducibility.\nRestart the kernel and Run All before sharing. Colab runtimes can be reclaimed; download notebooks and artifacts you need. Start with public or synthetic data and keep credentials out of notebooks.",
+  "why_it_matters_vi": "Notebook kết hợp code, output và giải thích, phù hợp khám phá dữ liệu. Script phù hợp chạy lặp bằng một lệnh. Kernel giữ biến giữa các cell, nên output đúng sau nhiều lần bấm chưa chứng minh notebook tái lập được.",
+  "why_it_matters_en": "A notebook combines code, output and explanation for exploration. A script is convenient for repeated command-line runs. The kernel retains variables across cells, so plausible output after repeated clicks does not prove reproducibility.",
+  "study_steps_vi": [
+    "Mở notebook ở môi trường bạn chọn, tạo một code cell chứa ví dụ.",
+    "Chạy cell hai lần, ghi hai kết quả counter.",
+    "Restart kernel/runtime rồi Run All; so sánh counter với lần đầu.",
+    "Lưu notebook và viết một dòng giải thích state ẩn. Web Journey chỉ hướng dẫn, không chạy notebook hộ bạn."
+  ],
+  "study_steps_en": [
+    "Open a notebook in your chosen environment and create a code cell with the example.",
+    "Run the cell twice and record both counter values.",
+    "Restart the kernel/runtime and Run All; compare counter with its first result.",
+    "Save the notebook and explain hidden state in one sentence. Journey web provides guidance; it does not run the notebook for you."
+  ],
+  "practice_plan": {
+    "vi": {
+      "task": "Lưu notebook và viết một dòng giải thích state ẩn. Web Journey chỉ hướng dẫn, không chạy notebook hộ bạn.",
+      "deliverables": [
+        "Chọn notebook hoặc script theo nhu cầu chạy.",
+        "Giải thích được biến còn lại trong kernel.",
+        "Restart và chạy lại toàn bộ notebook từ đầu."
+      ],
+      "checkpoint": "Restart và chạy lại toàn bộ notebook từ đầu.",
+      "stretch": "Tại sao counter là 2 dù code gán cộng 1?"
+    },
+    "en": {
+      "task": "Save the notebook and explain hidden state in one sentence. Journey web provides guidance; it does not run the notebook for you.",
+      "deliverables": [
+        "Choose a notebook or script for the execution task.",
+        "Explain variables retained by the kernel.",
+        "Restart and rerun the complete notebook from the beginning."
+      ],
+      "checkpoint": "Restart and rerun the complete notebook from the beginning.",
+      "stretch": "Why is counter 2 even though the code adds 1?"
+    }
+  },
+  "interview_questions": {
+    "vi": [
+      "Kiểm tra tối thiểu trước khi chia sẻ notebook?",
+      "Tại sao counter là 2 dù code gán cộng 1?",
+      "Khi nào nên chuyển notebook thành script?"
+    ],
+    "en": [
+      "What is the minimum check before sharing a notebook?",
+      "Why is counter 2 even though the code adds 1?",
+      "When should a notebook become a script?"
+    ]
+  },
+  "formulas": [],
+  "code_examples": [
+    {
+      "language": "python",
+      "title": "Jupyter, Colab and when to use them",
+      "code": "counter = globals().get('counter', 0) + 1\nvalues = [2, 4, 6]\nprint(f'counter={counter}')\nprint(f'mean={sum(values) / len(values)}')",
+      "status": "runnable",
+      "purpose_vi": "Phân biệt notebook và script, rồi nhận diện state ẩn khi chạy cell lệch thứ tự.",
+      "purpose_en": "Distinguish notebooks from scripts and identify hidden state from out-of-order execution.",
+      "setup": "Python 3.11+; chạy trong terminal hoặc notebook của bạn. Web chỉ hiển thị ví dụ.",
+      "expected_output": "Cell đầu: counter=1, mean=4.0. Chạy cell lần hai: counter=2. Sau restart: counter=1.",
+      "edge_case_vi": "Cell chạy được nhờ biến cũ có thể lỗi sau khi restart.",
+      "edge_case_en": "A cell relying on an old variable can fail after restart.",
+      "explanation_vi": "Notebook kết hợp code, output và giải thích, phù hợp khám phá dữ liệu. Script phù hợp chạy lặp bằng một lệnh. Kernel giữ biến giữa các cell, nên output đúng sau nhiều lần bấm chưa chứng minh notebook tái lập được.\nHãy restart kernel và Run All từ đầu trước khi chia sẻ. Runtime Colab có thể bị thu hồi; tải notebook và artifact cần giữ về. Đọc dataset công khai/synthetic cho buổi đầu; không dán credential vào notebook.",
+      "explanation_en": "A notebook combines code, output and explanation for exploration. A script is convenient for repeated command-line runs. The kernel retains variables across cells, so plausible output after repeated clicks does not prove reproducibility.\nRestart the kernel and Run All before sharing. Colab runtimes can be reclaimed; download notebooks and artifacts you need. Start with public or synthetic data and keep credentials out of notebooks."
+    }
+  ],
+  "resources": [
+    {
+      "title": "Jupyter notebook workflow",
+      "url": "https://jupyter-notebook.readthedocs.io/en/stable/notebook.html",
+      "language": "en",
+      "kind": "official",
+      "required": true,
+      "purpose_vi": "Chọn notebook hoặc script theo nhu cầu chạy.",
+      "purpose_en": "Choose a notebook or script for the execution task.",
+      "read_vi": "Đọc code cells, kernel và chạy notebook.",
+      "read_en": "Read code cells, kernel behavior and notebook execution."
+    },
+    {
+      "title": "Practice checkpoint / Thuc hanh",
+      "url": "",
+      "language": "vi",
+      "kind": "in_app",
+      "required": true,
+      "purpose_vi": "Lưu notebook và viết một dòng giải thích state ẩn. Web Journey chỉ hướng dẫn, không chạy notebook hộ bạn.",
+      "purpose_en": "Save the notebook and explain hidden state in one sentence. Journey web provides guidance; it does not run the notebook for you.",
+      "read_vi": "Restart và chạy lại toàn bộ notebook từ đầu.",
+      "read_en": "Restart and rerun the complete notebook from the beginning."
+    }
+  ],
+  "exercise_ids": [
+    "exercise-0-environment"
+  ],
+  "review_item_ids": [
+    "phase-00-onboarding-environment-4-recall",
+    "phase-00-onboarding-environment-4-application",
+    "phase-00-onboarding-environment-4-debug",
+    "phase-00-onboarding-environment-4-interview"
+  ],
+  "estimated_minutes": 30,
+  "completion_checklist": [
+    "Chọn notebook hoặc script theo nhu cầu chạy.",
+    "Giải thích được biến còn lại trong kernel.",
+    "Restart và chạy lại toàn bộ notebook từ đầu.",
+    "Lưu kết quả thực hành và một lỗi đã hiểu."
+  ],
+  "completion_criteria": [
+    "Chọn notebook hoặc script theo nhu cầu chạy.",
+    "Giải thích được biến còn lại trong kernel.",
+    "Restart và chạy lại toàn bộ notebook từ đầu."
+  ],
+  "common_mistakes": [
+    "Cell chạy được nhờ biến cũ có thể lỗi sau khi restart.",
+    "File trên runtime tạm không phải bản sao lưu bền vững."
+  ],
+  "next_lessons": [
+    "phase-00-onboarding-baseline-1",
+    "phase-00-onboarding-baseline-2"
+  ],
+  "review_question_vi": "Kernel giữ gì giữa hai lần chạy cell?",
+  "review_question_en": "What does a kernel retain between cell runs?",
+  "review_answer_vi": "Nó giữ biến và trạng thái process, gồm counter của ví dụ này.",
+  "review_answer_en": "It retains variables and process state, including this example's counter.",
+  "review_cards": [
+    {
+      "id": "phase-00-onboarding-environment-4-recall",
+      "type": "recall",
+      "question_vi": "Kernel giữ gì giữa hai lần chạy cell?",
+      "question_en": "What does a kernel retain between cell runs?",
+      "answer_vi": "Nó giữ biến và trạng thái process, gồm counter của ví dụ này.",
+      "answer_en": "It retains variables and process state, including this example's counter.",
+      "hint_vi": "Chạy lại cell mà chưa restart.",
+      "hint_en": "Rerun a cell without restarting."
+    },
+    {
+      "id": "phase-00-onboarding-environment-4-application",
+      "type": "application",
+      "question_vi": "Kiểm tra tối thiểu trước khi chia sẻ notebook?",
+      "question_en": "What is the minimum check before sharing a notebook?",
+      "answer_vi": "Restart kernel, Run All theo thứ tự và kiểm tra output bằng dữ liệu đi kèm.",
+      "answer_en": "Restart the kernel, Run All in order and verify output with the supplied data.",
+      "hint_vi": "Người khác bắt đầu với kernel sạch.",
+      "hint_en": "Another learner starts with a clean kernel."
+    },
+    {
+      "id": "phase-00-onboarding-environment-4-debug",
+      "type": "debug",
+      "question_vi": "Tại sao counter là 2 dù code gán cộng 1?",
+      "question_en": "Why is counter 2 even though the code adds 1?",
+      "answer_vi": "globals còn counter=1 từ lần chạy trước; lần sau cộng thêm 1.",
+      "answer_en": "globals retained counter=1 from the previous run, so the next execution adds another 1.",
+      "hint_vi": "Quan sát globals().get.",
+      "hint_en": "Inspect globals().get."
+    },
+    {
+      "id": "phase-00-onboarding-environment-4-interview",
+      "type": "interview",
+      "question_vi": "Khi nào nên chuyển notebook thành script?",
+      "question_en": "When should a notebook become a script?",
+      "answer_vi": "Khi cần chạy lặp theo một lệnh, tự động hóa hoặc test pipeline với input rõ ràng.",
+      "answer_en": "When repeated command-line execution, automation or pipeline tests need explicit inputs.",
+      "hint_vi": "Khám phá và vận hành có nhu cầu khác nhau.",
+      "hint_en": "Exploration and repeatable operation have different needs."
+    }
+  ],
+  "quality_status": "reviewed",
+  "reviewed_at": "2026-10-07",
+  "completion_checklist_en": [
+    "Choose a notebook or script for the execution task.",
+    "Explain variables retained by the kernel.",
+    "Restart and rerun the complete notebook from the beginning.",
+    "Save the practice result and one explained failure."
+  ],
+  "completion_criteria_en": [
+    "Choose a notebook or script for the execution task.",
+    "Explain variables retained by the kernel.",
+    "Restart and rerun the complete notebook from the beginning."
+  ],
+  "common_mistakes_en": [
+    "A cell relying on an old variable can fail after restart.",
+    "Files in a temporary runtime are not a durable backup."
+  ]
+}

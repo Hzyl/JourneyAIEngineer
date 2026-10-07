@@ -1,0 +1,210 @@
+{
+  "lesson_id": "phase-00-onboarding-learning-system-2",
+  "phase_id": "phase-00-onboarding",
+  "module_id": "learning-system",
+  "title_vi": "Cách ghi study session",
+  "title_en": "Record a study session",
+  "summary_vi": "Ghi thời gian học thực tế cùng đầu ra và vấn đề còn vướng.",
+  "summary_en": "Record actual study time together with an output and an unresolved issue.",
+  "learning_objectives": [
+    "Tách phút tập trung khỏi thời gian nghỉ.",
+    "Ghi một session với đầu ra cụ thể.",
+    "Kiểm tra tổng phút không bị ghi hai lần."
+  ],
+  "learning_objectives_en": [
+    "Separate focused minutes from breaks.",
+    "Record a session with a specific output.",
+    "Check that minutes were not recorded twice."
+  ],
+  "prerequisites": [
+    "phase-00-onboarding-learning-system-1"
+  ],
+  "key_terms": [
+    "study session",
+    "focused minutes",
+    "reflection"
+  ],
+  "concept_notes_vi": "Study session là một lần học có thời lượng thực tế, không phải thời gian browser mở. Ghi phút tập trung và ghi chú ngắn về việc đã làm; không cộng thời gian nghỉ.\nMột session có thể gắn lesson hoặc là thực hành chung. Tránh vừa ghi session vừa cộng lại cùng phút bằng thao tác progress. Mục tiêu tuần là công cụ điều chỉnh lịch; streak không thay thế chất lượng hiểu bài.",
+  "concept_notes_en": "A study session records actual learning time, not how long a browser stayed open. Record focused minutes and a short note about completed work; exclude breaks.\nA session can relate to a lesson or general practice. Avoid recording the same minutes through both a session and a progress action. Weekly targets help adjust your schedule; a streak does not replace understanding.",
+  "why_it_matters_vi": "Study session là một lần học có thời lượng thực tế, không phải thời gian browser mở. Ghi phút tập trung và ghi chú ngắn về việc đã làm; không cộng thời gian nghỉ.",
+  "why_it_matters_en": "A study session records actual learning time, not how long a browser stayed open. Record focused minutes and a short note about completed work; exclude breaks.",
+  "study_steps_vi": [
+    "Chọn một việc nhỏ và ghi thời điểm bắt đầu/kết thúc cùng thời gian nghỉ.",
+    "Ví dụ hai đoạn tập trung 20 và 25 phút: tổng 45 phút, không cộng đoạn nghỉ.",
+    "Trong app, ghi session một lần, kèm lesson nếu phù hợp và một câu mô tả output.",
+    "Đối chiếu tổng phút trước/sau, lưu một câu hỏi để buổi sau tiếp tục. Trên web cần đăng nhập để lưu session."
+  ],
+  "study_steps_en": [
+    "Choose a small task and record start/end times and breaks.",
+    "For focused intervals of 20 and 25 minutes, record 45 minutes and exclude breaks.",
+    "Record the session once in the app, attach a lesson where appropriate and describe the output.",
+    "Compare totals before and after, then save one question for the next session. Sign in on the web to persist a session."
+  ],
+  "practice_plan": {
+    "vi": {
+      "task": "Đối chiếu tổng phút trước/sau, lưu một câu hỏi để buổi sau tiếp tục. Trên web cần đăng nhập để lưu session.",
+      "deliverables": [
+        "Tách phút tập trung khỏi thời gian nghỉ.",
+        "Ghi một session với đầu ra cụ thể.",
+        "Kiểm tra tổng phút không bị ghi hai lần."
+      ],
+      "checkpoint": "Kiểm tra tổng phút không bị ghi hai lần.",
+      "stretch": "Tổng phút tăng gấp đôi sau khi ghi: kiểm tra gì?"
+    },
+    "en": {
+      "task": "Compare totals before and after, then save one question for the next session. Sign in on the web to persist a session.",
+      "deliverables": [
+        "Separate focused minutes from breaks.",
+        "Record a session with a specific output.",
+        "Check that minutes were not recorded twice."
+      ],
+      "checkpoint": "Check that minutes were not recorded twice.",
+      "stretch": "Minutes doubled after recording: what should you inspect?"
+    }
+  },
+  "interview_questions": {
+    "vi": [
+      "20 phút học, 10 phút nghỉ, 25 phút thực hành: ghi bao nhiêu?",
+      "Tổng phút tăng gấp đôi sau khi ghi: kiểm tra gì?",
+      "Một ghi chú session hữu ích cần gì ngoài số phút?"
+    ],
+    "en": [
+      "20 minutes learning, 10 resting and 25 practicing: what should you record?",
+      "Minutes doubled after recording: what should you inspect?",
+      "What should a useful session note include beyond minutes?"
+    ]
+  },
+  "formulas": [],
+  "code_examples": [
+    {
+      "language": "python",
+      "title": "Record a study session",
+      "code": "sessions = [\n    {'minutes': 20, 'output': 'version report'},\n    {'minutes': 25, 'output': 'venv check'},\n]\nassert all(0 < row['minutes'] <= 1440 for row in sessions)\nprint(sum(row['minutes'] for row in sessions))\nprint([row['output'] for row in sessions])",
+      "status": "runnable",
+      "purpose_vi": "Ghi thời gian học thực tế cùng đầu ra và vấn đề còn vướng.",
+      "purpose_en": "Record actual study time together with an output and an unresolved issue.",
+      "setup": "Python 3.11+; chạy trong terminal hoặc notebook của bạn. Web chỉ hiển thị ví dụ.",
+      "expected_output": "45\n['version report', 'venv check']",
+      "edge_case_vi": "Bấm gửi lại cùng session có thể làm tổng phút sai nếu không kiểm tra phản hồi.",
+      "edge_case_en": "Resubmitting the same session can distort totals unless the response is checked.",
+      "explanation_vi": "Study session là một lần học có thời lượng thực tế, không phải thời gian browser mở. Ghi phút tập trung và ghi chú ngắn về việc đã làm; không cộng thời gian nghỉ.\nMột session có thể gắn lesson hoặc là thực hành chung. Tránh vừa ghi session vừa cộng lại cùng phút bằng thao tác progress. Mục tiêu tuần là công cụ điều chỉnh lịch; streak không thay thế chất lượng hiểu bài.",
+      "explanation_en": "A study session records actual learning time, not how long a browser stayed open. Record focused minutes and a short note about completed work; exclude breaks.\nA session can relate to a lesson or general practice. Avoid recording the same minutes through both a session and a progress action. Weekly targets help adjust your schedule; a streak does not replace understanding."
+    }
+  ],
+  "resources": [
+    {
+      "title": "Python sum",
+      "url": "https://docs.python.org/3/library/functions.html#sum",
+      "language": "en",
+      "kind": "official",
+      "required": true,
+      "purpose_vi": "Tách phút tập trung khỏi thời gian nghỉ.",
+      "purpose_en": "Separate focused minutes from breaks.",
+      "read_vi": "Đọc sum để kiểm tra tổng phút trong ví dụ.",
+      "read_en": "Read sum to verify the example's total minutes."
+    },
+    {
+      "title": "Practice checkpoint / Thuc hanh",
+      "url": "",
+      "language": "vi",
+      "kind": "in_app",
+      "required": true,
+      "purpose_vi": "Đối chiếu tổng phút trước/sau, lưu một câu hỏi để buổi sau tiếp tục. Trên web cần đăng nhập để lưu session.",
+      "purpose_en": "Compare totals before and after, then save one question for the next session. Sign in on the web to persist a session.",
+      "read_vi": "Kiểm tra tổng phút không bị ghi hai lần.",
+      "read_en": "Check that minutes were not recorded twice."
+    }
+  ],
+  "exercise_ids": [
+    "exercise-0-learning-system"
+  ],
+  "review_item_ids": [
+    "phase-00-onboarding-learning-system-2-recall",
+    "phase-00-onboarding-learning-system-2-application",
+    "phase-00-onboarding-learning-system-2-debug",
+    "phase-00-onboarding-learning-system-2-interview"
+  ],
+  "estimated_minutes": 20,
+  "completion_checklist": [
+    "Tách phút tập trung khỏi thời gian nghỉ.",
+    "Ghi một session với đầu ra cụ thể.",
+    "Kiểm tra tổng phút không bị ghi hai lần.",
+    "Lưu kết quả thực hành và một lỗi đã hiểu."
+  ],
+  "completion_criteria": [
+    "Tách phút tập trung khỏi thời gian nghỉ.",
+    "Ghi một session với đầu ra cụ thể.",
+    "Kiểm tra tổng phút không bị ghi hai lần."
+  ],
+  "common_mistakes": [
+    "Bấm gửi lại cùng session có thể làm tổng phút sai nếu không kiểm tra phản hồi.",
+    "Tăng phút để giữ streak không tạo thêm bằng chứng hiểu bài."
+  ],
+  "next_lessons": [
+    "phase-00-onboarding-learning-system-3",
+    "phase-00-onboarding-learning-system-4"
+  ],
+  "review_question_vi": "Nên ghi thời gian browser mở hay thời gian tập trung?",
+  "review_question_en": "Should you record browser-open time or focused time?",
+  "review_answer_vi": "Ghi thời gian tập trung thực tế, loại thời gian nghỉ hoặc để máy chạy không học.",
+  "review_answer_en": "Record actual focused time and exclude breaks or idle browser time.",
+  "review_cards": [
+    {
+      "id": "phase-00-onboarding-learning-system-2-recall",
+      "type": "recall",
+      "question_vi": "Nên ghi thời gian browser mở hay thời gian tập trung?",
+      "question_en": "Should you record browser-open time or focused time?",
+      "answer_vi": "Ghi thời gian tập trung thực tế, loại thời gian nghỉ hoặc để máy chạy không học.",
+      "answer_en": "Record actual focused time and exclude breaks or idle browser time.",
+      "hint_vi": "Session mô tả việc học đã xảy ra.",
+      "hint_en": "A session describes learning that actually occurred."
+    },
+    {
+      "id": "phase-00-onboarding-learning-system-2-application",
+      "type": "application",
+      "question_vi": "20 phút học, 10 phút nghỉ, 25 phút thực hành: ghi bao nhiêu?",
+      "question_en": "20 minutes learning, 10 resting and 25 practicing: what should you record?",
+      "answer_vi": "45 phút, kèm đầu ra của hai đoạn tập trung; không cộng 10 phút nghỉ.",
+      "answer_en": "45 minutes with the outputs of both focused intervals; exclude the ten-minute break.",
+      "hint_vi": "Cộng đúng hai đoạn tập trung.",
+      "hint_en": "Add the two focused intervals."
+    },
+    {
+      "id": "phase-00-onboarding-learning-system-2-debug",
+      "type": "debug",
+      "question_vi": "Tổng phút tăng gấp đôi sau khi ghi: kiểm tra gì?",
+      "question_en": "Minutes doubled after recording: what should you inspect?",
+      "answer_vi": "Xem có gửi lại session hoặc vừa ghi session vừa cộng cùng phút qua progress; không tiếp tục bấm gửi.",
+      "answer_en": "Check for a duplicate submission or the same minutes recorded through both session and progress actions; stop resubmitting.",
+      "hint_vi": "Theo dõi từng sự kiện ghi thời gian.",
+      "hint_en": "Trace each time-recording event."
+    },
+    {
+      "id": "phase-00-onboarding-learning-system-2-interview",
+      "type": "interview",
+      "question_vi": "Một ghi chú session hữu ích cần gì ngoài số phút?",
+      "question_en": "What should a useful session note include beyond minutes?",
+      "answer_vi": "Nêu output đã tạo, cách kiểm tra và một vướng mắc cho lần học sau.",
+      "answer_en": "Name the output, its verification method and one obstacle for the next session.",
+      "hint_vi": "Giúp buổi sau nối tiếp được.",
+      "hint_en": "Make the next session easy to resume."
+    }
+  ],
+  "quality_status": "reviewed",
+  "reviewed_at": "2026-10-07",
+  "completion_checklist_en": [
+    "Separate focused minutes from breaks.",
+    "Record a session with a specific output.",
+    "Check that minutes were not recorded twice.",
+    "Save the practice result and one explained failure."
+  ],
+  "completion_criteria_en": [
+    "Separate focused minutes from breaks.",
+    "Record a session with a specific output.",
+    "Check that minutes were not recorded twice."
+  ],
+  "common_mistakes_en": [
+    "Resubmitting the same session can distort totals unless the response is checked.",
+    "Inflating minutes to preserve a streak does not add evidence of understanding."
+  ]
+}

@@ -1,0 +1,208 @@
+{
+  "lesson_id": "phase-00-onboarding-environment-1",
+  "phase_id": "phase-00-onboarding",
+  "module_id": "environment",
+  "title_vi": "Cài Python và kiểm tra phiên bản",
+  "title_en": "Install Python and verify the version",
+  "summary_vi": "Cài Python, xác định đúng interpreter và lưu một báo cáo phiên bản đầu tiên.",
+  "summary_en": "Install Python, identify the interpreter and save your first version report.",
+  "learning_objectives": [
+    "Chạy được kiểm tra phiên bản Python 3.11+.",
+    "Xác định executable đang chạy bằng sys.executable.",
+    "Lưu environment_check.py và kết quả chạy."
+  ],
+  "learning_objectives_en": [
+    "Verify a Python 3.11+ interpreter.",
+    "Identify the running executable with sys.executable.",
+    "Save environment_check.py and its output."
+  ],
+  "prerequisites": [],
+  "key_terms": [
+    "interpreter",
+    "Python version",
+    "PATH"
+  ],
+  "concept_notes_vi": "Interpreter là chương trình thực thi file Python. VS Code là editor, không tự thay thế Python.\nTrên Windows, dùng bản Python chính thức hỗ trợ project (3.11 trở lên). Mở terminal mới sau khi cài. Dùng py -3 --version để kiểm tra, rồi in sys.executable để biết chính xác executable đang chạy. Nếu python mở Microsoft Store, kiểm tra launcher py và cấu hình app execution aliases; không cài một gói tên python bằng pip.",
+  "concept_notes_en": "The interpreter executes Python files. VS Code is an editor, not a replacement for Python.\nOn Windows, install an official Python version supported by this project (3.11 or newer). Open a new terminal after installation. Check py -3 --version, then inspect sys.executable. If python opens Microsoft Store, inspect the py launcher and app execution aliases; do not try to install Python through pip.",
+  "why_it_matters_vi": "Interpreter là chương trình thực thi file Python. VS Code là editor, không tự thay thế Python.",
+  "why_it_matters_en": "The interpreter executes Python files. VS Code is an editor, not a replacement for Python.",
+  "study_steps_vi": [
+    "Đọc hướng dẫn Windows trong tài liệu Python; chọn bản chính thức phù hợp project.",
+    "Mở terminal mới, chạy py -3 --version. Trên macOS/Linux, kiểm tra python3 --version.",
+    "Lưu ví dụ vào environment_check.py, chạy py -3 environment_check.py.",
+    "Lưu output và ghi phiên bản/executable. Nếu đang đọc trên web, chạy thủ công trên máy hoặc notebook riêng; chưa cần Git."
+  ],
+  "study_steps_en": [
+    "Read the Python Windows guide and select an official version supported by the project.",
+    "Open a new terminal and run py -3 --version, or python3 --version on macOS/Linux.",
+    "Save the example as environment_check.py and run py -3 environment_check.py.",
+    "Save the version and executable output. On the web, run it manually on your computer or in your notebook; Git is not required."
+  ],
+  "practice_plan": {
+    "vi": {
+      "task": "Lưu output và ghi phiên bản/executable. Nếu đang đọc trên web, chạy thủ công trên máy hoặc notebook riêng; chưa cần Git.",
+      "deliverables": [
+        "Chạy được kiểm tra phiên bản Python 3.11+.",
+        "Xác định executable đang chạy bằng sys.executable.",
+        "Lưu environment_check.py và kết quả chạy."
+      ],
+      "checkpoint": "Lưu environment_check.py và kết quả chạy.",
+      "stretch": "python mở Store nhưng py -3 chạy được: kiểm tra gì?"
+    },
+    "en": {
+      "task": "Save the version and executable output. On the web, run it manually on your computer or in your notebook; Git is not required.",
+      "deliverables": [
+        "Verify a Python 3.11+ interpreter.",
+        "Identify the running executable with sys.executable.",
+        "Save environment_check.py and its output."
+      ],
+      "checkpoint": "Save environment_check.py and its output.",
+      "stretch": "python opens Store while py -3 works: what should you inspect?"
+    }
+  },
+  "interview_questions": {
+    "vi": [
+      "Bạn cần lưu gì để người khác biết Python nào đã chạy bài?",
+      "python mở Store nhưng py -3 chạy được: kiểm tra gì?",
+      "Vì sao ghi phiên bản trong báo cáo môi trường?"
+    ],
+    "en": [
+      "What identifies the Python used for your exercise?",
+      "python opens Store while py -3 works: what should you inspect?",
+      "Why record the version in an environment report?"
+    ]
+  },
+  "formulas": [],
+  "code_examples": [
+    {
+      "language": "python",
+      "title": "Install Python and verify the version",
+      "code": "import sys\n\nprint(f'Python {sys.version_info.major}.{sys.version_info.minor}')\nprint(f'Executable: {sys.executable}')\nprint(f'Supported: {sys.version_info >= (3, 11)}')",
+      "status": "runnable",
+      "purpose_vi": "Cài Python, xác định đúng interpreter và lưu một báo cáo phiên bản đầu tiên.",
+      "purpose_en": "Install Python, identify the interpreter and save your first version report.",
+      "setup": "Python 3.11+; chạy trong terminal hoặc notebook của bạn. Web chỉ hiển thị ví dụ.",
+      "expected_output": "Python 3.x (x >= 11), đường dẫn executable của máy, Supported: True.",
+      "edge_case_vi": "Lệnh python có thể trỏ executable khác py -3; kiểm tra đường dẫn trước khi cài thư viện.",
+      "edge_case_en": "python may select a different executable from py -3; inspect its path before installing packages.",
+      "explanation_vi": "Interpreter là chương trình thực thi file Python. VS Code là editor, không tự thay thế Python.\nTrên Windows, dùng bản Python chính thức hỗ trợ project (3.11 trở lên). Mở terminal mới sau khi cài. Dùng py -3 --version để kiểm tra, rồi in sys.executable để biết chính xác executable đang chạy. Nếu python mở Microsoft Store, kiểm tra launcher py và cấu hình app execution aliases; không cài một gói tên python bằng pip.",
+      "explanation_en": "The interpreter executes Python files. VS Code is an editor, not a replacement for Python.\nOn Windows, install an official Python version supported by this project (3.11 or newer). Open a new terminal after installation. Check py -3 --version, then inspect sys.executable. If python opens Microsoft Store, inspect the py launcher and app execution aliases; do not try to install Python through pip."
+    }
+  ],
+  "resources": [
+    {
+      "title": "Python on Windows",
+      "url": "https://docs.python.org/3/using/windows.html",
+      "language": "en",
+      "kind": "official",
+      "required": true,
+      "purpose_vi": "Chạy được kiểm tra phiên bản Python 3.11+.",
+      "purpose_en": "Verify a Python 3.11+ interpreter.",
+      "read_vi": "Đọc phần cài đặt và chạy Python trên Windows.",
+      "read_en": "Read the installation and running Python sections for Windows."
+    },
+    {
+      "title": "Practice checkpoint / Thuc hanh",
+      "url": "",
+      "language": "vi",
+      "kind": "in_app",
+      "required": true,
+      "purpose_vi": "Lưu output và ghi phiên bản/executable. Nếu đang đọc trên web, chạy thủ công trên máy hoặc notebook riêng; chưa cần Git.",
+      "purpose_en": "Save the version and executable output. On the web, run it manually on your computer or in your notebook; Git is not required.",
+      "read_vi": "Lưu environment_check.py và kết quả chạy.",
+      "read_en": "Save environment_check.py and its output."
+    }
+  ],
+  "exercise_ids": [
+    "exercise-0-environment"
+  ],
+  "review_item_ids": [
+    "phase-00-onboarding-environment-1-recall",
+    "phase-00-onboarding-environment-1-application",
+    "phase-00-onboarding-environment-1-debug",
+    "phase-00-onboarding-environment-1-interview"
+  ],
+  "estimated_minutes": 25,
+  "completion_checklist": [
+    "Chạy được kiểm tra phiên bản Python 3.11+.",
+    "Xác định executable đang chạy bằng sys.executable.",
+    "Lưu environment_check.py và kết quả chạy.",
+    "Lưu kết quả thực hành và một lỗi đã hiểu."
+  ],
+  "completion_criteria": [
+    "Chạy được kiểm tra phiên bản Python 3.11+.",
+    "Xác định executable đang chạy bằng sys.executable.",
+    "Lưu environment_check.py và kết quả chạy."
+  ],
+  "common_mistakes": [
+    "Lệnh python có thể trỏ executable khác py -3; kiểm tra đường dẫn trước khi cài thư viện.",
+    "Terminal đã mở trước khi cài có thể chưa nhận PATH mới."
+  ],
+  "next_lessons": [
+    "phase-00-onboarding-environment-2",
+    "phase-00-onboarding-environment-3"
+  ],
+  "review_question_vi": "VS Code có phải Python interpreter không?",
+  "review_question_en": "Is VS Code a Python interpreter?",
+  "review_answer_vi": "Không. VS Code sửa file; interpreter Python được chọn sẽ thực thi file đó.",
+  "review_answer_en": "No. VS Code edits files; the selected Python interpreter executes them.",
+  "review_cards": [
+    {
+      "id": "phase-00-onboarding-environment-1-recall",
+      "type": "recall",
+      "question_vi": "VS Code có phải Python interpreter không?",
+      "question_en": "Is VS Code a Python interpreter?",
+      "answer_vi": "Không. VS Code sửa file; interpreter Python được chọn sẽ thực thi file đó.",
+      "answer_en": "No. VS Code edits files; the selected Python interpreter executes them.",
+      "hint_vi": "Phân biệt editor và runtime.",
+      "hint_en": "Separate the editor from the runtime."
+    },
+    {
+      "id": "phase-00-onboarding-environment-1-application",
+      "type": "application",
+      "question_vi": "Bạn cần lưu gì để người khác biết Python nào đã chạy bài?",
+      "question_en": "What identifies the Python used for your exercise?",
+      "answer_vi": "Lưu phiên bản và sys.executable cùng lệnh chạy, không chỉ ảnh biểu tượng Python.",
+      "answer_en": "Record the version, sys.executable and command, not only a Python icon screenshot.",
+      "hint_vi": "Hai dòng output trong ví dụ.",
+      "hint_en": "Look at the first two output lines."
+    },
+    {
+      "id": "phase-00-onboarding-environment-1-debug",
+      "type": "debug",
+      "question_vi": "python mở Store nhưng py -3 chạy được: kiểm tra gì?",
+      "question_en": "python opens Store while py -3 works: what should you inspect?",
+      "answer_vi": "Kiểm tra app execution aliases và executable/PATH; dùng launcher đã xác nhận thay vì cài lại thư viện.",
+      "answer_en": "Inspect app execution aliases and executable/PATH; use the verified launcher instead of reinstalling libraries.",
+      "hint_vi": "Đây là cách tìm executable, chưa phải lỗi package.",
+      "hint_en": "This is executable resolution, not yet a package issue."
+    },
+    {
+      "id": "phase-00-onboarding-environment-1-interview",
+      "type": "interview",
+      "question_vi": "Vì sao ghi phiên bản trong báo cáo môi trường?",
+      "question_en": "Why record the version in an environment report?",
+      "answer_vi": "Để tái hiện runtime và nhận ra khác biệt cú pháp hoặc dependency giữa các máy.",
+      "answer_en": "To reproduce the runtime and identify syntax or dependency differences across machines.",
+      "hint_vi": "Nghĩ về việc chạy lại sau một tháng.",
+      "hint_en": "Consider rerunning the exercise a month later."
+    }
+  ],
+  "quality_status": "reviewed",
+  "reviewed_at": "2026-10-07",
+  "completion_checklist_en": [
+    "Verify a Python 3.11+ interpreter.",
+    "Identify the running executable with sys.executable.",
+    "Save environment_check.py and its output.",
+    "Save the practice result and one explained failure."
+  ],
+  "completion_criteria_en": [
+    "Verify a Python 3.11+ interpreter.",
+    "Identify the running executable with sys.executable.",
+    "Save environment_check.py and its output."
+  ],
+  "common_mistakes_en": [
+    "python may select a different executable from py -3; inspect its path before installing packages.",
+    "A terminal opened before installation may still have the old PATH."
+  ]
+}

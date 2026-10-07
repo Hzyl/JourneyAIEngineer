@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "exercise_slug": "exercise-0-learning-system",
+  "title_vi": "Tính phút học mà không cộng trùng",
+  "title_en": "Count study minutes without duplicates",
+  "assessment_kind": "verified",
+  "test_command": "python -m unittest -v test_exercise.py"
+}

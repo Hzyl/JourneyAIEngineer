@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "exercise_slug": "exercise-0-environment",
+  "title_vi": "Kiểm tra Python đang chạy",
+  "title_en": "Inspect the running Python",
+  "assessment_kind": "verified",
+  "test_command": "python -m unittest -v test_exercise.py"
+}

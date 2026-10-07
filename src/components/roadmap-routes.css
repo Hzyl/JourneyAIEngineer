@@ -1,0 +1,43 @@
+.route-choices {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-block: 1.5rem;
+}
+
+.route-choice {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  text-align: left;
+  padding: 1.25rem;
+  color: #233943;
+  background: #fff;
+  border: 2px solid #c8d4d5;
+  border-radius: 0.75rem;
+  cursor: pointer;
+}
+
+.route-choice[aria-pressed="true"] {
+  border-color: #096b61;
+  background: #e8f4ef;
+}
+
+.route-choice strong {
+  font-size: 1.15rem;
+}
+
+.route-choice span {
+  line-height: 1.6;
+}
+
+.route-choice small {
+  margin-top: auto;
+  color: #375961;
+}
+
+@media (max-width: 760px) {
+  .route-choices {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,210 @@
+{
+  "lesson_id": "phase-00-onboarding-baseline-2",
+  "phase_id": "phase-00-onboarding",
+  "module_id": "baseline",
+  "title_vi": "Bài kiểm tra toán và logic",
+  "title_en": "Math and logic baseline assessment",
+  "summary_vi": "Kiểm tra trung bình, tỷ lệ, điều kiện logic và sai số số thực bằng ví dụ nhỏ.",
+  "summary_en": "Check means, ratios, Boolean conditions and floating-point error with small examples.",
+  "learning_objectives": [
+    "Tính được 30 phút bằng 0.5 giờ.",
+    "Giải thích được điều kiện and bằng bảng giá trị.",
+    "Kiểm tra 0.1 + 0.2 bằng isclose."
+  ],
+  "learning_objectives_en": [
+    "Convert 30 minutes to 0.5 hours.",
+    "Explain an and condition with a truth table.",
+    "Check 0.1 + 0.2 with isclose."
+  ],
+  "prerequisites": [
+    "phase-00-onboarding-baseline-1"
+  ],
+  "key_terms": [
+    "units",
+    "Boolean logic",
+    "floating point"
+  ],
+  "concept_notes_vi": "Ghi đơn vị trước khi tính: 30 phút không phải 0.30 giờ. Trung bình cộng là tổng chia số quan sát; tỷ lệ là phần chia tổng và cần biết mẫu số.\nSố thực nhị phân không biểu diễn chính xác mọi phân số thập phân. Dùng math.isclose khi so sánh kết quả xấp xỉ với tolerance phù hợp; không tự làm tròn dữ liệu đầu vào để che lỗi. Với điều kiện and, cả hai vế phải đúng.",
+  "concept_notes_en": "Record units first: 30 minutes is not 0.30 hours. A mean is the sum divided by the number of observations; a ratio requires an explicit denominator.\nBinary floating point cannot exactly represent every decimal fraction. Use math.isclose with an appropriate tolerance for approximate results; do not round inputs merely to hide errors. An and condition requires both operands to be true.",
+  "why_it_matters_vi": "Ghi đơn vị trước khi tính: 30 phút không phải 0.30 giờ. Trung bình cộng là tổng chia số quan sát; tỷ lệ là phần chia tổng và cần biết mẫu số.",
+  "why_it_matters_en": "Record units first: 30 minutes is not 0.30 hours. A mean is the sum divided by the number of observations; a ratio requires an explicit denominator.",
+  "study_steps_vi": [
+    "Tự tính trung bình [2, 4, 6], tỷ lệ 3/4 và 30/60 giờ trên giấy.",
+    "Dự đoán từng dòng True/False trong ví dụ trước khi chạy.",
+    "Thay score=59 và attempts=3; sau đó score=80 và attempts=2 để kiểm tra hai nhánh.",
+    "Lưu math_check.py cùng ba kết quả tính tay. Nếu chạy notebook, restart và Run All để kiểm chứng."
+  ],
+  "study_steps_en": [
+    "Compute the mean of [2, 4, 6], the ratio 3/4 and 30/60 hours on paper.",
+    "Predict each True/False output before running the example.",
+    "Try score=59 with attempts=3, then score=80 with attempts=2 to test both branches.",
+    "Save math_check.py and the three hand calculations. In a notebook, restart and Run All to verify them."
+  ],
+  "practice_plan": {
+    "vi": {
+      "task": "Lưu math_check.py cùng ba kết quả tính tay. Nếu chạy notebook, restart và Run All để kiểm chứng.",
+      "deliverables": [
+        "Tính được 30 phút bằng 0.5 giờ.",
+        "Giải thích được điều kiện and bằng bảng giá trị.",
+        "Kiểm tra 0.1 + 0.2 bằng isclose."
+      ],
+      "checkpoint": "Kiểm tra 0.1 + 0.2 bằng isclose.",
+      "stretch": "0.1+0.2==0.3 là False có chứng minh Python tính sai không?"
+    },
+    "en": {
+      "task": "Save math_check.py and the three hand calculations. In a notebook, restart and Run All to verify them.",
+      "deliverables": [
+        "Convert 30 minutes to 0.5 hours.",
+        "Explain an and condition with a truth table.",
+        "Check 0.1 + 0.2 with isclose."
+      ],
+      "checkpoint": "Check 0.1 + 0.2 with isclose.",
+      "stretch": "Does 0.1+0.2==0.3 being False prove Python is broken?"
+    }
+  },
+  "interview_questions": {
+    "vi": [
+      "score=80, attempts=2 có qua điều kiện and trong ví dụ không?",
+      "0.1+0.2==0.3 là False có chứng minh Python tính sai không?",
+      "Vì sao cần ghi mẫu số khi báo tỷ lệ thành công?"
+    ],
+    "en": [
+      "Does score=80, attempts=2 satisfy the example's and condition?",
+      "Does 0.1+0.2==0.3 being False prove Python is broken?",
+      "Why include the denominator when reporting a success rate?"
+    ]
+  },
+  "formulas": [],
+  "code_examples": [
+    {
+      "language": "python",
+      "title": "Math and logic baseline assessment",
+      "code": "import math\n\nprint(30 / 60)\nprint(0.1 + 0.2 == 0.3)\nprint(math.isclose(0.1 + 0.2, 0.3))\nscore, attempts = 80, 3\nprint(score >= 60 and attempts >= 3)",
+      "status": "runnable",
+      "purpose_vi": "Kiểm tra trung bình, tỷ lệ, điều kiện logic và sai số số thực bằng ví dụ nhỏ.",
+      "purpose_en": "Check means, ratios, Boolean conditions and floating-point error with small examples.",
+      "setup": "Python 3.11+; chạy trong terminal hoặc notebook của bạn. Web chỉ hiển thị ví dụ.",
+      "expected_output": "0.5\nFalse\nTrue\nTrue",
+      "edge_case_vi": "Dùng == với số thực xấp xỉ có thể cho False ngoài dự đoán.",
+      "edge_case_en": "Using == with approximate floats can unexpectedly produce False.",
+      "explanation_vi": "Ghi đơn vị trước khi tính: 30 phút không phải 0.30 giờ. Trung bình cộng là tổng chia số quan sát; tỷ lệ là phần chia tổng và cần biết mẫu số.\nSố thực nhị phân không biểu diễn chính xác mọi phân số thập phân. Dùng math.isclose khi so sánh kết quả xấp xỉ với tolerance phù hợp; không tự làm tròn dữ liệu đầu vào để che lỗi. Với điều kiện and, cả hai vế phải đúng.",
+      "explanation_en": "Record units first: 30 minutes is not 0.30 hours. A mean is the sum divided by the number of observations; a ratio requires an explicit denominator.\nBinary floating point cannot exactly represent every decimal fraction. Use math.isclose with an appropriate tolerance for approximate results; do not round inputs merely to hide errors. An and condition requires both operands to be true."
+    }
+  ],
+  "resources": [
+    {
+      "title": "Python floating-point arithmetic",
+      "url": "https://docs.python.org/3/tutorial/floatingpoint.html",
+      "language": "en",
+      "kind": "official",
+      "required": true,
+      "purpose_vi": "Tính được 30 phút bằng 0.5 giờ.",
+      "purpose_en": "Convert 30 minutes to 0.5 hours.",
+      "read_vi": "Đọc lỗi biểu diễn và math.isclose.",
+      "read_en": "Read representation error and math.isclose."
+    },
+    {
+      "title": "Practice checkpoint / Thuc hanh",
+      "url": "",
+      "language": "vi",
+      "kind": "in_app",
+      "required": true,
+      "purpose_vi": "Lưu math_check.py cùng ba kết quả tính tay. Nếu chạy notebook, restart và Run All để kiểm chứng.",
+      "purpose_en": "Save math_check.py and the three hand calculations. In a notebook, restart and Run All to verify them.",
+      "read_vi": "Kiểm tra 0.1 + 0.2 bằng isclose.",
+      "read_en": "Check 0.1 + 0.2 with isclose."
+    }
+  ],
+  "exercise_ids": [
+    "exercise-0-baseline"
+  ],
+  "review_item_ids": [
+    "phase-00-onboarding-baseline-2-recall",
+    "phase-00-onboarding-baseline-2-application",
+    "phase-00-onboarding-baseline-2-debug",
+    "phase-00-onboarding-baseline-2-interview"
+  ],
+  "estimated_minutes": 30,
+  "completion_checklist": [
+    "Tính được 30 phút bằng 0.5 giờ.",
+    "Giải thích được điều kiện and bằng bảng giá trị.",
+    "Kiểm tra 0.1 + 0.2 bằng isclose.",
+    "Lưu kết quả thực hành và một lỗi đã hiểu."
+  ],
+  "completion_criteria": [
+    "Tính được 30 phút bằng 0.5 giờ.",
+    "Giải thích được điều kiện and bằng bảng giá trị.",
+    "Kiểm tra 0.1 + 0.2 bằng isclose."
+  ],
+  "common_mistakes": [
+    "Dùng == với số thực xấp xỉ có thể cho False ngoài dự đoán.",
+    "Tỷ lệ 3/4 là 0.75 hoặc 75%, không phải 0.75%."
+  ],
+  "next_lessons": [
+    "phase-00-onboarding-baseline-3",
+    "phase-00-onboarding-baseline-4"
+  ],
+  "review_question_vi": "30 phút bằng bao nhiêu giờ và vì sao?",
+  "review_question_en": "How many hours are 30 minutes, and why?",
+  "review_answer_vi": "0.5 giờ vì một giờ có 60 phút nên đổi đơn vị bằng 30/60.",
+  "review_answer_en": "0.5 hours, because an hour has 60 minutes and conversion uses 30/60.",
+  "review_cards": [
+    {
+      "id": "phase-00-onboarding-baseline-2-recall",
+      "type": "recall",
+      "question_vi": "30 phút bằng bao nhiêu giờ và vì sao?",
+      "question_en": "How many hours are 30 minutes, and why?",
+      "answer_vi": "0.5 giờ vì một giờ có 60 phút nên đổi đơn vị bằng 30/60.",
+      "answer_en": "0.5 hours, because an hour has 60 minutes and conversion uses 30/60.",
+      "hint_vi": "Viết đơn vị của mẫu số.",
+      "hint_en": "Write the denominator's unit."
+    },
+    {
+      "id": "phase-00-onboarding-baseline-2-application",
+      "type": "application",
+      "question_vi": "score=80, attempts=2 có qua điều kiện and trong ví dụ không?",
+      "question_en": "Does score=80, attempts=2 satisfy the example's and condition?",
+      "answer_vi": "Không, vì attempts>=3 sai dù score>=60 đúng.",
+      "answer_en": "No, attempts>=3 is false even though score>=60 is true.",
+      "hint_vi": "And yêu cầu cả hai điều kiện.",
+      "hint_en": "And requires both conditions."
+    },
+    {
+      "id": "phase-00-onboarding-baseline-2-debug",
+      "type": "debug",
+      "question_vi": "0.1+0.2==0.3 là False có chứng minh Python tính sai không?",
+      "question_en": "Does 0.1+0.2==0.3 being False prove Python is broken?",
+      "answer_vi": "Không; biểu diễn nhị phân tạo sai số nhỏ. Kiểm tra bằng tolerance và math.isclose phù hợp.",
+      "answer_en": "No; binary representation introduces a small error. Check with a suitable tolerance and math.isclose.",
+      "hint_vi": "Đọc về biểu diễn số thực.",
+      "hint_en": "Read about floating-point representation."
+    },
+    {
+      "id": "phase-00-onboarding-baseline-2-interview",
+      "type": "interview",
+      "question_vi": "Vì sao cần ghi mẫu số khi báo tỷ lệ thành công?",
+      "question_en": "Why include the denominator when reporting a success rate?",
+      "answer_vi": "3/4 và 300/400 đều 75% nhưng lượng bằng chứng khác nhau; cần cả số quan sát và định nghĩa thành công.",
+      "answer_en": "3/4 and 300/400 are both 75% but provide different amounts of evidence; include sample size and the success definition.",
+      "hint_vi": "Tỷ lệ không mô tả kích thước mẫu.",
+      "hint_en": "A rate alone does not describe sample size."
+    }
+  ],
+  "quality_status": "reviewed",
+  "reviewed_at": "2026-10-07",
+  "completion_checklist_en": [
+    "Convert 30 minutes to 0.5 hours.",
+    "Explain an and condition with a truth table.",
+    "Check 0.1 + 0.2 with isclose.",
+    "Save the practice result and one explained failure."
+  ],
+  "completion_criteria_en": [
+    "Convert 30 minutes to 0.5 hours.",
+    "Explain an and condition with a truth table.",
+    "Check 0.1 + 0.2 with isclose."
+  ],
+  "common_mistakes_en": [
+    "Using == with approximate floats can unexpectedly produce False.",
+    "The ratio 3/4 is 0.75 or 75%, not 0.75%."
+  ]
+}

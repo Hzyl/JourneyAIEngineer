@@ -54,11 +54,16 @@ def _validate_python_snippets(lessons: list[dict]) -> None:
         examples = lesson["code_examples"]
         _assert(examples, f"no code example for {lesson['lesson_id']}")
         for index, example in enumerate(examples):
-            _assert(example.get("language", "").lower() == "python", f"unsupported snippet language in {lesson['lesson_id']}")
+            language = example.get("language", "").lower()
+            _assert(language in {"python", "powershell", "bash", "sql", "json"},
+                    f"unsupported snippet language in {lesson['lesson_id']}")
             code = example.get("code", "")
             _assert(code.strip(), f"empty code example {lesson['lesson_id']}:{index}")
             _assert(example.get("status") in {"runnable", "conceptual"}, f"code example status missing: {lesson['lesson_id']}:{index}")
             _assert(all(example.get(field) for field in ("title", "purpose_vi", "purpose_en", "setup", "expected_output", "edge_case_vi", "edge_case_en")), f"code example guidance missing: {lesson['lesson_id']}:{index}")
+            if language != "python":
+                _assert(example.get("status") == "conceptual", "non-Python snippets require manual environment checks")
+                continue
             try:
                 ast.parse(code, filename=f"{lesson['lesson_id']}:{index}")
                 compile(code, f"{lesson['lesson_id']}:{index}", "exec")
@@ -91,6 +96,11 @@ def validate(root: Path = ROOT) -> None:
         build(generated_path)
         generated = json.loads(generated_path.read_text(encoding="utf-8"))
     _assert(generated == catalog, "lessons.json is stale; run build_lesson_catalog.py")
+
+    from apps.api.catalog_content import load_lesson_catalog, validate_portfolio_references, validate_learning_routes
+    validate_portfolio_references(curriculum)
+    validate_learning_routes(json.loads((content / "learning_routes.json").read_text(encoding="utf-8")), curriculum)
+    lessons = list(load_lesson_catalog(content / "lessons.json").values())
 
     missing = {lesson["lesson_id"]: sorted(REQUIRED_LESSON_FIELDS - lesson.keys()) for lesson in lessons if REQUIRED_LESSON_FIELDS - lesson.keys()}
     _assert(not missing, f"missing required lesson fields: {missing}")

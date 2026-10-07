@@ -32,6 +32,8 @@ jobs:
           cache: npm
       - name: Install frontend dependencies
         run: npm ci
+      - name: Verify catalog fingerprint
+        run: python scripts/catalog_version.py
       - name: Validate curriculum
         run: npm run validate
       - name: Prepare Python test directories

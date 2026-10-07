@@ -1,0 +1,39 @@
+.route-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.route-choices button {
+  min-height: 46px;
+  padding: 10px 20px;
+  background: white;
+  color: var(--public-ink);
+  border: 1px solid #88979f;
+  border-radius: 8px;
+}
+.route-choices button[aria-pressed="true"] {
+  background: var(--public-ink);
+  color: white;
+  border-color: var(--public-ink);
+}
+.route-phases {
+  padding-left: 28px;
+  max-width: 760px;
+}
+.route-phases > li {
+  padding: 12px;
+  border-bottom: 1px solid #d8dce0;
+}
+.public-shell summary {
+  cursor: pointer;
+  min-height: 32px;
+}
+.public-modes > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+}
+.public-footer {
+  border-top: 1px solid #d8dce0;
+  font-size: 14px;
+}

@@ -1,0 +1,108 @@
+:root {
+  --display-font: "Segoe UI", system-ui, sans-serif;
+  --ink: #172335;
+  --muted: #4a596c;
+  --paper: #f7f8fa;
+  --surface: #ffffff;
+  --line: #cdd6de;
+  --teal: #08685e;
+  --teal-dark: #07574f;
+  --orange: #ad4b21;
+}
+.app-shell {
+  color: var(--ink);
+  background: var(--paper);
+}
+.app-shell .sidebar {
+  background: #172b3d;
+}
+.app-shell .sidebar-intro,
+.app-shell .sidebar-footer,
+.app-shell .nav-item,
+.app-shell .nav-item small,
+.app-shell .brand-lockup span {
+  color: #bdcdd9;
+}
+.app-shell .nav-item.active,
+.app-shell .nav-item:hover {
+  background: #29475e;
+  border-color: #6d8fa5;
+  color: white;
+}
+.app-shell .nav-item.active small {
+  color: #e2ebf1;
+}
+.app-shell .nav-item.active {
+  box-shadow: inset 3px 0 #7edbcb;
+}
+.app-shell button:focus-visible,
+.app-shell a:focus-visible,
+.app-shell input:focus-visible,
+.app-shell textarea:focus-visible,
+.app-shell select:focus-visible,
+.app-shell summary:focus-visible {
+  outline: 3px solid #096fbd;
+  outline-offset: 3px;
+}
+.app-shell .primary-button {
+  background: #08685e;
+  color: white;
+  min-height: 44px;
+}
+.app-shell .secondary-button,
+.app-shell .text-button {
+  color: #075f88;
+}
+.app-shell .lesson-detail {
+  color: #172335;
+}
+.app-shell .lesson-detail h1 {
+  font-family: var(--display-font);
+  font-size: clamp(30px, 3vw, 44px);
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+.app-shell .lesson-detail .lead,
+.app-shell .concept-copy,
+.app-shell .lesson-check-block,
+.app-shell .review-card p {
+  color: #35475b;
+  font-size: 16px;
+  line-height: 1.75;
+}
+.app-shell .lesson-section {
+  background: #fff;
+  border-color: #cdd6de;
+}
+.app-shell .review-card {
+  background: #fff;
+  color: #172335;
+}
+.app-shell .review-card textarea {
+  font-size: 16px;
+  color: #172335;
+  border-color: #8898a6;
+}
+.app-shell .rating-row button {
+  min-height: 44px;
+  border: 1px solid #728496;
+  background: white;
+  color: #172335;
+}
+.app-shell .rating-row button.good,
+.app-shell .rating-row button.easy {
+  background: #08685e;
+  color: white;
+  border-color: #08685e;
+}
+.app-shell .topbar h1 {
+  font-family: var(--display-font);
+  font-size: 24px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-shell *,
+  .public-shell * {
+    scroll-behavior: auto !important;
+    transition-duration: 0s !important;
+  }
+}

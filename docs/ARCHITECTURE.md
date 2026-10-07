@@ -2,7 +2,9 @@
 
 ## Mục tiêu v0.1
 
-Journey AI Engineer là learning product local-first, single-user, ưu tiên khả năng học thật, chạy lại và version-control artifact. Kiến trúc hiện tại không phải SaaS multi-user và không hứa hẹn sync tiến độ lên cloud.
+Journey AI Engineer có bản desktop/local-first và web beta.
+Bản local v0.1 chạy single-user, ưu tiên khả năng học thật, chạy lại và version-control artifact.
+Web beta lưu dữ liệu theo tài khoản trên Supabase; hai runtime không tự đồng bộ dữ liệu với nhau.
 
 ```text
 React 19 + Vite + TypeScript
@@ -39,11 +41,12 @@ Source clone dùng `.data/` trong project để thuận tiện backup local; por
 
 Các route đọc Git, mở folder/VS Code, tạo workspace và chạy test là local capabilities. Chúng có path allowlist, timeout, output cap, secret scan và confirmation trước publish. API chỉ bind loopback; health response không được trả absolute path hoặc credential. `local_tools_enabled` có thể tắt capability khi cần.
 
-Hosted v0.2+ phải tách các adapter này khỏi public API, thêm authentication, per-user isolation, Postgres/RLS, rate limit, audit log và secret management. Không triển khai public bằng cách expose FastAPI local hiện tại.
+Web beta tách các adapter local khỏi frontend hosted, dùng Supabase Auth và Postgres/RLS.
+Không triển khai public bằng cách expose FastAPI local hiện tại.
 
-## Web beta candidate
+## Web beta
 
-Web beta is prepared as a separate runtime and is not a public FastAPI deployment:
+The deployed web beta uses a separate runtime:
 
 ```text
 Cloudflare Pages (React/Vite static SPA)
@@ -75,5 +78,7 @@ CI chạy content validation, Python tests, `pip check`, `npm ci`, lint và Vite
 ## Public product roadmap
 
 - **v0.1:** local single-user, source clone, portable Windows package, bilingual lessons, workspace, review, journal và Git context bridge.
-- **v0.2:** public read-only learning hub/feedback moderation sau khi có auth và data isolation rõ.
-- **v0.3:** optional hosted progress sync, provider adapters và account recovery; giữ local export/import làm đường lui.
+- **Web beta đã triển khai:** Cloudflare Pages + Supabase Auth/Postgres/RLS, email/password authentication
+  và lưu dữ liệu học theo tài khoản. Xem [WEB-BETA.md](WEB-BETA.md) để biết trạng thái rollout auth.
+- **Sau beta:** public learning hub/feedback moderation, self-service account deletion,
+  stronger hosted E2E/monitoring và optional provider adapters; giữ local export/import làm đường lui.

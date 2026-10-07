@@ -4,6 +4,10 @@
 # working directory name when running `supabase init`.
 project_id = "journey-ai-engineer"
 
+# The handler validates user tokens with Auth before password reauthentication.
+[functions.delete-account]
+verify_jwt = false
+
 [api]
 enabled = true
 # Port to use for the API URL.

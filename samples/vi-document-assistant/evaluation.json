@@ -1,0 +1,8 @@
+[
+  {"id":"time","question":"Buổi học Python bắt đầu lúc nào?","source":"workshop.md","contains":"19:00"},
+  {"id":"registration","question":"Đăng ký workshop hạn chót khi nào?","source":"workshop.md","contains":"thứ Hai"},
+  {"id":"requirements","question":"Người tham gia chuẩn bị Python phiên bản nào?","source":"workshop.md","contains":"3.11"},
+  {"id":"submission","question":"Nộp bài tập bằng file gì, có cần dùng Git?","source":"project.md","contains":"không cần dùng Git"},
+  {"id":"unknown","question":"Ai là người tài trợ học bổng tiến sĩ?","source":null,"contains":""},
+  {"id":"unrelated","question":"Giá vé máy bay Hà Nội ngày mai?","source":null,"contains":""}
+]

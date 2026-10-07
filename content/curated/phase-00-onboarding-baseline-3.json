@@ -1,0 +1,211 @@
+{
+  "lesson_id": "phase-00-onboarding-baseline-3",
+  "phase_id": "phase-00-onboarding",
+  "module_id": "baseline",
+  "title_vi": "Bài kiểm tra Git và terminal",
+  "title_en": "Git and terminal baseline assessment",
+  "summary_vi": "Đọc trạng thái file và diff trong một Git repo mà chưa cần push hay tài khoản GitHub.",
+  "summary_en": "Read file status and diffs in a Git repository without pushing or using a GitHub account.",
+  "learning_objectives": [
+    "Phân biệt Git với GitHub.",
+    "Nhận diện file modified và untracked từ status.",
+    "Đọc được thay đổi một dòng bằng diff."
+  ],
+  "learning_objectives_en": [
+    "Distinguish Git from GitHub.",
+    "Identify modified and untracked files from status.",
+    "Read a one-line change in a diff."
+  ],
+  "prerequisites": [
+    "phase-00-onboarding-baseline-2"
+  ],
+  "key_terms": [
+    "working tree",
+    "index",
+    "diff",
+    "Git"
+  ],
+  "concept_notes_vi": "Git lưu lịch sử phiên bản ở máy; GitHub là một dịch vụ hosting repository. Có thể học và sửa file mà không dùng cả hai. Khi cần lịch sử, working tree là file đang sửa, index là nội dung đã stage, commit là snapshot đã ghi.\nChỉ thực hành lệnh trong repo sandbox của bạn. git status --short và git diff là thao tác đọc; git diff không hiển thị nội dung file untracked. Không dùng reset --hard hoặc clean để giải quyết một bài nhập môn.",
+  "concept_notes_en": "Git stores version history locally; GitHub hosts repositories. You can learn and edit files without either. When using history, the working tree contains current files, the index contains staged content and a commit records a snapshot.\nPractice only in your sandbox repository. git status --short and git diff are read-only; git diff does not show untracked file contents. Do not use reset --hard or clean to solve an introductory exercise.",
+  "why_it_matters_vi": "Git lưu lịch sử phiên bản ở máy; GitHub là một dịch vụ hosting repository. Có thể học và sửa file mà không dùng cả hai. Khi cần lịch sử, working tree là file đang sửa, index là nội dung đã stage, commit là snapshot đã ghi.",
+  "why_it_matters_en": "Git stores version history locally; GitHub hosts repositories. You can learn and edit files without either. When using history, the working tree contains current files, the index contains staged content and a commit records a snapshot.",
+  "study_steps_vi": [
+    "Nếu chưa có Git, đọc ví dụ status trong tài liệu; việc này không chặn bài tập Python.",
+    "Trong repo sandbox sẵn có, chạy git status --short và ghi các ký hiệu.",
+    "Sửa/lưu một dòng trong file tracked, chạy git diff -- tên-file và giải thích dòng +/−.",
+    "Lưu note về modified/untracked/staged. Không push dữ liệu học riêng; web không truy cập Git trên máy."
+  ],
+  "study_steps_en": [
+    "If Git is unavailable, read the documented status examples; this does not block Python practice.",
+    "In an existing sandbox repository, run git status --short and record its symbols.",
+    "Edit and save one line in a tracked file, run git diff -- filename and explain the +/− lines.",
+    "Save a note about modified, untracked and staged files. Do not push private learning data; the web app cannot access local Git."
+  ],
+  "practice_plan": {
+    "vi": {
+      "task": "Lưu note về modified/untracked/staged. Không push dữ liệu học riêng; web không truy cập Git trên máy.",
+      "deliverables": [
+        "Phân biệt Git với GitHub.",
+        "Nhận diện file modified và untracked từ status.",
+        "Đọc được thay đổi một dòng bằng diff."
+      ],
+      "checkpoint": "Đọc được thay đổi một dòng bằng diff.",
+      "stretch": "status hiện ?? nhưng git diff trống: dữ liệu có mất không?"
+    },
+    "en": {
+      "task": "Save a note about modified, untracked and staged files. Do not push private learning data; the web app cannot access local Git.",
+      "deliverables": [
+        "Distinguish Git from GitHub.",
+        "Identify modified and untracked files from status.",
+        "Read a one-line change in a diff."
+      ],
+      "checkpoint": "Read a one-line change in a diff.",
+      "stretch": "Status shows ?? but git diff is empty: is the file lost?"
+    }
+  },
+  "interview_questions": {
+    "vi": [
+      "Muốn xem phần đã stage dùng lệnh nào?",
+      "status hiện ?? nhưng git diff trống: dữ liệu có mất không?",
+      "Có nên push journal và .env để tạo artifact không?"
+    ],
+    "en": [
+      "Which command displays staged changes?",
+      "Status shows ?? but git diff is empty: is the file lost?",
+      "Should journals and .env be pushed as learning artifacts?"
+    ]
+  },
+  "formulas": [],
+  "code_examples": [
+    {
+      "language": "powershell",
+      "title": "Git and terminal baseline assessment",
+      "code": "# Run in your own existing sandbox repository\ngit status --short\ngit diff -- hello.py\ngit diff --cached -- hello.py",
+      "status": "conceptual",
+      "purpose_vi": "Đọc trạng thái file và diff trong một Git repo mà chưa cần push hay tài khoản GitHub.",
+      "purpose_en": "Read file status and diffs in a Git repository without pushing or using a GitHub account.",
+      "setup": "Git installed; run the commands in PowerShell inside a practice repository.",
+      "expected_output": "Status tùy repo: ?? là untracked; hai cột phân biệt index/working tree. Diff thường và --cached có thể khác.",
+      "edge_case_vi": "git diff trống không chứng minh không có file mới; xem status để thấy untracked.",
+      "edge_case_en": "An empty git diff does not prove there are no new files; inspect status for untracked files.",
+      "explanation_vi": "Git lưu lịch sử phiên bản ở máy; GitHub là một dịch vụ hosting repository. Có thể học và sửa file mà không dùng cả hai. Khi cần lịch sử, working tree là file đang sửa, index là nội dung đã stage, commit là snapshot đã ghi.\nChỉ thực hành lệnh trong repo sandbox của bạn. git status --short và git diff là thao tác đọc; git diff không hiển thị nội dung file untracked. Không dùng reset --hard hoặc clean để giải quyết một bài nhập môn.",
+      "explanation_en": "Git stores version history locally; GitHub hosts repositories. You can learn and edit files without either. When using history, the working tree contains current files, the index contains staged content and a commit records a snapshot.\nPractice only in your sandbox repository. git status --short and git diff are read-only; git diff does not show untracked file contents. Do not use reset --hard or clean to solve an introductory exercise."
+    }
+  ],
+  "resources": [
+    {
+      "title": "Git status reference",
+      "url": "https://git-scm.com/docs/git-status",
+      "language": "en",
+      "kind": "official",
+      "required": true,
+      "purpose_vi": "Phân biệt Git với GitHub.",
+      "purpose_en": "Distinguish Git from GitHub.",
+      "read_vi": "Đọc Short Format và ý nghĩa hai cột trạng thái.",
+      "read_en": "Read Short Format and the two status columns."
+    },
+    {
+      "title": "Practice checkpoint / Thuc hanh",
+      "url": "",
+      "language": "vi",
+      "kind": "in_app",
+      "required": true,
+      "purpose_vi": "Lưu note về modified/untracked/staged. Không push dữ liệu học riêng; web không truy cập Git trên máy.",
+      "purpose_en": "Save a note about modified, untracked and staged files. Do not push private learning data; the web app cannot access local Git.",
+      "read_vi": "Đọc được thay đổi một dòng bằng diff.",
+      "read_en": "Read a one-line change in a diff."
+    }
+  ],
+  "exercise_ids": [
+    "exercise-0-baseline"
+  ],
+  "review_item_ids": [
+    "phase-00-onboarding-baseline-3-recall",
+    "phase-00-onboarding-baseline-3-application",
+    "phase-00-onboarding-baseline-3-debug",
+    "phase-00-onboarding-baseline-3-interview"
+  ],
+  "estimated_minutes": 30,
+  "completion_checklist": [
+    "Phân biệt Git với GitHub.",
+    "Nhận diện file modified và untracked từ status.",
+    "Đọc được thay đổi một dòng bằng diff.",
+    "Lưu kết quả thực hành và một lỗi đã hiểu."
+  ],
+  "completion_criteria": [
+    "Phân biệt Git với GitHub.",
+    "Nhận diện file modified và untracked từ status.",
+    "Đọc được thay đổi một dòng bằng diff."
+  ],
+  "common_mistakes": [
+    "git diff trống không chứng minh không có file mới; xem status để thấy untracked.",
+    "Commit không tự đẩy dữ liệu lên GitHub; push là thao tác riêng."
+  ],
+  "next_lessons": [
+    "phase-00-onboarding-baseline-4",
+    "phase-00-onboarding-learning-system-1"
+  ],
+  "review_question_vi": "Git và GitHub khác nhau ở đâu?",
+  "review_question_en": "How do Git and GitHub differ?",
+  "review_answer_vi": "Git quản lý lịch sử local; GitHub là hosting. Git hoạt động không cần tài khoản GitHub.",
+  "review_answer_en": "Git manages local history; GitHub is hosting. Git works without a GitHub account.",
+  "review_cards": [
+    {
+      "id": "phase-00-onboarding-baseline-3-recall",
+      "type": "recall",
+      "question_vi": "Git và GitHub khác nhau ở đâu?",
+      "question_en": "How do Git and GitHub differ?",
+      "answer_vi": "Git quản lý lịch sử local; GitHub là hosting. Git hoạt động không cần tài khoản GitHub.",
+      "answer_en": "Git manages local history; GitHub is hosting. Git works without a GitHub account.",
+      "hint_vi": "Một bên là công cụ, một bên là dịch vụ.",
+      "hint_en": "One is a tool, the other a service."
+    },
+    {
+      "id": "phase-00-onboarding-baseline-3-application",
+      "type": "application",
+      "question_vi": "Muốn xem phần đã stage dùng lệnh nào?",
+      "question_en": "Which command displays staged changes?",
+      "answer_vi": "Dùng git diff --cached; git diff mặc định xem thay đổi chưa stage so với index.",
+      "answer_en": "Use git diff --cached; plain git diff compares unstaged working-tree changes with the index.",
+      "hint_vi": "Phân biệt hai vùng trước commit.",
+      "hint_en": "Distinguish the two areas before a commit."
+    },
+    {
+      "id": "phase-00-onboarding-baseline-3-debug",
+      "type": "debug",
+      "question_vi": "status hiện ?? nhưng git diff trống: dữ liệu có mất không?",
+      "question_en": "Status shows ?? but git diff is empty: is the file lost?",
+      "answer_vi": "Không. File còn untracked, chưa có trong index để diff thông thường so sánh.",
+      "answer_en": "No. The file is untracked and has no index entry for the usual diff comparison.",
+      "hint_vi": "Đọc ý nghĩa ?? trong status.",
+      "hint_en": "Read the meaning of ?? in status."
+    },
+    {
+      "id": "phase-00-onboarding-baseline-3-interview",
+      "type": "interview",
+      "question_vi": "Có nên push journal và .env để tạo artifact không?",
+      "question_en": "Should journals and .env be pushed as learning artifacts?",
+      "answer_vi": "Không. Xuất artifact đã rà soát, loại secret và nội dung riêng; kiểm tra diff trước khi chia sẻ.",
+      "answer_en": "No. Export a reviewed artifact, remove secrets and private content, and inspect the diff before sharing.",
+      "hint_vi": "Artifact chỉ cần phần chứng minh việc học.",
+      "hint_en": "An artifact only needs evidence of the learning work."
+    }
+  ],
+  "quality_status": "reviewed",
+  "reviewed_at": "2026-10-07",
+  "completion_checklist_en": [
+    "Distinguish Git from GitHub.",
+    "Identify modified and untracked files from status.",
+    "Read a one-line change in a diff.",
+    "Save the practice result and one explained failure."
+  ],
+  "completion_criteria_en": [
+    "Distinguish Git from GitHub.",
+    "Identify modified and untracked files from status.",
+    "Read a one-line change in a diff."
+  ],
+  "common_mistakes_en": [
+    "An empty git diff does not prove there are no new files; inspect status for untracked files.",
+    "A commit does not automatically upload to GitHub; pushing is a separate operation."
+  ]
+}

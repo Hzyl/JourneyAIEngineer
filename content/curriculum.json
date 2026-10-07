@@ -59,7 +59,7 @@
         "slug": "vietnamese-rag",
         "title_vi": "Vietnamese Document Assistant",
         "title_en": "Vietnamese Document Assistant",
-        "phase_id": "phase-06-nlp-llm-rag",
+        "phase_id": "phase-06-llm-rag",
         "problem_vi": "Hỏi đáp tài liệu tiếng Việt có retrieval, citation và từ chối khi thiếu bằng chứng.",
         "problem_en": "Answer questions over Vietnamese documents with retrieval, citations and abstention.",
         "stack": [

@@ -145,6 +145,8 @@ def test_health_search_and_review_cards_are_local_safe(tmp_path, monkeypatch):
         cards = db.execute("SELECT * FROM review_cards WHERE lesson_id=(SELECT id FROM lessons WHERE slug=?) ORDER BY id", ("phase-00-onboarding-environment-1",)).fetchall()
     assert len(cards) == 4
     assert {card["type"] for card in cards} == {"recall", "application", "debug", "interview"}
+    assert module.due_reviews()["count"] == 0
+    module.update_progress("phase-00-onboarding-environment-1", module.ProgressUpdate(status="completed"))
     due = module.due_reviews()
     assert due["count"] >= 4
     assert all(item["lesson_slug"] for item in due["items"][:4])
@@ -263,7 +265,14 @@ def test_workspace_creation_and_runner(tmp_path, monkeypatch):
         encoding="utf-8",
     )
     result = module.run_workspace(workspace_id)
+    assert result["status"] == "failed"
+    assert result["assessment_kind"] == "verified"
+    reference = module.CONTENT_ROOT / "exercise_templates" / exercise["slug"] / "reference.py"
+    shutil.copyfile(reference, workspace_path / "starter.py")
+    (workspace_path / "test_exercise.py").write_text("# learner-owned custom test\n", encoding="utf-8")
+    result = module.run_workspace(workspace_id)
     assert result["status"] == "passed"
+    assert (workspace_path / "test_exercise.py").read_text(encoding="utf-8") == "# learner-owned custom test\n"
     shutil.rmtree(workspace_path)
     repaired_run = module.run_workspace(workspace_id)
     assert repaired_run["status"] == "failed"

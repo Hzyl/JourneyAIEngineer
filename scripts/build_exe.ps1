@@ -1,6 +1,11 @@
+param([string]$OutputDir = "")
+
 $ErrorActionPreference = 'Stop'
 $ProjectRoot = Split-Path -Parent $PSScriptRoot
 Set-Location $ProjectRoot
+if ([string]::IsNullOrWhiteSpace($OutputDir)) { $OutputDir = $ProjectRoot }
+$OutputDir = [IO.Path]::GetFullPath($OutputDir)
+New-Item -ItemType Directory -Force -Path $OutputDir | Out-Null
 
 $Python = Join-Path $ProjectRoot '.venv\Scripts\python.exe'
 if (-not (Test-Path -LiteralPath $Python)) {
@@ -9,6 +14,7 @@ if (-not (Test-Path -LiteralPath $Python)) {
 
 Write-Host 'Building production frontend...' -ForegroundColor Cyan
 npm run build
+if ($LASTEXITCODE -ne 0) { throw 'Frontend build failed.' }
 
 $PyInstaller = Join-Path $ProjectRoot '.venv\Scripts\pyinstaller.exe'
 if (-not (Test-Path -LiteralPath $PyInstaller)) {
@@ -19,25 +25,20 @@ if (-not (Test-Path -LiteralPath $PyInstaller)) {
     throw 'PyInstaller was not found after installation.'
 }
 
-$BuildRoot = Join-Path $ProjectRoot '.build\pyinstaller'
+$BuildRoot = Join-Path $ProjectRoot ('.build\pyinstaller-' + [Guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Force -Path $BuildRoot | Out-Null
 Write-Host 'Packaging JourneyAIEngineer.exe...' -ForegroundColor Cyan
-& $PyInstaller --noconfirm --clean --distpath $ProjectRoot --workpath $BuildRoot (Join-Path $ProjectRoot 'packaging\JourneyAIEngineer.spec')
+& $PyInstaller --noconfirm --clean --distpath $OutputDir --workpath $BuildRoot (Join-Path $ProjectRoot 'packaging\JourneyAIEngineer.spec')
 if ($LASTEXITCODE -ne 0) {
     throw "PyInstaller failed with exit code $LASTEXITCODE."
 }
 
-$ExePath = Join-Path $ProjectRoot 'JourneyAIEngineer.exe'
+$ExePath = Join-Path $OutputDir 'JourneyAIEngineer.exe'
 if (-not (Test-Path -LiteralPath $ExePath)) {
     throw 'PyInstaller did not create JourneyAIEngineer.exe.'
 }
 
-if (Test-Path -LiteralPath $BuildRoot) {
-    Remove-Item -LiteralPath $BuildRoot -Recurse -Force
-}
-if (Test-Path -LiteralPath (Join-Path $ProjectRoot 'dist')) {
-    Remove-Item -LiteralPath (Join-Path $ProjectRoot 'dist') -Recurse -Force
-}
+# Retain build intermediates for diagnostics; never remove a running preview's dist.
 
 $sizeMb = [math]::Round((Get-Item -LiteralPath $ExePath).Length / 1MB, 1)
 Write-Host "Created $ExePath ($sizeMb MB)" -ForegroundColor Green

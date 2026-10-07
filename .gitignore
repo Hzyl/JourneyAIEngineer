@@ -13,6 +13,7 @@ dist-ssr
 *.local
 
 # Editor directories and files
+/AGENTS.md
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -48,3 +49,6 @@ JourneyAIEngineer*.exe
 
 # Generated journal context can contain private debugging details
 journal/context/
+# Local agent runtime and configuration
+/.omx/
+/.codex/

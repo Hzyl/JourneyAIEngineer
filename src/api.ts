@@ -1,3 +1,4 @@
+import { withMutationRequest } from './platform/mutation-request'
 // A relative API path works for the packaged desktop app and is proxied by Vite during development.
 const API_BASE = import.meta.env.VITE_API_BASE ?? '/api'
 
@@ -7,6 +8,7 @@ export type Dashboard = {
   in_progress_lessons: number
   progress_percent: number
   due_reviews: number
+  new_reviews?: number
   study_minutes: number
   weekly_minutes: number
   weekly_goal_minutes: number
@@ -60,6 +62,7 @@ export type SearchResult = {
 
 export type BackupPayload = {
   schema_version: number
+  catalog?: { schema_version: number; app_version: string; content_sha256: string }
   app_version: string
   exported_at: string
   settings: Record<string, string>
@@ -79,6 +82,8 @@ export type LessonPracticePlan = {
 export type LessonInterviewQuestions = { vi?: string[]; en?: string[] }
 
 export type Lesson = {
+  quality_status?: 'draft' | 'reviewed'
+  reviewed_at?: string | null
   slug: string
   title_vi: string
   title_en: string
@@ -106,6 +111,9 @@ export type Lesson = {
   }>
   checklist: string[]
   completion_checklist: string[]
+  completion_checklist_en?: string[]
+  completion_criteria_en?: string[]
+  common_mistakes_en?: string[]
   completion_criteria: string[]
   common_mistakes: string[]
   next_lessons: string[]
@@ -138,6 +146,7 @@ export type Lesson = {
 }
 
 export type Exercise = {
+  assessment_kind?: 'verified' | 'reflection'
   id: number
   slug: string
   title_vi: string
@@ -243,6 +252,11 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
   return response.json() as Promise<T>
 }
 
+function learningWrite(path: string, method: string, payload: Record<string, string | number | null>) {
+  return withMutationRequest(`local:${API_BASE}`, `${method}:${path}`, payload, (requestId) =>
+    request(path, { method, body: JSON.stringify({ ...payload, request_id: requestId }) }))
+}
+
 export const localApi = {
   health: () => request<HealthStatus>('/health'),
   dashboard: () => request<Dashboard>('/dashboard'),
@@ -260,10 +274,10 @@ export const localApi = {
   createFeedback: (payload: { lesson_slug: string; kind: FeedbackKind; body: string; display_name?: string }) => request<{ feedback: FeedbackItem; message: string }>('/feedback', { method: 'POST', body: JSON.stringify(payload) }),
   securityAudit: () => request<SecurityAuditReport>('/security/audit'),
   lesson: (slug: string) => request<Lesson>(`/lessons/${slug}`),
-  updateProgress: (slug: string, status: string, minutes_spent = 0) => request(`/lessons/${slug}/progress`, { method: 'PATCH', body: JSON.stringify({ status, minutes_spent }) }),
-  createSession: (payload: { lesson_slug?: string; minutes: number; note?: string }) => request('/study-sessions', { method: 'POST', body: JSON.stringify(payload) }),
+  updateProgress: (slug: string, status: string, minutes_spent = 0) => learningWrite(`/lessons/${slug}/progress`, 'PATCH', { status, minutes_spent }),
+  createSession: (payload: { lesson_slug?: string; minutes: number; note?: string }) => learningWrite('/study-sessions', 'POST', { lesson_slug: payload.lesson_slug ?? null, minutes: payload.minutes, note: payload.note ?? '' }),
   reviews: () => request<{ items: Array<any>; count: number }>('/reviews/due'),
-  answerReview: (id: number, rating: string, thoughtSeconds = 0, answerText = '') => request(`/reviews/${id}/answer`, { method: 'POST', body: JSON.stringify({ rating, thought_seconds: thoughtSeconds, answer_text: answerText }) }),
+  answerReview: (id: number, rating: string, thoughtSeconds = 0, answerText = '') => learningWrite(`/reviews/${id}/answer`, 'POST', { rating, thought_seconds: thoughtSeconds, answer_text: answerText }),
   reviewHistory: () => request<{ items: Array<any>; count: number }>('/reviews/history'),
   weakTopics: () => request<{ items: Array<any> }>('/reviews/weak-topics'),
   exercises: () => request<{ exercises: Exercise[] }>('/exercises'),
@@ -271,7 +285,9 @@ export const localApi = {
   openWorkspace: (id: number) => request<{ opened: boolean; path: string; message?: string }>(`/workspaces/${id}/open`, { method: 'POST' }),
   openFolder: (id: number) => request<{ opened: boolean; path: string; message?: string }>(`/workspaces/${id}/open-folder`, { method: 'POST' }),
   exportWorkspace: (id: number) => request<WorkspaceExport>(`/workspaces/${id}/export`, { method: 'POST' }),
-  runWorkspace: (id: number) => request<{ status: string; output: string; duration_ms: number }>(`/workspaces/${id}/run`, { method: 'POST' }),
+  runWorkspace: (id: number) => request<{
+    status: string; output: string; duration_ms: number; assessment_kind: 'verified' | 'reflection'
+  }>(`/workspaces/${id}/run`, { method: 'POST' }),
   workspaceRuns: (id: number) => request<{ runs: Array<any>; count: number }>(`/workspaces/${id}/runs`),
   tools: () => request<{ tools: Array<any> }>('/tools'),
   settings: () => request<AppSettings>('/settings'),
@@ -285,7 +301,7 @@ export const localApi = {
   exportJournal: () => request<{ path: string; week: string }>('/journal/export', { method: 'POST' }),
   exportContext: (payload: { lesson_slug?: string; exercise_slug?: string; question: string }) => request<{ path: string; content: string }>('/context/export', { method: 'POST', body: JSON.stringify(payload) }),
   exportBackup: () => request<{ payload: BackupPayload; json_path: string; markdown_path: string }>('/backup/export', { method: 'POST' }),
-  previewBackup: (payload: BackupPayload) => request<{ valid: boolean; errors: string[]; counts: Record<string, number> }>('/backup/preview', { method: 'POST', body: JSON.stringify({ payload }) }),
+  previewBackup: (payload: BackupPayload) => request<{ valid: boolean; errors: string[]; counts: Record<string, number>; warnings: string[]; replaces: Record<string, number> }>('/backup/preview', { method: 'POST', body: JSON.stringify({ payload }) }),
   importBackup: (payload: BackupPayload) => request<{ imported: boolean; safety_backup_json: string; safety_backup_markdown: string; restored_journal_files: number }>('/backup/import', { method: 'POST', body: JSON.stringify({ payload, confirm: true }) }),
   runtimeHeartbeat: (clientId: string) => request<{ ok: boolean; active_clients: number }>('/runtime/heartbeat', { method: 'POST', body: JSON.stringify({ client_id: clientId }) }),
   runtimeDisconnect: (clientId: string) => {

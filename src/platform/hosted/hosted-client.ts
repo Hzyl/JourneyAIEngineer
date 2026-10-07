@@ -1,5 +1,8 @@
 import type { AppSettings, Dashboard, Lesson, ReferenceResource, SearchResult } from '../../api'
 import { hostedCapabilities } from '../capabilities'
+import { withMutationRequest } from '../mutation-request'
+import { readPages } from '../read-pages'
+import { buildReviewQueue } from '../review-queue'
 import { hostedCatalog } from './catalog'
 import { countLocalStreak } from './learning-state'
 import { requireHostedUser, requireSupabase } from './supabase-client'
@@ -37,10 +40,28 @@ function lessonStatus(progress: Map<string, ProgressRow>, slug: string): Progres
 }
 
 async function selectRows<T>(table: string, columns: string): Promise<T[]> {
-  await requireHostedUser()
-  const { data, error } = await requireSupabase().from(table).select(columns)
-  if (error) errorMessage(error)
-  return (data ?? []) as T[]
+  const user = await requireHostedUser()
+  const key = table === 'lesson_progress' ? 'lesson_slug' : table === 'review_state' ? 'card_id' : 'id'
+  const selected = columns.split(',').includes(key) ? columns : `${columns},${key}`
+  return readPages(async (after) => {
+    let query = requireSupabase().from(table).select(selected).eq('user_id', user.id)
+      .order(key, { ascending: true }).limit(500)
+    if (after) query = query.gt(key, after)
+    const { data, error } = await query
+    if (error) errorMessage(error)
+    return (data ?? []) as unknown as T[]
+  }, (row) => String((row as Record<string, unknown>)[key]))
+}
+
+async function applyMutation(operation: string, payload: Record<string, string | number | null>) {
+  const user = await requireHostedUser()
+  return withMutationRequest(user.id, operation, payload, async (requestId) => {
+    const { data, error } = await requireSupabase().rpc('apply_learning_mutation', {
+      p_request_id: requestId, p_operation: operation, p_payload: payload,
+    })
+    if (error) errorMessage(error)
+    return data
+  })
 }
 
 async function readSettings(): Promise<AppSettings> {
@@ -105,6 +126,8 @@ function makeLesson(slug: string, progressRows: ProgressRow[]): Lesson {
   const exercises = hostedCatalog.exercises.filter((item) => item.module_id === source.module_id)
   return {
     slug,
+    quality_status: source.quality_status,
+    reviewed_at: source.reviewed_at,
     title_vi: source.title_vi,
     title_en: source.title_en,
     summary_vi: source.summary_vi,
@@ -121,6 +144,9 @@ function makeLesson(slug: string, progressRows: ProgressRow[]): Lesson {
     resources: source.resources as Lesson['resources'],
     checklist: source.completion_checklist,
     completion_checklist: source.completion_checklist,
+    completion_checklist_en: source.completion_checklist_en,
+    completion_criteria_en: source.completion_criteria_en,
+    common_mistakes_en: source.common_mistakes_en,
     completion_criteria: source.completion_criteria,
     common_mistakes: source.common_mistakes,
     next_lessons: source.next_lessons,
@@ -185,10 +211,8 @@ export const hostedApi = {
       completed_lessons: completed.length,
       in_progress_lessons: inProgress.length,
       progress_percent: lessons.length ? Math.round((completed.length / lessons.length) * 1000) / 10 : 0,
-      due_reviews: hostedCatalog.reviewCards().filter((card) => {
-        const state = reviewState.find((item) => item.card_id === card.id)
-        return !state || (!state.suspended && new Date(state.due_at) <= now)
-      }).length,
+      due_reviews: buildReviewQueue(hostedCatalog.reviewCards(), reviewState, progress, { now }).dueCount,
+      new_reviews: buildReviewQueue(hostedCatalog.reviewCards(), reviewState, progress, { now }).newCount,
       study_minutes: sessions.reduce((sum, item) => sum + item.minutes, 0),
       weekly_minutes: weeklySessions.reduce((sum, item) => sum + item.minutes, 0),
       weekly_goal_minutes: settings.weekly_goal_minutes,
@@ -242,50 +266,61 @@ export const hostedApi = {
   securityAudit: async () => ({ mode: 'passive', safe_mode: true, network_requests: 0, payloads_sent: 0, external_tools: [], source_root: '', route_count: 0, routes: [], findings: [], summary: { status_counts: {}, severity_counts: {}, candidate_count: 0, needs_human_review: 0, verified_controls: 0 }, limitations_vi: ['Security Lab chỉ chạy trong desktop/local mode.'] }),
   lesson: async (slug: string) => makeLesson(slug, await selectRows<ProgressRow>('lesson_progress', 'lesson_slug,status,minutes_spent,completed_at,updated_at')),
   updateProgress: async (slug: string, status: string, minutesSpent = 0) => {
-    const { error } = await requireSupabase().rpc('record_lesson_progress', { p_lesson_slug: slug, p_status: status, p_minutes: minutesSpent })
-    if (error) errorMessage(error)
+    await applyMutation('progress', { lesson_slug: slug, status, minutes: minutesSpent })
     return { slug, status, minutes_added: minutesSpent }
   },
   createSession: async (payload: { lesson_slug?: string; minutes: number; note?: string }) => {
-    const user = await requireHostedUser()
-    const { error } = await requireSupabase().from('study_sessions').insert({ user_id: user.id, lesson_slug: payload.lesson_slug ?? null, minutes: payload.minutes, note: payload.note ?? '' })
-    if (error) errorMessage(error)
+    await applyMutation('session', {
+      lesson_slug: payload.lesson_slug ?? null, minutes: payload.minutes, note: payload.note ?? '',
+    })
     return { status: 'recorded' }
   },
   reviews: async () => {
-    const state = await selectRows<ReviewStateRow>('review_state', 'card_id,lesson_slug,due_at,interval_days,repetitions,ease_factor,lapses,leech,suspended,last_reviewed_at')
+    const [state, progress] = await Promise.all([
+      selectRows<ReviewStateRow>('review_state', 'card_id,lesson_slug,due_at,interval_days,repetitions,ease_factor,lapses,leech,suspended,last_reviewed_at'),
+      selectRows<ProgressRow>('lesson_progress', 'lesson_slug,status,minutes_spent,completed_at,updated_at'),
+    ])
     const byCard = new Map(state.map((item) => [item.card_id, item]))
     const now = new Date()
-    const items = hostedCatalog.reviewCards().filter((card) => {
-      const item = byCard.get(card.id)
-      return !item || (!item.suspended && new Date(item.due_at) <= now)
-    }).slice(0, 30).map((card) => ({
+    const queue = buildReviewQueue(hostedCatalog.reviewCards(), state, progress, { now })
+    const items = queue.items.map((card) => ({
       ...card,
       id: card.id,
       phase_title_vi: moduleMeta(card.phase_id, card.module_id).phase?.title_vi ?? card.phase_id,
+      phase_title_en: moduleMeta(card.phase_id, card.module_id).phase?.title_en ?? card.phase_id,
       related_exercise: hostedCatalog.exercises.find((item) => item.module_id === card.module_id)?.slug ?? null,
       ...(byCard.get(card.id) ?? { due_at: now.toISOString(), interval_days: 0, repetitions: 0, ease_factor: 2.5, lapses: 0, leech: false, suspended: false, last_reviewed_at: null }),
     }))
-    return { items, count: items.length }
+    return {
+      items,
+      count: items.length,
+      due_count: queue.dueCount,
+      new_count: queue.newCount,
+      total_count: queue.totalCount,
+    }
   },
   answerReview: async (id: string | number, rating: string, thoughtSeconds = 0, answerText = '') => {
     const card = hostedCatalog.reviewCards().find((item) => item.id === id)
     if (!card) throw new Error('Không tìm thấy review card.')
-    const { data, error } = await requireSupabase().rpc('answer_review_card', { p_card_id: card.id, p_lesson_slug: card.lesson_slug, p_rating: rating, p_thought_seconds: thoughtSeconds, p_answer_text: answerText })
-    if (error) errorMessage(error)
-    return data
+    return applyMutation('review', { card_id: card.id, lesson_slug: card.lesson_slug,
+      rating, thought_seconds: thoughtSeconds, answer_text: answerText })
   },
   reviewHistory: async () => {
-    const rows = await selectRows<any>('review_history', 'id,card_id,lesson_slug,rating,thought_seconds,answer_text,reviewed_at,interval_days,ease_factor,repetitions,lapses')
+    const user = await requireHostedUser()
+    const { data, error } = await requireSupabase().from('review_history')
+      .select('id,card_id,lesson_slug,rating,thought_seconds,answer_text,reviewed_at,interval_days,ease_factor,repetitions,lapses')
+      .eq('user_id', user.id).order('reviewed_at', { ascending: false }).order('id', { ascending: false }).limit(50)
+    if (error) errorMessage(error)
+    const rows = data ?? []
     const cards = new Map(hostedCatalog.reviewCards().map((card) => [card.id, card]))
-    const items = rows.sort((a, b) => new Date(b.reviewed_at).getTime() - new Date(a.reviewed_at).getTime()).slice(0, 50).map((row) => ({ ...row, created_at: row.reviewed_at, lesson_title_vi: cards.get(row.card_id)?.title_vi ?? row.lesson_slug }))
+    const items = rows.sort((a, b) => new Date(b.reviewed_at).getTime() - new Date(a.reviewed_at).getTime()).slice(0, 50).map((row) => ({ ...row, created_at: row.reviewed_at, lesson_title_vi: cards.get(row.card_id)?.title_vi ?? row.lesson_slug, lesson_title_en: cards.get(row.card_id)?.title_en ?? row.lesson_slug }))
     return { items, count: items.length }
   },
   weakTopics: async () => {
     const { items } = await hostedApi.reviewHistory()
-    const aggregate = new Map<string, { lesson_slug: string; title_vi: string; attempts: number; hard_attempts: number; last_reviewed_at: string }>()
+    const aggregate = new Map<string, { lesson_slug: string; title_vi: string; title_en: string; attempts: number; hard_attempts: number; last_reviewed_at: string }>()
     for (const row of items) {
-      const current = aggregate.get(row.lesson_slug) ?? { lesson_slug: row.lesson_slug, title_vi: row.lesson_title_vi, attempts: 0, hard_attempts: 0, last_reviewed_at: row.created_at }
+      const current = aggregate.get(row.lesson_slug) ?? { lesson_slug: row.lesson_slug, title_vi: row.lesson_title_vi, title_en: row.lesson_title_en, attempts: 0, hard_attempts: 0, last_reviewed_at: row.created_at }
       current.attempts += 1
       if (row.rating === 'again' || row.rating === 'hard') current.hard_attempts += 1
       aggregate.set(row.lesson_slug, current)

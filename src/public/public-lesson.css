@@ -1,0 +1,100 @@
+.public-lesson {
+  max-width: 800px;
+  margin: 24px auto 72px;
+}
+.public-lesson h1 {
+  font-size: clamp(32px, 4vw, 52px);
+}
+.public-lesson h2 {
+  font-size: 28px;
+}
+.public-lesson > section {
+  margin-top: 44px;
+}
+.public-prose,
+.public-example > p {
+  white-space: pre-line;
+}
+.public-prose {
+  margin-top: 28px;
+}
+.public-lesson li {
+  margin-bottom: 8px;
+}
+.public-practice,
+.public-save {
+  background: #eaf1ed;
+  border-left: 4px solid #08685e;
+  padding: 24px 28px;
+}
+.public-question {
+  padding: 16px 0;
+  border-bottom: 1px solid #d8dce0;
+}
+.public-question summary {
+  font-weight: 600;
+}
+.public-auth {
+  background: #faf9f5;
+  min-height: 100vh;
+}
+.public-auth > .public-back {
+  position: absolute;
+  z-index: 5;
+  top: 12px;
+  left: 16px;
+}
+@media (max-width: 820px) {
+  .public-nav,
+  .public-footer {
+    padding: 18px 24px;
+  }
+  .public-shell main {
+    padding: 0 24px;
+  }
+  .public-hero {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    padding: 44px 0;
+  }
+  .public-artifact {
+    max-width: 560px;
+  }
+  .public-section-heading {
+    display: block;
+  }
+  .public-lesson-list,
+  .public-modes > div {
+    grid-template-columns: 1fr;
+  }
+  .public-samples,
+  .public-roadmap,
+  .public-modes {
+    padding: 40px 0;
+  }
+  .public-footer {
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 520px) {
+  .public-nav {
+    padding: 14px 16px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .public-nav nav {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .public-shell main {
+    padding: 0 20px;
+  }
+  .public-artifact,
+  .public-practice,
+  .public-save {
+    padding: 22px;
+  }
+  .public-actions > button {
+    width: 100%;
+  }
+}

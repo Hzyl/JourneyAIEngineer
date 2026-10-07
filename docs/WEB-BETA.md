@@ -2,7 +2,24 @@
 
 Web beta adds a browser-only learning mode. It is deliberately separate from the local FastAPI app: a browser may read the curriculum, authenticate, and save its own learning state, but it never receives filesystem, VS Code, Git, subprocess, exercise-runner or SQLite capabilities.
 
-## What is ready in source
+## Current deployment status
+
+The web beta is deployed on Cloudflare Pages and uses Supabase email/password authentication.
+Use the beta URL shared by the maintainer. Desktop/local remains a separate runtime with its own SQLite data;
+the beta does not automatically synchronise that database with the web account.
+
+Deployment handoff checkpoint, **2026-10-07**:
+
+- The maintainer confirmed that the web beta is deployed. Its URL and live Cloudflare deployment were not
+  independently checked during this documentation update.
+- GitHub `main` was checked and still points to `a4ebbc4`; local `main` has two pending auth commits:
+  `e8c2f4d` (signup confirmation and login recovery) and `5db2e8e` (account CTA and feedback states).
+- The earlier push failed to connect to `github.com:443`. A read-only GitHub check now succeeds;
+  the two auth commits still need to be pushed after maintainer confirmation.
+- If Cloudflare Pages Git integration is enabled for `main`, an approved push will trigger a build/deployment.
+  Check the resulting deployment commit and smoke-test it before marking these auth changes as live.
+
+## Hosted features
 
 - React/Vite hosted mode is enabled by `VITE_APP_MODE=hosted`.
 - Supabase Auth supports email/password signup, confirmation, sign-in, password reset and sign-out.
@@ -10,13 +27,30 @@ Web beta adds a browser-only learning mode. It is deliberately separate from the
 - Curriculum, resources and exercise briefs remain versioned static content; the web does not upload or execute learner code.
 - Cloudflare Pages receives the SPA rewrite and generated CSP headers. The build rejects a missing URL/key or a secret Supabase key.
 
-## What is deliberately not public yet
+## Auth improvements awaiting rollout
 
-No Supabase project is linked, no migration is pushed, and no Cloudflare Pages deployment exists. Do not claim a hosted URL until a preview has passed the two-user/RLS smoke test. The portable Windows app and source clone remain the current usable release paths.
+The pending local commits add password confirmation at signup, show/hide password controls, guidance and a
+resend action for unconfirmed email, and more prominent account-creation and success/error feedback.
+Invalid-credential and password-recovery messages do not tell the user that an email address is unregistered.
+
+The handoff reports passing hosted Playwright E2E, unit tests, lint and a Vite production build for these commits.
+The hosted Playwright configuration uses test-only Supabase values and checks the auth UI and absence of local
+`/api/*` calls. That test does not verify live email delivery, a signed-in learning session or production RLS.
+The acceptance checklist below must be checked against the deployed build; it is not a record of completed tests.
+
+## Pending public-readiness changes
+
+The working tree adds guest lessons, learning routes, retry-safe learning writes, cloud export
+and a delete-account flow. These are not confirmed live. They require four additive migrations
+and an Edge Function rollout before the matching frontend: see [release order and rollback](RELEASE-READINESS.md).
+MCP confirmed the real project URL and its two existing migrations on 2026-10-07.
 
 ## Local hosted development
 
-Docker Desktop is required for the Supabase local stack.
+Using the deployed web beta does **not** require Docker. Read-only inspection of its real
+Supabase database uses the connected MCP. Docker Desktop is needed only for the disposable
+local Supabase stack used by database/RLS tests. Run the following reset commands only in a
+separate development stack with no personal data; never against production.
 
 ```powershell
 npm ci
@@ -43,7 +77,21 @@ npx supabase test db
 
 `VITE_SUPABASE_PUBLISHABLE_KEY` is intended for the browser. Never put a database password, personal access token, `service_role`, or `sb_secret_` key in a Vite environment variable.
 
-## Deployment sequence
+## Updating the existing deployment
+
+1. Run the applicable curriculum, local regression, database/RLS, hosted unit and hosted browser tests.
+2. Review the exact commits and obtain maintainer confirmation before pushing to `origin/main`.
+   Do not include `.env`, service keys, database passwords, `.data`, SQLite databases, private journals or tokens.
+3. Push the approved commits with `git push origin main`. If Cloudflare Git integration is still enabled for
+   `main`, this also triggers its configured build/deployment. Otherwise use an explicitly approved deployment.
+4. Check Cloudflare build status and the deployed commit. Verify the hosted variables and Supabase Auth
+   redirect settings against the deployed URL; configuration changes need maintainer confirmation.
+5. Run the acceptance checklist against that build, including confirmation/resend/reset email and two-user
+   isolation. Keep the previous successful deployment available as a rollback target.
+
+## Setting up another environment
+
+These steps apply to a new environment, not to the already deployed beta.
 
 1. Run curriculum, local regression, database/RLS, hosted unit and hosted browser tests.
 2. Create a **Supabase Free** project and enable email confirmation. Record only its URL and publishable key in deployment settings.
@@ -54,7 +102,7 @@ npx supabase test db
 
 Every remote project creation, migration push, environment-variable change and deployment needs separate maintainer confirmation. Free tiers are useful for a small beta but have quotas and policies that may change.
 
-## Acceptance checklist
+## Acceptance checklist for each deployment
 
 - [ ] Local mode still binds FastAPI to loopback and portable packaging passes.
 - [ ] Hosted mode has no Security Lab, Git, VS Code, test runner, workspace execution, SQLite backup or local heartbeat calls.

@@ -17,7 +17,7 @@ Set-Location JourneyAIEngineer
 
 ## Các nguyên tắc của repository
 
-- **Markdown là nguồn nội dung chuẩn.** Sửa lesson trong `content/lessons/*.md`; `content/lessons.json` là catalog generated và phải được build lại.
+- **Nội dung có hai lớp.** Markdown trong `content/lessons/` tạo catalog nền `content/lessons.json`; `content/curated/<lesson_id>.json` ghi đè bài cùng ID ở cả local và web. Nếu bài đã có curated file, sửa file đó. Giữ ổn định ID/prerequisite/review card; xem [chuẩn biên tập](docs/CURRICULUM-STANDARDS.md) và [mẫu đóng góp](docs/LESSON-CONTRIBUTION.md).
 - Lesson phải có giải thích đủ trong app. Link ngoài chỉ là đọc sâu hoặc đối chiếu, không thay thế concept notes.
 - Code example phải ghi rõ `runnable` hay `conceptual`, setup, output mong đợi và edge case.
 - Không thêm API key, token, database binary, `.venv`, `node_modules`, file `.env` hoặc journal riêng vào pull request.
@@ -47,6 +47,7 @@ Chạy các gate sau khi sửa:
 
 ```powershell
 python scripts/build_lesson_catalog.py
+python scripts/catalog_version.py --write
 python scripts/validate_content.py
 python -m pytest -q tests/test_content_foundation.py --basetemp .build\pytest-content -o cache_dir=.build\pytest-cache
 ```
@@ -77,6 +78,8 @@ lesson deep link in Chromium. It does not call an external AI API. CI installs
 the browser before running the same command.
 
 Kiểm tra keyboard navigation, màn hình rộng 390px, focus state, text tiếng Việt có dấu và không để absolute path/credential lọt vào response. Thay đổi route local phải giữ loopback binding, path allowlist, timeout, secret redaction và confirmation trước Git publish.
+
+Các việc có tiêu chí hoàn thành cụ thể nằm trong [starter issues](docs/STARTER-ISSUES.md); đây là bản nháp để maintainer chọn, chưa tự tạo issue trên GitHub.
 
 ## Branch, commit và pull request
 

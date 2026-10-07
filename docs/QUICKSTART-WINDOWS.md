@@ -6,7 +6,7 @@ Journey AI Engineer v0.1 có hai cách chạy. Nếu chỉ muốn thử app, dù
 
 ## 1. Dùng portable ZIP (không cần cài môi trường phát triển)
 
-Portable là cách nhanh nhất cho người thử beta. ZIP đã có executable; bạn không cần Python, Node.js, Git hay Docker.
+Portable là cách nhanh nhất cho người thử beta. ZIP đã có executable: mở app, đọc bài và ôn tập không cần Python, Node.js, Git hay Docker. Runner bài tập cần Python 3.11+ cài riêng; mở bằng VS Code cần VS Code.
 
 1. Mở [GitHub Releases](https://github.com/Hzyl/JourneyAIEngineer/releases/latest).
 2. Tải hai file trong cùng một release: **JourneyAIEngineer-v0.1.2-windows-x64.zip** và **SHA256SUMS.txt**.
@@ -47,7 +47,18 @@ $env:JOURNEY_PROJECT_ROOT = 'C:\src\JourneyAIEngineer'
 .\JourneyAIEngineer.exe
 ~~~
 
-Không có source clone, app vẫn học/review/test local; nút publish sẽ bị tắt.
+Không có source clone, app vẫn học/ôn tập và tạo workspace; chạy test cần Python riêng. Nút publish sẽ bị tắt.
+
+### Xem và sửa code mà không dùng Git
+
+Trong bài tập, mở đường dẫn workspace hiển thị bởi app bằng **File → Open Folder** trong VS Code.
+Mặc định portable đặt workspace dưới `%LOCALAPPDATA%\JourneyAIEngineer\workspaces`.
+Nếu muốn sửa cả app, tải source ZIP của đúng tag/version, giải nén rồi mở folder chứa `package.json`.
+Chạy `scripts/setup.ps1` và `scripts/dev.ps1` như bên dưới; không cần Git cho việc đọc/sửa/chạy code.
+Git chỉ phục vụ lịch sử thay đổi và chia sẻ lên repository.
+
+EXE là bản chạy đã đóng gói, không thay thế source ZIP. Source ZIP mới có `SOURCE-MANIFEST.json`
+liệt kê SHA-256 từng file; dòng `working-tree snapshot` không chứng minh đã phát hành.
 
 ## 2. Dùng source clone (học, sửa code và đóng góp)
 

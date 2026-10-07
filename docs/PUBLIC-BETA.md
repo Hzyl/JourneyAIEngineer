@@ -2,9 +2,13 @@
 
 Journey AI Engineer v0.1.2 là bản beta **local-first trên Windows**. Mục tiêu của beta là kiểm tra app có giúp một người mới đi qua vòng Roadmap → Lesson → Practice → Review → Journal hay không, đồng thời thu thập feedback để sửa nội dung và UX.
 
-Web beta có đăng nhập và cloud sync đang được chuẩn bị trong source, nhưng chưa có public URL. Khi được mở, nó là một runtime riêng dùng Supabase Auth/Postgres/RLS và Cloudflare Pages; người dùng web sẽ không thể chạy exercise, mở VS Code hay gọi Git trên máy. Theo dõi [WEB-BETA.md](WEB-BETA.md) thay vì coi portable release hiện tại là web deployment.
+Web beta đã triển khai trên Cloudflare Pages, dùng Supabase Auth/Postgres/RLS với đăng nhập email/password
+và dữ liệu học tách theo tài khoản. Dùng URL do maintainer chia sẻ.
+Web không chạy exercise, mở VS Code, truy cập Git hoặc filesystem local.
+Xem [WEB-BETA.md](WEB-BETA.md) để theo dõi deployment và các cải thiện auth đang chờ rollout.
 
-> **Beta không phải hosted web app.** Không có login, cloud sync, public execution server, API AI trả phí hay progress dùng chung giữa các tài khoản. Mỗi người chạy app trên máy của mình.
+> **Portable/source clone là bản local.** Mỗi người chạy app và lưu dữ liệu trên máy của mình,
+> không có login hoặc cloud sync. Web beta là runtime riêng; không bản nào cung cấp public code-execution server.
 
 ## Trước khi mời người thử
 
@@ -20,6 +24,7 @@ Web beta có đăng nhập và cloud sync đang được chuẩn bị trong sour
 | Chỉ muốn thử app | Portable `.exe` | Tải ZIP từ [Releases](https://github.com/Hzyl/JourneyAIEngineer/releases/latest), kiểm tra SHA-256, giải nén và mở `JourneyAIEngineer.exe` |
 | Muốn học bằng VS Code hoặc sửa lesson | Source clone | Đọc [Windows quickstart](QUICKSTART-WINDOWS.md), clone, setup rồi chạy dev |
 | Muốn đóng góp code/content | Fork + branch | Đọc [CONTRIBUTING.md](../CONTRIBUTING.md) trước khi mở PR |
+| Muốn học bằng trình duyệt và tài khoản | Web beta | Mở URL maintainer chia sẻ; xem [hướng dẫn web](WEB-BETA.md) |
 
 ## Portable test flow
 
@@ -41,7 +46,9 @@ if ($actual -ne $expected) { throw 'Checksum không khớp.' }
 
 Portable data mặc định nằm ở `%LOCALAPPDATA%\JourneyAIEngineer`; xóa data root có thể mất progress. Không có source clone thì publish GitHub bị tắt là đúng behavior.
 
-## Checklist thử beta trong 15–30 phút
+## Checklist thử bản local trong 15–30 phút
+
+Với web beta, dùng [acceptance checklist của web](WEB-BETA.md#acceptance-checklist-for-each-deployment).
 
 - [ ] App mở được từ portable ZIP hoặc source clone.
 - [ ] Dashboard và Roadmap hiển thị phase/track; mở được một lesson.
@@ -64,7 +71,7 @@ Portable data mặc định nằm ở `%LOCALAPPDATA%\JourneyAIEngineer`; xóa d
 Dùng [Bug report form](https://github.com/Hzyl/JourneyAIEngineer/issues/new?template=bug_report.yml). Ghi:
 
 - Version/tag hoặc commit.
-- Mode: `Portable .exe` hay `Source clone`.
+- Mode: `Portable .exe`, `Source clone` hoặc `Web beta`.
 - Windows version, browser và viewport nếu liên quan.
 - Bước tái hiện tối thiểu.
 - Expected behavior và actual behavior.
@@ -97,7 +104,8 @@ Dùng [GitHub Discussions](https://github.com/Hzyl/JourneyAIEngineer/discussions
 ## Ranh giới beta đã biết
 
 - Chỉ portable Windows được đóng gói trong v0.1. Source clone cần môi trường phát triển.
-- Portable/source clone giữ tiến trình local, không có account, sync hoặc recovery trên cloud. Web beta sau này dùng account/cloud sync riêng, không tự merge dữ liệu SQLite local.
+- Portable/source clone giữ tiến trình local, không có account, sync hoặc recovery trên cloud.
+  Web beta dùng account/cloud sync riêng, không tự merge dữ liệu SQLite local.
 - App không gọi AI provider trực tiếp; context bridge chỉ tạo Markdown để người dùng tự gửi.
 - Local workspace runner có allowlist, timeout và output cap; không phải dịch vụ chạy code công khai.
 - Feedback public cần maintainer review; app không tự sửa hoặc push curriculum.

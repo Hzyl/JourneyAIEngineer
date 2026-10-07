@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "exercise_slug": "exercise-0-baseline",
+  "title_vi": "Tóm tắt điểm và xử lý dữ liệu thiếu",
+  "title_en": "Summarize scores and handle missing data",
+  "assessment_kind": "verified",
+  "test_command": "python -m unittest -v test_exercise.py"
+}

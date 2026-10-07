@@ -21,6 +21,9 @@ $Package = Get-Content -Raw -LiteralPath (Join-Path $ProjectRoot "package.json")
 if ([string]::IsNullOrWhiteSpace($Version)) {
     $Version = [string]$Package.version
 }
+if ($Version -ne [string]$Package.version) {
+    throw 'Release and source versions must match package.json. Update the version before packaging.'
+}
 if ($Version -notmatch '^[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?$') {
     throw "Version '$Version' is not a valid semantic version."
 }
@@ -28,7 +31,14 @@ if ([string]::IsNullOrWhiteSpace($OutputDir)) {
     $OutputDir = Join-Path $ProjectRoot ".build\releases"
 }
 $OutputDir = [IO.Path]::GetFullPath($OutputDir)
-$Stage = Join-Path $ProjectRoot ".build\release-stage-$Version"
+$Stage = Join-Path $ProjectRoot (".build\release-stage-$Version-" + [Guid]::NewGuid().ToString('N'))
+$BinaryOutput = Join-Path $ProjectRoot (".build\release-binary-$Version-" + [Guid]::NewGuid().ToString('N'))
+$SourceZip = Join-Path $OutputDir "JourneyAIEngineer-v$Version-source.zip"
+if (Test-Path -LiteralPath $SourceZip) { throw "Source ZIP already exists: use a new output directory." }
+$AllowedStage = [IO.Path]::GetFullPath((Join-Path $ProjectRoot '.build')) + [IO.Path]::DirectorySeparatorChar
+if (-not [IO.Path]::GetFullPath($Stage).StartsWith($AllowedStage, [StringComparison]::OrdinalIgnoreCase)) {
+    throw 'Release stage must remain inside the project build directory.'
+}
 $ZipName = "JourneyAIEngineer-v$Version-windows-x64.zip"
 $ZipPath = Join-Path $OutputDir $ZipName
 $HashPath = Join-Path $OutputDir "SHA256SUMS.txt"
@@ -38,6 +48,7 @@ if (-not (Test-Path -LiteralPath $Python)) { $Python = "python" }
 $Npm = (Get-Command npm -ErrorAction Stop).Source
 
 Write-Host "Running content validation..." -ForegroundColor Cyan
+Invoke-Checked $Python @("scripts/catalog_version.py")
 Invoke-Checked $Python @("scripts/validate_content.py")
 Write-Host "Running frontend lint/build..." -ForegroundColor Cyan
 Invoke-Checked $Npm @("run", "lint")
@@ -46,13 +57,12 @@ Write-Host "Running backend tests..." -ForegroundColor Cyan
 Invoke-Checked $Python @("-m", "pytest", "-q", "--basetemp", ".build\pytest-release", "-o", "cache_dir=.build\pytest-cache")
 
 Write-Host "Building portable executable..." -ForegroundColor Cyan
-& (Join-Path $ProjectRoot "scripts\build_exe.ps1")
+& (Join-Path $ProjectRoot "scripts\build_exe.ps1") -OutputDir $BinaryOutput
 if ($LASTEXITCODE -ne 0) { throw "build_exe.ps1 failed with exit code $LASTEXITCODE." }
 
-$Exe = Join-Path $ProjectRoot "JourneyAIEngineer.exe"
+$Exe = Join-Path $BinaryOutput "JourneyAIEngineer.exe"
 if (-not (Test-Path -LiteralPath $Exe)) { throw "Missing $Exe after build." }
 
-if (Test-Path -LiteralPath $Stage) { Remove-Item -LiteralPath $Stage -Recurse -Force }
 New-Item -ItemType Directory -Path $Stage, $OutputDir -Force | Out-Null
 Copy-Item -LiteralPath $Exe -Destination (Join-Path $Stage "JourneyAIEngineer.exe")
 Copy-Item -LiteralPath (Join-Path $ProjectRoot "README.md") -Destination $Stage
@@ -110,7 +120,9 @@ try {
 } finally {
     $sha256.Dispose()
 }
-"$Hash  $ZipName" | Set-Content -LiteralPath $HashPath -Encoding ascii
+Invoke-Checked $Python @("scripts/package_source.py", "--version", $Version, "--output", $OutputDir)
+$SourceChecksum = (Get-Content -Raw -LiteralPath "$SourceZip.sha256").Trim()
+@("$Hash  $ZipName", $SourceChecksum) | Set-Content -LiteralPath $HashPath -Encoding ascii
 Remove-Item -LiteralPath $Stage -Recurse -Force
 Write-Host "Created $ZipPath" -ForegroundColor Green
 Write-Host "SHA256: $Hash" -ForegroundColor Green

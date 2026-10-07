@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "routes": [
+    {
+      "id": "foundation",
+      "title_vi": "Xây nền tảng",
+      "title_en": "Build the foundations",
+      "audience_vi": "Mới học lập trình hoặc chưa tự làm được một bài phân tích dữ liệu.",
+      "audience_en": "New to programming or not yet comfortable building a data analysis independently.",
+      "outcome_vi": "Một pipeline dữ liệu và mô hình baseline, có test và báo cáo lỗi.",
+      "outcome_en": "A data pipeline and baseline model with tests and an error report.",
+      "phase_ids": ["phase-00-onboarding", "phase-01-python-software", "phase-02-math-ml", "phase-03-classical-ml"],
+      "weekly_hours": [4, 6],
+      "next_vi": "Sau baseline, chọn ứng dụng LLM hoặc đào sâu ML. Bỏ qua phần đã biết bằng bài thực hành đầu vào.",
+      "next_en": "After the baseline, choose LLM applications or deeper ML. Use the entry exercise to skip familiar material."
+    },
+    {
+      "id": "application",
+      "title_vi": "Làm ứng dụng AI",
+      "title_en": "Build AI applications",
+      "audience_vi": "Đã viết được Python, dùng HTTP/JSON và đọc được lỗi chương trình.",
+      "audience_en": "Comfortable writing Python, using HTTP/JSON and debugging programs.",
+      "outcome_vi": "Trợ lý tài liệu tiếng Việt có trích nguồn, bộ câu hỏi đánh giá và báo cáo chi phí.",
+      "outcome_en": "A Vietnamese document assistant with citations, an evaluation set and a cost report.",
+      "phase_ids": ["phase-00-onboarding", "phase-08-genai-software", "phase-09-genai-ml-fundamentals", "phase-11-llm-application", "phase-12-genai-rag", "phase-17-genai-evaluation", "phase-18-genai-observability", "phase-19-genai-production", "phase-07-capstone-career"],
+      "weekly_hours": [6, 8],
+      "next_vi": "Thiếu Python: quay lại nền tảng. Học evaluation trước agent; advanced RAG, tool calling và MCP là phần mở rộng theo nhu cầu.",
+      "next_en": "Missing Python skills? Start with foundations. Learn evaluation before agents; advanced RAG, tool calling and MCP are optional extensions."
+    },
+    {
+      "id": "deep-ml",
+      "title_vi": "Đào sâu ML",
+      "title_en": "Go deeper into ML",
+      "audience_vi": "Muốn hiểu dữ liệu, huấn luyện và triển khai mô hình; sẵn sàng học toán song song.",
+      "audience_en": "Interested in data, model training and deployment, with mathematics learned alongside practice.",
+      "outcome_vi": "Thí nghiệm PyTorch tái lập được, so sánh baseline và dịch vụ inference có theo dõi.",
+      "outcome_en": "A reproducible PyTorch experiment, baseline comparison and monitored inference service.",
+      "phase_ids": ["phase-00-onboarding", "phase-01-python-software", "phase-02-math-ml", "phase-03-classical-ml", "phase-04-deep-learning", "phase-05-mlops", "phase-07-capstone-career"],
+      "weekly_hours": [8, 10],
+      "next_vi": "Transformer và fine-tuning là nhánh tiếp theo. Chỉ tăng độ phức tạp khi baseline và evaluation đã ổn.",
+      "next_en": "Continue with transformers and fine-tuning when relevant. Increase complexity only after establishing a baseline and evaluation."
+    }
+  ],
+  "workload_note_vi": "Giờ mỗi tuần là ngân sách gợi ý, không phải cam kết thời gian hoàn thành hay tìm việc. Thời lượng bài đọc chưa bao gồm debugging, ôn tập và portfolio.",
+  "workload_note_en": "Weekly hours are suggested budgets, not promises of completion or employment. Reading estimates exclude debugging, reviews and portfolio work."
+}
