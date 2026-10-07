@@ -140,6 +140,9 @@ export function AuthScreen({ loading }: { loading: boolean }) {
     : mode === 'sign_up'
       ? 'Dùng một email bạn có thể mở ngay để xác nhận tài khoản.'
       : 'Chúng tôi sẽ gửi đường dẫn đặt lại mật khẩu tới email của bạn.'
+  const noticeTitle = error
+    ? mode === 'sign_in' ? 'Không thể đăng nhập' : mode === 'sign_up' ? 'Không thể tạo tài khoản' : 'Không thể gửi email'
+    : awaitingConfirmation ? 'Xác nhận email để tiếp tục' : 'Kiểm tra hộp thư của bạn'
 
   return <main className="auth-shell">
     <section className="auth-frame" aria-busy={loading || busy || resending}>
@@ -159,7 +162,7 @@ export function AuthScreen({ loading }: { loading: boolean }) {
       <section className="auth-form-panel" aria-labelledby="auth-title">
         <div className="auth-mode-switch" role="tablist" aria-label="Chọn cách truy cập">
           <button type="button" role="tab" aria-selected={mode === 'sign_in'} className={mode === 'sign_in' ? 'is-active' : ''} onClick={() => switchMode('sign_in')}>Đăng nhập</button>
-          <button type="button" role="tab" aria-selected={mode === 'sign_up'} className={mode === 'sign_up' ? 'is-active' : ''} onClick={() => switchMode('sign_up')}>Tạo tài khoản</button>
+          <button type="button" role="tab" aria-selected={mode === 'sign_up'} className={mode === 'sign_up' ? 'is-active' : 'auth-mode-cta'} onClick={() => switchMode('sign_up')}>Tạo tài khoản</button>
         </div>
         <div className="auth-heading">
           <span className="eyebrow accent">TÀI KHOẢN CỦA BẠN</span>
@@ -167,21 +170,26 @@ export function AuthScreen({ loading }: { loading: boolean }) {
           <p>{description}</p>
         </div>
 
+        {(message || error) && <div className={error ? 'auth-notice is-error' : 'auth-notice is-success'} role={error ? 'alert' : 'status'} aria-live="polite">
+          <span className="auth-notice-mark" aria-hidden="true">{error ? '!' : '✓'}</span>
+          <div className="auth-notice-copy"><strong>{noticeTitle}</strong><span>{error || message}</span></div>
+          {awaitingConfirmation && <button type="button" className="secondary-button" onClick={() => void resendConfirmation()} disabled={disabled}>{resending ? 'Đang gửi…' : 'Gửi lại email xác nhận'}</button>}
+        </div>}
+
         <form className="auth-form" onSubmit={(event) => void submit(event)} noValidate>
           <label className="auth-field"><span>Email</span><input type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} disabled={disabled} placeholder="ban@example.com" required /></label>
           {mode !== 'reset' && <PasswordField label="Mật khẩu" value={password} onChange={setPassword} autoComplete={mode === 'sign_in' ? 'current-password' : 'new-password'} disabled={disabled} invalid={mode === 'sign_up' && confirmation.length > 0 && password !== confirmation} />}
           {mode === 'sign_up' && <PasswordField label="Nhập lại mật khẩu" value={confirmation} onChange={setConfirmation} autoComplete="new-password" disabled={disabled} invalid={confirmation.length > 0 && password !== confirmation} />}
           {mode === 'sign_up' && <p className="field-hint">Ít nhất 8 ký tự. Hãy dùng mật khẩu riêng, không dùng mật khẩu GitHub.</p>}
-          <button className="primary-button auth-submit" disabled={disabled} type="submit">{loading || busy ? 'Đang xử lý…' : mode === 'sign_in' ? 'Đăng nhập' : mode === 'sign_up' ? 'Tạo tài khoản và xác nhận email' : 'Gửi email khôi phục'}</button>
+          <button className={`primary-button auth-submit${mode === 'sign_up' ? ' auth-submit-signup' : ''}`} disabled={disabled} type="submit">{loading || busy ? 'Đang xử lý…' : mode === 'sign_in' ? 'Đăng nhập' : mode === 'sign_up' ? 'Tạo tài khoản và xác nhận email' : 'Gửi email khôi phục'}</button>
         </form>
-
-        {(message || error) && <div className={error ? 'auth-notice is-error' : 'auth-notice is-success'} role={error ? 'alert' : 'status'} aria-live="polite"><strong>{error ? 'Chưa thể hoàn tất' : awaitingConfirmation ? 'Cần xác nhận email' : 'Đã gửi email'}</strong><span>{error || message}</span>{awaitingConfirmation && <button type="button" className="secondary-button" onClick={() => void resendConfirmation()} disabled={disabled}>{resending ? 'Đang gửi…' : 'Gửi lại email xác nhận'}</button>}</div>}
 
         <div className="auth-secondary-actions">
           {mode !== 'reset' && <button type="button" className="text-button" onClick={() => switchMode('reset')}>Quên mật khẩu?</button>}
           {mode === 'reset' && <button type="button" className="text-button" onClick={() => switchMode('sign_in')}>Quay về đăng nhập</button>}
           {awaitingConfirmation && <button type="button" className="text-button" onClick={() => switchMode('sign_up')}>Dùng email khác</button>}
         </div>
+        {mode === 'sign_in' && <button type="button" className="auth-create-account-link" onClick={() => switchMode('sign_up')}><span>Bạn chưa có tài khoản?</span><strong>Tạo tài khoản miễn phí →</strong></button>}
         <p className="auth-privacy-note">Không có API key, source code hay thư mục trên máy của bạn được gửi lên web beta.</p>
       </section>
     </section>

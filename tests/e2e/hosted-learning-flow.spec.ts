@@ -10,6 +10,7 @@ test('hosted browser starts with account boundary and never calls local FastAPI'
   await expect(page.getByRole('heading', { name: 'Chào mừng bạn trở lại' })).toBeVisible()
   await expect(page.getByText('Workspace, VS Code và Git vẫn dành cho bản desktop/source clone.')).toBeVisible()
   await expect(page.getByLabel('Email')).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Tạo tài khoản miễn phí →' })).toBeVisible()
   await page.getByRole('tab', { name: 'Tạo tài khoản' }).click()
   await expect(page.getByLabel('Nhập lại mật khẩu', { exact: true })).toBeVisible()
   await page.getByLabel('Email').fill('learner@example.com')
