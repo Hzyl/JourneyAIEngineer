@@ -7,9 +7,9 @@
   grid-template-columns: 1.8fr 1fr;
   gap: 48px;
   padding: 38px;
-  border: 1px solid #ced8dc;
+  border: 1px solid var(--line);
   border-radius: 16px;
-  background: #fff;
+  background: var(--surface);
 }
 .today-next h2 {
   font-family: var(--display-font);
@@ -20,16 +20,16 @@
 .today-next p {
   font-size: 16px;
   line-height: 1.65;
-  color: #46566a;
+  color: var(--muted);
 }
 .today-rhythm {
-  border-left: 1px solid #d4dce1;
+  border-left: 1px solid var(--line);
   padding-left: 32px;
 }
 .today-rhythm > span {
   font-size: 12px;
   font-weight: 650;
-  color: #46566a;
+  color: var(--muted);
 }
 .today-rhythm > strong {
   display: block;
@@ -40,7 +40,7 @@
 .today-stats small {
   font-size: 14px;
   font-weight: 400;
-  color: #46566a;
+  color: var(--muted);
 }
 .today-stats {
   display: grid;
@@ -52,15 +52,15 @@
 .today-stats > button {
   padding: 22px;
   text-align: left;
-  border: 1px solid #d4dce1;
+  border: 1px solid var(--field-border);
   border-radius: 12px;
-  background: #fff;
-  color: #172335;
+  background: var(--surface);
+  color: var(--ink);
 }
 .today-stats span {
   display: block;
   font-size: 14px;
-  color: #46566a;
+  color: var(--muted);
 }
 .today-stats strong {
   display: block;
@@ -70,7 +70,7 @@
 .today-evidence-note {
   font-size: 14px;
   line-height: 1.6;
-  color: #46566a;
+  color: var(--muted);
   margin: 16px 0 28px;
 }
 .today-session form {
@@ -86,10 +86,10 @@
 .today-session input {
   min-width: 0;
   padding: 12px;
-  border: 1px solid #8898a6;
+  border: 1px solid var(--field-border);
   border-radius: 8px;
-  background: #fff;
-  color: #172335;
+  background: var(--surface);
+  color: var(--ink);
 }
 .today-session p {
   line-height: 1.6;
@@ -101,7 +101,7 @@
   margin-top: 24px;
 }
 .today-links button {
-  color: #075f88;
+  color: var(--link);
   background: transparent;
   border: 0;
   min-height: 44px;
@@ -114,7 +114,7 @@
   }
   .today-rhythm {
     border-left: 0;
-    border-top: 1px solid #d4dce1;
+    border-top: 1px solid var(--line);
     padding: 24px 0 0;
   }
   .today-stats,

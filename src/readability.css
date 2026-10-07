@@ -1,39 +1,32 @@
 :root {
   --display-font: "Segoe UI", system-ui, sans-serif;
-  --ink: #172335;
-  --muted: #4a596c;
-  --paper: #f7f8fa;
-  --surface: #ffffff;
-  --line: #cdd6de;
-  --teal: #08685e;
-  --teal-dark: #07574f;
-  --orange: #ad4b21;
+
 }
 .app-shell {
   color: var(--ink);
   background: var(--paper);
 }
 .app-shell .sidebar {
-  background: #172b3d;
+  background: var(--sidebar-bg);
 }
 .app-shell .sidebar-intro,
 .app-shell .sidebar-footer,
 .app-shell .nav-item,
 .app-shell .nav-item small,
 .app-shell .brand-lockup span {
-  color: #bdcdd9;
+  color: var(--sidebar-muted);
 }
 .app-shell .nav-item.active,
 .app-shell .nav-item:hover {
-  background: #29475e;
-  border-color: #6d8fa5;
-  color: white;
+  background: var(--sidebar-hover);
+  border-color: var(--sidebar-line);
+  color: var(--sidebar-text);
 }
 .app-shell .nav-item.active small {
-  color: #e2ebf1;
+  color: var(--sidebar-text);
 }
 .app-shell .nav-item.active {
-  box-shadow: inset 3px 0 #7edbcb;
+  box-shadow: inset 3px 0 var(--teal);
 }
 .app-shell button:focus-visible,
 .app-shell a:focus-visible,
@@ -41,20 +34,20 @@
 .app-shell textarea:focus-visible,
 .app-shell select:focus-visible,
 .app-shell summary:focus-visible {
-  outline: 3px solid #096fbd;
+  outline: 3px solid var(--focus);
   outline-offset: 3px;
 }
 .app-shell .primary-button {
-  background: #08685e;
-  color: white;
+  background: var(--teal);
+  color: var(--on-accent);
   min-height: 44px;
 }
 .app-shell .secondary-button,
 .app-shell .text-button {
-  color: #075f88;
+  color: var(--link);
 }
 .app-shell .lesson-detail {
-  color: #172335;
+  color: var(--ink);
 }
 .app-shell .lesson-detail h1 {
   font-family: var(--display-font);
@@ -66,34 +59,34 @@
 .app-shell .concept-copy,
 .app-shell .lesson-check-block,
 .app-shell .review-card p {
-  color: #35475b;
+  color: var(--ink);
   font-size: 16px;
   line-height: 1.75;
 }
 .app-shell .lesson-section {
-  background: #fff;
-  border-color: #cdd6de;
+  background: var(--surface);
+  border-color: var(--line);
 }
 .app-shell .review-card {
-  background: #fff;
-  color: #172335;
+  background: var(--surface);
+  color: var(--ink);
 }
 .app-shell .review-card textarea {
   font-size: 16px;
-  color: #172335;
-  border-color: #8898a6;
+  color: var(--ink);
+  border-color: var(--field-border);
 }
 .app-shell .rating-row button {
   min-height: 44px;
-  border: 1px solid #728496;
-  background: white;
-  color: #172335;
+  border: 1px solid var(--field-border);
+  background: var(--surface);
+  color: var(--ink);
 }
 .app-shell .rating-row button.good,
 .app-shell .rating-row button.easy {
-  background: #08685e;
-  color: white;
-  border-color: #08685e;
+  background: var(--teal);
+  color: var(--on-accent);
+  border-color: var(--field-border);
 }
 .app-shell .topbar h1 {
   font-family: var(--display-font);

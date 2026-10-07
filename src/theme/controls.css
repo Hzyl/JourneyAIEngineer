@@ -1,0 +1,121 @@
+html,
+body {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+button,
+input,
+textarea,
+select,
+option {
+  color: inherit;
+}
+
+input,
+textarea,
+select {
+  accent-color: var(--teal);
+  caret-color: var(--ink);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--muted);
+  opacity: 1;
+}
+
+::selection {
+  color: var(--on-accent);
+  background: var(--teal);
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.theme-toggle,
+.public-nav button.theme-toggle {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--field-border);
+  border-radius: 9px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.theme-toggle:hover,
+.public-nav button.theme-toggle:hover {
+  background: var(--surface-subtle);
+}
+
+.auth-theme-toolbar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.auth-intro .eyebrow {
+  color: var(--sidebar-muted);
+}
+
+.auth-form-panel .brand-lockup span {
+  color: var(--muted);
+}
+
+.auth-callback .auth-notice {
+  display: block;
+}
+
+.app-shell .sidebar-footer small {
+  display: block;
+  margin-top: 8px;
+  line-height: 1.6;
+}
+
+.app-shell .status-dot span {
+  background: var(--sidebar-accent);
+}
+
+.auth-shell .auth-submit-signup {
+  background: var(--cta);
+  border-color: var(--cta);
+  color: var(--on-accent);
+}
+
+.auth-shell .auth-submit-signup:hover:not(:disabled),
+.auth-shell .auth-submit-signup:focus-visible:not(:disabled) {
+  background: var(--cta-hover);
+  border-color: var(--cta-hover);
+}
+
+.topbar-actions,
+.public-nav,
+.public-nav nav {
+  flex-wrap: wrap;
+}
+
+.topbar-actions {
+  min-width: 0;
+}
+
+@media (max-width: 600px) {
+  .public-nav nav {
+    gap: 6px;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .public-nav {
+    gap: 12px;
+  }
+}

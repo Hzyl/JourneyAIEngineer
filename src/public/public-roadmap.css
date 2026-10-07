@@ -6,15 +6,15 @@
 .route-choices button {
   min-height: 46px;
   padding: 10px 20px;
-  background: white;
+  background: var(--surface);
   color: var(--public-ink);
-  border: 1px solid #88979f;
+  border: 1px solid var(--field-border);
   border-radius: 8px;
 }
 .route-choices button[aria-pressed="true"] {
-  background: var(--public-ink);
-  color: white;
-  border-color: var(--public-ink);
+  background: var(--teal);
+  color: var(--on-accent);
+  border-color: var(--teal);
 }
 .route-phases {
   padding-left: 28px;
@@ -22,7 +22,7 @@
 }
 .route-phases > li {
   padding: 12px;
-  border-bottom: 1px solid #d8dce0;
+  border-bottom: 1px solid var(--line);
 }
 .public-shell summary {
   cursor: pointer;
@@ -34,6 +34,6 @@
   gap: 48px;
 }
 .public-footer {
-  border-top: 1px solid #d8dce0;
+  border-top: 1px solid var(--line);
   font-size: 14px;
 }

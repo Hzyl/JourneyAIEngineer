@@ -1,3 +1,4 @@
+import { ThemeToggle } from '../theme/ThemeToggle'
 import { useId, useState } from 'react'
 import { requireSupabase } from '../platform/hosted/supabase-client'
 import { describeAuthError, isUnconfirmedEmailError, passwordValidationError } from './auth-utils'
@@ -160,6 +161,7 @@ export function AuthScreen({ loading }: { loading: boolean }) {
       </aside>
 
       <section className="auth-form-panel" aria-labelledby="auth-title">
+        <div className="auth-theme-toolbar"><ThemeToggle /></div>
         <div className="auth-mode-switch" role="tablist" aria-label="Chọn cách truy cập">
           <button type="button" role="tab" aria-selected={mode === 'sign_in'} className={mode === 'sign_in' ? 'is-active' : ''} onClick={() => switchMode('sign_in')}>Đăng nhập</button>
           <button type="button" role="tab" aria-selected={mode === 'sign_up'} className={mode === 'sign_up' ? 'is-active' : 'auth-mode-cta'} onClick={() => switchMode('sign_up')}>Tạo tài khoản</button>

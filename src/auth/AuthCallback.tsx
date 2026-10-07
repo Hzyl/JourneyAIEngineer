@@ -1,3 +1,4 @@
+import { ThemeToggle } from '../theme/ThemeToggle'
 import { useEffect, useState } from 'react'
 import { useAuth } from './AuthProvider'
 import { requireSupabase } from '../platform/hosted/supabase-client'
@@ -57,6 +58,7 @@ export function AuthCallback() {
   return <main className="auth-shell">
     <section className="auth-frame auth-callback" aria-busy={auth.state === 'loading' || busy}>
       <section className="auth-form-panel">
+        <div className="auth-theme-toolbar"><ThemeToggle /></div>
         <div className="brand-lockup"><div className="brand-mark">J</div><div><strong>Journey</strong><span>AI Engineer</span></div></div>
         {callbackError ? <div className="auth-heading">
           <span className="eyebrow accent">LIÊN KẾT KHÔNG HỢP LỆ</span>

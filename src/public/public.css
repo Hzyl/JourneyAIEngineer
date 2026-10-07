@@ -1,8 +1,8 @@
 .public-shell {
-  --public-ink: #172335;
-  --public-muted: #4a596c;
-  --public-accent: #08685e;
-  background: #faf9f5;
+  --public-ink: var(--ink);
+  --public-muted: var(--muted);
+  --public-accent: var(--teal);
+  background: var(--paper);
   color: var(--public-ink);
   min-height: 100vh;
   font-size: 16px;
@@ -14,12 +14,12 @@
   touch-action: manipulation;
 }
 .public-shell a {
-  color: #075f88;
+  color: var(--link);
   text-underline-offset: 4px;
 }
 .public-shell :focus-visible,
 .public-auth :focus-visible {
-  outline: 3px solid #096fbd;
+  outline: 3px solid var(--focus);
   outline-offset: 4px;
 }
 .public-nav,
@@ -33,11 +33,11 @@
   gap: 20px;
 }
 .public-nav {
-  border-bottom: 1px solid #d8dce0;
+  border-bottom: 1px solid var(--line);
 }
 .public-nav button,
 .public-back {
-  color: #172335;
+  color: var(--ink);
   border: 0;
   background: transparent;
   padding: 10px 12px;
@@ -64,7 +64,7 @@
   align-items: center;
 }
 .public-nav .public-login {
-  border: 1px solid #728091;
+  border: 1px solid var(--line);
   border-radius: 8px;
   padding-inline: 18px;
 }
@@ -131,10 +131,10 @@
 }
 .public-primary {
   background: var(--public-accent);
-  color: white;
+  color: var(--on-accent);
 }
 .public-primary:hover {
-  background: #064e47;
+  background: var(--teal-dark);
 }
 .public-secondary {
   background: transparent;
@@ -145,11 +145,11 @@
   font-size: 14px;
 }
 .public-artifact {
-  border: 1px solid #bdc8cd;
+  border: 1px solid var(--line);
   border-radius: 16px;
-  background: #fff;
+  background: var(--surface);
   padding: 32px;
-  box-shadow: 8px 8px 0 #e2e8e6;
+  box-shadow: 8px 8px 0 var(--line);
 }
 .public-artifact h2 {
   font-size: 28px;
@@ -157,7 +157,7 @@
 }
 .artifact-filename {
   padding: 10px 16px;
-  background: #e9eef2;
+  background: var(--surface-subtle);
   border-radius: 8px 8px 0 0;
   font-family: monospace;
   font-size: 13px;
@@ -165,8 +165,8 @@
 .public-shell pre {
   white-space: pre;
   overflow-x: auto;
-  background: #172335;
-  color: #edf5fa;
+  background: var(--code-bg);
+  color: var(--code-text);
   border-radius: 8px;
   padding: 20px;
   line-height: 1.65;
@@ -178,14 +178,14 @@
   border-radius: 0 0 8px 8px;
 }
 .artifact-check {
-  color: #07594c;
+  color: var(--success-text);
   font-size: 14px;
   font-weight: 650;
 }
 .public-samples,
 .public-roadmap,
 .public-modes {
-  border-top: 1px solid #d0d7dc;
+  border-top: 1px solid var(--line);
   padding: 64px 0;
 }
 .public-section-heading {
@@ -211,13 +211,13 @@
   gap: 18px;
   text-align: left;
   border: 0;
-  border-top: 1px solid #d8dce0;
+  border-top: 1px solid var(--field-border);
   background: transparent;
   padding: 20px 6px;
   color: var(--public-ink);
 }
 .public-lesson-list button:hover {
-  background: #edf2ee;
+  background: var(--surface-subtle);
 }
 .public-lesson-list button > span:last-child {
   margin-left: auto;

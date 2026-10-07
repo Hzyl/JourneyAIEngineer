@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { checkThemeContrast } from './theme-checks'
 
 test('guest reads a lesson before the account boundary and never calls local FastAPI', async ({ page }) => {
   const localApiRequests: string[] = []
@@ -43,3 +44,62 @@ test('public landing and route selection work on mobile without private writes',
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
   expect(writes).toEqual([])
 })
+
+for (const theme of ['light', 'dark'] as const) {
+  test(`${theme} callback and recovery feedback remain readable`, async ({ page }) => {
+    await page.emulateMedia({ colorScheme: theme })
+    for (const width of [1440, 390]) {
+      await page.setViewportSize({ width, height: 900 })
+      await page.goto('/auth/callback?error_description=Link%20expired')
+      await expect(page.getByRole('heading', { name: 'Không thể xác nhận tài khoản' })).toBeVisible()
+      await checkThemeContrast(page)
+      await page.goto('/auth/callback?mode=recovery')
+      await expect(page.getByRole('heading', { name: 'Đặt lại mật khẩu' })).toBeVisible()
+      await checkThemeContrast(page)
+      await page.screenshot({ path: `.build/theme-evidence/recovery-${theme}-${width}.png`, fullPage: true })
+    }
+  })
+
+  test(`${theme} guest, selected route, lesson and auth feedback keep readable colors`, async ({ page }) => {
+    await page.emulateMedia({ colorScheme: theme })
+    for (const width of [1440, 390]) {
+      await page.setViewportSize({ width, height: 1000 })
+      await page.goto('/')
+      await expect(page.locator('.public-hero')).toBeVisible()
+      await checkThemeContrast(page)
+      await page.getByRole('button', { name: 'Khám phá lộ trình' }).click()
+      await page.getByRole('button', { name: 'Làm ứng dụng AI', exact: true }).click()
+      await checkThemeContrast(page)
+      await page.goto('/lesson/phase-00-onboarding-environment-1')
+      await expect(page.locator('.public-lesson')).toBeVisible()
+      await checkThemeContrast(page)
+      await page.getByRole('button', { name: 'Đăng nhập để lưu' }).click()
+      await expect(page.getByLabel('Email')).toBeVisible()
+      const back = await page.locator('.public-auth > .public-back').boundingBox()
+      const brand = await page.locator('.auth-intro .brand-lockup').boundingBox()
+      expect(back && brand && back.y + back.height <= brand.y).toBeTruthy()
+      await checkThemeContrast(page)
+      await page.getByRole('tab', { name: 'Tạo tài khoản' }).click()
+      await page.getByLabel('Email').fill('learner@example.com')
+      await page.getByLabel('Mật khẩu', { exact: true }).fill('secure-pass')
+      await page.getByLabel('Nhập lại mật khẩu', { exact: true }).fill('different-pass')
+      await page.getByRole('button', { name: 'Tạo tài khoản và xác nhận email' }).click()
+      await expect(page.getByRole('alert')).toBeVisible()
+      await checkThemeContrast(page)
+      await page.screenshot({ path: `.build/theme-evidence/auth-${theme}-${width}.png`, fullPage: true })
+      await page.route('https://example.supabase.co/auth/v1/signup*', (route) => route.fulfill({ json: {
+        user: { id: '00000000-0000-4000-8000-000000000001', email: 'learner@example.com',
+          identities: [{ id: '00000000-0000-4000-8000-000000000001' }] }, session: null,
+      } }))
+      await page.getByLabel('Nhập lại mật khẩu', { exact: true }).fill('secure-pass')
+      await page.getByRole('button', { name: 'Tạo tài khoản và xác nhận email' }).click()
+      await expect(page.locator('.auth-notice.is-success')).toBeVisible()
+      await checkThemeContrast(page)
+      const target = theme === 'dark' ? 'sáng' : 'tối'
+      await page.getByRole('button', { name: `Chuyển sang giao diện ${target}` }).click()
+      await expect(page.locator('html')).toHaveAttribute('data-theme', theme === 'dark' ? 'light' : 'dark')
+      await checkThemeContrast(page)
+      await page.getByRole('button', { name: `Chuyển sang giao diện ${theme === 'dark' ? 'tối' : 'sáng'}` }).click()
+    }
+  })
+}

@@ -3,6 +3,7 @@ import { AuthScreen } from '../auth/AuthScreen'
 import type { CatalogLesson } from '../platform/hosted/catalog'
 import { PublicLesson } from './PublicLesson'
 import { PublicRoadmap } from './PublicRoadmap'
+import { ThemeToggle } from '../theme/ThemeToggle'
 import './public.css'
 import './public-lesson.css'
 import './public-roadmap.css'
@@ -60,6 +61,7 @@ export function PublicExperience() {
         <span aria-hidden="true">J/</span> Journey <strong>AI Engineer</strong>
       </button>
       <nav aria-label={vi ? 'Điều hướng chính' : 'Main navigation'}>
+        <ThemeToggle language={language} />
         <button onClick={() => navigate('roadmap')}>{vi ? 'Lộ trình' : 'Roadmap'}</button>
         <button onClick={() => setLanguage(vi ? 'en' : 'vi')} aria-label={vi ? 'Switch to English' : 'Đổi sang tiếng Việt'}>
           {vi ? 'EN' : 'VI'}

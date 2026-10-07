@@ -23,26 +23,29 @@
 }
 .public-practice,
 .public-save {
-  background: #eaf1ed;
-  border-left: 4px solid #08685e;
+  background: var(--surface-subtle);
+  border-left: 4px solid var(--line);
   padding: 24px 28px;
 }
 .public-question {
   padding: 16px 0;
-  border-bottom: 1px solid #d8dce0;
+  border-bottom: 1px solid var(--line);
 }
 .public-question summary {
   font-weight: 600;
 }
 .public-auth {
-  background: #faf9f5;
+  background: var(--paper);
   min-height: 100vh;
 }
 .public-auth > .public-back {
-  position: absolute;
-  z-index: 5;
-  top: 12px;
-  left: 16px;
+  display: block;
+  position: static;
+  margin: 12px 24px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--field-border);
+  border-radius: 8px;
 }
 @media (max-width: 820px) {
   .public-nav,
