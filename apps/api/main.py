@@ -24,8 +24,11 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from apps.api.backup_journal import journal_targets, restore_journal
+from apps.api.backup_journal import journal_targets
+from apps.api.backup_lock import BackupBusyError
+from apps.api.backup_recovery import guarded_restore, recover_backup_import, restore_transaction
 from apps.api.backup_identity import metadata_warnings, remap_review_keys
+from apps.api.backup_validation import validate_backup_values
 from apps.api.learning_mutations import begin_mutation, ensure_mutations, finish_mutation
 from apps.api.security_audit import audit_app
 from apps.api.review_queue import learning_review_queue, review_counts
@@ -567,6 +570,7 @@ def init_db() -> None:
     DATA_ROOT.mkdir(parents=True, exist_ok=True)
     WORKSPACE_ROOT.mkdir(parents=True, exist_ok=True)
     JOURNAL_ROOT.mkdir(parents=True, exist_ok=True)
+    recover_backup_import(connect, JOURNAL_ROOT, DATA_ROOT / "backup-restore.lock")
     with connect() as db:
         db.executescript(
             """
@@ -2210,12 +2214,7 @@ def _normalize_backup_payload(payload: dict[str, Any]) -> dict[str, Any]:
 
 
 def _validate_backup_payload(payload: dict[str, Any]) -> list[str]:
-    errors: list[str] = []
-    if payload.get("schema_version") != BACKUP_SCHEMA_VERSION:
-        errors.append(f"Unsupported backup schema_version: {payload.get('schema_version')!r}")
-    for key, expected in (("settings", dict), ("progress", list), ("review_state", list), ("review_history", list), ("notes", list), ("study_sessions", list), ("journal_files", list)):
-        if not isinstance(payload.get(key), expected):
-            errors.append(f"{key} must be a {expected.__name__}")
+    errors = validate_backup_values(payload)
     if errors:
         return errors
     with connect() as db:
@@ -2290,6 +2289,9 @@ def preview_backup(request_data: BackupImportRequest, request: Request = None) -
         "counts": {key: len(value) for key in ("progress", "review_state", "review_history", "notes", "study_sessions", "journal_files")
                    if isinstance(value := request_data.payload.get(key), list)},
         "replaces": existing,
+        "journal_conflicts": [path.relative_to(JOURNAL_ROOT.resolve()).as_posix()
+                              for path, _ in journal_targets(JOURNAL_ROOT, request_data.payload["journal_files"])
+                              if path.exists()] if not errors else [],
         "warnings": metadata_warnings(request_data.payload, catalog),
     }
 
@@ -2303,32 +2305,34 @@ def import_backup(request_data: BackupImportRequest, request: Request = None) ->
         raise HTTPException(422, {"message": "Backup validation failed", "errors": errors})
     if not request_data.confirm:
         raise HTTPException(400, "Set confirm=true after reviewing the backup preview.")
-    safety_payload = _build_backup_payload()
-    safety_json, safety_markdown = _write_backup_files(safety_payload)
-    payload = request_data.payload
-    with restore_journal(JOURNAL_ROOT, payload["journal_files"]) as restored_files:
-        with connect() as db:
-            db.execute("BEGIN")
-            db.execute("DELETE FROM review_history")
-            db.execute("DELETE FROM review_state")
-            db.execute("DELETE FROM progress")
-            db.execute("DELETE FROM notes")
-            db.execute("DELETE FROM study_sessions")
-            db.execute("DELETE FROM settings")
-            lesson_ids = {row["slug"]: row["id"] for row in db.execute("SELECT id,slug FROM lessons").fetchall()}
-            for row in payload["progress"]:
-                db.execute("INSERT INTO progress(lesson_id,status,minutes_spent,completed_at,updated_at) VALUES(?,?,?,?,?)", (lesson_ids[row["lesson_slug"]], row["status"], row["minutes_spent"], row.get("completed_at"), row.get("updated_at") or now_iso()))
-            for row in payload["review_state"]:
-                db.execute("INSERT INTO review_state(card_id,due_at,interval_days,repetitions,ease_factor,lapses,leech,suspended,last_reviewed_at) VALUES(?,?,?,?,?,?,?,?,?)", (row["id"], row.get("due_at") or now_iso(), row.get("interval_days", 0), row.get("repetitions", 0), row.get("ease_factor", 2.5), row.get("lapses", 0), row.get("leech", 0), row.get("suspended", 0), row.get("last_reviewed_at")))
-            for row in payload["review_history"]:
-                db.execute("INSERT INTO review_history(review_id,rating,thought_seconds,answer_text,created_at) VALUES(?,?,?,?,?)", (row["review_id"], row["rating"], row.get("thought_seconds", 0), row.get("answer_text", ""), row.get("created_at") or now_iso()))
-            for row in payload["notes"]:
-                db.execute("INSERT INTO notes(lesson_id,title,body,created_at,updated_at) VALUES(?,?,?,?,?)", (lesson_ids.get(row.get("lesson_slug")) if row.get("lesson_slug") else None, row.get("title", "Imported note"), row.get("body", ""), row.get("created_at") or now_iso(), row.get("updated_at") or now_iso()))
-            for row in payload["study_sessions"]:
-                db.execute("INSERT INTO study_sessions(lesson_id,minutes,note,created_at) VALUES(?,?,?,?)", (lesson_ids.get(row.get("lesson_slug")) if row.get("lesson_slug") else None, row.get("minutes", 0), row.get("note", ""), row.get("created_at") or now_iso()))
-            for key, value in payload["settings"].items():
-                if isinstance(key, str) and isinstance(value, str) and len(key) <= 100 and len(value) <= 1000:
-                    db.execute("INSERT INTO settings(key,value,updated_at) VALUES(?,?,?)", (key, value, now_iso()))
+    try:
+        with guarded_restore(connect, JOURNAL_ROOT, DATA_ROOT / "backup-restore.lock") as db:
+            safety_payload = _build_backup_payload()
+            safety_json, safety_markdown = _write_backup_files(safety_payload)
+            payload = request_data.payload
+            with restore_transaction(db, JOURNAL_ROOT, payload["journal_files"]) as restored_files:
+                db.execute("DELETE FROM review_history")
+                db.execute("DELETE FROM review_state")
+                db.execute("DELETE FROM progress")
+                db.execute("DELETE FROM notes")
+                db.execute("DELETE FROM study_sessions")
+                db.execute("DELETE FROM settings")
+                lesson_ids = {row["slug"]: row["id"] for row in db.execute("SELECT id,slug FROM lessons").fetchall()}
+                for row in payload["progress"]:
+                    db.execute("INSERT INTO progress(lesson_id,status,minutes_spent,completed_at,updated_at) VALUES(?,?,?,?,?)", (lesson_ids[row["lesson_slug"]], row["status"], row["minutes_spent"], row.get("completed_at"), row.get("updated_at") or now_iso()))
+                for row in payload["review_state"]:
+                    db.execute("INSERT INTO review_state(card_id,due_at,interval_days,repetitions,ease_factor,lapses,leech,suspended,last_reviewed_at) VALUES(?,?,?,?,?,?,?,?,?)", (row["id"], row.get("due_at") or now_iso(), row.get("interval_days", 0), row.get("repetitions", 0), row.get("ease_factor", 2.5), row.get("lapses", 0), row.get("leech", 0), row.get("suspended", 0), row.get("last_reviewed_at")))
+                for row in payload["review_history"]:
+                    db.execute("INSERT INTO review_history(review_id,rating,thought_seconds,answer_text,created_at) VALUES(?,?,?,?,?)", (row["review_id"], row["rating"], row.get("thought_seconds", 0), row.get("answer_text", ""), row.get("created_at") or now_iso()))
+                for row in payload["notes"]:
+                    db.execute("INSERT INTO notes(lesson_id,title,body,created_at,updated_at) VALUES(?,?,?,?,?)", (lesson_ids.get(row.get("lesson_slug")) if row.get("lesson_slug") else None, row.get("title", "Imported note"), row.get("body", ""), row.get("created_at") or now_iso(), row.get("updated_at") or now_iso()))
+                for row in payload["study_sessions"]:
+                    db.execute("INSERT INTO study_sessions(lesson_id,minutes,note,created_at) VALUES(?,?,?,?)", (lesson_ids.get(row.get("lesson_slug")) if row.get("lesson_slug") else None, row.get("minutes", 0), row.get("note", ""), row.get("created_at") or now_iso()))
+                for key, value in payload["settings"].items():
+                    if isinstance(key, str) and isinstance(value, str) and len(key) <= 100 and len(value) <= 1000:
+                        db.execute("INSERT INTO settings(key,value,updated_at) VALUES(?,?,?)", (key, value, now_iso()))
+    except BackupBusyError as error:
+        raise HTTPException(409, str(error)) from error
     sync_review_cards()
     return {"imported": True, "safety_backup_json": str(safety_json), "safety_backup_markdown": str(safety_markdown), "restored_journal_files": restored_files}
 

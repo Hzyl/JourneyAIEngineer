@@ -1,0 +1,115 @@
+.review-card,
+.review-activity,
+.review-empty {
+  overflow-wrap: anywhere;
+}
+
+.review-card-meta {
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 12px;
+}
+
+.review-answer-label {
+  display: grid;
+  gap: 8px;
+  font-size: 15px;
+}
+
+.app-shell .review-card textarea {
+  margin-top: 0;
+  min-height: 130px;
+}
+
+.review-card summary {
+  font-size: 15px;
+  padding-block: 10px;
+  min-height: 44px;
+}
+
+.review-card details p {
+  white-space: pre-wrap;
+}
+
+.review-card h3:focus-visible,
+.review-empty h3:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 6px;
+}
+
+.review-card .rating-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 10px;
+}
+
+.rating-row > span {
+  grid-column: 1 / -1;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.app-shell .rating-row button {
+  position: relative;
+  min-height: 88px;
+  padding: 12px;
+  text-align: left;
+}
+
+.rating-row strong,
+.rating-row small {
+  display: block;
+}
+
+.rating-row strong {
+  font-size: 15px;
+}
+
+.rating-row button[aria-busy="true"] strong {
+  padding-inline-end: 18px;
+}
+
+.rating-row button[aria-busy="true"]::after {
+  position: absolute;
+  top: 15px;
+  right: 12px;
+  margin: 0;
+}
+
+.rating-row small {
+  margin-top: 7px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.app-shell .review-card .review-rating-note {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.review-activity .review-history p,
+.review-activity .weak-topics p {
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.weak-topics p > span {
+  display: block;
+  font-size: 13px;
+}
+
+.review-activity > button {
+  margin-top: 14px;
+}
+
+@media (max-width: 600px) {
+  .review-card {
+    padding: 22px;
+  }
+
+  .review-card .rating-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

@@ -1,0 +1,37 @@
+.session-recovery {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: clamp(24px, 6vw, 64px) 24px;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.session-recovery h1 {
+  font-size: clamp(24px, 5vw, 36px);
+  line-height: 1.25;
+}
+
+.session-recovery p,
+.session-recovery button,
+.signout-control button,
+.signout-control p {
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.session-recovery button,
+.signout-control button {
+  min-height: 44px;
+}
+
+.signout-control {
+  min-width: 0;
+  max-width: 240px;
+}
+
+.signout-control p {
+  margin: 4px 0 0;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}

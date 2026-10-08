@@ -1,3 +1,5 @@
+import { readDeletionBody } from './request-body.ts'
+
 type Identity = { id: string; email?: string; factors?: { status: string }[] }
 export type DeletionServices = {
   identify: (token: string) => Promise<Identity | null>
@@ -21,10 +23,10 @@ export async function handleDeletion(request: Request, services: DeletionService
   const token = request.headers.get('Authorization')?.match(/^Bearer (\S+)$/i)?.[1]
   if (!token) return respond(401, 'authentication_required')
   try {
-    const text = await request.text()
-    if (text.length > 8192) return respond(413, 'body_too_large')
+    const input = await readDeletionBody(request)
+    if (!input.ok) return respond(input.status, input.code)
     let body
-    try { body = JSON.parse(text) } catch { return respond(400, 'invalid_request') }
+    try { body = JSON.parse(input.text) } catch { return respond(400, 'invalid_request') }
     if (!body || body.confirmation !== 'DELETE' || typeof body.password !== 'string'
       || !body.password || body.password.length > 4096) return respond(400, 'confirmation_required')
     const user = await services.identify(token)

@@ -1,0 +1,37 @@
+.delete-account {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.delete-account p,
+.delete-account label,
+.delete-account button {
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.delete-account form {
+  display: grid;
+  gap: 18px;
+}
+
+.delete-account label {
+  display: grid;
+  gap: 8px;
+}
+
+.delete-account input {
+  min-width: 0;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  font-size: 16px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--field-border);
+  border-radius: 8px;
+}
+
+.delete-account button {
+  min-height: 44px;
+}

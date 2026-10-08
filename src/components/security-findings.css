@@ -1,0 +1,165 @@
+.security-findings-card {
+  padding: 24px;
+}
+
+.security-findings-card .section-heading {
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.security-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.security-filters label {
+  display: grid;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.security-filters select {
+  min-width: 170px;
+  max-width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--field-border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.security-finding-list {
+  display: grid;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.security-finding {
+  padding: 20px 0;
+  border-top: 1px solid var(--line);
+}
+
+.security-finding-top,
+.security-finding-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.security-finding-top {
+  justify-content: space-between;
+}
+
+.security-finding-top code {
+  color: var(--muted);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.security-severity,
+.security-status {
+  display: inline-flex;
+  border-radius: 6px;
+  padding: 5px 8px;
+  background: var(--surface-subtle);
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.severity-critical,
+.severity-high {
+  background: var(--danger-bg);
+  color: var(--danger-text);
+}
+
+.severity-medium {
+  background: var(--warning-bg);
+  color: var(--warning-text);
+}
+
+.severity-info {
+  background: var(--success-bg);
+  color: var(--success-text);
+}
+
+.security-finding h4,
+.security-empty h4 {
+  font-size: 18px;
+  line-height: 1.4;
+  margin: 16px 0 12px;
+}
+
+.security-finding p {
+  color: var(--muted);
+  margin: 8px 0;
+}
+
+.security-finding p strong {
+  color: var(--ink);
+}
+
+.security-source {
+  display: block;
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 12px;
+  overflow-wrap: anywhere;
+}
+
+.security-empty {
+  padding: 20px 0;
+}
+
+.security-route-list {
+  display: grid;
+  gap: 8px;
+  max-height: 420px;
+  overflow: auto;
+  margin-top: 16px;
+}
+
+.security-route {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.security-route code {
+  display: block;
+  color: var(--teal-dark);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.security-route small,
+.security-route-read,
+.security-route-write {
+  display: block;
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 5px;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 700px) {
+  .security-findings-card {
+    padding: 16px;
+  }
+
+  .security-route {
+    display: block;
+  }
+
+  .security-filters label {
+    width: 100%;
+  }
+}

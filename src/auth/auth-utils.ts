@@ -20,8 +20,15 @@ export function passwordValidationError(password: string, confirmation: string):
   return null
 }
 
-export function describeAuthError(error: unknown): string {
+export function describeAuthError(error: unknown, language: 'vi' | 'en' = 'vi'): string {
   const { code, message } = details(error)
+  if (language === 'en') {
+    if (isUnconfirmedEmailError(error)) return 'This email is not confirmed. Open the confirmation email or request a new one.'
+    if (code === 'invalid_credentials' || message.includes('invalid login credentials')) return 'Email or password is incorrect.'
+    if (code === 'over_email_send_rate_limit' || message.includes('rate limit')) return 'Too many email requests. Wait a few minutes and retry.'
+    if (message.includes('password should be at least')) return 'Your password needs at least 8 characters.'
+    return 'Authentication could not be completed. Please try again in a few minutes.'
+  }
   if (isUnconfirmedEmailError(error)) return 'Email này chưa được xác nhận. Hãy mở email xác nhận hoặc yêu cầu gửi lại.'
   if (code === 'invalid_credentials' || message.includes('invalid login credentials')) return 'Email hoặc mật khẩu chưa đúng.'
   if (code === 'over_email_send_rate_limit' || message.includes('rate limit')) return 'Bạn vừa yêu cầu quá nhiều email. Hãy chờ ít phút rồi thử lại.'

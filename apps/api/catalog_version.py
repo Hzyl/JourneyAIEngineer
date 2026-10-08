@@ -7,7 +7,8 @@ from pathlib import Path
 def catalog_metadata(content: Path, app_version: str) -> dict:
     digest = hashlib.sha256()
     for path in sorted(content.rglob("*")):
-        if path.suffix not in {".json", ".md", ".py"} or path.name == "catalog-version.json":
+        is_content = path.suffix in {".json", ".md", ".py"} or path.name == "requirements.txt"
+        if not is_content or path.name == "catalog-version.json":
             continue
         text = path.read_text(encoding="utf-8-sig").replace("\r\n", "\n")
         if path.suffix == ".json":

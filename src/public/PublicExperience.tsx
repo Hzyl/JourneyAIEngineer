@@ -1,12 +1,16 @@
-import { useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { AuthScreen } from '../auth/AuthScreen'
 import type { CatalogLesson } from '../platform/hosted/catalog'
 import { PublicLesson } from './PublicLesson'
 import { PublicRoadmap } from './PublicRoadmap'
 import { ThemeToggle } from '../theme/ThemeToggle'
+import { usePublicLanguage } from './public-language'
+import { authReturnPath, publicPage } from './public-navigation'
 import './public.css'
 import './public-lesson.css'
 import './public-roadmap.css'
+
+const PublicExercises = lazy(() => import('./PublicExercises'))
 
 const samples = import.meta.glob<CatalogLesson>('../../content/curated/*.json', {
   eager: true,
@@ -18,40 +22,58 @@ const lessons = Object.values(samples).sort((a, b) => (
   lessonOrder.indexOf(a.module_id) - lessonOrder.indexOf(b.module_id) || a.lesson_id.localeCompare(b.lesson_id)
 ))
 
-function currentPage() {
-  const path = window.location.pathname
-  return path.startsWith('/lesson/') ? decodeURIComponent(path.slice(8)) : path === '/roadmap' ? 'roadmap' : 'home'
-}
-
 export function PublicExperience() {
-  const [language, setLanguage] = useState<'vi' | 'en'>('vi')
-  const [page, setPage] = useState(currentPage)
-  const [signIn, setSignIn] = useState(window.location.pathname.startsWith('/auth/'))
+  const [language, setLanguage] = usePublicLanguage()
+  const [page, setPage] = useState(publicPage)
   const main = useRef<HTMLElement>(null)
+  const lastPath = useRef(window.location.pathname)
   const vi = language === 'vi'
   const selectedLesson = lessons.find((lesson) => lesson.lesson_id === page)
 
   useEffect(() => {
-    const restore = () => { setPage(currentPage()); setSignIn(false) }
+    const restore = () => {
+      setPage(publicPage())
+      // In-page links keep native focus; only changing pages focuses the main region.
+      if (lastPath.current === window.location.pathname) return
+      lastPath.current = window.location.pathname
+      requestAnimationFrame(() => {
+        if (publicPage() === 'auth') document.getElementById('auth-title')?.focus()
+        else main.current?.focus()
+      })
+    }
     window.addEventListener('popstate', restore)
     return () => window.removeEventListener('popstate', restore)
   }, [])
 
   const navigate = (next: string) => {
     setPage(next)
-    setSignIn(false)
-    const path = next === 'home' ? '/' : next === 'roadmap' ? '/roadmap' : `/lesson/${encodeURIComponent(next)}`
+    const path = next === 'home' ? '/' : ['roadmap', 'exercises'].includes(next)
+      ? `/${next}` : `/lesson/${encodeURIComponent(next)}`
     window.history.pushState({}, '', path)
     window.dispatchEvent(new PopStateEvent('popstate'))
     window.scrollTo({ top: 0, behavior: 'instant' })
     requestAnimationFrame(() => main.current?.focus())
   }
 
-  if (signIn) return <div className="public-auth">
-    <button className="public-back" onClick={() => setSignIn(false)}>
+  const openSignIn = () => {
+    const next = window.location.pathname + window.location.search + window.location.hash
+    window.history.pushState({ publicAuth: true }, '', `/auth/sign-in?next=${encodeURIComponent(next)}`)
+    window.dispatchEvent(new PopStateEvent('popstate'))
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  }
+  const closeSignIn = () => {
+    if (window.history.state?.publicAuth) window.history.back()
+    else {
+      window.history.replaceState({}, '', authReturnPath())
+      window.dispatchEvent(new PopStateEvent('popstate'))
+    }
+  }
+  if (page === 'auth') return <div className="public-auth">
+    <div className="public-auth-toolbar"><button className="public-back" onClick={closeSignIn}>
       ← {vi ? 'Quay lại học thử' : 'Back to learning'}
-    </button>
-    <AuthScreen loading={false} />
+    </button><button className="public-back" onClick={() => setLanguage(vi ? 'en' : 'vi')}
+      aria-label={vi ? 'Switch to English' : 'Đổi sang tiếng Việt'}>{vi ? 'EN' : 'VI'}</button></div>
+    <AuthScreen loading={false} language={language} />
   </div>
 
   return <div className="public-shell">
@@ -62,18 +84,27 @@ export function PublicExperience() {
       </button>
       <nav aria-label={vi ? 'Điều hướng chính' : 'Main navigation'}>
         <ThemeToggle language={language} />
-        <button onClick={() => navigate('roadmap')}>{vi ? 'Lộ trình' : 'Roadmap'}</button>
+        <button onClick={() => navigate('roadmap')} aria-current={page === 'roadmap' ? 'page' : undefined}>
+          {vi ? 'Lộ trình' : 'Roadmap'}</button>
+        <button onClick={() => navigate('exercises')} aria-current={page === 'exercises' ? 'page' : undefined}>
+          {vi ? 'Bài tập' : 'Exercises'}</button>
         <button onClick={() => setLanguage(vi ? 'en' : 'vi')} aria-label={vi ? 'Switch to English' : 'Đổi sang tiếng Việt'}>
           {vi ? 'EN' : 'VI'}
         </button>
-        <button className="public-login" onClick={() => setSignIn(true)}>{vi ? 'Đăng nhập' : 'Sign in'}</button>
+        <button className="public-login" onClick={openSignIn}>{vi ? 'Đăng nhập' : 'Sign in'}</button>
       </nav>
     </header>
     <main id="public-main" ref={main} tabIndex={-1}>
       {selectedLesson ? <>
         <button className="public-back" onClick={() => navigate('home')}>← {vi ? 'Bài học mẫu' : 'Sample lessons'}</button>
-        <PublicLesson lesson={selectedLesson} language={language} onSignIn={() => setSignIn(true)} />
-      </> : page === 'roadmap' ? <PublicRoadmap language={language} /> : page !== 'home' ? <section>
+        <PublicLesson lesson={selectedLesson} language={language} onSignIn={openSignIn} />
+      </> : page === 'roadmap' ? <PublicRoadmap language={language} standalone onStart={() => navigate(firstSlug)} />
+        : page === 'exercises' ? <>
+        <h1 className="sr-only">{vi ? 'Bài tập' : 'Exercises'}</h1>
+        <Suspense fallback={<p role="status">{vi ? 'Đang tải bài tập…' : 'Loading exercises…'}</p>}>
+          <PublicExercises language={language} />
+        </Suspense>
+      </> : page !== 'home' ? <section>
         <h1>{vi ? 'Bài này chưa có trong bộ học thử' : 'This lesson is not in the sample collection'}</h1>
         <p>{vi ? 'Bạn có thể đọc 10 bài mẫu hoặc đăng nhập để mở toàn bộ thư viện.'
           : 'Read the ten sample lessons, or sign in to explore the full library.'}</p>
@@ -123,7 +154,7 @@ export function PublicExperience() {
             </button>
           </li>)}</ol>
         </section>
-        <PublicRoadmap language={language} />
+        <PublicRoadmap language={language} onStart={() => navigate(firstSlug)} />
         <section className="public-modes">
           <h2>{vi ? 'Học ở web. Thực hành ở local.' : 'Learn on the web. Practise locally.'}</h2>
           <div><article><h3>Web beta</h3><p>{vi ? 'Đọc bài ngay. Có tài khoản để lưu tiến độ, ghi chú và ôn tập riêng.'

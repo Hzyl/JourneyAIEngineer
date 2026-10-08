@@ -12,10 +12,11 @@ Deployment handoff checkpoint, **2026-10-07**:
 
 - The maintainer confirmed that the web beta is deployed. Its URL and live Cloudflare deployment were not
   independently checked during this documentation update.
-- GitHub `main` was checked and still points to `a4ebbc4`; local `main` has two pending auth commits:
-  `e8c2f4d` (signup confirmation and login recovery) and `5db2e8e` (account CTA and feedback states).
-- The earlier push failed to connect to `github.com:443`. A read-only GitHub check now succeeds;
-  the two auth commits still need to be pushed after maintainer confirmation.
+- Read-only `git ls-remote origin refs/heads/main` confirms GitHub `main` at
+  `94d3be844de58596c383f2fe20cf061bb3bfb72b`. This includes the auth, public-readiness,
+  theme and interaction-feedback commits; the earlier auth push blockage is resolved.
+- Exercise readers, reference-solution disclosure and guest bundle splitting are subsequent
+  local changes. They have not been committed or pushed at this checkpoint.
 - If Cloudflare Pages Git integration is enabled for `main`, an approved push will trigger a build/deployment.
   Check the resulting deployment commit and smoke-test it before marking these auth changes as live.
 
@@ -27,23 +28,25 @@ Deployment handoff checkpoint, **2026-10-07**:
 - Curriculum, resources and exercise briefs remain versioned static content; the web does not upload or execute learner code.
 - Cloudflare Pages receives the SPA rewrite and generated CSP headers. The build rejects a missing URL/key or a secret Supabase key.
 
-## Auth improvements awaiting rollout
+## Auth improvements in source
 
-The pending local commits add password confirmation at signup, show/hide password controls, guidance and a
+The commits on `main` add password confirmation at signup, show/hide password controls, guidance and a
 resend action for unconfirmed email, and more prominent account-creation and success/error feedback.
 Invalid-credential and password-recovery messages do not tell the user that an email address is unregistered.
 
-The handoff reports passing hosted Playwright E2E, unit tests, lint and a Vite production build for these commits.
+Local hosted Playwright E2E, unit tests, lint and a Vite production build have passed for these flows.
 The hosted Playwright configuration uses test-only Supabase values and checks the auth UI and absence of local
 `/api/*` calls. That test does not verify live email delivery, a signed-in learning session or production RLS.
 The acceptance checklist below must be checked against the deployed build; it is not a record of completed tests.
 
 ## Pending public-readiness changes
 
-The working tree adds guest lessons, learning routes, retry-safe learning writes, cloud export
-and a delete-account flow. These are not confirmed live. They require four additive migrations
-and an Edge Function rollout before the matching frontend: see [release order and rollback](RELEASE-READINESS.md).
-MCP confirmed the real project URL and its two existing migrations on 2026-10-07.
+The local candidate adds the exercise reader, solutions and learning workflow improvements;
+that frontend remains unpublished. Its four additive migrations and `delete-account`
+function were approved and deployed on 2026-10-08. Six migration versions, nine RLS tables,
+function source and ten non-destructive live HTTP checks were verified. Authenticated
+account/browser acceptance remains open. See [backend rollout](BACKEND-ROLLOUT.md) and
+[release order and rollback](RELEASE-READINESS.md).
 
 ## Local hosted development
 
@@ -80,13 +83,17 @@ npx supabase test db
 ## Updating the existing deployment
 
 1. Run the applicable curriculum, local regression, database/RLS, hosted unit and hosted browser tests.
-2. Review the exact commits and obtain maintainer confirmation before pushing to `origin/main`.
+2. Check backend prerequisites against [release readiness](RELEASE-READINESS.md). This
+   candidate's four migrations and `delete-account` function were deployed and verified on
+   2026-10-08. Review later changes separately and obtain approval before applying them with
+   a verified backup. Never run `db reset` against the deployed project.
+3. Review the exact commits and obtain maintainer confirmation before pushing to `origin/main`.
    Do not include `.env`, service keys, database passwords, `.data`, SQLite databases, private journals or tokens.
-3. Push the approved commits with `git push origin main`. If Cloudflare Git integration is still enabled for
+4. Push the approved commits with `git push origin main`. If Cloudflare Git integration is still enabled for
    `main`, this also triggers its configured build/deployment. Otherwise use an explicitly approved deployment.
-4. Check Cloudflare build status and the deployed commit. Verify the hosted variables and Supabase Auth
+5. Check Cloudflare build status and the deployed commit. Verify the hosted variables and Supabase Auth
    redirect settings against the deployed URL; configuration changes need maintainer confirmation.
-5. Run the acceptance checklist against that build, including confirmation/resend/reset email and two-user
+6. Run the acceptance checklist against that build, including confirmation/resend/reset email and two-user
    isolation. Keep the previous successful deployment available as a rollback target.
 
 ## Setting up another environment

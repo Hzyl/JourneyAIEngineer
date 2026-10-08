@@ -1,0 +1,47 @@
+.settings-card .settings-help {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.settings-card > h3,
+.settings-goal h3 {
+  margin: 0;
+}
+
+.settings-card label {
+  font-size: 15px;
+}
+
+.settings-card input,
+.settings-card select {
+  font-size: 16px;
+  min-width: 0;
+}
+
+.settings-card .setting-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  line-height: 1.6;
+}
+
+.settings-card .setting-check input {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  margin: 3px 0 0;
+}
+
+.settings-goal {
+  display: grid;
+  gap: 16px;
+  border-top: 1px solid var(--line);
+  padding-top: 24px;
+  margin-top: 8px;
+}
+
+.settings-goal .primary-button {
+  justify-self: start;
+}

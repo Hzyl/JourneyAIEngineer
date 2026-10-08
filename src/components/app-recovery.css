@@ -1,0 +1,38 @@
+.app-shell .main-area > .error-banner {
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.app-shell .main-area > .error-banner button {
+  min-height: 44px;
+  font-size: inherit;
+}
+
+.lesson-page > .empty-state,
+.route-missing {
+  min-height: 0;
+  padding: 32px 0;
+  text-align: left;
+  justify-items: start;
+  align-content: start;
+}
+
+.lesson-page > .empty-state p,
+.route-missing p {
+  font-size: 15px;
+  line-height: 1.65;
+  max-width: 60ch;
+}
+
+.route-missing h2 {
+  font-size: 26px;
+  line-height: 1.3;
+  margin-top: 0;
+}
+
+.workspace-unavailable {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.65;
+  padding: 24px 0;
+}

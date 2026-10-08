@@ -1,0 +1,40 @@
+.global-search input {
+  padding-right: 82px;
+  font-size: 14px;
+}
+
+.global-search input::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+.global-search-clear {
+  right: 43px;
+  min-width: 32px;
+  min-height: 32px;
+}
+
+.global-search-results {
+  max-height: min(60vh, 480px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.global-search-result {
+  overflow-wrap: anywhere;
+}
+
+.global-search-result strong {
+  font-size: 14px;
+}
+
+.global-search-result small,
+.global-search-status {
+  font-size: 12px;
+}
+
+.global-search-result[aria-selected="true"] {
+  background: var(--surface-subtle);
+  color: var(--teal-dark);
+  outline: 2px solid var(--field-border);
+  outline-offset: -2px;
+}

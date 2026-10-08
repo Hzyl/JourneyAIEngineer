@@ -1,5 +1,4 @@
-"""Validated journal destinations and compensating rollback for backup imports."""
-from contextlib import contextmanager
+"""Validated journal destinations and atomic individual file replacement."""
 from pathlib import Path, PureWindowsPath
 import os
 import tempfile
@@ -18,6 +17,8 @@ def journal_targets(root: Path, rows: list[dict]) -> list[tuple[Path, str]]:
             raise ValueError("Journal backup must use relative paths inside the journal folder")
         if relative.suffix.lower() not in {".md", ".json", ".txt"}:
             raise ValueError("Journal backup contains an unsupported file type")
+        if any(char in '<>:"|?*' or ord(char) < 32 for part in relative.parts for char in part):
+            raise ValueError("Journal backup contains an invalid Windows filename")
         if any(part.rstrip(" .") != part or PureWindowsPath(part).is_reserved() for part in relative.parts):
             raise ValueError("Journal backup contains a reserved Windows filename")
         target = (root / relative).resolve()
@@ -41,28 +42,3 @@ def _replace_bytes(target: Path, data: bytes) -> None:
         os.replace(temporary, target)
     finally:
         Path(temporary).unlink(missing_ok=True)
-
-
-@contextmanager
-def restore_journal(root: Path, rows: list[dict]):
-    targets = journal_targets(root, rows)
-    previous = [(path, path.read_bytes() if path.exists() else None) for path, _ in targets]
-    written = []
-    try:
-        for (path, content), (_, original) in zip(targets, previous):
-            _replace_bytes(path, content.encode("utf-8"))
-            written.append((path, original))
-        yield len(written)
-    except BaseException as original_error:
-        failures = []
-        for path, original in reversed(written):
-            try:
-                if original is None:
-                    path.unlink(missing_ok=True)
-                else:
-                    _replace_bytes(path, original)
-            except OSError as error:
-                failures.append(error)
-        if failures:
-            raise OSError("Journal rollback failed; recover from the safety backup") from original_error
-        raise

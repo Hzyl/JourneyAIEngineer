@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import type { Dashboard } from '../api'
 import './today.css'
 
@@ -18,11 +18,13 @@ export function TodayView({ dashboard, language, lessonTitle, onOpenLesson, onNa
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
+  const saving = useRef(false)
+  const clearFeedback = () => { setMessage(''); setError('') }
   if (!dashboard) return <p role="status">{vi ? 'Chưa tải được dữ liệu học.' : 'Learning data is not available yet.'}</p>
   const next = dashboard.current_lesson
   const record = async (event: React.FormEvent) => {
     event.preventDefault()
-    if (busy) return
+    if (saving.current) return
     setError('')
     setMessage('')
     const amount = Number(minutes)
@@ -30,6 +32,7 @@ export function TodayView({ dashboard, language, lessonTitle, onOpenLesson, onNa
       setError(vi ? 'Nhập số phút từ 1 đến 1440.' : 'Enter between 1 and 1440 whole minutes.')
       return
     }
+    saving.current = true
     setBusy(true)
     try {
       await onRecordSession(amount, note.trim())
@@ -38,6 +41,7 @@ export function TodayView({ dashboard, language, lessonTitle, onOpenLesson, onNa
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : (vi ? 'Chưa lưu được phiên học.' : 'Session not saved.'))
     } finally {
+      saving.current = false
       setBusy(false)
     }
   }
@@ -46,12 +50,13 @@ export function TodayView({ dashboard, language, lessonTitle, onOpenLesson, onNa
     <section className="today-next" aria-labelledby="today-next-title">
       <div>
         <span className="eyebrow">{vi ? 'BƯỚC TIẾP THEO' : 'YOUR NEXT STEP'}</span>
-        <h2 id="today-next-title">{lessonTitle ?? next?.title_vi
+        <h2 id="today-next-title">{lessonTitle ?? (vi ? next?.title_vi : undefined)
+          ?? (next && !vi ? 'Continue your next lesson' : undefined)
           ?? (vi ? 'Chọn thử thách tiếp theo' : 'Choose your next challenge')}</h2>
         <p>{vi ? 'Đọc một ý chính, chạy một ví dụ và lưu lại điều bạn vừa làm được.'
           : 'Read one concept, run an example and save what you can now demonstrate.'}</p>
         <button className="primary-button" onClick={() => next ? onOpenLesson(next.slug) : onNavigate('roadmap')}>
-          {next ? (vi ? 'Tiếp tục lesson' : 'Continue lesson') : (vi ? 'Xem lộ trình' : 'Explore the roadmap')} →
+          {next ? (vi ? 'Tiếp tục bài học' : 'Continue lesson') : (vi ? 'Xem lộ trình' : 'Explore the roadmap')} →
         </button>
       </div>
       <div className="today-rhythm">
@@ -78,8 +83,9 @@ export function TodayView({ dashboard, language, lessonTitle, onOpenLesson, onNa
         : 'Record actual focused time. Do not repeat minutes already saved when completing a lesson.'}</p>
       <form onSubmit={(event) => void record(event)}>
         <label>{vi ? 'Phút' : 'Minutes'}<input type="number" min="1" max="1440" value={minutes}
-          onChange={(event) => setMinutes(event.target.value)} required /></label>
-        <label>{vi ? 'Ghi chú' : 'Note'}<input value={note} onChange={(event) => setNote(event.target.value)}
+          disabled={busy} onChange={(event) => { setMinutes(event.target.value); clearFeedback() }} required /></label>
+        <label>{vi ? 'Ghi chú' : 'Note'}<input value={note} disabled={busy}
+          onChange={(event) => { setNote(event.target.value); clearFeedback() }}
           placeholder={vi ? 'Đã làm được gì? Còn vướng ở đâu?' : 'What worked? What is still unclear?'} /></label>
         <button className="secondary-button" disabled={busy} aria-busy={busy} type="submit">
           {busy ? (vi ? 'Đang lưu…' : 'Saving…') : (vi ? 'Lưu phiên học' : 'Save session')}

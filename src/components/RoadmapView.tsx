@@ -41,7 +41,7 @@ export function RoadmapView({ roadmap, language, showCompletedLessons, onOpenLes
   const phases = ordered.filter((phase) => filters.phase === 'all' || phase.slug === filters.phase)
     .map((phase) => ({ ...phase, modules: phase.modules.map((module) => ({
       ...module, lessons: module.lessons.filter((lesson) => {
-        if (!showCompletedLessons && lesson.status === 'completed') return false
+        if (!showCompletedLessons && filters.status !== 'completed' && lesson.status === 'completed') return false
         if (filters.status !== 'all' && lesson.status !== filters.status) return false
         const text = `${phase.title_vi} ${phase.title_en} ${module.title_vi} ${module.title_en} ${lesson.title_vi} ${lesson.title_en}`
         return text.toLocaleLowerCase().includes(filters.q.trim().toLocaleLowerCase())
@@ -68,9 +68,9 @@ export function RoadmapView({ roadmap, language, showCompletedLessons, onOpenLes
       <p>{vi ? route.next_vi : route.next_en}</p>
     </section>}
     <div className="filter-bar" role="search">
-      <input aria-label={vi ? 'Tìm lesson hoặc module' : 'Search lessons or modules'} value={filters.q}
+      <input type="search" aria-label={vi ? 'Tìm bài học hoặc học phần' : 'Search lessons or modules'} value={filters.q}
         placeholder={vi ? 'Tìm bài học…' : 'Find a lesson…'} onChange={(event) => change({ q: event.target.value })} />
-      <select aria-label={vi ? 'Lọc theo phase' : 'Filter by phase'} value={filters.phase}
+      <select aria-label={vi ? 'Lọc theo chặng' : 'Filter by phase'} value={filters.phase}
         onChange={(event) => change({ phase: event.target.value })}>
         <option value="all">{vi ? 'Tất cả chặng' : 'All phases'}</option>
         {ordered.map((phase) => <option key={phase.slug} value={phase.slug}>
@@ -85,10 +85,13 @@ export function RoadmapView({ roadmap, language, showCompletedLessons, onOpenLes
         <option value="needs_review">{vi ? 'Cần ôn' : 'Needs review'}</option>
       </select>
       <button className="text-button" onClick={() => change({ route: 'all', phase: 'all', q: '', status: 'all' })}>
-        {vi ? 'Xem toàn bộ' : 'Browse everything'}</button>
+        {vi ? 'Xóa bộ lọc' : 'Clear filters'}</button>
     </div>
     <p role="status">{count} {vi ? 'bài học' : 'lessons'} · {vi ? 'Thời lượng là thời gian đọc ước tính.'
       : 'Durations estimate reading time.'}</p>
+    {!showCompletedLessons && filters.status !== 'completed' && <p className="muted">{vi
+      ? 'Bài hoàn thành đang được ẩn theo cài đặt. Chọn trạng thái “Hoàn thành” để xem lại.'
+      : 'Completed lessons are hidden by your settings. Choose “Completed” to revisit them.'}</p>}
     {!count && <p>{vi ? 'Không có bài phù hợp bộ lọc này.' : 'No lessons match these filters.'}</p>}
     {phases.map((phase, index) => <section className="phase-block" key={phase.slug}>
       <header className="phase-header"><span className="phase-index">{String(index + 1).padStart(2, '0')}</span>

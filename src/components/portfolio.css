@@ -1,0 +1,65 @@
+.portfolio-board {
+  overflow-wrap: anywhere;
+}
+
+.portfolio-board .portfolio-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+
+.portfolio-board .portfolio-card {
+  padding: 22px;
+}
+
+.portfolio-board .portfolio-card h4 {
+  font-size: 22px;
+  line-height: 1.35;
+}
+
+.portfolio-board .portfolio-intro,
+.portfolio-board .portfolio-card p,
+.portfolio-board .career-checklist p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--muted);
+  min-height: 0;
+}
+
+.portfolio-board summary {
+  min-height: 44px;
+  padding-block: 12px;
+  font-size: 15px;
+  line-height: 1.5;
+  cursor: pointer;
+  color: var(--link);
+}
+
+.portfolio-card details {
+  margin-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.portfolio-card h5 {
+  font-size: 15px;
+  margin: 16px 0 8px;
+  color: var(--ink);
+}
+
+.portfolio-board .portfolio-card ul,
+.portfolio-board .career-checklist ul {
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.portfolio-card code {
+  white-space: normal;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+@media (max-width: 760px) {
+  .portfolio-board .portfolio-grid {
+    grid-template-columns: 1fr;
+  }
+}

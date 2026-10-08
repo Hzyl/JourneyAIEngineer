@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { learningClient as api } from '../platform/learning-client'
 import { HostedJournalEditor, type HostedJournalApi, type HostedJournalEntry } from './HostedJournalEditor'
 import { journalCopy } from './journal-copy'
+import './journal-layout.css'
 
 type ContextExport = { path: string; content: string }
 type GitStatus = Awaited<ReturnType<typeof api.gitStatus>>

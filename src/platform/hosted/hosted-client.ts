@@ -1,4 +1,5 @@
-import type { AppSettings, Dashboard, Lesson, ReferenceResource, SearchResult } from '../../api'
+import { searchCatalog, type SearchOptions } from './catalog-search'
+import type { AppSettings, Dashboard, Lesson, ReferenceResource } from '../../api'
 import { hostedCapabilities } from '../capabilities'
 import { withMutationRequest } from '../mutation-request'
 import { readPages } from '../read-pages'
@@ -23,10 +24,6 @@ type ReviewStateRow = { card_id: string; lesson_slug: string; due_at: string; in
 
 function errorMessage(error: { message?: string } | null): never {
   throw new Error(error?.message || 'Không thể đồng bộ dữ liệu học.')
-}
-
-function normalize(value: string): string {
-  return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase()
 }
 
 function moduleMeta(phaseId: string, moduleId: string) {
@@ -240,30 +237,18 @@ export const hostedApi = {
   resources: async () => ({ resources: hostedCatalog.resources as ReferenceResource[], count: hostedCatalog.resources.length, total: hostedCatalog.resources.length }),
   tools: async () => ({ tools: hostedCatalog.tools }),
   exercises: async () => ({ exercises: hostedCatalog.exercises.map((item) => ({ ...item, workspace_id: null, workspace_path: null })) }),
-  search: async (query: string, options: { type?: string; phase?: string; status?: string; limit?: number } = {}) => {
-    const needle = normalize(query.trim())
-    if (!needle) return { results: [], count: 0, query }
-    const progress = await selectRows<ProgressRow>('lesson_progress', 'lesson_slug,status,minutes_spent,completed_at,updated_at')
-    const progressBySlug = new Map(progress.map((item) => [item.lesson_slug, item]))
-    const result: SearchResult[] = []
-    for (const lesson of hostedCatalog.lessons) {
-      const text = normalize([lesson.title_vi, lesson.title_en, lesson.summary_vi, lesson.summary_en, ...lesson.key_terms].join(' '))
-      if (text.includes(needle) && (!options.phase || options.phase === 'all' || lesson.phase_id === options.phase) && (!options.status || options.status === 'all' || lessonStatus(progressBySlug, lesson.lesson_id).status === options.status)) {
-        result.push({ type: 'lesson', id: lesson.lesson_id, slug: lesson.lesson_id, title: lesson.title_vi, subtitle: lesson.summary_vi, phase: lesson.phase_id })
-      }
-    }
-    for (const resource of hostedCatalog.resources) {
-      if (normalize([resource.title_vi, resource.title_en, resource.provider, resource.description_vi].join(' ')).includes(needle)) result.push({ type: 'resource', id: resource.slug, title: resource.title_vi, subtitle: resource.provider, phase: resource.phase_ids, url: resource.url })
-    }
-    const limit = Math.max(1, Math.min(options.limit ?? 25, 50))
-    return { results: result.slice(0, limit), count: result.length, query }
+  search: async (query: string, options: SearchOptions = {}) => {
+    const status = options.status?.trim().toLowerCase()
+    const progress = status && status !== 'all' && status !== 'available'
+      ? await selectRows<ProgressRow>('lesson_progress', 'lesson_slug,status') : []
+    return searchCatalog(hostedCatalog, query, options,
+      new Map(progress.map((item) => [item.lesson_slug, item.status])))
   },
   feedback: async () => ({ items: [], count: 0 }),
-  createFeedback: async (payload: { lesson_slug: string; kind: string; body: string; display_name?: string }) => ({
-    feedback: { id: Date.now(), lesson_slug: payload.lesson_slug, lesson_title_vi: payload.lesson_slug, lesson_title_en: payload.lesson_slug, kind: payload.kind, body: payload.body, status: 'drafted', display_name: payload.display_name ?? null, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
-    message: 'Web beta sẽ mở GitHub Issues để thu thập góp ý sau khi repository được public.',
-  }),
-  securityAudit: async () => ({ mode: 'passive', safe_mode: true, network_requests: 0, payloads_sent: 0, external_tools: [], source_root: '', route_count: 0, routes: [], findings: [], summary: { status_counts: {}, severity_counts: {}, candidate_count: 0, needs_human_review: 0, verified_controls: 0 }, limitations_vi: ['Security Lab chỉ chạy trong desktop/local mode.'] }),
+  createFeedback: async () => {
+    throw new Error('Direct feedback submission is not available in web beta. Create a draft instead.')
+  },
+  securityAudit: async () => ({ mode: 'passive', safe_mode: true, network_requests: 0, payloads_sent: 0, external_tools: [], source_root: '', route_count: 0, routes: [], findings: [], summary: { status_counts: {}, severity_counts: {}, candidate_count: 0, needs_human_review: 0, verified_controls: 0 }, limitations_vi: ['Security Lab chỉ chạy trong desktop/local mode.'], limitations_en: ['Security Lab is available only in desktop/local mode.'] }),
   lesson: async (slug: string) => makeLesson(slug, await selectRows<ProgressRow>('lesson_progress', 'lesson_slug,status,minutes_spent,completed_at,updated_at')),
   updateProgress: async (slug: string, status: string, minutesSpent = 0) => {
     await applyMutation('progress', { lesson_slug: slug, status, minutes: minutesSpent })

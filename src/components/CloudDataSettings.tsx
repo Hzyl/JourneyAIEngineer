@@ -1,37 +1,18 @@
-import { useState } from 'react'
 import { DeleteAccount } from './DeleteAccount'
-import catalogVersion from '../../content/catalog-version.json'
-import { requireHostedUser, requireSupabase } from '../platform/hosted/supabase-client'
+import { useCloudExport } from './useCloudExport'
 
 export function CloudDataSettings({ language }: { language: 'vi' | 'en' }) {
   const vi = language === 'vi'
-  const [busy, setBusy] = useState(false)
-  const [message, setMessage] = useState('')
-  const [error, setError] = useState('')
-  const download = async () => {
-    setBusy(true)
-    setMessage('')
-    setError('')
-    try {
-      const user = await requireHostedUser()
-      const { data, error: failure } = await requireSupabase().rpc('export_learning_snapshot')
-      if (failure) throw new Error(failure.message)
-      if (!data || data.owner_id !== user.id) throw new Error('Account changed. Please try again.')
-      const payload = { ...data, catalog: catalogVersion }
-      const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' }))
-      const link = document.createElement('a')
-      link.href = url
-      link.download = `journey-cloud-${new Date().toISOString().slice(0, 10)}.json`
-      link.click()
-      window.setTimeout(() => URL.revokeObjectURL(url), 1000)
-      setMessage(vi ? 'Đã tạo file xuất dữ liệu. Hãy kiểm tra thư mục tải xuống.'
-        : 'Export created. Check your downloads folder.')
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : 'Export failed')
-    } finally { setBusy(false) }
+  const { busy, exported, error, download } = useCloudExport()
+  const errors = vi ? {
+    account: 'Tài khoản đã thay đổi. Chưa tải file; hãy xuất lại cho tài khoản hiện tại.',
+    export: 'Chưa xuất được dữ liệu. Kiểm tra kết nối và thử lại. Nếu vẫn lỗi, tính năng có thể chưa sẵn sàng.',
+  } : {
+    account: 'The account changed. No file was downloaded; export again for the current account.',
+    export: 'Could not export data. Check your connection and retry. If it still fails, export may not be available yet.',
   }
   return <><section className="section-card backup-card">
-    <span className="eyebrow">CLOUD DATA</span>
+    <span className="eyebrow">{vi ? 'DỮ LIỆU WEB' : 'CLOUD DATA'}</span>
     <h3>{vi ? 'Dữ liệu thuộc về bạn' : 'Your learning data'}</h3>
     <p>{vi ? 'Tải tiến độ, lịch sử ôn tập, phiên học, notes, journal và cài đặt của tài khoản này.'
       : 'Download this account’s progress, review history, study sessions, notes, journal and settings.'}</p>
@@ -40,7 +21,9 @@ export function CloudDataSettings({ language }: { language: 'vi' | 'en' }) {
     <button className="secondary-button" disabled={busy} aria-busy={busy} onClick={() => void download()}>
       {busy ? (vi ? 'Đang xuất…' : 'Exporting…') : (vi ? 'Tải dữ liệu JSON' : 'Download JSON export')}
     </button>
-    {message && <p role="status" className="success-note">{message}</p>}
-    {error && <p role="alert" className="warning-note">{error}</p>}
+    {exported && <p role="status" className="success-note">{vi
+      ? 'Đã tạo file xuất dữ liệu. Hãy kiểm tra thư mục tải xuống.'
+      : 'Export created. Check your downloads folder.'}</p>}
+    {error && <p role="alert" className="warning-note">{errors[error]}</p>}
   </section><DeleteAccount language={language} /></>
 }

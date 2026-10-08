@@ -30,7 +30,16 @@
         ],
         "evaluation": "Hold-out test, cross-validation, metric rationale and error slices.",
         "github_path": "projects/tabular-ml",
-        "estimated_weeks": 3
+        "estimated_weeks": 3,
+        "deliverables_vi": [
+          "Từ điển dữ liệu",
+          "Mô hình cơ sở (baseline)",
+          "Pipeline xử lý và huấn luyện",
+          "Phân tích lỗi",
+          "Thẻ mô hình (model card)",
+          "README"
+        ],
+        "evaluation_vi": "Tập kiểm tra giữ riêng, kiểm định chéo, lý do chọn thước đo và phân tích lỗi theo nhóm dữ liệu."
       },
       {
         "slug": "deep-learning",
@@ -53,7 +62,15 @@
         ],
         "evaluation": "Validation protocol, ablation or optimizer comparison, failure analysis.",
         "github_path": "projects/deep-learning",
-        "estimated_weeks": 4
+        "estimated_weeks": 4,
+        "deliverables_vi": [
+          "Vòng lặp huấn luyện",
+          "Thẻ mô tả tập dữ liệu",
+          "Ma trận nhầm lẫn",
+          "Checkpoint mô hình",
+          "Báo cáo thí nghiệm"
+        ],
+        "evaluation_vi": "Quy trình kiểm định, thí nghiệm loại bỏ thành phần hoặc so sánh bộ tối ưu, và phân tích thất bại."
       },
       {
         "slug": "vietnamese-rag",
@@ -77,7 +94,15 @@
         ],
         "evaluation": "Retrieval recall, answer faithfulness, abstention quality, latency and cost.",
         "github_path": "projects/vietnamese-rag",
-        "estimated_weeks": 5
+        "estimated_weeks": 5,
+        "deliverables_vi": [
+          "Chính sách chia đoạn",
+          "Bộ câu hỏi đánh giá",
+          "Thước đo truy xuất",
+          "Giao diện trích nguồn",
+          "Nhật ký chi phí và độ trễ"
+        ],
+        "evaluation_vi": "Độ bao phủ truy xuất, mức bám sát nguồn, khả năng từ chối khi thiếu bằng chứng, độ trễ và chi phí."
       },
       {
         "slug": "capstone-ai-product",
@@ -102,7 +127,16 @@
         ],
         "evaluation": "User value, reliability, reproducibility, observability and clear trade-offs.",
         "github_path": "projects/capstone-ai-product",
-        "estimated_weeks": 6
+        "estimated_weeks": 6,
+        "deliverables_vi": [
+          "Mô tả vấn đề",
+          "Kiến trúc hệ thống",
+          "Sản phẩm khả dụng tối thiểu (MVP)",
+          "Báo cáo đánh giá",
+          "Video demo",
+          "Câu chuyện trình bày khi phỏng vấn"
+        ],
+        "evaluation_vi": "Giá trị với người dùng, độ tin cậy, khả năng tái lập, khả năng quan sát và giải thích các đánh đổi."
       },
       {
         "slug": "llm-chat-api",
@@ -127,7 +161,15 @@
         "evaluation": "Schema validity, latency, retry behavior, rate-limit correctness, and cost per request.",
         "github_path": "projects/llm-chat-api",
         "estimated_weeks": 3,
-        "track": "genai-specialization"
+        "track": "genai-specialization",
+        "deliverables_vi": [
+          "Hợp đồng API",
+          "Demo trả lời dạng streaming",
+          "Test giới hạn tần suất",
+          "Nhật ký chi phí",
+          "README"
+        ],
+        "evaluation_vi": "Tính hợp lệ của schema, độ trễ, hành vi thử lại, giới hạn tần suất và chi phí mỗi yêu cầu."
       },
       {
         "slug": "document-intelligence",
@@ -152,7 +194,15 @@
         "evaluation": "Parsing coverage, retrieval recall, grounded answer rate, and abstention quality.",
         "github_path": "projects/document-intelligence",
         "estimated_weeks": 4,
-        "track": "genai-specialization"
+        "track": "genai-specialization",
+        "deliverables_vi": [
+          "Pipeline nhập tài liệu",
+          "Chính sách chia đoạn",
+          "Schema metadata",
+          "API trả bằng chứng",
+          "Bộ câu hỏi đánh giá"
+        ],
+        "evaluation_vi": "Độ bao phủ khi đọc tài liệu, độ bao phủ truy xuất, tỷ lệ câu trả lời có căn cứ và chất lượng từ chối."
       },
       {
         "slug": "advanced-rag-system",
@@ -178,7 +228,15 @@
         "evaluation": "Recall@k, MRR, answer faithfulness, citation coverage, latency, and cost.",
         "github_path": "projects/advanced-rag-system",
         "estimated_weeks": 5,
-        "track": "genai-specialization"
+        "track": "genai-specialization",
+        "deliverables_vi": [
+          "Benchmark truy xuất",
+          "Nhóm tình huống thất bại",
+          "Chính sách trích nguồn",
+          "Báo cáo chất lượng",
+          "Báo cáo độ trễ"
+        ],
+        "evaluation_vi": "Recall@k, MRR, mức bám sát nguồn, độ bao phủ trích dẫn, độ trễ và chi phí."
       },
       {
         "slug": "ai-database-api-assistant",
@@ -203,7 +261,15 @@
         "evaluation": "Invalid-call rejection, side-effect safety, timeout behavior, and trace completeness.",
         "github_path": "projects/ai-database-api-assistant",
         "estimated_weeks": 4,
-        "track": "genai-specialization"
+        "track": "genai-specialization",
+        "deliverables_vi": [
+          "Danh mục tool",
+          "Test kiểm tra đầu vào",
+          "Khóa chống xử lý trùng (idempotency key)",
+          "Nhật ký kiểm toán",
+          "Ghi chú bảo mật"
+        ],
+        "evaluation_vi": "Từ chối lời gọi không hợp lệ, kiểm soát thao tác ghi, xử lý hết thời gian chờ và dấu vết đầy đủ."
       },
       {
         "slug": "research-assistant-agent",
@@ -229,7 +295,15 @@
         "evaluation": "Task success, tool-call correctness, stop-condition compliance, faithfulness, and cost.",
         "github_path": "projects/research-assistant-agent",
         "estimated_weeks": 5,
-        "track": "genai-specialization"
+        "track": "genai-specialization",
+        "deliverables_vi": [
+          "Vòng lặp agent",
+          "Nhật ký các bước thực hiện",
+          "Bước phê duyệt của người dùng",
+          "Test giới hạn an toàn",
+          "Báo cáo đánh giá"
+        ],
+        "evaluation_vi": "Tỷ lệ hoàn thành tác vụ, gọi tool đúng, tuân thủ điều kiện dừng, mức bám sát nguồn và chi phí."
       },
       {
         "slug": "production-genai-system",
@@ -256,7 +330,16 @@
         "evaluation": "End-to-end reliability, reproducibility, p95 latency, cost budget, security, and rollback readiness.",
         "github_path": "projects/production-genai-system",
         "estimated_weeks": 8,
-        "track": "genai-specialization"
+        "track": "genai-specialization",
+        "deliverables_vi": [
+          "Bản ghi quyết định kiến trúc (ADR)",
+          "Mục tiêu và cam kết dịch vụ (SLO/SLA)",
+          "Mô hình đe dọa",
+          "Test tải",
+          "Bảng theo dõi vận hành",
+          "Video demo"
+        ],
+        "evaluation_vi": "Độ tin cậy toàn hệ thống, khả năng tái lập, độ trễ p95, ngân sách, bảo mật và khả năng khôi phục phiên bản."
       }
     ],
     "career_checklist": [
@@ -1525,7 +1608,19 @@
           "order": 208
         }
       ]
-    }
+    },
+    "career_checklist_en": [
+      "Write READMEs for three main projects and a capstone with an architecture diagram.",
+      "Include at least one project that runs in Docker and a tested inference API.",
+      "Provide an evaluation report with metrics, a baseline, error analysis and limitations.",
+      "Maintain a regular Git history with a weekly journal and clear commit messages.",
+      "Prepare a one-page CV, demo links and an interview story for each project.",
+      "Practise Python, SQL, ML fundamentals, debugging and AI system design.",
+      "Build an LLM Chat API, Document Intelligence and Advanced RAG with clear evaluation sets.",
+      "Include a tool-calling or agent project with trajectories, guardrails and human approval.",
+      "Include an MCP or local LLM lab with a threat model, hardware context and benchmarks.",
+      "Write a production GenAI design document covering SLOs, cost budgets, observability and rollback."
+    ]
   },
   "phases": [
     {

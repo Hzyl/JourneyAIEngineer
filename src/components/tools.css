@@ -1,0 +1,42 @@
+.tools-page .tools-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.tools-page .tool-content {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.tools-page .tool-content p {
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.tools-page .tool-content strong {
+  display: block;
+  font-size: 14px;
+  line-height: 1.5;
+  margin-top: 16px;
+}
+
+.tools-page .command-list code {
+  white-space: pre-wrap;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+  .tools-page .tool-card {
+    padding: 20px;
+  }
+
+  .tools-page .tool-symbol {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .tools-page .tools-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

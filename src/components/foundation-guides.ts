@@ -1,0 +1,100 @@
+import type { GuideText } from './exercise-guides'
+
+export const foundationGuides: Record<string, Record<'vi' | 'en', GuideText>> = {
+  'exercise-1-python-core': {
+    vi: {
+      summary: 'Tạo package tính điểm có trọng số: hàm thuần, type hint, kiểm tra dữ liệu và test biên.',
+      steps: [
+        'Chọn bài toán nhỏ: weighted_score(items) nhận list tuple (điểm, trọng số). Điểm thuộc [0,100], trọng số thuộc (0,1]; chuẩn hóa tổng trọng số trước khi tính trung bình.',
+        'Tạo thư mục study_scores và file __init__.py bên trong. Viết hàm có type hint, không in kết quả, không đọc file và không sửa list đầu vào.',
+        'Báo ValueError cho list rỗng, sai cấu trúc, bool, chuỗi, NaN hoặc số ngoài khoảng. Viết các điều kiện này trước bước tính toán.',
+        'Đặt test_solution.py bên cạnh package. Test ví dụ thông thường, trọng số không có tổng bằng 1, điểm 0/100, đầu vào sai và việc giữ nguyên input.',
+        'Chạy python -m unittest -v test_solution.py. Giải thích vì sao type hint không thay thế kiểm tra input lúc chạy.',
+      ],
+      checks: ['[(80,0.25),(100,0.75)] → 95; [(0,0.2),(100,0.2)] → 50.',
+        'List rỗng, bool và NaN phải báo lỗi; đầu vào không bị sửa.',
+        'Thêm yêu cầu mới bằng cách viết test trước, rồi tự sửa hàm mà không chép lại đáp án.'],
+      hints: ['Tổng có trọng số cần chia cho tổng trọng số.', 'Dùng assertAlmostEqual cho số thực.'],
+      example: 'weighted_score([(80, 0.25), (100, 0.75)])  # 95\nweighted_score([(0, 0.2), (100, 0.2)])  # 50',
+    },
+    en: {
+      summary: 'Build a weighted-score package with a pure function, type hints, validation and edge-case tests.',
+      steps: [
+        'Choose a small task: weighted_score(items) accepts a list of (score, weight) tuples. Scores are in [0,100], weights in (0,1]; normalize by the total weight.',
+        'Create study_scores/__init__.py. Write a type-hinted function without printing, file reads or input mutation.',
+        'Raise ValueError for empty lists, wrong structure, bools, strings, NaN or out-of-range values before calculating.',
+        'Place test_solution.py next to the package. Cover normal inputs, weights not summing to 1, boundary scores, bad inputs and input preservation.',
+        'Run python -m unittest -v test_solution.py. Explain why type hints do not replace runtime validation.',
+      ],
+      checks: ['[(80,0.25),(100,0.75)] → 95; [(0,0.2),(100,0.2)] → 50.',
+        'Empty lists, bools and NaN raise errors; inputs remain unchanged.',
+        'Add a new requirement by writing a test first, then changing the function without copying the answer.'],
+      hints: ['Divide the weighted sum by the total weight.', 'Use assertAlmostEqual for floating-point results.'],
+      example: 'weighted_score([(80, 0.25), (100, 0.75)])  # 95\nweighted_score([(0, 0.2), (100, 0.2)])  # 50',
+    },
+  },
+  'exercise-1-reliable-code': {
+    vi: {
+      summary: 'Tái hiện lỗi list mặc định dùng chung, tìm nguyên nhân bằng log và bảo vệ bản sửa bằng regression test.',
+      steps: [
+        'Viết phiên bản cố ý lỗi ở ví dụ bên dưới. Dự đoán hai kết quả trước khi chạy; ghi lại kết quả thực tế.',
+        'Ghi giả thuyết hai lần gọi đang dùng chung list. Thêm log id(tags) và nội dung tags trước/sau append, hoặc đặt breakpoint ở đó.',
+        'Viết test gọi add_tag hai lần không truyền tags và yêu cầu hai list độc lập. Chạy test với code lỗi để thấy FAIL.',
+        'Sửa mặc định thành None, tạo list mới hoặc copy list truyền vào. Từ chối tag rỗng; trim khoảng trắng; không thêm tag đã có.',
+        'Chạy lại regression test và thêm test input sai, list truyền vào không bị sửa. Ghi phân biệt lỗi input, logic và môi trường.',
+      ],
+      checks: ['Hai lần gọi lần lượt trả ["python"] và ["sql"], không chia sẻ trạng thái.',
+        'Test hồi quy phải thất bại ở phiên bản lỗi và thành công ở phiên bản sửa.',
+        'Có log/quan sát hỗ trợ giả thuyết và biết test nào ngăn lỗi cũ quay lại.'],
+      hints: ['Giá trị mặc định được tạo khi định nghĩa hàm.', 'Thử kiểm tra first is second và id(tags).'],
+      example: '# Code cố ý có lỗi để điều tra\ndef add_tag(tag, tags=[]):\n    tags.append(tag)\n    return tags\n\nfirst = add_tag("python")\nsecond = add_tag("sql")\nprint(first, second)',
+    },
+    en: {
+      summary: 'Reproduce a shared-default-list bug, investigate it with logs and protect the fix with a regression test.',
+      steps: [
+        'Write the intentionally broken example below. Predict both results before running it; record the actual output.',
+        'Hypothesize that the calls share one list. Log id(tags) and its contents before/after append, or set a breakpoint there.',
+        'Write a test calling add_tag twice without supplying tags and requiring independent lists. Run it against the bug and observe FAIL.',
+        'Use None as the default, creating or copying a list. Reject empty tags, trim surrounding spaces and skip existing tags.',
+        'Rerun the regression test; add invalid-input and input-preservation tests. Distinguish input, logic and environment failures.',
+      ],
+      checks: ['The calls return ["python"] and ["sql"] independently.',
+        'The regression test fails before the fix and passes afterwards.',
+        'Logs or debugger observations support the hypothesis; identify the test that prevents recurrence.'],
+      hints: ['Default values are created when the function is defined.', 'Inspect first is second and id(tags).'],
+      example: '# Intentionally broken code to investigate\ndef add_tag(tag, tags=[]):\n    tags.append(tag)\n    return tags\n\nfirst = add_tag("python")\nsecond = add_tag("sql")\nprint(first, second)',
+    },
+  },
+  'exercise-1-data-files': {
+    vi: {
+      summary: 'Làm sạch CSV thành JSON, giữ điểm 0 và báo số dòng cùng lý do cho dữ liệu không hợp lệ.',
+      steps: [
+        'Tạo scores.csv như ví dụ. Quy định header đúng name,score; trim tên; điểm phải là số hữu hạn thuộc [0,100]. Không đoán giá trị thiếu.',
+        'Dùng csv.DictReader để đọc UTF-8, kiểm tra header trước khi xử lý từng record. Header sai phải dừng, dòng dữ liệu sai ghi vào errors.',
+        'Tách records và errors. Mỗi lỗi lưu dòng vật lý cuối của record cùng lý do; giữ điểm 0 và báo lỗi cho NaN, tên rỗng hoặc sai số cột.',
+        'Thêm CLI nhận đường dẫn nguồn và đích. Ghi JSON hợp lệ, không sửa nguồn; chạy lại cùng input phải cho cùng output, không append.',
+        'Test header sai, điểm biên, dòng thiếu/thừa cột và CSV có dấu phẩy trong tên. Chạy test và pipeline từ terminal, đọc cả records lẫn errors.',
+      ],
+      checks: ['Ví dụ tạo hai records: An=0, Bình=90; lỗi invalid_score ở dòng 4.',
+        'Chạy lại không nhân đôi records và không đổi file nguồn.',
+        'Giải thích được: trim tên là sửa có chủ đích, giữ điểm 0, loại NaN và không tự điền điểm thiếu.'],
+      hints: ['Không tách CSV bằng split(",").', 'float có thể tạo NaN hoặc infinity: kiểm tra math.isfinite.'],
+      example: '# scores.csv (lưu từ dòng name,score, không lưu dòng chú thích này)\nname,score\n An ,0\nBình,90\nBad,NaN',
+    },
+    en: {
+      summary: 'Clean CSV into JSON, preserve zero scores and report line numbers with reasons for invalid data.',
+      steps: [
+        'Create scores.csv using the example. Require the name,score header; trim names; accept finite scores in [0,100]. Do not invent missing values.',
+        'Read UTF-8 with csv.DictReader and validate the header first. A bad header stops processing; bad data rows go to errors.',
+        'Separate records and errors. Each error includes the record’s ending physical line and reason. Preserve zero; reject NaN, empty names and wrong column counts.',
+        'Add a CLI accepting source and destination paths. Write valid JSON without changing the source; repeating the run must not append records.',
+        'Test bad headers, boundary scores, short/long rows and quoted commas in names. Run tests and the pipeline in a terminal; inspect records and errors.',
+      ],
+      checks: ['The example produces two records: An=0 and Bình=90, plus invalid_score at line 4.',
+        'Rerunning neither duplicates records nor changes the source.',
+        'Explain each policy: trim names deliberately, preserve zero, reject NaN and never invent missing scores.'],
+      hints: ['Do not parse CSV with split(",").', 'float accepts NaN and infinity: check math.isfinite.'],
+      example: '# scores.csv (save starting at name,score; omit this comment)\nname,score\n An ,0\nBình,90\nBad,NaN',
+    },
+  },
+}

@@ -62,6 +62,9 @@ if ($LASTEXITCODE -ne 0) { throw "build_exe.ps1 failed with exit code $LASTEXITC
 
 $Exe = Join-Path $BinaryOutput "JourneyAIEngineer.exe"
 if (-not (Test-Path -LiteralPath $Exe)) { throw "Missing $Exe after build." }
+Write-Host "Inspecting embedded content without launching the executable..." -ForegroundColor Cyan
+Invoke-Checked $Python @("scripts/verify_windows_bundle.py", $Exe,
+    "--report", (Join-Path $OutputDir "WINDOWS-INSPECTION.json"))
 
 New-Item -ItemType Directory -Path $Stage, $OutputDir -Force | Out-Null
 Copy-Item -LiteralPath $Exe -Destination (Join-Path $Stage "JourneyAIEngineer.exe")

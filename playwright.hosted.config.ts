@@ -2,7 +2,7 @@ import { defineConfig, devices } from '@playwright/test'
 
 export default defineConfig({
   testDir: './tests/e2e',
-  testMatch: 'hosted-learning-flow.spec.ts',
+  testMatch: 'hosted-*.spec.ts',
   timeout: 30_000,
   use: {
     ...devices['Desktop Chrome'],

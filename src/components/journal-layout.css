@@ -1,0 +1,22 @@
+.git-card .git-details {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.git-card .git-details > div {
+  min-width: 0;
+}
+
+.git-card .git-details strong {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.git-card .muted code {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 620px) {
+  .git-card .git-details {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

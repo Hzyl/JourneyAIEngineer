@@ -19,13 +19,13 @@
       "phase-00-onboarding-environment-1",
       "phase-01-python-software-python-core-1"
     ],
-    "when_en": "Ngôn ngữ chính cho data, ML và backend.",
-    "how_en": "Tạo environment riêng, viết script và test trước khi mở rộng.",
-    "when_not_en": "Đừng dùng một environment chung cho mọi project hoặc chạy code tải từ nguồn không rõ.",
-    "install_en": "Cài Python 3.11+ từ python.org, sau đó kiểm tra python --version.",
-    "error_en": "Kiểm tra PATH, phiên bản Python và chạy lại python -m venv .venv.",
-    "combine_en": "Kết hợp với VS Code, pytest và Git; notebook chỉ dùng cho khám phá.",
-    "risks_en": "Dependency khác phiên bản, chạy nhầm interpreter và commit .venv."
+    "when_en": "The main language for data work, machine learning and backends.",
+    "how_en": "Create a separate environment and write scripts and tests before expanding the project.",
+    "when_not_en": "Avoid sharing one environment across every project or running code from an unknown source.",
+    "install_en": "Install Python 3.11+ from python.org, then check python --version.",
+    "error_en": "Check PATH and the Python version, then recreate the environment with python -m venv .venv.",
+    "combine_en": "Use it with VS Code, pytest and Git; use notebooks for exploration.",
+    "risks_en": "Dependency version conflicts, the wrong interpreter and accidentally committing .venv."
   },
   {
     "slug": "vscode",
@@ -40,19 +40,19 @@
     "when_not_vi": "Không mở trực tiếp workspace chứa secret hoặc chạy extension chưa tin cậy.",
     "install_vi": "Cài VS Code và Python extension chính thức; bật format/lint cho workspace.",
     "error_vi": "Kiểm tra interpreter ở status bar, terminal profile và quyền gọi code.",
-    "combine_vi": "Mở workspace từ app, chạy test trong terminal rồi review Git diff.",
+    "combine_vi": "Trong app local, mở workspace, chạy test trong terminal rồi review Git diff.",
     "risks_vi": "Extension tự chạy code, chọn nhầm interpreter và terminal không đúng thư mục.",
     "lesson_refs": [
       "phase-00-onboarding-environment-2",
       "phase-01-python-software-developer-tools-3"
     ],
-    "when_en": "Viết code, debug, quản lý workspace và xem Git diff.",
-    "how_en": "Mở từng exercise bằng workspace riêng; dùng terminal tích hợp để chạy test.",
-    "when_not_en": "Không mở trực tiếp workspace chứa secret hoặc chạy extension chưa tin cậy.",
-    "install_en": "Cài VS Code và Python extension chính thức; bật format/lint cho workspace.",
-    "error_en": "Kiểm tra interpreter ở status bar, terminal profile và quyền gọi code.",
-    "combine_en": "Mở workspace từ app, chạy test trong terminal rồi review Git diff.",
-    "risks_en": "Extension tự chạy code, chọn nhầm interpreter và terminal không đúng thư mục."
+    "when_en": "Write and debug code, manage a workspace and inspect Git diffs.",
+    "how_en": "Open each exercise in its own workspace and run tests in the integrated terminal.",
+    "when_not_en": "Avoid untrusted extensions and workspaces containing credentials you do not intend to expose.",
+    "install_en": "Install VS Code and the official Python extension; configure formatting and linting for the workspace.",
+    "error_en": "Check the selected interpreter, terminal profile and whether the code command is available.",
+    "combine_en": "In the local app, open a workspace, run tests in its terminal and review the Git diff.",
+    "risks_en": "Extensions may execute code; the interpreter or terminal directory may be incorrect."
   },
   {
     "slug": "git",
@@ -76,13 +76,13 @@
       "phase-00-onboarding-baseline-3",
       "phase-01-python-software-developer-tools-1"
     ],
-    "when_en": "Lưu mốc học tập, review diff và công khai portfolio.",
-    "how_en": "Commit theo một thay đổi nhỏ; không commit secrets hoặc database runtime.",
-    "when_not_en": "Không commit database runtime, .env, token hoặc thay đổi chưa review diff.",
-    "install_en": "Cài Git, cấu hình identity cá nhân và xác nhận git remote -v trước khi push.",
-    "error_en": "Đọc git status, xem branch/remote, giải quyết conflict rồi mới commit.",
-    "combine_en": "Mỗi lần học tạo một artifact nhỏ, journal và commit message có scope rõ.",
-    "risks_en": "Lộ secret, force push nhầm branch và commit quá lớn khó review."
+    "when_en": "Record learning milestones, review diffs and publish portfolio evidence.",
+    "how_en": "Keep each commit focused on a small change; exclude credentials and runtime databases.",
+    "when_not_en": "Do not commit runtime databases, .env files, tokens or changes whose diff you have not reviewed.",
+    "install_en": "Install Git, configure your own identity and check git remote -v before pushing.",
+    "error_en": "Read git status, check the branch and remote, and resolve conflicts before committing.",
+    "combine_en": "Create a small artifact and journal entry for each session, with a clearly scoped commit message.",
+    "risks_en": "Exposing credentials, force-pushing the wrong branch and making commits too large to review."
   },
   {
     "slug": "jupyter",
@@ -102,13 +102,13 @@
       "phase-00-onboarding-environment-4",
       "phase-02-math-ml-linear-algebra-1"
     ],
-    "when_en": "Khám phá dữ liệu, trực quan hóa và thử công thức nhanh.",
-    "how_en": "Sau khi hiểu ý tưởng, chuyển logic ổn định vào package/script có test.",
-    "when_not_en": "Không dùng notebook làm nơi duy nhất chứa logic production hoặc đánh giá model.",
-    "install_en": "Cài Jupyter trong .venv, chạy jupyter lab tại root project.",
-    "error_en": "Kiểm tra kernel đang trỏ đúng .venv và restart kernel khi state bị bẩn.",
-    "combine_en": "Khám phá trong notebook, sau đó chuyển logic ổn định sang package có test.",
-    "risks_en": "State ẩn, chạy cell sai thứ tự và kết quả không reproducible."
+    "when_en": "Explore data, create visualizations and try formulas quickly.",
+    "how_en": "Once the idea is clear, move stable logic into a tested package or script.",
+    "when_not_en": "Do not keep production logic or model evaluation only in a notebook.",
+    "install_en": "Install Jupyter in a virtual environment and run jupyter lab from the project root.",
+    "error_en": "Check that the kernel uses the intended environment; restart it when hidden state affects results.",
+    "combine_en": "Explore in a notebook, then move stable logic into a package with tests.",
+    "risks_en": "Hidden state, out-of-order cells and results that cannot be reproduced."
   },
   {
     "slug": "docker",
@@ -129,25 +129,25 @@
       "phase-05-mlops-containers-1",
       "phase-05-mlops-api-2"
     ],
-    "when_en": "Đóng gói API và môi trường chạy lặp lại được.",
-    "how_en": "Bắt đầu bằng Dockerfile tối giản, không đưa secret vào image.",
-    "when_not_en": "Không đưa secret vào image, không chạy container privileged nếu không cần.",
-    "install_en": "Cài Docker Desktop, kiểm tra docker version và bật Linux containers.",
-    "error_en": "Đọc build log, kiểm tra port, context và quyền truy cập Docker daemon.",
-    "combine_en": "Đóng gói FastAPI, chạy integration test trong container và đo latency.",
-    "risks_en": "Image phình to, cache dependency cũ và port mở ngoài ý muốn."
+    "when_en": "Package an API and its runtime environment for repeatable execution.",
+    "how_en": "Start with a minimal Dockerfile and keep credentials out of the image.",
+    "when_not_en": "Do not put credentials in an image or use privileged containers without a specific need.",
+    "install_en": "Install Docker Desktop, check docker version and enable Linux containers.",
+    "error_en": "Read build logs and check ports, the build context and access to the Docker daemon.",
+    "combine_en": "Package FastAPI, run integration tests in the container and measure latency.",
+    "risks_en": "Oversized images, stale dependency caches and unintentionally exposed ports."
   },
   {
     "slug": "chatgpt-codex",
     "name": "ChatGPT/Codex",
     "category": "Learning assistant",
     "when_vi": "Giải thích lỗi, chất vấn giả thuyết và review code sau khi tự thử.",
-    "how_vi": "Luôn gửi context, lỗi, giả thuyết và yêu cầu gợi ý từng bước thay vì xin lời giải ngay.",
+    "how_vi": "Gửi context, lỗi và giả thuyết. Hỏi gợi ý hoặc đối chiếu bài giải, sau đó tự làm lại để kiểm tra hiểu bài.",
     "commands": [
       "Tạo context từ lesson hoặc exercise trong app"
     ],
-    "when_not_vi": "Không gửi credential, dữ liệu cá nhân hoặc yêu cầu lời giải ngay khi chưa tự thử.",
-    "install_vi": "MVP không cần API key; dùng nút Context export để tạo Markdown.",
+    "when_not_vi": "Không gửi credential hoặc dữ liệu cá nhân. Tránh chép bài giải khi chưa giải thích được cách làm.",
+    "install_vi": "Tạo context không cần API key; chức năng xuất context chuẩn bị Markdown để dùng với trợ lý bạn chọn.",
     "error_vi": "Nếu câu trả lời mơ hồ, bổ sung lỗi, giả thuyết, code tối thiểu và yêu cầu gợi ý từng bước.",
     "combine_vi": "Tự thử → ghi giả thuyết → gửi context → sửa code → chạy test → ghi journal.",
     "risks_vi": "Hallucination, phụ thuộc quá mức và paste dữ liệu bí mật.",
@@ -155,13 +155,16 @@
       "phase-00-onboarding-learning-system-4",
       "phase-06-llm-rag-quality-safety-2"
     ],
-    "when_en": "Giải thích lỗi, chất vấn giả thuyết và review code sau khi tự thử.",
-    "how_en": "Luôn gửi context, lỗi, giả thuyết và yêu cầu gợi ý từng bước thay vì xin lời giải ngay.",
-    "when_not_en": "Không gửi credential, dữ liệu cá nhân hoặc yêu cầu lời giải ngay khi chưa tự thử.",
-    "install_en": "MVP không cần API key; dùng nút Context export để tạo Markdown.",
-    "error_en": "Nếu câu trả lời mơ hồ, bổ sung lỗi, giả thuyết, code tối thiểu và yêu cầu gợi ý từng bước.",
-    "combine_en": "Tự thử → ghi giả thuyết → gửi context → sửa code → chạy test → ghi journal.",
-    "risks_en": "Hallucination, phụ thuộc quá mức và paste dữ liệu bí mật."
+    "when_en": "Explain failures, challenge assumptions and review code after an attempt.",
+    "how_en": "Share the relevant context, error and hypothesis. Ask for hints or compare a worked solution, then retry independently.",
+    "when_not_en": "Do not share credentials or personal data. Avoid copying an answer without checking that you can explain it.",
+    "install_en": "Context export does not require an API key; it prepares Markdown to use with your chosen assistant.",
+    "error_en": "If an answer is vague, provide the error, hypothesis and minimal code, then ask for concrete steps.",
+    "combine_en": "Try, record a hypothesis, share context, revise the code, run tests and write a journal entry.",
+    "risks_en": "Incorrect generated answers, overreliance and accidentally pasting confidential information.",
+    "commands_en": [
+      "Create context from a lesson or exercise in the app"
+    ]
   },
   {
     "slug": "redamon",
@@ -186,13 +189,20 @@
       "phase-05-mlops-security-2",
       "phase-22-genai-system-design-genai-system-design-4"
     ],
-    "when_en": "Assess an application you own or are explicitly authorized to test, after creating an isolated staging environment.",
-    "how_en": "Start with dependency/SAST and API tests; then allowlist a local target, use synthetic data, limit scope, keep logs, and review every finding before fixing it.",
-    "when_not_en": "Never scan production/public targets or systems you do not own without written authorization. Do not make it the default CI scanner or auto-merge CodeFix changes.",
-    "install_en": "RedAmon is an external reference tool, not part of the Journey runtime. On Windows use Docker Desktop + WSL2 in a Linux filesystem and take a snapshot/backup first.",
-    "error_en": "If the container, LLM provider, database, or target scope is unclear, stop; inspect logs, allowlists, network boundaries, and return to a minimal staging target.",
-    "combine_en": "Safe flow: code review → Journey Passive Security Audit → dependency/SAST → unit/integration tests → authorized staging → only then consider an external tool if needed → triage → fix → regression test → security report.",
-    "risks_en": "The tool can perform reconnaissance/exploitation, persist data in databases, and send data to third-party LLM/APIs. Its README warns that tokens/API keys may be stored plaintext; never provide real credentials or expose its dashboard to the Internet."
+    "when_en": "Evaluate an application you own or have written permission to test, in an isolated staging environment.",
+    "how_en": "Start with dependency checks, static analysis and API tests. Use an allowlisted local target, synthetic data, bounded scope and logs; review findings before making changes.",
+    "when_not_en": "Do not scan production, public or third-party targets, or endpoints with real data, without explicit authorization. Do not make it the default CI scanner or auto-merge CodeFix changes.",
+    "install_en": "This is an external reference tool, not part of the Journey runtime. On Windows, the documented setup uses Docker Desktop and WSL2 in a separate Linux filesystem; take a snapshot or backup before trying it.",
+    "error_en": "Stop if the scope of a container, model provider, database or target is unclear. Review logs, allowlists and network boundaries, then return to a minimal staging setup.",
+    "combine_en": "Code review, Journey Passive Security Audit, dependency/static checks, tests, authorized staging, optional external-tool evaluation, triage, fixes and regression tests.",
+    "risks_en": "The tool may perform reconnaissance or exploitation, store data and send it to external model APIs. The referenced README warns of plaintext tokens or API keys; use no real credentials and do not expose its dashboard to the internet.",
+    "commands_en": [
+      "Read the README and review its license, scope and data flow before installation",
+      "docker compose config",
+      "docker compose up -d",
+      "docker compose logs -f",
+      "docker compose down"
+    ]
   },
   {
     "slug": "journey-passive-security-audit",
@@ -215,12 +225,12 @@
       "phase-05-mlops-security-2",
       "phase-22-genai-system-design-genai-system-design-4"
     ],
-    "when_en": "Find endpoints and risk signals in Journey's own source before writing verification tests.",
-    "how_en": "Run a static inventory, read each endpoint finding, inspect the handler and schema manually, fix confirmed issues, then rerun regression tests. The script makes no network calls, sends no payloads and does not clone offensive tools.",
-    "when_not_en": "Do not treat a finding as proof of exploitability. Do not use this script to scan online targets or replace authorized staging tests.",
-    "install_en": "Built into the repository; no package, API key, RedAmon or Docker is required.",
-    "error_en": "If the report fails, check the virtual environment and backend imports, then rerun API tests; do not switch to sending test requests.",
-    "combine_en": "Code review → passive audit → scoped human review → fix → regression test → security report.",
-    "risks_en": "Static analysis can miss runtime logic and produce false positives; every finding needs source review and a control test."
+    "when_en": "Locate endpoints and potential risks in Journey source code before writing verification tests.",
+    "how_en": "Run the static inventory, inspect each finding and its handler/schema, fix confirmed issues and rerun tests. The script makes no network requests, sends no payloads and clones no offensive tools.",
+    "when_not_en": "A finding is not evidence that an endpoint was exploited. This script does not scan online targets or replace authorized staging tests.",
+    "install_en": "Included in the repository; no additional package, API key, RedAmon or Docker is needed.",
+    "error_en": "If the report fails, check the virtual environment and backend imports, then rerun the API tests; do not switch to sending probing requests.",
+    "combine_en": "Code review, passive audit, scoped human review, fixes, regression tests and a security report.",
+    "risks_en": "Static checks may miss runtime behavior or produce false positives; confirm findings by reading code and running controlled tests."
   }
 ]

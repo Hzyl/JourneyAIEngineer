@@ -1,12 +1,15 @@
 # PyInstaller one-file build for the portable Windows app.
 
 from pathlib import Path
+import sys
 
 from PyInstaller.building.build_main import Analysis, EXE, PYZ
 from PyInstaller.utils.hooks import collect_submodules
 
 
 ROOT = Path(SPECPATH).resolve().parent
+sys.path.insert(0, str(ROOT))
+from scripts.package_source import content_bundle_data
 
 hiddenimports = []
 for package in ("fastapi", "starlette", "uvicorn", "pydantic"):
@@ -16,10 +19,7 @@ analysis = Analysis(
     [str(ROOT / "packaging" / "launcher.py")],
     pathex=[str(ROOT)],
     binaries=[],
-    datas=[
-        (str(ROOT / "content"), "content"),
-        (str(ROOT / "dist"), "dist"),
-    ],
+    datas=content_bundle_data(ROOT) + [(str(ROOT / "dist"), "dist")],
     hiddenimports=hiddenimports,
     hookspath=[],
     hooksconfig={},

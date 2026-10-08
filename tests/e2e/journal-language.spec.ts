@@ -1,6 +1,29 @@
 import { expect, test } from '@playwright/test'
 import { checkThemeContrast } from './theme-checks'
 
+test('long Git metadata stays readable without widening the journal page', async ({ page }) => {
+  const remote = `https://example.com/${'long-repository-name-'.repeat(20)}.git`
+  const branch = `feature/${'long-branch-'.repeat(20)}`
+  await page.route('**/api/git/status', (route) => route.fulfill({ json: {
+    root: '', branch, remote, last_commit: `0123456 ${'Long commit description '.repeat(20)}`,
+    status: ` M ${'long-directory/'.repeat(20)}file.py`,
+  } }))
+  await page.route('**/api/git/diff', (route) => route.fulfill({ json: { diff: '+ example change' } }))
+  await page.goto('/journal')
+  await expect(page.locator('.git-details')).toContainText(remote)
+  for (const width of [1440, 390]) {
+    await page.setViewportSize({ width, height: 900 })
+    for (const theme of ['light', 'dark'] as const) {
+      await page.emulateMedia({ colorScheme: theme })
+      await page.locator('.git-card').scrollIntoViewIfNeeded()
+      await checkThemeContrast(page)
+      expect(await page.locator('.git-details').evaluate((element) => (
+        element.scrollWidth <= element.clientWidth
+      ))).toBe(true)
+    }
+  }
+})
+
 for (const language of ['vi', 'en'] as const) {
   test(`${language} journal preserves notes, labels controls and handles clipboard failure`, async ({ page }) => {
     await page.route('**/api/settings', async (route) => {

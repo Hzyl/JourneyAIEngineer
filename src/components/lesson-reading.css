@@ -1,0 +1,87 @@
+.lesson-detail .lesson-anchor-nav {
+  position: static;
+  flex-wrap: wrap;
+  overflow: visible;
+  box-shadow: none;
+}
+
+.lesson-detail .lesson-anchor-nav a {
+  min-height: 44px;
+  font-size: 12px;
+}
+
+.lesson-detail .lesson-anchor-label {
+  font-size: 11px;
+}
+
+.lesson-page-shell .lesson-detail .lesson-section h2 {
+  font-size: clamp(24px, 2.4vw, 32px);
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.lesson-detail .study-step-copy strong {
+  color: var(--ink);
+  font-size: 15px;
+}
+
+.lesson-detail .study-step-copy small {
+  font-size: 12px;
+}
+
+.lesson-page-shell .lesson-detail .lesson-section li,
+.lesson-page-shell .lesson-detail .concept-notes,
+.lesson-page-shell .lesson-detail .study-step-card p,
+.lesson-detail .study-step-explanation,
+.lesson-detail .study-step-answer p,
+.lesson-detail .playbook-intro > p,
+.lesson-detail .practice-plan strong,
+.lesson-detail .practice-plan p {
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.lesson-detail .study-step-card small,
+.lesson-detail .study-step-card a,
+.lesson-detail .study-step-answer summary {
+  font-size: 13px;
+}
+
+.lesson-detail .study-step-card pre,
+.lesson-detail .code-example pre {
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.lesson-detail .linked-exercise {
+  gap: 16px;
+}
+
+.lesson-detail .linked-exercise > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.lesson-detail .linked-exercise button {
+  flex-shrink: 0;
+}
+
+.lesson-detail .lesson-section:focus,
+.lesson-detail #overview:focus {
+  outline: 2px solid var(--focus);
+  outline-offset: 5px;
+}
+
+.lesson-detail .study-step-detail[hidden] {
+  display: none;
+}
+
+@media (max-width: 620px) {
+  .lesson-detail .linked-exercise {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

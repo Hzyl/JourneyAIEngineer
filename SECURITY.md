@@ -1,6 +1,6 @@
 # Security policy
 
-## Phạm vi của v0.1
+## Phạm vi của bản local
 
 Journey AI Engineer v0.1 là ứng dụng **local-first, single-user**. FastAPI chỉ bind loopback (`127.0.0.1`), SQLite lưu trên máy người dùng, và các route mở VS Code/chạy exercise/đọc Git được thiết kế cho desktop owner. Đây không phải public multi-user API. Không expose port của app lên Internet hoặc reverse proxy ra ngoài.
 
@@ -30,13 +30,24 @@ Luồng an toàn: passive inventory → dependency/SAST → unit/integration tes
 - `JOURNEY_FEEDBACK_ADMIN_TOKEN` chỉ tồn tại trong process backend local, không đặt trong frontend bundle hoặc query string.
 - Nếu phát hiện secret đã lọt vào history, rotate/revoke secret trước, sau đó liên hệ maintainer để xử lý history rewrite.
 
-## Ranh giới hosted tương lai
+## Ranh giới web beta
 
-Nếu sau này có public web, phải tách public API khỏi filesystem/Git/subprocess, thêm authentication, per-user isolation, Postgres/RLS, rate limit, audit log, CSRF/origin policy và secret management. Không bật hosted mode bằng cách chỉ đổi CORS hoặc bind `0.0.0.0` trên code local hiện tại.
+Web beta là frontend React/Vite tĩnh trên Cloudflare Pages, dùng Supabase Auth và
+Postgres/RLS để tách dữ liệu theo tài khoản. Trình duyệt không có quyền gọi backend
+local để mở VS Code, chạy bài tập, đọc Git hay filesystem. Người học đọc đề, hướng
+dẫn và bài giải trong web; thực hành code trong môi trường của họ.
+
+Không expose FastAPI local bằng cách đổi CORS, bind `0.0.0.0` hay thêm reverse proxy
+để thay cho kiến trúc hosted. Không đưa service key hoặc mật khẩu database vào bundle.
+Đọc [trạng thái triển khai](docs/RELEASE-READINESS.md) để phân biệt tính năng đã có
+trên server và thay đổi đang chờ rollout; code trong repo không chứng minh đã deploy.
 
 ## Web beta boundary
 
-The hosted candidate uses a static React/Vite frontend with Supabase Auth and Postgres RLS. The Supabase **publishable** key is allowed in the browser bundle; it is not a credential that bypasses RLS. Its safety depends on all user-data tables having RLS enabled and policies requiring `user_id = auth.uid()`.
+The deployed web beta uses a static React/Vite frontend with Supabase Auth and
+Postgres RLS. The Supabase **publishable** key is allowed in the browser bundle;
+it is not a credential that bypasses RLS. Its safety depends on all user-data tables
+having RLS enabled and policies requiring `user_id = auth.uid()`.
 
 Never expose a Supabase `service_role`/`sb_secret_` key, database password, personal access token or local `.env` through Vite, Cloudflare Pages variables intended for the browser, Git history, screenshots or issue reports. The hosted build rejects the known secret-key prefix and generates CSP `connect-src` from the configured Supabase origin.
 

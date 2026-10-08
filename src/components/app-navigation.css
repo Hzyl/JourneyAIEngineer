@@ -1,0 +1,47 @@
+.app-shell .sidebar .nav-item strong {
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.app-shell .sidebar .nav-item small {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.app-shell .sidebar-intro {
+  font-size: 13px;
+}
+
+@media (max-width: 850px) {
+  .app-shell .sidebar {
+    width: min(280px, calc(100vw - 48px));
+    height: 100dvh;
+    min-height: 0;
+    overscroll-behavior: contain;
+  }
+
+  .app-shell .sidebar[inert] {
+    visibility: hidden;
+  }
+
+  .app-shell .sidebar .brand-lockup {
+    padding-inline: 0;
+    gap: 8px;
+  }
+
+  .app-shell .mobile-nav-close {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+    padding: 0;
+    border-radius: 8px;
+  }
+
+  .app-shell .sidebar-intro {
+    margin-block: 16px;
+  }
+
+  .app-shell .sidebar-footer {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+}

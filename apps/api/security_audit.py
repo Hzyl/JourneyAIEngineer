@@ -8,14 +8,15 @@ learner can review likely risk before choosing an authorized staging test.
 
 from __future__ import annotations
 
-import ast
 import inspect
-import re
 from pathlib import Path
 from typing import Any, get_args, get_origin
 
 from fastapi.routing import APIRoute
 from pydantic import BaseModel
+
+from .security_audit_copy import LIMITATIONS_EN, LIMITATIONS_VI, english_finding
+from .security_source_checks import ast_findings
 
 
 WRITE_METHODS = frozenset({"POST", "PUT", "PATCH", "DELETE"})
@@ -99,8 +100,9 @@ def _finding(
     methods: list[str] | None = None,
     source_file: str | None = None,
     source_line: int | None = None,
+    evidence_en: str = "",
 ) -> dict[str, Any]:
-    return {
+    finding = {
         "id": finding_id,
         "severity": severity,
         "status": status,
@@ -112,68 +114,8 @@ def _finding(
         "source_file": source_file,
         "source_line": source_line,
     }
-
-
-def _ast_findings(source_path: Path) -> list[dict[str, Any]]:
-    if not source_path.exists() or source_path.stat().st_size > 1_000_000:
-        return []
-    try:
-        source_text = source_path.read_text(encoding="utf-8")
-        tree = ast.parse(source_text, filename=str(source_path))
-    except (OSError, SyntaxError, UnicodeError):
-        return []
-    findings: list[dict[str, Any]] = []
-    for node in ast.walk(tree):
-        if not isinstance(node, ast.Call):
-            continue
-        function_name = ""
-        if isinstance(node.func, ast.Attribute):
-            function_name = node.func.attr
-        elif isinstance(node.func, ast.Name):
-            function_name = node.func.id
-        if function_name in {"run", "Popen", "call", "check_call", "check_output"}:
-            shell_true = any(
-                keyword.arg == "shell"
-                and isinstance(keyword.value, ast.Constant)
-                and keyword.value.value is True
-                for keyword in node.keywords
-            )
-            if shell_true:
-                findings.append(_finding(
-                    "source-shell-true",
-                    "critical",
-                    "needs_human_review",
-                    "Subprocess có shell=True",
-                    f"{source_path.name}:{node.lineno} gọi subprocess với shell=True.",
-                    "Loại bỏ shell=True, dùng argv list, allowlist command và test input boundary.",
-                    source_file=str(source_path),
-                    source_line=node.lineno,
-                ))
-        if function_name == "execute" and node.args and isinstance(node.args[0], ast.JoinedStr):
-            findings.append(_finding(
-                f"source-sql-fstring-{node.lineno}",
-                "medium",
-                "needs_human_review",
-                "SQL query được tạo bằng f-string",
-                f"{source_path.name}:{node.lineno} truyền f-string vào execute().",
-                "Kiểm tra toàn bộ giá trị động; dùng parameterized query cho dữ liệu người dùng và giữ phần SQL động trong allowlist.",
-                source_file=str(source_path),
-                source_line=node.lineno,
-            ))
-    cors_wildcard = re.search(r"allow_origins\s*=\s*\[[^\]]*[\"']\*[\"']", source_text)
-    if cors_wildcard:
-        line = source_text[:cors_wildcard.start()].count("\n") + 1
-        findings.append(_finding(
-            "source-cors-wildcard",
-            "high",
-            "needs_human_review",
-            "CORS cho phép mọi origin",
-            f"{source_path.name}:{line} chứa allow_origins=['*'].",
-            "Đổi sang allowlist origin cụ thể và kiểm tra credential/CORS trước khi public.",
-            source_file=str(source_path),
-            source_line=line,
-        ))
-    return findings
+    finding.update(english_finding(finding, evidence_en))
+    return finding
 
 
 def _route_findings(routes: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -216,6 +158,7 @@ def _route_findings(routes: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 "Body có string chưa thấy max length",
                 f"{route['body_model']} ({fields}) tại {route['path']} chưa có maxLength trong schema.",
                 "Đặt giới hạn độ dài phù hợp hoặc ghi lại lý do field cần mở; sau đó kiểm tra rate limit và payload size ở gateway.",
+                evidence_en=f"{route['body_model']} ({fields}) at {route['path']} has no maxLength in its schema.",
                 path=route["path"],
                 methods=route["methods"],
                 source_file=route["source_file"],
@@ -244,7 +187,15 @@ def audit_app(app: Any, source_root: Path | None = None) -> dict[str, Any]:
     routes = inventory_routes(app)
     findings = _route_findings(routes)
     api_source = root / "apps" / "api" / "main.py"
-    findings.extend(_ast_findings(api_source))
+    source_findings, inspected = ast_findings(api_source, _finding)
+    findings.extend(source_findings)
+    if not inspected:
+        findings.append(_finding(
+            "source-inspection-unavailable", "info", "needs_human_review",
+            "Chưa kiểm tra được source API",
+            "File source thiếu, không đọc được, quá lớn hoặc không phải Python hợp lệ.",
+            "Mở bản source có file Python hợp lệ, đọc được rồi chạy lại kiểm tra.",
+        ))
     frontend_files = list((root / "src").glob("*.tsx")) if (root / "src").exists() else []
     for source_path in frontend_files:
         try:
@@ -263,7 +214,7 @@ def audit_app(app: Any, source_root: Path | None = None) -> dict[str, Any]:
                 source_file=str(source_path),
                 source_line=line,
             ))
-    if not any(finding["id"] == "source-shell-true" for finding in findings):
+    if inspected and not any(finding["id"] == "source-shell-true" for finding in findings):
         findings.append(_finding(
             "control-no-shell-true",
             "info",
@@ -273,7 +224,7 @@ def audit_app(app: Any, source_root: Path | None = None) -> dict[str, Any]:
             "Giữ nguyên argv list, shell=False và timeout cho mọi subprocess mới.",
             source_file=str(api_source) if api_source.exists() else None,
         ))
-    if not any(finding["id"] == "source-cors-wildcard" for finding in findings):
+    if inspected and not any(finding["id"] == "source-cors-wildcard" for finding in findings):
         findings.append(_finding(
             "control-cors-not-wildcard",
             "info",
@@ -316,9 +267,6 @@ def audit_app(app: Any, source_root: Path | None = None) -> dict[str, Any]:
             "needs_human_review": status_counts.get("needs_human_review", 0),
             "verified_controls": status_counts.get("verified_control", 0),
         },
-        "limitations_vi": [
-            "Đây là review thụ động; không gửi request tới target và không chứng minh exploitability.",
-            "Finding cần human review là dấu hiệu để đọc code/test trên staging có ủy quyền.",
-            "Không clone, cài hoặc gọi RedAmon hay công cụ tấn công nào.",
-        ],
+        "limitations_vi": LIMITATIONS_VI,
+        "limitations_en": LIMITATIONS_EN,
     }

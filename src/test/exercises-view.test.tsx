@@ -20,6 +20,7 @@ let root: Root
 const refresh = vi.fn(async () => {})
 beforeEach(() => {
   vi.resetAllMocks()
+  window.history.replaceState({}, '', '/exercises')
   Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true })
   host = document.createElement('div')
   document.body.append(host)
@@ -37,6 +38,7 @@ const render = (hosted = false, language: 'vi' | 'en' = 'en', git = true) => act
 })
 const button = (name: string) => [...host.querySelectorAll('button')].find((b) => b.textContent === name)!
 const click = (name: string) => act(async () => button(name).click())
+const openExercise = () => click('Read task & guide →')
 const fill = (element: HTMLInputElement, value: string) => act(async () => {
   Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(element, value)
   element.dispatchEvent(new Event('input', { bubbles: true }))
@@ -46,7 +48,13 @@ test('hosted practice localizes and filters both languages without local API act
   await render(true)
   expect(host.textContent).toContain('Python practice')
   expect(host.textContent).toContain('Read synthetic records')
-  expect(host.querySelectorAll('button')).toHaveLength(0)
+  expect(host.querySelector('a[href*="github"]')).toBeNull()
+  await openExercise()
+  expect(host.textContent).toContain('How to approach it')
+  expect(host.querySelector('.exercise-workspace')).toBeNull()
+  expect(document.activeElement).toBe(host.querySelector('.exercise-detail h2'))
+  await click('← All exercises')
+  expect(document.activeElement).toBe(host.querySelector('.exercise-open'))
   await fill(host.querySelector('input')!, 'synthetic')
   expect(host.querySelectorAll('.exercise-card')).toHaveLength(1)
   await render(true, 'vi')
@@ -61,6 +69,7 @@ test('running blocks duplicate and conflicting actions, retains workspace and re
   api.runWorkspace.mockImplementationOnce(() => new Promise((_resolve, reject) => { fail = reject }))
     .mockResolvedValue({ status: 'passed', output: 'User output kept', duration_ms: 12, assessment_kind: 'reflection' })
   await render()
+  await openExercise()
   await act(async () => { button('Run tests').click(); button('Run tests').click() })
   expect(api.createWorkspace).toHaveBeenCalledTimes(1)
   expect(api.runWorkspace).toHaveBeenCalledTimes(1)
@@ -80,6 +89,7 @@ test('running blocks duplicate and conflicting actions, retains workspace and re
 
 test('empty history is explicit and does not create a workspace; local-only export stays disabled', async () => {
   await render(false, 'en', false)
+  await openExercise()
   await click('History')
   expect(host.textContent).toContain('No runs yet.')
   expect(api.createWorkspace).not.toHaveBeenCalled()
@@ -92,6 +102,7 @@ test('publish requires review, resets consent on message edits and prevents dupl
   let rejectPush: (reason: unknown) => void = () => {}
   api.publishGit.mockImplementationOnce(() => new Promise((_resolve, reject) => { rejectPush = reject }))
   await render()
+  await openExercise()
   await click('Save artifact')
   const confirm = host.querySelector<HTMLInputElement>('[type="checkbox"]')!
   expect(button('Confirm & push to GitHub').disabled).toBe(true)

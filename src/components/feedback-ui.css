@@ -1,0 +1,18 @@
+.community-feedback-card,
+.feedback-item,
+.feedback-panel {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.community-filter select {
+  max-width: 100%;
+}
+
+.feedback-report-heading {
+  flex-wrap: wrap;
+}
+
+.feedback-panel .feedback-report-preview {
+  max-width: 100%;
+}

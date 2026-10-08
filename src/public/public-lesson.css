@@ -38,10 +38,15 @@
   background: var(--paper);
   min-height: 100vh;
 }
-.public-auth > .public-back {
+.public-auth-toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 24px;
+}
+.public-auth-toolbar .public-back {
   display: block;
   position: static;
-  margin: 12px 24px;
   color: var(--ink);
   background: var(--surface);
   border: 1px solid var(--field-border);
@@ -87,6 +92,7 @@
   }
   .public-nav nav {
     width: 100%;
+    flex-wrap: wrap;
     justify-content: space-between;
   }
   .public-shell main {

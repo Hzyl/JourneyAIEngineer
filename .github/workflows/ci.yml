@@ -19,6 +19,8 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Scan source for common secret markers without logging values
+        run: python scripts/source_secrets.py
       - name: Install backend dependencies
         shell: pwsh
         run: |
@@ -56,16 +58,9 @@ jobs:
       - name: Run browser smoke test
         shell: pwsh
         run: npm run test:e2e
-      - name: Scan tracked source for common secret markers
+      - name: Run production web learning and account regression tests
         shell: pwsh
-        run: |
-          $patterns = 'BEGIN (RSA|OPENSSH|EC|DSA) PRIVATE KEY', 'AKIA[0-9A-Z]{16}', 'gh[pousr]_[A-Za-z0-9]{20,}', 'sk-[A-Za-z0-9]{20,}'
-          $files = git ls-files | Where-Object { $_ -notmatch '(^|/)(node_modules|\.venv|\.data|\.git)/' }
-          $matches = Select-String -Path $files -Pattern $patterns -AllMatches -ErrorAction SilentlyContinue
-          if ($matches) {
-            $matches | ForEach-Object { Write-Output $_.Line }
-            throw 'Potential secret marker found in tracked source.'
-          }
+        run: npm run test:e2e:production
   hosted-database:
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -82,10 +77,13 @@ jobs:
       - name: Start Supabase and apply migrations
         shell: bash
         run: |
+          sed -i 's/^project_id = .*/project_id = "journey-readiness-ci"/' supabase/config.toml
           npx supabase start
           npx supabase db reset
       - name: Test schema, RLS and RPC boundary
         run: npx supabase test db
+      - name: Verify conditional trigger migration and concurrent writes
+        run: python3 scripts/test_db_concurrency.py --container supabase_db_journey-readiness-ci
       - name: Verify generated database types
         shell: bash
         run: |

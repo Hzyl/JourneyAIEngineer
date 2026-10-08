@@ -1,0 +1,67 @@
+.exercise-solution-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 44px;
+  padding: 10px 16px;
+}
+.exercise-solution-content {
+  margin-top: 24px;
+}
+.exercise-solution-content h4 {
+  margin: 24px 0 8px;
+  font-size: 16px;
+}
+.exercise-solution-content ol {
+  padding-left: 24px;
+}
+.exercise-solution-content li {
+  margin-block: 12px;
+  padding-left: 6px;
+}
+.exercise-solution-content li::marker {
+  color: var(--teal);
+  font-weight: 700;
+}
+
+.exercise-solution-file summary {
+  padding-block: 12px;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+.exercise-solution-downloads a {
+  overflow-wrap: anywhere;
+}
+
+.exercise-solution-table {
+  max-width: 100%;
+  overflow-x: auto;
+  margin-block: 24px;
+}
+
+.exercise-solution-table table {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.exercise-solution-table caption {
+  text-align: left;
+  font-weight: 700;
+  padding-bottom: 12px;
+}
+
+.exercise-solution-table th,
+.exercise-solution-table td {
+  padding: 12px;
+  border: 1px solid var(--line);
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.exercise-solution-table thead {
+  background: var(--surface-subtle);
+}

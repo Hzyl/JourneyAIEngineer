@@ -1,0 +1,71 @@
+.auth-heading h1 {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--display-font);
+  font-size: clamp(2rem, 3.4vw, 3.15rem);
+  letter-spacing: -.035em;
+  line-height: 1.12;
+}
+
+.auth-theme-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+}
+
+.auth-form-panel,
+.auth-intro,
+.auth-field,
+.auth-notice-copy {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.auth-mode-switch button {
+  min-height: 44px;
+}
+
+.auth-mode-switch button,
+.auth-form button[type="submit"],
+.auth-secondary-actions button,
+.auth-notice button {
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.auth-shell .password-toggle {
+  min-height: 44px;
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.auth-form button[type="submit"] {
+  white-space: normal;
+  padding: 12px 16px;
+  line-height: 1.4;
+}
+
+.auth-callback .auth-heading .primary-button {
+  padding: 12px 16px;
+  line-height: 1.4;
+}
+
+@media (min-width: 761px) and (max-width: 960px) {
+  .auth-frame:not(.auth-callback) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .auth-form-panel,
+  .auth-intro {
+    padding: 28px;
+  }
+}
+
+@media (max-width: 520px) {
+  .auth-intro h1 {
+    font-size: 28px;
+    line-height: 1.12;
+  }
+}

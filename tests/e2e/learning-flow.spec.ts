@@ -17,7 +17,7 @@ test('lesson deep link renders content and preserves a single browser route', as
   await page.goto(`/lesson/${firstLessonSlug}`)
 
   await expect(page).toHaveURL(new RegExp(`/lesson/${firstLessonSlug}$`))
-  await expect(page.getByText('Lesson workspace', { exact: true })).toBeVisible()
+  await expect(page.locator('.topbar-title')).toHaveText('Bài học')
   await expect(page.locator('h1#lesson-page-title')).toBeVisible()
   await expect(page.getByText('Cài Python và kiểm tra phiên bản', { exact: true })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Giải thích cốt lõi' })).toBeVisible()

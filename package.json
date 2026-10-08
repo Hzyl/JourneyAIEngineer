@@ -15,7 +15,8 @@
     "test:unit": "vitest run src/test",
     "test:db": "supabase test db",
     "test:e2e:hosted": "playwright test --config=playwright.hosted.config.ts",
-    "supabase:types": "supabase gen types typescript --local > src/platform/hosted/database.types.ts",
+    "test:e2e:production": "playwright test --config=playwright.production.config.ts",
+    "supabase:types": "node scripts/generate-database-types.mjs",
     "package:windows": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/package_release.ps1"
   },
   "dependencies": {

@@ -1,16 +1,35 @@
 # Pending public-readiness release
 
-Status as of 2026-10-07: readiness commit `29b6baf` and theme commit `5e0e34a`
-are on `origin/main` (remote head verified). Interaction feedback and Journal VI/EN
-follow-up changes remain local. Cloudflare deployment and production migrations have
-not been reverified after those pushes. The package version is still 0.1.2, an
-existing release; select a new version before publishing new assets.
+Read-only follow-up on 2026-10-08 confirms GitHub `main` at `94d3be8`.
+Cloudflare's GitHub check reports successful deployment
+`13510298-de1b-48a2-a53d-9e1005a95ca6` for that exact commit, with preview
+`https://13510298.journeyaiengineer.pages.dev`. Direct HTTP inspection returned 403,
+but the subsequent browser inspection loaded both that preview and the main site
+`https://journeyaiengineer.pages.dev`, showing the public learning page. This proves
+those pages are reachable in the browser, not authenticated acceptance or an exact
+production-alias-to-deployment mapping. Confirm the mapping in Cloudflare before rollback.
+
+The in-page exercise reader, solutions and workflow improvements remain local.
+GitHub run `37636393815` passed `quality` but failed `hosted-database` at the
+regenerated-types diff: `learning_mutations` and two RPCs were missing. The local
+candidate now includes the generated definitions and passes an exact regeneration
+comparison. The remote CI check has not been rerun on this unpublished candidate.
+
+The package version remains 0.1.2, an existing release; select a new version before
+publishing new assets. The approved backend rollout completed on 2026-10-08:
+six migrations are applied, nine public tables have RLS, and `delete-account`
+version 1 is ACTIVE. Ten non-destructive live HTTP checks passed. See the
+[rollout report](BACKEND-ROLLOUT.md) for exact scope and remaining acceptance.
 See `PUBLIC-READINESS-IMPLEMENTATION.md` for evidence and outstanding checks.
+The [review packet](RELEASE-REVIEW-PACKET.md) records the exact candidate source,
+backend files and the order of approval, verification and rollback. Older packets
+are historical snapshots; check the rollout report before applying any migration.
 
 ## Supabase MCP and Docker have different jobs
 
 The deployed beta uses Supabase project `tnnlpsecrzatxdpoaagw`. MCP is connected and
-was used for read-only project URL, migration, schema and advisor inspection.
+was used for project URL, migration, schema and advisor inspection, and the approved
+Edge Function deployment. The CLI applied the approved versioned migrations.
 The browser talks to hosted Supabase directly; neither learners nor the hosted app need Docker.
 The desktop app uses SQLite and also does not need Docker.
 
@@ -19,10 +38,16 @@ users, attempt cross-user access, retry mutations, race concurrent requests and 
 fixtures. Never point those tests or `db reset` at the deployed project. A separate staging
 project is an alternative, but must be explicitly provisioned/approved before use.
 
+The maintainer confirmed on 2026-10-08 that the existing project remains the
+deployment destination under the Free-plan goal. A separate cloud staging project
+is optional. Complete disposable tests locally or in CI, and obtain approval for
+the concrete production migration/function changes and disposable-account checks.
+
 ## Additive database and function rollout
 
-Live MCP inspection on 2026-10-07 showed only `20261006000100` and `20261006000200` applied.
-Review these four pending migrations, in order:
+Following backup verification and explicit approval, the four migrations below were
+applied on 2026-10-08 in addition to `20261006000100` and `20261006000200`.
+MCP confirmed the resulting schema and the same destination project:
 
 1. `20261007000100_serialize_review_activation.sql`: lock a user's first review and require learned content.
 2. `20261007000200_idempotent_learning_writes.sql`: receipt table and transactional mutation RPC.
@@ -30,14 +55,14 @@ Review these four pending migrations, in order:
 4. `20261007000400_restrict_rls_trigger_execution.sql`: remove client EXECUTE permission on
    the platform event-trigger function when present; preserve its body and event trigger.
 
-Before rollout, finish local SQL/type generation checks, back up the destination and review
-the exact migration diff. Do not run a reset against production. Apply migrations before
-deploying the frontend that calls the new RPCs.
+Local SQL/type generation checks pass (see `DATABASE-ACCEPTANCE.md`). The production
+rollout followed the verified backup and local rehearsal. Do not run a reset against
+production. Reconfirm backend compatibility before promoting a later frontend.
 
-The `delete-account` Edge Function also needs a separate deployment and environment setup:
+The approved `delete-account` deployment and environment setup are complete:
 
-- Set `ALLOWED_ORIGINS` to the exact approved HTTPS frontend origins, comma-separated.
-  Do not use `*`; add preview origins only when intentionally testing that preview.
+- `ALLOWED_ORIGINS` is `https://journeyaiengineer.pages.dev`; live checks confirmed
+  that exact origin and rejection of other origins. Add previews only when approved.
 - `SUPABASE_URL`, `SUPABASE_ANON_KEY` and `SUPABASE_SERVICE_ROLE_KEY` stay in the server
   function environment. Never copy the service key into a Vite variable or browser bundle.
 - Gateway `verify_jwt=false` is intentional: the handler validates the bearer token with
@@ -46,11 +71,35 @@ The `delete-account` Edge Function also needs a separate deployment and environm
 - The flow requires typing DELETE, refuses verified MFA accounts until an MFA-aware
   implementation exists, and returns generic failures without leaking provider details.
 - Test a disposable account's deletion, all learning-row cascades and sign-out before launch.
-  Handler unit tests alone do not prove deployed Auth behavior. No real account was deleted
-  during this implementation.
+  Local Auth/Edge acceptance passed with two synthetic accounts and full cleanup.
+  This does not prove deployed Auth/browser behavior; no production account was deleted.
+- The request reader now enforces an 8192-byte streamed body limit and strict UTF-8;
+  [input verification](EDGE-INPUT-VALIDATION.md) covers Node Web Streams behavior.
+  Local Deno entrypoint/Auth acceptance and live malformed-input checks passed;
+  successful authenticated deletion and browser sign-out still need acceptance.
 
-The security advisor also reported leaked-password protection disabled. Review the project's
-available plan/settings and obtain approval before changing authentication or billing settings.
+The security advisor still reports leaked-password protection disabled. Supabase's
+[password security documentation](https://supabase.com/docs/guides/auth/password-security)
+limits this feature to Pro and above. The maintainer's Free-plan choice remains in
+force; record the limitation without claiming it is enabled or changing billing.
+Migration 004 removed the separate event-trigger EXECUTE grants; MCP confirmed
+anon/authenticated denial and the preserved event trigger. That advisor finding cleared.
+
+For Free-plan projects, Supabase recommends regular CLI exports in its
+[backup documentation](https://supabase.com/docs/guides/platform/backups).
+An authorized production backup was exported and restored locally on 2026-10-08.
+The existing CLI connection worked without requesting a password in chat.
+Seven SQL components and their checksums are stored outside the repository in a
+restricted local backup directory. All 42 data blocks and one sequence matched;
+the four rollout migrations also passed on the restored copy without changing
+existing rows. See [database acceptance](DATABASE-ACCEPTANCE.md).
+
+The CLI omits platform event triggers, so `ensure_rls` was captured separately and
+verified with its original owner, function body and enabled state. The test container
+and its anonymous volume were removed. This verifies database restoration, not all
+Supabase service configuration, credentials, email behavior or a production rollout.
+That backup captured the two original migrations before rollout. Subsequent approved
+deployment and post-deployment checks are recorded in `BACKEND-ROLLOUT.md`.
 
 ## Release order and rollback
 

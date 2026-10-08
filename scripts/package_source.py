@@ -2,20 +2,29 @@
 import argparse
 import hashlib
 import json
+import sys
 import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+from scripts.source_secrets import redacted_report, scan_payloads
+
 DIRECTORIES = {"src", "apps", "content", "docs", "scripts", "packaging", "public", "tests", "samples", ".github"}
 ROOT_FILES = {
     "README.md", "CONTRIBUTING.md", "SECURITY.md", "LICENSE", "package.json", "package-lock.json",
     "index.html", "vite.config.ts", "tsconfig.json", "tsconfig.app.json", "tsconfig.node.json",
-    "playwright.config.ts", "playwright.hosted.config.ts", "pytest.ini", ".gitignore", ".oxlintrc.json",
+    "playwright.config.ts", "playwright.hosted.config.ts", "playwright.production.config.ts",
+    "pytest.ini", ".gitignore", ".oxlintrc.json",
 }
 EXACT_FILES = {"supabase/config.toml", "supabase/seed.sql", "journal/weekly/TEMPLATE.md",
                "exercises/README.md", "projects/README.md"}
-BLOCKED_PARTS = {".git", ".data", ".codex", ".omx", "node_modules", "__pycache__", ".venv", "secrets"}
+BLOCKED_PARTS = {".git", ".data", ".codex", ".omx", "node_modules", "__pycache__", ".venv", "secrets",
+                 ".build", ".pytest_cache", "test-results", "playwright-report"}
 BLOCKED_SUFFIXES = {".pyc", ".pyo", ".db", ".sqlite", ".sqlite3", ".pem", ".key", ".exe", ".log"}
+BLOCKED_SUFFIXES.update(f"{database}{sidecar}" for database in (".db", ".db3", ".sqlite", ".sqlite3")
+                        for sidecar in ("", "-wal", "-shm", "-journal"))
 
 
 def source_files(root: Path) -> list[Path]:
@@ -29,9 +38,9 @@ def source_files(root: Path) -> list[Path]:
         name = relative.as_posix()
         allowed = (name in ROOT_FILES or name in EXACT_FILES or parts[0] in DIRECTORIES
                    or name.startswith(("supabase/migrations/", "supabase/tests/", "supabase/functions/")))
-        if not allowed or any(part in BLOCKED_PARTS for part in parts):
+        if not allowed or any(part.casefold() in BLOCKED_PARTS for part in parts):
             continue
-        if file.name == "AGENTS.md" or file.name.startswith(".env") or file.suffix.lower() in BLOCKED_SUFFIXES:
+        if file.name.casefold() == "agents.md" or file.name.casefold().startswith(".env") or file.suffix.lower() in BLOCKED_SUFFIXES:
             continue
         if not file.is_file():
             continue
@@ -47,6 +56,9 @@ def create_source_archive(root: Path, output: Path, version: str) -> Path:
         raise ValueError("Source version must match package.json; update version before creating a release")
     files = source_files(root)
     payloads = {file.relative_to(root).as_posix(): file.read_bytes() for file in files}
+    findings = scan_payloads(payloads)
+    if findings:
+        raise ValueError(redacted_report(findings))
     manifest = {
         "format": "journey-source-manifest", "schema_version": 1, "app_version": version,
         "origin": "working-tree snapshot; not evidence of a published release",
@@ -65,6 +77,12 @@ def create_source_archive(root: Path, output: Path, version: str) -> Path:
     checksum = hashlib.sha256(target.read_bytes()).hexdigest()
     target.with_suffix(".zip.sha256").write_text(f"{checksum}  {target.name}\n", encoding="ascii")
     return target
+
+
+def content_bundle_data(root: Path) -> list[tuple[str, str]]:
+    """Select authored content for PyInstaller with the source archive boundary."""
+    return [(str(file), file.relative_to(root).parent.as_posix()) for file in source_files(root)
+            if file.relative_to(root).parts[0] == "content"]
 
 
 def main():

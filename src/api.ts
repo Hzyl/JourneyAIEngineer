@@ -27,9 +27,21 @@ export type PortfolioProject = {
   problem_en: string
   stack: string[]
   deliverables: string[]
+  deliverables_vi?: string[]
   evaluation: string
+  evaluation_vi?: string
   github_path: string
   estimated_weeks: number
+}
+
+export type ToolTextField = 'when' | 'how' | 'when_not' | 'install' | 'error' | 'combine' | 'risks'
+export type LearningTool = Record<`${ToolTextField}_${'vi' | 'en'}`, string> & {
+  slug: string
+  name: string
+  category: string
+  commands: string[]
+  commands_en?: string[]
+  lesson_refs: string[]
 }
 
 export type ReferenceResource = {
@@ -54,6 +66,7 @@ export type SearchResult = {
   type: 'lesson' | 'phase' | 'module' | 'resource' | 'exercise' | string
   id: string
   title: string
+  title_en?: string
   subtitle?: string
   slug?: string
   phase?: string | string[]
@@ -209,8 +222,11 @@ export type SecurityFinding = {
   severity: 'critical' | 'high' | 'medium' | 'low' | 'info'
   status: 'candidate' | 'needs_human_review' | 'verified_control'
   title_vi: string
+  title_en: string
   evidence: string
+  evidence_en: string
   remediation_vi: string
+  remediation_en: string
   path: string | null
   methods: string[]
   source_file: string | null
@@ -229,6 +245,7 @@ export type SecurityAuditReport = {
   findings: SecurityFinding[]
   summary: { status_counts: Record<string, number>; severity_counts: Record<string, number>; candidate_count: number; needs_human_review: number; verified_controls: number }
   limitations_vi: string[]
+  limitations_en: string[]
 }
 
 export type HealthStatus = { status: string; project_root_configured: boolean; git_publish_available: boolean; local_only: boolean; mode?: 'local' | 'hosted' }
@@ -277,7 +294,7 @@ export const localApi = {
   updateProgress: (slug: string, status: string, minutes_spent = 0) => learningWrite(`/lessons/${slug}/progress`, 'PATCH', { status, minutes_spent }),
   createSession: (payload: { lesson_slug?: string; minutes: number; note?: string }) => learningWrite('/study-sessions', 'POST', { lesson_slug: payload.lesson_slug ?? null, minutes: payload.minutes, note: payload.note ?? '' }),
   reviews: () => request<{ items: Array<any>; count: number }>('/reviews/due'),
-  answerReview: (id: number, rating: string, thoughtSeconds = 0, answerText = '') => learningWrite(`/reviews/${id}/answer`, 'POST', { rating, thought_seconds: thoughtSeconds, answer_text: answerText }),
+  answerReview: (id: number | string, rating: string, thoughtSeconds = 0, answerText = '') => learningWrite(`/reviews/${encodeURIComponent(id)}/answer`, 'POST', { rating, thought_seconds: thoughtSeconds, answer_text: answerText }),
   reviewHistory: () => request<{ items: Array<any>; count: number }>('/reviews/history'),
   weakTopics: () => request<{ items: Array<any> }>('/reviews/weak-topics'),
   exercises: () => request<{ exercises: Exercise[] }>('/exercises'),
@@ -289,7 +306,7 @@ export const localApi = {
     status: string; output: string; duration_ms: number; assessment_kind: 'verified' | 'reflection'
   }>(`/workspaces/${id}/run`, { method: 'POST' }),
   workspaceRuns: (id: number) => request<{ runs: Array<any>; count: number }>(`/workspaces/${id}/runs`),
-  tools: () => request<{ tools: Array<any> }>('/tools'),
+  tools: () => request<{ tools: LearningTool[] }>('/tools'),
   settings: () => request<AppSettings>('/settings'),
   updateSettings: (payload: Partial<AppSettings>) => request<AppSettings>('/settings', { method: 'PATCH', body: JSON.stringify(payload) }),
   notes: () => request<{ notes: Array<any> }>('/notes'),
@@ -301,7 +318,7 @@ export const localApi = {
   exportJournal: () => request<{ path: string; week: string }>('/journal/export', { method: 'POST' }),
   exportContext: (payload: { lesson_slug?: string; exercise_slug?: string; question: string }) => request<{ path: string; content: string }>('/context/export', { method: 'POST', body: JSON.stringify(payload) }),
   exportBackup: () => request<{ payload: BackupPayload; json_path: string; markdown_path: string }>('/backup/export', { method: 'POST' }),
-  previewBackup: (payload: BackupPayload) => request<{ valid: boolean; errors: string[]; counts: Record<string, number>; warnings: string[]; replaces: Record<string, number> }>('/backup/preview', { method: 'POST', body: JSON.stringify({ payload }) }),
+  previewBackup: (payload: BackupPayload) => request<{ valid: boolean; errors: string[]; counts: Record<string, number>; warnings: string[]; replaces: Record<string, number>; journal_conflicts?: string[] }>('/backup/preview', { method: 'POST', body: JSON.stringify({ payload }) }),
   importBackup: (payload: BackupPayload) => request<{ imported: boolean; safety_backup_json: string; safety_backup_markdown: string; restored_journal_files: number }>('/backup/import', { method: 'POST', body: JSON.stringify({ payload, confirm: true }) }),
   runtimeHeartbeat: (clientId: string) => request<{ ok: boolean; active_clients: number }>('/runtime/heartbeat', { method: 'POST', body: JSON.stringify({ client_id: clientId }) }),
   runtimeDisconnect: (clientId: string) => {

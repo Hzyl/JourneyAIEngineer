@@ -1,0 +1,58 @@
+export const authCopy = {
+  vi: {
+    titles: { sign_in: 'Chào mừng bạn trở lại', sign_up: 'Tạo tài khoản học tập', reset: 'Khôi phục tài khoản' },
+    descriptions: {
+      sign_in: 'Đăng nhập để tiếp tục tiến độ và lịch ôn tập của bạn.',
+      sign_up: 'Dùng một email bạn có thể mở ngay để xác nhận tài khoản.',
+      reset: 'Chúng tôi sẽ gửi đường dẫn đặt lại mật khẩu tới email của bạn.',
+    },
+    failures: { sign_in: 'Không thể đăng nhập', sign_up: 'Không thể tạo tài khoản', reset: 'Không thể gửi email' },
+    validation: {
+      email: 'Hãy nhập một email hợp lệ.',
+      resendEmail: 'Hãy nhập email của bạn trước khi yêu cầu gửi lại xác nhận.',
+      short: 'Mật khẩu cần có ít nhất 8 ký tự.',
+      mismatch: 'Hai mật khẩu chưa trùng khớp.',
+    },
+    notices: {
+      resend: (email: string) => `Đã gửi lại email xác nhận đến ${email}. Hãy kiểm tra Inbox và Spam.`,
+      unconfirmed: (email: string) => `Tài khoản ${email} chưa được xác nhận. Mở email xác nhận trước, hoặc gửi lại email mới.`,
+      created: (email: string) => `Mở email gửi đến ${email} để xác nhận trước khi đăng nhập.`,
+      reset: () => 'Nếu email có tài khoản, hướng dẫn đặt lại mật khẩu đã được gửi. Hãy kiểm tra cả Spam.',
+    },
+    confirm: 'Xác nhận email để tiếp tục', inbox: 'Kiểm tra hộp thư của bạn',
+    signIn: 'Đăng nhập', signUp: 'Tạo tài khoản', chooseMode: 'Chọn cách truy cập', account: 'TÀI KHOẢN CỦA BẠN',
+    resend: 'Gửi lại email xác nhận', sending: 'Đang gửi…', password: 'Mật khẩu', confirmation: 'Nhập lại mật khẩu',
+    passwordHint: 'Ít nhất 8 ký tự. Hãy dùng mật khẩu riêng, không dùng mật khẩu GitHub.',
+    working: 'Đang xử lý…', create: 'Tạo tài khoản và xác nhận email', recover: 'Gửi email khôi phục',
+    forgot: 'Quên mật khẩu?', back: 'Quay về đăng nhập', different: 'Dùng email khác',
+    noAccount: 'Bạn chưa có tài khoản?', freeAccount: 'Tạo tài khoản miễn phí →',
+    privacy: 'Không có API key, source code hay thư mục trên máy của bạn được gửi lên web beta.',
+  },
+  en: {
+    titles: { sign_in: 'Welcome back', sign_up: 'Create your learning account', reset: 'Recover your account' },
+    descriptions: {
+      sign_in: 'Sign in to continue your progress and spaced reviews.',
+      sign_up: 'Use an email you can open now to confirm your account.',
+      reset: 'We will send a password reset link to your email.',
+    },
+    failures: { sign_in: 'Could not sign in', sign_up: 'Could not create your account', reset: 'Could not send email' },
+    validation: {
+      email: 'Enter a valid email address.', resendEmail: 'Enter your email before requesting confirmation again.',
+      short: 'Your password needs at least 8 characters.', mismatch: 'The two passwords do not match.',
+    },
+    notices: {
+      resend: (email: string) => `Confirmation email resent to ${email}. Check your inbox and spam folder.`,
+      unconfirmed: (email: string) => `The account for ${email} is not confirmed. Open the confirmation email or request a new one.`,
+      created: (email: string) => `Open the email sent to ${email} to confirm before signing in.`,
+      reset: () => 'If this email has an account, password reset instructions have been sent. Check your spam folder too.',
+    },
+    confirm: 'Confirm your email to continue', inbox: 'Check your inbox',
+    signIn: 'Sign in', signUp: 'Create account', chooseMode: 'Choose how to access your account', account: 'YOUR ACCOUNT',
+    resend: 'Resend confirmation email', sending: 'Sending…', password: 'Password', confirmation: 'Confirm password',
+    passwordHint: 'At least 8 characters. Use a unique password, not your GitHub password.',
+    working: 'Working…', create: 'Create account and confirm email', recover: 'Send recovery email',
+    forgot: 'Forgot password?', back: 'Back to sign in', different: 'Use another email',
+    noAccount: 'New here?', freeAccount: 'Create a free account →',
+    privacy: 'No API keys, source code or folders on your computer are sent to the web beta.',
+  },
+}

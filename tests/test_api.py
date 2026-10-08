@@ -505,6 +505,9 @@ def test_passive_security_audit_is_read_only_and_reports_evidence(tmp_path, monk
     assert any(finding["id"] == "control-no-shell-true" and finding["status"] == "verified_control" for finding in report["findings"])
     assert report["summary"]["needs_human_review"] >= 1
     assert any("không gửi request" in limitation for limitation in report["limitations_vi"])
+    assert report["limitations_en"]
+    assert all(finding["title_en"] and finding["evidence_en"] and finding["remediation_en"]
+               for finding in report["findings"])
 
 
 def test_passive_security_audit_rejects_non_local_request(tmp_path, monkeypatch):

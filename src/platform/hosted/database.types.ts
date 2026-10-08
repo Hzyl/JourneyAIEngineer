@@ -2,7 +2,7 @@
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
 
 export type Database = {
-  
+
   "graphql_public": {
           Tables: {
             [_ in never]: never
@@ -34,7 +34,20 @@ export type Database = {
                     "body"?: string,"created_at"?: string,"id"?: string,"title"?: string,"updated_at"?: string,"user_id"?: string,"week_start"?: string
                   }
                   Relationships: [
-                    
+
+                  ]
+                },"learning_mutations": {
+                  Row: {
+                    "created_at": string,"fingerprint": string,"operation": string,"request_id": string,"response": NonNullable<Json>,"user_id": string
+                  }
+                  Insert: {
+                    "created_at"?: string,"fingerprint": string,"operation": string,"request_id": string,"response": NonNullable<Json>,"user_id": string
+                  }
+                  Update: {
+                    "created_at"?: string,"fingerprint"?: string,"operation"?: string,"request_id"?: string,"response"?: NonNullable<Json>,"user_id"?: string
+                  }
+                  Relationships: [
+
                   ]
                 },"lesson_progress": {
                   Row: {
@@ -47,7 +60,7 @@ export type Database = {
                     "completed_at"?: string | null,"lesson_slug"?: string,"minutes_spent"?: number,"status"?: Database["public"]['Enums']["lesson_status"],"updated_at"?: string,"user_id"?: string
                   }
                   Relationships: [
-                    
+
                   ]
                 },"notes": {
                   Row: {
@@ -60,7 +73,7 @@ export type Database = {
                     "body"?: string,"created_at"?: string,"id"?: string,"lesson_slug"?: string | null,"title"?: string,"updated_at"?: string,"user_id"?: string
                   }
                   Relationships: [
-                    
+
                   ]
                 },"profiles": {
                   Row: {
@@ -73,7 +86,7 @@ export type Database = {
                     "created_at"?: string,"display_name"?: string | null,"updated_at"?: string,"user_id"?: string
                   }
                   Relationships: [
-                    
+
                   ]
                 },"review_history": {
                   Row: {
@@ -86,7 +99,7 @@ export type Database = {
                     "answer_text"?: string,"card_id"?: string,"ease_factor"?: number,"id"?: string,"interval_days"?: number,"lapses"?: number,"lesson_slug"?: string,"rating"?: Database["public"]['Enums']["review_rating"],"repetitions"?: number,"reviewed_at"?: string,"thought_seconds"?: number,"user_id"?: string
                   }
                   Relationships: [
-                    
+
                   ]
                 },"review_state": {
                   Row: {
@@ -99,7 +112,7 @@ export type Database = {
                     "card_id"?: string,"due_at"?: string,"ease_factor"?: number,"interval_days"?: number,"lapses"?: number,"last_reviewed_at"?: string | null,"leech"?: boolean,"lesson_slug"?: string,"repetitions"?: number,"suspended"?: boolean,"updated_at"?: string,"user_id"?: string
                   }
                   Relationships: [
-                    
+
                   ]
                 },"study_sessions": {
                   Row: {
@@ -112,7 +125,7 @@ export type Database = {
                     "created_at"?: string,"id"?: string,"lesson_slug"?: string | null,"minutes"?: number,"note"?: string,"studied_at"?: string,"user_id"?: string
                   }
                   Relationships: [
-                    
+
                   ]
                 },"user_settings": {
                   Row: {
@@ -125,7 +138,7 @@ export type Database = {
                     "created_at"?: string,"experience_level"?: string,"language"?: string,"onboarding_complete"?: boolean,"show_completed_lessons"?: boolean,"target_role"?: string,"track"?: string,"updated_at"?: string,"user_id"?: string,"weekly_goal_minutes"?: number
                   }
                   Relationships: [
-                    
+
                   ]
                 }
           }
@@ -154,6 +167,12 @@ export type Database = {
         isOneToOne: true
         isSetofReturn: false
       } },
+"apply_learning_mutation":
+{ Args: { "p_operation": string,"p_payload": Json,"p_request_id": string }; Returns: Json
+                           },
+"export_learning_snapshot":
+{ Args: Record<PropertyKey, never>; Returns: Json
+                           },
 "record_lesson_progress":
 { Args: { "p_lesson_slug": string,"p_minutes"?: number,"p_status": Database["public"]['Enums']["lesson_status"] }; Returns: {
               "completed_at": string | null,
@@ -287,7 +306,7 @@ export type CompositeTypes<
 export const Constants = {
   "graphql_public": {
           Enums: {
-            
+
           }
         },"public": {
           Enums: {

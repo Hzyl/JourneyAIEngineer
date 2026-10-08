@@ -12,7 +12,7 @@ const dataRoot = mkdtempSync(join(tmpdir(), 'journey-e2e-'))
  */
 export default defineConfig({
   testDir: './tests/e2e',
-  testIgnore: '**/hosted-learning-flow.spec.ts',
+  testIgnore: ['**/hosted-*.spec.ts', '**/*.production.spec.ts'],
   timeout: 45_000,
   expect: { timeout: 10_000 },
   // The local FastAPI/SQLite smoke environment has one shared runtime data

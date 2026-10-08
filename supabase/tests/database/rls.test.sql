@@ -21,8 +21,8 @@ select ok(has_table_privilege('authenticated', 'public.notes', 'select,insert,up
 select ok(has_table_privilege('authenticated', 'public.journal_entries', 'select,insert,update,delete'), 'authenticated has the intended journal privileges');
 
 -- Seed rows with deterministic IDs before dropping to the authenticated role.
--- Foreign keys are irrelevant to this policy unit test and are restored before
--- any user-scoped query runs.
+-- These policy-only fixtures bypass foreign keys. Account creation and real
+-- cascading foreign keys are covered separately in account_cascade.test.sql.
 set local session_replication_role = replica;
 insert into public.notes (id, user_id, title, body) values
   ('11111111-1111-1111-1111-111111111111', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'A private note', 'owner A'),
