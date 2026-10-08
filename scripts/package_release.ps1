@@ -54,6 +54,7 @@ Write-Host "Running frontend lint/build..." -ForegroundColor Cyan
 Invoke-Checked $Npm @("run", "lint")
 Invoke-Checked $Npm @("run", "build")
 Write-Host "Running backend tests..." -ForegroundColor Cyan
+New-Item -ItemType Directory -Path (Join-Path $ProjectRoot '.build') -Force | Out-Null
 Invoke-Checked $Python @("-m", "pytest", "-q", "--basetemp", ".build\pytest-release", "-o", "cache_dir=.build\pytest-cache")
 
 Write-Host "Building portable executable..." -ForegroundColor Cyan
