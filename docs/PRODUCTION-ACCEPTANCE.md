@@ -1,11 +1,38 @@
 # Remaining production acceptance
 
-Checkpoint: 2026-10-08, frontend commit `5518493`, Supabase project
+Checkpoint: 2026-10-08, frontend commit `128b353`, Supabase project
 `tnnlpsecrzatxdpoaagw`, https://journeyaiengineer.pages.dev.
-Both jobs in [CI run 37741791718](https://github.com/Hzyl/JourneyAIEngineer/actions/runs/37741791718)
-passed. Cloudflare reported deployment success. Guest browser checks covered the
-exercise list, the first exercise guide and solution, VI/EN, light/dark and reload.
-Those observations do not establish signed-in production account behavior.
+Both jobs in [CI run 37808220810](https://github.com/Hzyl/JourneyAIEngineer/actions/runs/37808220810)
+passed. Cloudflare deployment succeeded for this commit. The live sign-in screen
+shows the 24-hour policy; Supabase migration `20261008162049` and deletion function
+version 2 are deployed. Earlier guest checks at `5518493` covered the exercise list,
+first guide/solution, VI/EN, themes and reload. These observations do not establish
+signed-in production account behavior. See [session lifetime](SESSION-LIFETIME.md).
+
+## Maintainer feedback recorded on 2026-10-08
+
+| Area | Report | Acceptance status |
+| --- | --- | --- |
+| Registration/email | The response retained the example placeholder. | Still unconfirmed; no delivery result supplied. |
+| Progress persistence | No result supplied. | Still unconfirmed. |
+| Exercises, guides and solutions | Provisionally acceptable. | Provisional; no specific additional defect reported. |
+| Interface | Provisionally acceptable. | Provisional; no specific additional defect reported. |
+| Recovery/export | Reported working. | Maintainer-observed, without individual flow evidence. |
+| Two accounts | Reported working. | Maintainer-observed, without individual isolation evidence. |
+| Session duration | Requested 24 hours after observing restored sign-in. | Implemented and deployed; local expiry tests passed. |
+
+The maintainer's observations are valid feedback, but do not prove every numbered
+step below. In particular, export success does not prove deletion or email recovery.
+The original session-duration question is resolved by the approved 24-hour policy;
+it is no longer awaiting a choice of lifetime. A real expired-session login check
+remains part of manual acceptance, not a reason to change unrelated Auth settings.
+
+Follow-up: the maintainer identified signup email UX problems: no input for an OTP,
+link-based confirmation, and generic Supabase branding. The locally verified
+[signup OTP candidate](SIGNUP-OTP.md) addresses code entry and email content; hosted
+template deployment and real delivery acceptance remain pending. A separate progress
+persistence failure has not yet been described and is not inferred from this feedback.
+The maintainer has not selected a private security contact; that item remains open.
 
 ## Account and email checks — pending
 
@@ -18,7 +45,7 @@ passwords and email tokens must not be included in reports or chat.
 | Step | Action | Evidence required |
 | --- | --- | --- |
 | 1 | Register account A with a new password and confirmation field. | Unconfirmed-email screen appears; the actual confirmation email reaches A. |
-| 2 | Request one confirmation resend, respecting any cooldown. | A new email arrives; its link opens the expected app flow and permits sign-in. |
+| 2 | Request one confirmation resend, respecting any cooldown. | After the OTP candidate is deployed, a branded email arrives and its code completes signup in the app. Earlier confirmation links remain usable. |
 | 3 | Register and confirm account B in a separate browser profile/session. | A and B are distinct authenticated users. |
 | 4 | In A, record a lesson, a short study session and a synthetic note such as `QA A only`. Reload. | A's records remain; the displayed minutes do not increase just from reload. |
 | 5 | In B, create `QA B only` and inspect the same learning views. | A's note/progress is absent from B; B's data is absent after returning to A. |

@@ -9,7 +9,7 @@ Deployment decision, 2026-10-08: retain the existing web and Supabase project
 not a prerequisite. Use local/CI disposable tests; production mutations and test
 account operations still require approval of their concrete scope.
 
-The specifically approved backend rollout completed on 2026-10-08 after a verified
+The initial specifically approved backend rollout completed on 2026-10-08 after a verified
 backup and local rehearsal. All six migration versions are applied, nine tables have
 RLS, and `delete-account` version 1 is ACTIVE. Ten non-destructive live HTTP checks
 passed; see [backend rollout](BACKEND-ROLLOUT.md). The matching frontend was approved,
@@ -17,6 +17,14 @@ pushed as `5518493` and deployed by Cloudflare. CI run `37741791718` passed both
 guest browser checks on the main site passed in the first exercise flow.
 Real email/deletion/browser acceptance, Windows smoke coverage and learner
 pilot evidence remain outstanding; those checklist items below remain unchecked.
+
+Current checkpoint: the separately approved 24-hour session change is deployed as
+`128b353`, with both CI jobs passing. Supabase now has seven migrations and
+`delete-account` version 2; see [release readiness](RELEASE-READINESS.md) and
+[session lifetime](SESSION-LIFETIME.md). Maintainer feedback reports recovery/export
+and two accounts working, with UI and exercises provisionally accepted. Blank or
+placeholder answers for email and progress are not passing evidence. The remaining
+acceptance document records these distinctions without closing unverified checks.
 
 ## Contracts and ownership
 

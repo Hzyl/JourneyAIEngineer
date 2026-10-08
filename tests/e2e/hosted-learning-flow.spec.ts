@@ -93,7 +93,8 @@ for (const theme of ['light', 'dark'] as const) {
       } }))
       await page.getByLabel('Nhập lại mật khẩu', { exact: true }).fill('secure-pass')
       await page.getByRole('button', { name: 'Tạo tài khoản và xác nhận email' }).click()
-      await expect(page.locator('.auth-notice.is-success')).toBeVisible()
+      await expect(page.getByLabel('Mã xác nhận', { exact: true })).toBeVisible()
+      await expect(page.getByRole('heading', { name: 'Nhập mã xác nhận' })).toBeVisible()
       await checkThemeContrast(page)
       const target = theme === 'dark' ? 'sáng' : 'tối'
       await page.getByRole('button', { name: `Chuyển sang giao diện ${target}` }).click()

@@ -249,6 +249,10 @@ otp_expiry = 3600
 # sender_name = "Admin"
 
 # Uncomment to customize email template
+[auth.email.template.confirmation]
+subject = "Journey AI Engineer — Mã xác nhận / Verification code"
+content_path = "./supabase/templates/confirm-signup.html"
+
 # [auth.email.template.invite]
 # subject = "You have been invited"
 # content_path = "./supabase/templates/invite.html"

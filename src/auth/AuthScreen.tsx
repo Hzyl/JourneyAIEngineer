@@ -6,6 +6,7 @@ import { describeAuthError, isUnconfirmedEmailError } from './auth-utils'
 import { authCopy } from './auth-copy'
 import { AuthIntro } from './AuthIntro'
 import { PasswordField } from './PasswordField'
+import { SignupConfirmation } from './SignupConfirmation'
 import './auth.css'
 import './auth-layout.css'
 
@@ -21,9 +22,9 @@ export function AuthScreen({ loading, language = 'vi', expired = false }: {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmation, setConfirmation] = useState('')
-  const [pending, setPending] = useState<'submit' | 'resend' | null>(null)
+  const [pending, setPending] = useState<'submit' | null>(null)
   const inFlight = useRef(false)
-  const [awaitingConfirmation, setAwaitingConfirmation] = useState(false)
+  const [challenge, setChallenge] = useState<{ email: string; justSent: boolean } | null>(null)
   const [notice, setNotice] = useState<Notice | null>(null)
   const [error, setError] = useState<FormError | null>(null)
   const disabled = loading || pending !== null
@@ -34,7 +35,7 @@ export function AuthScreen({ loading, language = 'vi', expired = false }: {
   const switchMode = (next: Mode) => {
     if (inFlight.current || loading) return
     setMode(next)
-    setAwaitingConfirmation(false)
+    setChallenge(null)
     resetNotice()
   }
   const callbackUrl = (recovery = false) => {
@@ -44,20 +45,10 @@ export function AuthScreen({ loading, language = 'vi', expired = false }: {
     return url.href
   }
   const finish = () => { inFlight.current = false; setPending(null) }
-  const resendConfirmation = async () => {
-    if (inFlight.current || loading) return
-    resetNotice()
-    if (!email.includes('@')) { setError({ key: 'resendEmail' }); return }
-    inFlight.current = true
-    setPending('resend')
-    try {
-      const { error: authError } = await requireSupabase().auth.resend({
-        type: 'signup', email, options: { emailRedirectTo: callbackUrl() },
-      })
-      if (authError) throw authError
-      setNotice({ kind: 'resend', email })
-    } catch (cause) { setError({ cause }) }
-    finally { finish() }
+  const openConfirmation = (justSent: boolean) => {
+    setChallenge({ email: email.trim(), justSent })
+    setPassword('')
+    setConfirmation('')
   }
   const submit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -71,22 +62,20 @@ export function AuthScreen({ loading, language = 'vi', expired = false }: {
     try {
       const client = requireSupabase()
       if (mode === 'sign_in') {
-        const { error: authError } = await client.auth.signInWithPassword({ email, password })
+        const { error: authError } = await client.auth.signInWithPassword({ email: email.trim(), password })
         if (authError) {
           if (isUnconfirmedEmailError(authError)) {
-            setAwaitingConfirmation(true)
-            setNotice({ kind: 'unconfirmed', email })
+            openConfirmation(false)
             return
           }
           throw authError
         }
       } else if (mode === 'sign_up') {
-        const { error: authError } = await client.auth.signUp({
-          email, password, options: { emailRedirectTo: callbackUrl() },
+        const { data, error: authError } = await client.auth.signUp({
+          email: email.trim(), password, options: { emailRedirectTo: callbackUrl() },
         })
         if (authError) throw authError
-        setAwaitingConfirmation(true)
-        setNotice({ kind: 'created', email })
+        if (!data?.session) openConfirmation(true)
       } else {
         const { error: authError } = await client.auth.resetPasswordForEmail(email, { redirectTo: callbackUrl(true) })
         if (authError) throw authError
@@ -95,13 +84,16 @@ export function AuthScreen({ loading, language = 'vi', expired = false }: {
     } catch (cause) { setError({ cause }) }
     finally { finish() }
   }
-  const noticeTitle = error ? text.failures[mode] : awaitingConfirmation ? text.confirm : text.inbox
+  const noticeTitle = error ? text.failures[mode] : text.inbox
 
   return <main className="auth-shell" lang={language}>
     <section className="auth-frame" aria-busy={disabled}>
       <AuthIntro language={language} />
       <section className="auth-form-panel" aria-labelledby="auth-title">
         <div className="auth-theme-toolbar"><ThemeToggle language={language} /></div>
+        {challenge ? <SignupConfirmation key={challenge.email} email={challenge.email} language={language}
+          justSent={challenge.justSent} loading={loading}
+          onChangeEmail={() => switchMode('sign_up')} onBack={() => switchMode('sign_in')} /> : <>
         <div className="auth-mode-switch" role="group" aria-label={text.chooseMode}>
           <button type="button" aria-pressed={mode === 'sign_in'} disabled={disabled}
             className={mode === 'sign_in' ? 'is-active' : ''} onClick={() => switchMode('sign_in')}>
@@ -128,9 +120,6 @@ export function AuthScreen({ loading, language = 'vi', expired = false }: {
           role={error ? 'alert' : 'status'} aria-live="polite">
           <span className="auth-notice-mark" aria-hidden="true">{error ? '!' : '✓'}</span>
           <div className="auth-notice-copy"><strong>{noticeTitle}</strong><span>{errorText || message}</span></div>
-          {awaitingConfirmation && <button type="button" className="secondary-button" disabled={disabled}
-            onClick={() => void resendConfirmation()} aria-busy={pending === 'resend'}>
-            {pending === 'resend' ? text.sending : text.resend}</button>}
         </div>}
         <form className="auth-form" onSubmit={(event) => void submit(event)} noValidate>
           <label className="auth-field"><span>Email</span>
@@ -153,11 +142,10 @@ export function AuthScreen({ loading, language = 'vi', expired = false }: {
           <button type="button" className="text-button" disabled={disabled}
             onClick={() => switchMode(mode === 'reset' ? 'sign_in' : 'reset')}>
             {mode === 'reset' ? text.back : text.forgot}</button>
-          {awaitingConfirmation && <button type="button" className="text-button" disabled={disabled}
-            onClick={() => switchMode('sign_up')}>{text.different}</button>}
         </div>
         {mode === 'sign_in' && <button type="button" className="auth-create-account-link" disabled={disabled}
           onClick={() => switchMode('sign_up')}><span>{text.noAccount}</span><strong>{text.freeAccount}</strong></button>}
+        </>}
         <p className="auth-privacy-note">{text.privacy}</p>
         <p className="auth-privacy-note">{language === 'vi'
           ? 'Bạn sẽ được yêu cầu đăng nhập lại sau 24 giờ, kể cả khi đóng rồi mở lại trình duyệt.'

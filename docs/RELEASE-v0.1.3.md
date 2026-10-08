@@ -3,6 +3,11 @@
 Status: prepared locally, not tagged or published. The latest GitHub Release
 verified on 2026-10-08 is v0.1.2. Keep its existing assets unchanged.
 
+The existing candidate was built before hosted-session commit `128b353`. The live
+web now includes the 24-hour policy, but that change is not in the older candidate
+source ZIP. Build and verify a fresh candidate from the approved release commit
+before publishing; do not relabel or overwrite the older candidate's provenance.
+
 ## Changes included
 
 - Read exercise instructions inside the app, with concise lists, search, difficulty

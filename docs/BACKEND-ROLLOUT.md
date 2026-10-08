@@ -1,5 +1,12 @@
 # Approved backend rollout — 2026-10-08
 
+Current status: a subsequent approved rollout added migration `20261008162049`
+and deployed `delete-account` version 2 before frontend commit `128b353`. There are
+now seven migrations and 42 policies across nine RLS-protected tables. See
+[session lifetime](SESSION-LIFETIME.md) for the 24-hour access policy and
+[release readiness](RELEASE-READINESS.md) for current CI/Cloudflare evidence.
+The version 1 details below are the preserved record of the initial rollout.
+
 The maintainer approved four migrations, the production origin setting and deployment
 of `delete-account` to Supabase project `tnnlpsecrzatxdpoaagw`. These steps completed.
 This approval did not include a frontend commit/push or deleting a real account.

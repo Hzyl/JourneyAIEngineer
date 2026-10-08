@@ -1,5 +1,24 @@
 # Pending public-readiness release
 
+## Current deployed checkpoint — 2026-10-08
+
+Commit `128b353` is on `origin/main`. Both jobs in
+[CI run 37808220810](https://github.com/Hzyl/JourneyAIEngineer/actions/runs/37808220810)
+passed. Cloudflare deployment `b192916d-663b-498f-bb8d-cd17b710d099` succeeded for
+that exact commit. The live sign-in screen displays the 24-hour session policy.
+Supabase has seven migrations including `20261008162049_limit_learning_sessions`;
+all nine learning tables retain RLS with nine additional restrictive session
+policies (42 policies total). `delete-account` version 2 is ACTIVE. See
+[session lifetime](SESSION-LIFETIME.md) for implementation and verification scope.
+
+This supersedes the deployment versions in the historical checkpoint below.
+The latest published GitHub Release remains v0.1.2; the existing local v0.1.3
+candidate predates the session change. It is not an archive of commit `128b353`.
+Publication requires a fresh source-matched candidate and the remaining Windows,
+account and learner acceptance in [production acceptance](PRODUCTION-ACCEPTANCE.md).
+
+## Earlier approved checkpoint
+
 Approved web checkpoint, 2026-10-08: commit `5518493` was pushed to `origin/main`.
 [CI run 37741791718](https://github.com/Hzyl/JourneyAIEngineer/actions/runs/37741791718)
 passed both `quality` and `hosted-database`, including generated database types,

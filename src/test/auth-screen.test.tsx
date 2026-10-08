@@ -5,7 +5,7 @@ import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { AuthScreen } from '../auth/AuthScreen'
 
 const auth = vi.hoisted(() => ({
-  signInWithPassword: vi.fn(), signUp: vi.fn(), resend: vi.fn(), resetPasswordForEmail: vi.fn(),
+  signInWithPassword: vi.fn(), signUp: vi.fn(), resend: vi.fn(), resetPasswordForEmail: vi.fn(), verifyOtp: vi.fn(),
 }))
 vi.mock('../platform/hosted/supabase-client', () => ({ requireSupabase: () => ({ auth }) }))
 vi.mock('../theme/ThemeToggle', () => ({ ThemeToggle: () => <button>Theme</button> }))
@@ -67,19 +67,35 @@ test('one sign-in stays pending across duplicate submits and mode controls then 
 test('unconfirmed-email resend keeps the same address, language and duplicate guard', async () => {
   auth.signInWithPassword.mockResolvedValueOnce({ error: { code: 'email_not_confirmed' } })
   await act(async () => { submit() })
-  expect(host.querySelector('[role="status"]')!.textContent).toContain('not confirmed')
+  expect(host.querySelector('#signup-code')).not.toBeNull()
+  expect(host.querySelector('.password-control')).toBeNull()
   let resolve!: (result: unknown) => void
   auth.resend.mockReturnValueOnce(new Promise((done) => { resolve = done }))
   await act(async () => {
-    host.querySelector<HTMLButtonElement>('.auth-notice button')!.click()
-    host.querySelector<HTMLButtonElement>('.auth-notice button')!.click()
+    host.querySelector<HTMLButtonElement>('[data-action="resend"]')!.click()
+    host.querySelector<HTMLButtonElement>('[data-action="resend"]')!.click()
   })
   expect(auth.resend).toHaveBeenCalledTimes(1)
   expect(auth.resend.mock.calls[0][0].email).toBe('learner@example.com')
   expect(auth.resend.mock.calls[0][0].options.emailRedirectTo).toContain('/auth/callback?lang=en')
   await render('vi')
   await act(async () => resolve({ error: null }))
-  expect(host.querySelector('[role="status"]')!.textContent).toContain('Đã gửi lại email xác nhận')
+  expect(host.querySelector('[role="status"]')!.textContent).toContain('Nếu địa chỉ này cần xác nhận')
+})
+
+test('signup enters code confirmation and correcting the address clears password fields', async () => {
+  await click('.auth-mode-switch button:last-child')
+  await fill('input[autocomplete="new-password"]', 'example-password')
+  const inputs = host.querySelectorAll<HTMLInputElement>('input[autocomplete="new-password"]')
+  await fill(`#${inputs[1].id}`, 'example-password')
+  await act(async () => { submit() })
+  expect(auth.signUp).toHaveBeenCalledTimes(1)
+  expect(host.querySelector('#signup-code')).not.toBeNull()
+  expect(host.querySelector('.otp-destination')!.textContent).toContain('learner@example.com')
+  await click('[data-action="change-email"]')
+  expect(host.querySelector<HTMLInputElement>('input[type="email"]')!.value).toBe('learner@example.com')
+  expect([...host.querySelectorAll<HTMLInputElement>('input[autocomplete="new-password"]')]
+    .every((input) => input.value === '')).toBe(true)
 })
 
 test('recovery notice stays generic about account existence and retains the email-link language', async () => {
