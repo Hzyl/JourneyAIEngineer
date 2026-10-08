@@ -134,6 +134,12 @@ def main():
             # The local Kong CORS plugin overwrites response headers with '*'.
             # The function's origin rejection is verified by its 403/code above.
         check("rejected requests preserve data", snapshot(owner_a) == before_a and snapshot(owner_b) == before_b)
+        sql(f"update auth.sessions set created_at=now()-interval '25 hours' where user_id='{owner_a}';")
+        code, body, _ = request(path, "POST", payload, token_a, extra={"Origin": origin})
+        check("expired original session cannot delete an account", code == 401
+              and body.get("code") == "authentication_required")
+        check("expired deletion preserves both accounts", snapshot(owner_a) == before_a and snapshot(owner_b) == before_b)
+        sql(f"update auth.sessions set created_at=now() where user_id='{owner_a}';")
         # A forged target must not redirect deletion to B; identity comes from A's token.
         code, body, _ = request(path, "POST", {**payload, "user_id": owner_b}, token_a,
                                 extra={"Origin": origin})

@@ -7,8 +7,12 @@ select ok(not has_function_privilege('anon', 'public.apply_learning_mutation(uui
   'anonymous callers cannot write learning state');
 
 set local session_replication_role = replica;
+insert into auth.sessions(id,user_id,created_at,updated_at) values
+  ('dddddddd-dddd-dddd-dddd-dddddddddddd','dddddddd-dddd-dddd-dddd-dddddddddddd',now(),now()),
+  ('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee','eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee',now(),now());
 set local role authenticated;
 set local request.jwt.claim.sub = 'dddddddd-dddd-dddd-dddd-dddddddddddd';
+set local request.jwt.claims = '{"session_id":"dddddddd-dddd-dddd-dddd-dddddddddddd"}';
 
 select throws_ok($$select public.answer_review_card(
   'phase-00-onboarding-environment-1-recall', 'phase-00-onboarding-environment-1', 'good', 1, ''
@@ -36,6 +40,7 @@ select is((select count(*) from public.review_history), 1::bigint, 'review retry
 select is((select repetitions from public.review_state), 1, 'review retry does not advance the schedule');
 
 set local request.jwt.claim.sub = 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee';
+set local request.jwt.claims = '{"session_id":"eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"}';
 select is((select count(*) from public.learning_mutations), 0::bigint, 'B cannot read A receipts');
 select is((select count(*) from public.lesson_progress), 0::bigint, 'B cannot read A progress');
 select is((select count(*) from public.review_history), 0::bigint, 'B cannot read A review history');

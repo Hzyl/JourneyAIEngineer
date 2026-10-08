@@ -13,7 +13,9 @@ type Mode = 'sign_in' | 'sign_up' | 'reset'
 type Notice = { kind: keyof typeof authCopy.vi.notices; email: string }
 type FormError = { key: keyof typeof authCopy.vi.validation } | { cause: unknown }
 
-export function AuthScreen({ loading, language = 'vi' }: { loading: boolean; language?: PublicLanguage }) {
+export function AuthScreen({ loading, language = 'vi', expired = false }: {
+  loading: boolean; language?: PublicLanguage; expired?: boolean
+}) {
   const text = authCopy[language]
   const [mode, setMode] = useState<Mode>('sign_in')
   const [email, setEmail] = useState('')
@@ -113,6 +115,15 @@ export function AuthScreen({ loading, language = 'vi' }: { loading: boolean; lan
           <h2 id="auth-title" tabIndex={-1}>{text.titles[mode]}</h2>
           <p>{text.descriptions[mode]}</p>
         </div>
+        {expired && <div className="auth-notice" role="status">
+          <span className="auth-notice-mark" aria-hidden="true">i</span>
+          <div className="auth-notice-copy">
+            <strong>{language === 'vi' ? 'Phiên đăng nhập đã hết hạn' : 'Your session has expired'}</strong>
+            <span>{language === 'vi'
+              ? 'Phiên kéo dài tối đa 24 giờ. Đăng nhập lại để tiếp tục; tiến độ đã lưu vẫn còn.'
+              : 'Sessions last up to 24 hours. Sign in again to continue; your saved progress is still here.'}</span>
+          </div>
+        </div>}
         {(message || errorText) && <div className={error ? 'auth-notice is-error' : 'auth-notice is-success'}
           role={error ? 'alert' : 'status'} aria-live="polite">
           <span className="auth-notice-mark" aria-hidden="true">{error ? '!' : '✓'}</span>
@@ -148,6 +159,9 @@ export function AuthScreen({ loading, language = 'vi' }: { loading: boolean; lan
         {mode === 'sign_in' && <button type="button" className="auth-create-account-link" disabled={disabled}
           onClick={() => switchMode('sign_up')}><span>{text.noAccount}</span><strong>{text.freeAccount}</strong></button>}
         <p className="auth-privacy-note">{text.privacy}</p>
+        <p className="auth-privacy-note">{language === 'vi'
+          ? 'Bạn sẽ được yêu cầu đăng nhập lại sau 24 giờ, kể cả khi đóng rồi mở lại trình duyệt.'
+          : 'You will need to sign in again after 24 hours, including time with the browser closed.'}</p>
       </section>
     </section>
   </main>

@@ -29,6 +29,9 @@ for (const language of ['vi', 'en'] as const) {
     })
     await page.route('https://example.supabase.co/**', async (route) => {
       const path = new URL(route.request().url()).pathname
+      if (path === '/rest/v1/rpc/get_session_deadline') return route.fulfill({ json: {
+        server_time: new Date().toISOString(), expires_at: new Date(Date.now() + 86400000).toISOString(),
+      } })
       if (path === '/auth/v1/user') return route.fulfill({ json: user })
       if (path === '/rest/v1/rpc/export_learning_snapshot') {
         attempts += 1

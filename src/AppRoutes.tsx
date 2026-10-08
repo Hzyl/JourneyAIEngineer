@@ -6,6 +6,9 @@ import { runtimeConfig } from './platform/runtime-config'
 import { authReturnPath, isAuthEntry } from './public/public-navigation'
 
 const LearningApp = lazy(() => import('./App'))
+const SessionExpired = lazy(() => import('./auth/SessionExpired').then((module) => ({
+  default: module.SessionExpired,
+})))
 const PublicExperience = lazy(() => import('./public/PublicExperience').then((module) => ({
   default: module.PublicExperience,
 })))
@@ -56,7 +59,8 @@ export function AppRoutes() {
   const hosted = runtimeConfig.mode === 'hosted'
   const callback = window.location.pathname === '/auth/callback'
   let content: ReactNode
-  if (callback) content = <AuthCallback />
+  if (hosted && auth.state === 'expired') content = <SessionExpired />
+  else if (callback) content = <AuthCallback />
   else if (hosted && auth.state === 'loading') content = <LoadingScreen />
   else if (hosted && auth.state === 'error') content = <SessionRecovery />
   else if (hosted && auth.state !== 'signed_in') content = <PublicExperience />

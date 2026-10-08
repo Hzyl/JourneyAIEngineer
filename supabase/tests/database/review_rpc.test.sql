@@ -15,8 +15,11 @@ select ok(not has_function_privilege('anon', 'public.answer_review_card(text,tex
 -- Replication mode bypasses only the auth.users foreign-key fixture here; RLS
 -- still evaluates because the caller role is authenticated.
 set local session_replication_role = replica;
+insert into auth.sessions(id,user_id,created_at,updated_at) values
+  ('cccccccc-cccc-cccc-cccc-cccccccccccc','cccccccc-cccc-cccc-cccc-cccccccccccc',now(),now());
 set local role authenticated;
 set local request.jwt.claim.sub = 'cccccccc-cccc-cccc-cccc-cccccccccccc';
+set local request.jwt.claims = '{"session_id":"cccccccc-cccc-cccc-cccc-cccccccccccc"}';
 select public.record_lesson_progress('phase-00-onboarding-environment-1', 'completed', 0);
 select lives_ok($$select public.answer_review_card('phase-00-onboarding-environment-1-recall', 'phase-00-onboarding-environment-1', 'again', 12, 'I need to revisit the setup')$$, 'first again answer is scheduled');
 select is((select repetitions from public.review_state where card_id = 'phase-00-onboarding-environment-1-recall'), 0, 'again resets repetitions');

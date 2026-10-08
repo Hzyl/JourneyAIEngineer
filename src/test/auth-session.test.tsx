@@ -7,10 +7,10 @@ import { SignOutButton } from '../auth/SignOutButton'
 import { SessionRecovery } from '../auth/SessionRecovery'
 
 const api = vi.hoisted(() => ({
-  getSession: vi.fn(), signOut: vi.fn(), subscribe: vi.fn(), unsubscribe: vi.fn(), mode: 'hosted',
+  getSession: vi.fn(), signOut: vi.fn(), subscribe: vi.fn(), unsubscribe: vi.fn(), rpc: vi.fn(), mode: 'hosted',
 }))
 vi.mock('../platform/runtime-config', () => ({ runtimeConfig: { get mode() { return api.mode } } }))
-vi.mock('../platform/hosted/supabase-client', () => ({ supabase: { auth: {
+vi.mock('../platform/hosted/supabase-client', () => ({ supabase: { rpc: api.rpc, auth: {
   getSession: api.getSession, signOut: api.signOut, onAuthStateChange: api.subscribe,
 } } }))
 
@@ -45,6 +45,9 @@ beforeEach(() => {
   Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true })
   api.getSession.mockResolvedValue(reply('owner-a'))
   api.signOut.mockResolvedValue({ error: null })
+  api.rpc.mockImplementation(async () => ({ data: {
+    server_time: new Date().toISOString(), expires_at: new Date(Date.now() + 86400000).toISOString(),
+  }, error: null }))
   api.subscribe.mockImplementation((callback) => {
     changed = callback
     return { data: { subscription: { unsubscribe: api.unsubscribe } } }
@@ -59,6 +62,7 @@ beforeEach(() => {
 afterEach(async () => {
   if (!unmounted) await act(async () => root.unmount())
   host.remove()
+  vi.useRealTimers()
 })
 
 test.each(['returned', 'rejected'])('a %s startup error has a focused recovery view and a working retry', async (kind) => {
@@ -177,4 +181,93 @@ test('a logout reply for a previous owner leaves the replacement owner controls 
   expect(host.querySelector('output')?.textContent).toBe('signed_in:owner-b')
   expect(host.querySelector('button')?.disabled).toBe(false)
   expect(host.querySelector('[role="alert"]')).toBeNull()
+})
+
+test('private content waits for the server session deadline', async () => {
+  const check = pending()
+  api.rpc.mockReturnValueOnce(check.promise)
+  await render()
+  expect(host.querySelector('output')?.textContent).toBe('loading:')
+  await act(async () => check.resolve({ data: {
+    server_time: new Date().toISOString(), expires_at: new Date(Date.now() + 86400000).toISOString(),
+  }, error: null }))
+  expect(host.querySelector('output')?.textContent).toBe('signed_in:owner-a')
+})
+
+test('a restored expired session never exposes private content and signs out only this session', async () => {
+  api.rpc.mockResolvedValueOnce({ data: {
+    server_time: '2026-10-09T00:00:00Z', expires_at: '2026-10-09T00:00:00Z',
+  }, error: null })
+  await render()
+  expect(host.querySelector('output')?.textContent).toBe('expired:')
+  expect(api.signOut).toHaveBeenCalledWith({ scope: 'local' })
+})
+
+test('refreshing the access token does not extend the original 24 hour deadline', async () => {
+  vi.useFakeTimers()
+  const start = Date.parse('2026-10-08T00:00:00Z')
+  vi.setSystemTime(start)
+  api.rpc.mockImplementation(async () => ({ data: {
+    server_time: new Date().toISOString(), expires_at: new Date(start + 86400000).toISOString(),
+  }, error: null }))
+  await render()
+  await act(async () => vi.advanceTimersByTimeAsync(23 * 3600000))
+  await act(async () => changed('TOKEN_REFRESHED', owner('owner-a')))
+  expect(host.querySelector('output')?.textContent).toBe('signed_in:owner-a')
+  await act(async () => vi.advanceTimersByTimeAsync(3600000))
+  expect(host.querySelector('output')?.textContent).toBe('expired:')
+  expect(api.signOut).toHaveBeenCalledOnce()
+})
+
+test('a failed deadline lookup keeps personal content closed and permits retry', async () => {
+  api.rpc.mockResolvedValueOnce({ data: null, error: new Error('Private database error') })
+  await render()
+  expect(host.querySelector('output')?.textContent).toBe('error:')
+  expect(host.textContent).not.toContain('Private database error')
+  await act(async () => context.retrySession())
+  expect(host.querySelector('output')?.textContent).toBe('signed_in:owner-a')
+})
+
+test('a late deadline result cannot restore an account after sign-out', async () => {
+  const check = pending()
+  api.rpc.mockReturnValueOnce(check.promise)
+  await render()
+  await act(async () => changed('SIGNED_OUT', null))
+  await act(async () => check.resolve({ data: {
+    server_time: new Date().toISOString(), expires_at: new Date(Date.now() + 86400000).toISOString(),
+  }, error: null }))
+  expect(host.querySelector('output')?.textContent).toBe('signed_out:')
+})
+
+test('a sleeping tab expires on focus even when its timeout has not run', async () => {
+  vi.useFakeTimers()
+  const start = Date.parse('2026-10-08T00:00:00Z')
+  vi.setSystemTime(start)
+  await render()
+  vi.setSystemTime(start + 25 * 3600000)
+  await act(async () => window.dispatchEvent(new Event('focus')))
+  expect(host.querySelector('output')?.textContent).toBe('expired:')
+})
+
+test('server time determines lifetime when the device clock is wrong', async () => {
+  vi.useFakeTimers()
+  vi.setSystemTime('2030-01-01T00:00:00Z')
+  api.rpc.mockResolvedValueOnce({ data: {
+    server_time: '2026-10-08T23:00:00Z', expires_at: '2026-10-09T00:00:00Z',
+  }, error: null })
+  await render()
+  expect(host.querySelector('output')?.textContent).toBe('signed_in:owner-a')
+  await act(async () => vi.advanceTimersByTimeAsync(3600000))
+  expect(host.querySelector('output')?.textContent).toBe('expired:')
+})
+
+test('a missing server session expires and a stalled check offers retry', async () => {
+  api.rpc.mockResolvedValueOnce({ data: { server_time: new Date().toISOString(), expires_at: null }, error: null })
+  await render()
+  expect(host.querySelector('output')?.textContent).toBe('expired:')
+  vi.useFakeTimers()
+  api.rpc.mockReturnValueOnce(new Promise(() => undefined))
+  await act(async () => changed('SIGNED_IN', owner('owner-b')))
+  await act(async () => vi.advanceTimersByTimeAsync(10000))
+  expect(host.querySelector('output')?.textContent).toBe('error:')
 })

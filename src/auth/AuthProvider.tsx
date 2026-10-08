@@ -2,8 +2,9 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import type { Session } from '@supabase/supabase-js'
 import { runtimeConfig } from '../platform/runtime-config'
 import { supabase } from '../platform/hosted/supabase-client'
+import { sessionLifetime } from './session-lifetime'
 
-export type AuthState = 'local' | 'loading' | 'error' | 'signed_out' | 'signed_in'
+export type AuthState = 'local' | 'loading' | 'error' | 'signed_out' | 'signed_in' | 'expired'
 
 type AuthContextValue = {
   state: AuthState
@@ -33,33 +34,47 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!supabase || runtimeConfig.mode !== 'hosted') return
+    const client = supabase
     let active = true
     let changed = false
+    const lifetime = sessionLifetime({
+      read: async () => client.rpc('get_session_deadline'),
+      signOut: () => client.auth.signOut({ scope: 'local' }),
+      publish: (nextState, nextSession) => {
+        reading.current = nextState === 'loading'
+        setSession(nextSession)
+        setState(nextState)
+      },
+    })
     const { data: subscription } = supabase.auth.onAuthStateChange((_event, nextSession) => {
       if (!active) return
       changed = true
-      reading.current = false
-      setSession(nextSession)
-      setState(nextSession ? 'signed_in' : 'signed_out')
+      lifetime.accept(nextSession)
     })
     const readSession = async () => {
       try {
         const { data, error } = await supabase!.auth.getSession()
         if (!active || changed) return
         if (error) throw error
-        setSession(data.session)
-        setState(data.session ? 'signed_in' : 'signed_out')
+        lifetime.accept(data.session)
       } catch {
         if (!active || changed) return
         setSession(null)
         setState('error')
-      } finally {
-        if (active) reading.current = false
+        reading.current = false
       }
     }
     void readSession()
+    const onVisibility = () => { if (document.visibilityState === 'visible') lifetime.recheck() }
+    window.addEventListener('focus', lifetime.recheck)
+    window.addEventListener('pageshow', lifetime.recheck)
+    document.addEventListener('visibilitychange', onVisibility)
     return () => {
       active = false
+      lifetime.dispose()
+      window.removeEventListener('focus', lifetime.recheck)
+      window.removeEventListener('pageshow', lifetime.recheck)
+      document.removeEventListener('visibilitychange', onVisibility)
       subscription.subscription.unsubscribe()
     }
   }, [attempt])

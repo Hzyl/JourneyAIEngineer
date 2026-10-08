@@ -173,6 +173,9 @@ export type Database = {
 "export_learning_snapshot":
 { Args: Record<PropertyKey, never>; Returns: Json
                            },
+"get_session_deadline":
+{ Args: Record<PropertyKey, never>; Returns: Json
+                           },
 "record_lesson_progress":
 { Args: { "p_lesson_slug": string,"p_minutes"?: number,"p_status": Database["public"]['Enums']["lesson_status"] }; Returns: {
               "completed_at": string | null,

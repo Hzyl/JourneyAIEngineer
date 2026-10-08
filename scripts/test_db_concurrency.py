@@ -86,7 +86,9 @@ def main():
     owner = str(uuid4())
     lesson = "phase-00-onboarding-environment-1"
     sql(f"insert into auth.users(id,email) values('{owner}','{owner}@example.invalid');")
-    identity = f"set local role authenticated; set local request.jwt.claim.sub = '{owner}';"
+    sql(f"insert into auth.sessions(id,user_id,created_at,updated_at) values('{owner}','{owner}',now(),now());")
+    identity = (f"set local role authenticated; set local request.jwt.claim.sub = '{owner}';"
+                f"set local request.jwt.claims = '{{\"session_id\":\"{owner}\"}}';")
     sql(f"begin; {identity} select public.record_lesson_progress('{lesson}','completed',0); commit;")
 
     def run_pair(suffix, same_request):

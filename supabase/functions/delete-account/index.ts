@@ -18,7 +18,14 @@ Deno.serve(async (request) => {
   return handleDeletion(request, {
     async identify(token) {
       const { data, error } = await verifier.auth.getUser(token)
-      return error ? null : data.user
+      if (error || !data.user) return null
+      const scoped = createClient(url, publicKey, {
+        ...options, global: { headers: { Authorization: `Bearer ${token}` } },
+      })
+      const { data: deadline, error: deadlineError } = await scoped.rpc('get_session_deadline')
+      if (deadlineError || !deadline?.expires_at || !deadline?.server_time) return null
+      if (!(Date.parse(deadline.expires_at) > Date.parse(deadline.server_time))) return null
+      return data.user
     },
     async reauthenticate(email, password) {
       const client = createClient(url, publicKey, options)
