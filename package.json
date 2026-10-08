@@ -1,7 +1,7 @@
 {
   "name": "journey-ai-engineer",
   "private": false,
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Local-first bilingual learning OS for becoming an AI Engineer.",
   "type": "module",
   "scripts": {

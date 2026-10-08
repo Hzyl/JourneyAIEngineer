@@ -1,11 +1,14 @@
 # Public beta guide
 
-Journey AI Engineer v0.1.2 là bản beta **local-first trên Windows**. Mục tiêu của beta là kiểm tra app có giúp một người mới đi qua vòng Roadmap → Lesson → Practice → Review → Journal hay không, đồng thời thu thập feedback để sửa nội dung và UX.
+Journey AI Engineer có bản beta **local-first trên Windows**. Mục tiêu của beta là kiểm tra app có giúp một người mới đi qua vòng Roadmap → Lesson → Practice → Review → Journal hay không, đồng thời thu thập feedback để sửa nội dung và UX.
+
+Bản ứng viên local tiếp theo là **0.1.3**, chưa phải GitHub Release đã phát hành.
+Khi tải bản public, dùng đúng version và checksum ghi trên trang Release tương ứng.
 
 Web beta đã triển khai trên Cloudflare Pages, dùng Supabase Auth/Postgres/RLS với đăng nhập email/password
-và dữ liệu học tách theo tài khoản. Dùng URL do maintainer chia sẻ.
+và dữ liệu học tách theo tài khoản. Mở https://journeyaiengineer.pages.dev.
 Web không chạy exercise, mở VS Code, truy cập Git hoặc filesystem local.
-Xem [WEB-BETA.md](WEB-BETA.md) để theo dõi deployment và các cải thiện auth đang chờ rollout.
+Xem [WEB-BETA.md](WEB-BETA.md) để theo dõi deployment và phạm vi kiểm thử tài khoản.
 
 > **Portable/source clone là bản local.** Mỗi người chạy app và lưu dữ liệu trên máy của mình,
 > không có login hoặc cloud sync. Web beta là runtime riêng; không bản nào cung cấp public code-execution server.
@@ -28,17 +31,22 @@ Xem [WEB-BETA.md](WEB-BETA.md) để theo dõi deployment và các cải thiện
 
 ## Portable test flow
 
-1. Tải `JourneyAIEngineer-v0.1.2-windows-x64.zip` và `SHA256SUMS.txt` từ cùng một release.
+1. Tải ZIP `JourneyAIEngineer-v<version>-windows-x64.zip` và `SHA256SUMS.txt` từ cùng một release.
 2. Kiểm tra checksum của **ZIP**; checksum không phải checksum riêng của `.exe` bên trong.
 3. Giải nén vào thư mục có quyền ghi.
 4. Double-click `JourneyAIEngineer.exe`; app sẽ mở browser ở loopback và không để lại terminal.
 5. Đóng tab cuối cùng, chờ server local tự tắt.
 
-PowerShell checksum:
+PowerShell checksum (ví dụ cho gói ứng viên 0.1.3; đổi tên ZIP theo bản đang thử):
 
 ~~~powershell
-$zip = '.\JourneyAIEngineer-v0.1.2-windows-x64.zip'
-$expected = ((Get-Content '.\SHA256SUMS.txt' -Raw).Trim() -split '\s+')[0].ToLowerInvariant()
+$zip = '.\JourneyAIEngineer-v0.1.3-windows-x64.zip'
+$zipName = Split-Path -Leaf $zip
+$checksumRows = @(Get-Content '.\SHA256SUMS.txt' | Where-Object {
+    ($_ -split '\s+', 2)[-1].TrimStart('*') -eq $zipName
+})
+if ($checksumRows.Count -ne 1) { throw 'Không tìm thấy đúng một checksum cho ZIP này.' }
+$expected = ($checksumRows[0] -split '\s+', 2)[0].ToLowerInvariant()
 $actual = (Get-FileHash $zip -Algorithm SHA256).Hash.ToLowerInvariant()
 if ($actual -ne $expected) { throw 'Checksum không khớp.' }
 'Checksum OK: ' + $actual
@@ -80,7 +88,7 @@ Dùng [Bug report form](https://github.com/Hzyl/JourneyAIEngineer/issues/new?tem
 Mẫu:
 
 ~~~text
-Version: v0.1.2
+Version: <version hoặc commit đang thử>
 Mode: Portable .exe
 Environment: Windows 11, Chrome, viewport 390px
 Steps: 1. Mở Roadmap 2. Chọn Phase 1 3. Mở lesson ...

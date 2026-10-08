@@ -2,8 +2,8 @@
 
 The local review packet under `.build/release-review-<timestamp>/` is a dated
 working-tree snapshot. It is not a published release, a deployment approval or a
-replacement for the existing v0.1.2 assets. The app version stays at 0.1.2 until
-a new release version is selected.
+replacement for the existing v0.1.2 assets. Earlier packets use version 0.1.2;
+the new local candidate uses 0.1.3 as described in [candidate notes](RELEASE-v0.1.3.md).
 
 Backend status changed after the earlier packets were created: the four migration
 files and `delete-account` function were approved and deployed on 2026-10-08.

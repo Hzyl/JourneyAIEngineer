@@ -15,8 +15,9 @@ The earlier generated-type CI failure on `94d3be8` is resolved at this checkpoin
 For rollback, confirm the deployment-to-alias mapping in Cloudflare before choosing
 an older successful deployment. See [remaining acceptance](PRODUCTION-ACCEPTANCE.md).
 
-The package version remains 0.1.2, an existing release; select a new version before
-publishing new assets. The approved backend rollout completed on 2026-10-08:
+The local release candidate is 0.1.3; the latest published GitHub Release verified
+on 2026-10-08 remains 0.1.2. See [candidate notes](RELEASE-v0.1.3.md); building these
+assets does not publish them. The approved backend rollout completed on 2026-10-08:
 six migrations are applied, nine public tables have RLS, and `delete-account`
 version 1 is ACTIVE. Ten non-destructive live HTTP checks passed. See the
 [rollout report](BACKEND-ROLLOUT.md) for exact scope and remaining acceptance.

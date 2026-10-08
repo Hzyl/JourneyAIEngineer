@@ -70,8 +70,8 @@ substitute archive inspection for a launch or bypass that rejection.
 ## Support, release and learner pilot — pending
 
 - [ ] Maintainer supplies a private support/security contact approved for publication.
-- [ ] Select a new version before publishing Windows/source assets; version 0.1.2
-  already exists and preview ZIPs must not replace its published assets.
+- [x] Select version 0.1.3 for the next local Windows/source candidate. Version 0.1.2
+  already exists; publishing new assets remains gated and must not replace its assets.
 - [ ] Invite actual learners only with authorization to contact them. Ask each to
   open a lesson, attempt an exercise, use a hint/solution and explain what they learned.
 - [ ] Record real navigation problems, confusing instructions and time spent; keep
