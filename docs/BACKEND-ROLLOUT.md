@@ -64,8 +64,9 @@ changing existing rows. The event trigger was backed up separately. The private
 backup and its checksums remain outside the repository; test storage was removed.
 See [database acceptance](DATABASE-ACCEPTANCE.md) for restore scope and limitations.
 
-The updated frontend remains local. Commit/push needs separate approval and may
-trigger Cloudflare deployment. Real email/account acceptance, private support
+Follow-up on 2026-10-08: the frontend was separately approved and pushed as `5518493`.
+Cloudflare deployment and both CI jobs passed; guest exercise browser checks passed.
+Real email/account acceptance, private support
 contact, Windows clean-machine checks and real learner pilot evidence remain open.
 See [release readiness](RELEASE-READINESS.md); this backend rollout does not complete
 the entire public-release plan.

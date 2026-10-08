@@ -8,7 +8,10 @@ a new release version is selected.
 Backend status changed after the earlier packets were created: the four migration
 files and `delete-account` function were approved and deployed on 2026-10-08.
 See [backend rollout](BACKEND-ROLLOUT.md) before acting on a packet's historical
-"pending" list. Frontend commit/push and release publication remain separate gates.
+"pending" list. Frontend commit/push was subsequently approved and completed as
+`5518493`; Cloudflare and CI passed. New versioned release assets remain a separate
+gate. Dated packets retain their original bytes and should not be mistaken for the
+current working tree; see [release readiness](RELEASE-READINESS.md).
 
 ## Packet contents
 

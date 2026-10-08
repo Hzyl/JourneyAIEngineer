@@ -1,19 +1,19 @@
 # Pending public-readiness release
 
-Read-only follow-up on 2026-10-08 confirms GitHub `main` at `94d3be8`.
-Cloudflare's GitHub check reports successful deployment
-`13510298-de1b-48a2-a53d-9e1005a95ca6` for that exact commit, with preview
-`https://13510298.journeyaiengineer.pages.dev`. Direct HTTP inspection returned 403,
-but the subsequent browser inspection loaded both that preview and the main site
-`https://journeyaiengineer.pages.dev`, showing the public learning page. This proves
-those pages are reachable in the browser, not authenticated acceptance or an exact
-production-alias-to-deployment mapping. Confirm the mapping in Cloudflare before rollback.
+Approved web checkpoint, 2026-10-08: commit `5518493` was pushed to `origin/main`.
+[CI run 37741791718](https://github.com/Hzyl/JourneyAIEngineer/actions/runs/37741791718)
+passed both `quality` and `hosted-database`, including generated database types,
+54 browser smoke tests and the production-build regression step.
+Cloudflare reported successful deployment `69143046-7bf3-4dcc-a9c8-85b472085e46`
+for that commit. The public site at https://journeyaiengineer.pages.dev was also
+checked in a browser: the exercise list, first exercise guide, optional solution,
+VI/EN, light/dark themes and direct exercise URL reload worked in the observed flow.
+No console warnings or errors were captured during that check. This is guest-only
+acceptance; it does not establish real email, signed-in persistence or deletion.
 
-The in-page exercise reader, solutions and workflow improvements remain local.
-GitHub run `37636393815` passed `quality` but failed `hosted-database` at the
-regenerated-types diff: `learning_mutations` and two RPCs were missing. The local
-candidate now includes the generated definitions and passes an exact regeneration
-comparison. The remote CI check has not been rerun on this unpublished candidate.
+The earlier generated-type CI failure on `94d3be8` is resolved at this checkpoint.
+For rollback, confirm the deployment-to-alias mapping in Cloudflare before choosing
+an older successful deployment. See [remaining acceptance](PRODUCTION-ACCEPTANCE.md).
 
 The package version remains 0.1.2, an existing release; select a new version before
 publishing new assets. The approved backend rollout completed on 2026-10-08:

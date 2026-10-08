@@ -5,20 +5,17 @@ Web beta adds a browser-only learning mode. It is deliberately separate from the
 ## Current deployment status
 
 The web beta is deployed on Cloudflare Pages and uses Supabase email/password authentication.
-Use the beta URL shared by the maintainer. Desktop/local remains a separate runtime with its own SQLite data;
+Open [the web beta](https://journeyaiengineer.pages.dev). Desktop/local remains a separate runtime with its own SQLite data;
 the beta does not automatically synchronise that database with the web account.
 
-Deployment handoff checkpoint, **2026-10-07**:
+Deployment checkpoint, **2026-10-08**:
 
-- The maintainer confirmed that the web beta is deployed. Its URL and live Cloudflare deployment were not
-  independently checked during this documentation update.
-- Read-only `git ls-remote origin refs/heads/main` confirms GitHub `main` at
-  `94d3be844de58596c383f2fe20cf061bb3bfb72b`. This includes the auth, public-readiness,
-  theme and interaction-feedback commits; the earlier auth push blockage is resolved.
-- Exercise readers, reference-solution disclosure and guest bundle splitting are subsequent
-  local changes. They have not been committed or pushed at this checkpoint.
-- If Cloudflare Pages Git integration is enabled for `main`, an approved push will trigger a build/deployment.
-  Check the resulting deployment commit and smoke-test it before marking these auth changes as live.
+- The approved frontend commit `551849379c615fc7624cbe335310905f05c6853d` is on GitHub `main`.
+- Cloudflare's commit check reports successful deployment `69143046-7bf3-4dcc-a9c8-85b472085e46`.
+- [CI run 37741791718](https://github.com/Hzyl/JourneyAIEngineer/actions/runs/37741791718)
+  passed `quality` and `hosted-database`.
+- Browser checks on the main site verified the exercise list, first exercise guide and optional solution,
+  VI/EN, light/dark themes and a direct exercise URL reload. This does not verify signed-in account flows.
 
 ## Hosted features
 
@@ -39,14 +36,15 @@ The hosted Playwright configuration uses test-only Supabase values and checks th
 `/api/*` calls. That test does not verify live email delivery, a signed-in learning session or production RLS.
 The acceptance checklist below must be checked against the deployed build; it is not a record of completed tests.
 
-## Pending public-readiness changes
+## Public-readiness checkpoint
 
-The local candidate adds the exercise reader, solutions and learning workflow improvements;
-that frontend remains unpublished. Its four additive migrations and `delete-account`
+The exercise reader, solutions and learning workflow improvements are deployed on the web.
+Their four additive migrations and `delete-account`
 function were approved and deployed on 2026-10-08. Six migration versions, nine RLS tables,
 function source and ten non-destructive live HTTP checks were verified. Authenticated
 account/browser acceptance remains open. See [backend rollout](BACKEND-ROLLOUT.md) and
-[release order and rollback](RELEASE-READINESS.md).
+[release order and rollback](RELEASE-READINESS.md). Follow the
+[remaining acceptance checklist](PRODUCTION-ACCEPTANCE.md) before broader promotion.
 
 ## Local hosted development
 

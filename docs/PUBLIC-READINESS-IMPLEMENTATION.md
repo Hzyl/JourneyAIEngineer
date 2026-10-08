@@ -12,8 +12,10 @@ account operations still require approval of their concrete scope.
 The specifically approved backend rollout completed on 2026-10-08 after a verified
 backup and local rehearsal. All six migration versions are applied, nine tables have
 RLS, and `delete-account` version 1 is ACTIVE. Ten non-destructive live HTTP checks
-passed; see [backend rollout](BACKEND-ROLLOUT.md). The matching frontend is still
-local. Real email/deletion/browser acceptance, Windows smoke coverage and learner
+passed; see [backend rollout](BACKEND-ROLLOUT.md). The matching frontend was approved,
+pushed as `5518493` and deployed by Cloudflare. CI run `37741791718` passed both jobs;
+guest browser checks on the main site passed in the first exercise flow.
+Real email/deletion/browser acceptance, Windows smoke coverage and learner
 pilot evidence remain outstanding; those checklist items below remain unchecked.
 
 ## Contracts and ownership
@@ -90,13 +92,18 @@ These checks do not claim deployment, full WCAG certification or stage C/D accep
 - [x] Demo-first README, lesson contribution template and meaningful starter issues.
 - [x] Version-matched source archive and clear portable workspace/source instructions.
 - [x] Docs consistent with deployment, migration and local/web capability boundaries.
-- [ ] Appropriate unit/API/catalog/E2E/lint/build/package checks.
+- [x] Appropriate unit/API/catalog/E2E/lint/build/package checks for the web checkpoint and local preview.
 - [ ] Windows clean-machine smoke coverage and documented remaining limitations.
 - [ ] Concrete migration/release diff and rollback instructions ready for approval.
 - [ ] Commit/push/deploy/production changes only after current explicit confirmation.
 - [ ] Pilot feedback with real learners is external evidence, never fabricated.
 
 ## Evidence log
+
+Current web deployment and remote CI evidence: [release readiness](RELEASE-READINESS.md).
+Open checks requiring real accounts, a clean Windows environment or human feedback:
+[remaining acceptance](PRODUCTION-ACCEPTANCE.md). Entries below retain their historical
+checkpoint wording; an earlier statement that a feature was local is not its current deployment status.
 
 Further verification: [feedback/community](FEEDBACK-UX.md), [global search](SEARCH-UX.md),
 [ML framing solution](ML-FRAMING-SOLUTION.md), and [backup/cloud export](BACKUP-UX.md).
@@ -155,11 +162,12 @@ See the follow-up below for subsequent Git and test status.
 
 1. Preserve the now-passing local SQL, concurrency and generated-type checks; run
    the CI gates on the approved candidate before promotion.
-2. Local Deno/Auth acceptance passed. Verify exact deployed CORS headers and browser
-   sign-out after the approved function rollout; local Kong overrides CORS headers.
+2. Local Deno/Auth acceptance and deployed CORS checks passed. Verify signed-in
+   export, deletion and browser sign-out using the approved disposable accounts.
 3. Stage B cross-flow browser acceptance is complete in the scope recorded in
    `UI-ACCEPTANCE.md`. Preserve its checks when integrating further changes and
-   verify the deployed UI after the approved rollout; no deployment is claimed yet.
+   extend the deployed guest checks recorded in `RELEASE-READINESS.md` with real
+   authenticated acceptance; the current web checkpoint is deployed.
 4. Verify Windows launch, missing-Python behavior, learner workspace and backup restore
    on a clean machine. The successful build on this development machine is insufficient.
 5. Complete real confirmation/resend/reset email and two-account acceptance on an
