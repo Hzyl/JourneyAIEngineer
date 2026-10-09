@@ -1,11 +1,21 @@
 # Remaining production acceptance
 
-Checkpoint: 2026-10-08, frontend commit `128b353`, Supabase project
+Latest frontend checkpoint: 2026-10-09, commit `dc6d47f`, Supabase project
 `tnnlpsecrzatxdpoaagw`, https://journeyaiengineer.pages.dev.
-Both jobs in [CI run 37808220810](https://github.com/Hzyl/JourneyAIEngineer/actions/runs/37808220810)
-passed. Cloudflare deployment succeeded for this commit. The live sign-in screen
-shows the 24-hour policy; Supabase migration `20261008162049` and deletion function
-version 2 are deployed. Earlier guest checks at `5518493` covered the exercise list,
+Both jobs in [CI run 37816888792](https://github.com/Hzyl/JourneyAIEngineer/actions/runs/37816888792)
+passed. Cloudflare deployment `34c7e321-7daa-4020-a6f9-98eb0e2bab47` succeeded for this
+commit; HTTP 200 and the served OTP assets were verified. **The hosted signup email
+template was rejected by Supabase and remains unchanged.** The default email provider
+on this Free project does not permit template edits. Sender setup and real delivery
+remain open; see [the rollout result](SIGNUP-OTP.md).
+
+The previous `128b353` checkpoint verified the live 24-hour-policy screen; Supabase
+migration `20261008162049` and deletion function version 2 were deployed then.
+Inspection on 2026-10-09 found Site URL `http://localhost:3000` and no allowed
+redirect URLs. The separately approved [URL-only correction](AUTH-REDIRECTS.md) was
+then applied and read back: the Site URL is the public Pages app, with five reviewed
+callback destinations. Actual email/recovery acceptance remains pending.
+Earlier guest checks at `5518493` covered the exercise list,
 first guide/solution, VI/EN, themes and reload. These observations do not establish
 signed-in production account behavior. See [session lifetime](SESSION-LIFETIME.md).
 
@@ -28,9 +38,10 @@ it is no longer awaiting a choice of lifetime. A real expired-session login chec
 remains part of manual acceptance, not a reason to change unrelated Auth settings.
 
 Follow-up: the maintainer identified signup email UX problems: no input for an OTP,
-link-based confirmation, and generic Supabase branding. The locally verified
-[signup OTP candidate](SIGNUP-OTP.md) addresses code entry and email content; hosted
-template deployment and real delivery acceptance remain pending. A separate progress
+link-based confirmation, and generic Supabase branding. The deployed
+[signup OTP frontend](SIGNUP-OTP.md) provides code entry. The branded email is locally
+verified, but its hosted template deployment was rejected and real delivery acceptance
+remains pending. A separate progress
 persistence failure has not yet been described and is not inferred from this feedback.
 The maintainer has not selected a private security contact; that item remains open.
 
@@ -45,7 +56,7 @@ passwords and email tokens must not be included in reports or chat.
 | Step | Action | Evidence required |
 | --- | --- | --- |
 | 1 | Register account A with a new password and confirmation field. | Unconfirmed-email screen appears; the actual confirmation email reaches A. |
-| 2 | Request one confirmation resend, respecting any cooldown. | After the OTP candidate is deployed, a branded email arrives and its code completes signup in the app. Earlier confirmation links remain usable. |
+| 2 | After the sender/template and redirect configuration are ready, request one confirmation resend, respecting any cooldown. | A branded email arrives and its code completes signup in the app. Verify an earlier confirmation link also returns to the public app. |
 | 3 | Register and confirm account B in a separate browser profile/session. | A and B are distinct authenticated users. |
 | 4 | In A, record a lesson, a short study session and a synthetic note such as `QA A only`. Reload. | A's records remain; the displayed minutes do not increase just from reload. |
 | 5 | In B, create `QA B only` and inspect the same learning views. | A's note/progress is absent from B; B's data is absent after returning to A. |

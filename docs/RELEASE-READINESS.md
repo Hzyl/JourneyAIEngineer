@@ -1,6 +1,24 @@
 # Pending public-readiness release
 
-## Current deployed checkpoint — 2026-10-08
+## Current deployed checkpoint — 2026-10-09
+
+Frontend commit `dc6d47f` is on `origin/main`. Both jobs in
+[CI run 37816888792](https://github.com/Hzyl/JourneyAIEngineer/actions/runs/37816888792)
+passed, and Cloudflare deployment `34c7e321-7daa-4020-a6f9-98eb0e2bab47` succeeded.
+HTTP 200 and the served OTP frontend assets were verified. This does not establish
+production signup acceptance: Supabase rejected the branded Confirm signup template
+update because this Free project uses the default email provider. The existing
+hosted email subject/body remain unchanged; no sender, SMTP or billing change was made.
+
+The [signup rollout report](SIGNUP-OTP.md) records the rejection and local test evidence.
+Read-only inspection also found a localhost Site URL and an empty callback allowlist.
+The separately approved [URL-only correction](AUTH-REDIRECTS.md) is now applied and
+verified: the public Site URL and five callback destinations match the reviewed config.
+Real email/account acceptance, the sending setup and the
+remaining [production acceptance](PRODUCTION-ACCEPTANCE.md) tasks are still open.
+The older local Windows candidate has not been rebuilt or published by this rollout.
+
+## Previous deployed checkpoint — 2026-10-08
 
 Commit `128b353` is on `origin/main`. Both jobs in
 [CI run 37808220810](https://github.com/Hzyl/JourneyAIEngineer/actions/runs/37808220810)

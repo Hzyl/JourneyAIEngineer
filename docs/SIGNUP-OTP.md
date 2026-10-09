@@ -1,9 +1,35 @@
 # Signup OTP and email identity
 
-Candidate prepared and approved for commit, push and controlled rollout on 2026-10-09.
-This document records implementation and local verification. Hosted deployment and
-the Auth template update require separate verification; a Git push alone proves neither.
-The pre-rollout frontend checkpoint was `128b353`.
+Frontend deployed on 2026-10-09 at commit `dc6d47f` after approval of commit, push
+and the controlled Confirm signup template rollout. The pre-rollout frontend
+checkpoint was `128b353`. **The hosted email template update was rejected; signup
+OTP and branded email acceptance are not complete.**
+
+## Hosted rollout result — 2026-10-09
+
+- Both jobs in [CI run 37816888792](https://github.com/Hzyl/JourneyAIEngineer/actions/runs/37816888792)
+  passed. Cloudflare Pages deployment `34c7e321-7daa-4020-a6f9-98eb0e2bab47` succeeded
+  for the same commit. The public web responds with HTTP 200 and serves the new OTP code.
+- A minimal Supabase CLI config targeted only the Confirm signup subject and body
+  on project `tnnlpsecrzatxdpoaagw`. Supabase rejected the update with HTTP 400:
+  `Email template modification is not available for free tier projects using the default email provider.`
+  The response requires a plan upgrade or custom SMTP before template editing.
+- A second preview, explicitly declined, still showed both template changes pending.
+  The existing hosted subject/body therefore remain unchanged. The deployed code
+  input does not establish that the delivered email contains a code.
+- No SMTP, sender, domain, credentials or billing settings changed.
+  No production account was created and no test email was sent.
+- Configuration inspection found Site URL `http://localhost:3000` and an empty
+  redirect allowlist. After separate approval on 2026-10-09, the Site URL was set to
+  `https://journeyaiengineer.pages.dev` with five reviewed callback destinations.
+  A targeted push changed exactly these two fields and remote readback confirmed
+  no pending declared differences; see [Auth redirects](AUTH-REDIRECTS.md).
+
+Next: choose and authorize the sending setup; apply and read back the branded
+template once permitted; then verify a real delivered email.
+Existing callback handling remains in the app, but hosted link delivery and destination
+must still be verified with actual delivered messages after the configuration correction.
+Ignored operational evidence is in `.build/signup-otp-deployment/`.
 
 ## User flow
 
@@ -41,7 +67,7 @@ The dedicated OTP test stack enables confirmations independently.
 Email content/subject and sender identity are separate settings. To use an owned
 sender address, configure a verified sending domain and custom SMTP with sender
 name **Journey AI Engineer**. Do not invent an address or publish credentials.
-No hosted SMTP settings were inspected or changed for this candidate.
+No hosted SMTP settings were changed during this rollout.
 Supabase's default sending service has restricted recipients/rates and is not
 intended for public production delivery; custom SMTP requires separate configuration.
 

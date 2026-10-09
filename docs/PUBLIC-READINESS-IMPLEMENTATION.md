@@ -18,7 +18,16 @@ guest browser checks on the main site passed in the first exercise flow.
 Real email/deletion/browser acceptance, Windows smoke coverage and learner
 pilot evidence remain outstanding; those checklist items below remain unchecked.
 
-Current checkpoint: the separately approved 24-hour session change is deployed as
+Latest frontend checkpoint, 2026-10-09: `dc6d47f` is deployed and both CI jobs passed.
+The web serves the new signup code-entry implementation. Supabase rejected the
+Confirm signup subject/body update under the Free/default email-provider restriction;
+the delivered email has not been converted to the branded OTP template. See the
+[rollout result](SIGNUP-OTP.md). The separately approved [Auth URL correction](AUTH-REDIRECTS.md)
+was applied on 2026-10-09 and remote readback confirmed both fields match the reviewed
+configuration. These results do not close real email or
+signed-in account acceptance, and no production test account or email was created.
+
+Previous checkpoint: the separately approved 24-hour session change is deployed as
 `128b353`, with both CI jobs passing. Supabase now has seven migrations and
 `delete-account` version 2; see [release readiness](RELEASE-READINESS.md) and
 [session lifetime](SESSION-LIFETIME.md). Maintainer feedback reports recovery/export
