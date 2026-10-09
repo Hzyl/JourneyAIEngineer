@@ -6,9 +6,9 @@ import { join } from 'node:path'
 const dataRoot = mkdtempSync(join(tmpdir(), 'journey-e2e-'))
 
 /**
- * The smoke suite exercises the same local-only processes used by contributors:
- * FastAPI serves the learning data and Vite serves the React shell. No external
- * API or network resource is required by the test.
+ * Exercise the built local frontend against a disposable FastAPI/SQLite workspace.
+ * Building before browser startup avoids timing lazy imports against Vite's
+ * on-demand development transforms. No external API is required by the test.
  */
 export default defineConfig({
   testDir: './tests/e2e',
@@ -38,7 +38,9 @@ export default defineConfig({
       reuseExistingServer: false,
     },
     {
-      command: 'npm run dev -- --host 127.0.0.1 --port 5177 --strictPort',
+      command: 'node node_modules/vite/bin/vite.js build --outDir .build/local-e2e && '
+        + 'node node_modules/vite/bin/vite.js preview --outDir .build/local-e2e '
+        + '--host 127.0.0.1 --port 5177 --strictPort',
       url: 'http://127.0.0.1:5177',
       env: { VITE_APP_MODE: 'local', JOURNEY_DEV_API_PORT: '8871' },
       timeout: 120_000,

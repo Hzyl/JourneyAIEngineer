@@ -42,17 +42,21 @@ for (const theme of ['light', 'dark'] as const) {
     await page.emulateMedia({ colorScheme: theme })
     for (const route of ['/', '/roadmap', '/lesson/phase-00-onboarding-environment-1', '/review',
       '/exercises', '/tools', '/resources', '/community', '/journal', '/settings', '/security']) {
-      await page.goto(route)
-      await expect(page.locator('.page-content')).toBeVisible()
-      if (route.startsWith('/lesson/')) await expect(page.locator('#lesson-page-title')).toBeVisible()
-      await checkThemeContrast(page)
+      await test.step(`Desktop ${theme}: ${route}`, async () => {
+        await page.goto(route)
+        await expect(page.locator('.page-content')).toBeVisible()
+        if (route.startsWith('/lesson/')) await expect(page.locator('#lesson-page-title')).toBeVisible()
+        await checkThemeContrast(page)
+      })
     }
     await page.setViewportSize({ width: 390, height: 844 })
     for (const route of ['/', '/roadmap', '/lesson/phase-00-onboarding-environment-1', '/settings']) {
-      await page.goto(route)
-      await expect(page.locator('.page-content')).toBeVisible()
-      if (route.startsWith('/lesson/')) await expect(page.locator('#lesson-page-title')).toBeVisible()
-      await checkThemeContrast(page)
+      await test.step(`Mobile ${theme}: ${route}`, async () => {
+        await page.goto(route)
+        await expect(page.locator('.page-content')).toBeVisible()
+        if (route.startsWith('/lesson/')) await expect(page.locator('#lesson-page-title')).toBeVisible()
+        await checkThemeContrast(page)
+      })
     }
     await page.goto('/')
     await expect(page.locator('.today-next')).toBeVisible()
