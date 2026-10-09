@@ -1,6 +1,44 @@
 # Pending public-readiness release
 
-## Current deployed checkpoint — 2026-10-09
+## Current base and pending mobile/Core models batch — 2026-10-09
+
+Commit `41ff566d4b98d1f79352b8bbf57c2a706a341953` is on `origin/main`.
+[CI run 37944886879](https://github.com/Hzyl/JourneyAIEngineer/actions/runs/37944886879)
+completed successfully for that exact SHA. This separately approved commit contains
+only the Google HTML verification file. Public HTTP inspection saw a same-host 308
+to the extensionless path, then HTTP 200 with the exact 53-byte verification body.
+Google Search Console ownership itself remains unconfirmed by the maintainer.
+
+The pending review packet now combines Core models and the signed-in responsive
+layout fix. Navigation collapses through 1100 CSS pixels; header controls wrap.
+Six targeted production-build browser checks passed (four language/theme layout
+cases across 13 widths and two sign-out cases), together with TypeScript and lint.
+Existing lint/build warnings remain documented in the review packet. Physical
+iPhone/Android acceptance is still open. No additional dependencies or backend
+changes are required. See [the current review packet](RELEASE-REVIEW-PACKET.md).
+
+## Previous base and Windows candidate — 2026-10-09
+
+Commit `9bd2a7ccd359013d391a30f2d32bc392c74ca7b4` was the base before the Google
+verification commit. [CI run 37884149235](https://github.com/Hzyl/JourneyAIEngineer/actions/runs/37884149235)
+was read back as completed/success for that exact SHA. The earlier same-day
+deployment record verified Cloudflare deployment
+`49125584-20e4-4154-b454-ab410e006d8e` and HTTP 200 for the public root/callback.
+That deployment observation is not a new live authenticated acceptance check.
+
+A local Windows/source candidate was built from `9bd2a7c` in
+`.build/release-9bd2a7c-20261009/`; its recorded archive and embedded-data checks
+passed. It predates the uncommitted Core models addition. See
+[candidate provenance](RELEASE-v0.1.3.md) for exact hashes and limitations.
+
+The current batch adds Core models, a mobile table readability fix and updated
+release/acceptance documentation. It needs no migration, Edge Function deployment
+or Auth/SMTP change. Manual acceptance is grouped in
+[ACCEPTANCE-BATCH.md](ACCEPTANCE-BATCH.md). Publishing the frontend batch and
+publishing a GitHub Windows release are distinct actions; neither is implied by
+creating a local review packet.
+
+## Earlier OTP deployment checkpoint — 2026-10-09
 
 Frontend commit `dc6d47f` is on `origin/main`. Both jobs in
 [CI run 37816888792](https://github.com/Hzyl/JourneyAIEngineer/actions/runs/37816888792)

@@ -3,10 +3,24 @@
 Status: prepared locally, not tagged or published. The latest GitHub Release
 verified on 2026-10-08 is v0.1.2. Keep its existing assets unchanged.
 
-The existing candidate was built before hosted-session commit `128b353`. The live
-web now includes the 24-hour policy, but that change is not in the older candidate
-source ZIP. Build and verify a fresh candidate from the approved release commit
-before publishing; do not relabel or overwrite the older candidate's provenance.
+A newer candidate was built from `9bd2a7ccd359013d391a30f2d32bc392c74ca7b4`
+in `.build/release-9bd2a7c-20261009/`. It includes the session/OTP frontend and
+the E2E configuration fix. The source verification record matched 636 files
+against that commit (357 differed only in line endings); embedded inspection
+verified 272 content files, 22 frontend files and six required runtime modules.
+The executable was not launched and the candidate was not published.
+
+Recorded SHA-256 checksums, also present in that directory's `SHA256SUMS.txt`:
+
+| Artifact | SHA-256 |
+| --- | --- |
+| Windows ZIP | `e291e7eed9782144a69f15dfe56a5ae15d3dfea6d0e41949962ff220dabfda7a` |
+| Source ZIP | `36d63e255efaa565ac6d93cf17610b3061ba4856b67c98dbcb940f3127228b52` |
+
+The current uncommitted Core models extension is **not** in these two archives.
+Its review packet contains a separate working-tree source snapshot. Rebuild the
+Windows/source pair together from the approved final release commit before
+publishing; never relabel an older artifact as the latest source.
 
 ## Changes included
 
@@ -31,9 +45,10 @@ do not require a Git checkout. Do not label a preview ZIP as an uploaded release
 
 ## Acceptance and publication
 
-CI and guest web acceptance for the preceding application checkpoint `5518493`
-are recorded in [release readiness](RELEASE-READINESS.md). The version bump does
-not add lesson IDs or change the catalog content fingerprint.
+CI and deployment evidence through `9bd2a7c` are recorded in
+[release readiness](RELEASE-READINESS.md). The version remains 0.1.3 and lesson IDs
+stay stable. Adding the Core models files intentionally changes the content
+fingerprint; it must not be confused with the catalog inside the older archives.
 
 The candidate packaging pipeline must pass before review. Its build/inspection
 report is separate from Windows runtime acceptance: a clean-machine launch,

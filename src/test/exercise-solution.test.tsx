@@ -51,10 +51,10 @@ test('switching language preserves an open answer but selecting another exercise
 })
 
 test('a lab without an authored solution shows an honest state without a dead button', async () => {
-  await render('exercise-3-models')
+  await render('exercise-3-preprocessing')
   expect(host.textContent).toContain('chưa có bài giải mẫu')
   expect(host.querySelector('button')).toBeNull()
-  await render('exercise-3-models', 'en')
+  await render('exercise-3-preprocessing', 'en')
   expect(host.textContent).toContain('no worked solution yet')
   expect(host.querySelector('pre')).toBeNull()
 })
@@ -87,4 +87,23 @@ test('framing tables are opt-in, semantic and translated alongside the downloada
   expect(links.map((link) => link.download)).toEqual(['framing.py', 'test_solution.py'])
   expect(decodeURIComponent(links[0].href)).toContain('def split_orders')
   expect(decodeURIComponent(links[1].href)).toContain('test_label_maturity_boundaries')
+})
+
+test('core models has an opt-in bilingual comparison and all runnable source files', async () => {
+  await render('exercise-3-models')
+  expect(host.querySelector('table')).toBeNull()
+  expect(host.querySelector('a[download]')).toBeNull()
+  await act(async () => host.querySelector('button')!.click())
+  expect(host.querySelectorAll('table')).toHaveLength(2)
+  expect(host.textContent).toContain('Kết quả seed 42')
+  expect(host.textContent).toContain('11 tests, OK')
+  expect(host.textContent).toContain('40 / 3 / 1 / 36')
+  await render('exercise-3-models', 'en')
+  expect(host.textContent).toContain('Model selection tradeoffs')
+  expect(host.textContent).not.toContain('Kết quả seed 42')
+  const links = [...host.querySelectorAll<HTMLAnchorElement>('a[download]')]
+  expect(links.map((link) => link.download)).toEqual(['compare.py', 'models.py', 'test_solution.py'])
+  expect(decodeURIComponent(links[0].href)).toContain('include_test=False')
+  expect(decodeURIComponent(links[1].href)).toContain('def fit_boost')
+  expect(decodeURIComponent(links[2].href)).toContain('test_logistic_gradient_and_linear_boundary')
 })

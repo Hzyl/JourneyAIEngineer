@@ -65,3 +65,7 @@
 .exercise-solution-table thead {
   background: var(--surface-subtle);
 }
+
+.exercise-solution-table th[scope="row"] {
+  min-width: 8rem;
+}

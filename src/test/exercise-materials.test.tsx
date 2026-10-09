@@ -15,7 +15,7 @@ test('reference solutions have bilingual explanations and stay separate from sta
       const solution = exerciseSolution(exercise.slug, language)
       if (exercise.assessment_kind === 'verified'
         || exercise.slug in foundationSolutions || exercise.slug in workflowSolutions || exercise.slug in mathSolutions
-        || exercise.slug === 'exercise-3-ml-framing') {
+        || ['exercise-3-ml-framing', 'exercise-3-models'].includes(exercise.slug)) {
         expect(solution?.code).toContain('def ')
         expect(solution?.code).not.toContain('TODO')
         expect(solution?.explanation.length).toBeGreaterThanOrEqual(4)

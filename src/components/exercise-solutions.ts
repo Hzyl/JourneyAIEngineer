@@ -2,6 +2,7 @@ import { foundationSolutions } from './foundation-solutions'
 import { workflowSolutions } from './workflow-solutions'
 import { mathSolutions } from './math-solutions'
 import { framingSolution } from './framing-solution'
+import { modelsSolution } from './models-solution'
 
 type SolutionText = {
   approach: string
@@ -104,6 +105,7 @@ const explanations: Record<string, Record<'vi' | 'en', SolutionText>> = {
 export function exerciseSolution(slug: string, language: 'vi' | 'en') {
   const lab = foundationSolutions[slug] ?? workflowSolutions[slug] ?? mathSolutions[slug]
     ?? (slug === 'exercise-3-ml-framing' ? framingSolution : undefined)
+    ?? (slug === 'exercise-3-models' ? modelsSolution : undefined)
   if (lab) {
     const files = lab.files.map((name) => ({
       name, content: workedFiles[`../../content/worked_solutions/${slug}/${name}`],

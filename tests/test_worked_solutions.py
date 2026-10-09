@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1] / "content" / "worked_solutions"
     ("exercise-1-python-core", 5), ("exercise-1-reliable-code", 5), ("exercise-1-data-files", 5),
     ("exercise-1-developer-tools", 5), ("exercise-1-sql-structures", 5),
     ("exercise-3-ml-framing", 6),
+    ("exercise-3-models", 11),
 ])
 def test_downloadable_worked_solution_runs_without_external_packages(slug, test_count, tmp_path):
     destination = tmp_path / slug

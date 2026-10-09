@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-const mobileQuery = '(max-width: 850px)'
+// Keep aligned with the drawer styles in shell-responsive.css and app-navigation.css.
+const mobileQuery = '(max-width: 1100px)'
 
 export function useMobileNavigation() {
   const [mobile, setMobile] = useState(() => window.matchMedia(mobileQuery).matches)

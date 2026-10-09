@@ -11,6 +11,7 @@ import './App.css'
 import './typography.css'
 import './learning-workflow.css'
 import './readability.css'
+import './shell-responsive.css'
 
 initializeTheme()
 

@@ -2,6 +2,7 @@ import { foundationGuides } from './foundation-guides'
 import { workflowGuides } from './workflow-guides'
 import { mathGuides } from './math-guides'
 import { framingGuide } from './framing-guide'
+import { modelsGuide } from './models-guide'
 
 export type GuideText = {
   summary: string
@@ -16,6 +17,7 @@ export const exerciseGuides: Record<string, Record<'vi' | 'en', GuideText>> = {
   ...workflowGuides,
   ...mathGuides,
   'exercise-3-ml-framing': framingGuide,
+  'exercise-3-models': modelsGuide,
   'exercise-0-environment': {
     vi: {
       summary: 'Viết một hàm nhận diện phiên bản Python và môi trường đang chạy.',

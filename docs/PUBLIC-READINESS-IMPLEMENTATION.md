@@ -4,6 +4,17 @@ Approved scope: the 2026-10-07 audit and its four implementation stages.
 Existing user changes and auth commits must be preserved.
 Status is evidence based; an unchecked item remains part of the active goal.
 
+Current publication boundary, 2026-10-09: only the Google verification file was
+approved and pushed in `41ff566`; its CI succeeded. Mobile layout and Core models
+remain local, collected in [the current packet](RELEASE-REVIEW-PACKET.md).
+The remaining stages still require the external evidence recorded below.
+
+Scheduling update, 2026-10-09: manual acceptance is deferred at the maintainer's
+request and will be collected in [one final batch](ACCEPTANCE-BATCH.md).
+Continue independently verifiable implementation without treating that deferral
+as a blocker. The current local [Core models extension](CORE-MODELS-SOLUTION.md)
+raises authored walkthrough/solution coverage to 14 of 52 exercises.
+
 Deployment decision, 2026-10-08: retain the existing web and Supabase project
 `tnnlpsecrzatxdpoaagw` under the Free-plan goal. Separate cloud staging is optional,
 not a prerequisite. Use local/CI disposable tests; production mutations and test
@@ -111,7 +122,7 @@ These checks do not claim deployment, full WCAG certification or stage C/D accep
 - [x] Docs consistent with deployment, migration and local/web capability boundaries.
 - [x] Appropriate unit/API/catalog/E2E/lint/build/package checks for the web checkpoint and local preview.
 - [ ] Windows clean-machine smoke coverage and documented remaining limitations.
-- [ ] Concrete migration/release diff and rollback instructions ready for approval.
+- [x] Concrete migration/release diff and rollback instructions ready for approval (current frontend-only batch: `RELEASE-REVIEW-PACKET.md`; earlier backend rollout is already applied).
 - [ ] Commit/push/deploy/production changes only after current explicit confirmation.
 - [ ] Pilot feedback with real learners is external evidence, never fabricated.
 

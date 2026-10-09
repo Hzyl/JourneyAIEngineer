@@ -1,5 +1,10 @@
 # Remaining production acceptance
 
+**Scheduling update, 2026-10-09:** the maintainer deferred manual acceptance to one
+final round while implementation continues. Track the grouped requirements in
+[ACCEPTANCE-BATCH.md](ACCEPTANCE-BATCH.md); do not repeatedly interrupt independent
+implementation for these checks. The checkpoints below retain their original scope.
+
 Latest frontend checkpoint: 2026-10-09, commit `dc6d47f`, Supabase project
 `tnnlpsecrzatxdpoaagw`, https://journeyaiengineer.pages.dev.
 Both jobs in [CI run 37816888792](https://github.com/Hzyl/JourneyAIEngineer/actions/runs/37816888792)
