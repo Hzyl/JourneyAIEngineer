@@ -1,4 +1,5 @@
 import type { RefObject } from 'react'
+import { GitHubLink } from './GitHubLink'
 import './app-navigation.css'
 
 type Item = { id: string; label: string; icon: string; hint: string }
@@ -29,6 +30,7 @@ export function AppNavigation({ items, view, hosted, language, mobile, open, pan
       </div>
       <div className="sidebar-intro">{vi ? 'Học đều, thực hành và ghi lại bằng chứng.'
         : 'Learn steadily, practise and keep evidence.'}</div>
+      <GitHubLink language={language} />
       <nav aria-label={label} className="nav-list">
         {items.filter((item) => !hosted || item.id !== 'security').map((item) => {
           const current = view === item.id || (view === 'lesson' && item.id === 'roadmap')

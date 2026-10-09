@@ -4,6 +4,7 @@ import type { CatalogLesson } from '../platform/hosted/catalog'
 import { PublicLesson } from './PublicLesson'
 import { PublicRoadmap } from './PublicRoadmap'
 import { ThemeToggle } from '../theme/ThemeToggle'
+import { GitHubLink } from '../components/GitHubLink'
 import { usePublicLanguage } from './public-language'
 import { authReturnPath, publicPage } from './public-navigation'
 import './public.css'
@@ -84,6 +85,7 @@ export function PublicExperience() {
       </button>
       <nav aria-label={vi ? 'Điều hướng chính' : 'Main navigation'}>
         <ThemeToggle language={language} />
+        <GitHubLink language={language} />
         <button onClick={() => navigate('roadmap')} aria-current={page === 'roadmap' ? 'page' : undefined}>
           {vi ? 'Lộ trình' : 'Roadmap'}</button>
         <button onClick={() => navigate('exercises')} aria-current={page === 'exercises' ? 'page' : undefined}>
@@ -129,6 +131,8 @@ export function PublicExperience() {
               : 'No account to try a lesson. No Git to get started.'}</p>
           </div>
           <aside className="public-artifact" aria-label={vi ? 'Sản phẩm đầu tiên' : 'Your first artifact'}>
+            <img className="learning-art artifact-art" src="/images/learning/laptop.png"
+              width="128" height="128" alt="" decoding="async" />
             <span className="eyebrow">01 / {vi ? 'BẮT ĐẦU NHỎ' : 'START SMALL'}</span>
             <h2>{vi ? 'Một file Python.\nMột kết quả thật.' : 'One Python file.\nOne real result.'}</h2>
             <div className="artifact-filename">environment_check.py</div>
@@ -140,6 +144,8 @@ export function PublicExperience() {
         </section>
         <section className="public-samples" aria-labelledby="samples-title">
           <div className="public-section-heading">
+            <img className="learning-art" src="/images/learning/books.png"
+              width="80" height="80" alt="" loading="lazy" decoding="async" />
             <div><span className="eyebrow">{vi ? 'HỌC THỬ' : 'TRY IT'}</span>
               <h2 id="samples-title">{vi ? 'Mười bài để khởi động.' : 'Ten lessons to get going.'}</h2></div>
             <p>{vi ? 'Đọc, chạy ví dụ, tự trả lời. Các bài mẫu đã được rà soát nội dung; phần còn lại đang tiếp tục biên tập.'

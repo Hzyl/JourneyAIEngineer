@@ -90,7 +90,7 @@ for (const language of ['vi', 'en'] as const) {
     await page.getByRole('button', { name: vi ? '← Danh sách bài tập' : '← All exercises' }).click()
     await page.goBack()
     await expect(page.locator('.exercise-detail')).toContainText('total_study_minutes')
-    await page.goto('/exercises?exercise=exercise-3-models')
+    await page.goto('/exercises?exercise=exercise-3-preprocessing')
     await expect(page.locator('.exercise-steps li')).toHaveCount(4)
     await expect(page.locator('.exercise-detail')).toContainText(vi ? 'chưa có bộ chấm tự động' : 'no automated assessment')
     await expect(page.locator('.exercise-solution')).toContainText(vi ? 'chưa có bài giải mẫu' : 'no worked solution yet')

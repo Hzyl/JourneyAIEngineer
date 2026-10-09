@@ -1,0 +1,35 @@
+.github-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 9px 14px;
+  border: 1px solid var(--field-border);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 650;
+  line-height: 1.4;
+  text-decoration: none;
+}
+
+.github-link svg {
+  flex-shrink: 0;
+}
+
+.public-shell .github-link {
+  color: var(--ink);
+  background: var(--surface);
+}
+
+.app-shell .sidebar .github-link {
+  color: var(--sidebar-text);
+  border-color: var(--sidebar-line);
+  background: var(--sidebar-hover);
+  margin: 0 10px 20px;
+}
+
+.github-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}

@@ -12,6 +12,7 @@ import './typography.css'
 import './learning-workflow.css'
 import './readability.css'
 import './shell-responsive.css'
+import './reading-scale.css'
 
 initializeTheme()
 
