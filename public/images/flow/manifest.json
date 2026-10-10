@@ -1,0 +1,362 @@
+[
+  {
+    "id": "hero",
+    "source": "Google Flow",
+    "model": "Nano Banana 2.1",
+    "kind": "editorial illustration, not an instructional diagram",
+    "variants": [
+      {
+        "file": "hero-480.webp",
+        "width": 480,
+        "height": 268,
+        "bytes": 12746
+      },
+      {
+        "file": "hero-960.webp",
+        "width": 960,
+        "height": 536,
+        "bytes": 32662
+      }
+    ]
+  },
+  {
+    "id": "python",
+    "source": "Google Flow",
+    "model": "Nano Banana 2.1",
+    "kind": "editorial illustration, not an instructional diagram",
+    "variants": [
+      {
+        "file": "python-480.webp",
+        "width": 480,
+        "height": 268,
+        "bytes": 16458
+      },
+      {
+        "file": "python-960.webp",
+        "width": 960,
+        "height": 536,
+        "bytes": 40534
+      }
+    ]
+  },
+  {
+    "id": "math",
+    "source": "Google Flow",
+    "model": "Nano Banana 2.1",
+    "kind": "editorial illustration, not an instructional diagram",
+    "variants": [
+      {
+        "file": "math-480.webp",
+        "width": 480,
+        "height": 268,
+        "bytes": 12326
+      },
+      {
+        "file": "math-960.webp",
+        "width": 960,
+        "height": 536,
+        "bytes": 29128
+      }
+    ]
+  },
+  {
+    "id": "machine-learning",
+    "source": "Google Flow",
+    "model": "Nano Banana 2.1",
+    "kind": "editorial illustration, not an instructional diagram",
+    "variants": [
+      {
+        "file": "machine-learning-480.webp",
+        "width": 480,
+        "height": 268,
+        "bytes": 17348
+      },
+      {
+        "file": "machine-learning-960.webp",
+        "width": 960,
+        "height": 536,
+        "bytes": 45500
+      }
+    ]
+  },
+  {
+    "id": "deep-learning",
+    "source": "Google Flow",
+    "model": "Nano Banana 2.1",
+    "kind": "editorial illustration, not an instructional diagram",
+    "variants": [
+      {
+        "file": "deep-learning-480.webp",
+        "width": 480,
+        "height": 268,
+        "bytes": 15314
+      },
+      {
+        "file": "deep-learning-960.webp",
+        "width": 960,
+        "height": 536,
+        "bytes": 38066
+      }
+    ]
+  },
+  {
+    "id": "deployment",
+    "source": "Google Flow",
+    "model": "Nano Banana 2.1",
+    "kind": "editorial illustration, not an instructional diagram",
+    "variants": [
+      {
+        "file": "deployment-480.webp",
+        "width": 480,
+        "height": 268,
+        "bytes": 13370
+      },
+      {
+        "file": "deployment-960.webp",
+        "width": 960,
+        "height": 536,
+        "bytes": 32410
+      }
+    ]
+  },
+  {
+    "id": "retrieval",
+    "source": "Google Flow",
+    "model": "Nano Banana 2.1",
+    "kind": "editorial illustration, not an instructional diagram",
+    "variants": [
+      {
+        "file": "retrieval-480.webp",
+        "width": 480,
+        "height": 268,
+        "bytes": 11804
+      },
+      {
+        "file": "retrieval-960.webp",
+        "width": 960,
+        "height": 536,
+        "bytes": 29140
+      }
+    ]
+  },
+  {
+    "id": "agents",
+    "source": "Google Flow",
+    "model": "Nano Banana 2.1",
+    "kind": "editorial illustration, not an instructional diagram",
+    "variants": [
+      {
+        "file": "agents-480.webp",
+        "width": 480,
+        "height": 268,
+        "bytes": 14508
+      },
+      {
+        "file": "agents-960.webp",
+        "width": 960,
+        "height": 536,
+        "bytes": 35002
+      }
+    ]
+  },
+  {
+    "id": "evaluation",
+    "source": "Google Flow",
+    "model": "Nano Banana Pro",
+    "kind": "editorial illustration, not an instructional diagram",
+    "variants": [
+      {
+        "file": "evaluation-480.webp",
+        "width": 480,
+        "height": 268,
+        "bytes": 10908
+      },
+      {
+        "file": "evaluation-960.webp",
+        "width": 960,
+        "height": 536,
+        "bytes": 25508
+      }
+    ]
+  },
+  {
+    "id": "fine-tuning",
+    "source": "Google Flow",
+    "model": "Nano Banana Pro",
+    "kind": "editorial illustration, not an instructional diagram",
+    "variants": [
+      {
+        "file": "fine-tuning-480.webp",
+        "width": 480,
+        "height": 268,
+        "bytes": 9746
+      },
+      {
+        "file": "fine-tuning-960.webp",
+        "width": 960,
+        "height": 536,
+        "bytes": 25014
+      }
+    ]
+  },
+  {
+    "id": "local-inference",
+    "source": "Google Flow",
+    "model": "Nano Banana Pro",
+    "kind": "editorial illustration, not an instructional diagram",
+    "variants": [
+      {
+        "file": "local-inference-480.webp",
+        "width": 480,
+        "height": 268,
+        "bytes": 9522
+      },
+      {
+        "file": "local-inference-960.webp",
+        "width": 960,
+        "height": 536,
+        "bytes": 24062
+      }
+    ]
+  },
+  {
+    "id": "system-design",
+    "source": "Google Flow",
+    "model": "Nano Banana Pro",
+    "kind": "editorial illustration, not an instructional diagram",
+    "variants": [
+      {
+        "file": "system-design-480.webp",
+        "width": 480,
+        "height": 268,
+        "bytes": 10910
+      },
+      {
+        "file": "system-design-960.webp",
+        "width": 960,
+        "height": 536,
+        "bytes": 26242
+      }
+    ]
+  },
+  {
+    "id": "review",
+    "source": "Google Flow",
+    "model": "Nano Banana Pro",
+    "kind": "editorial illustration, not an instructional diagram",
+    "variants": [
+      {
+        "file": "review-480.webp",
+        "width": 480,
+        "height": 268,
+        "bytes": 16194
+      },
+      {
+        "file": "review-960.webp",
+        "width": 960,
+        "height": 536,
+        "bytes": 36468
+      }
+    ]
+  },
+  {
+    "id": "journal",
+    "source": "Google Flow",
+    "model": "Nano Banana Pro",
+    "kind": "editorial illustration, not an instructional diagram",
+    "variants": [
+      {
+        "file": "journal-480.webp",
+        "width": 480,
+        "height": 268,
+        "bytes": 12640
+      },
+      {
+        "file": "journal-960.webp",
+        "width": 960,
+        "height": 536,
+        "bytes": 32420
+      }
+    ]
+  },
+  {
+    "id": "resources",
+    "source": "Google Flow",
+    "model": "Nano Banana Pro",
+    "kind": "editorial illustration, not an instructional diagram",
+    "variants": [
+      {
+        "file": "resources-480.webp",
+        "width": 480,
+        "height": 268,
+        "bytes": 14106
+      },
+      {
+        "file": "resources-960.webp",
+        "width": 960,
+        "height": 536,
+        "bytes": 34954
+      }
+    ]
+  },
+  {
+    "id": "community",
+    "source": "Google Flow",
+    "model": "Nano Banana Pro",
+    "kind": "editorial illustration, not an instructional diagram",
+    "variants": [
+      {
+        "file": "community-480.webp",
+        "width": 480,
+        "height": 268,
+        "bytes": 13108
+      },
+      {
+        "file": "community-960.webp",
+        "width": 960,
+        "height": 536,
+        "bytes": 31782
+      }
+    ]
+  },
+  {
+    "id": "settings",
+    "source": "Google Flow",
+    "model": "Nano Banana Pro",
+    "kind": "editorial illustration, not an instructional diagram",
+    "variants": [
+      {
+        "file": "settings-480.webp",
+        "width": 480,
+        "height": 268,
+        "bytes": 7338
+      },
+      {
+        "file": "settings-960.webp",
+        "width": 960,
+        "height": 536,
+        "bytes": 17056
+      }
+    ]
+  },
+  {
+    "id": "practice",
+    "source": "Google Flow",
+    "model": "Nano Banana Pro",
+    "kind": "editorial illustration, not an instructional diagram",
+    "variants": [
+      {
+        "file": "practice-480.webp",
+        "width": 480,
+        "height": 268,
+        "bytes": 10740
+      },
+      {
+        "file": "practice-960.webp",
+        "width": 960,
+        "height": 536,
+        "bytes": 24740
+      }
+    ]
+  }
+]
