@@ -44,7 +44,7 @@ for (const language of ['vi', 'en'] as const) {
     await limitations.focus()
     await page.keyboard.press('Enter')
     await expect(view.locator('details[open]')).toContainText(vi
-      ? 'không gửi request' : 'sends no requests to target endpoints')
+      ? 'không gửi yêu cầu tới các điểm cuối được kiểm tra' : 'sends no requests to target endpoints')
     await view.locator('summary').filter({ hasText: vi ? 'Danh sách endpoint' : 'Endpoint inventory' }).click()
     await expect(view.getByRole('region', { name: vi ? 'Chi tiết endpoint' : 'Endpoint details' })).toBeVisible()
     for (const width of [1440, 390, 320]) {
@@ -63,7 +63,7 @@ for (const language of ['vi', 'en'] as const) {
       }
     }
     fail = true
-    await view.getByRole('button', { name: vi ? 'Kiểm tra lại source' : 'Review source again' }).click()
+    await view.getByRole('button', { name: vi ? 'Kiểm tra lại mã nguồn' : 'Review source again' }).click()
     await expect(view.getByRole('alert')).toContainText(vi ? 'kết quả lần trước' : 'Previous results')
     await expect(view.locator('.security-finding')).not.toHaveCount(0)
     expect(writes).toEqual([])

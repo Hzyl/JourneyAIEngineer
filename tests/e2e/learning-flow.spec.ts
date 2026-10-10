@@ -20,7 +20,7 @@ test('lesson deep link renders content and preserves a single browser route', as
   await expect(page.locator('.topbar-title')).toHaveText('Bài học')
   await expect(page.locator('h1#lesson-page-title')).toBeVisible()
   await expect(page.getByText('Cài Python và kiểm tra phiên bản', { exact: true })).toBeVisible()
-  await expect(page.getByRole('heading', { name: 'Giải thích cốt lõi' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Kiến thức cần nắm' })).toBeVisible()
   await expect(page.getByRole('navigation', { name: 'Mục lục bài học' })).toBeVisible()
   await page.getByRole('navigation', { name: 'Mục lục bài học' }).getByRole('link', { name: 'Khái niệm', exact: true }).click()
   await expect(page).toHaveURL(new RegExp(`/lesson/${firstLessonSlug}#concept$`))
@@ -29,8 +29,8 @@ test('lesson deep link renders content and preserves a single browser route', as
   const feedback = page.getByRole('textbox', { name: 'Góp ý cụ thể' })
   const fakeSecret = ['sk', 'abcdefghijklmnopqrstuvwxyz123456'].join('-')
   await feedback.fill(`Thêm một ví dụ PowerShell có output expected. ${fakeSecret}`)
-  await page.getByRole('button', { name: 'Tạo report để gửi GitHub' }).click()
-  await expect(page.getByRole('textbox', { name: 'Report feedback vừa tạo' })).toHaveValue(/phase-00-onboarding-environment-1[\s\S]*\[REDACTED\]/)
+  await page.getByRole('button', { name: 'Tạo bản góp ý để gửi lên GitHub' }).click()
+  await expect(page.getByRole('textbox', { name: 'Bản góp ý vừa tạo' })).toHaveValue(/phase-00-onboarding-environment-1[\s\S]*\[REDACTED\]/)
 
   // The route is intentionally a real SPA deep link. Refreshing this URL is
   // covered by opening it directly above, so a hosted/local server must serve

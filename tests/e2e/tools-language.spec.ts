@@ -18,7 +18,7 @@ for (const language of ['vi', 'en'] as const) {
     await expect(page.locator('.tools-page h2')).toContainText(vi ? 'Dùng công cụ' : 'Use the right tool')
     await expect(page.locator('.tool-card')).toHaveCount(8)
     await expect(page.locator('.tool-card').first()).toContainText(vi
-      ? 'Ngôn ngữ chính cho data' : 'The main language for data work')
+      ? 'Ngôn ngữ chính để xử lý dữ liệu' : 'The main language for data work')
     await expect(page.locator('.tool-card').first()).toContainText(vi ? 'Cài đặt' : 'Setup')
     await expect(page.locator('.tool-card').filter({ hasText: 'ChatGPT/Codex' })).toContainText(vi
       ? 'Tạo context từ lesson' : 'Create context from a lesson')

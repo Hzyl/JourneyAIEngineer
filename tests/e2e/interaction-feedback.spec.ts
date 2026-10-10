@@ -53,7 +53,7 @@ for (const theme of ['light', 'dark'] as const) {
     await expect(note).toBeDisabled()
     await save.evaluate((element: HTMLButtonElement) => element.click())
     expect(writes).toBe(1)
-    await expect(page.getByText('Đã lưu vào Journal.', { exact: true })).toHaveCount(0)
+    await expect(page.getByText('Đã lưu vào nhật ký.', { exact: true })).toHaveCount(0)
     await expect.poll(() => save.evaluate((element) => getComputedStyle(element, '::after').animationName))
       .toBe('feedback-spin')
     await checkThemeContrast(page)
@@ -69,10 +69,10 @@ for (const theme of ['light', 'dark'] as const) {
     await save.click()
     await expect.poll(() => writes).toBe(2)
     await pending!.fulfill({ json: { id: 1 } })
-    await expect(page.getByRole('status').filter({ hasText: 'Đã lưu vào Journal.' })).toBeVisible()
+    await expect(page.getByRole('status').filter({ hasText: 'Đã lưu vào nhật ký.' })).toBeVisible()
     await expect(note).toHaveValue('')
     await note.fill('Ghi chú mới')
-    await expect(page.getByText('Đã lưu vào Journal.', { exact: true })).toHaveCount(0)
+    await expect(page.getByText('Đã lưu vào nhật ký.', { exact: true })).toHaveCount(0)
   })
 }
 

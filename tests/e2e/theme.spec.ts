@@ -31,7 +31,7 @@ for (const theme of ['light', 'dark'] as const) {
     }] } }))
     await page.goto('/review')
     await page.getByText('Xem đáp án gợi ý', { exact: true }).click()
-    await page.getByRole('textbox', { name: 'Câu trả lời review' }).fill('sys.executable')
+    await page.getByRole('textbox', { name: 'Câu trả lời của bạn' }).fill('sys.executable')
     for (const label of ['Chưa nhớ', 'Khó', 'Nhớ được', 'Dễ']) {
       await page.getByRole('button', { name: label, exact: true }).hover()
       await checkThemeContrast(page)

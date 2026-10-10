@@ -50,7 +50,7 @@ for (const language of ['vi', 'en'] as const) {
       await page.getByRole('button', { name: vi ? 'Thử tải lại hoạt động' : 'Retry activity' }).click()
       await expect(page.locator('.review-history')).toContainText(vi ? 'Khó' : 'Hard')
       await expect(page.locator('.review-activity [role="alert"]')).toHaveCount(0)
-      const draft = page.getByRole('textbox', { name: vi ? 'Câu trả lời review' : 'Your review answer' })
+      const draft = page.getByRole('textbox', { name: vi ? 'Câu trả lời của bạn' : 'Your review answer' })
       await draft.fill('sys.executable')
       const reveal = page.locator('.review-card summary')
       await reveal.focus()
