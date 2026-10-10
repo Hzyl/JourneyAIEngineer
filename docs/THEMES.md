@@ -3,7 +3,7 @@
 Nút **Sáng / Tối** nằm trên thanh đầu trang của ứng dụng, trang học thử và màn hình tài khoản. Nút hỗ trợ bàn phím và có tên hành động cho trình đọc màn hình.
 
 - Lần đầu mở, ứng dụng dùng giao diện của hệ điều hành và theo các thay đổi của hệ thống.
-- Khi chọn thủ công, lựa chọn được lưu trong trình duyệt bằng khóa `journey.theme`, giữ sau khi tải lại và đồng bộ giữa các tab cùng origin.
+- Khi chọn thủ công, lựa chọn được lưu trong trình duyệt bằng khóa `journey.theme`, giữ sau khi tải lại và đồng bộ giữa các tab cùng địa chỉ nguồn (origin).
 - Khi trình duyệt chặn lưu trữ, vẫn đổi được giao diện trong tab hiện tại; lựa chọn có thể mất khi tải lại.
 - Thiết lập này thuộc trình duyệt/máy hiện tại, không lưu lên Supabase.
 
@@ -11,18 +11,18 @@ Nút **Sáng / Tối** nằm trên thanh đầu trang của ứng dụng, trang 
 
 `src/theme/tokens.css` định nghĩa riêng màu nền, chữ chính, chữ phụ, đường viền, liên kết, nút và thông báo cho mỗi giao diện. Dùng các biến này khi thêm giao diện mới; không gán chữ trắng lên mọi nút, vì nút màu sáng ở chế độ tối cần chữ tối.
 
-Sidebar, phần giới thiệu tài khoản và khối code giữ nền tối với cặp màu chữ riêng. Ô nhập liệu, placeholder, focus, lỗi và thành công cũng có màu riêng. Script cùng origin `public/theme-init.js` chọn giao diện trước khi React khởi động; khi đổi khóa lưu trữ hoặc màu nền gốc, cập nhật đồng thời script này và `src/theme/theme-store.ts`.
+Thanh bên, phần giới thiệu tài khoản và khối mã giữ nền tối với cặp màu chữ riêng. Ô nhập liệu, chữ gợi ý, dấu hiệu đang được chọn, lỗi và thông báo thành công cũng có màu riêng. Tệp `public/theme-init.js` được tải cùng địa chỉ nguồn để chọn giao diện trước khi React khởi động. Khi đổi khóa lưu trữ hoặc màu nền gốc, cập nhật cả tệp này và `src/theme/theme-store.ts`.
 
 ## Kiểm tra hồi quy
 
 - `npm run test:unit`: kiểm tra khởi tạo trước React, ưu tiên lựa chọn đã lưu và xử lý lưu trữ bị chặn.
-- `npm run test:e2e`: kiểm tra đổi bằng bàn phím, lưu sau reload, tùy chọn hệ thống, các màn hình học và nút chấm mức nhớ.
-- `npm run test:e2e:hosted`: kiểm tra trang công khai, lộ trình, bài học mẫu và trạng thái tài khoản trên desktop/mobile. Auth dùng dữ liệu giả lập, không tạo tài khoản thật.
-- Khi chạy đồng thời hai bộ E2E, truyền `--output` khác nhau để tránh dùng chung tệp trace.
+- `npm run test:e2e`: kiểm tra đổi bằng bàn phím, lưu sau khi tải lại, tùy chọn hệ thống, các màn hình học và nút chấm mức nhớ.
+- `npm run test:e2e:hosted`: kiểm tra trang công khai, lộ trình, bài mẫu và trạng thái tài khoản trên máy tính/điện thoại. Phần xác thực dùng dữ liệu giả lập, không tạo tài khoản thật.
+- Khi chạy đồng thời hai bộ E2E, truyền `--output` khác nhau để mỗi bộ có thư mục lưu dấu vết thực thi riêng.
 
-Kiểm tra màu chữ tự động yêu cầu ít nhất 4.5:1 cho chữ thường và 3:1 cho chữ lớn. Đây là kiểm tra hồi quy các trạng thái được phủ, không thay thế một cuộc kiểm tra accessibility toàn diện. Với gradient, công cụ hiện kiểm tra điểm màu đầu; vẫn cần xem ảnh thực tế.
+Kiểm tra màu chữ tự động yêu cầu tương phản ít nhất 4.5:1 cho chữ thường và 3:1 cho chữ lớn. Bộ kiểm tra chỉ bao phủ các trạng thái đã có trong kịch bản, không thay thế việc đánh giá toàn diện khả năng tiếp cận. Với nền chuyển màu, công cụ hiện chỉ kiểm tra điểm màu đầu; vẫn cần xem ảnh thực tế.
 
-Ảnh kiểm tra được tạo trong `.build/theme-evidence/` (không đưa vào Git). Bộ kiểm tra cũng phát hiện tràn ngang; ảnh mobile cần được xem để phát hiện chồng chữ. Nút quay lại từ màn hình tài khoản đã được đưa vào bố cục bình thường để không đè lên logo.
+Ảnh kiểm tra được tạo trong `.build/theme-evidence/` (không đưa vào Git). Bộ kiểm tra cũng phát hiện tràn ngang; vẫn cần xem ảnh điện thoại để tìm chỗ chồng chữ. Nút quay lại từ màn hình tài khoản đã được đưa vào bố cục bình thường để không đè lên logo.
 
 ## Báo cáo chất lượng UI — 2026-10-07
 

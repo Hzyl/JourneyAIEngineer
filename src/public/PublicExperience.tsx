@@ -1,3 +1,4 @@
+import { LearningIllustration } from '../components/LearningIllustration'
 import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { AuthScreen } from '../auth/AuthScreen'
 import type { CatalogLesson } from '../platform/hosted/catalog'
@@ -80,7 +81,8 @@ export function PublicExperience() {
   return <div className="public-shell">
     <a href="#public-main" className="skip-link">{vi ? 'Đến nội dung' : 'Skip to content'}</a>
     <header className="public-nav">
-      <button className="public-brand" onClick={() => navigate('home')} aria-label="Journey AI Engineer home">
+      <button className="public-brand" onClick={() => navigate('home')}
+        aria-label={vi ? 'Trang chủ Journey AI Engineer' : 'Journey AI Engineer home'}>
         <span aria-hidden="true">J/</span> Journey <strong>AI Engineer</strong>
       </button>
       <nav aria-label={vi ? 'Điều hướng chính' : 'Main navigation'}>
@@ -117,7 +119,7 @@ export function PublicExperience() {
             <span className="eyebrow">{vi ? 'MÃ NGUỒN MỞ · VI / EN · WEB & WINDOWS' : 'OPEN SOURCE · VI / EN · WEB & WINDOWS'}</span>
             <h1>{vi ? <>Học AI.<br />Làm ra <em>sản phẩm.</em></> : <>Learn AI.<br />Build <em>something real.</em></>}</h1>
             <p className="public-lead">{vi
-              ? 'Một hành trình có bài học, thực hành và ôn tập. Bắt đầu bằng Python, tiến tới ứng dụng AI có bằng chứng hoạt động.'
+              ? 'Học Python, thực hành qua từng bài và ôn lại điều đã học. Từng bước xây dựng ứng dụng AI mà bạn có thể chạy, kiểm tra và giải thích.'
               : 'Lessons, practice and spaced review in one journey. Start with Python and work towards AI applications you can demonstrate.'}</p>
             <div className="public-actions">
               <button className="public-primary" onClick={() => navigate(firstSlug)}>
@@ -131,21 +133,19 @@ export function PublicExperience() {
               : 'No account to try a lesson. No Git to get started.'}</p>
           </div>
           <aside className="public-artifact" aria-label={vi ? 'Sản phẩm đầu tiên' : 'Your first artifact'}>
-            <img className="learning-art artifact-art" src="/images/learning/laptop.png"
-              width="128" height="128" alt="" decoding="async" />
+            <LearningIllustration name="hero" variant="hero" eager />
             <span className="eyebrow">01 / {vi ? 'BẮT ĐẦU NHỎ' : 'START SMALL'}</span>
-            <h2>{vi ? 'Một file Python.\nMột kết quả thật.' : 'One Python file.\nOne real result.'}</h2>
+            <h2>{vi ? 'Một tệp Python.\nMột kết quả bạn tự kiểm tra.' : 'One Python file.\nOne real result.'}</h2>
             <div className="artifact-filename">environment_check.py</div>
             <pre><code>{'import sys\n\nprint(sys.version)\nprint(sys.executable)'}</code></pre>
-            <p>{vi ? 'Chạy trên máy của bạn, lưu output và giải thích Python nào đang thực thi chương trình.'
+            <p>{vi ? 'Chạy trên máy của bạn, lưu kết quả và xác định trình thông dịch Python đang chạy chương trình.'
               : 'Run it on your computer, save the output and explain which Python is executing your program.'}</p>
-            <span className="artifact-check">{vi ? 'Đầu ra buổi học đầu tiên' : 'Your first session outcome'}</span>
+            <span className="artifact-check">{vi ? 'Kết quả của buổi học đầu tiên' : 'Your first session outcome'}</span>
           </aside>
         </section>
         <section className="public-samples" aria-labelledby="samples-title">
           <div className="public-section-heading">
-            <img className="learning-art" src="/images/learning/books.png"
-              width="80" height="80" alt="" loading="lazy" decoding="async" />
+            <LearningIllustration name="resources" variant="thumbnail" />
             <div><span className="eyebrow">{vi ? 'HỌC THỬ' : 'TRY IT'}</span>
               <h2 id="samples-title">{vi ? 'Mười bài để khởi động.' : 'Ten lessons to get going.'}</h2></div>
             <p>{vi ? 'Đọc, chạy ví dụ, tự trả lời. Các bài mẫu đã được rà soát nội dung; phần còn lại đang tiếp tục biên tập.'
@@ -162,10 +162,10 @@ export function PublicExperience() {
         </section>
         <PublicRoadmap language={language} onStart={() => navigate(firstSlug)} />
         <section className="public-modes">
-          <h2>{vi ? 'Học ở web. Thực hành ở local.' : 'Learn on the web. Practise locally.'}</h2>
-          <div><article><h3>Web beta</h3><p>{vi ? 'Đọc bài ngay. Có tài khoản để lưu tiến độ, ghi chú và ôn tập riêng.'
+          <h2>{vi ? 'Đọc trên web. Thực hành trên máy của bạn.' : 'Learn on the web. Practise locally.'}</h2>
+          <div><article><h3>Web beta</h3><p>{vi ? 'Đọc bài ngay mà không cần tài khoản. Đăng nhập khi muốn lưu tiến độ, ghi chú và lịch ôn tập.'
             : 'Read right away. Sign in for personal progress, notes and spaced reviews.'}</p></article>
-            <article><h3>Windows / source</h3><p>{vi ? 'Giữ dữ liệu trên máy, mở workspace, chạy Python và lưu bài làm. GitHub là tùy chọn.'
+            <article><h3>{vi ? 'Bản Windows / mã nguồn' : 'Windows / source'}</h3><p>{vi ? 'Lưu dữ liệu trên máy, mở thư mục bài tập, chạy Python và lưu bài làm. Bạn có thể dùng GitHub nếu muốn chia sẻ.'
               : 'Keep data on your machine, open workspaces, run Python and save your work. GitHub is optional.'}</p>
               <a href="https://github.com/Hzyl/JourneyAIEngineer/releases">{vi ? 'Tải bản Windows ↗' : 'Download for Windows ↗'}</a>
             </article></div>
@@ -174,7 +174,7 @@ export function PublicExperience() {
     </main>
     <footer className="public-footer">
       <p>Journey AI Engineer · {vi ? 'Học bằng cách làm.' : 'Learn by building.'}</p>
-      <a href="https://github.com/Hzyl/JourneyAIEngineer">{vi ? 'Source, góp ý & đóng góp trên GitHub ↗' : 'Source, feedback & contributions on GitHub ↗'}</a>
+      <a href="https://github.com/Hzyl/JourneyAIEngineer">{vi ? 'Mã nguồn, góp ý và đóng góp trên GitHub ↗' : 'Source, feedback & contributions on GitHub ↗'}</a>
     </footer>
   </div>
 }

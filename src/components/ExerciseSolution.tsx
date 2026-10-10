@@ -38,15 +38,12 @@ export function ExerciseSolution({ slug, language }: { slug: string; language: '
               </tr>)}</tbody>
             </table>
           </div>)}
-          <h4>{vi ? 'Code mẫu' : 'Example code'}</h4>
-          <p>{solution.files[0].name}</p>
-          <pre tabIndex={0} aria-label={vi ? 'Code bài giải Python' : 'Python solution code'}>
-            <code>{solution.code}</code>
-          </pre>
-          {solution.files.slice(1).map((file) => <details key={file.name} className="exercise-solution-file">
-            <summary>{file.name}</summary>
-            <pre tabIndex={0} aria-label={file.name}><code>{file.content}</code></pre>
-          </details>)}
+          <h4>{vi ? 'Vì sao cách này đúng?' : 'Why this works'}</h4>
+          <ol>{solution.explanation.map((step) => <li key={step}>{step}</li>)}</ol>
+          <h4>{vi ? 'Lỗi thường gặp' : 'Common mistake'}</h4>
+          <p>{solution.pitfall}</p>
+          <h4>{vi ? 'Thử lại để hiểu bài' : 'Try again to check your understanding'}</h4>
+          <p>{solution.practice}</p>
           <h4>{vi ? 'Chạy lời giải' : 'Run the solution'}</h4>
           <p>{solution.setup}</p>
           <pre tabIndex={0}><code>{solution.command}</code></pre>
@@ -56,12 +53,17 @@ export function ExerciseSolution({ slug, language }: { slug: string; language: '
               {vi ? 'Tải' : 'Download'} {file.name} ↓
             </a>
           </li>)}</ul>
-          <h4>{vi ? 'Vì sao cách này đúng?' : 'Why this works'}</h4>
-          <ol>{solution.explanation.map((step) => <li key={step}>{step}</li>)}</ol>
-          <h4>{vi ? 'Lỗi thường gặp' : 'Common mistake'}</h4>
-          <p>{solution.pitfall}</p>
-          <h4>{vi ? 'Thử lại để hiểu bài' : 'Try again to check your understanding'}</h4>
-          <p>{solution.practice}</p>
+          <h4>{vi ? 'Mã mẫu' : 'Example code'}</h4>
+          <details className="exercise-solution-file exercise-solution-primary">
+            <summary>{vi ? 'Xem mã: ' : 'View code: '}{solution.files[0].name}</summary>
+            <pre tabIndex={0} aria-label={vi ? 'Mã Python của lời giải' : 'Python solution code'}>
+              <code>{solution.code}</code>
+            </pre>
+          </details>
+          {solution.files.slice(1).map((file) => <details key={file.name} className="exercise-solution-file">
+            <summary>{file.name}</summary>
+            <pre tabIndex={0} aria-label={file.name}><code>{file.content}</code></pre>
+          </details>)}
         </div>}
       </div>
     </> : <p className="muted">{vi

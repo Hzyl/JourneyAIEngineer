@@ -1,3 +1,4 @@
+import { LearningIllustration } from './LearningIllustration'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { learningClient as api } from '../platform/learning-client'
 import { HostedJournalEditor, type HostedJournalApi, type HostedJournalEntry } from './HostedJournalEditor'
@@ -114,9 +115,10 @@ export function JournalView({ hosted, language, onExportContext }: {
     onClick={() => void load()}>{loading ? t.loading : t.refresh}</button>
 
   return <div>
+    <LearningIllustration name="journal" />
     <div className="page-intro">
       <div>
-        <span className="eyebrow accent">EVIDENCE LOG</span>
+        <span className="eyebrow accent">{language === 'vi' ? 'GHI LẠI VIỆC HỌC' : 'EVIDENCE LOG'}</span>
         <h2>{t.heading}<br /><em>{hosted ? t.synced : t.local}</em></h2>
       </div>
       <p>{hosted ? t.introCloud : t.introLocal}</p>
@@ -125,7 +127,7 @@ export function JournalView({ hosted, language, onExportContext }: {
     <div className="journal-grid">
       <section className="section-card journal-card">
         <div className="section-heading">
-          <div><span className="eyebrow">WEEKLY REFLECTION</span><h3>{t.weekly}</h3></div>
+          <div><span className="eyebrow">{language === 'vi' ? 'NHÌN LẠI MỖI TUẦN' : 'WEEKLY REFLECTION'}</span><h3>{t.weekly}</h3></div>
           <span className="tag">Markdown</span>
         </div>
         <p>{hosted ? t.exportCloud : t.exportLocal}</p>
@@ -139,7 +141,7 @@ export function JournalView({ hosted, language, onExportContext }: {
       }} />}
       <section className="section-card ask-card">
         <div className="section-heading">
-          <div><span className="eyebrow">CONTEXT BRIDGE</span><h3>{t.ask}</h3></div>
+          <div><span className="eyebrow">{language === 'vi' ? 'CHUẨN BỊ CÂU HỎI' : 'CONTEXT BRIDGE'}</span><h3>{t.ask}</h3></div>
           <span className="tag">{t.noKey}</span>
         </div>
         <p>{t.contextInfo}</p>
@@ -151,7 +153,7 @@ export function JournalView({ hosted, language, onExportContext }: {
         {contextError && <p className="warning-note" role="alert">{contextError}</p>}
         {context && <section className="context-result" aria-live="polite">
           <div className="section-heading">
-            <div><span className="eyebrow accent">CONTEXT READY</span><h4>{t.context}</h4></div>
+            <div><span className="eyebrow accent">{language === 'vi' ? 'NỘI DUNG ĐÃ SẴN SÀNG' : 'CONTEXT READY'}</span><h4>{t.context}</h4></div>
             <button className="text-button" onClick={() => void copy(context)}>
               {contextCopied ? t.copied : t.copy}
             </button>
@@ -164,7 +166,7 @@ export function JournalView({ hosted, language, onExportContext }: {
     </div>
     <section className="section-card notes-card">
       <div className="section-heading">
-        <div><span className="eyebrow">YOUR NOTES</span><h3>{t.notes}</h3></div>
+        <div><span className="eyebrow">{language === 'vi' ? 'ĐIỀU BẠN GHI LẠI' : 'YOUR NOTES'}</span><h3>{t.notes}</h3></div>
         {refreshButton}
       </div>
       {notes.length ? <div className="saved-notes">
@@ -181,7 +183,8 @@ export function JournalView({ hosted, language, onExportContext }: {
     </section>
     {!hosted && <section className="section-card git-card">
       <div className="section-heading">
-        <div><span className="eyebrow">LOCAL REPOSITORY</span><h3>Git snapshot</h3></div>
+        <div><span className="eyebrow">{language === 'vi' ? 'KHO MÃ TRÊN MÁY' : 'LOCAL REPOSITORY'}</span>
+          <h3>{language === 'vi' ? 'Trạng thái Git' : 'Git snapshot'}</h3></div>
         {refreshButton}
       </div>
       {git ? <div className="git-details">

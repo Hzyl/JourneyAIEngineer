@@ -18,8 +18,8 @@ for (const language of ['vi', 'en'] as const) {
     await solution.getByRole('button').focus()
     await page.keyboard.press('Enter')
     await expect(solution.getByRole('table')).toHaveCount(2)
-    await expect(solution.getByRole('table', { name: 'Data dictionary' })).toContainText('refund_issued')
-    await expect(solution.getByRole('table', { name: vi ? 'Bảng nguy cơ leakage' : 'Leakage risk table' }))
+    await expect(solution.getByRole('table', { name: vi ? 'Bảng mô tả dữ liệu' : 'Data dictionary' })).toContainText('refund_issued')
+    await expect(solution.getByRole('table', { name: vi ? 'Nguy cơ rò rỉ dữ liệu' : 'Leakage risk table' }))
       .toContainText('label_ready_on')
     await expect(solution).toContainText('6 tests, OK')
     await expect(solution).toContainText('precision=null')
@@ -35,7 +35,7 @@ for (const language of ['vi', 'en'] as const) {
       for (const theme of ['light', 'dark'] as const) {
         await page.emulateMedia({ colorScheme: theme })
         await checkThemeContrast(page)
-        const region = solution.getByRole('region', { name: 'Data dictionary' })
+        const region = solution.getByRole('region', { name: vi ? 'Bảng mô tả dữ liệu' : 'Data dictionary' })
         await region.focus()
         await expect(region).toBeFocused()
         await region.screenshot({ path: `.build/framing-evidence/${language}-${theme}-${width}.png`,

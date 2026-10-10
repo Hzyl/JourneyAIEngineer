@@ -99,7 +99,7 @@ export function AuthCallback() {
           <p>{auth.state === 'signed_in'
             ? (vi ? 'Tài khoản đã sẵn sàng. Bạn sẽ được chuyển về không gian học.'
               : 'Your account is ready. You will be redirected to your learning space.')
-            : (vi ? 'Nếu link còn hiệu lực, trang này sẽ tự hoàn tất xác nhận.'
+            : (vi ? 'Nếu liên kết còn hiệu lực, trang này sẽ tự hoàn tất xác nhận.'
               : 'If the link is valid, confirmation will finish automatically.')}</p>
           {auth.state === 'signed_out' && back}
         </div>}

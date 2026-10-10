@@ -2,15 +2,15 @@
 lesson_id: phase-04-deep-learning-training-1
 phase_id: phase-04-deep-learning
 module_id: training
-title_vi: Forward pass và loss
+title_vi: Lan truyền xuôi và hàm mất mát
 title_en: Forward passes and loss
-summary_vi: Học Forward pass và loss qua một mô hình input → biến đổi → output, sau đó kiểm chứng bằng bài tập có edge case.
-summary_en: Learn Forward passes and loss through an input → transformation → output model, then verify it with an edge-case
-  exercise.
+summary_vi: Lan truyền xuôi tạo dự đoán từ đầu vào.
+summary_en: Learn Forward passes and loss through an input → transformation → output model, then verify it with
+  an edge-case exercise.
 learning_objectives:
-- Giải thích forward pass và loss bằng ví dụ cụ thể.
-- Viết hoặc sửa một đoạn code nhỏ áp dụng forward pass và loss.
-- Nhận diện điều kiện áp dụng, giới hạn và một lỗi thường gặp.
+- Theo dõi kích thước đầu ra của mô hình và giải thích cách tính mất mát.
+- Phân biệt tính gradient, cập nhật tham số và đánh giá mô hình.
+- Giải thích kết quả và nêu một giới hạn của bài làm.
 learning_objectives_en:
 - Explain forward passes and loss with a concrete example.
 - Write or adapt a small code example applying forward passes and loss.
@@ -25,36 +25,41 @@ key_terms:
 - PyTorch
 - tensor
 - training
-concept_notes_vi: Forward pass và loss là khái niệm của module training. Hãy xác định input, output, giả định, failure mode
-  và cách kiểm chứng bằng một ví dụ nhỏ trước khi mở rộng sang project.
-concept_notes_en: Forward pass và loss is a concept in the training module. Identify the inputs, outputs, assumptions, failure
-  modes, and verification method with a small example before scaling to a project.
-why_it_matters_vi: Tách forward, loss, backward, optimizer, validation và checkpoint thành một vòng lặp có thể debug.
+concept_notes_vi: Lan truyền xuôi tạo dự đoán từ đầu vào. Hàm mất mát so sánh dự đoán với mục tiêu; kiểu nhãn, kích
+  thước và biểu diễn đầu ra phải phù hợp hàm đã chọn.
+concept_notes_en: Forward pass và loss is a concept in the training module. Identify the inputs, outputs, assumptions,
+  failure modes, and verification method with a small example before scaling to a project.
+why_it_matters_vi: Tách các bước dự đoán, tính mất mát, tính gradient, cập nhật và kiểm định để dễ tìm lỗi.
 why_it_matters_en: Separate forward, loss, backward, optimizer, validation, and checkpoint into a debuggable loop.
 study_steps_vi:
-- 'Đọc phần Concept notes để trả lời: Tách forward, loss, backward, optimizer, validation và checkpoint thành một vòng lặp
-  có thể debug.'
-- Mở PyTorch Tutorials, đọc đúng mục Read this lesson và ghi lại một ví dụ hoặc định nghĩa đã kiểm chứng.
-- Mở Practice Lab, bấm Tạo & mở VS Code, lưu bằng Ctrl+S, thay một tham số rồi chạy lại test.
-- 'Làm bài thực hành: Viết training loop, log train/validation loss, lưu best checkpoint và resume từ checkpoint đó.'
-- Trả lời review card không nhìn gợi ý, hoàn thiện checklist và lưu một artifact có thể đưa lên GitHub.
+- Đọc phần giải thích, xác định khái niệm và điều kiện cần dùng cho nhiệm vụ bên dưới.
+- Tìm mục tương ứng với “Forward passes and loss” trong tài liệu tham khảo; đối chiếu với phần giải thích của bài.
+- Theo dõi kích thước đầu ra của mô hình và giải thích cách tính mất mát.
+- Phân biệt tính gradient, cập nhật tham số và đánh giá mô hình. Ghi kết quả đối chiếu và điều bạn đã sửa nếu lần
+  đầu chưa đúng.
+- Tự trả lời thẻ ôn tập, rồi kiểm tra các tiêu chí hoàn thành trước khi chuyển bài.
 study_steps_en:
-- 'Read the concept notes and answer: Separate forward, loss, backward, optimizer, validation, and checkpoint into a debuggable
-  loop.'
+- 'Read the concept notes and answer: Separate forward, loss, backward, optimizer, validation, and checkpoint into
+  a debuggable loop.'
 - Open PyTorch Tutorials, read the section marked Read this lesson, and record one verified example or definition.
-- Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the test.
-- 'Complete the practice task: Write a training loop, log train/validation loss, save the best checkpoint, and resume from
-  it.'
+- Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the
+  test.
+- 'Complete the practice task: Write a training loop, log train/validation loss, save the best checkpoint, and resume
+  from it.'
 - Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact.
 practice_plan:
   vi:
-    task: Viết training loop, log train/validation loss, lưu best checkpoint và resume từ checkpoint đó.
+    task: 'Theo dõi kích thước đầu ra của mô hình và giải thích cách tính mất mát.
+
+
+      Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Viết vòng lặp, ghi giá trị mất mát trên
+      tập huấn luyện và kiểm định, lưu trạng thái tốt nhất rồi thử tiếp tục từ bản lưu.'
     deliverables:
-    - Một file code chạy được
-    - Một test hoặc output expected
-    - Một note nêu edge case và trade-off
-    checkpoint: Bạn biết model nào được lưu, vì sao lưu, và có thể tái tạo metric từ checkpoint.
-    stretch: Viết thêm một failure test cho forward pass và loss và giải thích kết quả.
+    - Vòng lặp hoặc bước huấn luyện có kết quả trung gian
+    - Kết quả đối chiếu kèm dữ liệu hoặc điều kiện thực hiện
+    - Một giới hạn và cách kiểm tra thêm
+    checkpoint: Phân biệt tính gradient, cập nhật tham số và đánh giá mô hình.
+    stretch: Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào.
   en:
     task: Write a training loop, log train/validation loss, save the best checkpoint, and resume from it.
     deliverables:
@@ -65,9 +70,9 @@ practice_plan:
     stretch: Add a failure test for forward passes and loss and explain the result.
 interview_questions:
   vi:
-  - Bạn sẽ giải thích forward pass và loss cho một đồng đội mới như thế nào?
-  - Một assumption nào của forward pass và loss có thể sai trong production?
-  - Bạn sẽ chọn metric hoặc test nào để chứng minh kết quả đáng tin?
+  - Bạn sẽ giải thích nội dung “Lan truyền xuôi và hàm mất mát” bằng ví dụ nào?
+  - Điều kiện nào cần kiểm tra trước khi áp dụng vào công việc thực tế?
+  - Bạn dùng bằng chứng nào để kết luận bài làm đáp ứng yêu cầu?
   en:
   - How would you explain forward passes and loss to a new teammate?
   - Which assumption behind forward passes and loss could fail in production?
@@ -78,18 +83,19 @@ formulas:
 code_examples:
 - language: python
   title: 'Forward passes and loss: inspect one complete path'
-  code: "# Topic: Forward passes and loss (phase-04-deep-learning-training-1)\ndef linear(x: list[float], weights: list[float],\
-    \ bias: float = 0.0) -> float:\n    if len(x) != len(weights):\n        raise ValueError('shape mismatch')\n    return\
-    \ sum(value * weight for value, weight in zip(x, weights)) + bias\n\nprediction = linear([1.0, 2.0], [0.2, -0.1], 0.5)\n\
-    print({'prediction': prediction, 'loss': (prediction - 1.0) ** 2})"
+  code: "# Topic: Forward passes and loss (phase-04-deep-learning-training-1)\ndef linear(x: list[float], weights:\
+    \ list[float], bias: float = 0.0) -> float:\n    if len(x) != len(weights):\n        raise ValueError('shape\
+    \ mismatch')\n    return sum(value * weight for value, weight in zip(x, weights)) + bias\n\nprediction = linear([1.0,\
+    \ 2.0], [0.2, -0.1], 0.5)\nprint({'prediction': prediction, 'loss': (prediction - 1.0) ** 2})"
   status: runnable
-  purpose_vi: Minh họa đường đi input → output của forward pass và loss.
+  purpose_vi: Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.
   purpose_en: Illustrate the input-to-output path for forward passes and loss.
   setup: Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.
   expected_output: Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.
-  edge_case_vi: Thử input rỗng, shape sai hoặc dữ liệu thiếu và ghi lại lỗi.
+  edge_case_vi: Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.
   edge_case_en: Try an empty input, a wrong shape or missing data and record the failure.
-  explanation_vi: Làm rõ shape, forward output và loss trước khi thêm framework hoặc tối ưu hóa.
+  explanation_vi: Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần
+    nội dung; cần hoàn thành riêng nhiệm vụ thực hành.
   explanation_en: Keep the boundary executable and inspectable; change one input and verify the expected output.
 resources:
 - language: en
@@ -97,7 +103,7 @@ resources:
   url: https://pytorch.org/tutorials/
   kind: official
   required: false
-  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong lesson.
+  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.
   purpose_en: Official reference to verify the lesson concept.
   read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
   read_en: Read the relevant section, run a small example, and record one verified insight.
@@ -106,7 +112,7 @@ resources:
   url: https://pytorch.org/tutorials/beginner/basics/data_tutorial.html
   kind: official
   required: false
-  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong lesson.
+  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.
   purpose_en: Official reference to verify the lesson concept.
   read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
   read_en: Read the relevant section, run a small example, and record one verified insight.
@@ -115,17 +121,17 @@ resources:
   url: https://pytorch.org/docs/stable/optim.html
   kind: official
   required: false
-  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong lesson.
+  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.
   purpose_en: Official reference to verify the lesson concept.
   read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
   read_en: Read the relevant section, run a small example, and record one verified insight.
-- title: Giải thích tiếng Việt và checklist của lesson
+- title: Giải thích và hướng dẫn thực hành trong bài
   url: ''
   language: vi
   kind: in_app
-  purpose_vi: Phần giải thích, code example, checklist và tiêu chí hoàn thành ngay trong app.
+  purpose_vi: Đọc giải thích, thực hiện nhiệm vụ và đối chiếu tiêu chí hoàn thành.
   purpose_en: The explanation, code example, checklist, and completion criteria inside the app.
-  read_vi: Đọc theo thứ tự Study plan → Concept notes → Code example → Practice plan.
+  read_vi: Đọc giải thích → xem ví dụ → thực hành → tự kiểm tra.
   read_en: Follow Study plan → Concept notes → Code example → Practice plan.
   required: true
 exercise_ids:
@@ -137,70 +143,75 @@ review_item_ids:
 - phase-04-deep-learning-training-1-interview
 estimated_minutes: 60
 completion_checklist:
-- Giải thích được input, biến đổi và output của forward pass và loss.
-- Chạy hoặc sửa được code example với một input mới.
-- Ghi lại một edge case, metric hoặc failure mode.
-- Trả lời review card bằng bằng chứng cụ thể.
+- Theo dõi kích thước đầu ra của mô hình và giải thích cách tính mất mát.
+- Phân biệt tính gradient, cập nhật tham số và đánh giá mô hình.
+- Lưu kết quả và giải thích được một giới hạn mà không nhìn lời giải.
 completion_criteria:
-- Mô tả được khi nào dùng forward pass và loss và khi nào cần baseline khác.
-- Có artifact chạy được và output có thể kiểm tra.
-- Nêu được một giả định, edge case và cách kiểm chứng.
+- 'Bài làm đáp ứng nhiệm vụ: Theo dõi kích thước đầu ra của mô hình và giải thích cách tính mất mát.'
+- Có kết quả đối chiếu với tiêu chí hoặc dự đoán đã ghi trước.
+- Phân biệt tính gradient, cập nhật tham số và đánh giá mô hình.
 common_mistakes:
-- Bỏ qua invariant hoặc shape khi áp dụng forward pass và loss.
-- Đánh giá forward pass và loss bằng một output tốt mà không có baseline hoặc failure case.
-- Sao chép ví dụ forward pass và loss mà không thay input và kiểm tra kết quả biên.
+- Để gradient cộng dồn ngoài ý muốn hoặc đánh giá sai chế độ.
+- Kết luận từ một kết quả thuận lợi mà chưa kiểm tra trường hợp khác.
+- Chép lời giải nhưng không giải thích được quyết định trong bài làm của mình.
 next_lessons:
 - phase-04-deep-learning-training-2
 - phase-04-deep-learning-training-3
-review_question_vi: Định nghĩa forward pass và loss bằng lời của bạn. Input, biến đổi và output là gì?
+review_question_vi: Nội dung cốt lõi của “Lan truyền xuôi và hàm mất mát” là gì?
 review_question_en: Define forward passes and loss in your own words. What are the input, transformation and output?
-review_answer_vi: Một câu trả lời tốt nêu rõ input, phép biến đổi, output và bối cảnh dùng forward pass và loss. Hãy liên
-  hệ cụ thể với forward pass và loss trong lesson phase-04-deep-learning-training-1.
-review_answer_en: A strong answer names the input, transformation, output and the context where forward passes and loss is
-  used. Relate it specifically to forward passes and loss in lesson phase-04-deep-learning-training-1.
+review_answer_vi: Lan truyền xuôi tạo dự đoán từ đầu vào. Hàm mất mát so sánh dự đoán với mục tiêu; kiểu nhãn, kích
+  thước và biểu diễn đầu ra phải phù hợp hàm đã chọn.
+review_answer_en: A strong answer names the input, transformation, output and the context where forward passes and
+  loss is used. Relate it specifically to forward passes and loss in lesson phase-04-deep-learning-training-1.
 review_cards:
 - id: phase-04-deep-learning-training-1-recall
   type: recall
-  question_vi: Định nghĩa forward pass và loss bằng lời của bạn. Input, biến đổi và output là gì?
+  question_vi: Nội dung cốt lõi của “Lan truyền xuôi và hàm mất mát” là gì?
   question_en: Define forward passes and loss in your own words. What are the input, transformation and output?
-  answer_vi: Một câu trả lời tốt nêu rõ input, phép biến đổi, output và bối cảnh dùng forward pass và loss.
-  answer_en: A strong answer names the input, transformation, output and the context where forward passes and loss is used.
-  hint_vi: Bắt đầu bằng một ví dụ nhỏ có thể tính bằng tay.
+  answer_vi: Lan truyền xuôi tạo dự đoán từ đầu vào. Hàm mất mát so sánh dự đoán với mục tiêu; kiểu nhãn, kích thước
+    và biểu diễn đầu ra phải phù hợp hàm đã chọn.
+  answer_en: A strong answer names the input, transformation, output and the context where forward passes and loss
+    is used.
+  hint_vi: Nêu ý chính, sau đó minh họa bằng tình huống cụ thể.
   hint_en: Start with a small example you can calculate by hand.
 - id: phase-04-deep-learning-training-1-application
   type: application
-  question_vi: Viết một ví dụ code hoặc thiết kế nhỏ áp dụng forward pass và loss cho bài toán AI Engineer.
+  question_vi: Theo dõi kích thước đầu ra của mô hình và giải thích cách tính mất mát.
   question_en: Write a small code example or design that applies forward passes and loss to an AI engineering problem.
-  answer_vi: Ví dụ cho forward pass và loss cần có input rõ ràng, output mong đợi và một cách chạy hoặc kiểm chứng (phase-04-deep-learning-training-1).
-  answer_en: The forward passes and loss example should have an explicit input, expected output and a way to run or verify
-    it (phase-04-deep-learning-training-1).
-  hint_vi: Dùng code example trong lesson rồi thay một giả định.
+  answer_vi: 'Với nhiệm vụ “Theo dõi kích thước đầu ra của mô hình và giải thích cách tính mất mát”, cần lưu: vòng
+    lặp hoặc bước huấn luyện có kết quả trung gian. Phân biệt tính gradient, cập nhật tham số và đánh giá mô hình.'
+  answer_en: The forward passes and loss example should have an explicit input, expected output and a way to run
+    or verify it (phase-04-deep-learning-training-1).
+  hint_vi: Bắt đầu từ nhiệm vụ thực hành của bài.
   hint_en: Start from the lesson code example and change one assumption.
 - id: phase-04-deep-learning-training-1-debug
   type: debug
-  question_vi: Nếu kết quả của forward pass và loss sai hoặc metric giảm, bạn sẽ debug theo thứ tự nào?
+  question_vi: Khi làm bài “Lan truyền xuôi và hàm mất mát”, bạn cần tránh lỗi nào và kiểm tra lại ra sao?
   question_en: If forward passes and loss produces a wrong result or a metric drops, what would you debug first?
-  answer_vi: Với forward pass và loss, kiểm tra input/shape, preprocessing và baseline trước; sau đó cô lập lỗi bằng test
-    nhỏ và error analysis (phase-04-deep-learning-training-1).
-  answer_en: For forward passes and loss, check inputs/shapes, preprocessing and the baseline first; then isolate the failure
-    with a small test and error analysis (phase-04-deep-learning-training-1).
-  hint_vi: Đừng bắt đầu bằng việc đổi model hoặc tăng độ phức tạp.
+  answer_vi: 'Trong bài “Lan truyền xuôi và hàm mất mát”, lỗi cần tránh là: để gradient cộng dồn ngoài ý muốn hoặc
+    đánh giá sai chế độ. Phân biệt tính gradient, cập nhật tham số và đánh giá mô hình. Dùng ví dụ nhỏ để tìm bước
+    đầu tiên có kết quả khác dự kiến.'
+  answer_en: For forward passes and loss, check inputs/shapes, preprocessing and the baseline first; then isolate
+    the failure with a small test and error analysis (phase-04-deep-learning-training-1).
+  hint_vi: Tìm bước đầu tiên xuất hiện khác biệt.
   hint_en: Do not start by changing the model or adding complexity.
 - id: phase-04-deep-learning-training-1-interview
   type: interview
-  question_vi: Trong phỏng vấn, bạn sẽ giải thích trade-off và một edge case của forward pass và loss như thế nào?
+  question_vi: Bạn dùng kết quả nào từ bài “Lan truyền xuôi và hàm mất mát” để giải thích cách làm và giới hạn?
   question_en: In an interview, how would you explain a trade-off and one edge case of forward passes and loss?
-  answer_vi: Câu trả lời về forward pass và loss cần nêu giả định, metric/chi phí, giới hạn và cách giảm rủi ro trong production
-    (phase-04-deep-learning-training-1).
-  answer_en: The answer about forward passes and loss should cover assumptions, metrics/cost, limitations and how to reduce
-    production risk (phase-04-deep-learning-training-1).
-  hint_vi: Liên hệ với latency, chất lượng, chi phí hoặc khả năng quan sát nếu phù hợp.
+  answer_vi: Bắt đầu từ nhiệm vụ “Theo dõi kích thước đầu ra của mô hình và giải thích cách tính mất mát”. Trình
+    bày kết quả đã lưu, cách đối chiếu và một điều kiện có thể khiến kết luận thay đổi; không chỉ đọc lại định nghĩa.
+  answer_en: The answer about forward passes and loss should cover assumptions, metrics/cost, limitations and how
+    to reduce production risk (phase-04-deep-learning-training-1).
+  hint_vi: Dùng quyết định thật trong bài làm, tránh chỉ đọc định nghĩa.
   hint_en: Relate it to latency, quality, cost or observability where relevant.
 ---
-# Forward pass và loss / Forward passes and loss
+# Lan truyền xuôi và hàm mất mát / Forward passes and loss
 
-Forward pass và loss là khái niệm của module training. Hãy xác định input, output, giả định, failure mode và cách kiểm chứng bằng một ví dụ nhỏ trước khi mở rộng sang project.
+Lan truyền xuôi tạo dự đoán từ đầu vào. Hàm mất mát so sánh dự đoán với mục tiêu; kiểu nhãn, kích thước và biểu diễn đầu ra phải phù hợp hàm đã chọn.
 
-## Practice
+## Thực hành
 
-Viết training loop, log train/validation loss, lưu best checkpoint và resume từ checkpoint đó.
+Theo dõi kích thước đầu ra của mô hình và giải thích cách tính mất mát.
+
+Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Viết vòng lặp, ghi giá trị mất mát trên tập huấn luyện và kiểm định, lưu trạng thái tốt nhất rồi thử tiếp tục từ bản lưu.

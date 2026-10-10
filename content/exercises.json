@@ -12,15 +12,15 @@
         "phase-00-onboarding-environment-3",
         "phase-00-onboarding-environment-4"
       ],
-      "title_vi": "Lab · Môi trường học",
+      "title_vi": "Thực hành · Môi trường học",
       "title_en": "Lab · Learning environment",
-      "description_vi": "Tạo một thư mục repository, tạo .venv, chạy một script Python từ VS Code và ghi lại kết quả kiểm tra phiên bản.\n\nCheckpoint: Bạn có thể clone lại project, tạo môi trường mới và chạy script mà không cần đoán lệnh.",
+      "description_vi": "1. Tạo thư mục kho mã và môi trường ảo .venv.\n2. Chạy một tệp Python từ VS Code.\n3. Ghi lại lệnh và kết quả kiểm tra phiên bản.\n\nTự kiểm tra: Bạn có thể lấy lại mã nguồn, tạo môi trường mới và chạy chương trình theo các lệnh đã ghi.",
       "description_en": "Create a repository folder, create a .venv, run a Python script from VS Code, and record the version checks.\n\nCheckpoint: You can recreate the environment from a clean clone and run the script without guessing commands.",
       "difficulty": "easy",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn có thể clone lại project, tạo môi trường mới và chạy script mà không cần đoán lệnh."
+        "Ghi cả đường dẫn trình thông dịch Python để phân biệt Python hệ thống với Python trong .venv."
       ]
     },
     {
@@ -34,15 +34,15 @@
         "phase-00-onboarding-baseline-3",
         "phase-00-onboarding-baseline-4"
       ],
-      "title_vi": "Lab · Đánh giá đầu vào",
+      "title_vi": "Thực hành · Đánh giá đầu vào",
       "title_en": "Lab · Baseline assessment",
-      "description_vi": "Làm bài kiểm tra không xem tài liệu, chấm theo checklist, sau đó ghi ba lỗ hổng và một kế hoạch bù.\n\nCheckpoint: Bạn giải thích được vì sao mình chọn track 6 tháng hoặc 12–15 tháng bằng dữ liệu của chính mình.",
-      "description_en": "Take the assessment without references, score it with the checklist, then record three gaps and a recovery plan.\n\nCheckpoint: You can justify the six-month or 12–15-month track using your own evidence.",
+      "description_vi": "1. Làm bài kiểm tra mà không xem tài liệu.\n2. Tự chấm theo danh sách tiêu chí.\n3. Ghi ba phần kiến thức còn thiếu và lập kế hoạch học bù.\n\nTự kiểm tra: Bạn giải thích được vì sao chọn lộ trình 6 tháng hoặc 12–15 tháng dựa trên kết quả của mình.",
+      "description_en": "Take the assessment without references, score it with the checklist, then record three gaps and a recovery plan.\n\nCheckpoint: You can justify your learning pace using your independent assessment results and available time.",
       "difficulty": "easy",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn giải thích được vì sao mình chọn track 6 tháng hoặc 12–15 tháng bằng dữ liệu của chính mình."
+        "Phân loại từng lỗi theo kiến thức còn thiếu trước khi chọn bài ôn tập."
       ]
     },
     {
@@ -56,15 +56,15 @@
         "phase-00-onboarding-learning-system-3",
         "phase-00-onboarding-learning-system-4"
       ],
-      "title_vi": "Lab · Hệ thống học",
+      "title_vi": "Thực hành · Tổ chức việc học",
       "title_en": "Lab · Learning system",
-      "description_vi": "Chạy trọn một vòng học 45–60 phút: đọc, tự làm, chạy test, review card và ghi một insight vào journal.\n\nCheckpoint: Mỗi tuần bạn có thể chỉ ra artifact nào chứng minh mình tiến bộ và phần nào vẫn yếu.",
+      "description_vi": "1. Thực hiện một buổi học 45–60 phút gồm đọc bài và tự làm bài tập.\n2. Chạy kiểm thử rồi ôn lại thẻ ghi nhớ.\n3. Ghi một điều vừa hiểu thêm vào nhật ký học tập.\n\nTự kiểm tra: Mỗi tuần, bạn chỉ ra được sản phẩm hoặc kết quả nào thể hiện tiến bộ và phần nào còn cần luyện tập.",
       "description_en": "Run one complete 45–60 minute loop: read, attempt, test, answer a review card, and record one journal insight.\n\nCheckpoint: Each week you can point to an artifact that proves progress and a topic that remains weak.",
       "difficulty": "easy",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Mỗi tuần bạn có thể chỉ ra artifact nào chứng minh mình tiến bộ và phần nào vẫn yếu."
+        "Cuối buổi học, lưu đường dẫn bài làm cùng kết quả kiểm thử để tuần sau có thể đối chiếu."
       ]
     },
     {
@@ -78,15 +78,15 @@
         "phase-01-python-software-python-core-3",
         "phase-01-python-software-python-core-4"
       ],
-      "title_vi": "Lab · Python core",
+      "title_vi": "Thực hành · Python cốt lõi",
       "title_en": "Lab · Python core",
-      "description_vi": "Viết một package nhỏ có hàm thuần, type hint, xử lý input xấu và test cho cả happy path lẫn edge case.\n\nCheckpoint: Bạn có thể giải thích từng dòng quan trọng và sửa yêu cầu mới mà không copy nguyên tutorial.",
+      "description_vi": "1. Viết một gói Python nhỏ có hàm thuần và chú thích kiểu dữ liệu.\n2. Xử lý đầu vào không hợp lệ.\n3. Viết kiểm thử cho trường hợp thông thường và các trường hợp biên.\n\nTự kiểm tra: Bạn giải thích được những dòng mã quan trọng và tự sửa chương trình khi yêu cầu thay đổi.",
       "description_en": "Write a small package with pure functions, type hints, invalid-input handling, and happy-path plus edge-case tests.\n\nCheckpoint: You can explain the important lines and change a requirement without copying a tutorial wholesale.",
       "difficulty": "easy",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn có thể giải thích từng dòng quan trọng và sửa yêu cầu mới mà không copy nguyên tutorial."
+        "Với mỗi hàm, ghi trước đầu vào, kết quả mong đợi và cách xử lý dữ liệu không hợp lệ."
       ]
     },
     {
@@ -100,15 +100,15 @@
         "phase-01-python-software-reliable-code-3",
         "phase-01-python-software-reliable-code-4"
       ],
-      "title_vi": "Lab · Code đáng tin cậy",
+      "title_vi": "Thực hành · Viết mã đáng tin cậy",
       "title_en": "Lab · Reliable code",
-      "description_vi": "Cố tình tạo lỗi, ghi giả thuyết, dùng debugger/log để tìm nguyên nhân rồi viết regression test cho lỗi đó.\n\nCheckpoint: Bạn phân biệt được lỗi do input, lỗi logic và lỗi môi trường, đồng thời biết test nào ngăn lỗi quay lại.",
+      "description_vi": "1. Chủ động tạo một lỗi và ghi giả thuyết về nguyên nhân.\n2. Dùng trình gỡ lỗi hoặc nhật ký chạy để kiểm tra giả thuyết.\n3. Sửa lỗi và viết kiểm thử hồi quy để phát hiện nếu lỗi xuất hiện lại.\n\nTự kiểm tra: Bạn phân biệt được lỗi đầu vào, lỗi logic và lỗi môi trường, đồng thời chỉ ra kiểm thử bảo vệ phần vừa sửa.",
       "description_en": "Introduce a failure, write a hypothesis, use logs or a debugger to find the cause, then add a regression test.\n\nCheckpoint: You can distinguish input, logic, and environment failures and know which test prevents a regression.",
       "difficulty": "easy",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn phân biệt được lỗi do input, lỗi logic và lỗi môi trường, đồng thời biết test nào ngăn lỗi quay lại."
+        "Thu nhỏ ví dụ đến mức vẫn tái hiện được lỗi rồi mới thay đổi mã."
       ]
     },
     {
@@ -122,15 +122,15 @@
         "phase-01-python-software-data-files-3",
         "phase-01-python-software-data-files-4"
       ],
-      "title_vi": "Lab · File và dữ liệu",
+      "title_vi": "Thực hành · Tệp và dữ liệu",
       "title_en": "Lab · Files and data",
-      "description_vi": "Xây pipeline CSV/JSON nhỏ: validate schema, báo dòng lỗi, tạo output sạch và chạy lại được từ terminal.\n\nCheckpoint: Bạn biết dữ liệu nào được giữ, loại bỏ hoặc sửa và có lý do cho từng quyết định.",
+      "description_vi": "1. Xây quy trình xử lý tệp CSV/JSON và kiểm tra cấu trúc dữ liệu.\n2. Báo rõ dòng bị lỗi và tạo tệp kết quả đã làm sạch.\n3. Ghi lệnh để chạy lại toàn bộ quy trình từ dòng lệnh.\n\nTự kiểm tra: Bạn nêu được dữ liệu nào được giữ, loại bỏ hoặc sửa, cùng lý do cho từng quyết định.",
       "description_en": "Build a small CSV/JSON pipeline that validates schema, reports bad rows, writes clean output, and reruns from a terminal.\n\nCheckpoint: You can explain which data is kept, dropped, or repaired and why each decision is safe.",
       "difficulty": "easy",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn biết dữ liệu nào được giữ, loại bỏ hoặc sửa và có lý do cho từng quyết định."
+        "Dùng tệp mẫu nhỏ có cả dòng đúng và dòng sai để kiểm tra báo cáo lỗi."
       ]
     },
     {
@@ -144,15 +144,15 @@
         "phase-01-python-software-developer-tools-3",
         "phase-01-python-software-developer-tools-4"
       ],
-      "title_vi": "Lab · Developer workflow",
+      "title_vi": "Thực hành · Quy trình làm việc với mã nguồn",
       "title_en": "Lab · Developer workflow",
-      "description_vi": "Tạo branch, xem diff, gọi một API, lưu response và viết commit message mô tả đúng thay đổi.\n\nCheckpoint: Bạn có thể khôi phục trạng thái trước đó và giải thích một thay đổi bằng diff thay vì chỉ nói đã sửa.",
+      "description_vi": "1. Tạo nhánh Git và xem phần mã thay đổi.\n2. Gọi một API rồi lưu phản hồi.\n3. Viết thông điệp commit mô tả đúng thay đổi.\n\nTự kiểm tra: Bạn khôi phục được trạng thái trước đó và dùng bản so sánh mã để giải thích mình đã sửa gì.",
       "description_en": "Create a branch, inspect a diff, call an API, save its response, and write a commit message that matches the change.\n\nCheckpoint: You can recover an earlier state and explain a change from its diff instead of saying only that it was fixed.",
       "difficulty": "easy",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn có thể khôi phục trạng thái trước đó và giải thích một thay đổi bằng diff thay vì chỉ nói đã sửa."
+        "Xem git diff trước khi viết thông điệp commit để mô tả đúng phạm vi thay đổi."
       ]
     },
     {
@@ -166,15 +166,15 @@
         "phase-01-python-software-sql-structures-3",
         "phase-01-python-software-sql-structures-4"
       ],
-      "title_vi": "Lab · SQL và cấu trúc dữ liệu",
+      "title_vi": "Thực hành · SQL và cấu trúc dữ liệu",
       "title_en": "Lab · SQL and data structures",
-      "description_vi": "Tạo database nhỏ cho learning log, viết query tổng hợp tuần và so sánh hai cách truy vấn trên cùng dữ liệu.\n\nCheckpoint: Bạn giải thích được grain của bảng, khóa liên kết, kết quả JOIN và độ phức tạp của cấu trúc dữ liệu.",
+      "description_vi": "1. Tạo cơ sở dữ liệu nhỏ để lưu nhật ký học tập.\n2. Viết truy vấn tổng hợp thời gian học theo tuần.\n3. So sánh hai cách truy vấn trên cùng dữ liệu.\n\nTự kiểm tra: Bạn giải thích được mỗi hàng đại diện cho điều gì, cách liên kết khóa, kết quả JOIN và độ phức tạp của cấu trúc dữ liệu.",
       "description_en": "Create a small learning-log database, write weekly aggregates, and compare two queries over the same data.\n\nCheckpoint: You can explain table grain, keys, JOIN results, and the complexity of the chosen data structure.",
       "difficulty": "easy",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn giải thích được grain của bảng, khóa liên kết, kết quả JOIN và độ phức tạp của cấu trúc dữ liệu."
+        "Tạo dữ liệu có người chưa học buổi nào để kiểm tra truy vấn có giữ lại người đó hay không."
       ]
     },
     {
@@ -188,15 +188,15 @@
         "phase-02-math-ml-linear-algebra-3",
         "phase-02-math-ml-linear-algebra-4"
       ],
-      "title_vi": "Lab · Đại số tuyến tính",
+      "title_vi": "Thực hành · Đại số tuyến tính",
       "title_en": "Lab · Linear algebra",
-      "description_vi": "Tính tay một ví dụ nhỏ, viết lại bằng NumPy, in shape ở từng bước và giải thích ý nghĩa hình học.\n\nCheckpoint: Bạn phát hiện được shape mismatch trước khi chạy model và biết PCA đang loại bỏ thông tin nào.",
+      "description_vi": "1. Tính tay một ví dụ nhỏ rồi viết lại bằng NumPy.\n2. In kích thước mảng ở từng bước.\n3. Giải thích ý nghĩa hình học của phép tính.\n\nTự kiểm tra: Bạn phát hiện được kích thước không tương thích trước khi chạy mô hình và giải thích được PCA loại bỏ thông tin nào.",
       "description_en": "Work one small example by hand, reimplement it in NumPy, print every shape, and explain the geometry.\n\nCheckpoint: You can spot a shape mismatch before training and explain which information PCA removes.",
       "difficulty": "medium",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn phát hiện được shape mismatch trước khi chạy model và biết PCA đang loại bỏ thông tin nào."
+        "Ghi số hàng và số cột của từng ma trận trước khi thực hiện phép nhân."
       ]
     },
     {
@@ -210,15 +210,15 @@
         "phase-02-math-ml-calculus-3",
         "phase-02-math-ml-calculus-4"
       ],
-      "title_vi": "Lab · Giải tích và gradient",
+      "title_vi": "Thực hành · Giải tích và gradient",
       "title_en": "Lab · Calculus and gradients",
-      "description_vi": "Vẽ loss một biến, tính gradient tay, kiểm tra bằng finite difference rồi đối chiếu với autograd.\n\nCheckpoint: Bạn giải thích được dấu của gradient, learning rate và vì sao gradient sai làm training thất bại.",
+      "description_vi": "1. Vẽ đồ thị hàm mất mát một biến và tính gradient bằng tay.\n2. Kiểm tra kết quả bằng phương pháp sai phân hữu hạn.\n3. Đối chiếu với kết quả vi phân tự động của autograd.\n\nTự kiểm tra: Bạn giải thích được dấu của gradient, vai trò của tốc độ học và vì sao gradient sai khiến quá trình huấn luyện thất bại.",
       "description_en": "Plot a one-variable loss, calculate the gradient by hand, check it with finite differences, then compare autograd.\n\nCheckpoint: You can explain gradient sign, learning rate, and why a wrong gradient breaks training.",
       "difficulty": "medium",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn giải thích được dấu của gradient, learning rate và vì sao gradient sai làm training thất bại."
+        "Dùng cùng một giá trị đầu vào khi so sánh ba cách tính gradient."
       ]
     },
     {
@@ -232,15 +232,15 @@
         "phase-02-math-ml-probability-3",
         "phase-02-math-ml-probability-4"
       ],
-      "title_vi": "Lab · Xác suất",
+      "title_vi": "Thực hành · Xác suất",
       "title_en": "Lab · Probability",
-      "description_vi": "Mô phỏng một phân phối, thay đổi kích thước mẫu, vẽ histogram và ghi rõ giả định trước khi kết luận.\n\nCheckpoint: Bạn phân biệt được xác suất có điều kiện, expectation, variance và sample noise trong một ví dụ ML.",
+      "description_vi": "1. Mô phỏng một phân phối với các kích thước mẫu khác nhau.\n2. Vẽ biểu đồ phân bố tần suất.\n3. Ghi rõ giả định trước khi rút ra kết luận.\n\nTự kiểm tra: Bạn phân biệt được xác suất có điều kiện, kỳ vọng, phương sai và biến động do lấy mẫu trong một ví dụ học máy.",
       "description_en": "Simulate a distribution, vary sample size, plot a histogram, and state assumptions before drawing conclusions.\n\nCheckpoint: You can distinguish conditional probability, expectation, variance, and sampling noise in an ML example.",
       "difficulty": "medium",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn phân biệt được xác suất có điều kiện, expectation, variance và sample noise trong một ví dụ ML."
+        "Giữ nguyên phân phối khi thay đổi kích thước mẫu để so sánh có ý nghĩa."
       ]
     },
     {
@@ -254,15 +254,15 @@
         "phase-02-math-ml-optimization-3",
         "phase-02-math-ml-optimization-4"
       ],
-      "title_vi": "Lab · Thống kê và tối ưu",
+      "title_vi": "Thực hành · Thống kê và tối ưu",
       "title_en": "Lab · Statistics and optimization",
-      "description_vi": "Cài linear/logistic regression tối giản, vẽ loss curve và so sánh learning rate, SGD, momentum và Adam.\n\nCheckpoint: Bạn dự đoán được dấu hiệu underfit, overfit, exploding update và biết chọn metric để kiểm tra.",
+      "description_vi": "1. Tự cài đặt hồi quy tuyến tính hoặc hồi quy logistic ở dạng tối giản.\n2. Vẽ đường cong mất mát.\n3. So sánh ảnh hưởng của tốc độ học và các phương pháp SGD, momentum, Adam.\n\nTự kiểm tra: Bạn nhận ra dấu hiệu học chưa đủ, quá khớp và bước cập nhật tăng mất kiểm soát, đồng thời chọn được chỉ số để kiểm tra.",
       "description_en": "Implement minimal linear/logistic regression, plot loss curves, and compare learning rate, SGD, momentum, and Adam.\n\nCheckpoint: You can predict signs of underfitting, overfitting, exploding updates, and choose a metric to verify them.",
       "difficulty": "medium",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn dự đoán được dấu hiệu underfit, overfit, exploding update và biết chọn metric để kiểm tra."
+        "Khi so sánh bộ tối ưu, ghi rõ điều kiện khởi tạo, dữ liệu và tốc độ học của từng lần chạy."
       ]
     },
     {
@@ -276,15 +276,15 @@
         "phase-03-classical-ml-ml-framing-3",
         "phase-03-classical-ml-ml-framing-4"
       ],
-      "title_vi": "Lab · Framing và dữ liệu",
+      "title_vi": "Thực hành · Xác định bài toán và dữ liệu",
       "title_en": "Lab · Framing and data",
-      "description_vi": "Viết data dictionary, xác định target và baseline ngây thơ, sau đó lập bảng các điểm có thể leakage.\n\nCheckpoint: Bạn bảo vệ được cách split và metric trước một reviewer, kể cả khi score thấp.",
+      "description_vi": "1. Viết bảng mô tả các trường dữ liệu.\n2. Xác định biến mục tiêu và một phương án dự đoán đơn giản làm mốc so sánh.\n3. Lập bảng các vị trí có nguy cơ rò rỉ dữ liệu.\n\nTự kiểm tra: Bạn giải thích được lý do chọn cách chia dữ liệu và chỉ số đánh giá, kể cả khi kết quả còn thấp.",
       "description_en": "Write a data dictionary, define the target and a naive baseline, then list every possible leakage point.\n\nCheckpoint: You can defend the split and metric to a reviewer even when the score is low.",
       "difficulty": "medium",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn bảo vệ được cách split và metric trước một reviewer, kể cả khi score thấp."
+        "Với mỗi đặc trưng, kiểm tra xem thông tin đó đã tồn tại tại thời điểm dự đoán hay chưa."
       ]
     },
     {
@@ -298,15 +298,15 @@
         "phase-03-classical-ml-models-3",
         "phase-03-classical-ml-models-4"
       ],
-      "title_vi": "Lab · Mô hình cốt lõi",
+      "title_vi": "Thực hành · Các mô hình cốt lõi",
       "title_en": "Lab · Core models",
-      "description_vi": "Huấn luyện model đơn giản trước, thêm tree/boosting, ghi metric và một ví dụ lỗi tiêu biểu cho từng model.\n\nCheckpoint: Bạn giải thích được trade-off giữa interpretability, latency, data size và quality.",
+      "description_vi": "1. Huấn luyện mô hình đơn giản trước rồi thử mô hình cây và boosting.\n2. Ghi các chỉ số đánh giá cho từng mô hình.\n3. Chọn một ví dụ dự đoán sai tiêu biểu của mỗi mô hình để phân tích.\n\nTự kiểm tra: Bạn giải thích được sự đánh đổi giữa khả năng giải thích, độ trễ, lượng dữ liệu và chất lượng dự đoán.",
       "description_en": "Train a simple model first, add trees/boosting, and record metrics plus a representative error for each model.\n\nCheckpoint: You can explain trade-offs among interpretability, latency, data size, and quality.",
       "difficulty": "medium",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn giải thích được trade-off giữa interpretability, latency, data size và quality."
+        "Giữ nguyên cách chia dữ liệu khi so sánh các mô hình."
       ]
     },
     {
@@ -320,15 +320,15 @@
         "phase-03-classical-ml-preprocessing-3",
         "phase-03-classical-ml-preprocessing-4"
       ],
-      "title_vi": "Lab · Preprocessing",
+      "title_vi": "Thực hành · Tiền xử lý dữ liệu",
       "title_en": "Lab · Preprocessing",
-      "description_vi": "Đặt imputation, encoding và scaling trong Pipeline, fit chỉ trên train rồi kiểm tra bằng một case dữ liệu thiếu.\n\nCheckpoint: Bạn có thể serialize pipeline và chạy cùng preprocessing ở training lẫn inference.",
+      "description_vi": "1. Đặt các bước điền dữ liệu thiếu, mã hóa và chuẩn hóa trong Pipeline.\n2. Chỉ gọi fit trên tập huấn luyện.\n3. Kiểm tra quy trình với một trường hợp có dữ liệu thiếu.\n\nTự kiểm tra: Bạn lưu được toàn bộ quy trình và dùng cùng cách tiền xử lý khi huấn luyện lẫn khi dự đoán.",
       "description_en": "Put imputation, encoding, and scaling in a Pipeline, fit only on train, and test a missing-data case.\n\nCheckpoint: You can serialize the pipeline and reuse identical preprocessing during training and inference.",
       "difficulty": "medium",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn có thể serialize pipeline và chạy cùng preprocessing ở training lẫn inference."
+        "Kiểm tra rằng thống kê dùng để điền dữ liệu thiếu và chuẩn hóa chỉ được tính từ tập huấn luyện."
       ]
     },
     {
@@ -342,15 +342,15 @@
         "phase-03-classical-ml-evaluation-3",
         "phase-03-classical-ml-evaluation-4"
       ],
-      "title_vi": "Lab · Đánh giá mô hình",
+      "title_vi": "Thực hành · Đánh giá mô hình",
       "title_en": "Lab · Model evaluation",
-      "description_vi": "Viết metric decision table, chạy cross-validation, tune một hyperparameter và lưu kết quả vào bảng.\n\nCheckpoint: Bạn giải thích được khi nào accuracy, F1, PR-AUC, MAE hoặc calibration là lựa chọn hợp lý.",
+      "description_vi": "1. Lập bảng chọn chỉ số theo mục tiêu bài toán.\n2. Chạy kiểm định chéo và điều chỉnh một siêu tham số.\n3. Lưu kết quả từng cấu hình vào bảng.\n\nTự kiểm tra: Bạn giải thích được khi nào nên dùng accuracy, F1, PR-AUC, MAE hoặc đánh giá độ hiệu chuẩn của xác suất dự đoán.",
       "description_en": "Write a metric decision table, run cross-validation, tune one hyperparameter, and record results in a table.\n\nCheckpoint: You can explain when accuracy, F1, PR-AUC, MAE, or calibration is the right choice.",
       "difficulty": "medium",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn giải thích được khi nào accuracy, F1, PR-AUC, MAE hoặc calibration là lựa chọn hợp lý."
+        "Ghi tiêu chí chọn cấu hình trước khi xem kết quả để tránh chỉ chọn con số đẹp nhất."
       ]
     },
     {
@@ -364,15 +364,15 @@
         "phase-03-classical-ml-analysis-3",
         "phase-03-classical-ml-analysis-4"
       ],
-      "title_vi": "Lab · Phân tích và đóng gói",
+      "title_vi": "Thực hành · Phân tích và đóng gói mô hình",
       "title_en": "Lab · Analysis and packaging",
-      "description_vi": "Chia lỗi theo nhóm, đọc confusion matrix, lưu model/pipeline và viết model card nêu giới hạn.\n\nCheckpoint: Bạn biết model sai ở đâu, sai với ai và không dùng score cao để che giấu giới hạn.",
+      "description_vi": "1. Phân nhóm lỗi và đọc ma trận nhầm lẫn.\n2. Lưu mô hình cùng quy trình xử lý dữ liệu.\n3. Viết bản mô tả mô hình, nêu rõ giới hạn sử dụng.\n\nTự kiểm tra: Bạn chỉ ra được mô hình sai ở đâu, với nhóm nào và không bỏ qua giới hạn chỉ vì điểm tổng thể cao.",
       "description_en": "Slice errors by group, inspect a confusion matrix, save the model/pipeline, and write a model card with limits.\n\nCheckpoint: You know where and for whom the model fails and do not use a high score to hide limitations.",
       "difficulty": "medium",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn biết model sai ở đâu, sai với ai và không dùng score cao để che giấu giới hạn."
+        "Đối chiếu chỉ số tổng thể với kết quả của từng nhóm dữ liệu."
       ]
     },
     {
@@ -386,15 +386,15 @@
         "phase-04-deep-learning-pytorch-core-3",
         "phase-04-deep-learning-pytorch-core-4"
       ],
-      "title_vi": "Lab · PyTorch core",
+      "title_vi": "Thực hành · PyTorch cốt lõi",
       "title_en": "Lab · PyTorch core",
-      "description_vi": "Tạo Dataset giả, DataLoader, in batch shape và kiểm tra gradient của một layer bằng tay.\n\nCheckpoint: Bạn giải thích được batch dimension, train/eval mode, dtype và device của từng tensor.",
+      "description_vi": "1. Tạo Dataset bằng dữ liệu giả và đưa vào DataLoader.\n2. In kích thước của từng lô dữ liệu.\n3. Tính tay để kiểm tra gradient của một lớp trong mạng.\n\nTự kiểm tra: Bạn giải thích được chiều chứa lô dữ liệu, chế độ train/eval, kiểu dữ liệu và thiết bị xử lý của từng tensor.",
       "description_en": "Create a toy Dataset and DataLoader, print batch shapes, and inspect a layer's gradient manually.\n\nCheckpoint: You can explain batch dimension, train/eval mode, dtype, and device for every tensor.",
       "difficulty": "medium",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn giải thích được batch dimension, train/eval mode, dtype và device của từng tensor."
+        "Ghi shape, dtype và device của tensor tại đầu vào và đầu ra mỗi lớp."
       ]
     },
     {
@@ -408,15 +408,15 @@
         "phase-04-deep-learning-training-3",
         "phase-04-deep-learning-training-4"
       ],
-      "title_vi": "Lab · Training loop",
+      "title_vi": "Thực hành · Vòng lặp huấn luyện",
       "title_en": "Lab · Training loop",
-      "description_vi": "Viết training loop, log train/validation loss, lưu best checkpoint và resume từ checkpoint đó.\n\nCheckpoint: Bạn biết model nào được lưu, vì sao lưu, và có thể tái tạo metric từ checkpoint.",
+      "description_vi": "1. Viết vòng lặp huấn luyện và ghi giá trị mất mát trên tập huấn luyện, tập kiểm định.\n2. Lưu trạng thái mô hình tốt nhất.\n3. Tiếp tục huấn luyện từ trạng thái đã lưu.\n\nTự kiểm tra: Bạn biết mô hình nào được lưu, lý do chọn nó và cách tái tạo kết quả đánh giá từ bản lưu.",
       "description_en": "Write a training loop, log train/validation loss, save the best checkpoint, and resume from it.\n\nCheckpoint: You know which model is saved and why, and can reproduce metrics from its checkpoint.",
       "difficulty": "medium",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn biết model nào được lưu, vì sao lưu, và có thể tái tạo metric từ checkpoint."
+        "Ghi tiêu chí chọn bản lưu tốt nhất và kiểm tra các trạng thái cần khôi phục khi chạy tiếp."
       ]
     },
     {
@@ -430,15 +430,15 @@
         "phase-04-deep-learning-generalization-3",
         "phase-04-deep-learning-generalization-4"
       ],
-      "title_vi": "Lab · Generalization",
+      "title_vi": "Thực hành · Khả năng khái quát hóa",
       "title_en": "Lab · Generalization",
-      "description_vi": "Cố tình overfit một dataset nhỏ, thử một thay đổi mỗi lần và vẽ train/validation curves.\n\nCheckpoint: Bạn phân biệt được cải thiện thật với việc chỉ làm train score đẹp hơn.",
+      "description_vi": "1. Cho mô hình học quá khớp trên một tập dữ liệu nhỏ.\n2. Mỗi lần thử chỉ thay đổi một yếu tố.\n3. Vẽ đường cong kết quả trên tập huấn luyện và tập kiểm định.\n\nTự kiểm tra: Bạn phân biệt được cải thiện trên dữ liệu chưa dùng để huấn luyện với việc chỉ tăng điểm trên tập huấn luyện.",
       "description_en": "Overfit a tiny dataset on purpose, change one thing at a time, and plot train/validation curves.\n\nCheckpoint: You can distinguish real improvement from simply making the training score look better.",
       "difficulty": "medium",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn phân biệt được cải thiện thật với việc chỉ làm train score đẹp hơn."
+        "Đặt hai đường cong trên cùng biểu đồ để quan sát khoảng cách giữa chúng."
       ]
     },
     {
@@ -452,15 +452,15 @@
         "phase-04-deep-learning-vision-nlp-3",
         "phase-04-deep-learning-vision-nlp-4"
       ],
-      "title_vi": "Lab · CV và NLP nền tảng",
+      "title_vi": "Thực hành · Nền tảng thị giác máy tính và xử lý ngôn ngữ",
       "title_en": "Lab · Foundational CV and NLP",
-      "description_vi": "Chọn một dataset nhỏ, train baseline, dùng transfer learning hoặc embedding, rồi phân tích confusion matrix.\n\nCheckpoint: Bạn giải thích được representation nào đang được học và lỗi nào còn do dữ liệu.",
+      "description_vi": "1. Chọn một tập dữ liệu nhỏ và huấn luyện mô hình làm mốc so sánh.\n2. Thử học chuyển giao hoặc biểu diễn dữ liệu bằng embedding.\n3. Phân tích ma trận nhầm lẫn.\n\nTự kiểm tra: Bạn giải thích được mô hình đang học cách biểu diễn nào và lỗi nào còn bắt nguồn từ dữ liệu.",
       "description_en": "Choose a small dataset, train a baseline, try transfer learning or embeddings, and inspect a confusion matrix.\n\nCheckpoint: You can explain which representation is learned and which errors still come from the data.",
       "difficulty": "medium",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn giải thích được representation nào đang được học và lỗi nào còn do dữ liệu."
+        "Đọc vài mẫu dự đoán sai của từng nhóm trước khi kết luận về chất lượng biểu diễn."
       ]
     },
     {
@@ -474,15 +474,15 @@
         "phase-04-deep-learning-debugging-3",
         "phase-04-deep-learning-debugging-4"
       ],
-      "title_vi": "Lab · Debug và experiment",
+      "title_vi": "Thực hành · Gỡ lỗi và quản lý thí nghiệm",
       "title_en": "Lab · Debugging and experiments",
-      "description_vi": "Tạo từng lỗi một, ghi symptom, hypothesis, smallest reproduction và fix; lưu run metadata.\n\nCheckpoint: Bạn không chữa NaN bằng cách giảm learning rate một cách mù quáng; bạn tìm nguyên nhân trước.",
+      "description_vi": "1. Tạo từng lỗi một và ghi biểu hiện cùng giả thuyết về nguyên nhân.\n2. Tìm ví dụ nhỏ nhất tái hiện lỗi rồi sửa.\n3. Lưu thông tin cấu hình của từng lần chạy.\n\nTự kiểm tra: Khi gặp NaN, bạn kiểm tra nguyên nhân trước khi quyết định có giảm tốc độ học hay không.",
       "description_en": "Create one failure at a time and record its symptom, hypothesis, smallest reproduction, and fix with run metadata.\n\nCheckpoint: You do not blindly lower the learning rate for NaNs; you find the cause first.",
       "difficulty": "medium",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn không chữa NaN bằng cách giảm learning rate một cách mù quáng; bạn tìm nguyên nhân trước."
+        "Tìm bước tính toán đầu tiên tạo ra giá trị không hữu hạn."
       ]
     },
     {
@@ -496,15 +496,15 @@
         "phase-05-mlops-api-3",
         "phase-05-mlops-api-4"
       ],
-      "title_vi": "Lab · Inference API",
+      "title_vi": "Thực hành · API dự đoán",
       "title_en": "Lab · Inference API",
-      "description_vi": "Tách model loader, service và route; thêm health check, version model và test request hợp lệ/không hợp lệ.\n\nCheckpoint: Bạn thay model mà không sửa toàn bộ API và biết lỗi nằm ở input, model hay server.",
+      "description_vi": "1. Tách phần nạp mô hình, xử lý nghiệp vụ và định tuyến API.\n2. Thêm kiểm tra tình trạng dịch vụ và thông tin phiên bản mô hình.\n3. Kiểm thử yêu cầu hợp lệ lẫn không hợp lệ.\n\nTự kiểm tra: Bạn thay mô hình mà không phải sửa toàn bộ API và xác định được lỗi thuộc đầu vào, mô hình hay máy chủ.",
       "description_en": "Separate model loading, service, and routes; add health checks, model versioning, and valid/invalid request tests.\n\nCheckpoint: You can replace the model without rewriting the API and locate input, model, or server failures.",
       "difficulty": "medium",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn thay model mà không sửa toàn bộ API và biết lỗi nằm ở input, model hay server."
+        "Kiểm thử phần kiểm tra đầu vào độc lập với phần nạp mô hình."
       ]
     },
     {
@@ -518,15 +518,15 @@
         "phase-05-mlops-containers-3",
         "phase-05-mlops-containers-4"
       ],
-      "title_vi": "Lab · Container và CI",
+      "title_vi": "Thực hành · Container và tích hợp liên tục",
       "title_en": "Lab · Containers and CI",
-      "description_vi": "Viết Dockerfile nhỏ, build image, chạy container, gọi health check và tạo CI chạy test.\n\nCheckpoint: Bạn biết image chứa gì, thiếu gì, và có thể rollback về tag trước khi release.",
+      "description_vi": "1. Viết Dockerfile tối giản và tạo image.\n2. Chạy container rồi gọi điểm kiểm tra tình trạng dịch vụ.\n3. Tạo quy trình CI để tự động chạy kiểm thử.\n\nTự kiểm tra: Bạn biết image chứa và thiếu những gì, đồng thời có thể quay về tag trước đó khi chuẩn bị phát hành.",
       "description_en": "Write a small Dockerfile, build the image, run the container, call its health check, and add CI tests.\n\nCheckpoint: You know what the image contains, what it omits, and how to roll back to an earlier tag.",
       "difficulty": "medium",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn biết image chứa gì, thiếu gì, và có thể rollback về tag trước khi release."
+        "Ghi tag của image đã kiểm tra để có điểm khôi phục rõ ràng."
       ]
     },
     {
@@ -540,15 +540,15 @@
         "phase-05-mlops-tracking-3",
         "phase-05-mlops-tracking-4"
       ],
-      "title_vi": "Lab · Tracking và versioning",
+      "title_vi": "Thực hành · Theo dõi thí nghiệm và phiên bản",
       "title_en": "Lab · Tracking and versioning",
-      "description_vi": "Ghi params, metrics, artifact path và git commit cho hai run khác nhau; so sánh bằng bảng.\n\nCheckpoint: Bạn có thể trả lời run nào tạo ra model đang phục vụ và vì sao chọn nó.",
+      "description_vi": "1. Chạy hai thí nghiệm với cấu hình khác nhau.\n2. Ghi tham số, chỉ số, đường dẫn kết quả và mã commit Git của từng lần chạy.\n3. Lập bảng so sánh kết quả.\n\nTự kiểm tra: Bạn xác định được lần chạy nào tạo ra mô hình đang phục vụ và giải thích được lý do chọn mô hình đó.",
       "description_en": "Log parameters, metrics, artifact paths, and the git commit for two runs, then compare them in a table.\n\nCheckpoint: You can identify which run produced the served model and why it was selected.",
       "difficulty": "medium",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn có thể trả lời run nào tạo ra model đang phục vụ và vì sao chọn nó."
+        "Lưu mã định danh lần chạy cùng đường dẫn mô hình để truy ngược về cấu hình."
       ]
     },
     {
@@ -562,15 +562,15 @@
         "phase-05-mlops-observability-3",
         "phase-05-mlops-observability-4"
       ],
-      "title_vi": "Lab · Observability",
+      "title_vi": "Thực hành · Theo dõi hoạt động hệ thống",
       "title_en": "Lab · Observability",
-      "description_vi": "Thêm structured log, đo p50/p95, tạo một drift report và viết runbook rollback.\n\nCheckpoint: Bạn phân biệt data drift, concept drift và latency regression bằng số liệu.",
+      "description_vi": "1. Thêm nhật ký có cấu trúc và đo độ trễ p50/p95.\n2. Tạo báo cáo về sự thay đổi phân phối dữ liệu.\n3. Viết hướng dẫn khôi phục phiên bản trước.\n\nTự kiểm tra: Bạn phân biệt được sự thay đổi phân phối dữ liệu, sự thay đổi quan hệ giữa đầu vào và mục tiêu, và tình trạng độ trễ tăng bằng số liệu.",
       "description_en": "Add structured logs, measure p50/p95, create a drift report, and write a rollback runbook.\n\nCheckpoint: You can distinguish data drift, concept drift, and latency regression with measurements.",
       "difficulty": "medium",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn phân biệt data drift, concept drift và latency regression bằng số liệu."
+        "Ghi thời điểm và tập dữ liệu tham chiếu khi so sánh các chỉ số."
       ]
     },
     {
@@ -584,15 +584,15 @@
         "phase-05-mlops-security-3",
         "phase-05-mlops-security-4"
       ],
-      "title_vi": "Lab · An toàn hệ thống",
+      "title_vi": "Thực hành · An toàn hệ thống",
       "title_en": "Lab · System safety",
-      "description_vi": "Viết input limits, secret redaction và dependency check; thử một payload xấu nhưng không dùng secret thật.\n\nCheckpoint: Bạn biết log nào cần ẩn, giới hạn nào cần enforce và cách báo cáo rủi ro.",
+      "description_vi": "1. Đặt giới hạn đầu vào, che thông tin bí mật trong nhật ký và kiểm tra thư viện phụ thuộc.\n2. Thử một dữ liệu đầu vào không hợp lệ bằng dữ liệu giả.\n3. Ghi kết quả và cách xử lý rủi ro.\n\nTự kiểm tra: Bạn biết thông tin nào cần ẩn trong nhật ký, giới hạn nào phải được thực thi và cách báo cáo rủi ro.",
       "description_en": "Add input limits, secret redaction, and dependency checks; test a malicious payload without real secrets.\n\nCheckpoint: You know which logs to redact, which limits to enforce, and how to report a risk.",
       "difficulty": "medium",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn biết log nào cần ẩn, giới hạn nào cần enforce và cách báo cáo rủi ro."
+        "Kiểm tra nhật ký sau tình huống lỗi để chắc rằng dữ liệu bí mật không bị ghi ra."
       ]
     },
     {
@@ -606,15 +606,15 @@
         "phase-06-llm-rag-nlp-foundations-3",
         "phase-06-llm-rag-nlp-foundations-4"
       ],
-      "title_vi": "Lab · NLP foundations",
+      "title_vi": "Thực hành · Nền tảng xử lý ngôn ngữ",
       "title_en": "Lab · NLP foundations",
-      "description_vi": "Tokenize câu tiếng Việt, đếm token, so sánh embedding gần/xa và ghi giới hạn context.\n\nCheckpoint: Bạn giải thích được embedding không phải là sự thật, và context window ảnh hưởng cost/quality ra sao.",
+      "description_vi": "1. Tách một câu tiếng Việt thành token và đếm số token.\n2. So sánh các embedding gần nhau và xa nhau.\n3. Ghi giới hạn cửa sổ ngữ cảnh của mô hình.\n\nTự kiểm tra: Bạn giải thích được vì sao độ gần của embedding không xác nhận tính đúng của thông tin, và cửa sổ ngữ cảnh ảnh hưởng đến chi phí, chất lượng ra sao.",
       "description_en": "Tokenize Vietnamese text, count tokens, compare near/far embeddings, and record context limits.\n\nCheckpoint: You can explain that embeddings are not truth and how context windows affect cost and quality.",
       "difficulty": "medium",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn giải thích được embedding không phải là sự thật, và context window ảnh hưởng cost/quality ra sao."
+        "So sánh hai câu dùng từ gần giống nhưng có ý nghĩa khác nhau."
       ]
     },
     {
@@ -628,15 +628,15 @@
         "phase-06-llm-rag-transformers-3",
         "phase-06-llm-rag-transformers-4"
       ],
-      "title_vi": "Lab · Transformer và prompting",
+      "title_vi": "Thực hành · Transformer và cách viết prompt",
       "title_en": "Lab · Transformers and prompting",
-      "description_vi": "Viết prompt có input/output contract, thử case thiếu dữ liệu và validate JSON trước khi dùng downstream.\n\nCheckpoint: Bạn nhận diện được prompt ambiguity, output invalid và injection trong một flow cụ thể.",
+      "description_vi": "1. Viết prompt quy định rõ đầu vào và đầu ra.\n2. Thử trường hợp thiếu dữ liệu.\n3. Kiểm tra JSON trước khi chuyển kết quả sang bước xử lý tiếp theo.\n\nTự kiểm tra: Bạn nhận diện được yêu cầu mơ hồ, đầu ra không hợp lệ và chỉ dẫn chèn vào dữ liệu trong một quy trình cụ thể.",
       "description_en": "Write a prompt with an input/output contract, test missing data, and validate JSON before downstream use.\n\nCheckpoint: You can identify prompt ambiguity, invalid output, and injection in a concrete flow.",
       "difficulty": "medium",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn nhận diện được prompt ambiguity, output invalid và injection trong một flow cụ thể."
+        "Ghi riêng phần chỉ dẫn và phần dữ liệu để dễ nhận ra nội dung nào không được phép thay đổi yêu cầu."
       ]
     },
     {
@@ -650,15 +650,15 @@
         "phase-06-llm-rag-retrieval-3",
         "phase-06-llm-rag-retrieval-4"
       ],
-      "title_vi": "Lab · Retrieval",
+      "title_vi": "Thực hành · Truy xuất tài liệu",
       "title_en": "Lab · Retrieval",
-      "description_vi": "Tạo 10 document chunks, viết 10 query có đáp án biết trước, đo hit@k và đọc các false negative.\n\nCheckpoint: Bạn biết RAG fail do retrieval hay generation và có evidence cho kết luận đó.",
+      "description_vi": "1. Tạo 10 đoạn tài liệu và 10 câu truy vấn có đáp án biết trước.\n2. Đo hit@k.\n3. Đọc các trường hợp không tìm được đoạn tài liệu cần thiết.\n\nTự kiểm tra: Bạn xác định được lỗi của RAG nằm ở bước truy xuất hay sinh câu trả lời và đưa ra bằng chứng cho kết luận.",
       "description_en": "Create ten document chunks and ten known-answer queries, measure hit@k, and inspect false negatives.\n\nCheckpoint: You can tell whether RAG failed during retrieval or generation and show evidence for the conclusion.",
       "difficulty": "medium",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn biết RAG fail do retrieval hay generation và có evidence cho kết luận đó."
+        "Lưu các đoạn được trả về cho từng truy vấn trước khi xem câu trả lời của mô hình."
       ]
     },
     {
@@ -672,15 +672,15 @@
         "phase-06-llm-rag-rag-3",
         "phase-06-llm-rag-rag-4"
       ],
-      "title_vi": "Lab · RAG architecture",
+      "title_vi": "Thực hành · Kiến trúc RAG",
       "title_en": "Lab · RAG architecture",
-      "description_vi": "Tạo evaluation set 30 câu, lưu retrieved chunks, đối chiếu citation và phân loại từng lỗi.\n\nCheckpoint: Bạn biết câu trả lời nào có căn cứ, câu nào phải từ chối và vì sao.",
+      "description_vi": "1. Tạo bộ đánh giá gồm 30 câu hỏi.\n2. Lưu các đoạn tài liệu được truy xuất và đối chiếu nguồn trích dẫn.\n3. Phân loại từng lỗi.\n\nTự kiểm tra: Bạn biết câu trả lời nào có căn cứ, câu nào cần từ chối và giải thích được lý do.",
       "description_en": "Create a 30-question evaluation set, save retrieved chunks, verify citations, and label each failure.\n\nCheckpoint: You can tell which answers are grounded, which must be refused, and why.",
       "difficulty": "medium",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn biết câu trả lời nào có căn cứ, câu nào phải từ chối và vì sao."
+        "Kiểm tra xem đoạn trích dẫn có thực sự hỗ trợ nội dung trả lời hay chỉ cùng chủ đề."
       ]
     },
     {
@@ -694,15 +694,15 @@
         "phase-06-llm-rag-quality-safety-3",
         "phase-06-llm-rag-quality-safety-4"
       ],
-      "title_vi": "Lab · Quality và safety",
+      "title_vi": "Thực hành · Chất lượng và an toàn",
       "title_en": "Lab · Quality and safety",
-      "description_vi": "Tạo rubric, golden set, adversarial set, cost log và dashboard lỗi theo loại.\n\nCheckpoint: Bạn bảo vệ được một thay đổi model bằng số liệu quality–latency–cost, không chỉ cảm nhận.",
+      "description_vi": "1. Tạo bảng tiêu chí chấm và bộ câu hỏi có đáp án chuẩn.\n2. Thêm bộ tình huống cố ý gây lỗi và nhật ký chi phí.\n3. Lập bảng theo dõi lỗi theo từng loại.\n\nTự kiểm tra: Bạn giải thích được quyết định đổi mô hình bằng số liệu về chất lượng, độ trễ và chi phí.",
       "description_en": "Create a rubric, golden set, adversarial set, cost log, and an error dashboard by category.\n\nCheckpoint: You can defend a model change with quality–latency–cost evidence rather than intuition.",
       "difficulty": "medium",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn bảo vệ được một thay đổi model bằng số liệu quality–latency–cost, không chỉ cảm nhận."
+        "Giữ cố định bộ đánh giá khi so sánh trước và sau thay đổi."
       ]
     },
     {
@@ -716,15 +716,15 @@
         "phase-06-llm-rag-adaptation-3",
         "phase-06-llm-rag-adaptation-4"
       ],
-      "title_vi": "Lab · Adaptation và agents",
+      "title_vi": "Thực hành · Điều chỉnh mô hình và tác tử AI",
       "title_en": "Lab · Adaptation and agents",
-      "description_vi": "Viết decision record so sánh RAG, prompt, fine-tune và model nhỏ theo data, cost, latency và risk.\n\nCheckpoint: Bạn không fine-tune chỉ vì prompt chưa được debug, và agent không chạy vô hạn.",
+      "description_vi": "1. Viết bản ghi quyết định so sánh RAG, chỉnh prompt, tinh chỉnh mô hình và dùng mô hình nhỏ.\n2. Đối chiếu từng lựa chọn theo dữ liệu, chi phí, độ trễ và rủi ro.\n3. Nêu giới hạn chạy cho tác tử AI.\n\nTự kiểm tra: Bạn kiểm tra lỗi trong prompt trước khi chọn tinh chỉnh mô hình và bảo đảm tác tử có điều kiện dừng.",
       "description_en": "Write a decision record comparing RAG, prompting, fine-tuning, and small models by data, cost, latency, and risk.\n\nCheckpoint: You do not fine-tune before debugging the prompt, and your agent cannot run forever.",
       "difficulty": "medium",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn không fine-tune chỉ vì prompt chưa được debug, và agent không chạy vô hạn."
+        "Ghi vấn đề mà mỗi phương án giải quyết trước khi so sánh chi phí thực hiện."
       ]
     },
     {
@@ -738,15 +738,15 @@
         "phase-07-capstone-career-problem-3",
         "phase-07-capstone-career-problem-4"
       ],
-      "title_vi": "Lab · Problem và architecture",
+      "title_vi": "Thực hành · Bài toán và kiến trúc",
       "title_en": "Lab · Problem and architecture",
-      "description_vi": "Viết problem statement một trang, user journey, non-goals, constraints và architecture diagram.\n\nCheckpoint: Reviewer hiểu bạn xây gì, cho ai và thế nào là thành công trong chưa đầy hai phút.",
+      "description_vi": "1. Viết một trang mô tả bài toán và hành trình người dùng.\n2. Nêu phần ngoài phạm vi cùng các ràng buộc.\n3. Vẽ sơ đồ kiến trúc.\n\nTự kiểm tra: Người đọc hiểu trong chưa đầy hai phút bạn xây gì, cho ai và dùng tiêu chí nào để xác định thành công.",
       "description_en": "Write a one-page problem statement, user journey, non-goals, constraints, and architecture diagram.\n\nCheckpoint: A reviewer understands what you build, for whom, and what success means in under two minutes.",
       "difficulty": "medium",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Reviewer hiểu bạn xây gì, cho ai và thế nào là thành công trong chưa đầy hai phút."
+        "Bắt đầu bằng một tình huống sử dụng cụ thể rồi lần theo dữ liệu qua các thành phần."
       ]
     },
     {
@@ -760,15 +760,15 @@
         "phase-07-capstone-career-ship-3",
         "phase-07-capstone-career-ship-4"
       ],
-      "title_vi": "Lab · Build và ship",
+      "title_vi": "Thực hành · Xây dựng và bàn giao",
       "title_en": "Lab · Build and ship",
-      "description_vi": "Ship một vertical slice chạy local, ghi test/evaluation, quay demo ngắn và mở issue cho phần chưa làm.\n\nCheckpoint: Người khác clone repo và chạy demo theo README mà không cần bạn hướng dẫn trực tiếp.",
+      "description_vi": "1. Hoàn thành một luồng chức năng từ đầu đến cuối có thể chạy trên máy cá nhân.\n2. Ghi kết quả kiểm thử, đánh giá và quay bản trình diễn ngắn.\n3. Tạo mục theo dõi cho những phần chưa làm.\n\nTự kiểm tra: Người khác lấy mã nguồn và chạy bản trình diễn theo README mà không cần bạn hướng dẫn trực tiếp.",
       "description_en": "Ship one local vertical slice, record tests/evaluation, make a short demo, and open issues for unfinished work.\n\nCheckpoint: Another person can clone the repo and run the demo from the README without your help.",
       "difficulty": "medium",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Người khác clone repo và chạy demo theo README mà không cần bạn hướng dẫn trực tiếp."
+        "Thử làm theo README từ một thư mục mới để phát hiện bước thiết lập còn thiếu."
       ]
     },
     {
@@ -782,15 +782,15 @@
         "phase-07-capstone-career-portfolio-3",
         "phase-07-capstone-career-portfolio-4"
       ],
-      "title_vi": "Lab · Portfolio",
+      "title_vi": "Thực hành · Hồ sơ dự án",
       "title_en": "Lab · Portfolio",
-      "description_vi": "Chuẩn hóa README theo problem→data→model→evaluation→deployment→limitations và link evidence.\n\nCheckpoint: Mỗi project có một đóng góp riêng, metric rõ và một trade-off bạn sẵn sàng bảo vệ.",
+      "description_vi": "1. Sắp xếp README theo thứ tự: bài toán, dữ liệu, mô hình, đánh giá, triển khai và giới hạn.\n2. Gắn liên kết tới bài làm, báo cáo hoặc kết quả kiểm thử để minh chứng.\n3. Nêu đóng góp riêng của từng dự án.\n\nTự kiểm tra: Mỗi dự án có đóng góp cụ thể, chỉ số rõ ràng và một sự đánh đổi mà bạn giải thích được.",
       "description_en": "Standardize the README around problem→data→model→evaluation→deployment→limitations and link evidence.\n\nCheckpoint: Each project has a distinct contribution, clear metrics, and a trade-off you can defend.",
       "difficulty": "medium",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Mỗi project có một đóng góp riêng, metric rõ và một trade-off bạn sẵn sàng bảo vệ."
+        "Đặt kết quả đo cạnh nhận định tương ứng để người đọc kiểm chứng dễ hơn."
       ]
     },
     {
@@ -804,15 +804,15 @@
         "phase-07-capstone-career-career-3",
         "phase-07-capstone-career-career-4"
       ],
-      "title_vi": "Lab · Career readiness",
+      "title_vi": "Thực hành · Chuẩn bị ứng tuyển",
       "title_en": "Lab · Career readiness",
-      "description_vi": "Luyện giới thiệu project 90 giây, viết STAR story cho một bug và thiết kế một hệ thống inference.\n\nCheckpoint: Bạn nói được mình đã quyết định gì, đo gì, sai ở đâu và học được gì từ mỗi project.",
+      "description_vi": "1. Luyện giới thiệu dự án trong 90 giây.\n2. Kể lại một lần xử lý lỗi theo STAR: tình huống, nhiệm vụ, hành động và kết quả.\n3. Thiết kế một hệ thống phục vụ dự đoán.\n\nTự kiểm tra: Với mỗi dự án, bạn nói được mình đã quyết định gì, đo gì, sai ở đâu và học được gì.",
       "description_en": "Practice a 90-second project pitch, write a STAR story for a bug, and design an inference system.\n\nCheckpoint: You can explain your decisions, measurements, failures, and lessons from every project.",
       "difficulty": "medium",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn nói được mình đã quyết định gì, đo gì, sai ở đâu và học được gì từ mỗi project."
+        "Chọn một quyết định do chính bạn đưa ra và dùng số liệu để giải thích kết quả."
       ]
     },
     {
@@ -826,15 +826,15 @@
         "phase-08-genai-software-genai-software-foundations-3",
         "phase-08-genai-software-genai-software-foundations-4"
       ],
-      "title_vi": "Lab · GenAI software foundations",
+      "title_vi": "Thực hành · Nền tảng phần mềm cho AI tạo sinh",
       "title_en": "Lab · GenAI software foundations",
-      "description_vi": "Đóng gói một endpoint AI giả lập bằng FastAPI, Docker và GitHub Actions; ghi lại contract, health check và lệnh rollback.\n\nCheckpoint: Clone trên máy sạch, chạy test và container bằng một chuỗi lệnh; giải thích được lỗi thuộc code, môi trường hay deployment.",
+      "description_vi": "1. Đóng gói một điểm cuối API AI giả lập bằng FastAPI, Docker và GitHub Actions.\n2. Ghi quy định đầu vào, đầu ra và cách kiểm tra tình trạng dịch vụ.\n3. Lưu lệnh khôi phục phiên bản trước.\n\nTự kiểm tra: Bạn lấy mã nguồn trên máy mới, chạy kiểm thử và container theo các lệnh đã ghi, rồi phân biệt được lỗi mã nguồn, môi trường và triển khai.",
       "description_en": "Package a stub AI endpoint with FastAPI, Docker, and GitHub Actions; document its contract, health check, and rollback command.\n\nCheckpoint: From a clean clone, run tests and the container with one command sequence and distinguish code, environment, and deployment failures.",
       "difficulty": "hard",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Clone trên máy sạch, chạy test và container bằng một chuỗi lệnh; giải thích được lỗi thuộc code, môi trường hay deployment."
+        "Kiểm tra riêng yêu cầu đầu vào, tình trạng dịch vụ và cách khởi động container."
       ]
     },
     {
@@ -848,15 +848,15 @@
         "phase-09-genai-ml-fundamentals-genai-ml-fundamentals-3",
         "phase-09-genai-ml-fundamentals-genai-ml-fundamentals-4"
       ],
-      "title_vi": "Lab · GenAI ML fundamentals",
+      "title_vi": "Thực hành · Nền tảng học máy cho AI tạo sinh",
       "title_en": "Lab · GenAI ML fundamentals",
-      "description_vi": "Tạo một embedding benchmark nhỏ: split dữ liệu, đo cosine similarity, kiểm tra leakage và vẽ loss curve.\n\nCheckpoint: Bạn giải thích được một similarity score, một split hợp lệ và cách overfitting làm kết quả retrieval kém đi.",
+      "description_vi": "1. Tạo một bài đo nhỏ cho embedding và chia dữ liệu thành các tập phù hợp.\n2. Đo độ tương đồng cosine và kiểm tra nguy cơ rò rỉ dữ liệu.\n3. Vẽ đường cong mất mát.\n\nTự kiểm tra: Bạn giải thích được điểm tương đồng, cách chia dữ liệu hợp lệ và tác động của quá khớp đến chất lượng truy xuất.",
       "description_en": "Build a small embedding benchmark: split data, measure cosine similarity, check leakage, and plot a loss curve.\n\nCheckpoint: You can explain a similarity score, a valid split, and how overfitting degrades retrieval.",
       "difficulty": "hard",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn giải thích được một similarity score, một split hợp lệ và cách overfitting làm kết quả retrieval kém đi."
+        "Kiểm tra mẫu trùng giữa các tập trước khi diễn giải kết quả."
       ]
     },
     {
@@ -870,15 +870,15 @@
         "phase-10-genai-transformers-genai-transformers-3",
         "phase-10-genai-transformers-genai-transformers-4"
       ],
-      "title_vi": "Lab · Deep learning and Transformers",
+      "title_vi": "Thực hành · Học sâu và Transformer",
       "title_en": "Lab · Deep learning and Transformers",
-      "description_vi": "Tự viết attention tối giản bằng PyTorch/NumPy, đo shape và so sánh inference có/không có cache.\n\nCheckpoint: Bạn vẽ được luồng Q/K/V, giải thích encoder/decoder và định lượng vì sao KV cache giảm latency.",
+      "description_vi": "1. Tự viết cơ chế attention tối giản bằng PyTorch hoặc NumPy.\n2. Ghi kích thước tensor ở từng bước.\n3. So sánh thời gian suy luận khi có và không có bộ nhớ đệm.\n\nTự kiểm tra: Bạn vẽ được luồng Q/K/V, giải thích vai trò encoder/decoder và đo được mức giảm độ trễ nhờ KV cache.",
       "description_en": "Implement minimal attention with PyTorch/NumPy, inspect shapes, and compare inference with and without caching.\n\nCheckpoint: You can draw the Q/K/V flow, explain encoder/decoder roles, and quantify why KV cache reduces latency.",
       "difficulty": "hard",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn vẽ được luồng Q/K/V, giải thích encoder/decoder và định lượng vì sao KV cache giảm latency."
+        "Giữ nguyên dữ liệu đầu vào và cách đo khi so sánh hai chế độ dùng bộ nhớ đệm."
       ]
     },
     {
@@ -892,15 +892,15 @@
         "phase-11-llm-application-llm-application-3",
         "phase-11-llm-application-llm-application-4"
       ],
-      "title_vi": "Lab · LLM application contracts",
+      "title_vi": "Thực hành · Quy định đầu vào và đầu ra cho ứng dụng LLM",
       "title_en": "Lab · LLM application contracts",
-      "description_vi": "Xây LLM Chat API có schema request/response, streaming giả lập, retry có backoff và token budget.\n\nCheckpoint: Một client khác có thể gọi API mà không biết prompt nội bộ; output sai schema và rate limit đều có test riêng.",
+      "description_vi": "1. Xây API trò chuyện với LLM có cấu trúc yêu cầu và phản hồi rõ ràng.\n2. Giả lập truyền kết quả từng phần và cơ chế thử lại với thời gian chờ tăng dần.\n3. Đặt giới hạn token và viết kiểm thử.\n\nTự kiểm tra: Ứng dụng khác gọi được API mà không cần biết prompt nội bộ; đầu ra sai cấu trúc và giới hạn tần suất đều có kiểm thử riêng.",
       "description_en": "Build an LLM Chat API with request/response schemas, simulated streaming, backoff retries, and a token budget.\n\nCheckpoint: Another client can call the API without knowing internal prompts, and schema failures plus rate limits have dedicated tests.",
       "difficulty": "hard",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Một client khác có thể gọi API mà không biết prompt nội bộ; output sai schema và rate limit đều có test riêng."
+        "Tách kiểm thử cấu trúc phản hồi khỏi kiểm thử cơ chế thử lại."
       ]
     },
     {
@@ -914,15 +914,15 @@
         "phase-12-genai-rag-rag-foundations-3",
         "phase-12-genai-rag-rag-foundations-4"
       ],
-      "title_vi": "Lab · RAG foundations",
+      "title_vi": "Thực hành · Nền tảng RAG",
       "title_en": "Lab · RAG foundations",
-      "description_vi": "Xây ingestion pipeline cho tài liệu tiếng Việt, lưu metadata, benchmark top-k và trả lời kèm các chunk evidence.\n\nCheckpoint: Bạn chỉ ra được lỗi do parsing, chunking, retrieval hay generation bằng một evaluation case cụ thể.",
+      "description_vi": "1. Xây quy trình tiếp nhận tài liệu tiếng Việt và lưu thông tin mô tả tài liệu.\n2. Đo chất lượng truy xuất top-k.\n3. Trả lời kèm các đoạn tài liệu làm căn cứ.\n\nTự kiểm tra: Qua một trường hợp đánh giá cụ thể, bạn chỉ ra được lỗi thuộc bước đọc tài liệu, chia đoạn, truy xuất hay sinh câu trả lời.",
       "description_en": "Build an ingestion pipeline for Vietnamese documents, preserve metadata, benchmark top-k, and answer with evidence chunks.\n\nCheckpoint: You can attribute a failure to parsing, chunking, retrieval, or generation with a concrete evaluation case.",
       "difficulty": "hard",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn chỉ ra được lỗi do parsing, chunking, retrieval hay generation bằng một evaluation case cụ thể."
+        "Lưu kết quả trung gian của từng bước để truy ngược nguồn gốc lỗi."
       ]
     },
     {
@@ -936,15 +936,15 @@
         "phase-13-genai-advanced-rag-advanced-rag-3",
         "phase-13-genai-advanced-rag-advanced-rag-4"
       ],
-      "title_vi": "Lab · Advanced retrieval",
+      "title_vi": "Thực hành · Truy xuất nâng cao",
       "title_en": "Lab · Advanced retrieval",
-      "description_vi": "Tạo evaluation set 30 câu, so sánh vector/BM25/hybrid, thêm reranker và phân tích failure theo query type.\n\nCheckpoint: Bạn biết retrieval fail ở recall hay ranking, citation có đủ evidence không và thay đổi nào đáng giữ.",
+      "description_vi": "1. Tạo bộ đánh giá gồm 30 câu hỏi rồi so sánh tìm kiếm vector, BM25 và tìm kiếm kết hợp.\n2. Thêm mô hình xếp hạng lại kết quả.\n3. Phân tích lỗi theo loại truy vấn.\n\nTự kiểm tra: Bạn xác định được lỗi nằm ở khả năng tìm đủ tài liệu hay thứ tự xếp hạng, kiểm tra được căn cứ của trích dẫn và chọn được thay đổi nên giữ.",
       "description_en": "Create a 30-question evaluation set, compare vector/BM25/hybrid retrieval, add a reranker, and slice failures by query type.\n\nCheckpoint: You can tell whether retrieval failed on recall or ranking, whether citations support claims, and which change is worth keeping.",
       "difficulty": "hard",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn biết retrieval fail ở recall hay ranking, citation có đủ evidence không và thay đổi nào đáng giữ."
+        "So sánh danh sách ứng viên trước và sau bước xếp hạng lại."
       ]
     },
     {
@@ -958,15 +958,15 @@
         "phase-14-genai-tool-calling-tool-calling-3",
         "phase-14-genai-tool-calling-tool-calling-4"
       ],
-      "title_vi": "Lab · Tool calling contracts",
+      "title_vi": "Thực hành · Quy định gọi công cụ",
       "title_en": "Lab · Tool calling contracts",
-      "description_vi": "Xây tool đọc database giả lập với schema validation, timeout, retry có giới hạn và audit log không chứa secret.\n\nCheckpoint: Tool sai input không thể chạy side effect; retry không nhân đôi giao dịch và lỗi được trả về có thể sửa.",
+      "description_vi": "1. Xây công cụ đọc cơ sở dữ liệu giả lập có kiểm tra cấu trúc đầu vào.\n2. Đặt thời gian chờ và giới hạn số lần thử lại.\n3. Ghi nhật ký kiểm tra không chứa thông tin bí mật.\n\nTự kiểm tra: Đầu vào sai bị chặn trước khi công cụ gây thay đổi dữ liệu; việc thử lại không nhân đôi giao dịch và thông báo lỗi đủ rõ để sửa.",
       "description_en": "Build a mock database tool with schema validation, bounded retries, timeouts, and an audit log without secrets.\n\nCheckpoint: Invalid tool input cannot cause side effects, retries do not duplicate transactions, and errors are actionable.",
       "difficulty": "hard",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Tool sai input không thể chạy side effect; retry không nhân đôi giao dịch và lỗi được trả về có thể sửa."
+        "Kiểm tra đầu vào trước khi thực hiện thao tác và dùng cùng mã yêu cầu khi kiểm tra trường hợp thử lại."
       ]
     },
     {
@@ -980,15 +980,15 @@
         "phase-15-genai-agents-ai-agents-3",
         "phase-15-genai-agents-ai-agents-4"
       ],
-      "title_vi": "Lab · Agent loops and guardrails",
+      "title_vi": "Thực hành · Vòng lặp và giới hạn của tác tử AI",
       "title_en": "Lab · Agent loops and guardrails",
-      "description_vi": "Xây research agent tối giản có max steps, tool allowlist, memory state và bước phê duyệt trước side effect.\n\nCheckpoint: Agent dừng đúng khi đạt mục tiêu hoặc gặp guardrail; mọi tool call có lý do, input và output để review.",
+      "description_vi": "1. Xây tác tử nghiên cứu tối giản với giới hạn số bước và danh sách công cụ được phép dùng.\n2. Lưu trạng thái làm việc của tác tử.\n3. Thêm bước phê duyệt trước thao tác gây thay đổi bên ngoài.\n\nTự kiểm tra: Tác tử dừng khi đạt mục tiêu hoặc chạm giới hạn; mỗi lần gọi công cụ đều lưu lý do, đầu vào và đầu ra để kiểm tra.",
       "description_en": "Build a minimal research agent with max steps, a tool allowlist, memory state, and approval before side effects.\n\nCheckpoint: The agent stops when it reaches the goal or a guardrail, and every tool call has reviewable intent, input, and output.",
       "difficulty": "hard",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Agent dừng đúng khi đạt mục tiêu hoặc gặp guardrail; mọi tool call có lý do, input và output để review."
+        "Thử tình huống công cụ liên tục trả lỗi để kiểm tra điều kiện dừng."
       ]
     },
     {
@@ -1002,15 +1002,15 @@
         "phase-16-genai-mcp-mcp-3",
         "phase-16-genai-mcp-mcp-4"
       ],
-      "title_vi": "Lab · MCP architecture",
+      "title_vi": "Thực hành · Kiến trúc MCP",
       "title_en": "Lab · MCP architecture",
-      "description_vi": "Viết MCP server local cung cấp một resource và một tool read-only, kiểm tra schema và quyền truy cập.\n\nCheckpoint: Bạn vẽ được flow client/server, phân biệt tool với resource/prompt và nêu được threat model tối thiểu.",
+      "description_vi": "1. Viết máy chủ MCP chạy trên máy cá nhân.\n2. Cung cấp một tài nguyên và một công cụ chỉ đọc.\n3. Kiểm tra cấu trúc dữ liệu và quyền truy cập.\n\nTự kiểm tra: Bạn vẽ được luồng trao đổi giữa máy khách và máy chủ, phân biệt tool, resource, prompt và nêu được các mối đe dọa cơ bản.",
       "description_en": "Write a local MCP server exposing one resource and one read-only tool, then test schemas and access control.\n\nCheckpoint: You can draw the client/server flow, distinguish tools from resources/prompts, and state a minimum threat model.",
       "difficulty": "hard",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn vẽ được flow client/server, phân biệt tool với resource/prompt và nêu được threat model tối thiểu."
+        "Liệt kê dữ liệu mà công cụ được phép đọc rồi kiểm thử yêu cầu nằm ngoài phạm vi đó."
       ]
     },
     {
@@ -1024,15 +1024,15 @@
         "phase-17-genai-evaluation-genai-evaluation-3",
         "phase-17-genai-evaluation-genai-evaluation-4"
       ],
-      "title_vi": "Lab · GenAI evaluation",
+      "title_vi": "Thực hành · Đánh giá AI tạo sinh",
       "title_en": "Lab · GenAI evaluation",
-      "description_vi": "Tạo golden set, rubric và regression suite cho RAG/agent; lưu cả lỗi và chi phí mỗi run.\n\nCheckpoint: Bạn biết metric nào đo retrieval, metric nào đo grounded answer và khi nào human review bắt buộc.",
+      "description_vi": "1. Tạo bộ câu hỏi có đáp án chuẩn và bảng tiêu chí chấm.\n2. Xây bộ kiểm thử hồi quy cho RAG hoặc tác tử AI.\n3. Lưu lỗi và chi phí của từng lần chạy.\n\nTự kiểm tra: Bạn phân biệt được chỉ số đo truy xuất với chỉ số đo mức độ có căn cứ của câu trả lời, đồng thời biết khi nào cần người đánh giá.",
       "description_en": "Create a golden set, rubric, and regression suite for RAG/agents, recording failures and cost for every run.\n\nCheckpoint: You can identify retrieval metrics, grounded-answer metrics, and when human review is required.",
       "difficulty": "hard",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn biết metric nào đo retrieval, metric nào đo grounded answer và khi nào human review bắt buộc."
+        "Lưu câu trả lời, nguồn trích dẫn và điểm chấm cùng nhau để có thể kiểm tra lại."
       ]
     },
     {
@@ -1046,15 +1046,15 @@
         "phase-18-genai-observability-genai-observability-3",
         "phase-18-genai-observability-genai-observability-4"
       ],
-      "title_vi": "Lab · AI observability",
+      "title_vi": "Thực hành · Theo dõi hoạt động ứng dụng AI",
       "title_en": "Lab · AI observability",
-      "description_vi": "Instrument một request end-to-end với trace id, token/cost fields, p50/p95 latency và alert budget.\n\nCheckpoint: Từ một trace bạn tìm được nguyên nhân của latency/cost spike mà không log prompt nhạy cảm.",
+      "description_vi": "1. Theo dõi một yêu cầu từ đầu đến cuối bằng mã truy vết.\n2. Ghi số token, chi phí và độ trễ p50/p95.\n3. Đặt cảnh báo khi chi phí chạm ngưỡng ngân sách.\n\nTự kiểm tra: Từ bản ghi truy vết, bạn tìm được nguyên nhân độ trễ hoặc chi phí tăng đột biến mà không ghi prompt nhạy cảm vào nhật ký.",
       "description_en": "Instrument an end-to-end request with a trace ID, token/cost fields, p50/p95 latency, and a budget alert.\n\nCheckpoint: From one trace you can identify a latency or cost spike without logging sensitive prompts.",
       "difficulty": "hard",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Từ một trace bạn tìm được nguyên nhân của latency/cost spike mà không log prompt nhạy cảm."
+        "Dùng cùng mã truy vết ở các bước xử lý để nối được toàn bộ đường đi của yêu cầu."
       ]
     },
     {
@@ -1068,15 +1068,15 @@
         "phase-19-genai-production-genai-production-3",
         "phase-19-genai-production-genai-production-4"
       ],
-      "title_vi": "Lab · Production GenAI systems",
+      "title_vi": "Thực hành · Vận hành hệ thống AI tạo sinh",
       "title_en": "Lab · Production GenAI systems",
-      "description_vi": "Thiết kế service có cache policy, provider fallback, queue worker và load test đơn giản với SLO rõ ràng.\n\nCheckpoint: Bạn giải thích được trade-off consistency, latency, cost và availability bằng số liệu đo được.",
+      "description_vi": "1. Thiết kế dịch vụ có chính sách bộ nhớ đệm và phương án dự phòng khi nhà cung cấp lỗi.\n2. Thêm hàng đợi cùng tiến trình xử lý tác vụ.\n3. Chạy kiểm thử tải đơn giản với mục tiêu mức dịch vụ (SLO) rõ ràng.\n\nTự kiểm tra: Bạn dùng số liệu đo để giải thích sự đánh đổi giữa tính nhất quán, độ trễ, chi phí và khả năng sẵn sàng.",
       "description_en": "Design a service with a cache policy, provider fallback, queue worker, and a small load test with explicit SLOs.\n\nCheckpoint: You can explain consistency, latency, cost, and availability trade-offs with measured evidence.",
       "difficulty": "hard",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn giải thích được trade-off consistency, latency, cost và availability bằng số liệu đo được."
+        "Ghi điều kiện tải và tình huống nhà cung cấp lỗi khi đánh giá phương án dự phòng."
       ]
     },
     {
@@ -1090,15 +1090,15 @@
         "phase-20-genai-finetuning-fine-tuning-3",
         "phase-20-genai-finetuning-fine-tuning-4"
       ],
-      "title_vi": "Lab · Fine-tuning decisions",
+      "title_vi": "Thực hành · Quyết định tinh chỉnh mô hình",
       "title_en": "Lab · Fine-tuning decisions",
-      "description_vi": "Chuẩn bị dataset có split và license rõ ràng, chạy LoRA nhỏ, so sánh baseline và đo memory/quality.\n\nCheckpoint: Bạn bảo vệ được quyết định fine-tune hay không bằng quality, cost, data volume và maintenance risk.",
+      "description_vi": "1. Chuẩn bị tập dữ liệu có cách chia và giấy phép sử dụng rõ ràng.\n2. Chạy một thử nghiệm LoRA nhỏ.\n3. So sánh với mô hình ban đầu và đo chất lượng cùng lượng bộ nhớ dùng.\n\nTự kiểm tra: Bạn giải thích được quyết định có tinh chỉnh hay không dựa trên chất lượng, chi phí, lượng dữ liệu và rủi ro bảo trì.",
       "description_en": "Prepare a dataset with explicit splits and licensing, run a small LoRA experiment, and compare memory and quality to baseline.\n\nCheckpoint: You can defend whether to fine-tune using quality, cost, data volume, and maintenance risk.",
       "difficulty": "hard",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn bảo vệ được quyết định fine-tune hay không bằng quality, cost, data volume và maintenance risk."
+        "Dùng cùng bộ đánh giá trước và sau tinh chỉnh để kết quả có thể so sánh."
       ]
     },
     {
@@ -1112,15 +1112,15 @@
         "phase-21-genai-local-llm-local-llm-3",
         "phase-21-genai-local-llm-local-llm-4"
       ],
-      "title_vi": "Lab · Local LLM serving",
+      "title_vi": "Thực hành · Chạy LLM trên máy cá nhân",
       "title_en": "Lab · Local LLM serving",
-      "description_vi": "Chạy một model nhỏ local, đo cold/warm latency, tokens/sec, VRAM và so sánh quantized với full precision.\n\nCheckpoint: Bạn chọn được runtime theo hardware, workload và privacy requirement thay vì chọn theo trend.",
+      "description_vi": "1. Chạy một mô hình nhỏ trên máy cá nhân.\n2. Đo độ trễ lúc khởi động và sau khi đã nạp mô hình, số token mỗi giây cùng lượng VRAM dùng.\n3. So sánh bản lượng tử hóa với bản dùng độ chính xác đầy đủ.\n\nTự kiểm tra: Bạn chọn được môi trường chạy theo phần cứng, khối lượng công việc và yêu cầu riêng tư.",
       "description_en": "Run a small local model, measure cold/warm latency, tokens/sec, VRAM, and compare quantized with full precision.\n\nCheckpoint: You can choose a runtime from hardware, workload, and privacy requirements rather than hype.",
       "difficulty": "hard",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Bạn chọn được runtime theo hardware, workload và privacy requirement thay vì chọn theo trend."
+        "Ghi cấu hình phần cứng, phiên bản mô hình và bộ prompt dùng trong mỗi lần đo."
       ]
     },
     {
@@ -1134,15 +1134,15 @@
         "phase-22-genai-system-design-genai-system-design-3",
         "phase-22-genai-system-design-genai-system-design-4"
       ],
-      "title_vi": "Lab · AI system design",
+      "title_vi": "Thực hành · Thiết kế hệ thống AI",
       "title_en": "Lab · AI system design",
-      "description_vi": "Viết design doc cho Production GenAI System, có data flow, SLO, threat model, cost estimate và rollout plan.\n\nCheckpoint: Reviewer có thể lần theo từng quyết định, failure mode, metric và kế hoạch rollback trong design doc.",
+      "description_vi": "1. Viết tài liệu thiết kế cho hệ thống AI tạo sinh vận hành thực tế.\n2. Mô tả luồng dữ liệu, mục tiêu mức dịch vụ (SLO) và các mối đe dọa.\n3. Ước tính chi phí và lập kế hoạch triển khai theo từng bước.\n\nTự kiểm tra: Người đọc lần theo được các quyết định, tình huống lỗi, chỉ số theo dõi và kế hoạch khôi phục phiên bản trước trong tài liệu.",
       "description_en": "Write a design document for a Production GenAI System with data flow, SLOs, threat model, cost estimate, and rollout plan.\n\nCheckpoint: A reviewer can trace every decision, failure mode, metric, and rollback plan in the design document.",
       "difficulty": "hard",
       "estimated_minutes": 100,
-      "test_command": "Dùng source clone hoặc portable app để mở workspace và chạy test local.",
+      "test_command": "Dùng bản sao mã nguồn hoặc ứng dụng chạy trực tiếp để mở thư mục bài tập và chạy kiểm thử trên máy cá nhân.",
       "hints": [
-        "Reviewer có thể lần theo từng quyết định, failure mode, metric và kế hoạch rollback trong design doc."
+        "Với mỗi thành phần, nêu cách phát hiện lỗi và cách hệ thống tiếp tục hoặc dừng an toàn."
       ]
     }
   ]

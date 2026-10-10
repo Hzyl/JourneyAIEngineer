@@ -1,0 +1,48 @@
+.flow-art {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 16px;
+  background: #f7f3ec;
+}
+
+.flow-art--section {
+  width: min(100%, 24rem);
+  margin-block: 1rem 1.5rem;
+}
+
+.flow-art--hero {
+  width: min(100%, 30rem);
+  margin-block: 0 1.5rem;
+}
+
+.flow-art--thumbnail {
+  width: 6rem;
+  flex: 0 0 auto;
+  margin-block: .5rem;
+}
+
+.phase-header .flow-art {
+  margin-inline-end: .75rem;
+}
+
+.phase-header h3 {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.today-rhythm > .flow-art {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 480px) {
+  .phase-header {
+    flex-wrap: wrap;
+  }
+
+  .phase-header h3 {
+    flex-basis: 100%;
+  }
+}

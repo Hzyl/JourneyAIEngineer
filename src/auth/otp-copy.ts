@@ -9,7 +9,7 @@ export const otpCopy = {
     resend: 'Gửi lại mã', sending: 'Đang gửi…', wait: (seconds: number) => `Gửi lại sau ${seconds}s`,
     sent: 'Nếu địa chỉ này cần xác nhận, mã mới đã được gửi. Hãy kiểm tra cả thư rác.',
     changeEmail: 'Sửa địa chỉ email', back: 'Quay về đăng nhập',
-    help: 'Chưa thấy thư? Kiểm tra địa chỉ email và mục Spam. Tìm thư có tên Journey AI Engineer.',
+    help: 'Chưa thấy thư? Kiểm tra địa chỉ email và mục thư rác. Tìm thư có tên Journey AI Engineer.',
     validation: 'Nhập mã bằng số trong email xác nhận.',
     invalid: 'Mã không đúng hoặc đã hết hạn. Kiểm tra lại mã hoặc yêu cầu gửi mã mới.',
     rateLimit: 'Bạn đã thử quá nhiều lần. Hãy chờ ít phút rồi thử lại.',

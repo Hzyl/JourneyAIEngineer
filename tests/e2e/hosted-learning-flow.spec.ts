@@ -12,7 +12,7 @@ test('guest reads a lesson before the account boundary and never calls local Fas
   await expect(page.getByRole('button', { name: 'Đăng nhập để lưu' })).toBeVisible()
   await page.getByRole('button', { name: 'Đăng nhập để lưu' }).click()
   await expect(page.getByRole('heading', { name: 'Chào mừng bạn trở lại' })).toBeVisible()
-  await expect(page.getByText('Workspace, VS Code và Git vẫn dành cho bản desktop/source clone.')).toBeVisible()
+  await expect(page.getByText('Để mở thư mục bài tập bằng VS Code và dùng Git, bạn cần bản chạy trên máy hoặc bản sao mã nguồn.')).toBeVisible()
   await expect(page.getByLabel('Email')).toBeVisible()
   await expect(page.getByRole('button', { name: 'Tạo tài khoản miễn phí →' })).toBeVisible()
   await page.getByRole('button', { name: 'Tạo tài khoản', exact: true }).click()

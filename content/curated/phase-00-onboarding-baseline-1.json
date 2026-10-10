@@ -4,12 +4,12 @@
   "module_id": "baseline",
   "title_vi": "Bài kiểm tra Python cơ bản",
   "title_en": "Python baseline assessment",
-  "summary_vi": "Tự viết một hàm tính trung bình, xử lý danh sách rỗng và giải thích test.",
+  "summary_vi": "Tự viết một hàm tính trung bình, xử lý danh sách rỗng và giải thích kiểm thử.",
   "summary_en": "Write a mean function, handle an empty list and explain its tests.",
   "learning_objectives": [
     "Viết hàm có tham số và return.",
     "Phân biệt [] với [0].",
-    "Chạy ít nhất ba test và giải thích kết quả."
+    "Chạy ít nhất ba kiểm thử và giải thích kết quả."
   ],
   "learning_objectives_en": [
     "Write a function with a parameter and a return value.",
@@ -25,15 +25,15 @@
     "assert",
     "empty input"
   ],
-  "concept_notes_vi": "Bài đánh giá đầu vào tìm lỗ hổng để chọn bài luyện tiếp, không đánh giá khả năng tuyển dụng. Thử tự làm trước khi đọc ví dụ.\nHàm nên trả giá trị thay vì chỉ print để dễ test và tái sử dụng. Với danh sách rỗng, định nghĩa rõ trả None; với dữ liệu số, dùng sum và len để tính trung bình. Một test bình thường chưa bao phủ trường hợp rỗng hoặc số 0.",
+  "concept_notes_vi": "Bài đánh giá đầu vào tìm lỗ hổng để chọn bài luyện tiếp, không đánh giá khả năng tuyển dụng. Thử tự làm trước khi đọc ví dụ.\nHàm nên trả giá trị thay vì chỉ print để dễ kiểm thử và tái sử dụng. Với danh sách rỗng, định nghĩa rõ trả None; với dữ liệu số, dùng sum và len để tính trung bình. Một kiểm thử bình thường chưa bao phủ trường hợp rỗng hoặc số 0.",
   "concept_notes_en": "This baseline locates gaps for further practice; it does not measure employability. Try the task before reading the example.\nA function should return a value instead of only printing so it can be tested and reused. Define an empty list to return None. For numeric data, sum and len produce the mean. One normal test does not cover empty input or zero.",
   "why_it_matters_vi": "Bài đánh giá đầu vào tìm lỗ hổng để chọn bài luyện tiếp, không đánh giá khả năng tuyển dụng. Thử tự làm trước khi đọc ví dụ.",
   "why_it_matters_en": "This baseline locates gaps for further practice; it does not measure employability. Try the task before reading the example.",
   "study_steps_vi": [
-    "Dành 10 phút tự viết mean_score trước khi đọc code mẫu.",
-    "Ghi output dự đoán cho [60, 80, 100], [], [0].",
-    "Chạy hàm với assert; phân biệt lỗi cú pháp, exception và kết quả sai.",
-    "Lưu baseline.py và một note chỉ rõ phần tự làm/phần cần gợi ý. Web: tải hoặc chép code sang môi trường riêng."
+    "Dành 10 phút tự viết mean_score trước khi đọc mã mẫu.",
+    "Ghi đầu ra dự đoán cho [60, 80, 100], [], [0].",
+    "Chạy hàm với assert; phân biệt lỗi cú pháp, ngoại lệ và kết quả sai.",
+    "Lưu baseline.py và một ghi chú chỉ rõ phần tự làm/phần cần gợi ý. Web: tải hoặc chép mã sang môi trường riêng."
   ],
   "study_steps_en": [
     "Spend ten minutes writing mean_score before reading the example.",
@@ -43,13 +43,13 @@
   ],
   "practice_plan": {
     "vi": {
-      "task": "Lưu baseline.py và một note chỉ rõ phần tự làm/phần cần gợi ý. Web: tải hoặc chép code sang môi trường riêng.",
+      "task": "Tự viết hàm tính trung bình và kiểm tra riêng danh sách rỗng, số 0, dữ liệu thông thường. Lưu baseline.py và một ghi chú chỉ rõ phần tự làm/phần cần gợi ý. Web: tải hoặc chép mã sang môi trường riêng.",
       "deliverables": [
-        "Viết hàm có tham số và return.",
-        "Phân biệt [] với [0].",
-        "Chạy ít nhất ba test và giải thích kết quả."
+        "Hàm có tham số và giá trị trả về",
+        "Kết quả riêng cho [] và [0]",
+        "Ít nhất ba kiểm thử kèm lời giải thích"
       ],
-      "checkpoint": "Chạy ít nhất ba test và giải thích kết quả.",
+      "checkpoint": "Chạy ít nhất ba kiểm thử và giải thích kết quả.",
       "stretch": "Hàm print(80) nhưng assert thất bại: tại sao?"
     },
     "en": {
@@ -65,9 +65,9 @@
   },
   "interview_questions": {
     "vi": [
-      "Thêm test nào phát hiện hàm luôn trả 80?",
+      "Thêm kiểm thử nào phát hiện hàm luôn trả 80?",
       "Hàm print(80) nhưng assert thất bại: tại sao?",
-      "Một bài baseline thất bại nói lên điều gì?"
+      "Chưa làm được bài đánh giá đầu vào cho bạn biết điều gì?"
     ],
     "en": [
       "Which test catches a function that always returns 80?",
@@ -82,13 +82,13 @@
       "title": "Python baseline assessment",
       "code": "def mean_score(scores):\n    if not scores:\n        return None\n    return sum(scores) / len(scores)\n\nassert mean_score([60, 80, 100]) == 80\nassert mean_score([]) is None\nassert mean_score([0]) == 0\nprint('3 checks passed')",
       "status": "runnable",
-      "purpose_vi": "Tự viết một hàm tính trung bình, xử lý danh sách rỗng và giải thích test.",
+      "purpose_vi": "Tự viết một hàm tính trung bình, xử lý danh sách rỗng và giải thích kiểm thử.",
       "purpose_en": "Write a mean function, handle an empty list and explain its tests.",
       "setup": "Python 3.11+; chạy trong terminal hoặc notebook của bạn. Web chỉ hiển thị ví dụ.",
       "expected_output": "3 checks passed",
       "edge_case_vi": "Chia cho len(scores) khi scores=[] gây ZeroDivisionError.",
       "edge_case_en": "Dividing by len(scores) for [] raises ZeroDivisionError.",
-      "explanation_vi": "Bài đánh giá đầu vào tìm lỗ hổng để chọn bài luyện tiếp, không đánh giá khả năng tuyển dụng. Thử tự làm trước khi đọc ví dụ.\nHàm nên trả giá trị thay vì chỉ print để dễ test và tái sử dụng. Với danh sách rỗng, định nghĩa rõ trả None; với dữ liệu số, dùng sum và len để tính trung bình. Một test bình thường chưa bao phủ trường hợp rỗng hoặc số 0.",
+      "explanation_vi": "Bài đánh giá đầu vào tìm lỗ hổng để chọn bài luyện tiếp, không đánh giá khả năng tuyển dụng. Thử tự làm trước khi đọc ví dụ.\nHàm nên trả giá trị thay vì chỉ print để dễ kiểm thử và tái sử dụng. Với danh sách rỗng, định nghĩa rõ trả None; với dữ liệu số, dùng sum và len để tính trung bình. Một kiểm thử bình thường chưa bao phủ trường hợp rỗng hoặc số 0.",
       "explanation_en": "This baseline locates gaps for further practice; it does not measure employability. Try the task before reading the example.\nA function should return a value instead of only printing so it can be tested and reused. Define an empty list to return None. For numeric data, sum and len produce the mean. One normal test does not cover empty input or zero."
     }
   ],
@@ -110,9 +110,9 @@
       "language": "vi",
       "kind": "in_app",
       "required": true,
-      "purpose_vi": "Lưu baseline.py và một note chỉ rõ phần tự làm/phần cần gợi ý. Web: tải hoặc chép code sang môi trường riêng.",
+      "purpose_vi": "Lưu baseline.py và một ghi chú chỉ rõ phần tự làm/phần cần gợi ý. Web: tải hoặc chép mã sang môi trường riêng.",
       "purpose_en": "Save baseline.py and note which parts were independent or needed a hint. On the web, copy or download code to your own environment.",
-      "read_vi": "Chạy ít nhất ba test và giải thích kết quả.",
+      "read_vi": "Chạy ít nhất ba kiểm thử và giải thích kết quả.",
       "read_en": "Run at least three tests and explain the results."
     }
   ],
@@ -129,13 +129,13 @@
   "completion_checklist": [
     "Viết hàm có tham số và return.",
     "Phân biệt [] với [0].",
-    "Chạy ít nhất ba test và giải thích kết quả.",
+    "Chạy ít nhất ba kiểm thử và giải thích kết quả.",
     "Lưu kết quả thực hành và một lỗi đã hiểu."
   ],
   "completion_criteria": [
     "Viết hàm có tham số và return.",
     "Phân biệt [] với [0].",
-    "Chạy ít nhất ba test và giải thích kết quả."
+    "Chạy ít nhất ba kiểm thử và giải thích kết quả."
   ],
   "common_mistakes": [
     "Chia cho len(scores) khi scores=[] gây ZeroDivisionError.",
@@ -145,7 +145,7 @@
     "phase-00-onboarding-baseline-2",
     "phase-00-onboarding-baseline-3"
   ],
-  "review_question_vi": "Vì sao [] và [0] cần test riêng?",
+  "review_question_vi": "Vì sao [] và [0] cần kiểm thử riêng?",
   "review_question_en": "Why should [] and [0] have separate tests?",
   "review_answer_vi": "[] không có quan sát nên trả None; [0] có một quan sát và trung bình là 0.",
   "review_answer_en": "[] has no observations and returns None; [0] has one observation with a mean of 0.",
@@ -153,7 +153,7 @@
     {
       "id": "phase-00-onboarding-baseline-1-recall",
       "type": "recall",
-      "question_vi": "Vì sao [] và [0] cần test riêng?",
+      "question_vi": "Vì sao [] và [0] cần kiểm thử riêng?",
       "question_en": "Why should [] and [0] have separate tests?",
       "answer_vi": "[] không có quan sát nên trả None; [0] có một quan sát và trung bình là 0.",
       "answer_en": "[] has no observations and returns None; [0] has one observation with a mean of 0.",
@@ -163,11 +163,11 @@
     {
       "id": "phase-00-onboarding-baseline-1-application",
       "type": "application",
-      "question_vi": "Thêm test nào phát hiện hàm luôn trả 80?",
+      "question_vi": "Thêm kiểm thử nào phát hiện hàm luôn trả 80?",
       "question_en": "Which test catches a function that always returns 80?",
       "answer_vi": "Dùng đầu vào khác như [10, 30] và assert kết quả bằng 20.",
       "answer_en": "Use a different input such as [10, 30] and assert that the result is 20.",
-      "hint_vi": "Thay input, không chỉ chạy lại cùng test.",
+      "hint_vi": "Thay đầu vào, không chỉ chạy lại cùng kiểm thử.",
       "hint_en": "Change the input instead of repeating the same test."
     },
     {
@@ -175,17 +175,17 @@
       "type": "debug",
       "question_vi": "Hàm print(80) nhưng assert thất bại: tại sao?",
       "question_en": "A function prints 80 but the assertion fails: why?",
-      "answer_vi": "Print tạo output trên màn hình; hàm không return sẽ trả None cho caller.",
+      "answer_vi": "print hiển thị thông tin trên màn hình; hàm không dùng return sẽ trả None cho nơi gọi hàm.",
       "answer_en": "Print writes to the screen; a function without return provides None to its caller.",
-      "hint_vi": "So sánh output hiển thị với giá trị trả về.",
+      "hint_vi": "So sánh đầu ra hiển thị với giá trị trả về.",
       "hint_en": "Separate displayed output from the returned value."
     },
     {
       "id": "phase-00-onboarding-baseline-1-interview",
       "type": "interview",
-      "question_vi": "Một bài baseline thất bại nói lên điều gì?",
+      "question_vi": "Chưa làm được bài đánh giá đầu vào cho bạn biết điều gì?",
       "question_en": "What does a failed baseline exercise tell you?",
-      "answer_vi": "Nó chỉ ra kiến thức cần luyện, như return hoặc empty input; không đủ kết luận mức sẵn sàng đi làm.",
+      "answer_vi": "Kết quả chỉ ra kiến thức cần luyện, như giá trị trả về hoặc cách xử lý đầu vào rỗng; chưa đủ để kết luận về khả năng làm việc.",
       "answer_en": "It reveals a practice gap such as return values or empty input; it does not establish job readiness.",
       "hint_vi": "Dùng kết quả để chọn bài tiếp theo.",
       "hint_en": "Use the result to choose the next practice task."

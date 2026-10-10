@@ -1,3 +1,4 @@
+import { LearningIllustration } from './LearningIllustration'
 import { useState } from 'react'
 import type { FeedbackKind } from '../api'
 import { feedbackDate, feedbackLabels } from './feedback-copy'
@@ -16,13 +17,14 @@ export function CommunityView({ language, hosted, onOpenLesson, onOpenRoadmap }:
   const [kind, setKind] = useState<FeedbackKind | 'all'>('all')
   const visible = kind === 'all' ? feed.items : feed.items.filter((item) => item.kind === kind)
   return <div className="community-layout">
+    <LearningIllustration name="community" />
     <section className="community-hero">
       <span className="eyebrow accent">{vi ? 'CÙNG CẢI THIỆN BÀI HỌC' : 'IMPROVE THE LESSONS TOGETHER'}</span>
       <h2>{vi ? 'Học cùng nhau,' : 'Learn together,'}<br /><em>{vi ? 'góp ý cụ thể.' : 'share useful feedback.'}</em></h2>
       <p>{vi ? 'Góp ý về chỗ chưa rõ, ví dụ hoặc bài tập ngay trong từng bài học.'
         : 'Share feedback about unclear explanations, examples or exercises from each lesson.'}</p>
       <div className="community-boundary">
-        <strong>{hosted ? 'Web beta' : (vi ? 'Dữ liệu local' : 'Local data')}</strong>
+        <strong>{hosted ? 'Web beta' : (vi ? 'Dữ liệu trên máy' : 'Local data')}</strong>
         <span>{hosted ? (vi ? 'Bảng góp ý công khai chưa hoạt động. Bản nháp không tự gửi hoặc lưu vào tài khoản.'
           : 'The public feedback feed is not available yet. Drafts are not automatically submitted or saved to your account.')
           : (vi ? 'Chỉ hiển thị góp ý đã duyệt trên máy này; không tự đồng bộ lên web.'

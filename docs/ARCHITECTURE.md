@@ -1,10 +1,10 @@
-# Architecture
+# Kiến trúc
 
 ## Mục tiêu v0.1
 
-Journey AI Engineer có bản desktop/local-first và web beta.
-Bản local v0.1 chạy single-user, ưu tiên khả năng học thật, chạy lại và version-control artifact.
-Web beta lưu dữ liệu theo tài khoản trên Supabase; hai runtime không tự đồng bộ dữ liệu với nhau.
+Journey AI Engineer có bản chạy trên máy cá nhân và web beta.
+Bản trên máy cá nhân v0.1 dành cho một người dùng, hỗ trợ thực hành, chạy lại bài làm và quản lý phiên bản kết quả.
+Web beta lưu dữ liệu theo tài khoản trên Supabase; hai bản không tự đồng bộ dữ liệu với nhau.
 
 ```text
 React 19 + Vite + TypeScript
@@ -20,29 +20,29 @@ FastAPI + Pydantic + local capability guards
         └── Git/VS Code adapters (explicit local actions)
 ```
 
-## Content pipeline
+## Quy trình tạo danh mục nội dung
 
-Markdown frontmatter và body là nguồn chuẩn để reviewer đọc diff. `scripts/build_lesson_catalog.py` parse chúng thành `content/lessons.json`, sau đó `scripts/validate_content.py` kiểm tra:
+Phần khai báo đầu tệp và nội dung Markdown là nguồn để người đóng góp đọc, sửa và so sánh. `scripts/build_lesson_catalog.py` chuyển chúng thành `content/lessons.json`, sau đó `scripts/validate_content.py` kiểm tra:
 
-- 23 phase / 208 lesson và ID resolve;
-- prerequisite/next lesson không có vòng lặp;
-- objective, explanation, practice, checklist, resource guidance và review card;
-- Python snippet đánh dấu `runnable` có thể compile;
-- formula/code/review answer không bị copy generic hàng loạt;
-- accelerated track map và workload.
+- 23 giai đoạn, 208 bài học và khả năng tìm đúng nội dung theo ID;
+- quan hệ bài cần học trước và bài tiếp theo không tạo vòng lặp;
+- mục tiêu, giải thích, bài thực hành, danh sách tự kiểm tra, hướng dẫn dùng tài liệu và thẻ ôn tập;
+- đoạn Python gắn nhãn `runnable` biên dịch được;
+- công thức, mã và đáp án ôn tập không bị sao chép máy móc cho nhiều bài;
+- lịch học tăng tốc và khối lượng học tương ứng.
 
-JSON generated được commit để fresh clone chạy ngay, nhưng không được sửa tay thay cho Markdown.
+JSON được sinh tự động được lưu trong Git để bản sao mã nguồn mới có thể chạy ngay. Sửa nguồn nội dung rồi sinh lại JSON, không sửa trực tiếp để thay thế nguồn.
 
-## Runtime data và portable mode
+## Dữ liệu khi chạy và bản chạy trực tiếp
 
-Source clone dùng `.data/` trong project để thuận tiện backup local; portable executable dùng data root writable của user (`%LOCALAPPDATA%\JourneyAIEngineer`) và có `JOURNEY_DATA_DIR` override. `JOURNEY_PROJECT_ROOT` trỏ tới clone repo khi cần export artifact/Git. Database, `.env`, token và journal riêng luôn ở ngoài source artifact.
+Bản chạy từ mã nguồn lưu dữ liệu trong `.data/` của dự án để thuận tiện sao lưu. Bản chạy trực tiếp lưu ở thư mục người dùng có quyền ghi (`%LOCALAPPDATA%\JourneyAIEngineer`); có thể đổi bằng `JOURNEY_DATA_DIR`. Khi cần xuất bài làm hoặc dùng Git, `JOURNEY_PROJECT_ROOT` trỏ tới bản sao kho mã. Cơ sở dữ liệu, `.env`, token và nhật ký riêng không được đưa vào gói mã nguồn.
 
-## Local capability boundary
+## Giới hạn công cụ trên máy cá nhân
 
-Các route đọc Git, mở folder/VS Code, tạo workspace và chạy test là local capabilities. Chúng có path allowlist, timeout, output cap, secret scan và confirmation trước publish. API chỉ bind loopback; health response không được trả absolute path hoặc credential. `local_tools_enabled` có thể tắt capability khi cần.
+Các API đọc Git, mở thư mục/VS Code, tạo thư mục bài tập và chạy kiểm thử chỉ dành cho máy cá nhân. Chúng giới hạn đường dẫn, thời gian chạy và dung lượng kết quả; kiểm tra thông tin bí mật và yêu cầu xác nhận trước khi công bố. API chỉ lắng nghe tại địa chỉ nội bộ; phản hồi kiểm tra tình trạng dịch vụ không được lộ đường dẫn tuyệt đối hoặc thông tin đăng nhập. Có thể dùng `local_tools_enabled` để tắt các công cụ này.
 
-Web beta tách các adapter local khỏi frontend hosted, dùng Supabase Auth và Postgres/RLS.
-Không triển khai public bằng cách expose FastAPI local hiện tại.
+Web beta tách phần kết nối công cụ trên máy cá nhân khỏi giao diện web, dùng Supabase Auth và Postgres/RLS.
+Không cung cấp bản web bằng cách mở FastAPI hiện tại trên máy cá nhân ra Internet.
 
 ## Web beta
 
@@ -61,11 +61,11 @@ Desktop/local remains: React → FastAPI loopback → SQLite + workspace/Git ada
 
 The web runtime imports a static curriculum catalog and has no route to local filesystem, Git, VS Code, test runner, backup database or subprocess code. Web and desktop learning data are separate in beta; no automatic two-way migration is promised. See [WEB-BETA.md](WEB-BETA.md) for the deployment gate and [WEB-BETA-PRIVACY.md](WEB-BETA-PRIVACY.md) for data handling.
 
-## Learning state
+## Trạng thái học tập
 
-Nội dung card (`review_cards`) bất biến; lịch học (`review_state`) lưu due time, interval, ease, repetitions, lapses và suspended/leech. Migration additive giữ progress/history cũ. SM-2 scheduler nhận `again`, `hard`, `good`, `easy`; review sai liên kết trở lại lesson/topic yếu.
+Nội dung thẻ (`review_cards`) tách riêng với lịch ôn (`review_state`). Lịch ôn lưu hạn ôn, khoảng cách giữa các lần ôn, độ dễ, số lần lặp, số lần quên và trạng thái tạm dừng/thẻ hay quên. Cập nhật cơ sở dữ liệu theo cách bổ sung để giữ tiến độ và lịch sử cũ. Bộ lập lịch SM-2 nhận `again`, `hard`, `good`, `easy`; câu trả lời sai dẫn lại bài học hoặc chủ đề cần ôn.
 
-## Release flow
+## Quy trình phát hành
 
 ```text
 Markdown edit → build/validate → Python tests → lint/build
@@ -73,12 +73,12 @@ Markdown edit → build/validate → Python tests → lint/build
              → versioned ZIP + SHA256SUMS → human review → GitHub Release
 ```
 
-CI chạy content validation, Python tests, `pip check`, `npm ci`, lint và Vite build. Release package không chứa `.data`, database, `.venv`, `node_modules`, `.env`, secret hoặc build cache. SmartScreen warning là hệ quả binary chưa code-sign, không phải dấu hiệu checksum đã xác minh nhà phát hành.
+CI kiểm tra nội dung, chạy kiểm thử Python, `pip check`, `npm ci`, kiểm tra mã và tạo bản Vite. Gói phát hành không chứa `.data`, cơ sở dữ liệu, `.venv`, `node_modules`, `.env`, thông tin bí mật hoặc bộ nhớ đệm khi đóng gói. SmartScreen có thể cảnh báo vì tệp thực thi chưa được ký số. Mã kiểm tra SHA-256 giúp đối chiếu tệp tải về, không thay thế chữ ký xác minh nhà phát hành.
 
-## Public product roadmap
+## Hướng phát triển sản phẩm
 
-- **v0.1:** local single-user, source clone, portable Windows package, bilingual lessons, workspace, review, journal và Git context bridge.
-- **Web beta đã triển khai:** Cloudflare Pages + Supabase Auth/Postgres/RLS, email/password authentication
-  và lưu dữ liệu học theo tài khoản. Xem [WEB-BETA.md](WEB-BETA.md) để biết trạng thái rollout auth.
-- **Sau beta:** public learning hub/feedback moderation, self-service account deletion,
-  stronger hosted E2E/monitoring và optional provider adapters; giữ local export/import làm đường lui.
+- **v0.1:** bản một người dùng trên máy cá nhân, mã nguồn và gói Windows chạy trực tiếp; có bài học song ngữ, thư mục bài tập, ôn tập, nhật ký, Git và xuất nội dung để hỏi trợ lý.
+- **Web beta đã triển khai:** Cloudflare Pages + Supabase Auth/Postgres/RLS, đăng nhập bằng email và mật khẩu
+  và lưu dữ liệu học theo tài khoản. Xem [WEB-BETA.md](WEB-BETA.md) để biết trạng thái triển khai đăng nhập.
+- **Sau beta:** hoàn thiện trang học công khai và duyệt phản hồi, cho phép tự xóa tài khoản,
+  tăng kiểm thử đầu cuối và theo dõi bản web, bổ sung kết nối nhà cung cấp khi cần; giữ xuất/nhập dữ liệu trên máy làm phương án dự phòng.

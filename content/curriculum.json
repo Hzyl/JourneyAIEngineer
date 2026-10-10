@@ -1,18 +1,18 @@
 {
   "program": {
-    "title_vi": "Journey AI Engineer",
+    "title_vi": "Hành trình trở thành kỹ sư AI",
     "title_en": "Journey AI Engineer",
-    "description_vi": "Chương trình core 8 phase và GenAI specialization 15 giai đoạn, đi từ nền tảng đến xây dựng, đánh giá và vận hành hệ thống AI production.",
+    "description_vi": "Lộ trình gồm 8 giai đoạn nền tảng và 15 giai đoạn chuyên sâu về AI tạo sinh (GenAI), từ kiến thức cơ bản đến xây dựng, đánh giá và vận hành hệ thống AI.",
     "description_en": "An 8-phase core plus a 15-stage GenAI specialization, from foundations to building, evaluating, and operating production AI systems.",
     "standard_weeks": 68,
     "accelerated_weeks": 34,
     "portfolio_projects": [
       {
         "slug": "tabular-ml",
-        "title_vi": "End-to-End Tabular ML",
+        "title_vi": "Dự án học máy với dữ liệu dạng bảng",
         "title_en": "End-to-End Tabular ML",
         "phase_id": "phase-03-classical-ml",
-        "problem_vi": "Dự đoán churn, gian lận hoặc nhu cầu với pipeline có thể tái lập.",
+        "problem_vi": "Dự đoán khách rời bỏ, gian lận hoặc nhu cầu bằng quy trình học máy có thể tái lập.",
         "problem_en": "Predict churn, fraud or demand with a reproducible ML pipeline.",
         "stack": [
           "Python",
@@ -33,20 +33,20 @@
         "estimated_weeks": 3,
         "deliverables_vi": [
           "Từ điển dữ liệu",
-          "Mô hình cơ sở (baseline)",
-          "Pipeline xử lý và huấn luyện",
+          "Mô hình cơ sở (mốc so sánh)",
+          "Quy trình xử lý dữ liệu và huấn luyện",
           "Phân tích lỗi",
-          "Thẻ mô hình (model card)",
+          "Thẻ mô tả mô hình",
           "README"
         ],
         "evaluation_vi": "Tập kiểm tra giữ riêng, kiểm định chéo, lý do chọn thước đo và phân tích lỗi theo nhóm dữ liệu."
       },
       {
         "slug": "deep-learning",
-        "title_vi": "Deep Learning Classifier",
+        "title_vi": "Bộ phân loại bằng học sâu",
         "title_en": "Deep Learning Classifier",
         "phase_id": "phase-04-deep-learning",
-        "problem_vi": "Huấn luyện một model vision hoặc NLP, phân tích overfitting và checkpoint.",
+        "problem_vi": "Huấn luyện mô hình thị giác hoặc ngôn ngữ, phân tích quá khớp và quản lý bản lưu trạng thái.",
         "problem_en": "Train a vision or NLP model, analyze overfitting and manage checkpoints.",
         "stack": [
           "PyTorch",
@@ -67,17 +67,17 @@
           "Vòng lặp huấn luyện",
           "Thẻ mô tả tập dữ liệu",
           "Ma trận nhầm lẫn",
-          "Checkpoint mô hình",
+          "Bản lưu trạng thái mô hình",
           "Báo cáo thí nghiệm"
         ],
         "evaluation_vi": "Quy trình kiểm định, thí nghiệm loại bỏ thành phần hoặc so sánh bộ tối ưu, và phân tích thất bại."
       },
       {
         "slug": "vietnamese-rag",
-        "title_vi": "Vietnamese Document Assistant",
+        "title_vi": "Trợ lý tài liệu tiếng Việt",
         "title_en": "Vietnamese Document Assistant",
         "phase_id": "phase-06-llm-rag",
-        "problem_vi": "Hỏi đáp tài liệu tiếng Việt có retrieval, citation và từ chối khi thiếu bằng chứng.",
+        "problem_vi": "Trả lời theo tài liệu tiếng Việt, có truy xuất, trích nguồn và từ chối khi thiếu bằng chứng.",
         "problem_en": "Answer questions over Vietnamese documents with retrieval, citations and abstention.",
         "stack": [
           "FastAPI",
@@ -106,10 +106,10 @@
       },
       {
         "slug": "capstone-ai-product",
-        "title_vi": "Capstone AI Product",
+        "title_vi": "Sản phẩm AI cho đồ án tổng kết",
         "title_en": "Capstone AI Product",
         "phase_id": "phase-07-capstone-career",
-        "problem_vi": "Chọn một người dùng thật, xây MVP AI có architecture, evaluation và demo.",
+        "problem_vi": "Chọn người dùng thật và xây sản phẩm tối thiểu có kiến trúc, đánh giá và demo.",
         "problem_en": "Choose a real user, build an AI MVP with architecture, evaluation and demo.",
         "stack": [
           "Python",
@@ -140,10 +140,10 @@
       },
       {
         "slug": "llm-chat-api",
-        "title_vi": "LLM Chat API",
+        "title_vi": "API trò chuyện với LLM",
         "title_en": "LLM Chat API",
         "phase_id": "phase-11-llm-application",
-        "problem_vi": "Xây API chat có prompt boundary, structured output, streaming, rate limit và fallback.",
+        "problem_vi": "Xây API chat có ranh giới chỉ dẫn, đầu ra có cấu trúc, streaming, giới hạn tần suất và phương án dự phòng.",
         "problem_en": "Build a chat API with prompt boundaries, structured output, streaming, rate limits, and fallback.",
         "stack": [
           "Python",
@@ -163,9 +163,9 @@
         "estimated_weeks": 3,
         "track": "genai-specialization",
         "deliverables_vi": [
-          "Hợp đồng API",
-          "Demo trả lời dạng streaming",
-          "Test giới hạn tần suất",
+          "Đặc tả API",
+          "Demo trả lời từng phần",
+          "Kiểm thử giới hạn tần suất",
           "Nhật ký chi phí",
           "README"
         ],
@@ -173,10 +173,10 @@
       },
       {
         "slug": "document-intelligence",
-        "title_vi": "Document Intelligence System",
+        "title_vi": "Hệ thống xử lý tài liệu",
         "title_en": "Document Intelligence System",
         "phase_id": "phase-12-genai-rag",
-        "problem_vi": "Parse tài liệu tiếng Việt, trích xuất thông tin và trả lời có evidence.",
+        "problem_vi": "Đọc tài liệu tiếng Việt, trích xuất thông tin và trả lời kèm bằng chứng.",
         "problem_en": "Parse Vietnamese documents, extract information, and answer with evidence.",
         "stack": [
           "Python",
@@ -196,9 +196,9 @@
         "estimated_weeks": 4,
         "track": "genai-specialization",
         "deliverables_vi": [
-          "Pipeline nhập tài liệu",
+          "Quy trình nhập tài liệu",
           "Chính sách chia đoạn",
-          "Schema metadata",
+          "Cấu trúc siêu dữ liệu",
           "API trả bằng chứng",
           "Bộ câu hỏi đánh giá"
         ],
@@ -206,10 +206,10 @@
       },
       {
         "slug": "advanced-rag-system",
-        "title_vi": "Advanced RAG System",
+        "title_vi": "Hệ thống RAG nâng cao",
         "title_en": "Advanced RAG System",
         "phase_id": "phase-13-genai-advanced-rag",
-        "problem_vi": "So sánh BM25, vector, hybrid, reranking và query rewrite trên evaluation set cố định.",
+        "problem_vi": "So sánh BM25, vector, tìm kiếm kết hợp, xếp hạng lại và viết lại truy vấn trên bộ đánh giá cố định.",
         "problem_en": "Compare BM25, vector, hybrid retrieval, reranking, and query rewriting on a fixed evaluation set.",
         "stack": [
           "Python",
@@ -230,7 +230,7 @@
         "estimated_weeks": 5,
         "track": "genai-specialization",
         "deliverables_vi": [
-          "Benchmark truy xuất",
+          "Báo cáo đo chất lượng truy xuất",
           "Nhóm tình huống thất bại",
           "Chính sách trích nguồn",
           "Báo cáo chất lượng",
@@ -240,10 +240,10 @@
       },
       {
         "slug": "ai-database-api-assistant",
-        "title_vi": "AI Assistant với Database và API",
+        "title_vi": "Trợ lý AI kết nối cơ sở dữ liệu và API",
         "title_en": "AI Assistant with Database and APIs",
         "phase_id": "phase-14-genai-tool-calling",
-        "problem_vi": "Cho model gọi database/API qua tool schema có validation, timeout, retry và audit.",
+        "problem_vi": "Cho mô hình dùng cơ sở dữ liệu, API qua công cụ có kiểm tra tham số, thời gian chờ, thử lại và nhật ký.",
         "problem_en": "Let a model call databases/APIs through validated tool schemas with timeouts, retries, and audit logs.",
         "stack": [
           "FastAPI",
@@ -263,8 +263,8 @@
         "estimated_weeks": 4,
         "track": "genai-specialization",
         "deliverables_vi": [
-          "Danh mục tool",
-          "Test kiểm tra đầu vào",
+          "Danh mục công cụ",
+          "Kiểm thử dữ liệu đầu vào",
           "Khóa chống xử lý trùng (idempotency key)",
           "Nhật ký kiểm toán",
           "Ghi chú bảo mật"
@@ -273,10 +273,10 @@
       },
       {
         "slug": "research-assistant-agent",
-        "title_vi": "Research Assistant Agent",
+        "title_vi": "Agent hỗ trợ nghiên cứu",
         "title_en": "Research Assistant Agent",
         "phase_id": "phase-15-genai-agents",
-        "problem_vi": "Agent lập kế hoạch, tìm evidence, dùng tool có giới hạn và yêu cầu người duyệt trước side effect.",
+        "problem_vi": "Agent lập kế hoạch, tìm bằng chứng và dùng công cụ trong giới hạn; yêu cầu người duyệt trước thao tác có ảnh hưởng.",
         "problem_en": "An agent plans, gathers evidence, uses bounded tools, and requests approval before side effects.",
         "stack": [
           "Python",
@@ -300,17 +300,17 @@
           "Vòng lặp agent",
           "Nhật ký các bước thực hiện",
           "Bước phê duyệt của người dùng",
-          "Test giới hạn an toàn",
+          "Kiểm thử giới hạn an toàn",
           "Báo cáo đánh giá"
         ],
-        "evaluation_vi": "Tỷ lệ hoàn thành tác vụ, gọi tool đúng, tuân thủ điều kiện dừng, mức bám sát nguồn và chi phí."
+        "evaluation_vi": "Tỷ lệ hoàn thành tác vụ, gọi công cụ đúng, tuân thủ điều kiện dừng, mức bám sát nguồn và chi phí."
       },
       {
         "slug": "production-genai-system",
-        "title_vi": "End-to-End Production GenAI System",
+        "title_vi": "Hệ thống GenAI vận hành thực tế",
         "title_en": "End-to-End Production GenAI System",
         "phase_id": "phase-22-genai-system-design",
-        "problem_vi": "Thiết kế và triển khai hệ thống GenAI có observability, evaluation, security, cost và rollback.",
+        "problem_vi": "Thiết kế hệ thống GenAI có đánh giá, theo dõi vận hành, bảo mật, ngân sách và cách khôi phục phiên bản.",
         "problem_en": "Design and ship a GenAI system with observability, evaluation, security, cost controls, and rollback.",
         "stack": [
           "FastAPI",
@@ -335,7 +335,7 @@
           "Bản ghi quyết định kiến trúc (ADR)",
           "Mục tiêu và cam kết dịch vụ (SLO/SLA)",
           "Mô hình đe dọa",
-          "Test tải",
+          "Kiểm thử tải",
           "Bảng theo dõi vận hành",
           "Video demo"
         ],
@@ -343,16 +343,16 @@
       }
     ],
     "career_checklist": [
-      "Có README cho ba project chính và một capstone có architecture diagram.",
-      "Có ít nhất một project chạy bằng Docker và một API inference có test.",
-      "Có evaluation report nêu metric, baseline, error analysis và giới hạn.",
-      "Có Git history đều đặn với weekly journal và commit message rõ ràng.",
-      "Có CV một trang, demo link và câu chuyện trả lời phỏng vấn cho từng project.",
-      "Luyện được Python, SQL, ML fundamentals, debugging và AI system design.",
-      "Có LLM Chat API, Document Intelligence và Advanced RAG với evaluation set rõ ràng.",
-      "Có một tool-calling/agent project ghi trajectory, guardrail và human approval.",
-      "Có MCP hoặc local LLM lab kèm threat model, hardware context và benchmark.",
-      "Có production GenAI design doc nêu SLO, cost budget, observability và rollback."
+      "Có README cho ba dự án chính và đồ án tổng kết, kèm sơ đồ kiến trúc.",
+      "Có ít nhất một dự án chạy bằng Docker và một API suy luận có kiểm thử.",
+      "Có báo cáo đánh giá nêu thước đo, mô hình cơ sở, phân tích lỗi và giới hạn.",
+      "Có lịch sử Git, nhật ký hằng tuần và thông điệp commit rõ.",
+      "Có CV một trang, liên kết demo và câu chuyện phỏng vấn cho từng dự án.",
+      "Luyện Python, SQL, nền tảng học máy, gỡ lỗi và thiết kế hệ thống AI.",
+      "Có API chat, hệ thống xử lý tài liệu và RAG nâng cao với bộ đánh giá rõ.",
+      "Có dự án công cụ hoặc agent ghi các bước thực hiện, giới hạn và phê duyệt của người dùng.",
+      "Có bài thực hành MCP hoặc mô hình cục bộ, kèm rủi ro, cấu hình phần cứng và phép đo hiệu năng.",
+      "Có tài liệu thiết kế GenAI nêu SLO, ngân sách, theo dõi vận hành và khôi phục phiên bản."
     ],
     "accelerated_track": {
       "weeks": 34,
@@ -1627,9 +1627,9 @@
       "slug": "phase-00-onboarding",
       "order": 0,
       "duration_weeks": 1,
-      "title_vi": "Onboarding và đánh giá đầu vào",
+      "title_vi": "Bắt đầu và đánh giá đầu vào",
       "title_en": "Onboarding and baseline assessment",
-      "summary_vi": "Thiết lập môi trường, kiểm tra đầu vào và học cách sử dụng app như một learning operating system.",
+      "summary_vi": "Thiết lập môi trường, tự đánh giá kiến thức và học cách ghi lại quá trình thực hành.",
       "summary_en": "Set up the environment, assess your baseline and learn to use the app as a learning operating system.",
       "modules": [
         {
@@ -1639,8 +1639,8 @@
           "lessons": [
             "Cài Python và kiểm tra phiên bản",
             "Thiết lập VS Code và terminal",
-            "Tạo virtual environment đầu tiên",
-            "Jupyter, Colab và khi nào dùng chúng"
+            "Tạo môi trường ảo Python đầu tiên",
+            "Khi nào nên dùng Jupyter hoặc Colab"
           ]
         },
         {
@@ -1656,12 +1656,12 @@
         },
         {
           "slug": "learning-system",
-          "title_vi": "Hệ thống học",
+          "title_vi": "Tổ chức việc học",
           "title_en": "Learning system",
           "lessons": [
-            "Cách dùng roadmap và checkpoint",
-            "Cách ghi study session",
-            "Cách viết journal tuần",
+            "Sử dụng lộ trình và mốc tự đánh giá",
+            "Ghi lại một buổi học",
+            "Viết nhật ký học tập hằng tuần",
             "Dùng ChatGPT/Codex để học có kiểm soát"
           ]
         }
@@ -1683,52 +1683,52 @@
       "slug": "phase-01-python-software",
       "order": 1,
       "duration_weeks": 6,
-      "title_vi": "Python và Software Engineering",
+      "title_vi": "Python và kỹ thuật phần mềm",
       "title_en": "Python and Software Engineering",
-      "summary_vi": "Viết Python có cấu trúc, test được và có thể đưa vào một service.",
+      "summary_vi": "Viết Python có cấu trúc, có kiểm thử và có thể sử dụng trong dịch vụ.",
       "summary_en": "Write structured, testable Python that can become a service.",
       "modules": [
         {
           "slug": "python-core",
-          "title_vi": "Python core",
+          "title_vi": "Python nền tảng",
           "title_en": "Python core",
           "lessons": [
             "Kiểu dữ liệu và biến",
-            "Control flow và comprehension",
-            "Function, scope và typing",
-            "Class và object-oriented design"
+            "Rẽ nhánh, vòng lặp và comprehension",
+            "Hàm, phạm vi biến và chú thích kiểu",
+            "Lớp và thiết kế hướng đối tượng"
           ]
         },
         {
           "slug": "reliable-code",
-          "title_vi": "Code đáng tin cậy",
+          "title_vi": "Viết mã đáng tin cậy",
           "title_en": "Reliable code",
           "lessons": [
-            "Module và package",
-            "Exception và logging",
-            "Debugging có giả thuyết",
-            "pytest và test boundary"
+            "Module và package trong Python",
+            "Xử lý ngoại lệ và ghi nhật ký",
+            "Gỡ lỗi bằng giả thuyết",
+            "Kiểm thử bằng pytest và xác định phạm vi kiểm thử"
           ]
         },
         {
           "slug": "data-files",
-          "title_vi": "File và dữ liệu",
+          "title_vi": "Tệp và dữ liệu",
           "title_en": "Files and data",
           "lessons": [
-            "CSV và JSON",
-            "Parquet và columnar data",
-            "CLI với argparse",
-            "Validate schema và dữ liệu thiếu"
+            "Đọc và ghi CSV, JSON",
+            "Parquet và lưu trữ theo cột",
+            "Tạo giao diện dòng lệnh với argparse",
+            "Kiểm tra cấu trúc và dữ liệu thiếu"
           ]
         },
         {
           "slug": "developer-tools",
-          "title_vi": "Developer workflow",
+          "title_vi": "Quy trình làm việc của lập trình viên",
           "title_en": "Developer workflow",
           "lessons": [
-            "Git add, diff và commit",
-            "Branch và pull request",
-            "Terminal PowerShell/Linux",
+            "Đưa thay đổi vào Git: add, diff và commit",
+            "Nhánh Git và pull request",
+            "Sử dụng terminal PowerShell/Linux",
             "HTTP, REST và JSON"
           ]
         },
@@ -1737,10 +1737,10 @@
           "title_vi": "SQL và cấu trúc dữ liệu",
           "title_en": "SQL and data structures",
           "lessons": [
-            "SELECT, JOIN và GROUP BY",
-            "Subquery và window function",
-            "List, dict, set và queue",
-            "Big-O và trade-off"
+            "Truy vấn với SELECT, JOIN và GROUP BY",
+            "Truy vấn con và hàm cửa sổ",
+            "List, dict, set và hàng đợi",
+            "Độ phức tạp Big-O và lựa chọn thuật toán"
           ]
         }
       ],
@@ -1766,9 +1766,9 @@
       "slug": "phase-02-math-ml",
       "order": 2,
       "duration_weeks": 6,
-      "title_vi": "Toán cho AI và Machine Learning",
+      "title_vi": "Toán cho AI và học máy",
       "title_en": "Mathematics for AI and Machine Learning",
-      "summary_vi": "Học toán qua code để hiểu dữ liệu, gradient và quá trình tối ưu.",
+      "summary_vi": "Học toán qua tính tay và lập trình để hiểu dữ liệu, gradient và tối ưu.",
       "summary_en": "Learn mathematics through code to understand data, gradients and optimization.",
       "modules": [
         {
@@ -1776,10 +1776,10 @@
           "title_vi": "Đại số tuyến tính",
           "title_en": "Linear algebra",
           "lessons": [
-            "Vector và không gian",
-            "Matrix multiplication",
-            "Dot product, norm và distance",
-            "Eigenvalue, eigenvector và PCA"
+            "Vector và không gian vector",
+            "Nhân ma trận",
+            "Tích vô hướng, chuẩn và khoảng cách",
+            "Trị riêng, vector riêng và PCA"
           ]
         },
         {
@@ -1788,9 +1788,9 @@
           "title_en": "Calculus and gradients",
           "lessons": [
             "Hàm số và đạo hàm",
-            "Partial derivative",
-            "Gradient và level set",
-            "Chain rule trong neural network"
+            "Đạo hàm riêng",
+            "Gradient và đường đồng mức",
+            "Quy tắc dây chuyền trong mạng nơ-ron"
           ]
         },
         {
@@ -1800,8 +1800,8 @@
           "lessons": [
             "Biến ngẫu nhiên và phân phối",
             "Kỳ vọng và phương sai",
-            "Conditional probability và Bayes",
-            "Sampling và luật số lớn"
+            "Xác suất có điều kiện và định lý Bayes",
+            "Lấy mẫu và luật số lớn"
           ]
         },
         {
@@ -1809,9 +1809,9 @@
           "title_vi": "Thống kê và tối ưu",
           "title_en": "Statistics and optimization",
           "lessons": [
-            "Bias, variance và overfitting",
-            "Maximum likelihood",
-            "Gradient descent",
+            "Độ chệch, phương sai và quá khớp",
+            "Ước lượng hợp lý cực đại",
+            "Hạ gradient",
             "SGD, momentum và Adam"
           ]
         }
@@ -1833,20 +1833,20 @@
       "slug": "phase-03-classical-ml",
       "order": 3,
       "duration_weeks": 8,
-      "title_vi": "Machine Learning cổ điển",
+      "title_vi": "Học máy cổ điển",
       "title_en": "Classical Machine Learning",
-      "summary_vi": "Từ framing bài toán đến pipeline có metric, error analysis và reproducibility.",
+      "summary_vi": "Đi từ đặt bài toán đến quy trình học máy có đánh giá, phân tích lỗi và kết quả tái lập.",
       "summary_en": "From problem framing to pipelines with metrics, error analysis and reproducibility.",
       "modules": [
         {
           "slug": "ml-framing",
-          "title_vi": "Framing và dữ liệu",
+          "title_vi": "Đặt bài toán học máy",
           "title_en": "Framing and data",
           "lessons": [
-            "Supervised và unsupervised",
-            "Dataset, feature và label",
-            "Train validation test split",
-            "Data leakage và baseline"
+            "Học có giám sát và không giám sát",
+            "Tập dữ liệu, đặc trưng và nhãn",
+            "Chia tập huấn luyện, kiểm định và kiểm tra",
+            "Rò rỉ dữ liệu và mô hình cơ sở"
           ]
         },
         {
@@ -1854,21 +1854,21 @@
           "title_vi": "Mô hình cốt lõi",
           "title_en": "Core models",
           "lessons": [
-            "Linear regression",
-            "Logistic regression",
-            "Decision tree và random forest",
+            "Hồi quy tuyến tính",
+            "Hồi quy logistic",
+            "Cây quyết định và rừng ngẫu nhiên",
             "Gradient boosting"
           ]
         },
         {
           "slug": "preprocessing",
-          "title_vi": "Preprocessing",
+          "title_vi": "Tiền xử lý dữ liệu",
           "title_en": "Preprocessing",
           "lessons": [
-            "Missing data",
-            "Categorical data",
-            "Scaling và transformation",
-            "Feature engineering"
+            "Xử lý dữ liệu thiếu",
+            "Mã hóa dữ liệu phân loại",
+            "Chuẩn hóa và biến đổi dữ liệu",
+            "Xây dựng đặc trưng"
           ]
         },
         {
@@ -1876,10 +1876,10 @@
           "title_vi": "Đánh giá mô hình",
           "title_en": "Model evaluation",
           "lessons": [
-            "Classification metrics",
-            "Regression metrics",
-            "Cross-validation",
-            "Hyperparameter tuning"
+            "Thước đo cho phân loại",
+            "Thước đo cho hồi quy",
+            "Kiểm định chéo",
+            "Điều chỉnh siêu tham số"
           ]
         },
         {
@@ -1887,10 +1887,10 @@
           "title_vi": "Phân tích và đóng gói",
           "title_en": "Analysis and packaging",
           "lessons": [
-            "Imbalanced data",
-            "Calibration",
-            "Error analysis",
-            "Model interpretation và serialization"
+            "Dữ liệu mất cân bằng lớp",
+            "Hiệu chỉnh xác suất dự đoán",
+            "Phân tích lỗi mô hình",
+            "Diễn giải và lưu mô hình"
           ]
         }
       ],
@@ -1911,64 +1911,64 @@
       "slug": "phase-04-deep-learning",
       "order": 4,
       "duration_weeks": 8,
-      "title_vi": "Deep Learning với PyTorch",
+      "title_vi": "Học sâu với PyTorch",
       "title_en": "Deep Learning with PyTorch",
-      "summary_vi": "Tự viết training loop, hiểu tensor, debug gradient và dùng transfer learning.",
+      "summary_vi": "Tự viết vòng lặp huấn luyện, hiểu tensor, tìm lỗi gradient và sử dụng học chuyển giao.",
       "summary_en": "Write training loops, reason about tensors, debug gradients and use transfer learning.",
       "modules": [
         {
           "slug": "pytorch-core",
-          "title_vi": "PyTorch core",
+          "title_vi": "PyTorch nền tảng",
           "title_en": "PyTorch core",
           "lessons": [
-            "Tensor và shape",
-            "Broadcasting",
+            "Tensor và kích thước các chiều",
+            "Quy tắc broadcasting",
             "Dataset và DataLoader",
-            "Autograd và computational graph"
+            "Autograd và đồ thị tính toán"
           ]
         },
         {
           "slug": "training",
-          "title_vi": "Training loop",
+          "title_vi": "Vòng lặp huấn luyện",
           "title_en": "Training loop",
           "lessons": [
-            "Forward pass và loss",
-            "Backward pass",
-            "Optimizer và learning rate",
-            "Validation và checkpoint"
+            "Lan truyền xuôi và hàm mất mát",
+            "Lan truyền ngược",
+            "Bộ tối ưu và tốc độ học",
+            "Kiểm định và lưu trạng thái huấn luyện"
           ]
         },
         {
           "slug": "generalization",
-          "title_vi": "Generalization",
+          "title_vi": "Khả năng khái quát hóa",
           "title_en": "Generalization",
           "lessons": [
-            "Overfitting và regularization",
-            "Dropout và batch normalization",
-            "Data augmentation",
-            "Early stopping và resume"
+            "Quá khớp và điều chuẩn",
+            "Dropout và chuẩn hóa theo lô",
+            "Tăng cường dữ liệu",
+            "Dừng sớm và tiếp tục huấn luyện"
           ]
         },
         {
           "slug": "vision-nlp",
-          "title_vi": "CV và NLP nền tảng",
+          "title_vi": "Thị giác máy tính và xử lý ngôn ngữ",
           "title_en": "Foundational CV and NLP",
           "lessons": [
-            "CNN và image classifier",
-            "Transfer learning",
-            "Embedding và text classifier",
-            "Attention và Transformer overview"
+            "CNN và phân loại ảnh",
+            "Học chuyển giao",
+            "Embedding và phân loại văn bản",
+            "Tổng quan attention và Transformer"
           ]
         },
         {
           "slug": "debugging",
-          "title_vi": "Debug và experiment",
+          "title_vi": "Gỡ lỗi và quản lý thí nghiệm",
           "title_en": "Debugging and experiments",
           "lessons": [
-            "Shape error",
-            "NaN và exploding gradient",
-            "GPU memory",
-            "Experiment logging"
+            "Tìm lỗi kích thước tensor",
+            "NaN và gradient bùng nổ",
+            "Quản lý bộ nhớ GPU",
+            "Ghi lại thí nghiệm"
           ]
         }
       ],
@@ -1989,53 +1989,53 @@
       "slug": "phase-05-mlops",
       "order": 5,
       "duration_weeks": 8,
-      "title_vi": "Deployment và MLOps",
+      "title_vi": "Triển khai và MLOps",
       "title_en": "Deployment and MLOps",
-      "summary_vi": "Biến notebook thành API có test, Docker, tracking và quan sát được.",
+      "summary_vi": "Đóng gói mô hình thành API có kiểm thử, Docker và dữ liệu theo dõi vận hành.",
       "summary_en": "Turn a notebook into a tested, containerized, observable API.",
       "modules": [
         {
           "slug": "api",
-          "title_vi": "Inference API",
+          "title_vi": "API suy luận",
           "title_en": "Inference API",
           "lessons": [
-            "Package code và configuration",
-            "FastAPI route",
-            "Request response validation",
-            "Batch inference"
+            "Đóng gói mã nguồn và cấu hình",
+            "Định nghĩa route trong FastAPI",
+            "Kiểm tra dữ liệu yêu cầu và phản hồi",
+            "Suy luận theo lô"
           ]
         },
         {
           "slug": "containers",
-          "title_vi": "Container và CI",
+          "title_vi": "Container và tích hợp liên tục",
           "title_en": "Containers and CI",
           "lessons": [
-            "Docker image",
-            "Docker compose basics",
-            "Unit và integration test",
-            "CI pipeline"
+            "Tạo Docker image",
+            "Cơ bản về Docker Compose",
+            "Kiểm thử đơn vị và tích hợp",
+            "Quy trình tích hợp liên tục"
           ]
         },
         {
           "slug": "tracking",
-          "title_vi": "Tracking và versioning",
+          "title_vi": "Theo dõi thí nghiệm và phiên bản",
           "title_en": "Tracking and versioning",
           "lessons": [
-            "Model versioning",
-            "Data versioning",
-            "MLflow tracking",
-            "Reproducibility"
+            "Quản lý phiên bản mô hình",
+            "Quản lý phiên bản dữ liệu",
+            "Theo dõi thí nghiệm với MLflow",
+            "Tái lập kết quả"
           ]
         },
         {
           "slug": "observability",
-          "title_vi": "Observability",
+          "title_vi": "Theo dõi vận hành",
           "title_en": "Observability",
           "lessons": [
-            "Structured logging",
-            "Latency p50/p95",
-            "Data drift",
-            "Concept drift và rollback"
+            "Ghi nhật ký có cấu trúc",
+            "Độ trễ p50 và p95",
+            "Dịch chuyển phân bố dữ liệu",
+            "Thay đổi quan hệ dự đoán và khôi phục phiên bản"
           ]
         },
         {
@@ -2043,10 +2043,10 @@
           "title_vi": "An toàn hệ thống",
           "title_en": "System safety",
           "lessons": [
-            "Environment variables",
-            "Input limits",
-            "Dependency hygiene",
-            "PII và secret redaction"
+            "Biến môi trường",
+            "Giới hạn đầu vào",
+            "Quản lý phụ thuộc an toàn",
+            "Che dữ liệu cá nhân và bí mật"
           ]
         }
       ],
@@ -2072,75 +2072,75 @@
       "slug": "phase-06-llm-rag",
       "order": 6,
       "duration_weeks": 10,
-      "title_vi": "NLP, LLM và RAG",
+      "title_vi": "Xử lý ngôn ngữ, LLM và RAG",
       "title_en": "NLP, LLMs and RAG",
-      "summary_vi": "Hiểu embedding, Transformer, retrieval, đánh giá và xây trợ lý tài liệu tiếng Việt.",
+      "summary_vi": "Hiểu embedding, Transformer, truy xuất và đánh giá để xây trợ lý tài liệu tiếng Việt.",
       "summary_en": "Understand embeddings, Transformers, retrieval, evaluation and build a Vietnamese document assistant.",
       "modules": [
         {
           "slug": "nlp-foundations",
-          "title_vi": "NLP foundations",
+          "title_vi": "Nền tảng xử lý ngôn ngữ",
           "title_en": "NLP foundations",
           "lessons": [
-            "Tokenization",
-            "Word và sentence embedding",
-            "Language model",
-            "Context window"
+            "Tách token",
+            "Embedding cho từ và câu",
+            "Mô hình ngôn ngữ",
+            "Cửa sổ ngữ cảnh"
           ]
         },
         {
           "slug": "transformers",
-          "title_vi": "Transformer và prompting",
+          "title_vi": "Transformer và thiết kế prompt",
           "title_en": "Transformers and prompting",
           "lessons": [
-            "Attention",
+            "Cơ chế attention",
             "Encoder và decoder",
-            "Prompt design",
-            "Structured output và function calling"
+            "Thiết kế prompt",
+            "Đầu ra có cấu trúc và gọi hàm"
           ]
         },
         {
           "slug": "retrieval",
-          "title_vi": "Retrieval",
+          "title_vi": "Truy xuất thông tin",
           "title_en": "Retrieval",
           "lessons": [
-            "Vector search",
-            "Chunking",
-            "Metadata filter",
-            "Reranking và hybrid retrieval"
+            "Tìm kiếm vector",
+            "Chia tài liệu thành đoạn",
+            "Lọc theo siêu dữ liệu",
+            "Xếp hạng lại và truy xuất kết hợp"
           ]
         },
         {
           "slug": "rag",
-          "title_vi": "RAG architecture",
+          "title_vi": "Kiến trúc RAG",
           "title_en": "RAG architecture",
           "lessons": [
-            "RAG pipeline",
-            "Citation",
-            "Không đủ bằng chứng",
-            "RAG failure analysis"
+            "Quy trình RAG",
+            "Trích dẫn nguồn",
+            "Xử lý khi không đủ bằng chứng",
+            "Phân tích lỗi RAG"
           ]
         },
         {
           "slug": "quality-safety",
-          "title_vi": "Quality và safety",
+          "title_vi": "Chất lượng và an toàn",
           "title_en": "Quality and safety",
           "lessons": [
-            "Evaluation set",
-            "Hallucination",
-            "Prompt injection",
-            "Latency và token cost"
+            "Xây dựng bộ đánh giá",
+            "Thông tin bịa đặt của mô hình",
+            "Tấn công chèn chỉ dẫn",
+            "Độ trễ và chi phí token"
           ]
         },
         {
           "slug": "adaptation",
-          "title_vi": "Adaptation và agents",
+          "title_vi": "Điều chỉnh mô hình và agent",
           "title_en": "Adaptation and agents",
           "lessons": [
-            "Fine-tuning khi nào",
+            "Khi nào nên tinh chỉnh mô hình",
             "LoRA và PEFT",
-            "Quantization",
-            "Tool-using agent có điều kiện dừng"
+            "Lượng tử hóa",
+            "Agent dùng công cụ và điều kiện dừng"
           ]
         }
       ],
@@ -2161,53 +2161,53 @@
       "slug": "phase-07-capstone-career",
       "order": 7,
       "duration_weeks": 6,
-      "title_vi": "Capstone, portfolio và xin việc",
+      "title_vi": "Đồ án tổng kết, hồ sơ dự án và ứng tuyển",
       "title_en": "Capstone, portfolio and career",
-      "summary_vi": "Hoàn thiện sản phẩm có demo, documentation, evaluation và luyện phỏng vấn.",
+      "summary_vi": "Hoàn thiện sản phẩm có demo, hướng dẫn, báo cáo đánh giá và câu chuyện phỏng vấn.",
       "summary_en": "Ship a documented, evaluated product and prepare for interviews.",
       "modules": [
         {
           "slug": "problem",
-          "title_vi": "Problem và architecture",
+          "title_vi": "Vấn đề và kiến trúc",
           "title_en": "Problem and architecture",
           "lessons": [
-            "Chọn domain",
-            "Viết problem statement",
-            "Xác định user và metric",
-            "Thiết kế architecture"
+            "Chọn lĩnh vực cho đồ án",
+            "Viết bản mô tả vấn đề",
+            "Xác định người dùng và thước đo",
+            "Thiết kế kiến trúc hệ thống"
           ]
         },
         {
           "slug": "ship",
-          "title_vi": "Build và ship",
+          "title_vi": "Xây dựng và hoàn thiện sản phẩm",
           "title_en": "Build and ship",
           "lessons": [
-            "Baseline và MVP",
-            "Evaluation report",
-            "Demo và README",
-            "Limitations và roadmap"
+            "Mô hình cơ sở và sản phẩm tối thiểu",
+            "Viết báo cáo đánh giá",
+            "Chuẩn bị demo và README",
+            "Nêu giới hạn và hướng phát triển"
           ]
         },
         {
           "slug": "portfolio",
-          "title_vi": "Portfolio",
+          "title_vi": "Hồ sơ dự án",
           "title_en": "Portfolio",
           "lessons": [
-            "Project README",
-            "Architecture diagram",
-            "Video demo",
-            "GitHub profile"
+            "Viết README cho dự án",
+            "Vẽ sơ đồ kiến trúc",
+            "Quay video demo",
+            "Sắp xếp hồ sơ GitHub"
           ]
         },
         {
           "slug": "career",
-          "title_vi": "Career readiness",
+          "title_vi": "Chuẩn bị ứng tuyển",
           "title_en": "Career readiness",
           "lessons": [
-            "CV AI Engineer",
-            "Trình bày project",
-            "ML interview questions",
-            "AI system design"
+            "Viết CV cho vị trí AI Engineer",
+            "Trình bày dự án trong phỏng vấn",
+            "Luyện câu hỏi phỏng vấn học máy",
+            "Thiết kế hệ thống AI trong phỏng vấn"
           ]
         }
       ],
@@ -2229,20 +2229,20 @@
       "order": 8,
       "duration_weeks": 1,
       "track": "genai-specialization",
-      "title_vi": "Software Engineering cho GenAI",
+      "title_vi": "Kỹ thuật phần mềm cho GenAI",
       "title_en": "Software Engineering for GenAI",
-      "summary_vi": "Củng cố nền tảng để biến prototype GenAI thành service có test, container và pipeline.",
+      "summary_vi": "Củng cố nền tảng để biến bản thử nghiệm GenAI thành dịch vụ có kiểm thử và môi trường tái lập.",
       "summary_en": "Strengthen the foundations needed to turn a GenAI prototype into a tested service with a container and delivery pipeline.",
       "modules": [
         {
           "slug": "genai-software-foundations",
-          "title_vi": "GenAI software foundations",
+          "title_vi": "Nền tảng phần mềm cho GenAI",
           "title_en": "GenAI software foundations",
           "lessons": [
-            "Python cho AI service và typed contract",
+            "Python cho dịch vụ AI và quy định kiểu dữ liệu",
             "Linux shell và môi trường tái lập",
             "REST API, SQL và Docker cho AI",
-            "CI/CD và cloud căn bản"
+            "CI/CD và nền tảng đám mây"
           ]
         }
       ],
@@ -2253,20 +2253,20 @@
       "order": 9,
       "duration_weeks": 1,
       "track": "genai-specialization",
-      "title_vi": "Machine Learning Fundamentals cho GenAI",
+      "title_vi": "Nền tảng học máy cho GenAI",
       "title_en": "Machine Learning Fundamentals for GenAI",
-      "summary_vi": "Hiểu dữ liệu, embedding, similarity và tối ưu để không dùng LLM như một hộp đen.",
+      "summary_vi": "Hiểu dữ liệu, embedding, độ tương đồng và tối ưu để giải thích kết quả ứng dụng LLM.",
       "summary_en": "Understand data, embeddings, similarity, and optimization so an LLM is not treated as a black box.",
       "modules": [
         {
           "slug": "genai-ml-fundamentals",
-          "title_vi": "GenAI ML fundamentals",
+          "title_vi": "Nền tảng học máy cho GenAI",
           "title_en": "GenAI ML fundamentals",
           "lessons": [
-            "Supervised và unsupervised learning",
-            "Embedding và similarity search",
-            "Train, validation, test và leakage",
-            "Loss function, optimizer và overfitting"
+            "Học có giám sát và không giám sát cho GenAI",
+            "Embedding và tìm kiếm tương đồng",
+            "Chia dữ liệu và ngăn rò rỉ",
+            "Hàm mất mát, bộ tối ưu và quá khớp"
           ]
         }
       ],
@@ -2277,20 +2277,20 @@
       "order": 10,
       "duration_weeks": 1,
       "track": "genai-specialization",
-      "title_vi": "Deep Learning và Transformer",
+      "title_vi": "Học sâu và Transformer",
       "title_en": "Deep Learning and Transformers",
-      "summary_vi": "Đi từ neural network và backpropagation đến self-attention, encoder/decoder và KV cache.",
+      "summary_vi": "Liên hệ mạng nơ-ron, lan truyền ngược, self-attention, encoder/decoder và KV cache.",
       "summary_en": "Move from neural networks and backpropagation to self-attention, encoder/decoder models, and KV cache.",
       "modules": [
         {
           "slug": "genai-transformers",
-          "title_vi": "Deep learning and Transformers",
+          "title_vi": "Học sâu và Transformer",
           "title_en": "Deep learning and Transformers",
           "lessons": [
-            "Neural network và backpropagation",
-            "Self-attention và scaled dot product",
-            "Transformer encoder và decoder",
-            "KV cache và inference efficiency"
+            "Mạng nơ-ron và lan truyền ngược",
+            "Self-attention và tích vô hướng có chia tỷ lệ",
+            "Encoder và decoder của Transformer",
+            "KV cache và hiệu quả suy luận"
           ]
         }
       ],
@@ -2301,20 +2301,20 @@
       "order": 11,
       "duration_weeks": 1,
       "track": "genai-specialization",
-      "title_vi": "LLM Application Engineering",
+      "title_vi": "Phát triển ứng dụng LLM",
       "title_en": "LLM Application Engineering",
-      "summary_vi": "Xây ứng dụng gọi model có prompt boundary, output schema, streaming và giới hạn vận hành.",
+      "summary_vi": "Xây ứng dụng gọi mô hình với chỉ dẫn rõ, đầu ra có cấu trúc và giới hạn vận hành.",
       "summary_en": "Build model-powered applications with prompt boundaries, output schemas, streaming, and operational limits.",
       "modules": [
         {
           "slug": "llm-application",
-          "title_vi": "LLM application contracts",
+          "title_vi": "Thiết kế ứng dụng LLM",
           "title_en": "LLM application contracts",
           "lessons": [
-            "Chat completion và message lifecycle",
-            "System prompt và user prompt",
-            "Structured output và JSON Schema",
-            "Streaming, rate limit và retry"
+            "Chat completion và vòng đời tin nhắn",
+            "Chỉ dẫn hệ thống và yêu cầu người dùng",
+            "Đầu ra có cấu trúc và JSON Schema",
+            "Trả lời từng phần, giới hạn tần suất và thử lại"
           ]
         }
       ],
@@ -2327,18 +2327,18 @@
       "track": "genai-specialization",
       "title_vi": "RAG nền tảng",
       "title_en": "RAG Foundations",
-      "summary_vi": "Xây pipeline từ document parsing đến chunking, embedding, vector database, retriever và grounded answer.",
+      "summary_vi": "Xây quy trình đọc tài liệu, chia đoạn, lập chỉ mục, truy xuất và trả lời có bằng chứng.",
       "summary_en": "Build the pipeline from document parsing through chunking, embeddings, a vector database, retrieval, and grounded answers.",
       "modules": [
         {
           "slug": "rag-foundations",
-          "title_vi": "RAG foundations",
+          "title_vi": "RAG nền tảng",
           "title_en": "RAG foundations",
           "lessons": [
-            "Document parsing và ingestion",
-            "Chunking, metadata và context",
-            "Embedding và vector database",
-            "Retriever, context và LLM"
+            "Đọc cấu trúc và nhập tài liệu",
+            "Chia đoạn, siêu dữ liệu và ngữ cảnh",
+            "Embedding và cơ sở dữ liệu vector",
+            "Kết nối truy xuất, ngữ cảnh và LLM"
           ]
         }
       ],
@@ -2349,20 +2349,20 @@
       "order": 13,
       "duration_weeks": 1,
       "track": "genai-specialization",
-      "title_vi": "Advanced RAG",
+      "title_vi": "RAG nâng cao",
       "title_en": "Advanced RAG",
-      "summary_vi": "Nâng chất lượng retrieval bằng hybrid search, reranking, query rewrite, filtering, citation và evaluation.",
+      "summary_vi": "So sánh tìm kiếm kết hợp, xếp hạng lại, viết lại truy vấn và lọc dữ liệu bằng bộ đánh giá.",
       "summary_en": "Improve retrieval with hybrid search, reranking, query rewriting, filtering, citations, and evaluation.",
       "modules": [
         {
           "slug": "advanced-rag",
-          "title_vi": "Advanced retrieval",
+          "title_vi": "Truy xuất nâng cao",
           "title_en": "Advanced retrieval",
           "lessons": [
-            "Hybrid search: BM25 và vector search",
-            "Reranking và top-k selection",
-            "Query rewrite và metadata filtering",
-            "Citation, faithfulness và evaluation"
+            "Tìm kiếm kết hợp BM25 và vector",
+            "Xếp hạng lại và chọn top-k",
+            "Viết lại truy vấn và lọc siêu dữ liệu",
+            "Trích nguồn, bám sát bằng chứng và đánh giá"
           ]
         }
       ],
@@ -2373,20 +2373,20 @@
       "order": 14,
       "duration_weeks": 1,
       "track": "genai-specialization",
-      "title_vi": "Tool Calling",
+      "title_vi": "Gọi công cụ",
       "title_en": "Tool Calling",
-      "summary_vi": "Cho model dùng API và database bên ngoài với schema, validation, retry, timeout và error handling an toàn.",
+      "summary_vi": "Cho mô hình dùng API và cơ sở dữ liệu qua lời gọi được kiểm tra quyền, tham số và thời gian xử lý.",
       "summary_en": "Let a model use external APIs and databases with safe schemas, validation, retries, timeouts, and error handling.",
       "modules": [
         {
           "slug": "tool-calling",
-          "title_vi": "Tool calling contracts",
+          "title_vi": "Thiết kế công cụ cho mô hình",
           "title_en": "Tool calling contracts",
           "lessons": [
-            "Function calling và tool schema",
-            "Tool validation và argument policy",
-            "Retry, timeout và idempotency",
-            "Error handling và secure tool execution"
+            "Gọi hàm và schema công cụ",
+            "Kiểm tra công cụ và chính sách tham số",
+            "Thử lại, thời gian chờ và tính lũy đẳng",
+            "Xử lý lỗi và thực thi công cụ an toàn"
           ]
         }
       ],
@@ -2397,20 +2397,20 @@
       "order": 15,
       "duration_weeks": 1,
       "track": "genai-specialization",
-      "title_vi": "AI Agents",
+      "title_vi": "Agent AI",
       "title_en": "AI Agents",
-      "summary_vi": "Thiết kế agent loop có planning, memory, tool use, human approval và guardrails kiểm soát được.",
+      "summary_vi": "Thiết kế vòng lặp agent có kế hoạch, bộ nhớ, công cụ, người duyệt và điều kiện dừng.",
       "summary_en": "Design a controllable agent loop with planning, memory, tool use, human approval, and guardrails.",
       "modules": [
         {
           "slug": "ai-agents",
-          "title_vi": "Agent loops and guardrails",
+          "title_vi": "Vòng lặp agent và giới hạn an toàn",
           "title_en": "Agent loops and guardrails",
           "lessons": [
-            "Planning và task decomposition",
-            "Memory: state, history và retrieval",
-            "Agent loop và điều kiện dừng",
-            "Human in the loop và guardrails"
+            "Lập kế hoạch và chia nhỏ nhiệm vụ",
+            "Bộ nhớ: trạng thái, lịch sử và truy xuất",
+            "Vòng lặp agent và điều kiện dừng",
+            "Người duyệt và giới hạn an toàn"
           ]
         }
       ],
@@ -2423,18 +2423,18 @@
       "track": "genai-specialization",
       "title_vi": "Model Context Protocol (MCP)",
       "title_en": "Model Context Protocol (MCP)",
-      "summary_vi": "Hiểu kiến trúc MCP, client/server, tools, resources, prompts và security boundary.",
+      "summary_vi": "Hiểu kiến trúc MCP, công cụ, tài nguyên, mẫu prompt và ranh giới quyền truy cập.",
       "summary_en": "Understand MCP architecture, clients/servers, tools, resources, prompts, and security boundaries.",
       "modules": [
         {
           "slug": "mcp",
-          "title_vi": "MCP architecture",
+          "title_vi": "Kiến trúc MCP",
           "title_en": "MCP architecture",
           "lessons": [
-            "MCP architecture và message flow",
-            "MCP client và server",
-            "MCP tools và resources",
-            "MCP prompts và security"
+            "Kiến trúc MCP và luồng thông điệp",
+            "Client và server MCP",
+            "Công cụ và tài nguyên MCP",
+            "Mẫu prompt và bảo mật MCP"
           ]
         }
       ],
@@ -2445,20 +2445,20 @@
       "order": 17,
       "duration_weeks": 1,
       "track": "genai-specialization",
-      "title_vi": "Evaluation cho LLM, RAG và Agent",
+      "title_vi": "Đánh giá LLM, RAG và agent",
       "title_en": "Evaluation for LLMs, RAG, and Agents",
-      "summary_vi": "Đo quality, hallucination, faithfulness và metrics để mỗi thay đổi có bằng chứng.",
+      "summary_vi": "Đo chất lượng và mức bám sát bằng chứng để so sánh thay đổi bằng số liệu.",
       "summary_en": "Measure quality, hallucination, faithfulness, and metrics so every change has evidence.",
       "modules": [
         {
           "slug": "genai-evaluation",
-          "title_vi": "GenAI evaluation",
+          "title_vi": "Đánh giá hệ thống GenAI",
           "title_en": "GenAI evaluation",
           "lessons": [
-            "LLM evaluation và test set",
-            "RAG evaluation: retrieval và answer",
-            "Agent evaluation và trajectory",
-            "Hallucination, faithfulness và metrics"
+            "Đánh giá LLM và xây tập kiểm tra",
+            "Đánh giá RAG: truy xuất và câu trả lời",
+            "Đánh giá agent và chuỗi hành động",
+            "Thông tin bịa đặt, mức bám sát nguồn và thước đo"
           ]
         }
       ],
@@ -2469,20 +2469,20 @@
       "order": 18,
       "duration_weeks": 1,
       "track": "genai-specialization",
-      "title_vi": "Observability cho hệ thống AI",
+      "title_vi": "Theo dõi vận hành hệ thống AI",
       "title_en": "Observability for AI Systems",
-      "summary_vi": "Theo dõi logging, tracing, token usage, latency, cost, dashboard và alert trong runtime.",
+      "summary_vi": "Theo dõi nhật ký, truy vết, token, độ trễ, chi phí và cảnh báo khi hệ thống chạy.",
       "summary_en": "Track logging, tracing, token usage, latency, cost, dashboards, and alerts at runtime.",
       "modules": [
         {
           "slug": "genai-observability",
-          "title_vi": "AI observability",
+          "title_vi": "Theo dõi vận hành hệ thống AI",
           "title_en": "AI observability",
           "lessons": [
-            "Structured logging và tracing",
-            "Token usage và latency",
-            "Cost monitoring và budget",
-            "Dashboard, alert và incident"
+            "Nhật ký có cấu trúc và truy vết",
+            "Lượng token và độ trễ",
+            "Theo dõi chi phí và ngân sách",
+            "Bảng theo dõi, cảnh báo và sự cố"
           ]
         }
       ],
@@ -2493,20 +2493,20 @@
       "order": 19,
       "duration_weeks": 1,
       "track": "genai-specialization",
-      "title_vi": "Production Engineering cho GenAI",
+      "title_vi": "Vận hành hệ thống GenAI",
       "title_en": "Production Engineering for GenAI",
-      "summary_vi": "Đưa hệ thống lên production với caching, fallback, queue, worker, scaling và availability.",
+      "summary_vi": "Thiết kế bộ nhớ đệm, phương án dự phòng, hàng đợi và cách duy trì dịch vụ khi tải tăng.",
       "summary_en": "Take the system to production with caching, fallbacks, queues, workers, scaling, and availability.",
       "modules": [
         {
           "slug": "genai-production",
-          "title_vi": "Production GenAI systems",
+          "title_vi": "Vận hành hệ thống GenAI",
           "title_en": "Production GenAI systems",
           "lessons": [
-            "Streaming và caching",
-            "Retry, fallback và rate limit",
-            "Queue và worker",
-            "High availability và capacity"
+            "Streaming và bộ nhớ đệm",
+            "Thử lại, phương án dự phòng và giới hạn tần suất",
+            "Hàng đợi và tiến trình xử lý nền",
+            "Tính sẵn sàng và năng lực phục vụ"
           ]
         }
       ],
@@ -2517,20 +2517,20 @@
       "order": 20,
       "duration_weeks": 1,
       "track": "genai-specialization",
-      "title_vi": "Fine-tuning và PEFT",
+      "title_vi": "Tinh chỉnh mô hình và PEFT",
       "title_en": "Fine-tuning and PEFT",
-      "summary_vi": "Biết khi nào fine-tune, chuẩn bị dataset, SFT/LoRA/QLoRA, evaluation và quantization.",
+      "summary_vi": "Đánh giá nhu cầu tinh chỉnh, chuẩn bị dữ liệu và so sánh SFT, LoRA, QLoRA, lượng tử hóa.",
       "summary_en": "Know when to fine-tune, prepare datasets, use SFT/LoRA/QLoRA, evaluate, and quantize.",
       "modules": [
         {
           "slug": "fine-tuning",
-          "title_vi": "Fine-tuning decisions",
+          "title_vi": "Lựa chọn tinh chỉnh mô hình",
           "title_en": "Fine-tuning decisions",
           "lessons": [
-            "Dataset preparation và SFT",
+            "Chuẩn bị dữ liệu và tinh chỉnh có giám sát",
             "LoRA, QLoRA và PEFT",
-            "Fine-tuning evaluation",
-            "Quantization và model trade-offs"
+            "Đánh giá sau tinh chỉnh",
+            "Lượng tử hóa và lựa chọn mô hình"
           ]
         }
       ],
@@ -2541,20 +2541,20 @@
       "order": 21,
       "duration_weeks": 1,
       "track": "genai-specialization",
-      "title_vi": "Local LLM và inference",
+      "title_vi": "Mô hình ngôn ngữ cục bộ và suy luận",
       "title_en": "Local LLMs and Inference",
-      "summary_vi": "Chạy model local với Transformers, PyTorch, vLLM, GGUF và tối ưu GPU/inference.",
+      "summary_vi": "Chạy mô hình bằng Transformers, PyTorch, vLLM hoặc Ollama và đo hiệu năng trên phần cứng thực tế.",
       "summary_en": "Run models locally with Transformers, PyTorch, vLLM, GGUF, and GPU/inference optimization.",
       "modules": [
         {
           "slug": "local-llm",
-          "title_vi": "Local LLM serving",
+          "title_vi": "Phục vụ mô hình cục bộ",
           "title_en": "Local LLM serving",
           "lessons": [
-            "Transformers và PyTorch inference",
-            "vLLM và serving throughput",
-            "GGUF, quantization và Ollama",
-            "GPU optimization và inference benchmark"
+            "Suy luận với Transformers và PyTorch",
+            "vLLM và thông lượng phục vụ",
+            "GGUF, lượng tử hóa và Ollama",
+            "Tối ưu GPU và đo hiệu năng suy luận"
           ]
         }
       ],
@@ -2565,20 +2565,20 @@
       "order": 22,
       "duration_weeks": 1,
       "track": "genai-specialization",
-      "title_vi": "AI System Design",
+      "title_vi": "Thiết kế hệ thống AI",
       "title_en": "AI System Design",
-      "summary_vi": "Tổng hợp architecture, scalability, security, cost, model selection và thiết kế end-to-end.",
+      "summary_vi": "Tổng hợp kiến trúc, khả năng mở rộng, bảo mật, chi phí và lựa chọn mô hình cho sản phẩm AI.",
       "summary_en": "Synthesize architecture, scalability, security, cost, model selection, and end-to-end design.",
       "modules": [
         {
           "slug": "genai-system-design",
-          "title_vi": "AI system design",
+          "title_vi": "Thiết kế hệ thống AI",
           "title_en": "AI system design",
           "lessons": [
-            "Architecture end-to-end cho AI product",
-            "Scalability, reliability và failure modes",
-            "Security, cost optimization và model selection",
-            "Design review và capstone proposal"
+            "Kiến trúc toàn hệ thống cho sản phẩm AI",
+            "Mở rộng, độ tin cậy và các tình huống lỗi",
+            "Bảo mật, chi phí và lựa chọn mô hình",
+            "Rà soát thiết kế và đề xuất đồ án"
           ]
         }
       ],

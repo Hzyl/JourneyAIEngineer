@@ -1,3 +1,4 @@
+import { LearningIllustration } from './LearningIllustration'
 import { useRef, useState } from 'react'
 import type { AppSettings } from '../api'
 import { BackupSettings } from './BackupSettings'
@@ -57,6 +58,7 @@ export function SettingsView({ settings, hosted, externalSaving = false, onSave,
     if (await save({ weekly_goal_minutes: value }, 'weekly_goal_minutes')) setGoal(null)
   }
   return <div className="settings-view">
+    <LearningIllustration name="settings" />
     <div className="page-intro">
       <div>
         <span className="eyebrow accent">{vi ? 'CÀI ĐẶT CÁ NHÂN' : 'PERSONAL SETTINGS'}</span>

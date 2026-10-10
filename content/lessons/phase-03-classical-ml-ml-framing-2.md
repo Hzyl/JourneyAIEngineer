@@ -2,16 +2,15 @@
 lesson_id: phase-03-classical-ml-ml-framing-2
 phase_id: phase-03-classical-ml
 module_id: ml-framing
-title_vi: Dataset, feature và label
+title_vi: Tập dữ liệu, đặc trưng và nhãn
 title_en: Datasets, features and labels
-summary_vi: Học Dataset, feature và label qua một mô hình input → biến đổi → output, sau đó kiểm chứng bằng bài tập có edge
-  case.
-summary_en: Learn Datasets, features and labels through an input → transformation → output model, then verify it with an edge-case
-  exercise.
+summary_vi: Đặc trưng là thông tin dùng để dự đoán; nhãn là kết quả cần học.
+summary_en: Learn Datasets, features and labels through an input → transformation → output model, then verify it
+  with an edge-case exercise.
 learning_objectives:
-- Giải thích dataset, feature và label bằng ví dụ cụ thể.
-- Viết hoặc sửa một đoạn code nhỏ áp dụng dataset, feature và label.
-- Nhận diện điều kiện áp dụng, giới hạn và một lỗi thường gặp.
+- Lập từ điển dữ liệu và ghi thời điểm có sẵn của từng đặc trưng.
+- Kiểm tra thời điểm có sẵn của dữ liệu và nguy cơ rò rỉ giữa các tập.
+- Giải thích kết quả và nêu một giới hạn của bài làm.
 learning_objectives_en:
 - Explain datasets, features and labels with a concrete example.
 - Write or adapt a small code example applying datasets, features and labels.
@@ -26,37 +25,43 @@ key_terms:
 - baseline
 - evaluation
 - ml-framing
-concept_notes_vi: 'Dataset, feature và label là một quyết định trong classical Machine Learning: xác định label, baseline,
-  split và metric trước khi chọn model. Preprocessing phải fit chỉ trên train; error analysis cần chỉ ra nhóm dữ liệu làm
-  model sai và cách kiểm tra lại giả thuyết.'
-concept_notes_en: 'Dataset, feature và label is a classical Machine Learning decision: define the label, baseline, split,
-  and metric before choosing a model. Fit preprocessing on train only; error analysis should identify the groups where the
-  model fails and how to retest the hypothesis.'
-why_it_matters_vi: 'Đặt đúng bài toán trước khi chọn model: user, label, split, baseline và rủi ro leakage.'
+concept_notes_vi: Đặc trưng là thông tin dùng để dự đoán; nhãn là kết quả cần học. Đặc trưng phải có sẵn tại thời
+  điểm dự đoán.
+concept_notes_en: 'Dataset, feature và label is a classical Machine Learning decision: define the label, baseline,
+  split, and metric before choosing a model. Fit preprocessing on train only; error analysis should identify the
+  groups where the model fails and how to retest the hypothesis.'
+why_it_matters_vi: Làm rõ người dùng, nhãn, cách chia dữ liệu và mốc so sánh trước khi chọn mô hình.
 why_it_matters_en: 'Frame the problem before choosing a model: user, label, split, baseline, and leakage risks.'
 study_steps_vi:
-- 'Đọc phần Concept notes để trả lời: Đặt đúng bài toán trước khi chọn model: user, label, split, baseline và rủi ro leakage.'
-- Mở scikit-learn User Guide, đọc đúng mục Read this lesson và ghi lại một ví dụ hoặc định nghĩa đã kiểm chứng.
-- Mở Practice Lab, bấm Tạo & mở VS Code, lưu bằng Ctrl+S, thay một tham số rồi chạy lại test.
-- 'Làm bài thực hành: Viết data dictionary, xác định target và baseline ngây thơ, sau đó lập bảng các điểm có thể leakage.'
-- Trả lời review card không nhìn gợi ý, hoàn thiện checklist và lưu một artifact có thể đưa lên GitHub.
+- Đọc phần giải thích, xác định khái niệm và điều kiện cần dùng cho nhiệm vụ bên dưới.
+- Tìm mục tương ứng với “Datasets, features and labels” trong tài liệu tham khảo; đối chiếu với phần giải thích
+  của bài.
+- Lập từ điển dữ liệu và ghi thời điểm có sẵn của từng đặc trưng.
+- Kiểm tra thời điểm có sẵn của dữ liệu và nguy cơ rò rỉ giữa các tập. Ghi kết quả đối chiếu và điều bạn đã sửa
+  nếu lần đầu chưa đúng.
+- Tự trả lời thẻ ôn tập, rồi kiểm tra các tiêu chí hoàn thành trước khi chuyển bài.
 study_steps_en:
-- 'Read the concept notes and answer: Frame the problem before choosing a model: user, label, split, baseline, and leakage
-  risks.'
+- 'Read the concept notes and answer: Frame the problem before choosing a model: user, label, split, baseline, and
+  leakage risks.'
 - Open scikit-learn User Guide, read the section marked Read this lesson, and record one verified example or definition.
-- Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the test.
-- 'Complete the practice task: Write a data dictionary, define the target and a naive baseline, then list every possible leakage
-  point.'
+- Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the
+  test.
+- 'Complete the practice task: Write a data dictionary, define the target and a naive baseline, then list every
+  possible leakage point.'
 - Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact.
 practice_plan:
   vi:
-    task: Viết data dictionary, xác định target và baseline ngây thơ, sau đó lập bảng các điểm có thể leakage.
+    task: 'Lập từ điển dữ liệu và ghi thời điểm có sẵn của từng đặc trưng.
+
+
+      Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Viết từ điển dữ liệu, xác định mục tiêu,
+      chọn dự đoán đơn giản làm mốc và liệt kê nguy cơ rò rỉ dữ liệu.'
     deliverables:
-    - Một file code chạy được
-    - Một test hoặc output expected
-    - Một note nêu edge case và trade-off
-    checkpoint: Bạn bảo vệ được cách split và metric trước một reviewer, kể cả khi score thấp.
-    stretch: Viết thêm một failure test cho dataset, feature và label và giải thích kết quả.
+    - Mô tả mục tiêu, dữ liệu và cách đánh giá đã chọn
+    - Kết quả đối chiếu kèm dữ liệu hoặc điều kiện thực hiện
+    - Một giới hạn và cách kiểm tra thêm
+    checkpoint: Kiểm tra thời điểm có sẵn của dữ liệu và nguy cơ rò rỉ giữa các tập.
+    stretch: Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào.
   en:
     task: Write a data dictionary, define the target and a naive baseline, then list every possible leakage point.
     deliverables:
@@ -67,9 +72,9 @@ practice_plan:
     stretch: Add a failure test for datasets, features and labels and explain the result.
 interview_questions:
   vi:
-  - Bạn sẽ giải thích dataset, feature và label cho một đồng đội mới như thế nào?
-  - Một assumption nào của dataset, feature và label có thể sai trong production?
-  - Bạn sẽ chọn metric hoặc test nào để chứng minh kết quả đáng tin?
+  - Bạn sẽ giải thích nội dung “Tập dữ liệu, đặc trưng và nhãn” bằng ví dụ nào?
+  - Điều kiện nào cần kiểm tra trước khi áp dụng vào công việc thực tế?
+  - Bạn dùng bằng chứng nào để kết luận bài làm đáp ứng yêu cầu?
   en:
   - How would you explain datasets, features and labels to a new teammate?
   - Which assumption behind datasets, features and labels could fail in production?
@@ -78,18 +83,19 @@ formulas: []
 code_examples:
 - language: python
   title: 'Datasets, features and labels: inspect one complete path'
-  code: "# Topic: Datasets, features and labels (phase-03-classical-ml-ml-framing-2)\ndef accuracy(y_true: list[int], y_pred:\
-    \ list[int]) -> float:\n    if len(y_true) != len(y_pred) or not y_true:\n        raise ValueError('non-empty aligned\
-    \ labels are required')\n    return sum(a == b for a, b in zip(y_true, y_pred)) / len(y_true)\n\nprint(accuracy([1, 0,\
-    \ 1], [1, 1, 1]))"
+  code: "# Topic: Datasets, features and labels (phase-03-classical-ml-ml-framing-2)\ndef accuracy(y_true: list[int],\
+    \ y_pred: list[int]) -> float:\n    if len(y_true) != len(y_pred) or not y_true:\n        raise ValueError('non-empty\
+    \ aligned labels are required')\n    return sum(a == b for a, b in zip(y_true, y_pred)) / len(y_true)\n\nprint(accuracy([1,\
+    \ 0, 1], [1, 1, 1]))"
   status: runnable
-  purpose_vi: Minh họa đường đi input → output của dataset, feature và label.
+  purpose_vi: Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.
   purpose_en: Illustrate the input-to-output path for datasets, features and labels.
   setup: Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.
   expected_output: Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.
-  edge_case_vi: Thử input rỗng, shape sai hoặc dữ liệu thiếu và ghi lại lỗi.
+  edge_case_vi: Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.
   edge_case_en: Try an empty input, a wrong shape or missing data and record the failure.
-  explanation_vi: Giữ một baseline và kiểm tra định dạng label trước khi diễn giải metric.
+  explanation_vi: Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần
+    nội dung; cần hoàn thành riêng nhiệm vụ thực hành.
   explanation_en: Keep the boundary executable and inspectable; change one input and verify the expected output.
 resources:
 - language: en
@@ -97,7 +103,7 @@ resources:
   url: https://scikit-learn.org/stable/user_guide.html
   kind: official
   required: false
-  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong lesson.
+  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.
   purpose_en: Official reference to verify the lesson concept.
   read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
   read_en: Read the relevant section, run a small example, and record one verified insight.
@@ -106,7 +112,7 @@ resources:
   url: https://scikit-learn.org/stable/modules/model_evaluation.html
   kind: official
   required: false
-  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong lesson.
+  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.
   purpose_en: Official reference to verify the lesson concept.
   read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
   read_en: Read the relevant section, run a small example, and record one verified insight.
@@ -115,17 +121,17 @@ resources:
   url: https://scikit-learn.org/stable/modules/compose.html
   kind: official
   required: false
-  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong lesson.
+  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.
   purpose_en: Official reference to verify the lesson concept.
   read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
   read_en: Read the relevant section, run a small example, and record one verified insight.
-- title: Giải thích tiếng Việt và checklist của lesson
+- title: Giải thích và hướng dẫn thực hành trong bài
   url: ''
   language: vi
   kind: in_app
-  purpose_vi: Phần giải thích, code example, checklist và tiêu chí hoàn thành ngay trong app.
+  purpose_vi: Đọc giải thích, thực hiện nhiệm vụ và đối chiếu tiêu chí hoàn thành.
   purpose_en: The explanation, code example, checklist, and completion criteria inside the app.
-  read_vi: Đọc theo thứ tự Study plan → Concept notes → Code example → Practice plan.
+  read_vi: Đọc giải thích → xem ví dụ → thực hành → tự kiểm tra.
   read_en: Follow Study plan → Concept notes → Code example → Practice plan.
   required: true
 exercise_ids:
@@ -137,71 +143,78 @@ review_item_ids:
 - phase-03-classical-ml-ml-framing-2-interview
 estimated_minutes: 60
 completion_checklist:
-- Giải thích được input, biến đổi và output của dataset, feature và label.
-- Chạy hoặc sửa được code example với một input mới.
-- Ghi lại một edge case, metric hoặc failure mode.
-- Trả lời review card bằng bằng chứng cụ thể.
+- Lập từ điển dữ liệu và ghi thời điểm có sẵn của từng đặc trưng.
+- Kiểm tra thời điểm có sẵn của dữ liệu và nguy cơ rò rỉ giữa các tập.
+- Lưu kết quả và giải thích được một giới hạn mà không nhìn lời giải.
 completion_criteria:
-- Mô tả được khi nào dùng dataset, feature và label và khi nào cần baseline khác.
-- Có artifact chạy được và output có thể kiểm tra.
-- Nêu được một giả định, edge case và cách kiểm chứng.
+- 'Bài làm đáp ứng nhiệm vụ: Lập từ điển dữ liệu và ghi thời điểm có sẵn của từng đặc trưng.'
+- Có kết quả đối chiếu với tiêu chí hoặc dự đoán đã ghi trước.
+- Kiểm tra thời điểm có sẵn của dữ liệu và nguy cơ rò rỉ giữa các tập.
 common_mistakes:
-- Bỏ qua invariant hoặc shape khi áp dụng dataset, feature và label.
-- Đánh giá dataset, feature và label bằng một output tốt mà không có baseline hoặc failure case.
-- Sao chép ví dụ dataset, feature và label mà không thay input và kiểm tra kết quả biên.
+- Dùng thông tin chỉ có sau thời điểm dự đoán làm đặc trưng đầu vào.
+- Kết luận từ một kết quả thuận lợi mà chưa kiểm tra trường hợp khác.
+- Chép lời giải nhưng không giải thích được quyết định trong bài làm của mình.
 next_lessons:
 - phase-03-classical-ml-ml-framing-3
 - phase-03-classical-ml-ml-framing-4
-review_question_vi: Định nghĩa dataset, feature và label bằng lời của bạn. Input, biến đổi và output là gì?
-review_question_en: Define datasets, features and labels in your own words. What are the input, transformation and output?
-review_answer_vi: Một câu trả lời tốt nêu rõ input, phép biến đổi, output và bối cảnh dùng dataset, feature và label. Hãy
-  liên hệ cụ thể với dataset, feature và label trong lesson phase-03-classical-ml-ml-framing-2.
-review_answer_en: A strong answer names the input, transformation, output and the context where datasets, features and labels
-  is used. Relate it specifically to datasets, features and labels in lesson phase-03-classical-ml-ml-framing-2.
+review_question_vi: Nội dung cốt lõi của “Tập dữ liệu, đặc trưng và nhãn” là gì?
+review_question_en: Define datasets, features and labels in your own words. What are the input, transformation and
+  output?
+review_answer_vi: Đặc trưng là thông tin dùng để dự đoán; nhãn là kết quả cần học. Đặc trưng phải có sẵn tại thời
+  điểm dự đoán.
+review_answer_en: A strong answer names the input, transformation, output and the context where datasets, features
+  and labels is used. Relate it specifically to datasets, features and labels in lesson phase-03-classical-ml-ml-framing-2.
 review_cards:
 - id: phase-03-classical-ml-ml-framing-2-recall
   type: recall
-  question_vi: Định nghĩa dataset, feature và label bằng lời của bạn. Input, biến đổi và output là gì?
+  question_vi: Nội dung cốt lõi của “Tập dữ liệu, đặc trưng và nhãn” là gì?
   question_en: Define datasets, features and labels in your own words. What are the input, transformation and output?
-  answer_vi: Một câu trả lời tốt nêu rõ input, phép biến đổi, output và bối cảnh dùng dataset, feature và label.
-  answer_en: A strong answer names the input, transformation, output and the context where datasets, features and labels is
-    used.
-  hint_vi: Bắt đầu bằng một ví dụ nhỏ có thể tính bằng tay.
+  answer_vi: Đặc trưng là thông tin dùng để dự đoán; nhãn là kết quả cần học. Đặc trưng phải có sẵn tại thời điểm
+    dự đoán.
+  answer_en: A strong answer names the input, transformation, output and the context where datasets, features and
+    labels is used.
+  hint_vi: Nêu ý chính, sau đó minh họa bằng tình huống cụ thể.
   hint_en: Start with a small example you can calculate by hand.
 - id: phase-03-classical-ml-ml-framing-2-application
   type: application
-  question_vi: Viết một ví dụ code hoặc thiết kế nhỏ áp dụng dataset, feature và label cho bài toán AI Engineer.
-  question_en: Write a small code example or design that applies datasets, features and labels to an AI engineering problem.
-  answer_vi: Ví dụ cho dataset, feature và label cần có input rõ ràng, output mong đợi và một cách chạy hoặc kiểm chứng (phase-03-classical-ml-ml-framing-2).
-  answer_en: The datasets, features and labels example should have an explicit input, expected output and a way to run or
-    verify it (phase-03-classical-ml-ml-framing-2).
-  hint_vi: Dùng code example trong lesson rồi thay một giả định.
+  question_vi: Lập từ điển dữ liệu và ghi thời điểm có sẵn của từng đặc trưng.
+  question_en: Write a small code example or design that applies datasets, features and labels to an AI engineering
+    problem.
+  answer_vi: 'Với nhiệm vụ “Lập từ điển dữ liệu và ghi thời điểm có sẵn của từng đặc trưng”, cần lưu: mô tả mục
+    tiêu, dữ liệu và cách đánh giá đã chọn. Kiểm tra thời điểm có sẵn của dữ liệu và nguy cơ rò rỉ giữa các tập.'
+  answer_en: The datasets, features and labels example should have an explicit input, expected output and a way
+    to run or verify it (phase-03-classical-ml-ml-framing-2).
+  hint_vi: Bắt đầu từ nhiệm vụ thực hành của bài.
   hint_en: Start from the lesson code example and change one assumption.
 - id: phase-03-classical-ml-ml-framing-2-debug
   type: debug
-  question_vi: Nếu kết quả của dataset, feature và label sai hoặc metric giảm, bạn sẽ debug theo thứ tự nào?
-  question_en: If datasets, features and labels produces a wrong result or a metric drops, what would you debug first?
-  answer_vi: Với dataset, feature và label, kiểm tra input/shape, preprocessing và baseline trước; sau đó cô lập lỗi bằng
-    test nhỏ và error analysis (phase-03-classical-ml-ml-framing-2).
-  answer_en: For datasets, features and labels, check inputs/shapes, preprocessing and the baseline first; then isolate the
-    failure with a small test and error analysis (phase-03-classical-ml-ml-framing-2).
-  hint_vi: Đừng bắt đầu bằng việc đổi model hoặc tăng độ phức tạp.
+  question_vi: Khi làm bài “Tập dữ liệu, đặc trưng và nhãn”, bạn cần tránh lỗi nào và kiểm tra lại ra sao?
+  question_en: If datasets, features and labels produces a wrong result or a metric drops, what would you debug
+    first?
+  answer_vi: 'Trong bài “Tập dữ liệu, đặc trưng và nhãn”, lỗi cần tránh là: dùng thông tin chỉ có sau thời điểm
+    dự đoán làm đặc trưng đầu vào. Kiểm tra thời điểm có sẵn của dữ liệu và nguy cơ rò rỉ giữa các tập. Dùng ví
+    dụ nhỏ để tìm bước đầu tiên có kết quả khác dự kiến.'
+  answer_en: For datasets, features and labels, check inputs/shapes, preprocessing and the baseline first; then
+    isolate the failure with a small test and error analysis (phase-03-classical-ml-ml-framing-2).
+  hint_vi: Tìm bước đầu tiên xuất hiện khác biệt.
   hint_en: Do not start by changing the model or adding complexity.
 - id: phase-03-classical-ml-ml-framing-2-interview
   type: interview
-  question_vi: Trong phỏng vấn, bạn sẽ giải thích trade-off và một edge case của dataset, feature và label như thế nào?
+  question_vi: Bạn dùng kết quả nào từ bài “Tập dữ liệu, đặc trưng và nhãn” để giải thích cách làm và giới hạn?
   question_en: In an interview, how would you explain a trade-off and one edge case of datasets, features and labels?
-  answer_vi: Câu trả lời về dataset, feature và label cần nêu giả định, metric/chi phí, giới hạn và cách giảm rủi ro trong
-    production (phase-03-classical-ml-ml-framing-2).
-  answer_en: The answer about datasets, features and labels should cover assumptions, metrics/cost, limitations and how to
-    reduce production risk (phase-03-classical-ml-ml-framing-2).
-  hint_vi: Liên hệ với latency, chất lượng, chi phí hoặc khả năng quan sát nếu phù hợp.
+  answer_vi: Bắt đầu từ nhiệm vụ “Lập từ điển dữ liệu và ghi thời điểm có sẵn của từng đặc trưng”. Trình bày kết
+    quả đã lưu, cách đối chiếu và một điều kiện có thể khiến kết luận thay đổi; không chỉ đọc lại định nghĩa.
+  answer_en: The answer about datasets, features and labels should cover assumptions, metrics/cost, limitations
+    and how to reduce production risk (phase-03-classical-ml-ml-framing-2).
+  hint_vi: Dùng quyết định thật trong bài làm, tránh chỉ đọc định nghĩa.
   hint_en: Relate it to latency, quality, cost or observability where relevant.
 ---
-# Dataset, feature và label / Datasets, features and labels
+# Tập dữ liệu, đặc trưng và nhãn / Datasets, features and labels
 
-Dataset, feature và label là một quyết định trong classical Machine Learning: xác định label, baseline, split và metric trước khi chọn model. Preprocessing phải fit chỉ trên train; error analysis cần chỉ ra nhóm dữ liệu làm model sai và cách kiểm tra lại giả thuyết.
+Đặc trưng là thông tin dùng để dự đoán; nhãn là kết quả cần học. Đặc trưng phải có sẵn tại thời điểm dự đoán.
 
-## Practice
+## Thực hành
 
-Viết data dictionary, xác định target và baseline ngây thơ, sau đó lập bảng các điểm có thể leakage.
+Lập từ điển dữ liệu và ghi thời điểm có sẵn của từng đặc trưng.
+
+Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Viết từ điển dữ liệu, xác định mục tiêu, chọn dự đoán đơn giản làm mốc và liệt kê nguy cơ rò rỉ dữ liệu.

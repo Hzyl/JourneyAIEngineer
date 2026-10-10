@@ -12,13 +12,16 @@ export function LessonReading({ lesson, language }: ContentProps) {
   return <>
     <section id="overview-objectives" className="detail-section lesson-section lesson-section-overview"
       aria-labelledby="lesson-overview-title" tabIndex={-1}>
-      <h2 id="lesson-overview-title">{vi ? 'Mục tiêu đầu ra' : 'Learning outcomes'}</h2>
+      <h2 id="lesson-overview-title">{vi ? 'Sau bài này, bạn sẽ làm được gì?' : 'Learning outcomes'}</h2>
       <ul>{lesson.objectives[language].map((item) => <li key={item}>{item}</li>)}</ul>
     </section>
     <section id="concept" className="detail-section lesson-section lesson-section-concept"
       aria-labelledby="lesson-concept-title" tabIndex={-1}>
-      <h2 id="lesson-concept-title">{vi ? 'Giải thích cốt lõi' : 'Concept notes'}</h2>
-      <p className="concept-notes">{vi ? lesson.concept_notes_vi : lesson.concept_notes_en}</p>
+      <h2 id="lesson-concept-title">{vi ? 'Kiến thức cần nắm' : 'Concept notes'}</h2>
+      <div className="concept-notes">
+        {(vi ? lesson.concept_notes_vi : lesson.concept_notes_en).split(/\n+/).filter(Boolean)
+          .map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+      </div>
       {lesson.formulas.length > 0 && <div className="formula-list"
         aria-label={vi ? 'Công thức liên quan' : 'Related formulas'}>
         {lesson.formulas.map((formula) => <code key={formula}>{formula}</code>)}
@@ -28,7 +31,7 @@ export function LessonReading({ lesson, language }: ContentProps) {
       aria-labelledby="lesson-playbook-title" tabIndex={-1}>
       <div className="playbook-intro">
         <span className="eyebrow accent">02 · {vi ? 'CÁCH THỰC HÀNH' : 'PRACTICE PLAYBOOK'}</span>
-        <h2 id="lesson-playbook-title">{vi ? 'Học theo một quy trình có thể lặp lại'
+        <h2 id="lesson-playbook-title">{vi ? 'Các bước thực hành'
           : 'Follow a repeatable study process'}</h2>
         <p>{vi ? guide.why_it_matters_vi : guide.why_it_matters_en}</p>
       </div>
@@ -40,7 +43,7 @@ export function LessonReading({ lesson, language }: ContentProps) {
         <article className="practice-plan">
           <span className="eyebrow">{vi ? 'THỰC HÀNH' : 'PRACTICE'}</span>
           <strong>{plan.task}</strong>
-          <h3>{vi ? 'Bằng chứng cần lưu' : 'Evidence to save'}</h3>
+          <h3>{vi ? 'Kết quả cần lưu lại' : 'Evidence to save'}</h3>
           <ul>{(plan.deliverables ?? []).map((item) => <li key={item}>{item}</li>)}</ul>
         </article>
         <article className="practice-plan checkpoint">
@@ -55,7 +58,7 @@ export function LessonReading({ lesson, language }: ContentProps) {
     </section>
     {lesson.code_examples.length > 0 && <section
       className="detail-section lesson-section lesson-section-practice" aria-labelledby="lesson-code-title">
-      <h2 id="lesson-code-title">{vi ? 'Ví dụ code' : 'Code examples'}</h2>
+      <h2 id="lesson-code-title">{vi ? 'Ví dụ mã nguồn' : 'Code examples'}</h2>
       {lesson.code_examples.map((example) => <div className="code-example" key={example.title}>
         <strong>{example.title}</strong>
         <pre tabIndex={0} aria-label={example.title}><code>{example.code}</code></pre>
@@ -72,7 +75,7 @@ export function LessonChecks({ lesson, language, checked, nudge, onToggle, onOpe
   return <>
     <section id="check" className="detail-section lesson-section lesson-section-check"
       aria-labelledby="lesson-check-title" tabIndex={-1}>
-      <h2 id="lesson-check-title">{vi ? 'Kiểm tra hiểu' : 'Check understanding'}</h2>
+      <h2 id="lesson-check-title">{vi ? 'Kiểm tra mức độ hiểu bài' : 'Check understanding'}</h2>
       <div className="lesson-check-block">
         <h3>{vi ? 'Kiến thức cần có và tiêu chí hoàn thành' : 'Prerequisites and completion criteria'}</h3>
         {lesson.prerequisites.length > 0 && <ul>{lesson.prerequisites.map((item) => <li key={item}>
@@ -88,13 +91,13 @@ export function LessonChecks({ lesson, language, checked, nudge, onToggle, onOpe
       </div>}
     </section>
     <section className="detail-section lesson-section lesson-section-check" aria-labelledby="lesson-checklist-title">
-      <h2 id="lesson-checklist-title">{vi ? 'Checklist thực hành' : 'Practice checklist'}</h2>
+      <h2 id="lesson-checklist-title">{vi ? 'Những việc cần hoàn thành' : 'Practice checklist'}</h2>
       <div className="checklist">{lesson.checklist.map((item, index) => <label key={index}>
         <input type="checkbox" checked={checked[index] ?? false} onChange={() => onToggle(index)} />
         <span className={checked[index] ? 'checked-item' : ''}>{item}</span>
       </label>)}</div>
       {nudge && <p className="warning-note" role="status">{vi
-        ? 'Hãy hoàn thiện các mục checklist trước khi đánh dấu hoàn thành.'
+        ? 'Hãy làm đủ các mục bên trên trước khi đánh dấu hoàn thành bài học.'
         : 'Finish every checklist item before marking this lesson complete.'}</p>}
       {questions.length > 0 && <div className="interview-questions">
         <h3>{vi ? 'Câu hỏi phỏng vấn cần tự trả lời' : 'Interview questions to answer aloud'}</h3>

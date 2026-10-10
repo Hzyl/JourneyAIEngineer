@@ -1,3 +1,5 @@
+import { illustrationForLesson } from '../components/learning-illustrations'
+import { LearningIllustration } from '../components/LearningIllustration'
 import { useState } from 'react'
 import curriculum from '../../content/curriculum.json'
 import routes from '../../content/learning_routes.json'
@@ -30,7 +32,8 @@ export function PublicRoadmap({ language, standalone, onStart }: Props) {
       {route.phase_ids.map((id) => {
         const phase = curriculum.phases.find((item) => item.slug === id)!
         return <li key={id}>
-          <details>
+          <LearningIllustration name={illustrationForLesson(id)} variant="thumbnail" />
+    <details>
             <summary>{vi ? phase.title_vi : phase.title_en}</summary>
             <ul>{phase.modules.map((module) => <li key={module.slug}>
               {vi ? module.title_vi : module.title_en}

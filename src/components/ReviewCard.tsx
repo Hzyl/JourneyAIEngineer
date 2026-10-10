@@ -55,7 +55,7 @@ export function ReviewCard({ item, language, pendingRating, onSubmit, onEdit }: 
     </div>
     <h3 ref={heading} id={`${labelId}-question`} tabIndex={-1}>{vi ? item.question_vi : item.question_en}</h3>
     <label className="review-answer-label">
-      {vi ? 'Câu trả lời review' : 'Your review answer'}
+      {vi ? 'Câu trả lời của bạn' : 'Your review answer'}
       <textarea value={answer} disabled={busy}
         onFocus={(event) => { startedAt.current ??= event.timeStamp }}
         onChange={(event) => { setAnswer(event.target.value); onEdit() }}

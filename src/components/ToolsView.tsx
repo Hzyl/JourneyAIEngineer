@@ -1,3 +1,4 @@
+import { LearningIllustration } from './LearningIllustration'
 import type { LearningTool, ToolTextField } from '../api'
 import './tools.css'
 
@@ -26,6 +27,7 @@ export function ToolsView({ tools, language }: { tools: LearningTool[]; language
       <h3>{vi ? 'Chưa có công cụ' : 'No tools available'}</h3>
       <p>{vi ? 'Thử làm mới dữ liệu để tải lại danh mục.' : 'Refresh the data to reload the catalogue.'}</p>
     </div>}
+    <LearningIllustration name="agents" />
     <div className="tools-grid">
       {tools.map((tool) => <article className="tool-card" key={tool.slug}>
         <div className="tool-symbol" aria-hidden="true">{tool.name.slice(0, 1)}</div>

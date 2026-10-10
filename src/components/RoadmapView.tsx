@@ -1,3 +1,5 @@
+import { illustrationForLesson } from './learning-illustrations'
+import { LearningIllustration } from './LearningIllustration'
 import { useEffect, useState, type ReactNode } from 'react'
 import routes from '../../content/learning_routes.json'
 import './roadmap-routes.css'
@@ -95,7 +97,8 @@ export function RoadmapView({ roadmap, language, showCompletedLessons, onOpenLes
     {!count && <p>{vi ? 'Không có bài phù hợp bộ lọc này.' : 'No lessons match these filters.'}</p>}
     {phases.map((phase, index) => <section className="phase-block" key={phase.slug}>
       <header className="phase-header"><span className="phase-index">{String(index + 1).padStart(2, '0')}</span>
-        <h3>{vi ? phase.title_vi : phase.title_en}</h3></header>
+        <LearningIllustration name={illustrationForLesson(phase.slug)} variant="thumbnail" />
+    <h3>{vi ? phase.title_vi : phase.title_en}</h3></header>
       {phase.modules.map((module) => <div className="module-block" key={module.slug}>
         <h4 className="module-title">{vi ? module.title_vi : module.title_en}</h4>
         {module.lessons.map((lesson) => <button className={`lesson-row ${lesson.status === 'completed' ? 'done' : ''}`}

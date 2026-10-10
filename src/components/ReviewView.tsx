@@ -1,3 +1,4 @@
+import { LearningIllustration } from './LearningIllustration'
 import { useEffect, useRef, useState } from 'react'
 import { ReviewCard, type ReviewItem, type ReviewRating } from './ReviewCard'
 import { ReviewActivity } from './ReviewActivity'
@@ -44,9 +45,10 @@ export function ReviewView({ reviews, language, onAnswer, onOpenLesson }: Props)
   }
 
   return <div className="review-layout">
+    <LearningIllustration name="review" />
     <header className="review-header">
       <span className="eyebrow accent">{vi ? 'ÔN TẬP CÁCH QUÃNG' : 'SPACED REVIEW'}</span>
-      <h2>{vi ? 'Nhớ bằng cách tự gọi lại.' : 'Remember through active recall.'}</h2>
+      <h2>{vi ? 'Tự nhớ lại để hiểu và nhớ lâu hơn.' : 'Remember through active recall.'}</h2>
       <p role="status">{remaining.filter((card) => card.queue_status !== 'new').length} {vi ? 'đến hạn' : 'due'} ·{' '}
         {remaining.filter((card) => card.queue_status === 'new').length} {vi ? 'thẻ mới' : 'new cards'}</p>
     </header>

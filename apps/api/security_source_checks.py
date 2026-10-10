@@ -37,7 +37,7 @@ def ast_findings(source_path: Path, finding: Callable[..., dict[str, Any]]) -> t
                     "needs_human_review",
                     "Subprocess có shell=True",
                     f"{source_path.name}:{node.lineno} gọi subprocess với shell=True.",
-                    "Loại bỏ shell=True, dùng argv list, allowlist command và test input boundary.",
+                    "Bỏ shell=True, truyền danh sách đối số và chỉ cho phép các lệnh đã định. Kiểm thử các giá trị biên của đầu vào.",
                     source_file=str(source_path),
                     source_line=node.lineno,
                 ))
@@ -46,9 +46,9 @@ def ast_findings(source_path: Path, finding: Callable[..., dict[str, Any]]) -> t
                 f"source-sql-fstring-{node.lineno}",
                 "medium",
                 "needs_human_review",
-                "SQL query được tạo bằng f-string",
+                "Truy vấn SQL được tạo bằng f-string",
                 f"{source_path.name}:{node.lineno} truyền f-string vào execute().",
-                "Kiểm tra toàn bộ giá trị động; dùng parameterized query cho dữ liệu người dùng và giữ phần SQL động trong allowlist.",
+                "Kiểm tra mọi giá trị động. Truyền dữ liệu người dùng bằng tham số truy vấn; chỉ cho phép các cấu trúc SQL động đã định trước.",
                 source_file=str(source_path),
                 source_line=node.lineno,
             ))
@@ -61,7 +61,7 @@ def ast_findings(source_path: Path, finding: Callable[..., dict[str, Any]]) -> t
             "needs_human_review",
             "CORS cho phép mọi origin",
             f"{source_path.name}:{line} chứa allow_origins=['*'].",
-            "Đổi sang allowlist origin cụ thể và kiểm tra credential/CORS trước khi public.",
+            "Chỉ cho phép các origin cụ thể và kiểm tra việc gửi thông tin xác thực qua CORS trước khi công khai ứng dụng.",
             source_file=str(source_path),
             source_line=line,
         ))

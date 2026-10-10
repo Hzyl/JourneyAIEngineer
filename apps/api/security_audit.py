@@ -128,9 +128,9 @@ def _route_findings(routes: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 f"endpoint-online-auth-{route['endpoint']}",
                 "medium",
                 "needs_human_review",
-                "Endpoint ghi dữ liệu chưa có dấu hiệu auth online",
-                f"{'/'.join(route['methods'])} {route['path']} không có auth/token rõ trong handler; hiện phù hợp local-only nhưng chưa sẵn sàng public.",
-                "Giữ endpoint ở local-only hoặc thêm authentication, authorization, rate limit và audit log trước khi deploy online.",
+                "Chưa thấy dấu hiệu xác thực trong hàm xử lý ghi dữ liệu",
+                f"{'/'.join(route['methods'])} {route['path']} chưa có dấu hiệu auth/token được nhận diện trong mã của hàm xử lý. Phép kiểm tra này chưa đánh giá lớp trung gian (middleware).",
+                "Giữ điểm cuối này chỉ hoạt động trên máy, hoặc kiểm tra cơ chế xác thực, phân quyền, giới hạn tần suất và nhật ký kiểm toán trước khi đưa lên mạng.",
                 path=route["path"],
                 methods=route["methods"],
                 source_file=route["source_file"],
@@ -141,9 +141,9 @@ def _route_findings(routes: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 f"endpoint-input-contract-{route['endpoint']}",
                 "low",
                 "needs_human_review",
-                "Endpoint ghi dữ liệu không có body model rõ ràng",
-                f"{'/'.join(route['methods'])} {route['path']} không expose Pydantic body model.",
-                "Xác định input contract bằng Pydantic model hoặc ghi rõ vì sao endpoint không nhận body.",
+                "Điểm cuối ghi dữ liệu chưa khai báo mô hình nội dung yêu cầu",
+                f"{'/'.join(route['methods'])} {route['path']} không có mô hình Pydantic cho nội dung yêu cầu trong thông tin tuyến API.",
+                "Khai báo cấu trúc đầu vào bằng mô hình Pydantic, hoặc ghi rõ lý do điểm cuối không nhận nội dung yêu cầu.",
                 path=route["path"],
                 methods=route["methods"],
                 source_file=route["source_file"],
@@ -155,9 +155,9 @@ def _route_findings(routes: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 f"endpoint-input-size-{route['endpoint']}",
                 "low",
                 "needs_human_review",
-                "Body có string chưa thấy max length",
-                f"{route['body_model']} ({fields}) tại {route['path']} chưa có maxLength trong schema.",
-                "Đặt giới hạn độ dài phù hợp hoặc ghi lại lý do field cần mở; sau đó kiểm tra rate limit và payload size ở gateway.",
+                "Đầu vào có chuỗi chưa khai báo độ dài tối đa",
+                f"{route['body_model']} ({fields}) tại {route['path']} chưa có maxLength trong cấu trúc dữ liệu.",
+                "Đặt giới hạn độ dài phù hợp hoặc ghi rõ lý do trường này không giới hạn. Sau đó kiểm tra giới hạn tần suất và kích thước dữ liệu tại cổng API.",
                 evidence_en=f"{route['body_model']} ({fields}) at {route['path']} has no maxLength in its schema.",
                 path=route["path"],
                 methods=route["methods"],
@@ -192,9 +192,9 @@ def audit_app(app: Any, source_root: Path | None = None) -> dict[str, Any]:
     if not inspected:
         findings.append(_finding(
             "source-inspection-unavailable", "info", "needs_human_review",
-            "Chưa kiểm tra được source API",
-            "File source thiếu, không đọc được, quá lớn hoặc không phải Python hợp lệ.",
-            "Mở bản source có file Python hợp lệ, đọc được rồi chạy lại kiểm tra.",
+            "Chưa kiểm tra được mã nguồn API",
+            "Tệp mã nguồn bị thiếu, không đọc được, quá lớn hoặc không phải mã Python hợp lệ.",
+            "Mở bản sao mã nguồn có tệp Python hợp lệ và đọc được, rồi chạy lại phép kiểm tra.",
         ))
     frontend_files = list((root / "src").glob("*.tsx")) if (root / "src").exists() else []
     for source_path in frontend_files:
@@ -208,9 +208,9 @@ def audit_app(app: Any, source_root: Path | None = None) -> dict[str, Any]:
                 "frontend-dangerous-html",
                 "high",
                 "needs_human_review",
-                "Frontend chèn HTML nguy hiểm",
+                "Giao diện chèn HTML trực tiếp",
                 f"{source_path.name}:{line} chứa dangerouslySetInnerHTML.",
-                "Render dữ liệu không tin cậy bằng text node hoặc sanitize bằng policy rõ ràng.",
+                "Hiển thị dữ liệu không đáng tin dưới dạng văn bản, hoặc lọc HTML theo quy tắc rõ ràng trước khi chèn.",
                 source_file=str(source_path),
                 source_line=line,
             ))
@@ -219,9 +219,9 @@ def audit_app(app: Any, source_root: Path | None = None) -> dict[str, Any]:
             "control-no-shell-true",
             "info",
             "verified_control",
-            "Không phát hiện shell=True trong API source",
-            "AST scan không thấy subprocess call với shell=True.",
-            "Giữ nguyên argv list, shell=False và timeout cho mọi subprocess mới.",
+            "Không phát hiện shell=True trong mã nguồn API",
+            "Phân tích cây cú pháp (AST) không phát hiện lời gọi subprocess có shell=True.",
+            "Tiếp tục truyền danh sách đối số, dùng shell=False và đặt thời gian chờ tối đa cho mọi lời gọi subprocess mới.",
             source_file=str(api_source) if api_source.exists() else None,
         ))
     if inspected and not any(finding["id"] == "source-cors-wildcard" for finding in findings):
@@ -230,8 +230,8 @@ def audit_app(app: Any, source_root: Path | None = None) -> dict[str, Any]:
             "info",
             "verified_control",
             "CORS không dùng wildcard",
-            "AST/text scan không thấy allow_origins=['*'] trong API source.",
-            "Giữ allowlist origin cụ thể khi mở preview hoặc public beta.",
+            "Phân tích cây cú pháp và văn bản không thấy allow_origins=['*'] trong mã nguồn API.",
+            "Giữ danh sách origin được phép cụ thể khi mở bản xem trước hoặc bản beta công khai.",
             source_file=str(api_source) if api_source.exists() else None,
         ))
     public_routes = []

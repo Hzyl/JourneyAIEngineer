@@ -8,8 +8,8 @@
   "summary_en": "Use baseline evidence to choose practice gaps and a sustainable learning schedule.",
   "learning_objectives": [
     "Gắn mỗi điểm tự đánh giá với bằng chứng.",
-    "Chọn hai lỗ hổng ưu tiên.",
-    "Đặt lịch tuần đầu dựa trên thời gian có thật."
+    "Chọn hai phần kiến thức cần ưu tiên bổ sung.",
+    "Lập lịch tuần đầu theo thời gian bạn thực sự có thể dành cho việc học."
   ],
   "learning_objectives_en": [
     "Attach evidence to each self-assessment score.",
@@ -24,12 +24,12 @@
     "evidence",
     "weekly budget"
   ],
-  "concept_notes_vi": "Điểm tự chấm chỉ giúp quyết định bài tiếp theo. Ghi mỗi kỹ năng theo ba mức: 0 chưa làm được, 1 làm với gợi ý, 2 tự làm và giải thích được. Kèm artifact hoặc test, không chỉ một con số.\nNếu Python/terminal còn yếu, ưu tiên nhánh nền tảng. Nếu đã lập trình, có thể vào AI Application với phần nền tảng cần bù. ML/DL chuyên sâu cần thêm toán và thực nghiệm. Nhịp học là ngân sách giờ thực tế, không phải lời hứa có việc sau một số tuần.",
+  "concept_notes_vi": "Điểm tự chấm chỉ giúp quyết định bài tiếp theo. Ghi mỗi kỹ năng theo ba mức: 0 chưa làm được, 1 làm với gợi ý, 2 tự làm và giải thích được. Kèm sản phẩm thực hành hoặc kiểm thử, không chỉ một con số.\nNếu Python/terminal còn yếu, ưu tiên nhánh nền tảng. Nếu đã lập trình, có thể vào phát triển ứng dụng AI với phần nền tảng cần bù. ML/DL chuyên sâu cần thêm toán và thực nghiệm. Nhịp học là ngân sách giờ thực tế, không phải lời hứa có việc sau một số tuần.",
   "concept_notes_en": "A self-assessment helps choose the next lesson. Record each skill as 0 not yet able, 1 with hints, or 2 independent and explainable. Attach an artifact or test instead of only a number.\nIf Python or terminal skills are weak, prioritize foundations. Existing programmers can enter AI Application while addressing gaps. Deep ML/DL requires additional mathematics and experiments. A pace is a realistic time budget, not a job guarantee after a fixed number of weeks.",
-  "why_it_matters_vi": "Điểm tự chấm chỉ giúp quyết định bài tiếp theo. Ghi mỗi kỹ năng theo ba mức: 0 chưa làm được, 1 làm với gợi ý, 2 tự làm và giải thích được. Kèm artifact hoặc test, không chỉ một con số.",
+  "why_it_matters_vi": "Điểm tự chấm chỉ giúp quyết định bài tiếp theo. Ghi mỗi kỹ năng theo ba mức: 0 chưa làm được, 1 làm với gợi ý, 2 tự làm và giải thích được. Kèm sản phẩm thực hành hoặc kiểm thử, không chỉ một con số.",
   "why_it_matters_en": "A self-assessment helps choose the next lesson. Record each skill as 0 not yet able, 1 with hints, or 2 independent and explainable. Attach an artifact or test instead of only a number.",
   "study_steps_vi": [
-    "Xem lại output/test ba bài baseline và ghi mức 0/1/2 cho từng kỹ năng.",
+    "Xem lại kết quả và kiểm thử ba bài đánh giá đầu vào và ghi mức 0/1/2 cho từng kỹ năng.",
     "Liệt kê kỹ năng cần gợi ý và chọn hai mục ảnh hưởng trực tiếp bài tiếp theo.",
     "Đặt số buổi và số phút mỗi buổi; chừa thời gian sửa lỗi/ôn tập.",
     "Lưu baseline-plan.md với bằng chứng, hai mục luyện và thời điểm xem lại sau một tuần."
@@ -42,14 +42,14 @@
   ],
   "practice_plan": {
     "vi": {
-      "task": "Lưu baseline-plan.md với bằng chứng, hai mục luyện và thời điểm xem lại sau một tuần.",
+      "task": "Đối chiếu kết quả ba bài đầu vào và lập kế hoạch cho tuần đầu. Lưu baseline-plan.md với bằng chứng, hai mục luyện và thời điểm xem lại sau một tuần.",
       "deliverables": [
-        "Gắn mỗi điểm tự đánh giá với bằng chứng.",
-        "Chọn hai lỗ hổng ưu tiên.",
-        "Đặt lịch tuần đầu dựa trên thời gian có thật."
+        "Bảng tự đánh giá kèm bằng chứng",
+        "Hai phần kiến thức cần ưu tiên bổ sung",
+        "Lịch học theo số buổi và thời gian thực tế"
       ],
-      "checkpoint": "Đặt lịch tuần đầu dựa trên thời gian có thật.",
-      "stretch": "Đã xem lời giải rồi chấm tự làm: điều chỉnh thế nào?"
+      "checkpoint": "Lập lịch tuần đầu theo thời gian bạn thực sự có thể dành cho việc học.",
+      "stretch": "Nếu đã xem lời giải nhưng ghi là tự làm, bạn nên điều chỉnh kết quả ra sao?"
     },
     "en": {
       "task": "Save baseline-plan.md with evidence, two practice targets and a review date one week later.",
@@ -65,7 +65,7 @@
   "interview_questions": {
     "vi": [
       "Có 3 buổi, mỗi buổi 30 phút: ngân sách tuần là bao nhiêu?",
-      "Đã xem lời giải rồi chấm tự làm: điều chỉnh thế nào?",
+      "Nếu đã xem lời giải nhưng ghi là tự làm, bạn nên điều chỉnh kết quả ra sao?",
       "Nhịp nhanh có chứng minh sẵn sàng đi làm không?"
     ],
     "en": [
@@ -87,7 +87,7 @@
       "expected_output": "['logic', 'terminal']\nweekly_minutes=90",
       "edge_case_vi": "Điểm cao tự chấm không thay thế việc chạy lại bài mà không xem lời giải.",
       "edge_case_en": "A high self-score does not replace rerunning the task without a solution.",
-      "explanation_vi": "Điểm tự chấm chỉ giúp quyết định bài tiếp theo. Ghi mỗi kỹ năng theo ba mức: 0 chưa làm được, 1 làm với gợi ý, 2 tự làm và giải thích được. Kèm artifact hoặc test, không chỉ một con số.\nNếu Python/terminal còn yếu, ưu tiên nhánh nền tảng. Nếu đã lập trình, có thể vào AI Application với phần nền tảng cần bù. ML/DL chuyên sâu cần thêm toán và thực nghiệm. Nhịp học là ngân sách giờ thực tế, không phải lời hứa có việc sau một số tuần.",
+      "explanation_vi": "Điểm tự chấm chỉ giúp quyết định bài tiếp theo. Ghi mỗi kỹ năng theo ba mức: 0 chưa làm được, 1 làm với gợi ý, 2 tự làm và giải thích được. Kèm sản phẩm thực hành hoặc kiểm thử, không chỉ một con số.\nNếu Python/terminal còn yếu, ưu tiên nhánh nền tảng. Nếu đã lập trình, có thể vào phát triển ứng dụng AI với phần nền tảng cần bù. ML/DL chuyên sâu cần thêm toán và thực nghiệm. Nhịp học là ngân sách giờ thực tế, không phải lời hứa có việc sau một số tuần.",
       "explanation_en": "A self-assessment helps choose the next lesson. Record each skill as 0 not yet able, 1 with hints, or 2 independent and explainable. Attach an artifact or test instead of only a number.\nIf Python or terminal skills are weak, prioritize foundations. Existing programmers can enter AI Application while addressing gaps. Deep ML/DL requires additional mathematics and experiments. A pace is a realistic time budget, not a job guarantee after a fixed number of weeks."
     }
   ],
@@ -111,7 +111,7 @@
       "required": true,
       "purpose_vi": "Lưu baseline-plan.md với bằng chứng, hai mục luyện và thời điểm xem lại sau một tuần.",
       "purpose_en": "Save baseline-plan.md with evidence, two practice targets and a review date one week later.",
-      "read_vi": "Đặt lịch tuần đầu dựa trên thời gian có thật.",
+      "read_vi": "Lập lịch tuần đầu theo thời gian bạn thực sự có thể dành cho việc học.",
       "read_en": "Schedule the first week using genuinely available time."
     }
   ],
@@ -127,36 +127,36 @@
   "estimated_minutes": 25,
   "completion_checklist": [
     "Gắn mỗi điểm tự đánh giá với bằng chứng.",
-    "Chọn hai lỗ hổng ưu tiên.",
-    "Đặt lịch tuần đầu dựa trên thời gian có thật.",
+    "Chọn hai phần kiến thức cần ưu tiên bổ sung.",
+    "Lập lịch tuần đầu theo thời gian bạn thực sự có thể dành cho việc học.",
     "Lưu kết quả thực hành và một lỗi đã hiểu."
   ],
   "completion_criteria": [
     "Gắn mỗi điểm tự đánh giá với bằng chứng.",
-    "Chọn hai lỗ hổng ưu tiên.",
-    "Đặt lịch tuần đầu dựa trên thời gian có thật."
+    "Chọn hai phần kiến thức cần ưu tiên bổ sung.",
+    "Lập lịch tuần đầu theo thời gian bạn thực sự có thể dành cho việc học."
   ],
   "common_mistakes": [
     "Điểm cao tự chấm không thay thế việc chạy lại bài mà không xem lời giải.",
-    "Chọn nhịp nhanh hơn thời gian có thật dễ biến lịch học thành nợ."
+    "Chọn nhịp học vượt quá thời gian sẵn có khiến công việc dồn lại và khó duy trì kế hoạch."
   ],
   "next_lessons": [
     "phase-00-onboarding-learning-system-1",
     "phase-00-onboarding-learning-system-2"
   ],
-  "review_question_vi": "Mức 2 trong rubric này cần bằng chứng gì?",
+  "review_question_vi": "Mức 2 trong bảng tiêu chí này cần bằng chứng gì?",
   "review_question_en": "What evidence supports level 2 in this rubric?",
-  "review_answer_vi": "Tự làm được, chạy kiểm tra và giải thích quyết định; lưu artifact tương ứng.",
+  "review_answer_vi": "Tự làm được, chạy kiểm tra và giải thích quyết định; lưu sản phẩm thực hành tương ứng.",
   "review_answer_en": "Complete the task independently, run checks and explain decisions; retain the corresponding artifact.",
   "review_cards": [
     {
       "id": "phase-00-onboarding-baseline-4-recall",
       "type": "recall",
-      "question_vi": "Mức 2 trong rubric này cần bằng chứng gì?",
+      "question_vi": "Mức 2 trong bảng tiêu chí này cần bằng chứng gì?",
       "question_en": "What evidence supports level 2 in this rubric?",
-      "answer_vi": "Tự làm được, chạy kiểm tra và giải thích quyết định; lưu artifact tương ứng.",
+      "answer_vi": "Tự làm được, chạy kiểm tra và giải thích quyết định; lưu sản phẩm thực hành tương ứng.",
       "answer_en": "Complete the task independently, run checks and explain decisions; retain the corresponding artifact.",
-      "hint_vi": "Không chỉ nhìn output mẫu.",
+      "hint_vi": "Không chỉ nhìn đầu ra mẫu.",
       "hint_en": "Do more than look at sample output."
     },
     {
@@ -172,11 +172,11 @@
     {
       "id": "phase-00-onboarding-baseline-4-debug",
       "type": "debug",
-      "question_vi": "Đã xem lời giải rồi chấm tự làm: điều chỉnh thế nào?",
+      "question_vi": "Nếu đã xem lời giải nhưng ghi là tự làm, bạn nên điều chỉnh kết quả ra sao?",
       "question_en": "You read the solution but marked independent: how should you adjust?",
-      "answer_vi": "Ghi rõ đã dùng gợi ý, làm lại với input mới sau đó rồi cập nhật bằng chứng.",
+      "answer_vi": "Ghi rõ đã dùng gợi ý, làm lại với đầu vào mới sau đó rồi cập nhật bằng chứng.",
       "answer_en": "Record that hints were used, retry later with new input and update the evidence.",
-      "hint_vi": "Rubric phục vụ kế hoạch của chính bạn.",
+      "hint_vi": "Bảng tiêu chí giúp bạn điều chỉnh kế hoạch học của mình.",
       "hint_en": "The rubric serves your own learning plan."
     },
     {
@@ -184,7 +184,7 @@
       "type": "interview",
       "question_vi": "Nhịp nhanh có chứng minh sẵn sàng đi làm không?",
       "question_en": "Does a faster pace prove job readiness?",
-      "answer_vi": "Không; nhịp chỉ phân bổ thời gian. Năng lực cần project, test, giải thích và phản hồi thực tế.",
+      "answer_vi": "Không; nhịp chỉ phân bổ thời gian. Năng lực cần dự án, kiểm thử, giải thích và phản hồi thực tế.",
       "answer_en": "No; pace allocates time. Capability needs projects, tests, explanations and real feedback.",
       "hint_vi": "Tách lịch học khỏi kết quả nghề nghiệp.",
       "hint_en": "Separate scheduling from career outcomes."

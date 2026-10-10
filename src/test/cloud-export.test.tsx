@@ -116,7 +116,7 @@ test('RPC errors are localized without provider details and a successful retry c
   expect(HTMLAnchorElement.prototype.click).not.toHaveBeenCalled()
   await click()
   expect(host.querySelector('[role="alert"]')).toBeNull()
-  expect(host.textContent).toContain('Đã tạo file xuất dữ liệu')
+  expect(host.textContent).toContain('Đã tạo tệp xuất dữ liệu')
 })
 
 test('a normal token refresh for the same user does not cancel an export', async () => {

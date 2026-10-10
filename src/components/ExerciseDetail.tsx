@@ -40,7 +40,7 @@ export function ExerciseDetail({ exercise, language, hosted, gitPublishAvailable
       <a href="#exercise-task">{vi ? 'Đề bài' : 'Task'}</a>
       <a href="#exercise-walkthrough">{vi ? 'Hướng dẫn' : 'Walkthrough'}</a>
       <a href="#exercise-solution">{vi ? 'Bài giải' : 'Solution'}</a>
-      <a href="#exercise-start">{vi ? 'File & cách chạy' : 'Files & setup'}</a>
+      <a href="#exercise-start">{vi ? 'Tệp và cách chạy' : 'Files & setup'}</a>
     </nav>
     <div className="exercise-reading-layout">
       <div className="exercise-reading">
@@ -73,12 +73,12 @@ export function ExerciseDetail({ exercise, language, hosted, gitPublishAvailable
       <aside className="exercise-setup" aria-labelledby="exercise-start">
         <h3 id="exercise-start">{vi ? 'Bắt đầu làm bài' : 'Start practising'}</h3>
         {material.files.length > 0 ? <>
-          <p>{vi ? 'Cần Python 3.11+. Tải hai file vào cùng một thư mục; không cần Git hoặc cài package ngoài.'
+          <p>{vi ? 'Cần Python 3.11+. Tải hai tệp vào cùng một thư mục; không cần Git hoặc thư viện bên ngoài.'
             : 'Requires Python 3.11+. Save both files in one folder; no Git or third-party packages needed.'}</p>
           <ul className="exercise-files">{material.files.map((file) => <li key={file.name}>
             <a download={file.name} href={`data:text/plain;charset=utf-8,${encodeURIComponent(file.content)}`}>
               <strong>{file.name}</strong>
-              <span>{vi ? 'Tải file ↓' : 'Download ↓'}</span>
+              <span>{vi ? 'Tải tệp ↓' : 'Download ↓'}</span>
             </a>
           </li>)}</ul>
           <p>{vi ? 'Sửa starter.py, sau đó chạy lệnh trong thư mục vừa lưu:'
@@ -87,14 +87,14 @@ export function ExerciseDetail({ exercise, language, hosted, gitPublishAvailable
             <code>python -m unittest -v test_exercise.py</code>
           </pre>
           <details className="exercise-source">
-            <summary>{vi ? 'Xem code khởi đầu' : 'View starter code'}</summary>
+            <summary>{vi ? 'Xem mã khởi đầu' : 'View starter code'}</summary>
             <pre tabIndex={0}><code>{material.files.find((file) => file.name === 'starter.py')?.content}</code></pre>
           </details>
         </> : <p>{vi
-          ? 'Tạo file hoặc notebook cho bài làm của bạn. Bắt đầu với yêu cầu ở mục Đề bài và làm lần lượt theo hướng dẫn.'
+          ? 'Tạo tệp mã hoặc notebook cho bài làm của bạn. Đọc yêu cầu ở mục Đề bài rồi làm lần lượt theo hướng dẫn.'
           : 'Create a file or notebook for your work. Start with the task requirements and follow the steps in order.'}</p>}
         {hosted && <p className="exercise-platform-note">{vi
-          ? 'Bạn có thể đọc toàn bộ hướng dẫn tại đây. Code được chạy bằng Python trên máy của bạn.'
+          ? 'Bạn có thể đọc toàn bộ hướng dẫn tại đây và chạy mã bằng Python trên máy của mình.'
           : 'Read the complete guide here. Run your code using Python on your own computer.'}</p>}
       </aside>
     </div>

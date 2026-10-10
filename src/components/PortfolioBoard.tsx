@@ -15,7 +15,7 @@ export function PortfolioBoard({ program, language }: { program: Program; langua
     <div className="section-heading">
       <div>
         <span className="eyebrow accent">{vi ? 'SẢN PHẨM THỰC HÀNH' : 'BUILD YOUR PORTFOLIO'}</span>
-        <h3 id="portfolio-title">{vi ? `${projects.length} gợi ý portfolio` : `${projects.length} portfolio ideas`}</h3>
+        <h3 id="portfolio-title">{vi ? `${projects.length} gợi ý dự án cho hồ sơ` : `${projects.length} portfolio ideas`}</h3>
       </div>
     </div>
     <p className="portfolio-intro">{vi
@@ -39,12 +39,12 @@ export function PortfolioBoard({ program, language }: { program: Program; langua
       </details>
     </article>)}</div>
     <details className="career-checklist">
-      <summary>{vi ? 'Checklist tham khảo khi ứng tuyển' : 'Application preparation checklist'}</summary>
+      <summary>{vi ? 'Các mục cần chuẩn bị khi ứng tuyển' : 'Application preparation checklist'}</summary>
       <p>{vi
         ? 'Chọn các mục liên quan đến vị trí tuyển dụng. Các dự án GenAI nâng cao là phần bổ sung theo hướng chuyên môn, không phải điều kiện cho mọi vị trí AI Engineer.'
         : 'Use the items relevant to the job description. Advanced GenAI projects are specialization options, not requirements for every AI engineering role.'}</p>
       {checklist.length ? <ul>{checklist.map((item) => <li key={item}>{item}</li>)}</ul>
-        : <p>{vi ? 'Checklist đang được cập nhật.' : 'The checklist is being updated.'}</p>}
+        : <p>{vi ? 'Danh sách đang được cập nhật.' : 'The checklist is being updated.'}</p>}
     </details>
   </section>
 }

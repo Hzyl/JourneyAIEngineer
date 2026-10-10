@@ -45,10 +45,10 @@ export function AppNavigation({ items, view, hosted, language, mobile, open, pan
         <div className="status-dot"><span />{hosted
           ? (vi ? 'Đồng bộ tài khoản' : 'Cloud sync') : (vi ? 'Không gian trên máy' : 'Local workspace')}</div>
         <small>{hosted ? (vi ? 'Dữ liệu được lưu riêng theo tài khoản' : 'Learning data is private to your account')
-          : (vi ? 'Tiến trình được lưu trên máy của bạn' : 'Progress is saved on this device')}</small>
-        <small>{hosted ? (vi ? 'VS Code, Git và test chỉ chạy trên bản local.'
+          : (vi ? 'Tiến độ được lưu trên máy của bạn' : 'Progress is saved on this device')}</small>
+        <small>{hosted ? (vi ? 'VS Code, Git và kiểm thử chỉ chạy trên bản dùng trên máy.'
           : 'VS Code, Git and tests are available in local mode.')
-          : (vi ? 'Bản portable tự dừng khi đóng tab cuối.' : 'The portable app stops after its last tab closes.')}</small>
+          : (vi ? 'Bản chạy trực tiếp tự dừng khi bạn đóng thẻ trình duyệt cuối cùng.' : 'The portable app stops after its last tab closes.')}</small>
       </div>
     </aside>
   </>

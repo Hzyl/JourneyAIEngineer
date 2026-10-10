@@ -2,19 +2,19 @@ import type { GuideText } from './exercise-guides'
 
 export const framingGuide: Record<'vi' | 'en', GuideText> = {
   vi: {
-    summary: 'Xác định thời điểm dự đoán, loại dữ liệu tương lai và bảo vệ cách chia train/validation/test.',
+    summary: 'Xác định thời điểm dự đoán, loại dữ liệu tương lai và giữ đúng ranh giới giữa tập huấn luyện, kiểm định và kiểm tra cuối cùng.',
     steps: [
-      'Chọn bài toán giả lập: tại lúc mua hàng, dự đoán đơn có hoàn trả trong 30 ngày không. Một dòng là một đơn; target 1 là có hoàn trả. Trước khi xem điểm, chọn recall để theo dõi đơn bị bỏ sót, đồng thời báo precision và khối lượng cần kiểm tra.',
-      'Viết data dictionary: kiểu, ý nghĩa, thời điểm biết và vai trò của từng cột. Chỉ items_at_purchase và prior_orders_at_purchase là feature. ID dùng kiểm tra/split; returned_30d là nhãn; refund_issued là thông tin tương lai phải loại.',
-      'Chốt mốc 01/03/2026 cho train, 01/06 cho validation và quan sát test đến 01/08. Chia theo ngày mua, rồi chỉ giữ nhãn đã đủ 30 ngày tại mốc tương ứng. Đơn mua trước cutoff nhưng nhãn chưa sẵn sàng vẫn bị loại, không gán nhãn 0.',
-      'Fit baseline lớp đa số chỉ trên train; nếu hòa, luôn chọn 0 theo quy tắc đã định. In confusion matrix, accuracy, precision, recall của train/validation. Precision không xác định phải hiện null, không giả thành 1.',
-      'Lập bảng leakage và giải thích khách hàng lặp lại phù hợp với dự đoán đơn tương lai từ cùng tập khách hàng. Nếu muốn phục vụ khách hàng hoàn toàn mới, cần đánh giá giữ riêng theo khách hàng. Chỉ chạy --include-test sau khi đã chốt lựa chọn và ghi giới hạn dữ liệu giả.',
+      'Xét bài toán giả lập: tại thời điểm mua, dự đoán đơn hàng có được hoàn trả trong 30 ngày hay không. Mỗi dòng là một đơn; nhãn 1 nghĩa là có hoàn trả. Trước khi xem kết quả, chọn recall để theo dõi đơn bị bỏ sót, đồng thời báo precision và số đơn cần kiểm tra.',
+      'Lập bảng mô tả dữ liệu: kiểu, ý nghĩa, thời điểm biết giá trị và vai trò của từng cột. Chỉ dùng items_at_purchase và prior_orders_at_purchase làm đặc trưng (feature). ID dùng để kiểm tra/chia tập; returned_30d là nhãn; refund_issued là thông tin tương lai cần loại.',
+      'Chốt mốc 01/03/2026 cho tập huấn luyện (train), 01/06 cho tập kiểm định (validation), và quan sát tập kiểm tra (test) đến 01/08. Chia theo ngày mua rồi chỉ giữ nhãn đã đủ 30 ngày tại từng mốc. Đơn mua trước mốc nhưng chưa đủ thời gian biết nhãn vẫn bị loại, không gán nhãn 0.',
+      'Chỉ dùng tập huấn luyện để chọn lớp đa số làm mô hình cơ sở (baseline). Nếu hòa, chọn 0 theo quy tắc đã định. In ma trận nhầm lẫn (confusion matrix), accuracy, precision và recall trên tập huấn luyện/kiểm định. Precision không xác định phải hiện null, không thay bằng 1.',
+      'Lập bảng nguy cơ rò rỉ dữ liệu (leakage). Giải thích vì sao khách hàng có thể lặp lại khi mục tiêu là dự đoán đơn tương lai của cùng nhóm khách hàng. Nếu muốn phục vụ khách hàng hoàn toàn mới, cần giữ riêng khách hàng để đánh giá. Chỉ chạy --include-test sau khi chốt lựa chọn và nêu rõ giới hạn của dữ liệu giả.',
     ],
     checks: [
-      'Data dictionary phân biệt feature, ID, nhãn và dữ liệu xuất hiện sau thời điểm dự đoán.',
-      'Có 8 dòng train, 4 validation, 4 test và 3 dòng chưa đủ thời gian quan sát bị loại.',
-      'Baseline chọn 0: train accuracy=0.75, validation accuracy=0.5, recall=0 và precision=null.',
-      'Thay nhãn validation/test không làm thay đổi baseline; báo cáo mặc định không có metric test.',
+      'Bảng mô tả dữ liệu phân biệt đặc trưng, ID, nhãn và thông tin xuất hiện sau thời điểm dự đoán.',
+      'Có 8 dòng huấn luyện, 4 dòng kiểm định, 4 dòng kiểm tra và 3 dòng bị loại vì chưa đủ thời gian quan sát.',
+      'Mô hình cơ sở chọn 0: accuracy trên tập huấn luyện=0.75, accuracy trên tập kiểm định=0.5, recall=0 và precision=null.',
+      'Thay nhãn của tập kiểm định/kiểm tra không làm đổi mô hình cơ sở; báo cáo mặc định không có chỉ số của tập kiểm tra.',
     ],
     hints: ['label_ready_on = ordered_on + 30 ngày; kiểm tra label_ready_on <= cutoff, không chỉ ordered_on < cutoff.',
       'Recall = TP/(TP+FN). Accuracy cao vẫn có thể bỏ sót toàn bộ lớp cần phát hiện.'],

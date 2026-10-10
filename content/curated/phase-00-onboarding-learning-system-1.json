@@ -2,13 +2,13 @@
   "lesson_id": "phase-00-onboarding-learning-system-1",
   "phase_id": "phase-00-onboarding",
   "module_id": "learning-system",
-  "title_vi": "Cách dùng roadmap và checkpoint",
+  "title_vi": "Cách dùng lộ trình và mốc kiểm tra",
   "title_en": "Use the roadmap and checkpoints",
-  "summary_vi": "Chọn một checkpoint có đầu ra kiểm chứng được thay vì chỉ đếm bài đã đọc.",
+  "summary_vi": "Chọn một mốc kiểm tra có đầu ra kiểm chứng được thay vì chỉ đếm bài đã đọc.",
   "summary_en": "Choose a checkpoint with a verifiable output instead of only counting lessons read.",
   "learning_objectives": [
-    "Chọn được bài tiếp theo dựa trên tiên quyết.",
-    "Viết checkpoint có artifact và cách kiểm chứng.",
+    "Chọn bài tiếp theo dựa trên kiến thức cần có trước.",
+    "Viết mốc kiểm tra có sản phẩm thực hành và cách kiểm chứng.",
     "Phân biệt đọc xong với thực hành đạt tiêu chí."
   ],
   "learning_objectives_en": [
@@ -24,15 +24,15 @@
     "artifact",
     "acceptance criteria"
   ],
-  "concept_notes_vi": "Roadmap là bản đồ lựa chọn, không phải danh sách phải hoàn thành toàn bộ trước khi làm project. Đọc tiên quyết để biết phần cần bù; chọn một đầu ra nhỏ cho buổi học.\nĐã đọc, tự đánh dấu hoàn thành và bài tập vượt qua test là ba loại bằng chứng khác nhau. Một checkpoint nên nêu artifact, cách chạy và tiêu chí đúng/sai. Số tuần chỉ là ước lượng; thời gian project và review cần được tính riêng.",
+  "concept_notes_vi": "Lộ trình là bản đồ lựa chọn, không phải danh sách phải hoàn thành toàn bộ trước khi làm dự án. Đọc yêu cầu kiến thức đầu vào để biết phần cần bổ sung; chọn một đầu ra nhỏ cho buổi học.\nĐã đọc, tự đánh dấu hoàn thành và bài tập vượt qua kiểm thử là ba loại bằng chứng khác nhau. Một mốc kiểm tra nên nêu sản phẩm thực hành, cách chạy và tiêu chí đúng/sai. Số tuần chỉ là ước lượng; thời gian làm dự án và rà soát kết quả cần được tính riêng.",
   "concept_notes_en": "A roadmap is a map of choices, not a list you must finish before building a project. Read prerequisites to identify gaps and choose one small output for a session.\nReading, self-reported completion and passing exercise tests are different evidence types. A checkpoint should name an artifact, a run command and an acceptance criterion. Weeks are estimates; project and review effort must be considered separately.",
-  "why_it_matters_vi": "Roadmap là bản đồ lựa chọn, không phải danh sách phải hoàn thành toàn bộ trước khi làm project. Đọc tiên quyết để biết phần cần bù; chọn một đầu ra nhỏ cho buổi học.",
+  "why_it_matters_vi": "Lộ trình là bản đồ lựa chọn, không phải danh sách phải hoàn thành toàn bộ trước khi làm dự án. Đọc yêu cầu kiến thức đầu vào để biết phần cần bổ sung; chọn một đầu ra nhỏ cho buổi học.",
   "why_it_matters_en": "A roadmap is a map of choices, not a list you must finish before building a project. Read prerequisites to identify gaps and choose one small output for a session.",
   "study_steps_vi": [
-    "Mở roadmap và xem tiên quyết của một bài muốn học.",
-    "Chọn một đầu ra trong 15–30 phút, ví dụ environment_check.py có output phiên bản.",
-    "Viết tên artifact, lệnh chạy và kết quả dự kiến trong note.",
-    "Chạy kiểm chứng rồi ghi điều còn chưa hiểu; chỉ tự đánh dấu hoàn thành khi đã đối chiếu checklist."
+    "Mở lộ trình và xem kiến thức cần có trước khi học bài bạn đã chọn.",
+    "Chọn một đầu ra trong 15–30 phút, ví dụ environment_check.py có đầu ra phiên bản.",
+    "Viết tên sản phẩm thực hành, lệnh chạy và kết quả dự kiến trong ghi chú.",
+    "Chạy kiểm chứng rồi ghi điều còn chưa hiểu; chỉ tự đánh dấu hoàn thành khi đã đối chiếu danh sách tự kiểm tra."
   ],
   "study_steps_en": [
     "Open the roadmap and inspect prerequisites for a lesson you want to learn.",
@@ -42,14 +42,14 @@
   ],
   "practice_plan": {
     "vi": {
-      "task": "Chạy kiểm chứng rồi ghi điều còn chưa hiểu; chỉ tự đánh dấu hoàn thành khi đã đối chiếu checklist.",
+      "task": "Chọn một bài phù hợp và viết mốc tự đánh giá có kết quả mong đợi rõ. Chạy kiểm chứng rồi ghi điều còn chưa hiểu; chỉ tự đánh dấu hoàn thành khi đã đối chiếu danh sách tự kiểm tra.",
       "deliverables": [
-        "Chọn được bài tiếp theo dựa trên tiên quyết.",
-        "Viết checkpoint có artifact và cách kiểm chứng.",
-        "Phân biệt đọc xong với thực hành đạt tiêu chí."
+        "Bài tiếp theo cùng kiến thức cần có trước",
+        "Mốc tự đánh giá nêu bài làm và cách kiểm chứng",
+        "Kết quả đối chiếu với tiêu chí hoàn thành"
       ],
       "checkpoint": "Phân biệt đọc xong với thực hành đạt tiêu chí.",
-      "stretch": "Ví dụ kiểm tra checkpoint fields có chứng minh code đúng không?"
+      "stretch": "Ví dụ kiểm tra các trường của kế hoạch có chứng minh bài làm chạy đúng không?"
     },
     "en": {
       "task": "Run the check and record an unresolved question; mark completion only after reviewing the checklist.",
@@ -64,9 +64,9 @@
   },
   "interview_questions": {
     "vi": [
-      "Checkpoint của environment_check.py nên viết thế nào?",
-      "Ví dụ kiểm tra checkpoint fields có chứng minh code đúng không?",
-      "Có phải xong mọi phase rồi mới làm project không?"
+      "Tiêu chí kiểm tra environment_check.py nên viết thế nào?",
+      "Ví dụ kiểm tra các trường của kế hoạch có chứng minh bài làm chạy đúng không?",
+      "Có phải xong mọi giai đoạn rồi mới làm dự án không?"
     ],
     "en": [
       "How would you specify an environment_check.py checkpoint?",
@@ -81,13 +81,13 @@
       "title": "Use the roadmap and checkpoints",
       "code": "checkpoint = {\n    'artifact': 'environment_check.py',\n    'command': 'py -3 environment_check.py',\n    'expected': 'Supported: True',\n}\nfor field in ('artifact', 'command', 'expected'):\n    assert checkpoint[field].strip()\nprint(checkpoint['command'])\nprint('This checks the plan fields, not the artifact result.')",
       "status": "runnable",
-      "purpose_vi": "Chọn một checkpoint có đầu ra kiểm chứng được thay vì chỉ đếm bài đã đọc.",
+      "purpose_vi": "Chọn một mốc kiểm tra có đầu ra kiểm chứng được thay vì chỉ đếm bài đã đọc.",
       "purpose_en": "Choose a checkpoint with a verifiable output instead of only counting lessons read.",
       "setup": "Python 3.11+; chạy trong terminal hoặc notebook của bạn. Web chỉ hiển thị ví dụ.",
       "expected_output": "py -3 environment_check.py\nThis checks the plan fields, not the artifact result.",
-      "edge_case_vi": "Checklist có chữ không chứng minh artifact chạy đúng; vẫn phải thực thi kiểm tra.",
+      "edge_case_vi": "Điền đủ danh sách tự kiểm tra chưa chứng minh bài làm chạy đúng; vẫn phải thực thi kiểm tra.",
       "edge_case_en": "Nonempty checklist text does not prove the artifact works; execute its check.",
-      "explanation_vi": "Roadmap là bản đồ lựa chọn, không phải danh sách phải hoàn thành toàn bộ trước khi làm project. Đọc tiên quyết để biết phần cần bù; chọn một đầu ra nhỏ cho buổi học.\nĐã đọc, tự đánh dấu hoàn thành và bài tập vượt qua test là ba loại bằng chứng khác nhau. Một checkpoint nên nêu artifact, cách chạy và tiêu chí đúng/sai. Số tuần chỉ là ước lượng; thời gian project và review cần được tính riêng.",
+      "explanation_vi": "Lộ trình là bản đồ lựa chọn, không phải danh sách phải hoàn thành toàn bộ trước khi làm dự án. Đọc yêu cầu kiến thức đầu vào để biết phần cần bổ sung; chọn một đầu ra nhỏ cho buổi học.\nĐã đọc, tự đánh dấu hoàn thành và bài tập vượt qua kiểm thử là ba loại bằng chứng khác nhau. Một mốc kiểm tra nên nêu sản phẩm thực hành, cách chạy và tiêu chí đúng/sai. Số tuần chỉ là ước lượng; thời gian làm dự án và rà soát kết quả cần được tính riêng.",
       "explanation_en": "A roadmap is a map of choices, not a list you must finish before building a project. Read prerequisites to identify gaps and choose one small output for a session.\nReading, self-reported completion and passing exercise tests are different evidence types. A checkpoint should name an artifact, a run command and an acceptance criterion. Weeks are estimates; project and review effort must be considered separately."
     }
   ],
@@ -98,7 +98,7 @@
       "language": "en",
       "kind": "official",
       "required": true,
-      "purpose_vi": "Chọn được bài tiếp theo dựa trên tiên quyết.",
+      "purpose_vi": "Chọn bài tiếp theo dựa trên kiến thức cần có trước.",
       "purpose_en": "Choose the next lesson using its prerequisites.",
       "read_vi": "Đọc assert để phân biệt điều đã kiểm tra với điều chưa được kiểm tra.",
       "read_en": "Read assert and distinguish what was checked from what remains unverified."
@@ -109,7 +109,7 @@
       "language": "vi",
       "kind": "in_app",
       "required": true,
-      "purpose_vi": "Chạy kiểm chứng rồi ghi điều còn chưa hiểu; chỉ tự đánh dấu hoàn thành khi đã đối chiếu checklist.",
+      "purpose_vi": "Chạy kiểm chứng rồi ghi điều còn chưa hiểu; chỉ tự đánh dấu hoàn thành khi đã đối chiếu danh sách tự kiểm tra.",
       "purpose_en": "Run the check and record an unresolved question; mark completion only after reviewing the checklist.",
       "read_vi": "Phân biệt đọc xong với thực hành đạt tiêu chí.",
       "read_en": "Distinguish finishing reading from meeting practice criteria."
@@ -126,35 +126,35 @@
   ],
   "estimated_minutes": 20,
   "completion_checklist": [
-    "Chọn được bài tiếp theo dựa trên tiên quyết.",
-    "Viết checkpoint có artifact và cách kiểm chứng.",
+    "Chọn bài tiếp theo dựa trên kiến thức cần có trước.",
+    "Viết mốc kiểm tra có sản phẩm thực hành và cách kiểm chứng.",
     "Phân biệt đọc xong với thực hành đạt tiêu chí.",
     "Lưu kết quả thực hành và một lỗi đã hiểu."
   ],
   "completion_criteria": [
-    "Chọn được bài tiếp theo dựa trên tiên quyết.",
-    "Viết checkpoint có artifact và cách kiểm chứng.",
+    "Chọn bài tiếp theo dựa trên kiến thức cần có trước.",
+    "Viết mốc kiểm tra có sản phẩm thực hành và cách kiểm chứng.",
     "Phân biệt đọc xong với thực hành đạt tiêu chí."
   ],
   "common_mistakes": [
-    "Checklist có chữ không chứng minh artifact chạy đúng; vẫn phải thực thi kiểm tra.",
-    "Đọc hết roadmap trước khi thử bài đầu dễ trì hoãn việc thực hành."
+    "Điền đủ danh sách tự kiểm tra chưa chứng minh bài làm chạy đúng; vẫn phải thực thi kiểm tra.",
+    "Đọc hết lộ trình trước khi thử bài đầu dễ trì hoãn việc thực hành."
   ],
   "next_lessons": [
     "phase-00-onboarding-learning-system-2",
     "phase-00-onboarding-learning-system-3"
   ],
-  "review_question_vi": "Một checkpoint thực hành cần ba thành phần nào?",
+  "review_question_vi": "Một mốc kiểm tra thực hành cần ba thành phần nào?",
   "review_question_en": "Which three parts should a practice checkpoint include?",
-  "review_answer_vi": "Artifact cụ thể, lệnh hoặc thao tác kiểm tra, và kết quả mong đợi.",
+  "review_answer_vi": "Sản phẩm thực hành cụ thể, lệnh hoặc thao tác kiểm tra, và kết quả mong đợi.",
   "review_answer_en": "A specific artifact, a verification command or action, and an expected result.",
   "review_cards": [
     {
       "id": "phase-00-onboarding-learning-system-1-recall",
       "type": "recall",
-      "question_vi": "Một checkpoint thực hành cần ba thành phần nào?",
+      "question_vi": "Một mốc kiểm tra thực hành cần ba thành phần nào?",
       "question_en": "Which three parts should a practice checkpoint include?",
-      "answer_vi": "Artifact cụ thể, lệnh hoặc thao tác kiểm tra, và kết quả mong đợi.",
+      "answer_vi": "Sản phẩm thực hành cụ thể, lệnh hoặc thao tác kiểm tra, và kết quả mong đợi.",
       "answer_en": "A specific artifact, a verification command or action, and an expected result.",
       "hint_vi": "Để người khác có thể làm lại.",
       "hint_en": "Make it reproducible by another learner."
@@ -162,9 +162,9 @@
     {
       "id": "phase-00-onboarding-learning-system-1-application",
       "type": "application",
-      "question_vi": "Checkpoint của environment_check.py nên viết thế nào?",
+      "question_vi": "Tiêu chí kiểm tra environment_check.py nên viết thế nào?",
       "question_en": "How would you specify an environment_check.py checkpoint?",
-      "answer_vi": "Nêu file environment_check.py, lệnh chạy bằng interpreter đã chọn và output version/path hợp lệ.",
+      "answer_vi": "Nêu tệp environment_check.py, lệnh chạy bằng trình thông dịch đã chọn và đầu ra cho biết đúng phiên bản và đường dẫn.",
       "answer_en": "Name environment_check.py, its selected-interpreter command and valid version/path output.",
       "hint_vi": "Không chỉ ghi học xong Python.",
       "hint_en": "Do not merely write finished Python."
@@ -172,9 +172,9 @@
     {
       "id": "phase-00-onboarding-learning-system-1-debug",
       "type": "debug",
-      "question_vi": "Ví dụ kiểm tra checkpoint fields có chứng minh code đúng không?",
+      "question_vi": "Ví dụ kiểm tra các trường của kế hoạch có chứng minh bài làm chạy đúng không?",
       "question_en": "Does checking checkpoint fields prove the code is correct?",
-      "answer_vi": "Không. Nó chỉ xác nhận các trường kế hoạch có nội dung; phải chạy artifact và so với expected.",
+      "answer_vi": "Không. Ví dụ chỉ xác nhận các trường của kế hoạch có nội dung; vẫn cần chạy bài làm và đối chiếu với kết quả mong đợi.",
       "answer_en": "No. It only checks that planning fields contain text; execute the artifact and compare with expected output.",
       "hint_vi": "Phân biệt kiểm tra cấu trúc với hành vi.",
       "hint_en": "Distinguish structure checks from behavior checks."
@@ -182,11 +182,11 @@
     {
       "id": "phase-00-onboarding-learning-system-1-interview",
       "type": "interview",
-      "question_vi": "Có phải xong mọi phase rồi mới làm project không?",
+      "question_vi": "Có phải xong mọi giai đoạn rồi mới làm dự án không?",
       "question_en": "Must every phase be completed before starting a project?",
-      "answer_vi": "Không. Chọn project vừa sức, đáp ứng tiên quyết và học bổ sung theo lỗ hổng có thật.",
+      "answer_vi": "Không. Chọn dự án vừa sức, đáp ứng yêu cầu đầu vào và bổ sung đúng phần kiến thức còn thiếu.",
       "answer_en": "No. Choose a manageable project, satisfy its prerequisites and fill demonstrated gaps.",
-      "hint_vi": "Roadmap giúp chọn hướng.",
+      "hint_vi": "Lộ trình giúp chọn hướng.",
       "hint_en": "A roadmap helps choose a direction."
     }
   ],

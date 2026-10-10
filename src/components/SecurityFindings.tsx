@@ -19,7 +19,7 @@ export function SecurityFindings({ findings, language }: {
   const statuses: Record<Status, string> = {
     all: vi ? 'Mọi trạng thái' : 'All statuses', candidate: vi ? 'Cần xem xét' : 'Candidate',
     needs_human_review: vi ? 'Cần người kiểm tra' : 'Needs human review',
-    verified_control: vi ? 'Kiểm tra source đạt' : 'Source check passed',
+    verified_control: vi ? 'Kiểm tra mã nguồn đạt' : 'Source check passed',
   }
   const visible = findings.filter((finding) =>
     (severity === 'all' || finding.severity === severity) && (status === 'all' || finding.status === status))
@@ -27,7 +27,7 @@ export function SecurityFindings({ findings, language }: {
     <div className="section-heading">
       <div>
         <span className="eyebrow">{vi ? 'DANH SÁCH CẦN XEM' : 'REVIEW QUEUE'}</span>
-        <h3>{vi ? 'Dấu hiệu cần đọc trong code' : 'Patterns to review in code'}</h3>
+        <h3>{vi ? 'Dấu hiệu cần xem trong mã nguồn' : 'Patterns to review in code'}</h3>
       </div>
       <span className="tag" role="status">{vi ? 'Hiển thị' : 'Showing'} {visible.length}/{findings.length}</span>
     </div>
@@ -45,7 +45,7 @@ export function SecurityFindings({ findings, language }: {
     </div>
     {visible.length === 0 ? <div className="security-empty" role="status">
       <h4>{vi ? 'Không có kết quả phù hợp' : 'No matching findings'}</h4>
-      <p>{vi ? 'Thử bỏ bớt bộ lọc hoặc kiểm tra lại source.' : 'Clear a filter or review the source again.'}</p>
+      <p>{vi ? 'Thử bỏ bớt bộ lọc hoặc kiểm tra lại mã nguồn.' : 'Clear a filter or review the source again.'}</p>
       {(severity !== 'all' || status !== 'all') && <button className="text-button" onClick={() => {
         setSeverity('all')
         setStatus('all')

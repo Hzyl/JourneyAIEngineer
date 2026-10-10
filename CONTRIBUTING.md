@@ -1,6 +1,6 @@
-# Contributing to Journey AI Engineer
+# Đóng góp cho Journey AI Engineer
 
-Cảm ơn bạn đã muốn cải thiện Journey AI Engineer. Repository này là một learning product local-first: nội dung, code mẫu và bài làm đều cần dễ đọc, chạy lại được và có thể kiểm chứng. Một pull request tốt giúp người học hiểu **vì sao** thay đổi đúng, không chỉ làm UI hoặc thêm một đoạn code chạy được.
+Journey AI Engineer là ứng dụng học tập ưu tiên lưu dữ liệu trên máy cá nhân. Nội dung, mã mẫu và bài làm cần dễ đọc, chạy lại được và có kết quả để kiểm chứng. Khi đóng góp, hãy giải thích thay đổi giúp người học hiểu hoặc thực hành tốt hơn như thế nào.
 
 ## Bắt đầu trong 5 phút
 
@@ -13,20 +13,20 @@ Set-Location JourneyAIEngineer
 .\scripts\dev.ps1
 ```
 
-`setup.ps1` tạo `.venv`, cài dependency backend/frontend và thư mục dữ liệu local. Database runtime, progress cá nhân, `.env` và workspace bài tập không được commit.
+`setup.ps1` tạo `.venv`, cài thư viện cho phần máy chủ và giao diện, rồi chuẩn bị thư mục dữ liệu trên máy. Không đưa cơ sở dữ liệu đang sử dụng, tiến trình học cá nhân, `.env` hoặc thư mục bài tập vào commit.
 
-## Các nguyên tắc của repository
+## Nguyên tắc của kho mã
 
-- **Nội dung có hai lớp.** Markdown trong `content/lessons/` tạo catalog nền `content/lessons.json`; `content/curated/<lesson_id>.json` ghi đè bài cùng ID ở cả local và web. Nếu bài đã có curated file, sửa file đó. Giữ ổn định ID/prerequisite/review card; xem [chuẩn biên tập](docs/CURRICULUM-STANDARDS.md) và [mẫu đóng góp](docs/LESSON-CONTRIBUTION.md).
-- Lesson phải có giải thích đủ trong app. Link ngoài chỉ là đọc sâu hoặc đối chiếu, không thay thế concept notes.
-- Code example phải ghi rõ `runnable` hay `conceptual`, setup, output mong đợi và edge case.
-- Không thêm API key, token, database binary, `.venv`, `node_modules`, file `.env` hoặc journal riêng vào pull request.
-- Local routes được phép mở VS Code, chạy exercise và đọc Git chỉ trên máy người học. Không thiết kế chúng thành public API.
-- Không thêm framework giao diện lớn chỉ để làm repo có nhiều dependency. Ưu tiên component rõ, accessibility và CSS design token hiện có.
+- **Nội dung có hai lớp.** Markdown trong `content/lessons/` tạo danh mục nền `content/lessons.json`; `content/curated/<lesson_id>.json` thay thế bài cùng ID ở cả bản trên máy cá nhân và bản web. Nếu đã có tệp trong `curated/`, sửa tệp đó. Giữ nguyên ID, quan hệ bài cần học trước và thẻ ôn tập; xem [chuẩn nội dung](docs/CURRICULUM-STANDARDS.md), [cách biên tập tiếng Việt](docs/VIETNAMESE-EDITORIAL.md) và [mẫu đóng góp](docs/LESSON-CONTRIBUTION.md).
+- Bài học phải có đủ phần giải thích trong ứng dụng. Liên kết ngoài dùng để đọc sâu hoặc đối chiếu, không thay thế phần giải thích khái niệm.
+- Ví dụ mã phải ghi rõ `runnable` hay `conceptual`, cách chuẩn bị, kết quả mong đợi và trường hợp biên.
+- Không đưa khóa API, token, tệp cơ sở dữ liệu, `.venv`, `node_modules`, tệp `.env` hoặc nhật ký riêng vào pull request.
+- Các đường dẫn API mở VS Code, chạy bài tập và đọc Git chỉ hoạt động trên máy người học. Không biến chúng thành API công khai.
+- Ưu tiên các thành phần giao diện dễ hiểu, hỗ trợ người dùng có nhu cầu tiếp cận khác nhau và dùng các biến thiết kế CSS hiện có. Chỉ thêm bộ thư viện giao diện lớn khi có nhu cầu cụ thể.
 
-## Sửa nội dung lesson
+## Sửa nội dung bài học
 
-Mỗi lesson cần có frontmatter hợp lệ:
+Mỗi bài Markdown cần có phần khai báo đầu tệp (frontmatter) hợp lệ:
 
 ```yaml
 slug: phase-01-python-software-functions
@@ -41,9 +41,9 @@ prerequisites: [phase-01-python-software-syntax]
 next_lessons: [phase-01-python-software-testing]
 ```
 
-Nội dung phải trả lời được: học xong làm được gì, kiến thức dùng ở đâu, ví dụ nào có thể chạy, bằng chứng hoàn thành là gì, lỗi thường gặp và bài tiếp theo. Review cards nên có đủ recall/explain, application/code, debug/metric và interview; không copy một đáp án cho hàng loạt bài.
+Nội dung cần nêu rõ bạn sẽ làm được gì, kiến thức dùng ở đâu, ví dụ nào chạy được, cách tự kiểm tra, lỗi thường gặp và bài nên học tiếp. Thẻ ôn tập cần có câu hỏi nhớ lại/giải thích, vận dụng/viết mã, sửa lỗi/đọc chỉ số và phỏng vấn. Mỗi đáp án phải gắn với nội dung bài; không chép một đáp án cho hàng loạt bài.
 
-Chạy các gate sau khi sửa:
+Sau khi sửa, sinh lại danh mục và chạy các bước kiểm tra:
 
 ```powershell
 python scripts/build_lesson_catalog.py
@@ -52,9 +52,9 @@ python scripts/validate_content.py
 python -m pytest -q tests/test_content_foundation.py --basetemp .build\pytest-content -o cache_dir=.build\pytest-cache
 ```
 
-Nếu sửa curriculum cấp phase/module, kiểm tra cả `content/curriculum.json` và catalog generated trong cùng pull request. Validator sẽ kiểm tra ID, prerequisite graph, code Python runnable, resource/exercise/review reference và duplicate content.
+Nếu sửa lộ trình ở cấp giai đoạn hoặc mô-đun, kiểm tra cả `content/curriculum.json` và danh mục được sinh lại trong cùng pull request. Bộ kiểm tra sẽ kiểm tra ID, quan hệ bài cần học trước, mã Python gắn nhãn `runnable`, liên kết tài liệu/bài tập/thẻ ôn và nội dung trùng lặp.
 
-## Sửa backend/frontend
+## Sửa phần máy chủ hoặc giao diện
 
 Backend:
 
@@ -77,27 +77,27 @@ npm run test:e2e
 lesson deep link in Chromium. It does not call an external AI API. CI installs
 the browser before running the same command.
 
-Kiểm tra keyboard navigation, màn hình rộng 390px, focus state, text tiếng Việt có dấu và không để absolute path/credential lọt vào response. Thay đổi route local phải giữ loopback binding, path allowlist, timeout, secret redaction và confirmation trước Git publish.
+Kiểm tra thao tác bằng bàn phím, màn hình rộng 390px, dấu hiệu phần tử đang được chọn và chữ tiếng Việt có dấu. Phản hồi API không được lộ đường dẫn tuyệt đối hoặc thông tin đăng nhập. Khi sửa API trên máy cá nhân, giữ giới hạn địa chỉ nội bộ, danh sách đường dẫn được phép, thời gian chờ, cơ chế che thông tin bí mật và bước xác nhận trước khi công bố qua Git.
 
-Các việc có tiêu chí hoàn thành cụ thể nằm trong [starter issues](docs/STARTER-ISSUES.md); đây là bản nháp để maintainer chọn, chưa tự tạo issue trên GitHub.
+Xem [các đề xuất đóng góp ban đầu](docs/STARTER-ISSUES.md) để chọn việc có tiêu chí hoàn thành cụ thể. Người duy trì sẽ chọn và mở mục công việc trên GitHub; danh sách chưa được đăng tự động.
 
-## Branch, commit và pull request
+## Nhánh, commit và pull request
 
-- Tạo branch ngắn, mô tả được mục tiêu: `content/phase-03-metrics`, `fix/mobile-drawer`, `docs/release-guide`.
+- Đặt tên nhánh ngắn, mô tả được mục tiêu: `content/phase-03-metrics`, `fix/mobile-drawer`, `docs/release-guide`.
 - Commit nhỏ, dùng dạng `learn(phase-03): explain precision recall`, `fix(ui): preserve lesson deep link`, `docs: add Windows release guide`.
-- Pull request cần nêu problem, behavior sau thay đổi, test đã chạy và ảnh/screencast nếu thay đổi UI.
-- Không squash mất các thông tin kiểm chứng cần thiết nếu reviewer đang cần trace lỗi.
-- Chỉ maintainer thực hiện release hoặc thay đổi visibility của repository.
+- Pull request cần nêu vấn đề, cách ứng dụng hoạt động sau thay đổi, kiểm thử đã chạy và ảnh hoặc video nếu sửa giao diện.
+- Khi gộp commit, giữ lại thông tin kiểm chứng mà người đánh giá cần để tìm nguyên nhân lỗi.
+- Chỉ người duy trì phát hành phiên bản hoặc đổi chế độ công khai/riêng tư của kho mã.
 
-## Checklist trước khi gửi PR
+## Tự kiểm tra trước khi gửi PR
 
-- [ ] Không còn secret, `.data`, database, `.venv`, `node_modules` hoặc output build trong diff.
-- [ ] `python scripts/validate_content.py` pass nếu có sửa nội dung.
-- [ ] Backend test và `npm run lint`/`npm run build` pass nếu có sửa code.
-- [ ] Có test cho behavior mới hoặc giải thích vì sao test hiện có đủ.
-- [ ] README/docs được cập nhật nếu command, data root hoặc security boundary thay đổi.
-- [ ] Không mô tả local SQLite/executable như hosted multi-user production service.
+- [ ] Phần thay đổi không có thông tin bí mật, `.data`, cơ sở dữ liệu, `.venv`, `node_modules` hoặc kết quả đóng gói.
+- [ ] `python scripts/validate_content.py` đạt nếu có sửa nội dung.
+- [ ] Kiểm thử máy chủ và `npm run lint`/`npm run build` đạt nếu có sửa mã.
+- [ ] Có kiểm thử cho hành vi mới hoặc giải thích vì sao kiểm thử hiện có đã đủ.
+- [ ] Cập nhật README/tài liệu nếu lệnh, thư mục dữ liệu hoặc giới hạn bảo mật thay đổi.
+- [ ] Không mô tả SQLite hoặc tệp thực thi trên máy cá nhân như dịch vụ trực tuyến dành cho nhiều người dùng.
 
 ## Giấy phép và nội dung bên thứ ba
 
-Source code của repository phát hành theo Apache-2.0. Tài liệu ngoài, model, dataset và code snippet của bên thứ ba vẫn chịu license riêng; hãy liên kết nguồn, giữ attribution và không sao chép nguyên văn tài liệu có bản quyền vào lesson.
+Mã nguồn của kho này phát hành theo Apache-2.0. Tài liệu, mô hình, tập dữ liệu và đoạn mã của bên thứ ba vẫn có giấy phép riêng. Hãy liên kết, ghi nhận nguồn và không sao chép nguyên văn tài liệu có bản quyền vào bài học.

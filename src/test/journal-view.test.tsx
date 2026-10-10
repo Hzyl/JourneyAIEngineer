@@ -70,7 +70,7 @@ test('cloud journal locks pending edits, retains failed drafts and clears stale 
   expect(host.querySelector<HTMLTextAreaElement>('textarea')!.value).toBe('Giữ nguyên nội dung.')
   await act(async () => host.querySelector<HTMLButtonElement>('button')!.click())
   expect(save).toHaveBeenCalledTimes(2)
-  expect(host.querySelector('[role="status"]')!.textContent).toBe('Đã đồng bộ journal.')
+  expect(host.querySelector('[role="status"]')!.textContent).toBe('Đã đồng bộ nhật ký.')
   await fill('textarea', 'Draft update')
   expect(host.querySelector('[role="status"]')).toBeNull()
 })

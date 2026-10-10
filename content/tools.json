@@ -3,18 +3,18 @@
     "slug": "python",
     "name": "Python",
     "category": "Foundation",
-    "when_vi": "Ngôn ngữ chính cho data, ML và backend.",
-    "how_vi": "Tạo environment riêng, viết script và test trước khi mở rộng.",
+    "when_vi": "Ngôn ngữ chính để xử lý dữ liệu, học máy và lập trình phía máy chủ.",
+    "how_vi": "Tạo môi trường riêng cho dự án. Viết chương trình và kiểm thử trước khi mở rộng chức năng.",
     "commands": [
       "python --version",
       "python -m venv .venv",
       "python -m pytest"
     ],
-    "when_not_vi": "Đừng dùng một environment chung cho mọi project hoặc chạy code tải từ nguồn không rõ.",
-    "install_vi": "Cài Python 3.11+ từ python.org, sau đó kiểm tra python --version.",
-    "error_vi": "Kiểm tra PATH, phiên bản Python và chạy lại python -m venv .venv.",
-    "combine_vi": "Kết hợp với VS Code, pytest và Git; notebook chỉ dùng cho khám phá.",
-    "risks_vi": "Dependency khác phiên bản, chạy nhầm interpreter và commit .venv.",
+    "when_not_vi": "Tránh dùng chung một môi trường cho mọi dự án hoặc chạy mã tải từ nguồn không rõ.",
+    "install_vi": "Cài Python 3.11+ từ python.org, sau đó kiểm tra bằng python --version.",
+    "error_vi": "Kiểm tra PATH, phiên bản Python và tạo lại môi trường bằng python -m venv .venv.",
+    "combine_vi": "Dùng cùng VS Code, pytest và Git. Dùng notebook để khám phá dữ liệu và thử ý tưởng.",
+    "risks_vi": "Có thể gặp xung đột phiên bản thư viện, chạy nhầm trình thông dịch hoặc vô tình đưa .venv vào commit.",
     "lesson_refs": [
       "phase-00-onboarding-environment-1",
       "phase-01-python-software-python-core-1"
@@ -31,17 +31,17 @@
     "slug": "vscode",
     "name": "VS Code",
     "category": "Development",
-    "when_vi": "Viết code, debug, quản lý workspace và xem Git diff.",
-    "how_vi": "Mở từng exercise bằng workspace riêng; dùng terminal tích hợp để chạy test.",
+    "when_vi": "Viết mã, gỡ lỗi, quản lý thư mục làm việc và xem thay đổi bằng Git diff.",
+    "how_vi": "Mở thư mục riêng cho từng bài tập. Dùng cửa sổ dòng lệnh tích hợp để chạy kiểm thử.",
     "commands": [
       "code .",
       "code --reuse-window <path>"
     ],
-    "when_not_vi": "Không mở trực tiếp workspace chứa secret hoặc chạy extension chưa tin cậy.",
-    "install_vi": "Cài VS Code và Python extension chính thức; bật format/lint cho workspace.",
-    "error_vi": "Kiểm tra interpreter ở status bar, terminal profile và quyền gọi code.",
-    "combine_vi": "Trong app local, mở workspace, chạy test trong terminal rồi review Git diff.",
-    "risks_vi": "Extension tự chạy code, chọn nhầm interpreter và terminal không đúng thư mục.",
+    "when_not_vi": "Không dùng tiện ích mở rộng chưa đáng tin cậy hoặc mở thư mục chứa thông tin đăng nhập mà bạn không muốn để lộ.",
+    "install_vi": "Cài VS Code và tiện ích Python chính thức. Thiết lập định dạng mã và kiểm tra lỗi mã cho thư mục làm việc.",
+    "error_vi": "Kiểm tra trình thông dịch trên thanh trạng thái, cấu hình cửa sổ dòng lệnh và khả năng gọi lệnh code.",
+    "combine_vi": "Trong ứng dụng trên máy cá nhân, mở thư mục bài tập, chạy kiểm thử từ cửa sổ dòng lệnh rồi xem lại thay đổi bằng Git diff.",
+    "risks_vi": "Tiện ích mở rộng có thể thực thi mã; bạn cũng có thể chọn nhầm trình thông dịch hoặc chạy lệnh ở sai thư mục.",
     "lesson_refs": [
       "phase-00-onboarding-environment-2",
       "phase-01-python-software-developer-tools-3"
@@ -58,8 +58,8 @@
     "slug": "git",
     "name": "Git/GitHub",
     "category": "Workflow",
-    "when_vi": "Lưu mốc học tập, review diff và công khai portfolio.",
-    "how_vi": "Commit theo một thay đổi nhỏ; không commit secrets hoặc database runtime.",
+    "when_vi": "Lưu các mốc học tập, xem lại thay đổi và công bố hồ sơ dự án.",
+    "how_vi": "Mỗi commit chỉ nên ghi một thay đổi nhỏ. Không đưa thông tin bí mật hoặc cơ sở dữ liệu đang sử dụng vào commit.",
     "commands": [
       "git status",
       "git diff",
@@ -67,11 +67,11 @@
       "git commit -m \"learn: ...\"",
       "git push"
     ],
-    "when_not_vi": "Không commit database runtime, .env, token hoặc thay đổi chưa review diff.",
-    "install_vi": "Cài Git, cấu hình identity cá nhân và xác nhận git remote -v trước khi push.",
-    "error_vi": "Đọc git status, xem branch/remote, giải quyết conflict rồi mới commit.",
-    "combine_vi": "Mỗi lần học tạo một artifact nhỏ, journal và commit message có scope rõ.",
-    "risks_vi": "Lộ secret, force push nhầm branch và commit quá lớn khó review.",
+    "when_not_vi": "Không đưa cơ sở dữ liệu đang sử dụng, tệp .env hay token vào commit. Xem lại phần thay đổi trước khi lưu.",
+    "install_vi": "Cài Git, cấu hình tên và email của bạn, rồi kiểm tra git remote -v trước khi đẩy mã lên máy chủ.",
+    "error_vi": "Đọc git status, kiểm tra nhánh và kho mã từ xa, sau đó giải quyết xung đột trước khi commit.",
+    "combine_vi": "Sau mỗi buổi học, lưu bài làm và ghi nhật ký. Viết thông điệp commit nêu rõ phần vừa thay đổi.",
+    "risks_vi": "Các rủi ro thường gặp là lộ thông tin bí mật, ghi đè lịch sử nhầm nhánh và tạo commit quá lớn để kiểm tra kỹ.",
     "lesson_refs": [
       "phase-00-onboarding-baseline-3",
       "phase-01-python-software-developer-tools-1"
@@ -89,15 +89,15 @@
     "name": "Jupyter/Colab",
     "category": "Exploration",
     "when_vi": "Khám phá dữ liệu, trực quan hóa và thử công thức nhanh.",
-    "how_vi": "Sau khi hiểu ý tưởng, chuyển logic ổn định vào package/script có test.",
+    "how_vi": "Khi đã hiểu cách làm, chuyển phần xử lý ổn định vào gói Python hoặc tệp chương trình có kiểm thử.",
     "commands": [
       "jupyter lab"
     ],
-    "when_not_vi": "Không dùng notebook làm nơi duy nhất chứa logic production hoặc đánh giá model.",
-    "install_vi": "Cài Jupyter trong .venv, chạy jupyter lab tại root project.",
-    "error_vi": "Kiểm tra kernel đang trỏ đúng .venv và restart kernel khi state bị bẩn.",
-    "combine_vi": "Khám phá trong notebook, sau đó chuyển logic ổn định sang package có test.",
-    "risks_vi": "State ẩn, chạy cell sai thứ tự và kết quả không reproducible.",
+    "when_not_vi": "Không để notebook là nơi duy nhất lưu phần xử lý dùng trong hệ thống thực tế hoặc quy trình đánh giá mô hình.",
+    "install_vi": "Cài Jupyter trong .venv rồi chạy jupyter lab tại thư mục gốc của dự án.",
+    "error_vi": "Kiểm tra kernel có dùng đúng .venv hay không. Khởi động lại kernel khi trạng thái từ các lần chạy trước làm sai lệch kết quả.",
+    "combine_vi": "Khám phá trong notebook, sau đó chuyển phần xử lý ổn định sang gói Python có kiểm thử.",
+    "risks_vi": "Biến còn lưu từ lần chạy trước, các ô chạy sai thứ tự và kết quả không tái lập được có thể khiến bạn kết luận sai.",
     "lesson_refs": [
       "phase-00-onboarding-environment-4",
       "phase-02-math-ml-linear-algebra-1"
@@ -114,17 +114,17 @@
     "slug": "docker",
     "name": "Docker",
     "category": "Deployment",
-    "when_vi": "Đóng gói API và môi trường chạy lặp lại được.",
-    "how_vi": "Bắt đầu bằng Dockerfile tối giản, không đưa secret vào image.",
+    "when_vi": "Đóng gói API cùng môi trường để có thể chạy lại nhất quán.",
+    "how_vi": "Bắt đầu bằng Dockerfile tối giản. Không đưa thông tin bí mật vào image.",
     "commands": [
       "docker build -t journey-api .",
       "docker run --rm -p 8000:8000 journey-api"
     ],
-    "when_not_vi": "Không đưa secret vào image, không chạy container privileged nếu không cần.",
-    "install_vi": "Cài Docker Desktop, kiểm tra docker version và bật Linux containers.",
-    "error_vi": "Đọc build log, kiểm tra port, context và quyền truy cập Docker daemon.",
-    "combine_vi": "Đóng gói FastAPI, chạy integration test trong container và đo latency.",
-    "risks_vi": "Image phình to, cache dependency cũ và port mở ngoài ý muốn.",
+    "when_not_vi": "Không đưa thông tin bí mật vào image hoặc chạy container với quyền đặc biệt nếu không có nhu cầu cụ thể.",
+    "install_vi": "Cài Docker Desktop, kiểm tra docker version và bật chế độ Linux containers.",
+    "error_vi": "Đọc nhật ký tạo image. Kiểm tra cổng, thư mục dữ liệu dùng để tạo image và quyền truy cập Docker daemon.",
+    "combine_vi": "Đóng gói FastAPI, chạy kiểm thử tích hợp trong container và đo độ trễ.",
+    "risks_vi": "Image có thể quá lớn, dùng lại bộ nhớ đệm chứa thư viện cũ hoặc mở cổng mạng ngoài ý muốn.",
     "lesson_refs": [
       "phase-05-mlops-containers-1",
       "phase-05-mlops-api-2"
@@ -141,16 +141,16 @@
     "slug": "chatgpt-codex",
     "name": "ChatGPT/Codex",
     "category": "Learning assistant",
-    "when_vi": "Giải thích lỗi, chất vấn giả thuyết và review code sau khi tự thử.",
-    "how_vi": "Gửi context, lỗi và giả thuyết. Hỏi gợi ý hoặc đối chiếu bài giải, sau đó tự làm lại để kiểm tra hiểu bài.",
+    "when_vi": "Nhờ giải thích lỗi, kiểm tra giả thuyết và nhận xét mã sau khi bạn đã tự thử.",
+    "how_vi": "Cung cấp bối cảnh, lỗi gặp phải và giả thuyết của bạn. Xin gợi ý hoặc đối chiếu bài giải, sau đó tự làm lại để kiểm tra mức độ hiểu bài.",
     "commands": [
       "Tạo context từ lesson hoặc exercise trong app"
     ],
-    "when_not_vi": "Không gửi credential hoặc dữ liệu cá nhân. Tránh chép bài giải khi chưa giải thích được cách làm.",
-    "install_vi": "Tạo context không cần API key; chức năng xuất context chuẩn bị Markdown để dùng với trợ lý bạn chọn.",
-    "error_vi": "Nếu câu trả lời mơ hồ, bổ sung lỗi, giả thuyết, code tối thiểu và yêu cầu gợi ý từng bước.",
-    "combine_vi": "Tự thử → ghi giả thuyết → gửi context → sửa code → chạy test → ghi journal.",
-    "risks_vi": "Hallucination, phụ thuộc quá mức và paste dữ liệu bí mật.",
+    "when_not_vi": "Không gửi thông tin đăng nhập hoặc dữ liệu cá nhân. Tránh chép bài giải khi chưa giải thích được cách làm.",
+    "install_vi": "Chức năng xuất ngữ cảnh không cần khóa API. Ứng dụng chuẩn bị nội dung Markdown để bạn dùng với trợ lý đã chọn.",
+    "error_vi": "Nếu câu trả lời mơ hồ, bổ sung thông báo lỗi, giả thuyết và ví dụ mã tối thiểu, rồi yêu cầu gợi ý từng bước.",
+    "combine_vi": "Tự làm thử, ghi giả thuyết rồi gửi ngữ cảnh. Sau khi sửa mã, chạy kiểm thử và ghi lại điều đã học vào nhật ký.",
+    "risks_vi": "Trợ lý có thể đưa thông tin sai. Bạn cũng có thể phụ thuộc quá mức hoặc vô tình gửi dữ liệu bí mật.",
     "lesson_refs": [
       "phase-00-onboarding-learning-system-4",
       "phase-06-llm-rag-quality-safety-2"
@@ -170,8 +170,8 @@
     "slug": "redamon",
     "name": "RedAmon (authorized security lab)",
     "category": "Security",
-    "when_vi": "Đánh giá có kiểm soát một ứng dụng bạn sở hữu hoặc có văn bản cho phép kiểm thử, sau khi đã có staging cô lập.",
-    "how_vi": "Bắt đầu bằng dependency/SAST và test API; sau đó đặt allowlist target local, dùng dữ liệu giả, giới hạn phạm vi, ghi log và review từng phát hiện trước khi sửa.",
+    "when_vi": "Đánh giá có kiểm soát ứng dụng do bạn sở hữu hoặc được cho phép kiểm thử bằng văn bản, sau khi đã có môi trường thử nghiệm cô lập.",
+    "how_vi": "Bắt đầu bằng kiểm tra thư viện phụ thuộc, phân tích mã tĩnh (SAST) và kiểm thử API. Sau đó, nếu cần, lập danh sách mục tiêu được phép kiểm tra trên máy cá nhân, dùng dữ liệu giả và giới hạn phạm vi. Ghi nhật ký, đọc lại từng phát hiện trước khi sửa.",
     "commands": [
       "Đọc README và kiểm tra license, scope, data flow trước khi cài",
       "docker compose config",
@@ -179,11 +179,11 @@
       "docker compose logs -f",
       "docker compose down"
     ],
-    "when_not_vi": "Không quét production/public target, hệ thống của người khác, hoặc endpoint chứa dữ liệu thật nếu chưa có ủy quyền rõ ràng. Không dùng làm CI scanner mặc định và không auto-merge CodeFix.",
-    "install_vi": "RedAmon là công cụ tham khảo ngoài app, không được cài vào Journey runtime. Với Windows, dùng Docker Desktop + WSL2 trong filesystem Linux riêng; tạo snapshot/backup trước khi thử.",
-    "error_vi": "Nếu container, LLM provider, database hoặc target không rõ scope thì dừng; kiểm tra logs, allowlist, network boundary và quay lại staging tối thiểu.",
-    "combine_vi": "Luồng an toàn: code review → Journey Passive Security Audit → dependency/SAST → unit/integration test → staging có ủy quyền → nếu thật sự cần mới đánh giá tool bên ngoài → triage → sửa → regression test → ghi security report.",
-    "risks_vi": "Tool có thể thực hiện reconnaissance/exploitation, lưu dữ liệu vào database và gửi dữ liệu sang LLM/API bên thứ ba. README cảnh báo token/API key có thể lưu plaintext; không đưa credential thật và không expose dashboard ra Internet.",
+    "when_not_vi": "Không quét hệ thống đang phục vụ người dùng, mục tiêu công khai, hệ thống của người khác hoặc điểm cuối API chứa dữ liệu thật khi chưa có ủy quyền rõ ràng. Không dùng làm công cụ quét mặc định trong CI và không tự động hợp nhất thay đổi từ CodeFix.",
+    "install_vi": "RedAmon là công cụ tham khảo ngoài ứng dụng, không được cài vào môi trường chạy Journey. Trên Windows, dùng Docker Desktop và WSL2 với hệ thống tệp Linux riêng. Tạo bản chụp hoặc sao lưu trước khi thử.",
+    "error_vi": "Dừng nếu chưa rõ phạm vi của container, nhà cung cấp LLM, cơ sở dữ liệu hoặc mục tiêu kiểm tra. Kiểm tra nhật ký, danh sách mục tiêu được phép và ranh giới mạng, rồi quay về môi trường thử nghiệm tối giản.",
+    "combine_vi": "Đọc mã, chạy Journey Passive Security Audit, kiểm tra thư viện phụ thuộc và phân tích mã tĩnh, rồi chạy kiểm thử đơn vị và tích hợp. Chỉ dùng công cụ bên ngoài khi cần và đã có môi trường thử nghiệm được ủy quyền. Phân loại phát hiện, sửa lỗi, chạy kiểm thử hồi quy và ghi báo cáo bảo mật.",
+    "risks_vi": "Công cụ có thể thu thập thông tin, khai thác lỗ hổng, lưu dữ liệu vào cơ sở dữ liệu và gửi dữ liệu sang LLM hoặc API bên thứ ba. README cảnh báo token và khóa API có thể được lưu dạng văn bản thuần. Không dùng thông tin đăng nhập thật hoặc mở bảng điều khiển ra Internet.",
     "lesson_refs": [
       "phase-05-mlops-security-1",
       "phase-05-mlops-security-2",
@@ -208,18 +208,18 @@
     "slug": "journey-passive-security-audit",
     "name": "Journey Passive Security Audit",
     "category": "Security",
-    "when_vi": "Tìm endpoint và dấu hiệu rủi ro trong chính source của Journey trước khi viết test kiểm chứng.",
-    "how_vi": "Chạy static inventory, đọc finding theo endpoint, kiểm tra handler/schema bằng tay, sửa nếu xác nhận có vấn đề rồi chạy lại test. Script không gọi network, không gửi payload và không clone công cụ tấn công.",
+    "when_vi": "Tìm các điểm cuối API và dấu hiệu rủi ro trong mã nguồn Journey để chọn phần cần kiểm thử xác minh.",
+    "how_vi": "Chạy chương trình thống kê mã tĩnh và đọc phát hiện theo từng điểm cuối API. Tự kiểm tra hàm xử lý cùng cấu trúc dữ liệu, chỉ sửa khi đã xác nhận vấn đề rồi chạy lại kiểm thử. Chương trình không truy cập mạng, không gửi dữ liệu thử tấn công và không tải công cụ tấn công.",
     "commands": [
       "python scripts/security_audit.py --format summary",
       "python scripts/security_audit.py --format json > .data/security-audit.json",
       "python -m pytest tests/test_api.py -q"
     ],
-    "when_not_vi": "Không coi finding là bằng chứng endpoint đã bị khai thác. Không dùng script để quét target online hoặc thay thế kiểm thử có ủy quyền trên staging.",
-    "install_vi": "Đã có sẵn trong repo, không cần package, API key, RedAmon hay Docker.",
-    "error_vi": "Nếu báo cáo không chạy, kiểm tra virtual environment, import backend và chạy lại test API; không chuyển sang gửi request thử nghiệm.",
-    "combine_vi": "Code review → passive audit → human review có phạm vi → fix → regression test → ghi security report.",
-    "risks_vi": "Static scan có thể bỏ sót logic runtime và có thể tạo false positive; mọi finding phải được đọc code và test kiểm soát xác nhận.",
+    "when_not_vi": "Không coi phát hiện là bằng chứng điểm cuối API đã bị khai thác. Không dùng chương trình để quét hệ thống trực tuyến hoặc thay cho kiểm thử được ủy quyền trong môi trường thử nghiệm.",
+    "install_vi": "Đã có sẵn trong kho mã; không cần thêm thư viện, khóa API, RedAmon hay Docker.",
+    "error_vi": "Nếu không tạo được báo cáo, kiểm tra môi trường ảo và khả năng nạp các mô-đun phía máy chủ, rồi chạy lại kiểm thử API. Không tự chuyển sang gửi yêu cầu thử nghiệm tới hệ thống.",
+    "combine_vi": "Đọc mã, chạy kiểm tra thụ động rồi tự xác minh trong phạm vi đã định. Sau khi sửa, chạy kiểm thử hồi quy và ghi báo cáo bảo mật.",
+    "risks_vi": "Phân tích mã tĩnh có thể bỏ sót hành vi khi chạy hoặc báo nhầm rủi ro. Mỗi phát hiện cần được xác minh bằng việc đọc mã và kiểm thử có kiểm soát.",
     "lesson_refs": [
       "phase-05-mlops-security-1",
       "phase-05-mlops-security-2",

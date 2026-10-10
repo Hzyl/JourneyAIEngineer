@@ -4,12 +4,12 @@
   "module_id": "environment",
   "title_vi": "Thiết lập VS Code và terminal",
   "title_en": "Set up VS Code and the terminal",
-  "summary_vi": "Mở đúng folder trong VS Code, chọn interpreter và chạy file từ terminal.",
+  "summary_vi": "Mở đúng thư mục trong VS Code, chọn trình thông dịch và chạy tệp từ terminal.",
   "summary_en": "Open the correct folder in VS Code, select an interpreter and run a file from the terminal.",
   "learning_objectives": [
-    "Mở một folder bài tập bằng Open Folder.",
-    "Chọn interpreter đã xác nhận ở bài trước.",
-    "Giải thích được working directory trong output."
+    "Mở thư mục bài tập bằng lệnh Open Folder.",
+    "Chọn trình thông dịch đã xác nhận ở bài trước.",
+    "Giải thích được thư mục làm việc trong đầu ra."
   ],
   "learning_objectives_en": [
     "Open an exercise folder with Open Folder.",
@@ -24,15 +24,15 @@
     "working directory",
     "terminal"
   ],
-  "concept_notes_vi": "Folder đang mở quyết định nơi bạn tìm và lưu file. Working directory của terminal quyết định cách đường dẫn tương đối được hiểu; nó không luôn là folder chứa script.\nTrong VS Code dùng Python: Select Interpreter để chọn Python đã kiểm tra. Lưu file trước khi chạy. So sánh sys.executable trong terminal và khi dùng Run Python File nếu hai cách cho kết quả khác nhau.",
+  "concept_notes_vi": "Thư mục đang mở quyết định nơi bạn tìm và lưu tệp. Thư mục làm việc của terminal quyết định cách đường dẫn tương đối được hiểu; thư mục này không nhất thiết là nơi chứa tệp chương trình.\nTrong VS Code dùng Python: Select Interpreter để chọn Python đã kiểm tra. Lưu tệp trước khi chạy. So sánh sys.executable trong terminal và khi dùng Run Python File nếu hai cách cho kết quả khác nhau.",
   "concept_notes_en": "The open folder organizes your files. The terminal working directory determines how relative paths resolve; it is not always the script directory.\nUse Python: Select Interpreter in VS Code to select the verified interpreter. Save before running. Compare sys.executable in the terminal and Run Python File if their results differ.",
-  "why_it_matters_vi": "Folder đang mở quyết định nơi bạn tìm và lưu file. Working directory của terminal quyết định cách đường dẫn tương đối được hiểu; nó không luôn là folder chứa script.",
+  "why_it_matters_vi": "Thư mục đang mở quyết định nơi bạn tìm và lưu tệp. Thư mục làm việc của terminal quyết định cách đường dẫn tương đối được hiểu; thư mục này không nhất thiết là nơi chứa tệp chương trình.",
   "why_it_matters_en": "The open folder organizes your files. The terminal working directory determines how relative paths resolve; it is not always the script directory.",
   "study_steps_vi": [
-    "Tạo folder journey-practice bằng File Explorer, mở bằng VS Code; không cần tạo Git repo.",
-    "Chọn Python: Select Interpreter từ Command Palette; tạo file hello.py.",
-    "Lưu ví dụ, mở terminal tích hợp và chạy py -3 hello.py hoặc interpreter đã chọn.",
-    "Ghi output, đổi thông điệp rồi lưu/chạy lại. Web không mở editor tự động; thực hiện các bước trên máy của bạn."
+    "Tạo thư mục journey-practice bằng File Explorer, mở bằng VS Code; không cần tạo kho mã nguồn Git.",
+    "Chọn Python: Select Interpreter từ Command Palette; tạo tệp hello.py.",
+    "Lưu ví dụ, mở terminal tích hợp và chạy py -3 hello.py hoặc trình thông dịch đã chọn.",
+    "Ghi đầu ra, đổi thông điệp rồi lưu/chạy lại. Web không mở trình soạn thảo tự động; thực hiện các bước trên máy của bạn."
   ],
   "study_steps_en": [
     "Create journey-practice with your file manager and open it in VS Code; no Git repository is needed.",
@@ -42,14 +42,14 @@
   ],
   "practice_plan": {
     "vi": {
-      "task": "Ghi output, đổi thông điệp rồi lưu/chạy lại. Web không mở editor tự động; thực hiện các bước trên máy của bạn.",
+      "task": "Mở thư mục bài tập trong VS Code, chọn Python và chạy ví dụ từ terminal. Ghi đầu ra, đổi thông điệp rồi lưu/chạy lại. Web không mở trình soạn thảo tự động; thực hiện các bước trên máy của bạn.",
       "deliverables": [
-        "Mở một folder bài tập bằng Open Folder.",
-        "Chọn interpreter đã xác nhận ở bài trước.",
-        "Giải thích được working directory trong output."
+        "Thư mục bài tập đã mở bằng Open Folder",
+        "Trình thông dịch đã chọn và được đối chiếu",
+        "Đầu ra kèm giải thích thư mục làm việc"
       ],
-      "checkpoint": "Giải thích được working directory trong output.",
-      "stretch": "Đã sửa thông điệp mà output chưa đổi: làm gì trước?"
+      "checkpoint": "Giải thích được thư mục làm việc trong đầu ra.",
+      "stretch": "Đã sửa thông điệp mà đầu ra chưa đổi: làm gì trước?"
     },
     "en": {
       "task": "Record the output, change the message, save and rerun. The web app cannot open your editor; perform these steps on your computer.",
@@ -64,9 +64,9 @@
   },
   "interview_questions": {
     "vi": [
-      "Cách chứng minh VS Code chạy đúng interpreter?",
-      "Đã sửa thông điệp mà output chưa đổi: làm gì trước?",
-      "Cần Git để mở folder bài tập trong VS Code không?"
+      "Cách chứng minh VS Code chạy đúng trình thông dịch?",
+      "Đã sửa thông điệp mà đầu ra chưa đổi: làm gì trước?",
+      "Cần Git để mở thư mục bài tập trong VS Code không?"
     ],
     "en": [
       "How can you prove VS Code uses the intended interpreter?",
@@ -81,13 +81,13 @@
       "title": "Set up VS Code and the terminal",
       "code": "from pathlib import Path\nimport sys\n\nprint('Hello, AI Engineer!')\nprint(f'Working directory: {Path.cwd()}')\nprint(f'Interpreter: {sys.executable}')",
       "status": "runnable",
-      "purpose_vi": "Mở đúng folder trong VS Code, chọn interpreter và chạy file từ terminal.",
+      "purpose_vi": "Mở đúng thư mục trong VS Code, chọn trình thông dịch và chạy tệp từ terminal.",
       "purpose_en": "Open the correct folder in VS Code, select an interpreter and run a file from the terminal.",
       "setup": "Python 3.11+; chạy trong terminal hoặc notebook của bạn. Web chỉ hiển thị ví dụ.",
       "expected_output": "Hello, AI Engineer! và working directory/interpreter của máy.",
-      "edge_case_vi": "Chạy file chưa lưu sẽ cho output cũ.",
+      "edge_case_vi": "Chạy tệp chưa lưu sẽ cho đầu ra cũ.",
       "edge_case_en": "Running an unsaved file can show old output.",
-      "explanation_vi": "Folder đang mở quyết định nơi bạn tìm và lưu file. Working directory của terminal quyết định cách đường dẫn tương đối được hiểu; nó không luôn là folder chứa script.\nTrong VS Code dùng Python: Select Interpreter để chọn Python đã kiểm tra. Lưu file trước khi chạy. So sánh sys.executable trong terminal và khi dùng Run Python File nếu hai cách cho kết quả khác nhau.",
+      "explanation_vi": "Thư mục đang mở quyết định nơi bạn tìm và lưu tệp. Thư mục làm việc của terminal quyết định cách đường dẫn tương đối được hiểu; thư mục này không nhất thiết là nơi chứa tệp chương trình.\nTrong VS Code dùng Python: Select Interpreter để chọn Python đã kiểm tra. Lưu tệp trước khi chạy. So sánh sys.executable trong terminal và khi dùng Run Python File nếu hai cách cho kết quả khác nhau.",
       "explanation_en": "The open folder organizes your files. The terminal working directory determines how relative paths resolve; it is not always the script directory.\nUse Python: Select Interpreter in VS Code to select the verified interpreter. Save before running. Compare sys.executable in the terminal and Run Python File if their results differ."
     }
   ],
@@ -98,9 +98,9 @@
       "language": "en",
       "kind": "official",
       "required": true,
-      "purpose_vi": "Mở một folder bài tập bằng Open Folder.",
+      "purpose_vi": "Mở thư mục bài tập bằng lệnh Open Folder.",
       "purpose_en": "Open an exercise folder with Open Folder.",
-      "read_vi": "Đọc cách chọn interpreter và terminal environment.",
+      "read_vi": "Đọc cách chọn trình thông dịch và cấu hình môi trường của terminal.",
       "read_en": "Read interpreter selection and terminal environment behavior."
     },
     {
@@ -109,9 +109,9 @@
       "language": "vi",
       "kind": "in_app",
       "required": true,
-      "purpose_vi": "Ghi output, đổi thông điệp rồi lưu/chạy lại. Web không mở editor tự động; thực hiện các bước trên máy của bạn.",
+      "purpose_vi": "Ghi đầu ra, đổi thông điệp rồi lưu/chạy lại. Web không mở trình soạn thảo tự động; thực hiện các bước trên máy của bạn.",
       "purpose_en": "Record the output, change the message, save and rerun. The web app cannot open your editor; perform these steps on your computer.",
-      "read_vi": "Giải thích được working directory trong output.",
+      "read_vi": "Giải thích được thư mục làm việc trong đầu ra.",
       "read_en": "Explain the working directory shown in the output."
     }
   ],
@@ -126,35 +126,35 @@
   ],
   "estimated_minutes": 30,
   "completion_checklist": [
-    "Mở một folder bài tập bằng Open Folder.",
-    "Chọn interpreter đã xác nhận ở bài trước.",
-    "Giải thích được working directory trong output.",
+    "Mở thư mục bài tập bằng lệnh Open Folder.",
+    "Chọn trình thông dịch đã xác nhận ở bài trước.",
+    "Giải thích được thư mục làm việc trong đầu ra.",
     "Lưu kết quả thực hành và một lỗi đã hiểu."
   ],
   "completion_criteria": [
-    "Mở một folder bài tập bằng Open Folder.",
-    "Chọn interpreter đã xác nhận ở bài trước.",
-    "Giải thích được working directory trong output."
+    "Mở thư mục bài tập bằng lệnh Open Folder.",
+    "Chọn trình thông dịch đã xác nhận ở bài trước.",
+    "Giải thích được thư mục làm việc trong đầu ra."
   ],
   "common_mistakes": [
-    "Chạy file chưa lưu sẽ cho output cũ.",
-    "FileNotFoundError với đường dẫn tương đối có thể do working directory khác."
+    "Chạy tệp chưa lưu sẽ cho đầu ra cũ.",
+    "FileNotFoundError với đường dẫn tương đối có thể do thư mục làm việc khác."
   ],
   "next_lessons": [
     "phase-00-onboarding-environment-3",
     "phase-00-onboarding-environment-4"
   ],
-  "review_question_vi": "Working directory khác script directory thế nào?",
+  "review_question_vi": "Thư mục làm việc khác thư mục chứa chương trình thế nào?",
   "review_question_en": "How does the working directory differ from the script directory?",
-  "review_answer_vi": "Working directory thuộc process; script directory là nơi chứa file. Hai đường dẫn có thể khác nhau.",
+  "review_answer_vi": "Thư mục làm việc thuộc tiến trình; thư mục chứa chương trình là nơi chứa tệp. Hai đường dẫn có thể khác nhau.",
   "review_answer_en": "The working directory belongs to the process; the script directory contains the file. They can differ.",
   "review_cards": [
     {
       "id": "phase-00-onboarding-environment-2-recall",
       "type": "recall",
-      "question_vi": "Working directory khác script directory thế nào?",
+      "question_vi": "Thư mục làm việc khác thư mục chứa chương trình thế nào?",
       "question_en": "How does the working directory differ from the script directory?",
-      "answer_vi": "Working directory thuộc process; script directory là nơi chứa file. Hai đường dẫn có thể khác nhau.",
+      "answer_vi": "Thư mục làm việc thuộc tiến trình; thư mục chứa chương trình là nơi chứa tệp. Hai đường dẫn có thể khác nhau.",
       "answer_en": "The working directory belongs to the process; the script directory contains the file. They can differ.",
       "hint_vi": "Dùng Path.cwd().",
       "hint_en": "Inspect Path.cwd()."
@@ -162,9 +162,9 @@
     {
       "id": "phase-00-onboarding-environment-2-application",
       "type": "application",
-      "question_vi": "Cách chứng minh VS Code chạy đúng interpreter?",
+      "question_vi": "Cách chứng minh VS Code chạy đúng trình thông dịch?",
       "question_en": "How can you prove VS Code uses the intended interpreter?",
-      "answer_vi": "Chạy sys.executable bằng Run Python File và so sánh đường dẫn interpreter đã chọn.",
+      "answer_vi": "Chạy sys.executable bằng Run Python File và so sánh đường dẫn trình thông dịch đã chọn.",
       "answer_en": "Run sys.executable through Run Python File and compare it with the selected interpreter path.",
       "hint_vi": "Tên nút Run không phải bằng chứng.",
       "hint_en": "A Run button label is not proof."
@@ -172,9 +172,9 @@
     {
       "id": "phase-00-onboarding-environment-2-debug",
       "type": "debug",
-      "question_vi": "Đã sửa thông điệp mà output chưa đổi: làm gì trước?",
+      "question_vi": "Đã sửa thông điệp mà đầu ra chưa đổi: làm gì trước?",
       "question_en": "The message was edited but output is unchanged: what comes first?",
-      "answer_vi": "Lưu file, xác nhận đang chạy đúng file, rồi xem lệnh và working directory.",
+      "answer_vi": "Lưu tệp, xác nhận đang chạy đúng tệp, rồi xem lệnh và thư mục làm việc.",
       "answer_en": "Save, verify the file being executed, then inspect the command and working directory.",
       "hint_vi": "Kiểm tra thao tác đơn giản trước.",
       "hint_en": "Check the simple steps first."
@@ -182,11 +182,11 @@
     {
       "id": "phase-00-onboarding-environment-2-interview",
       "type": "interview",
-      "question_vi": "Cần Git để mở folder bài tập trong VS Code không?",
+      "question_vi": "Cần Git để mở thư mục bài tập trong VS Code không?",
       "question_en": "Is Git required to open an exercise folder in VS Code?",
-      "answer_vi": "Không. File > Open Folder mở folder thường; Git chỉ thêm quản lý phiên bản.",
+      "answer_vi": "Không. File > Open Folder mở được thư mục thông thường; Git bổ sung chức năng quản lý phiên bản.",
       "answer_en": "No. File > Open Folder works with ordinary folders; Git adds version control.",
-      "hint_vi": "Phân biệt chỉnh file và lưu lịch sử.",
+      "hint_vi": "Phân biệt chỉnh tệp và lưu lịch sử.",
       "hint_en": "Separate file editing from history tracking."
     }
   ],

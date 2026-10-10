@@ -76,7 +76,7 @@ export function BackupSettings({ language, onRestored }: {
   const importBackup = async () => {
     if (inFlight.current || !ready || !review) return
     if (!window.confirm(vi
-      ? 'Nhập sẽ thay thế tiến độ, lịch ôn, lịch sử ôn, ghi chú, phiên học và cài đặt. Journal trùng tên sẽ bị ghi đè. App tạo bản sao an toàn trước. Tiếp tục?'
+      ? 'Nhập bản sao lưu sẽ thay thế tiến độ, lịch ôn, lịch sử ôn, ghi chú, phiên học và cài đặt. Tệp nhật ký trùng tên sẽ bị ghi đè. Ứng dụng tạo bản sao an toàn trước khi nhập. Tiếp tục?'
       : 'Import replaces progress, review schedules/history, notes, sessions and settings. Matching journal files are overwritten. A safety backup is created first. Continue?')) return
     const payload = review.payload
     if (!begin('import')) return
@@ -91,14 +91,14 @@ export function BackupSettings({ language, onRestored }: {
   }
   const labels: Record<string, string> = vi
     ? { progress: 'Tiến độ bài học', review_state: 'Lịch ôn', review_history: 'Lượt ôn', notes: 'Ghi chú',
-      study_sessions: 'Phiên học', journal_files: 'File journal' }
+      study_sessions: 'Phiên học', journal_files: 'Tệp nhật ký' }
     : { progress: 'Lesson progress', review_state: 'Review schedules', review_history: 'Review history', notes: 'Notes',
       study_sessions: 'Study sessions', journal_files: 'Journal files' }
   const errors = vi ? {
     export: 'Chưa xuất được bản sao lưu. Hãy thử lại.',
     preview: 'Chưa kiểm tra được bản sao lưu. Kiểm tra JSON và thử lại; nội dung vẫn còn.',
     import: 'Chưa nhập được bản sao lưu. Nội dung vẫn còn; hãy kiểm tra lại trước khi thử nhập.',
-    reload: 'Đã nhập thành công, nhưng chưa tải lại được màn hình. Hãy làm mới app; không cần nhập lần nữa.',
+    reload: 'Đã nhập thành công, nhưng chưa tải lại được màn hình. Hãy tải lại trang; không cần nhập lần nữa.',
   } : {
     export: 'Could not export the backup. Please retry.',
     preview: 'Could not preview the backup. Check the JSON and retry; your text is preserved.',
@@ -109,7 +109,7 @@ export function BackupSettings({ language, onRestored }: {
     <span className="eyebrow">{vi ? 'SAO LƯU CÓ THỂ CHUYỂN MÁY' : 'PORTABLE BACKUP'}</span>
     <h3>{vi ? 'Sao lưu và khôi phục' : 'Backup and restore'}</h3>
     <p className="muted">{vi
-      ? 'Chuyển tiến độ, lịch ôn, notes, journal và cài đặt sang máy khác. Database và workspace bài tập không nằm trong bản sao lưu. File có nội dung riêng tư.'
+      ? 'Chuyển tiến độ, lịch ôn, ghi chú, nhật ký và cài đặt sang máy khác. Bản sao lưu không chứa toàn bộ cơ sở dữ liệu hay thư mục bài tập. Tệp này có nội dung riêng tư.'
       : 'Move progress, reviews, notes, journals and settings to another computer. Database files and exercise workspaces are excluded. Backups contain private content.'}</p>
     <div className="backup-actions">
       <button className="secondary-button" disabled={pending !== null} aria-busy={pending === 'export'}
@@ -123,7 +123,7 @@ export function BackupSettings({ language, onRestored }: {
           : (vi ? 'Nhập bản đã kiểm tra' : 'Import reviewed backup')}</button>
     </div>
     <textarea className="backup-editor" spellCheck={false} wrap="off"
-      aria-label={vi ? 'Nội dung backup JSON' : 'Backup JSON contents'}
+      aria-label={vi ? 'Nội dung bản sao lưu JSON' : 'Backup JSON contents'}
       value={text} disabled={pending !== null} onChange={(event) => {
         if (!inFlight.current) replaceText(event.target.value)
       }} placeholder={vi ? 'Dán JSON để kiểm tra trước khi nhập…' : 'Paste JSON to review before importing…'} />
@@ -135,9 +135,9 @@ export function BackupSettings({ language, onRestored }: {
         {labels[key] ?? key}: {count} {vi ? 'sẽ nhập' : 'to import'}
         {key in review.result.replaces && ` / ${review.result.replaces[key]} ${vi ? 'hiện có, sẽ thay thế' : 'existing, replaced'}`}
       </li>)}</ul>
-      <p>{vi ? 'Cài đặt bị thay thế. Journal trùng tên bị ghi đè; các file khác được giữ.'
+      <p>{vi ? 'Cài đặt sẽ được thay thế. Tệp nhật ký trùng tên sẽ bị ghi đè; các tệp khác được giữ nguyên.'
         : 'Settings are replaced. Matching journal filenames are overwritten; other files are kept.'}</p>
-      {review.result.journal_conflicts && <p>{vi ? 'File journal sẽ bị ghi đè: ' : 'Journal files to overwrite: '}
+      {review.result.journal_conflicts && <p>{vi ? 'Tệp nhật ký sẽ bị ghi đè: ' : 'Journal files to overwrite: '}
         {review.result.journal_conflicts.join(', ') || (vi ? 'Không có' : 'None')}</p>}
       {review.result.warnings.map((warning) => <p className="warning-note" key={warning}>
         {backupWarning(warning, language)}</p>)}

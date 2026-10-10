@@ -1,3 +1,4 @@
+import { LearningIllustration } from './LearningIllustration'
 import { useEffect, useRef, useState } from 'react'
 import type { Exercise } from '../api'
 import { exerciseCopy } from './exercise-copy'
@@ -52,7 +53,8 @@ export function ExercisesView({ exercises, gitPublishAvailable, hosted, language
   return <div className="practice-page">
     {selected ? <ExerciseDetail key={selected.slug} exercise={selected} hosted={hosted}
       gitPublishAvailable={gitPublishAvailable} language={language} onBack={() => select(null)} onRefresh={onRefresh} /> : <>
-      <header className="practice-intro">
+      <LearningIllustration name="practice" />
+    <header className="practice-intro">
         <span className="eyebrow accent">{vi ? 'HỌC BẰNG CÁCH LÀM' : 'LEARN BY DOING'}</span>
         <h2>{vi ? 'Từng bài nhỏ. Kỹ năng thật.' : 'Small exercises. Real skills.'}</h2>
         <p>{vi ? 'Chọn một bài, đọc hướng dẫn và tự làm. Đề bài, gợi ý và cách kiểm tra đều ở đây.'

@@ -109,25 +109,25 @@ export function FeedbackPanel({ lesson, language, hosted }: Props) {
     </form>
     {!hosted && <button type="button" className="text-button" onClick={createDraft}
       disabled={submitting || body.trim().length < 5}>
-      {vi ? 'Tạo report để gửi GitHub' : 'Create GitHub report'}
+      {vi ? 'Tạo bản góp ý để gửi lên GitHub' : 'Create GitHub report'}
     </button>}
     {report && <div className="feedback-report" aria-live="polite">
       <div className="feedback-report-heading">
         <strong>{vi ? 'Bản nháp chưa gửi' : 'Draft, not submitted'}</strong>
         <button type="button" className="text-button" onClick={() => void copyReport()}
           disabled={copyState === 'copying'} aria-busy={copyState === 'copying'}>
-          {copyState === 'copying' ? (vi ? 'Đang copy…' : 'Copying…')
-            : copyState === 'copied' ? (vi ? 'Đã copy ✓' : 'Copied ✓') : (vi ? 'Copy bản nháp' : 'Copy draft')}
+          {copyState === 'copying' ? (vi ? 'Đang sao chép…' : 'Copying…')
+            : copyState === 'copied' ? (vi ? 'Đã sao chép ✓' : 'Copied ✓') : (vi ? 'Sao chép bản nháp' : 'Copy draft')}
         </button>
         <a className="text-button" href="https://github.com/Hzyl/JourneyAIEngineer/discussions"
           target="_blank" rel="noreferrer">{vi ? 'Mở Discussions ↗' : 'Open Discussions ↗'}</a>
       </div>
-      <textarea className="feedback-report-preview" aria-label={vi ? 'Report feedback vừa tạo' : 'Generated feedback report'}
+      <textarea className="feedback-report-preview" aria-label={vi ? 'Bản góp ý vừa tạo' : 'Generated feedback report'}
         readOnly value={report} onFocus={(event) => event.currentTarget.select()} />
-      <small>{vi ? 'Kiểm tra trước khi chia sẻ. Chỉ một số mẫu credential phổ biến được che; thao tác này chưa gửi góp ý.'
+      <small>{vi ? 'Kiểm tra trước khi chia sẻ. Chỉ một số mẫu khóa và thông tin xác thực phổ biến được che; thao tác này chưa gửi góp ý.'
         : 'Review before sharing. Only common credential patterns are redacted; nothing has been submitted.'}</small>
       {copyState === 'failed' && <p className="warning-note" role="alert">
-        {vi ? 'Không copy được. Bạn vẫn có thể chọn và copy bản nháp ở trên.'
+        {vi ? 'Không sao chép được. Bạn vẫn có thể chọn nội dung bản nháp ở trên và sao chép thủ công.'
           : 'Could not copy. You can still select and copy the draft above.'}
       </p>}
     </div>}

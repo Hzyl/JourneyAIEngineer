@@ -36,10 +36,10 @@ const baseNavItems: Array<{ id: View; label: string; icon: string; hint: string 
   { id: 'review', label: 'Ôn tập', icon: '↻', hint: 'Nhớ lâu hơn' },
   { id: 'exercises', label: 'Bài tập', icon: '⌘', hint: 'Mở bằng VS Code' },
   { id: 'tools', label: 'Công cụ', icon: '◇', hint: 'Dùng đúng lúc' },
-  { id: 'security', label: 'Security Lab', icon: '⌁', hint: 'Kiểm tra source thụ động' },
-  { id: 'resources', label: 'Tài liệu', icon: '▤', hint: 'Sách · course · docs' },
+  { id: 'security', label: 'Thực hành bảo mật', icon: '⌁', hint: 'Kiểm tra mã nguồn thụ động' },
+  { id: 'resources', label: 'Tài liệu', icon: '▤', hint: 'Sách · khóa học · tài liệu' },
   { id: 'community', label: 'Cộng đồng', icon: '✦', hint: 'Góp ý · cải thiện bài học' },
-  { id: 'journal', label: 'Journal & Git', icon: '✎', hint: 'Ghi lại hành trình' },
+  { id: 'journal', label: 'Nhật ký & Git', icon: '✎', hint: 'Ghi lại việc học' },
   { id: 'settings', label: 'Cài đặt', icon: '⚙', hint: 'Nhịp học cá nhân' },
 ]
 
@@ -63,7 +63,7 @@ function App() {
     journal: [hosted ? 'Journal' : 'Journal & Git', 'Record your learning'], settings: ['Settings', 'Your learning rhythm'],
   }
   const navItems = baseNavItems.map((item) => ({ ...item,
-    label: vi ? (hosted && item.id === 'journal' ? 'Journal' : item.label) : englishNav[item.id][0],
+    label: vi ? (hosted && item.id === 'journal' ? 'Nhật ký' : item.label) : englishNav[item.id][0],
     hint: vi ? (hosted && item.id === 'exercises' ? 'Hướng dẫn thực hành' : item.hint) : englishNav[item.id][1],
   }))
   const [selectedLesson, setSelectedLesson] = useState<string | null>(initialLocation.lesson)
@@ -156,7 +156,7 @@ function App() {
   }
   return <div className="app-shell">
     <a className="skip-link" href="#main-content" inert={mobileNavOpen}>
-      {vi ? 'Bỏ qua đến nội dung chính' : 'Skip to main content'}
+      {vi ? 'Đến nội dung chính' : 'Skip to main content'}
     </a>
     <AppNavigation items={navItems} view={view} hosted={hosted} language={settings.language}
       mobile={mobileNav} open={mobileNavOpen} panel={navPanelRef}
@@ -170,7 +170,7 @@ function App() {
           <span aria-hidden="true">☰</span><span className="sr-only">{vi ? 'Mở menu' : 'Open menu'}</span>
         </button>
         <div>
-          <span className="eyebrow">PERSONAL LEARNING OS</span>
+          <span className="eyebrow">{vi ? 'GÓC HỌC TẬP CỦA BẠN' : 'PERSONAL LEARNING OS'}</span>
           {view === 'lesson' ? <div className="topbar-title">{vi ? 'Bài học' : 'Lesson workspace'}</div>
             : <h1>{view === 'dashboard' ? (vi ? 'Hôm nay học gì?' : 'What will you learn today?')
               : view === 'missing' ? (vi ? 'Không tìm thấy trang' : 'Page not found')

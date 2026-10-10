@@ -1,0 +1,369 @@
+{
+  "schema_version": 1,
+  "exercises": {
+    "exercise-0-environment": {
+      "title_vi": "Thực hành · Môi trường học",
+      "description_vi": "1. Tạo thư mục kho mã và môi trường ảo .venv.\n2. Chạy một tệp Python từ VS Code.\n3. Ghi lại lệnh và kết quả kiểm tra phiên bản.\n\nTự kiểm tra: Bạn có thể lấy lại mã nguồn, tạo môi trường mới và chạy chương trình theo các lệnh đã ghi.",
+      "hints": [
+        "Ghi cả đường dẫn trình thông dịch Python để phân biệt Python hệ thống với Python trong .venv."
+      ]
+    },
+    "exercise-0-baseline": {
+      "title_vi": "Thực hành · Đánh giá đầu vào",
+      "description_vi": "1. Làm bài kiểm tra mà không xem tài liệu.\n2. Tự chấm theo danh sách tiêu chí.\n3. Ghi ba phần kiến thức còn thiếu và lập kế hoạch học bù.\n\nTự kiểm tra: Bạn giải thích được vì sao chọn lộ trình 6 tháng hoặc 12–15 tháng dựa trên kết quả của mình.",
+      "hints": [
+        "Phân loại từng lỗi theo kiến thức còn thiếu trước khi chọn bài ôn tập."
+      ]
+    },
+    "exercise-0-learning-system": {
+      "title_vi": "Thực hành · Tổ chức việc học",
+      "description_vi": "1. Thực hiện một buổi học 45–60 phút gồm đọc bài và tự làm bài tập.\n2. Chạy kiểm thử rồi ôn lại thẻ ghi nhớ.\n3. Ghi một điều vừa hiểu thêm vào nhật ký học tập.\n\nTự kiểm tra: Mỗi tuần, bạn chỉ ra được sản phẩm hoặc kết quả nào thể hiện tiến bộ và phần nào còn cần luyện tập.",
+      "hints": [
+        "Cuối buổi học, lưu đường dẫn bài làm cùng kết quả kiểm thử để tuần sau có thể đối chiếu."
+      ]
+    },
+    "exercise-1-python-core": {
+      "title_vi": "Thực hành · Python cốt lõi",
+      "description_vi": "1. Viết một gói Python nhỏ có hàm thuần và chú thích kiểu dữ liệu.\n2. Xử lý đầu vào không hợp lệ.\n3. Viết kiểm thử cho trường hợp thông thường và các trường hợp biên.\n\nTự kiểm tra: Bạn giải thích được những dòng mã quan trọng và tự sửa chương trình khi yêu cầu thay đổi.",
+      "hints": [
+        "Với mỗi hàm, ghi trước đầu vào, kết quả mong đợi và cách xử lý dữ liệu không hợp lệ."
+      ]
+    },
+    "exercise-1-reliable-code": {
+      "title_vi": "Thực hành · Viết mã đáng tin cậy",
+      "description_vi": "1. Chủ động tạo một lỗi và ghi giả thuyết về nguyên nhân.\n2. Dùng trình gỡ lỗi hoặc nhật ký chạy để kiểm tra giả thuyết.\n3. Sửa lỗi và viết kiểm thử hồi quy để phát hiện nếu lỗi xuất hiện lại.\n\nTự kiểm tra: Bạn phân biệt được lỗi đầu vào, lỗi logic và lỗi môi trường, đồng thời chỉ ra kiểm thử bảo vệ phần vừa sửa.",
+      "hints": [
+        "Thu nhỏ ví dụ đến mức vẫn tái hiện được lỗi rồi mới thay đổi mã."
+      ]
+    },
+    "exercise-1-data-files": {
+      "title_vi": "Thực hành · Tệp và dữ liệu",
+      "description_vi": "1. Xây quy trình xử lý tệp CSV/JSON và kiểm tra cấu trúc dữ liệu.\n2. Báo rõ dòng bị lỗi và tạo tệp kết quả đã làm sạch.\n3. Ghi lệnh để chạy lại toàn bộ quy trình từ dòng lệnh.\n\nTự kiểm tra: Bạn nêu được dữ liệu nào được giữ, loại bỏ hoặc sửa, cùng lý do cho từng quyết định.",
+      "hints": [
+        "Dùng tệp mẫu nhỏ có cả dòng đúng và dòng sai để kiểm tra báo cáo lỗi."
+      ]
+    },
+    "exercise-1-developer-tools": {
+      "title_vi": "Thực hành · Quy trình làm việc với mã nguồn",
+      "description_vi": "1. Tạo nhánh Git và xem phần mã thay đổi.\n2. Gọi một API rồi lưu phản hồi.\n3. Viết thông điệp commit mô tả đúng thay đổi.\n\nTự kiểm tra: Bạn khôi phục được trạng thái trước đó và dùng bản so sánh mã để giải thích mình đã sửa gì.",
+      "hints": [
+        "Xem git diff trước khi viết thông điệp commit để mô tả đúng phạm vi thay đổi."
+      ]
+    },
+    "exercise-1-sql-structures": {
+      "title_vi": "Thực hành · SQL và cấu trúc dữ liệu",
+      "description_vi": "1. Tạo cơ sở dữ liệu nhỏ để lưu nhật ký học tập.\n2. Viết truy vấn tổng hợp thời gian học theo tuần.\n3. So sánh hai cách truy vấn trên cùng dữ liệu.\n\nTự kiểm tra: Bạn giải thích được mỗi hàng đại diện cho điều gì, cách liên kết khóa, kết quả JOIN và độ phức tạp của cấu trúc dữ liệu.",
+      "hints": [
+        "Tạo dữ liệu có người chưa học buổi nào để kiểm tra truy vấn có giữ lại người đó hay không."
+      ]
+    },
+    "exercise-2-linear-algebra": {
+      "title_vi": "Thực hành · Đại số tuyến tính",
+      "description_vi": "1. Tính tay một ví dụ nhỏ rồi viết lại bằng NumPy.\n2. In kích thước mảng ở từng bước.\n3. Giải thích ý nghĩa hình học của phép tính.\n\nTự kiểm tra: Bạn phát hiện được kích thước không tương thích trước khi chạy mô hình và giải thích được PCA loại bỏ thông tin nào.",
+      "hints": [
+        "Ghi số hàng và số cột của từng ma trận trước khi thực hiện phép nhân."
+      ]
+    },
+    "exercise-2-calculus": {
+      "title_vi": "Thực hành · Giải tích và gradient",
+      "description_vi": "1. Vẽ đồ thị hàm mất mát một biến và tính gradient bằng tay.\n2. Kiểm tra kết quả bằng phương pháp sai phân hữu hạn.\n3. Đối chiếu với kết quả vi phân tự động của autograd.\n\nTự kiểm tra: Bạn giải thích được dấu của gradient, vai trò của tốc độ học và vì sao gradient sai khiến quá trình huấn luyện thất bại.",
+      "hints": [
+        "Dùng cùng một giá trị đầu vào khi so sánh ba cách tính gradient."
+      ]
+    },
+    "exercise-2-probability": {
+      "title_vi": "Thực hành · Xác suất",
+      "description_vi": "1. Mô phỏng một phân phối với các kích thước mẫu khác nhau.\n2. Vẽ biểu đồ phân bố tần suất.\n3. Ghi rõ giả định trước khi rút ra kết luận.\n\nTự kiểm tra: Bạn phân biệt được xác suất có điều kiện, kỳ vọng, phương sai và biến động do lấy mẫu trong một ví dụ học máy.",
+      "hints": [
+        "Giữ nguyên phân phối khi thay đổi kích thước mẫu để so sánh có ý nghĩa."
+      ]
+    },
+    "exercise-2-optimization": {
+      "title_vi": "Thực hành · Thống kê và tối ưu",
+      "description_vi": "1. Tự cài đặt hồi quy tuyến tính hoặc hồi quy logistic ở dạng tối giản.\n2. Vẽ đường cong mất mát.\n3. So sánh ảnh hưởng của tốc độ học và các phương pháp SGD, momentum, Adam.\n\nTự kiểm tra: Bạn nhận ra dấu hiệu học chưa đủ, quá khớp và bước cập nhật tăng mất kiểm soát, đồng thời chọn được chỉ số để kiểm tra.",
+      "hints": [
+        "Khi so sánh bộ tối ưu, ghi rõ điều kiện khởi tạo, dữ liệu và tốc độ học của từng lần chạy."
+      ]
+    },
+    "exercise-3-ml-framing": {
+      "title_vi": "Thực hành · Xác định bài toán và dữ liệu",
+      "description_vi": "1. Viết bảng mô tả các trường dữ liệu.\n2. Xác định biến mục tiêu và một phương án dự đoán đơn giản làm mốc so sánh.\n3. Lập bảng các vị trí có nguy cơ rò rỉ dữ liệu.\n\nTự kiểm tra: Bạn giải thích được lý do chọn cách chia dữ liệu và chỉ số đánh giá, kể cả khi kết quả còn thấp.",
+      "hints": [
+        "Với mỗi đặc trưng, kiểm tra xem thông tin đó đã tồn tại tại thời điểm dự đoán hay chưa."
+      ]
+    },
+    "exercise-3-models": {
+      "title_vi": "Thực hành · Các mô hình cốt lõi",
+      "description_vi": "1. Huấn luyện mô hình đơn giản trước rồi thử mô hình cây và boosting.\n2. Ghi các chỉ số đánh giá cho từng mô hình.\n3. Chọn một ví dụ dự đoán sai tiêu biểu của mỗi mô hình để phân tích.\n\nTự kiểm tra: Bạn giải thích được sự đánh đổi giữa khả năng giải thích, độ trễ, lượng dữ liệu và chất lượng dự đoán.",
+      "hints": [
+        "Giữ nguyên cách chia dữ liệu khi so sánh các mô hình."
+      ]
+    },
+    "exercise-3-preprocessing": {
+      "title_vi": "Thực hành · Tiền xử lý dữ liệu",
+      "description_vi": "1. Đặt các bước điền dữ liệu thiếu, mã hóa và chuẩn hóa trong Pipeline.\n2. Chỉ gọi fit trên tập huấn luyện.\n3. Kiểm tra quy trình với một trường hợp có dữ liệu thiếu.\n\nTự kiểm tra: Bạn lưu được toàn bộ quy trình và dùng cùng cách tiền xử lý khi huấn luyện lẫn khi dự đoán.",
+      "hints": [
+        "Kiểm tra rằng thống kê dùng để điền dữ liệu thiếu và chuẩn hóa chỉ được tính từ tập huấn luyện."
+      ]
+    },
+    "exercise-3-evaluation": {
+      "title_vi": "Thực hành · Đánh giá mô hình",
+      "description_vi": "1. Lập bảng chọn chỉ số theo mục tiêu bài toán.\n2. Chạy kiểm định chéo và điều chỉnh một siêu tham số.\n3. Lưu kết quả từng cấu hình vào bảng.\n\nTự kiểm tra: Bạn giải thích được khi nào nên dùng accuracy, F1, PR-AUC, MAE hoặc đánh giá độ hiệu chuẩn của xác suất dự đoán.",
+      "hints": [
+        "Ghi tiêu chí chọn cấu hình trước khi xem kết quả để tránh chỉ chọn con số đẹp nhất."
+      ]
+    },
+    "exercise-3-analysis": {
+      "title_vi": "Thực hành · Phân tích và đóng gói mô hình",
+      "description_vi": "1. Phân nhóm lỗi và đọc ma trận nhầm lẫn.\n2. Lưu mô hình cùng quy trình xử lý dữ liệu.\n3. Viết bản mô tả mô hình, nêu rõ giới hạn sử dụng.\n\nTự kiểm tra: Bạn chỉ ra được mô hình sai ở đâu, với nhóm nào và không bỏ qua giới hạn chỉ vì điểm tổng thể cao.",
+      "hints": [
+        "Đối chiếu chỉ số tổng thể với kết quả của từng nhóm dữ liệu."
+      ]
+    },
+    "exercise-4-pytorch-core": {
+      "title_vi": "Thực hành · PyTorch cốt lõi",
+      "description_vi": "1. Tạo Dataset bằng dữ liệu giả và đưa vào DataLoader.\n2. In kích thước của từng lô dữ liệu.\n3. Tính tay để kiểm tra gradient của một lớp trong mạng.\n\nTự kiểm tra: Bạn giải thích được chiều chứa lô dữ liệu, chế độ train/eval, kiểu dữ liệu và thiết bị xử lý của từng tensor.",
+      "hints": [
+        "Ghi shape, dtype và device của tensor tại đầu vào và đầu ra mỗi lớp."
+      ]
+    },
+    "exercise-4-training": {
+      "title_vi": "Thực hành · Vòng lặp huấn luyện",
+      "description_vi": "1. Viết vòng lặp huấn luyện và ghi giá trị mất mát trên tập huấn luyện, tập kiểm định.\n2. Lưu trạng thái mô hình tốt nhất.\n3. Tiếp tục huấn luyện từ trạng thái đã lưu.\n\nTự kiểm tra: Bạn biết mô hình nào được lưu, lý do chọn nó và cách tái tạo kết quả đánh giá từ bản lưu.",
+      "hints": [
+        "Ghi tiêu chí chọn bản lưu tốt nhất và kiểm tra các trạng thái cần khôi phục khi chạy tiếp."
+      ]
+    },
+    "exercise-4-generalization": {
+      "title_vi": "Thực hành · Khả năng khái quát hóa",
+      "description_vi": "1. Cho mô hình học quá khớp trên một tập dữ liệu nhỏ.\n2. Mỗi lần thử chỉ thay đổi một yếu tố.\n3. Vẽ đường cong kết quả trên tập huấn luyện và tập kiểm định.\n\nTự kiểm tra: Bạn phân biệt được cải thiện trên dữ liệu chưa dùng để huấn luyện với việc chỉ tăng điểm trên tập huấn luyện.",
+      "hints": [
+        "Đặt hai đường cong trên cùng biểu đồ để quan sát khoảng cách giữa chúng."
+      ]
+    },
+    "exercise-4-vision-nlp": {
+      "title_vi": "Thực hành · Nền tảng thị giác máy tính và xử lý ngôn ngữ",
+      "description_vi": "1. Chọn một tập dữ liệu nhỏ và huấn luyện mô hình làm mốc so sánh.\n2. Thử học chuyển giao hoặc biểu diễn dữ liệu bằng embedding.\n3. Phân tích ma trận nhầm lẫn.\n\nTự kiểm tra: Bạn giải thích được mô hình đang học cách biểu diễn nào và lỗi nào còn bắt nguồn từ dữ liệu.",
+      "hints": [
+        "Đọc vài mẫu dự đoán sai của từng nhóm trước khi kết luận về chất lượng biểu diễn."
+      ]
+    },
+    "exercise-4-debugging": {
+      "title_vi": "Thực hành · Gỡ lỗi và quản lý thí nghiệm",
+      "description_vi": "1. Tạo từng lỗi một và ghi biểu hiện cùng giả thuyết về nguyên nhân.\n2. Tìm ví dụ nhỏ nhất tái hiện lỗi rồi sửa.\n3. Lưu thông tin cấu hình của từng lần chạy.\n\nTự kiểm tra: Khi gặp NaN, bạn kiểm tra nguyên nhân trước khi quyết định có giảm tốc độ học hay không.",
+      "hints": [
+        "Tìm bước tính toán đầu tiên tạo ra giá trị không hữu hạn."
+      ]
+    },
+    "exercise-5-api": {
+      "title_vi": "Thực hành · API dự đoán",
+      "description_vi": "1. Tách phần nạp mô hình, xử lý nghiệp vụ và định tuyến API.\n2. Thêm kiểm tra tình trạng dịch vụ và thông tin phiên bản mô hình.\n3. Kiểm thử yêu cầu hợp lệ lẫn không hợp lệ.\n\nTự kiểm tra: Bạn thay mô hình mà không phải sửa toàn bộ API và xác định được lỗi thuộc đầu vào, mô hình hay máy chủ.",
+      "hints": [
+        "Kiểm thử phần kiểm tra đầu vào độc lập với phần nạp mô hình."
+      ]
+    },
+    "exercise-5-containers": {
+      "title_vi": "Thực hành · Container và tích hợp liên tục",
+      "description_vi": "1. Viết Dockerfile tối giản và tạo image.\n2. Chạy container rồi gọi điểm kiểm tra tình trạng dịch vụ.\n3. Tạo quy trình CI để tự động chạy kiểm thử.\n\nTự kiểm tra: Bạn biết image chứa và thiếu những gì, đồng thời có thể quay về tag trước đó khi chuẩn bị phát hành.",
+      "hints": [
+        "Ghi tag của image đã kiểm tra để có điểm khôi phục rõ ràng."
+      ]
+    },
+    "exercise-5-tracking": {
+      "title_vi": "Thực hành · Theo dõi thí nghiệm và phiên bản",
+      "description_vi": "1. Chạy hai thí nghiệm với cấu hình khác nhau.\n2. Ghi tham số, chỉ số, đường dẫn kết quả và mã commit Git của từng lần chạy.\n3. Lập bảng so sánh kết quả.\n\nTự kiểm tra: Bạn xác định được lần chạy nào tạo ra mô hình đang phục vụ và giải thích được lý do chọn mô hình đó.",
+      "hints": [
+        "Lưu mã định danh lần chạy cùng đường dẫn mô hình để truy ngược về cấu hình."
+      ]
+    },
+    "exercise-5-observability": {
+      "title_vi": "Thực hành · Theo dõi hoạt động hệ thống",
+      "description_vi": "1. Thêm nhật ký có cấu trúc và đo độ trễ p50/p95.\n2. Tạo báo cáo về sự thay đổi phân phối dữ liệu.\n3. Viết hướng dẫn khôi phục phiên bản trước.\n\nTự kiểm tra: Bạn phân biệt được sự thay đổi phân phối dữ liệu, sự thay đổi quan hệ giữa đầu vào và mục tiêu, và tình trạng độ trễ tăng bằng số liệu.",
+      "hints": [
+        "Ghi thời điểm và tập dữ liệu tham chiếu khi so sánh các chỉ số."
+      ]
+    },
+    "exercise-5-security": {
+      "title_vi": "Thực hành · An toàn hệ thống",
+      "description_vi": "1. Đặt giới hạn đầu vào, che thông tin bí mật trong nhật ký và kiểm tra thư viện phụ thuộc.\n2. Thử một dữ liệu đầu vào không hợp lệ bằng dữ liệu giả.\n3. Ghi kết quả và cách xử lý rủi ro.\n\nTự kiểm tra: Bạn biết thông tin nào cần ẩn trong nhật ký, giới hạn nào phải được thực thi và cách báo cáo rủi ro.",
+      "hints": [
+        "Kiểm tra nhật ký sau tình huống lỗi để chắc rằng dữ liệu bí mật không bị ghi ra."
+      ]
+    },
+    "exercise-6-nlp-foundations": {
+      "title_vi": "Thực hành · Nền tảng xử lý ngôn ngữ",
+      "description_vi": "1. Tách một câu tiếng Việt thành token và đếm số token.\n2. So sánh các embedding gần nhau và xa nhau.\n3. Ghi giới hạn cửa sổ ngữ cảnh của mô hình.\n\nTự kiểm tra: Bạn giải thích được vì sao độ gần của embedding không xác nhận tính đúng của thông tin, và cửa sổ ngữ cảnh ảnh hưởng đến chi phí, chất lượng ra sao.",
+      "hints": [
+        "So sánh hai câu dùng từ gần giống nhưng có ý nghĩa khác nhau."
+      ]
+    },
+    "exercise-6-transformers": {
+      "title_vi": "Thực hành · Transformer và cách viết prompt",
+      "description_vi": "1. Viết prompt quy định rõ đầu vào và đầu ra.\n2. Thử trường hợp thiếu dữ liệu.\n3. Kiểm tra JSON trước khi chuyển kết quả sang bước xử lý tiếp theo.\n\nTự kiểm tra: Bạn nhận diện được yêu cầu mơ hồ, đầu ra không hợp lệ và chỉ dẫn chèn vào dữ liệu trong một quy trình cụ thể.",
+      "hints": [
+        "Ghi riêng phần chỉ dẫn và phần dữ liệu để dễ nhận ra nội dung nào không được phép thay đổi yêu cầu."
+      ]
+    },
+    "exercise-6-retrieval": {
+      "title_vi": "Thực hành · Truy xuất tài liệu",
+      "description_vi": "1. Tạo 10 đoạn tài liệu và 10 câu truy vấn có đáp án biết trước.\n2. Đo hit@k.\n3. Đọc các trường hợp không tìm được đoạn tài liệu cần thiết.\n\nTự kiểm tra: Bạn xác định được lỗi của RAG nằm ở bước truy xuất hay sinh câu trả lời và đưa ra bằng chứng cho kết luận.",
+      "hints": [
+        "Lưu các đoạn được trả về cho từng truy vấn trước khi xem câu trả lời của mô hình."
+      ]
+    },
+    "exercise-6-rag": {
+      "title_vi": "Thực hành · Kiến trúc RAG",
+      "description_vi": "1. Tạo bộ đánh giá gồm 30 câu hỏi.\n2. Lưu các đoạn tài liệu được truy xuất và đối chiếu nguồn trích dẫn.\n3. Phân loại từng lỗi.\n\nTự kiểm tra: Bạn biết câu trả lời nào có căn cứ, câu nào cần từ chối và giải thích được lý do.",
+      "hints": [
+        "Kiểm tra xem đoạn trích dẫn có thực sự hỗ trợ nội dung trả lời hay chỉ cùng chủ đề."
+      ]
+    },
+    "exercise-6-quality-safety": {
+      "title_vi": "Thực hành · Chất lượng và an toàn",
+      "description_vi": "1. Tạo bảng tiêu chí chấm và bộ câu hỏi có đáp án chuẩn.\n2. Thêm bộ tình huống cố ý gây lỗi và nhật ký chi phí.\n3. Lập bảng theo dõi lỗi theo từng loại.\n\nTự kiểm tra: Bạn giải thích được quyết định đổi mô hình bằng số liệu về chất lượng, độ trễ và chi phí.",
+      "hints": [
+        "Giữ cố định bộ đánh giá khi so sánh trước và sau thay đổi."
+      ]
+    },
+    "exercise-6-adaptation": {
+      "title_vi": "Thực hành · Điều chỉnh mô hình và tác tử AI",
+      "description_vi": "1. Viết bản ghi quyết định so sánh RAG, chỉnh prompt, tinh chỉnh mô hình và dùng mô hình nhỏ.\n2. Đối chiếu từng lựa chọn theo dữ liệu, chi phí, độ trễ và rủi ro.\n3. Nêu giới hạn chạy cho tác tử AI.\n\nTự kiểm tra: Bạn kiểm tra lỗi trong prompt trước khi chọn tinh chỉnh mô hình và bảo đảm tác tử có điều kiện dừng.",
+      "hints": [
+        "Ghi vấn đề mà mỗi phương án giải quyết trước khi so sánh chi phí thực hiện."
+      ]
+    },
+    "exercise-7-problem": {
+      "title_vi": "Thực hành · Bài toán và kiến trúc",
+      "description_vi": "1. Viết một trang mô tả bài toán và hành trình người dùng.\n2. Nêu phần ngoài phạm vi cùng các ràng buộc.\n3. Vẽ sơ đồ kiến trúc.\n\nTự kiểm tra: Người đọc hiểu trong chưa đầy hai phút bạn xây gì, cho ai và dùng tiêu chí nào để xác định thành công.",
+      "hints": [
+        "Bắt đầu bằng một tình huống sử dụng cụ thể rồi lần theo dữ liệu qua các thành phần."
+      ]
+    },
+    "exercise-7-ship": {
+      "title_vi": "Thực hành · Xây dựng và bàn giao",
+      "description_vi": "1. Hoàn thành một luồng chức năng từ đầu đến cuối có thể chạy trên máy cá nhân.\n2. Ghi kết quả kiểm thử, đánh giá và quay bản trình diễn ngắn.\n3. Tạo mục theo dõi cho những phần chưa làm.\n\nTự kiểm tra: Người khác lấy mã nguồn và chạy bản trình diễn theo README mà không cần bạn hướng dẫn trực tiếp.",
+      "hints": [
+        "Thử làm theo README từ một thư mục mới để phát hiện bước thiết lập còn thiếu."
+      ]
+    },
+    "exercise-7-portfolio": {
+      "title_vi": "Thực hành · Hồ sơ dự án",
+      "description_vi": "1. Sắp xếp README theo thứ tự: bài toán, dữ liệu, mô hình, đánh giá, triển khai và giới hạn.\n2. Gắn liên kết tới bài làm, báo cáo hoặc kết quả kiểm thử để minh chứng.\n3. Nêu đóng góp riêng của từng dự án.\n\nTự kiểm tra: Mỗi dự án có đóng góp cụ thể, chỉ số rõ ràng và một sự đánh đổi mà bạn giải thích được.",
+      "hints": [
+        "Đặt kết quả đo cạnh nhận định tương ứng để người đọc kiểm chứng dễ hơn."
+      ]
+    },
+    "exercise-7-career": {
+      "title_vi": "Thực hành · Chuẩn bị ứng tuyển",
+      "description_vi": "1. Luyện giới thiệu dự án trong 90 giây.\n2. Kể lại một lần xử lý lỗi theo STAR: tình huống, nhiệm vụ, hành động và kết quả.\n3. Thiết kế một hệ thống phục vụ dự đoán.\n\nTự kiểm tra: Với mỗi dự án, bạn nói được mình đã quyết định gì, đo gì, sai ở đâu và học được gì.",
+      "hints": [
+        "Chọn một quyết định do chính bạn đưa ra và dùng số liệu để giải thích kết quả."
+      ]
+    },
+    "exercise-8-genai-software-foundations": {
+      "title_vi": "Thực hành · Nền tảng phần mềm cho AI tạo sinh",
+      "description_vi": "1. Đóng gói một điểm cuối API AI giả lập bằng FastAPI, Docker và GitHub Actions.\n2. Ghi quy định đầu vào, đầu ra và cách kiểm tra tình trạng dịch vụ.\n3. Lưu lệnh khôi phục phiên bản trước.\n\nTự kiểm tra: Bạn lấy mã nguồn trên máy mới, chạy kiểm thử và container theo các lệnh đã ghi, rồi phân biệt được lỗi mã nguồn, môi trường và triển khai.",
+      "hints": [
+        "Kiểm tra riêng yêu cầu đầu vào, tình trạng dịch vụ và cách khởi động container."
+      ]
+    },
+    "exercise-9-genai-ml-fundamentals": {
+      "title_vi": "Thực hành · Nền tảng học máy cho AI tạo sinh",
+      "description_vi": "1. Tạo một bài đo nhỏ cho embedding và chia dữ liệu thành các tập phù hợp.\n2. Đo độ tương đồng cosine và kiểm tra nguy cơ rò rỉ dữ liệu.\n3. Vẽ đường cong mất mát.\n\nTự kiểm tra: Bạn giải thích được điểm tương đồng, cách chia dữ liệu hợp lệ và tác động của quá khớp đến chất lượng truy xuất.",
+      "hints": [
+        "Kiểm tra mẫu trùng giữa các tập trước khi diễn giải kết quả."
+      ]
+    },
+    "exercise-10-genai-transformers": {
+      "title_vi": "Thực hành · Học sâu và Transformer",
+      "description_vi": "1. Tự viết cơ chế attention tối giản bằng PyTorch hoặc NumPy.\n2. Ghi kích thước tensor ở từng bước.\n3. So sánh thời gian suy luận khi có và không có bộ nhớ đệm.\n\nTự kiểm tra: Bạn vẽ được luồng Q/K/V, giải thích vai trò encoder/decoder và đo được mức giảm độ trễ nhờ KV cache.",
+      "hints": [
+        "Giữ nguyên dữ liệu đầu vào và cách đo khi so sánh hai chế độ dùng bộ nhớ đệm."
+      ]
+    },
+    "exercise-11-llm-application": {
+      "title_vi": "Thực hành · Quy định đầu vào và đầu ra cho ứng dụng LLM",
+      "description_vi": "1. Xây API trò chuyện với LLM có cấu trúc yêu cầu và phản hồi rõ ràng.\n2. Giả lập truyền kết quả từng phần và cơ chế thử lại với thời gian chờ tăng dần.\n3. Đặt giới hạn token và viết kiểm thử.\n\nTự kiểm tra: Ứng dụng khác gọi được API mà không cần biết prompt nội bộ; đầu ra sai cấu trúc và giới hạn tần suất đều có kiểm thử riêng.",
+      "hints": [
+        "Tách kiểm thử cấu trúc phản hồi khỏi kiểm thử cơ chế thử lại."
+      ]
+    },
+    "exercise-12-rag-foundations": {
+      "title_vi": "Thực hành · Nền tảng RAG",
+      "description_vi": "1. Xây quy trình tiếp nhận tài liệu tiếng Việt và lưu thông tin mô tả tài liệu.\n2. Đo chất lượng truy xuất top-k.\n3. Trả lời kèm các đoạn tài liệu làm căn cứ.\n\nTự kiểm tra: Qua một trường hợp đánh giá cụ thể, bạn chỉ ra được lỗi thuộc bước đọc tài liệu, chia đoạn, truy xuất hay sinh câu trả lời.",
+      "hints": [
+        "Lưu kết quả trung gian của từng bước để truy ngược nguồn gốc lỗi."
+      ]
+    },
+    "exercise-13-advanced-rag": {
+      "title_vi": "Thực hành · Truy xuất nâng cao",
+      "description_vi": "1. Tạo bộ đánh giá gồm 30 câu hỏi rồi so sánh tìm kiếm vector, BM25 và tìm kiếm kết hợp.\n2. Thêm mô hình xếp hạng lại kết quả.\n3. Phân tích lỗi theo loại truy vấn.\n\nTự kiểm tra: Bạn xác định được lỗi nằm ở khả năng tìm đủ tài liệu hay thứ tự xếp hạng, kiểm tra được căn cứ của trích dẫn và chọn được thay đổi nên giữ.",
+      "hints": [
+        "So sánh danh sách ứng viên trước và sau bước xếp hạng lại."
+      ]
+    },
+    "exercise-14-tool-calling": {
+      "title_vi": "Thực hành · Quy định gọi công cụ",
+      "description_vi": "1. Xây công cụ đọc cơ sở dữ liệu giả lập có kiểm tra cấu trúc đầu vào.\n2. Đặt thời gian chờ và giới hạn số lần thử lại.\n3. Ghi nhật ký kiểm tra không chứa thông tin bí mật.\n\nTự kiểm tra: Đầu vào sai bị chặn trước khi công cụ gây thay đổi dữ liệu; việc thử lại không nhân đôi giao dịch và thông báo lỗi đủ rõ để sửa.",
+      "hints": [
+        "Kiểm tra đầu vào trước khi thực hiện thao tác và dùng cùng mã yêu cầu khi kiểm tra trường hợp thử lại."
+      ]
+    },
+    "exercise-15-ai-agents": {
+      "title_vi": "Thực hành · Vòng lặp và giới hạn của tác tử AI",
+      "description_vi": "1. Xây tác tử nghiên cứu tối giản với giới hạn số bước và danh sách công cụ được phép dùng.\n2. Lưu trạng thái làm việc của tác tử.\n3. Thêm bước phê duyệt trước thao tác gây thay đổi bên ngoài.\n\nTự kiểm tra: Tác tử dừng khi đạt mục tiêu hoặc chạm giới hạn; mỗi lần gọi công cụ đều lưu lý do, đầu vào và đầu ra để kiểm tra.",
+      "hints": [
+        "Thử tình huống công cụ liên tục trả lỗi để kiểm tra điều kiện dừng."
+      ]
+    },
+    "exercise-16-mcp": {
+      "title_vi": "Thực hành · Kiến trúc MCP",
+      "description_vi": "1. Viết máy chủ MCP chạy trên máy cá nhân.\n2. Cung cấp một tài nguyên và một công cụ chỉ đọc.\n3. Kiểm tra cấu trúc dữ liệu và quyền truy cập.\n\nTự kiểm tra: Bạn vẽ được luồng trao đổi giữa máy khách và máy chủ, phân biệt tool, resource, prompt và nêu được các mối đe dọa cơ bản.",
+      "hints": [
+        "Liệt kê dữ liệu mà công cụ được phép đọc rồi kiểm thử yêu cầu nằm ngoài phạm vi đó."
+      ]
+    },
+    "exercise-17-genai-evaluation": {
+      "title_vi": "Thực hành · Đánh giá AI tạo sinh",
+      "description_vi": "1. Tạo bộ câu hỏi có đáp án chuẩn và bảng tiêu chí chấm.\n2. Xây bộ kiểm thử hồi quy cho RAG hoặc tác tử AI.\n3. Lưu lỗi và chi phí của từng lần chạy.\n\nTự kiểm tra: Bạn phân biệt được chỉ số đo truy xuất với chỉ số đo mức độ có căn cứ của câu trả lời, đồng thời biết khi nào cần người đánh giá.",
+      "hints": [
+        "Lưu câu trả lời, nguồn trích dẫn và điểm chấm cùng nhau để có thể kiểm tra lại."
+      ]
+    },
+    "exercise-18-genai-observability": {
+      "title_vi": "Thực hành · Theo dõi hoạt động ứng dụng AI",
+      "description_vi": "1. Theo dõi một yêu cầu từ đầu đến cuối bằng mã truy vết.\n2. Ghi số token, chi phí và độ trễ p50/p95.\n3. Đặt cảnh báo khi chi phí chạm ngưỡng ngân sách.\n\nTự kiểm tra: Từ bản ghi truy vết, bạn tìm được nguyên nhân độ trễ hoặc chi phí tăng đột biến mà không ghi prompt nhạy cảm vào nhật ký.",
+      "hints": [
+        "Dùng cùng mã truy vết ở các bước xử lý để nối được toàn bộ đường đi của yêu cầu."
+      ]
+    },
+    "exercise-19-genai-production": {
+      "title_vi": "Thực hành · Vận hành hệ thống AI tạo sinh",
+      "description_vi": "1. Thiết kế dịch vụ có chính sách bộ nhớ đệm và phương án dự phòng khi nhà cung cấp lỗi.\n2. Thêm hàng đợi cùng tiến trình xử lý tác vụ.\n3. Chạy kiểm thử tải đơn giản với mục tiêu mức dịch vụ (SLO) rõ ràng.\n\nTự kiểm tra: Bạn dùng số liệu đo để giải thích sự đánh đổi giữa tính nhất quán, độ trễ, chi phí và khả năng sẵn sàng.",
+      "hints": [
+        "Ghi điều kiện tải và tình huống nhà cung cấp lỗi khi đánh giá phương án dự phòng."
+      ]
+    },
+    "exercise-20-fine-tuning": {
+      "title_vi": "Thực hành · Quyết định tinh chỉnh mô hình",
+      "description_vi": "1. Chuẩn bị tập dữ liệu có cách chia và giấy phép sử dụng rõ ràng.\n2. Chạy một thử nghiệm LoRA nhỏ.\n3. So sánh với mô hình ban đầu và đo chất lượng cùng lượng bộ nhớ dùng.\n\nTự kiểm tra: Bạn giải thích được quyết định có tinh chỉnh hay không dựa trên chất lượng, chi phí, lượng dữ liệu và rủi ro bảo trì.",
+      "hints": [
+        "Dùng cùng bộ đánh giá trước và sau tinh chỉnh để kết quả có thể so sánh."
+      ]
+    },
+    "exercise-21-local-llm": {
+      "title_vi": "Thực hành · Chạy LLM trên máy cá nhân",
+      "description_vi": "1. Chạy một mô hình nhỏ trên máy cá nhân.\n2. Đo độ trễ lúc khởi động và sau khi đã nạp mô hình, số token mỗi giây cùng lượng VRAM dùng.\n3. So sánh bản lượng tử hóa với bản dùng độ chính xác đầy đủ.\n\nTự kiểm tra: Bạn chọn được môi trường chạy theo phần cứng, khối lượng công việc và yêu cầu riêng tư.",
+      "hints": [
+        "Ghi cấu hình phần cứng, phiên bản mô hình và bộ prompt dùng trong mỗi lần đo."
+      ]
+    },
+    "exercise-22-genai-system-design": {
+      "title_vi": "Thực hành · Thiết kế hệ thống AI",
+      "description_vi": "1. Viết tài liệu thiết kế cho hệ thống AI tạo sinh vận hành thực tế.\n2. Mô tả luồng dữ liệu, mục tiêu mức dịch vụ (SLO) và các mối đe dọa.\n3. Ước tính chi phí và lập kế hoạch triển khai theo từng bước.\n\nTự kiểm tra: Người đọc lần theo được các quyết định, tình huống lỗi, chỉ số theo dõi và kế hoạch khôi phục phiên bản trước trong tài liệu.",
+      "hints": [
+        "Với mỗi thành phần, nêu cách phát hiện lỗi và cách hệ thống tiếp tục hoặc dừng an toàn."
+      ]
+    }
+  }
+}

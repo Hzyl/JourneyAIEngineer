@@ -34,7 +34,7 @@ body .public-shell {
 .app-shell .sidebar-intro,
 .app-shell .sidebar-footer,
 .app-shell .sidebar-footer small {
-  font-size: .9375rem;
+  font-size: 1rem;
   line-height: 1.5;
 }
 
@@ -66,7 +66,7 @@ body .public-shell {
 }
 
 .app-shell .today-rhythm > span {
-  font-size: .9375rem;
+  font-size: 1rem;
 }
 
 .app-shell .today-next {
@@ -128,13 +128,13 @@ body .public-shell {
 }
 
 .practice-page .exercise-meta {
-  font-size: .9375rem;
+  font-size: 1rem;
 }
 
 .app-shell .exercise-detail pre,
 .public-shell .exercise-detail pre,
 .public-shell pre {
-  font-size: .9375rem;
+  font-size: 1rem;
 }
 
 @media (max-width: 800px) {

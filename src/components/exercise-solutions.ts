@@ -28,12 +28,12 @@ const workedFiles = import.meta.glob<string>([
 const explanations: Record<string, Record<'vi' | 'en', SolutionText>> = {
   'exercise-0-environment': {
     vi: {
-      approach: 'Đọc thông tin trực tiếp từ interpreter đang chạy qua module sys.',
+      approach: 'Đọc thông tin của trình thông dịch Python đang chạy qua mô-đun sys.',
       explanation: [
         'sys.version_info.major và .minor trả về hai số nguyên của phiên bản Python thực tế.',
-        'sys.executable trả về đường dẫn interpreter đã chạy file, nên không cần đoán đường dẫn cài đặt.',
-        'Trong venv, sys.prefix trỏ tới môi trường ảo còn sys.base_prefix trỏ tới Python gốc. So sánh hai giá trị để nhận bool.',
-        'Khối __main__ chỉ in kết quả khi chạy file trực tiếp; khi test import hàm, nó không tự in.',
+        'sys.executable trả về đường dẫn trình thông dịch đã chạy tệp, nên bạn không cần đoán nơi cài Python.',
+        'Trong môi trường ảo venv, sys.prefix trỏ tới môi trường ảo còn sys.base_prefix trỏ tới Python gốc. So sánh hai giá trị để nhận kết quả kiểu bool.',
+        'Khối __main__ chỉ in kết quả khi chạy tệp trực tiếp; khi bài kiểm thử dùng import để nạp hàm, khối này không tự in.',
       ],
       pitfall: 'Không ghi cố định phiên bản hoặc đường dẫn: chương trình phải phản ánh môi trường thực tế.',
       practice: 'Đóng bài giải, tự viết lại hàm rồi so sánh kết quả khi chạy bằng Python ngoài và trong .venv.',
@@ -52,16 +52,16 @@ const explanations: Record<string, Record<'vi' | 'en', SolutionText>> = {
   },
   'exercise-0-baseline': {
     vi: {
-      approach: 'Lọc dữ liệu hợp lệ vào một list mới, sau đó tính số lượng, tổng và trung bình.',
+      approach: 'Lọc dữ liệu hợp lệ vào một danh sách mới rồi tính số lượng, tổng và trung bình.',
       explanation: [
         'Chỉ bỏ qua phần tử là None. Điểm 0 vẫn đi tiếp và được tính vào số lượng.',
         'Loại bool trước khi chấp nhận int hoặc float, vì bool cũng là lớp con của int trong Python.',
         'math.isfinite và kiểm tra khoảng [0, 100] từ chối NaN, vô hạn và điểm ngoài giới hạn.',
-        'List values là dữ liệu mới nên list đầu vào không bị sửa. len và sum tạo count và total.',
+        'Danh sách values là dữ liệu mới nên danh sách đầu vào không bị sửa. len và sum tạo ra count và total.',
         'Khi values rỗng, mean là None để không chia cho 0. Ví dụ [0, None, 20] còn [0, 20], có tổng 20 và trung bình 10.',
       ],
       pitfall: 'Dùng if not score sẽ bỏ nhầm điểm 0. Dùng total / count mà không kiểm tra rỗng sẽ gây lỗi chia cho 0.',
-      practice: 'Đóng bài giải rồi viết phiên bản chỉ giữ count và total, không tạo list values. Chạy lại cùng bộ test.',
+      practice: 'Đóng bài giải rồi viết phiên bản chỉ giữ count và total, không tạo danh sách values. Chạy lại cùng bộ kiểm thử.',
     },
     en: {
       approach: 'Collect valid values in a new list, then calculate their count, total and mean.',
@@ -78,10 +78,10 @@ const explanations: Record<string, Record<'vi' | 'en', SolutionText>> = {
   },
   'exercise-0-learning-system': {
     vi: {
-      approach: 'Dùng dictionary ánh xạ mỗi ID tới số phút. Mỗi ID chỉ đóng góp một giá trị vào tổng.',
+      approach: 'Dùng từ điển (dictionary) để lưu số phút của từng ID. Mỗi ID chỉ được tính một lần vào tổng.',
       explanation: [
-        'Kiểm tra từng session là dictionary trước khi gọi .get, rồi kiểm tra ID và số phút.',
-        'identity.strip() dùng để phát hiện ID chỉ có khoảng trắng; khóa lưu vẫn là ID gốc, không tự đổi danh tính.',
+        'Kiểm tra từng phiên học là dictionary trước khi gọi .get, rồi kiểm tra ID và số phút.',
+        'identity.strip() phát hiện ID chỉ chứa khoảng trắng. Khi lưu khóa, vẫn giữ nguyên ID gốc; không tự ý cắt hoặc đổi ID.',
         'Nếu ID đã có nhưng số phút khác, báo ValueError. Nếu cả hai giống nhau, gán lại cùng giá trị nên tổng không tăng.',
         'sum(seen.values()) cộng mỗi phiên đúng một lần. Hai phiên a=20, b=25 có tổng 45; gửi lại a=20 vẫn là 45.',
       ],
@@ -119,7 +119,7 @@ export function exerciseSolution(slug: string, language: 'vi' | 'en') {
     ...text, tables: [], code, files: [{ name: 'starter.py', content: code }],
     command: 'python -m unittest -v test_exercise.py',
     setup: language === 'vi'
-      ? 'Chép code mẫu vào starter.py, đặt cùng test_exercise.py ở mục File & cách chạy, rồi chạy lệnh bên dưới.'
+      ? 'Chép mã mẫu vào starter.py, đặt cạnh test_exercise.py tải từ mục Tệp và cách chạy, rồi chạy lệnh bên dưới.'
       : 'Put the example code in starter.py beside test_exercise.py from Files & setup, then run the command below.',
   } : null
 }

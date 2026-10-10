@@ -1,3 +1,4 @@
+import { LearningIllustration } from './LearningIllustration'
 import { useRef, useState } from 'react'
 import type { Dashboard } from '../api'
 import './today.css'
@@ -29,7 +30,7 @@ export function TodayView({ dashboard, language, lessonTitle, onOpenLesson, onNa
     setMessage('')
     const amount = Number(minutes)
     if (!Number.isInteger(amount) || amount < 1 || amount > 1440) {
-      setError(vi ? 'Nhập số phút từ 1 đến 1440.' : 'Enter between 1 and 1440 whole minutes.')
+      setError(vi ? 'Nhập số phút nguyên từ 1 đến 1440.' : 'Enter between 1 and 1440 whole minutes.')
       return
     }
     saving.current = true
@@ -60,8 +61,7 @@ export function TodayView({ dashboard, language, lessonTitle, onOpenLesson, onNa
         </button>
       </div>
       <div className="today-rhythm">
-        <img className="learning-art today-art" src="/images/learning/laptop.png"
-          width="112" height="112" alt="" decoding="async" />
+        <LearningIllustration name="hero" variant="hero" eager />
         <span>{vi ? 'TUẦN NÀY' : 'THIS WEEK'}</span>
         <strong>{dashboard.weekly_minutes}<small> {vi ? 'phút' : 'min'}</small></strong>
         <p>{vi ? 'Mục tiêu riêng của bạn: ' : 'Your personal goal: '}{dashboard.weekly_goal_minutes} {vi ? 'phút' : 'min'}</p>
@@ -77,12 +77,11 @@ export function TodayView({ dashboard, language, lessonTitle, onOpenLesson, onNa
         <strong>{dashboard.streak_days}<small> {vi ? 'ngày' : 'days'}</small></strong></div>
     </section>
     <p className="today-evidence-note">{vi
-      ? 'Tiến độ do bạn tự ghi nhận. Test bài tập kiểm tra từng hành vi; năng lực cần được chứng minh qua sản phẩm và đánh giá.'
+      ? 'Tiến độ do bạn tự ghi nhận. Kiểm thử bài tập chỉ xác minh từng hành vi; năng lực cần được thể hiện qua sản phẩm và đánh giá.'
       : 'Progress is self-reported. Exercise tests check specific behavior; demonstrate broader skills through projects and evaluation.'}</p>
     <section className="today-session section-card">
       <h3 className="today-session-title">
-        <img className="learning-art" src="/images/learning/books.png"
-          width="48" height="48" alt="" loading="lazy" decoding="async" />
+        <LearningIllustration name="resources" variant="thumbnail" />
         {vi ? 'Ghi lại một phiên học' : 'Record a study session'}
       </h3>
       <p>{vi ? 'Chỉ ghi thời gian tập trung thực tế. Không cộng lại thời gian đã lưu khi hoàn thành bài.'
@@ -102,7 +101,7 @@ export function TodayView({ dashboard, language, lessonTitle, onOpenLesson, onNa
     </section>
     <nav className="today-links" aria-label={vi ? 'Hoạt động tiếp theo' : 'More learning activities'}>
       <button onClick={() => onNavigate('exercises')}>{vi ? 'Làm bài tập →' : 'Practise →'}</button>
-      <button onClick={() => onNavigate('journal')}>{vi ? 'Viết journal →' : 'Write in your journal →'}</button>
+      <button onClick={() => onNavigate('journal')}>{vi ? 'Viết nhật ký →' : 'Write in your journal →'}</button>
       <button onClick={() => onNavigate('roadmap')}>{vi ? 'Xem toàn bộ lộ trình →' : 'View the full roadmap →'}</button>
     </nav>
   </div>

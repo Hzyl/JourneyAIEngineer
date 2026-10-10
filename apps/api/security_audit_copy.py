@@ -54,9 +54,9 @@ LIMITATIONS_EN = [
 ]
 
 LIMITATIONS_VI = [
-    "Đây là review thụ động; không gửi request tới target và không chứng minh exploitability.",
-    "Finding là dấu hiệu để đọc code và test trên staging có ủy quyền, không phải lỗ hổng đã xác nhận.",
-    "Kiểm tra mẫu source chỉ gồm apps/api/main.py và src/*.tsx cấp đầu, không bao phủ mọi dependency hoặc control khi chạy.",
+    "Đây là rà soát thụ động: không gửi yêu cầu tới các điểm cuối được kiểm tra và không chứng minh có thể khai thác lỗ hổng.",
+    "Mỗi kết quả chỉ ra phần mã nguồn cần đọc và kiểm thử trong môi trường được cho phép; đó chưa phải lỗ hổng đã xác nhận.",
+    "Phép kiểm tra mẫu mã chỉ bao gồm apps/api/main.py và các tệp src/*.tsx ở cấp đầu; chưa bao phủ mọi thư viện phụ thuộc hay biện pháp bảo vệ khi ứng dụng chạy.",
     "Không cài hoặc chạy công cụ bảo mật bên ngoài.",
 ]
 

@@ -15,14 +15,14 @@ export function settingsChoices(vi: boolean): Array<{ key: SelectKey; options: A
   return [
     { key: 'language', options: [['vi', 'Tiếng Việt'], ['en', 'English']] },
     { key: 'target_role', options: [
-      ['internship', vi ? 'Thực tập AI/ML Engineer' : 'AI/ML engineering internship'],
-      ['junior', 'Junior AI Engineer'],
-      ['career_switch', vi ? 'Chuyển hướng sang AI Engineer' : 'Switching to AI engineering'],
+      ['internship', vi ? 'Thực tập kỹ sư AI/ML' : 'AI/ML engineering internship'],
+      ['junior', vi ? 'Kỹ sư AI mới vào nghề' : 'Junior AI Engineer'],
+      ['career_switch', vi ? 'Chuyển sang nghề kỹ sư AI' : 'Switching to AI engineering'],
     ] },
     { key: 'experience_level', options: [
       ['beginner', vi ? 'Mới bắt đầu' : 'Beginner'],
       ['intermediate', vi ? 'Đã có nền tảng' : 'Some experience'],
-      ['advanced', vi ? 'Đang cần portfolio sâu' : 'Building an advanced portfolio'],
+      ['advanced', vi ? 'Muốn xây dựng dự án chuyên sâu' : 'Building an advanced portfolio'],
     ] },
     { key: 'track', options: [
       ['standard', vi ? 'Nhịp đều đặn' : 'Steady pace'],

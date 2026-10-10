@@ -1,6 +1,6 @@
 import type { WorkedLab } from './foundation-solutions'
 
-const setupVi = 'Cần Python 3.11+. Lưu tất cả file trong một thư mục lab riêng. Tạo venv bằng python -m venv .venv và kích hoạt nó (Windows PowerShell: .venv\\Scripts\\Activate.ps1; macOS/Linux: source .venv/bin/activate). Cài thư viện bằng python -m pip install -r requirements.txt. Nếu đã có môi trường học phù hợp thì dùng môi trường đó. Mỗi bộ test mong đợi 5 tests, OK. Script tạo ảnh PNG trong thư mục hiện tại; chạy lại ghi đè ảnh cùng tên.'
+const setupVi = 'Cần Python 3.11+. Lưu tất cả tệp trong thư mục bài tập riêng. Tạo môi trường ảo bằng python -m venv .venv và kích hoạt nó (Windows PowerShell: .venv\\Scripts\\Activate.ps1; macOS/Linux: source .venv/bin/activate). Cài thư viện bằng python -m pip install -r requirements.txt. Nếu đã có môi trường học phù hợp, bạn có thể dùng môi trường đó. Mỗi bộ kiểm thử cần báo 5 tests, OK. Chương trình tạo ảnh PNG trong thư mục hiện tại; chạy lại sẽ ghi đè ảnh cùng tên.'
 const setupEn = 'Requires Python 3.11+. Save all files in a dedicated lab folder. Create a venv with python -m venv .venv and activate it (Windows PowerShell: .venv\\Scripts\\Activate.ps1; macOS/Linux: source .venv/bin/activate). Install packages with python -m pip install -r requirements.txt. An existing suitable learning environment also works. Each test suite expects 5 tests, OK. Scripts write PNG plots in the current folder; rerunning overwrites matching image filenames.'
 
 export const mathSolutions: Record<string, WorkedLab> = {
@@ -9,16 +9,16 @@ export const mathSolutions: Record<string, WorkedLab> = {
     command: 'python -m unittest -v test_solution.py\npython pca_demo.py',
     vi: {
       approach: 'Tính Xw+b bằng NumPy rồi dùng SVD trên dữ liệu đã trừ trung bình để giữ một thành phần PCA. Quan sát các điểm bị chiếu lên trục ngang.',
-      setup: setupVi + ' Mở pca.png sau khi chạy script. NumPy và Matplotlib là hai thư viện cần cài.',
+      setup: setupVi + ' Mở pca.png sau khi chạy chương trình. Cần cài NumPy và Matplotlib.',
       explanation: [
-        'X có shape (4,2), w là (2,), nên X @ w có shape (4,). Với w=[2,-1], b=1: hàng [-2,-1] cho -4+1+1=-2; bốn dự đoán là [-2,-4,6,4]. Đây là tích ma trận-vector, không phải nhân từng phần tử X*w.',
-        'Trừ mean theo cột để đặt tâm dữ liệu tại gốc. SVD của X-centered trả các trục trực chuẩn trong Vt, đã sắp theo singular value giảm dần. axes có shape (1,2); scores=centered @ axes.T có shape (4,1).',
+        'X có kích thước (4,2), w là (2,), nên X @ w có kích thước (4,). Với w=[2,-1], b=1: hàng [-2,-1] cho -4+1+1=-2; bốn dự đoán là [-2,-4,6,4]. Đây là tích ma trận-vectơ, không phải phép nhân từng phần tử X*w.',
+        'Trừ trung bình theo cột để đưa tâm dữ liệu về gốc. SVD của X-centered trả các trục trực chuẩn trong Vt, sắp theo giá trị kỳ dị giảm dần. axes có kích thước (1,2); scores=centered @ axes.T có kích thước (4,1).',
         'Dữ liệu ví dụ có biến thiên ngang lớn hơn dọc. Một thành phần giữ 80% tổng phương sai, tái tạo thành [(-2,0),(-2,0),(2,0),(2,0)]; tổng bình phương sai số là 4. Chi tiết trên/dưới trục ngang bị mất.',
-        'SVD có thể đổi dấu của trục và scores mà phép tái tạo không đổi. Vì vậy test reconstruction và retained variance, không bắt buộc một dấu cụ thể. Khi các singular value bằng nhau, trục PCA không duy nhất.',
-        'PCA ưu tiên phương sai, không biết nhãn hay mức quan trọng của feature. 80% phương sai không có nghĩa 80% độ chính xác. Ví dụ dùng cùng thang đo; trong pipeline thực, cân nhắc scaling và chỉ fit mean/trục trên tập train.',
+        'SVD có thể đổi dấu cả trục và scores mà không đổi kết quả tái tạo. Vì vậy, kiểm thử dữ liệu tái tạo và tỷ lệ phương sai giữ lại, không yêu cầu một dấu cụ thể. Khi các giá trị kỳ dị bằng nhau, trục PCA không duy nhất.',
+        'PCA ưu tiên phương sai, không biết nhãn hoặc mức quan trọng của đặc trưng. Giữ 80% phương sai không có nghĩa là đạt 80% độ chính xác. Ví dụ dùng cùng thang đo; khi xử lý dữ liệu thật, cần cân nhắc chuẩn hóa thang đo và chỉ tính trung bình/trục từ tập huấn luyện.',
       ],
-      pitfall: 'Dùng w shape (2,1) cho kết quả (4,1); cộng vector shape (4,) có thể broadcast thành (4,4). In shape trước mỗi phép tính và giữ hợp đồng rõ ràng.',
-      practice: 'Ẩn lời giải. Nhân feature thứ hai với 10 rồi chạy PCA; dự đoán trục được giữ trước khi xem ảnh. Sau đó giữ hai thành phần và kiểm tra sai số tái tạo gần 0.',
+      pitfall: 'w có kích thước (2,1) sẽ cho kết quả (4,1); cộng với vectơ kích thước (4,) có thể bị mở rộng tự động (broadcast) thành (4,4). In kích thước trước mỗi phép tính và nêu rõ kích thước đầu vào/đầu ra cần có.',
+      practice: 'Ẩn lời giải. Nhân đặc trưng thứ hai với 10 rồi chạy PCA; dự đoán trục được giữ trước khi xem ảnh. Sau đó giữ hai thành phần và kiểm tra sai số tái tạo gần 0.',
     },
     en: {
       approach: 'Compute Xw+b with NumPy, then use SVD of centered data to retain one PCA component. Inspect the projection onto the horizontal axis.',
@@ -38,17 +38,17 @@ export const mathSolutions: Record<string, WorkedLab> = {
     files: ['gradient_demo.py', 'test_solution.py', 'requirements.txt'],
     command: 'python -m unittest -v test_solution.py\npython gradient_demo.py',
     vi: {
-      approach: 'Dùng L(w)=(w−3)² để đối chiếu đạo hàm tay, sai phân trung tâm và PyTorch autograd, rồi quan sát ảnh hưởng của learning rate.',
-      setup: setupVi + ' Cần PyTorch và Matplotlib; ví dụ chỉ dùng CPU. Mở gradient.png để xem loss và bốn đường cập nhật.',
+      approach: 'Dùng L(w)=(w−3)² để đối chiếu đạo hàm tính tay, sai phân trung tâm và đạo hàm tự động của PyTorch. Sau đó quan sát ảnh hưởng của tốc độ học.',
+      setup: setupVi + ' Cần PyTorch và Matplotlib; ví dụ chỉ dùng CPU. Mở gradient.png để xem hàm mất mát và bốn đường cập nhật.',
       explanation: [
-        'Chain rule cho dL/dw=2(w−3). Tại w=0 gradient=-6, tại w=3 gradient=0, tại w=5 gradient=4. Cập nhật w←w−η·gradient đi theo chiều giảm loss nếu bước đủ nhỏ.',
-        'Sai phân trung tâm [L(w+ε)−L(w−ε)]/(2ε) với ε=1e−5 kiểm tra độc lập đạo hàm. ε quá nhỏ có thể gây mất chính xác do trừ hai số gần bằng nhau; không so sánh float bằng dấu bằng tuyệt đối.',
-        'PyTorch tạo tensor float64 với requires_grad=True. torch.autograd.grad lấy đạo hàm của cùng biểu thức. Mỗi lần tạo graph mới, không tích lũy .grad giữa các bước; test so sánh cả ba cách.',
+        'Quy tắc đạo hàm hàm hợp cho dL/dw=2(w−3). Tại w=0 gradient=-6, tại w=3 gradient=0, tại w=5 gradient=4. Cập nhật w←w−η·gradient làm giảm hàm mất mát nếu bước đủ nhỏ.',
+        'Sai phân trung tâm [L(w+ε)−L(w−ε)]/(2ε) với ε=1e−5 giúp kiểm tra đạo hàm bằng một cách độc lập. ε quá nhỏ có thể làm mất độ chính xác khi trừ hai số gần bằng nhau; không so sánh số thực bằng dấu bằng tuyệt đối.',
+        'PyTorch tạo tensor float64 với requires_grad=True. torch.autograd.grad lấy đạo hàm của cùng biểu thức. Mỗi lần tính tạo đồ thị tính toán mới, không tích lũy .grad giữa các bước; bộ kiểm thử đối chiếu cả ba cách.',
         'Đặt e=w−3 thì e ở bước sau bằng (1−2η)e. Với hàm này: 0<η<1 hội tụ; η=0.5 tới nghiệm trong một bước; η=1 dao động giữa 0 và 6 khi bắt đầu từ 0; η=1.1 làm sai số tăng.',
-        'Các ngưỡng trên chỉ đúng cho quadratic này. Trong model nhiều tham số, curvature và scale làm ngưỡng learning rate khác đi. Đồ thị dùng symlog để hiển thị cả loss bằng 0 và loss lớn.',
+        'Các ngưỡng trên chỉ đúng cho hàm bậc hai này. Với mô hình nhiều tham số, độ cong và thang đo làm thay đổi ngưỡng tốc độ học. Đồ thị dùng symlog để hiển thị cả giá trị mất mát bằng 0 lẫn giá trị lớn.',
       ],
-      pitfall: 'Gradient sai dấu biến bước giảm thành bước tăng; loss tăng không nhất thiết là lỗi dữ liệu. Autograd cũng chỉ đạo hàm biểu thức bạn đã viết, không xác nhận biểu thức loss đúng yêu cầu.',
-      practice: 'Ẩn lời giải. Đổi loss thành 4(w−3)², tự tính gradient và khoảng learning rate hội tụ rồi kiểm chứng lại bằng cả ba cách.',
+      pitfall: 'Gradient sai dấu biến bước giảm thành bước tăng. Hàm mất mát tăng không nhất thiết do dữ liệu lỗi. Autograd chỉ tính đạo hàm của biểu thức bạn đã viết, không xác nhận biểu thức đó đúng yêu cầu.',
+      practice: 'Ẩn lời giải. Đổi hàm mất mát thành 4(w−3)², tự tính gradient và khoảng tốc độ học giúp hội tụ rồi kiểm chứng bằng cả ba cách.',
     },
     en: {
       approach: 'Use L(w)=(w−3)² to compare a hand derivative, central finite differences and PyTorch autograd, then inspect learning-rate effects.',
@@ -72,13 +72,13 @@ export const mathSolutions: Record<string, WorkedLab> = {
       setup: setupVi + ' Cần NumPy và Matplotlib. Mở histogram.png; ba biểu đồ dùng tần suất tương đối và cùng thang trục để so sánh được.',
       explanation: [
         'Giả định mỗi lần thử độc lập, cùng xác suất p=0.2 và giá trị chỉ là 0 hoặc 1. E[X]=p=0.2, Var(X)=p(1−p)=0.16. Đây là dữ liệu mô phỏng, không phải kết luận về người học thực.',
-        'default_rng(seed) giúp tái lập trong cùng môi trường. Chạy n=20, 200 và 20000; trung bình mẫu không nhất thiết tiến gần p một cách đơn điệu ở từng lần tăng n. Với IID, phương sai của trung bình là p(1−p)/n.',
-        'Histogram có hai bin quanh 0 và 1; weights=1/n biến chiều cao thành tỷ lệ thay vì số đếm. samples.var(ddof=0) là phương sai thực nghiệm với mẫu số n; không gọi nó là ước lượng phương sai không chệch.',
+        'default_rng(seed) giúp tái lập trong cùng môi trường. Chạy n=20, 200 và 20000; trung bình mẫu không nhất thiết gần p hơn ở từng lần tăng n. Với các mẫu độc lập cùng phân phối (IID), phương sai của trung bình là p(1−p)/n.',
+        'Biểu đồ tần suất có hai khoảng quanh 0 và 1; weights=1/n biến chiều cao thành tỷ lệ thay vì số đếm. samples.var(ddof=0) là phương sai thực nghiệm với mẫu số n, không phải ước lượng phương sai không chệch.',
         'Ví dụ phân loại có 100 dương thực, 900 âm thực; TP=80, FN=20, FP=90, TN=810. Recall=P(dự đoán dương | thực dương)=80/100=0.8; precision=P(thực dương | dự đoán dương)=80/170≈0.471.',
-        'Đổi điều kiện làm đổi mẫu số. Nếu không có dương thực hoặc không có dự đoán dương, tỷ lệ tương ứng không xác định; code trả None. Không thay None bằng 0 rồi diễn giải như một quan sát.',
+        'Đổi điều kiện sẽ đổi mẫu số. Nếu không có dương thực hoặc không có dự đoán dương, tỷ lệ tương ứng không xác định; chương trình trả None. Không thay None bằng 0 rồi diễn giải như một giá trị quan sát.',
       ],
-      pitfall: 'Nhiều mẫu hơn không sửa được sampling bias hay dữ liệu phụ thuộc. Seed cố định phục vụ tái lập, không chứng minh một estimator tốt trên mọi mẫu.',
-      practice: 'Ẩn lời giải. Giữ recall và false-positive rate nhưng giảm tỷ lệ dương thực từ 10% xuống 1%; lập bảng mới và tính precision. Giải thích tác động của base rate.',
+      pitfall: 'Nhiều mẫu hơn không khắc phục được thiên lệch lấy mẫu hoặc sự phụ thuộc giữa các mẫu. Seed cố định giúp tái lập, không chứng minh phương pháp ước lượng tốt trên mọi mẫu.',
+      practice: 'Ẩn lời giải. Giữ recall và tỷ lệ dương tính giả (false-positive rate), nhưng giảm tỷ lệ dương thực từ 10% xuống 1%. Lập bảng mới, tính precision và giải thích ảnh hưởng của tỷ lệ dương thực ban đầu (base rate).',
     },
     en: {
       approach: 'Simulate Bernoulli(p=0.2) at three sample sizes, then use a synthetic confusion table to distinguish precision from recall.',
@@ -98,17 +98,17 @@ export const mathSolutions: Record<string, WorkedLab> = {
     files: ['optimizers.py', 'test_solution.py', 'requirements.txt'],
     command: 'python -m unittest -v test_solution.py\npython optimizers.py',
     vi: {
-      approach: 'Cài linear regression y≈wx+b từ đầu, tối ưu từng mẫu bằng SGD, momentum và Adam; vẽ train/validation MSE trên cùng dữ liệu giả lập.',
-      setup: setupVi + ' Cần NumPy và Matplotlib. Mở loss-curves.png. Run learning rate quá lớn được dừng và in thông báo; đây là tình huống cố ý trong bài.',
+      approach: 'Tự cài đặt hồi quy tuyến tính y≈wx+b, cập nhật theo từng mẫu bằng SGD, momentum và Adam. Vẽ MSE trên tập huấn luyện và kiểm định từ cùng dữ liệu giả lập.',
+      setup: setupVi + ' Cần NumPy và Matplotlib. Mở loss-curves.png. Lần chạy có tốc độ học quá lớn sẽ bị dừng và in thông báo; đây là tình huống cố ý của bài.',
       explanation: [
-        'Sinh y=2x+1+noise, tách 120 mẫu train và 40 validation trước khi fit. Khởi tạo w=b=0; gradient từng mẫu là 2(wx+b−y)[x,1]. Validation chỉ được đo, không tham gia cập nhật tham số.',
-        'SGD cập nhật sau từng mẫu đã shuffle, không phải một gradient trung bình cả epoch. Momentum dùng v←0.9v+g rồi θ←θ−ηv; biến v được giữ qua các bước.',
-        'Adam giữ EMA của gradient và bình phương gradient, hiệu chỉnh bias bằng 1−β^t, rồi chia cho căn moment thứ hai cộng epsilon. t tăng theo mỗi cập nhật mẫu, không theo epoch.',
-        'So sánh SGD η=0.03, momentum η=0.003, Adam η=0.003, thêm SGD η=1e−5 và η=2. Cùng seed/shuffle/init giúp đọc kết quả, nhưng rate khác nhau nên đây không phải benchmark xếp hạng optimizer. Rate rất nhỏ chưa học đủ sau 40 epoch; rate lớn bị chặn khi tham số nổ.',
-        'MSE phù hợp target liên tục này. Train và validation đều cao gợi ý underfit hoặc tối ưu chưa đủ; train thấp mà validation cao gợi ý overfit hoặc lệch phân phối. Dữ liệu tuyến tính nhỏ này không chứng minh overfit, và validation không thay thế test set cuối cùng.',
+        'Sinh y=2x+1+noise, tách 120 mẫu huấn luyện và 40 mẫu kiểm định trước khi học. Khởi tạo w=b=0; gradient từng mẫu là 2(wx+b−y)[x,1]. Tập kiểm định chỉ dùng đo kết quả, không tham gia cập nhật tham số.',
+        'SGD cập nhật sau từng mẫu đã được xáo trộn, thay vì lấy một gradient trung bình cho cả epoch. Momentum dùng v←0.9v+g rồi θ←θ−ηv; giữ v qua các bước.',
+        'Adam giữ trung bình trượt theo hàm mũ (EMA) của gradient và bình phương gradient. Sau khi hiệu chỉnh độ chệch bằng 1−β^t, chia cho căn moment thứ hai cộng epsilon. t tăng theo mỗi lần cập nhật mẫu, không theo epoch.',
+        'So sánh SGD η=0.03, momentum η=0.003, Adam η=0.003; thêm SGD η=1e−5 và η=2. Giữ cùng seed, cách xáo trộn và giá trị khởi tạo để dễ đối chiếu. Tuy nhiên, tốc độ học khác nhau nên đây không phải phép đo để xếp hạng bộ tối ưu. Tốc độ học rất nhỏ khiến mô hình chưa học đủ sau 40 epoch; tốc độ quá lớn bị chặn khi tham số tăng mất kiểm soát.',
+        'MSE phù hợp với biến đích liên tục này. Sai số trên cả tập huấn luyện và kiểm định đều cao gợi ý thiếu khớp hoặc tối ưu chưa đủ. Sai số huấn luyện thấp nhưng kiểm định cao gợi ý quá khớp hoặc lệch phân phối. Dữ liệu tuyến tính nhỏ này chưa chứng minh có quá khớp; tập kiểm định cũng không thay thế tập kiểm tra cuối cùng.',
       ],
-      pitfall: 'Không reset hoặc tính lại momentum mỗi mẫu. Không chọn loss curve đẹp rồi kết luận model tổng quát tốt; xem validation và giữ test riêng nếu dùng kết quả để quyết định model.',
-      practice: 'Ẩn lời giải. Giảm số mẫu train, thêm feature đa thức rồi quan sát train/validation. Giữ seed và ghi cấu hình; giải thích tín hiệu nào là overfit và tín hiệu nào chỉ là learning rate chưa phù hợp.',
+      pitfall: 'Không đặt lại hoặc tính lại momentum từ đầu sau mỗi mẫu. Đường mất mát đẹp chưa đủ để kết luận mô hình khái quát tốt. Hãy xem kết quả kiểm định và giữ riêng tập kiểm tra nếu dùng kết quả để chọn mô hình.',
+      practice: 'Ẩn lời giải. Giảm số mẫu huấn luyện, thêm đặc trưng đa thức rồi quan sát tập huấn luyện/kiểm định. Giữ seed và ghi cấu hình. Giải thích tín hiệu nào cho thấy quá khớp, tín hiệu nào chỉ do tốc độ học chưa phù hợp.',
     },
     en: {
       approach: 'Implement linear regression y≈wx+b from scratch using sample-wise SGD, momentum and Adam, then plot training and validation MSE on synthetic data.',

@@ -27,7 +27,7 @@ export function HostedJournalEditor({ entries, language, onSaved }: {
     return `${monday.getFullYear()}-${String(monday.getMonth() + 1).padStart(2, '0')}`
       + `-${String(monday.getDate()).padStart(2, '0')}`
   })
-  const [title, setTitle] = useState(language === 'vi' ? 'Reflection tuần' : 'Weekly reflection')
+  const [title, setTitle] = useState(language === 'vi' ? 'Tổng kết tuần' : 'Weekly reflection')
   const [body, setBody] = useState('')
   const [busy, setBusy] = useState(false)
   const submitting = useRef(false)

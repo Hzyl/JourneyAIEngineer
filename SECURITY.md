@@ -1,46 +1,46 @@
-# Security policy
+# Chính sách bảo mật
 
-## Phạm vi của bản local
+## Phạm vi của bản chạy trên máy cá nhân
 
-Journey AI Engineer v0.1 là ứng dụng **local-first, single-user**. FastAPI chỉ bind loopback (`127.0.0.1`), SQLite lưu trên máy người dùng, và các route mở VS Code/chạy exercise/đọc Git được thiết kế cho desktop owner. Đây không phải public multi-user API. Không expose port của app lên Internet hoặc reverse proxy ra ngoài.
+Journey AI Engineer v0.1 là ứng dụng dành cho **một người dùng, ưu tiên lưu dữ liệu trên máy cá nhân**. FastAPI chỉ lắng nghe tại địa chỉ nội bộ (`127.0.0.1`); SQLite lưu trên máy người dùng. Các API mở VS Code, chạy bài tập và đọc Git dành cho người sử dụng máy đó. Không mở cổng ứng dụng ra Internet hoặc dùng máy chủ trung gian để cung cấp API này ra ngoài.
 
-`.exe` cũng giữ ranh giới này. Nó không cấp tài khoản, không đồng bộ progress lên cloud, không nhận API key AI và không chạy arbitrary learner code trên server. Workspace/test runner chỉ chạy command do manifest cho phép với timeout/output cap.
+`.exe` cũng giữ giới hạn này. Bản chạy trực tiếp không cấp tài khoản, đồng bộ tiến trình lên đám mây, nhận khóa API AI hoặc cung cấp máy chủ chạy mã tùy ý của người học. Bộ chạy bài tập chỉ thực thi lệnh được tệp khai báo cho phép, với giới hạn thời gian và dung lượng kết quả.
 
 ## Báo cáo lỗ hổng
 
-Vui lòng không đăng secret, exploit đang hoạt động hoặc dữ liệu cá nhân vào issue công khai. Gửi báo cáo riêng cho maintainer qua kênh liên hệ trong GitHub profile, kèm:
+Không đăng thông tin bí mật, mã khai thác đang hoạt động hoặc dữ liệu cá nhân trong mục báo lỗi công khai. Gửi riêng cho người duy trì qua kênh liên hệ trên hồ sơ GitHub, kèm:
 
 - phiên bản/commit và hệ điều hành;
-- bước tái hiện tối thiểu, không có credential thật;
-- impact quan sát được và điều kiện cần để xảy ra;
-- log đã redact path cá nhân, token, cookie và nội dung journal.
+- các bước tái hiện tối thiểu, không dùng thông tin đăng nhập thật;
+- tác động đã quan sát và điều kiện để lỗi xảy ra;
+- nhật ký đã che đường dẫn cá nhân, token, cookie và nội dung nhật ký học tập.
 
-Nếu vấn đề chỉ tái hiện với một target ngoài quyền kiểm soát, dừng kiểm thử và không tiếp tục quét.
+Nếu vấn đề chỉ tái hiện trên hệ thống ngoài quyền kiểm soát của bạn, dừng kiểm thử và không tiếp tục quét.
 
-## Security testing được phép
+## Phạm vi kiểm thử bảo mật được phép
 
-Repository có `scripts/security_audit.py` ở chế độ passive. Script chỉ đọc route table, schema và pattern source; không gửi network request, không tạo payload, không clone/cài/chạy RedAmon và không khẳng định endpoint đã bị khai thác. RedAmon là tài liệu/tham khảo cho security lab có ủy quyền, không phải dependency runtime của Journey.
+Kho mã có `scripts/security_audit.py` để kiểm tra thụ động. Chương trình chỉ đọc bảng định tuyến, cấu trúc dữ liệu và các mẫu mã nguồn; không gửi yêu cầu mạng, tạo dữ liệu thử tấn công, tải/cài/chạy RedAmon hoặc khẳng định API đã bị khai thác. RedAmon chỉ là tài liệu tham khảo cho bài thực hành bảo mật được ủy quyền, không phải thư viện cần để chạy Journey.
 
-Luồng an toàn: passive inventory → dependency/SAST → unit/integration test → staging cô lập với dữ liệu giả và văn bản ủy quyền → triage → sửa → regression test. Không chạy RedAmon hoặc scanner vào production/public target hay hệ thống của người khác; không commit report chứa credential.
+Quy trình kiểm tra: thống kê thụ động → kiểm tra thư viện phụ thuộc và phân tích mã tĩnh (SAST) → kiểm thử đơn vị/tích hợp → thử trên môi trường cô lập có dữ liệu giả và văn bản ủy quyền → phân loại phát hiện → sửa lỗi → kiểm thử hồi quy. Không chạy RedAmon hoặc công cụ quét vào hệ thống đang phục vụ người dùng, mục tiêu công khai hay hệ thống của người khác. Không đưa báo cáo chứa thông tin đăng nhập vào commit.
 
-## Chính sách secret và dữ liệu
+## Thông tin bí mật và dữ liệu
 
-- Không commit `.env`, API key, private key, password, database hoặc `.data`.
-- Trước khi export artifact, app loại `.env`, `.db`, `.venv`, symlink và pattern secret; vẫn phải review diff bằng mắt.
-- `JOURNEY_FEEDBACK_ADMIN_TOKEN` chỉ tồn tại trong process backend local, không đặt trong frontend bundle hoặc query string.
-- Nếu phát hiện secret đã lọt vào history, rotate/revoke secret trước, sau đó liên hệ maintainer để xử lý history rewrite.
+- Không đưa `.env`, khóa API, khóa riêng, mật khẩu, cơ sở dữ liệu hoặc `.data` vào commit.
+- Trước khi xuất bài làm, ứng dụng loại `.env`, `.db`, `.venv`, liên kết tượng trưng và các mẫu chứa thông tin bí mật; bạn vẫn phải tự đọc lại phần thay đổi.
+- `JOURNEY_FEEDBACK_ADMIN_TOKEN` chỉ tồn tại trong tiến trình máy chủ trên máy cá nhân; không đặt trong gói giao diện hoặc chuỗi truy vấn URL.
+- Nếu thông tin bí mật đã lọt vào lịch sử Git, hãy thay hoặc thu hồi thông tin đó trước, rồi liên hệ người duy trì để xử lý lịch sử.
 
 ## Ranh giới web beta
 
-Web beta là frontend React/Vite tĩnh trên Cloudflare Pages, dùng Supabase Auth và
-Postgres/RLS để tách dữ liệu theo tài khoản. Trình duyệt không có quyền gọi backend
-local để mở VS Code, chạy bài tập, đọc Git hay filesystem. Người học đọc đề, hướng
-dẫn và bài giải trong web; thực hành code trong môi trường của họ.
+Web beta dùng giao diện React/Vite tĩnh trên Cloudflare Pages, kết nối Supabase Auth và
+Postgres/RLS để tách dữ liệu theo tài khoản. Trình duyệt không có quyền gọi máy chủ trên
+máy cá nhân để mở VS Code, chạy bài tập, đọc Git hoặc hệ thống tệp. Người học đọc đề, hướng
+dẫn và bài giải trên web, rồi thực hành mã trong môi trường của mình.
 
-Không expose FastAPI local bằng cách đổi CORS, bind `0.0.0.0` hay thêm reverse proxy
-để thay cho kiến trúc hosted. Không đưa service key hoặc mật khẩu database vào bundle.
+Không mở FastAPI trên máy cá nhân ra ngoài bằng cách đổi CORS, lắng nghe tại `0.0.0.0` hay thêm máy chủ trung gian
+để thay thế kiến trúc web. Không đưa khóa dịch vụ hoặc mật khẩu cơ sở dữ liệu vào gói giao diện.
 Đọc [trạng thái triển khai](docs/RELEASE-READINESS.md) để phân biệt tính năng đã có
-trên server và thay đổi đang chờ rollout; code trong repo không chứng minh đã deploy.
+trên máy chủ và thay đổi đang chờ triển khai; mã trong kho không chứng minh rằng thay đổi đã được triển khai.
 
 ## Web beta boundary
 

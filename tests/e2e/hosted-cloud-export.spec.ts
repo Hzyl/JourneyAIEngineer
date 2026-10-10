@@ -75,7 +75,7 @@ for (const language of ['vi', 'en'] as const) {
       const payload = JSON.parse(await readFile((await download.path())!, 'utf8'))
       expect(payload).toMatchObject(snapshot)
       expect(payload.catalog.content_sha256).toMatch(/^[a-f0-9]{64}$/)
-      await expect(card.getByRole('status')).toContainText(vi ? 'Đã tạo file xuất dữ liệu' : 'Export created')
+      await expect(card.getByRole('status')).toContainText(vi ? 'Đã tạo tệp xuất dữ liệu' : 'Export created')
       await expect(downloadButton).toBeEnabled()
       expect(attempts).toBe(2)
       expect(unexpected).toEqual([])

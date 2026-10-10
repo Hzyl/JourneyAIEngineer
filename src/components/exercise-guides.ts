@@ -22,18 +22,18 @@ export const exerciseGuides: Record<string, Record<'vi' | 'en', GuideText>> = {
     vi: {
       summary: 'Viết một hàm nhận diện phiên bản Python và môi trường đang chạy.',
       steps: [
-        'Đọc starter.py và xác định bốn giá trị inspect_environment() cần trả về. Chạy file một lần để thấy phần chưa hoàn thành.',
-        'Import sys. Đọc phiên bản, đường dẫn interpreter và hai prefix của Python đang thực thi; không điền giá trị cố định.',
-        'Trả về một dictionary đúng bốn khóa major, minor, executable, in_venv. Hai khóa phiên bản là số nguyên; in_venv là bool.',
+        'Đọc starter.py, xác định bốn giá trị inspect_environment() cần trả về. Chạy tệp một lần để thấy phần chưa hoàn thành.',
+        'Nhập mô-đun sys bằng import sys. Đọc phiên bản, đường dẫn trình thông dịch và hai giá trị prefix của Python đang chạy; không điền giá trị cố định.',
+        'Trả về một từ điển (dictionary) có đúng bốn khóa major, minor, executable, in_venv. Hai khóa phiên bản nhận số nguyên; in_venv nhận bool.',
         'Chạy bộ kiểm thử. Nếu một ca lỗi, so sánh giá trị thực tế với yêu cầu trước khi sửa hàm.',
-        'Tạo .venv bằng python -m venv .venv. Chạy lại starter.py bằng Python trong .venv và so sánh hai output.',
+        'Tạo .venv bằng python -m venv .venv. Chạy lại starter.py bằng Python trong .venv rồi so sánh kết quả của hai lần chạy.',
       ],
       checks: [
         'major và minor khớp sys.version_info; executable khớp sys.executable.',
         'in_venv phản ánh sys.prefix khác sys.base_prefix, cả khi bật và tắt môi trường ảo.',
-        'Giữ hai output và giải thích vì sao đường dẫn Python thay đổi. Test đạt không có nghĩa đã cài đủ công cụ AI.',
+        'Giữ kết quả của cả hai lần chạy và giải thích vì sao đường dẫn Python thay đổi. Kiểm thử đạt không có nghĩa là bạn đã cài đủ công cụ AI.',
       ],
-      hints: ['sys.version_info có thuộc tính major và minor.', 'sys.executable là interpreter thực sự, không phải tên lệnh bạn đã gõ.'],
+      hints: ['sys.version_info có thuộc tính major và minor.', 'sys.executable cho biết trình thông dịch thực sự đang chạy, không chỉ tên lệnh bạn đã gõ.'],
       example: '# Hình dạng kết quả (giá trị phụ thuộc máy của bạn):\n{"major": 3, "minor": 11, "executable": "...", "in_venv": False}',
     },
     en: {
@@ -58,18 +58,18 @@ export const exerciseGuides: Record<string, Record<'vi' | 'en', GuideText>> = {
     vi: {
       summary: 'Tính số lượng, tổng và trung bình điểm; xử lý dữ liệu thiếu và đầu vào sai.',
       steps: [
-        'Trước khi code, tính tay kết quả của [0, None, 20], danh sách rỗng và danh sách chỉ có None.',
-        'Duyệt từng phần tử. Bỏ qua None, nhưng giữ điểm 0; đừng dùng điều kiện loại mọi giá trị falsy.',
+        'Trước khi viết mã, tính tay kết quả của [0, None, 20], danh sách rỗng và danh sách chỉ có None.',
+        'Duyệt từng phần tử. Bỏ qua None nhưng giữ điểm 0; đừng loại tất cả giá trị được coi là False (falsy).',
         'Từ chối bool, chuỗi, số vô hạn, NaN và điểm ngoài [0, 100] bằng ValueError.',
         'Tính count và total từ các điểm hợp lệ. Chỉ chia để tính mean khi count lớn hơn 0.',
-        'Chạy test rồi kiểm tra list đầu vào vẫn giữ nguyên. Ghi lại ca thất bại và cách bạn sửa.',
+        'Chạy kiểm thử rồi kiểm tra danh sách đầu vào vẫn giữ nguyên. Ghi lại trường hợp thất bại và cách bạn sửa.',
       ],
       checks: [
         '[0, None, 20] trả count=2, total=20, mean=10.',
         '[] và [None] trả count=0, total=0, mean=None.',
-        'True, "20", -1, 101 và số không hữu hạn gây ValueError. List đầu vào không bị sửa.',
+        'True, "20", -1, 101 và số không hữu hạn gây ValueError. Danh sách đầu vào không bị sửa.',
       ],
-      hints: ['Trong Python, bool là lớp con của int; kiểm tra bool trước.', 'math.isfinite giúp phân biệt số hữu hạn với NaN và infinity.'],
+      hints: ['Trong Python, bool là lớp con của int; kiểm tra bool trước.', 'math.isfinite giúp phân biệt số hữu hạn với NaN và vô hạn (infinity).'],
       example: 'summarize_scores([0, None, 20])\n# {"count": 2, "total": 20, "mean": 10}\n\nsummarize_scores([])\n# {"count": 0, "total": 0, "mean": None}',
     },
     en: {
@@ -94,11 +94,11 @@ export const exerciseGuides: Record<string, Record<'vi' | 'en', GuideText>> = {
     vi: {
       summary: 'Cộng phút học và xử lý phiên gửi lại mà không đếm trùng.',
       steps: [
-        'Viết ví dụ hai phiên 20 và 25 phút, rồi thêm lại phiên đầu. Dự đoán tổng trước khi code.',
-        'Kiểm tra mỗi session là dictionary, id là chuỗi không rỗng, minutes là số nguyên 1–1440 và không phải bool.',
-        'Dùng dictionary để nhớ số phút đã gặp của mỗi id. ID mới được cộng; ID cũ cùng số phút được bỏ qua.',
+        'Viết ví dụ gồm hai phiên 20 và 25 phút, rồi thêm lại phiên đầu. Dự đoán tổng trước khi viết mã.',
+        'Kiểm tra mỗi phiên học là một dictionary, id là chuỗi không rỗng, minutes là số nguyên 1–1440 và không phải bool.',
+        'Dùng dictionary lưu số phút đã gặp của mỗi id. Cộng phiên có ID mới; bỏ qua phiên có ID cũ và cùng số phút.',
         'Nếu cùng id nhưng số phút khác nhau, báo ValueError thay vì âm thầm chọn một giá trị.',
-        'Chạy test cho tuần rỗng, gửi trùng, dữ liệu sai và xung đột. Giải thích vì sao gửi lại không làm tăng tổng.',
+        'Chạy kiểm thử với tuần rỗng, phiên gửi trùng, dữ liệu sai và xung đột. Giải thích vì sao gửi lại một phiên không làm tăng tổng.',
       ],
       checks: [
         'Tuần rỗng có tổng 0; hai phiên 20 và 25 phút có tổng 45.',

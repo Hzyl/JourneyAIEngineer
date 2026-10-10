@@ -31,8 +31,15 @@ test('solutions are absent from the DOM until opened and can be hidden again', a
   await act(async () => button.click())
   expect(button.getAttribute('aria-expanded')).toBe('true')
   expect(panel.hidden).toBe(false)
-  expect(host.querySelector('pre')?.textContent).toContain('def summarize_scores(scores):')
+  const primary = host.querySelector<HTMLDetailsElement>('.exercise-solution-primary')!
+  expect(primary.open).toBe(false)
+  expect(primary.querySelector('pre')?.textContent).toContain('def summarize_scores(scores):')
+  expect([...host.querySelectorAll<HTMLDetailsElement>('.exercise-solution-file')]
+    .every((file) => !file.open)).toBe(true)
   expect(host.textContent).toContain('Vì sao cách này đúng?')
+  const explanation = [...host.querySelectorAll('h4')].find((heading) =>
+    heading.textContent === 'Vì sao cách này đúng?')!
+  expect(explanation.compareDocumentPosition(primary) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   await act(async () => button.click())
   expect(panel.hidden).toBe(true)
   expect(host.querySelector('pre')).toBeNull()
@@ -78,11 +85,11 @@ test('framing tables are opt-in, semantic and translated alongside the downloada
   expect(host.querySelectorAll('table')).toHaveLength(2)
   expect(host.querySelectorAll('th[scope="col"]')).toHaveLength(6)
   expect(host.querySelectorAll('th[scope="row"]')).toHaveLength(14)
-  expect(host.textContent).toContain('Bảng nguy cơ leakage')
+  expect(host.textContent).toContain('Nguy cơ rò rỉ dữ liệu')
   expect(host.textContent).toContain('precision=null')
   await render('exercise-3-ml-framing', 'en')
   expect(host.textContent).toContain('Leakage risk table')
-  expect(host.textContent).not.toContain('Bảng nguy cơ leakage')
+  expect(host.textContent).not.toContain('Nguy cơ rò rỉ dữ liệu')
   const links = [...host.querySelectorAll<HTMLAnchorElement>('a[download]')]
   expect(links.map((link) => link.download)).toEqual(['framing.py', 'test_solution.py'])
   expect(decodeURIComponent(links[0].href)).toContain('def split_orders')

@@ -65,6 +65,34 @@ test('local difficulty names map to the same filters as the web catalog', () => 
   expect(exerciseLevel('easy')).toBe('easy')
 })
 
+test.each([
+  ['vi', 'Tự kiểm tra:', 'Giải thích kết quả và nêu một trường hợp biên.'],
+  ['en', 'Checkpoint:', 'Explain the result and one edge case.'],
+  ['vi', 'Checkpoint:', 'Giữ tương thích với tài liệu tiếng Việt cũ.'],
+] as const)('%s fallback extracts %s without leaking the heading into the check', (language, label, check) => {
+  const exercise = {
+    ...catalogExercises[0], slug: 'unlisted-checkpoint-fixture',
+    description_vi: `# Bài tập\r\n\r\nMô tả nhiệm vụ cần làm.\r\n\r\n${label} ${check}\r\n\r\nGhi chú khác.`,
+    description_en: `# Exercise\n\nDescribe the task.\n\n${label} ${check}\n\nAnother note.`,
+  }
+  const material = exerciseMaterial(exercise, language)
+  expect(material.checks).toEqual([check])
+  expect(material.description).toContain(`${label} ${check}`)
+  expect(material.steps).toHaveLength(4)
+  expect(material.files).toEqual([])
+})
+
+test('checkpoint words inside ordinary prose do not replace the fallback self-check', () => {
+  const exercise = { ...catalogExercises[0], slug: 'unlisted-prose-fixture',
+    description_vi: 'Mô tả có cụm Tự kiểm tra: trong câu, không phải mục riêng.',
+    description_en: 'A sentence mentions Checkpoint: but does not start a section.',
+  }
+  expect(exerciseMaterial(exercise, 'vi').checks)
+    .toEqual(['Giải thích được bài làm, cách kiểm tra và một giới hạn còn lại.'])
+  expect(exerciseMaterial(exercise, 'en').checks)
+    .toEqual(['Explain your work, how you checked it and one remaining limitation.'])
+})
+
 test('the framing walkthrough remains self-assessed with a complete bilingual dictionary and risk table', () => {
   const lab = catalogExercises.find((exercise) => exercise.slug === 'exercise-3-ml-framing')!
   expect(lab.assessment_kind).toBe('reflection')

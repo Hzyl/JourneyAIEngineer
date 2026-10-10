@@ -8,20 +8,20 @@
 }
 
 .tools-page .tool-content p {
-  font-size: 15px;
+  font-size: 1.125rem;
   line-height: 1.7;
 }
 
 .tools-page .tool-content strong {
   display: block;
-  font-size: 14px;
+  font-size: 1rem;
   line-height: 1.5;
   margin-top: 16px;
 }
 
 .tools-page .command-list code {
   white-space: pre-wrap;
-  font-size: 13px;
+  font-size: 1rem;
   line-height: 1.6;
 }
 

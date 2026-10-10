@@ -1,3 +1,4 @@
+import { LearningIllustration } from './LearningIllustration'
 import { useEffect, useState } from 'react'
 import type { ReferenceResource } from '../api'
 
@@ -38,8 +39,8 @@ export function ResourcesView({ resources, language }: {
   const [type, setType] = useState(() => parameter('type', 'all'))
   const typeLabel = (value: string) => resourceTypes[value.toLowerCase()]?.[vi ? 0 : 1] ?? value
   const phaseLabels = Object.fromEntries(phaseTitles.map((title, index) => {
-    const translated = vi && index === 2 ? 'Toán & Machine Learning'
-      : vi && index === 4 ? 'Deep Learning với PyTorch' : title
+    const translated = vi && index === 2 ? 'Toán và học máy'
+      : vi && index === 4 ? 'Học sâu với PyTorch' : title
     const prefix = index < 8 ? `${vi ? 'Giai đoạn' : 'Phase'} ${index}` : `GenAI ${index - 7}`
     return [`phase-${String(index).padStart(2, '0')}`, `${prefix} · ${translated}`]
   }))
@@ -89,7 +90,8 @@ export function ResourcesView({ resources, language }: {
         : 'Books, courses, documentation and repositories mapped to each phase. Read with a lesson goal, verify what you learn, then return to practice.'}</p>
     </div>
     <section className="resource-library-card">
-      <div className="resource-library-header">
+      <LearningIllustration name="resources" />
+    <div className="resource-library-header">
         <div>
           <span className="eyebrow">{resources.length} {vi ? 'NGUỒN' : 'SOURCES'}</span>
           <h3>{vi ? 'Thư viện tài liệu AI Engineer' : 'AI Engineer reference library'}</h3>
@@ -135,7 +137,7 @@ export function ResourcesView({ resources, language }: {
           {resource.url ? <a className="resource-link" href={resource.url} target="_blank" rel="noreferrer">
             {vi ? 'Mở nguồn tham khảo' : 'Open reference'} <span aria-hidden="true">↗</span>
           </a> : <p className="resource-internal-note">
-            {vi ? 'Nội dung này có sẵn trong app.' : 'This content is available in the app.'}
+            {vi ? 'Nội dung này có sẵn trong ứng dụng.' : 'This content is available in the app.'}
           </p>}
         </article>)}
       </div>

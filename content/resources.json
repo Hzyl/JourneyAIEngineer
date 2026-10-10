@@ -36,9 +36,9 @@
         "phase-21",
         "phase-22"
       ],
-      "description_vi": "Một repository học AI Engineering từ nền tảng đến hệ thống; dùng như bản đồ tham khảo và đối chiếu với lesson trong app.",
+      "description_vi": "Kho tài liệu cộng đồng về kỹ thuật AI, từ kiến thức nền tảng đến xây dựng hệ thống. Dùng để tham khảo và đối chiếu với bài học trong ứng dụng.",
       "description_en": "A community repository covering AI Engineering foundations through systems; use it as a reference map alongside this app's lessons.",
-      "how_to_use_vi": "Mỗi tuần chọn đúng một chủ đề đang học, đọc mục tương ứng, ghi lại nguồn đã kiểm chứng và làm bài trong workspace. Nếu liên kết không mở được, chuyển sang nguồn official cùng phase.",
+      "how_to_use_vi": "Mỗi tuần, chọn một chủ đề đang học và đọc mục tương ứng. Ghi nguồn đã kiểm chứng rồi làm bài trong thư mục thực hành. Nếu liên kết không mở được, dùng tài liệu chính thức thuộc cùng giai đoạn.",
       "how_to_use_en": "Pick one topic that matches your current lesson, record what you verified, and implement it in the workspace. If the link is unavailable, use the official source mapped to the same phase."
     },
     {
@@ -55,9 +55,9 @@
         "phase-00",
         "phase-01"
       ],
-      "description_vi": "Tutorial chính thức về syntax, data structures, modules, errors, classes và virtual environments.",
+      "description_vi": "Hướng dẫn chính thức về cú pháp, cấu trúc dữ liệu, mô-đun, xử lý lỗi, lớp và môi trường ảo trong Python.",
       "description_en": "The official tutorial for syntax, data structures, modules, errors, classes, and virtual environments.",
-      "how_to_use_vi": "Đọc sau khi xem concept notes; chạy lại mọi ví dụ bằng file .py trong workspace thay vì chỉ đọc notebook.",
+      "how_to_use_vi": "Đọc sau phần giải thích khái niệm. Chạy lại các ví dụ bằng tệp .py trong thư mục thực hành để kiểm tra mình đã hiểu cách dùng.",
       "how_to_use_en": "Read it after the lesson notes and re-run every example in a .py workspace file instead of only reading a notebook."
     },
     {
@@ -74,9 +74,9 @@
         "phase-01",
         "phase-05"
       ],
-      "description_vi": "Hướng dẫn virtual environment, dependency, pyproject và đóng gói project Python.",
+      "description_vi": "Hướng dẫn về môi trường ảo, thư viện phụ thuộc, pyproject và đóng gói dự án Python.",
       "description_en": "Guidance for virtual environments, dependencies, pyproject, and packaging Python projects.",
-      "how_to_use_vi": "Dùng khi chuyển từ script sang package có thể cài và chạy lại trên máy khác.",
+      "how_to_use_vi": "Tra cứu khi chuyển từ tệp chương trình riêng lẻ sang gói Python có thể cài đặt và chạy trên máy khác.",
       "how_to_use_en": "Use it when moving from scripts to an installable package that another machine can reproduce."
     },
     {
@@ -93,9 +93,9 @@
         "phase-02",
         "phase-03"
       ],
-      "description_vi": "Tài liệu chính thức về ndarray, broadcasting, linear algebra, random và performance.",
+      "description_vi": "Tài liệu chính thức về ndarray, cơ chế broadcasting, đại số tuyến tính, sinh số ngẫu nhiên và hiệu năng.",
       "description_en": "Official documentation for ndarray, broadcasting, linear algebra, random, and performance.",
-      "how_to_use_vi": "Mở cùng Math for ML Lab; luôn ghi shape của tensor trước khi nhân hoặc broadcast.",
+      "how_to_use_vi": "Đọc cùng bài thực hành toán cho học máy. Ghi kích thước của từng mảng trước khi nhân hoặc áp dụng broadcasting.",
       "how_to_use_en": "Open it with the Math for ML Lab and write down tensor shapes before multiplication or broadcasting."
     },
     {
@@ -112,9 +112,9 @@
         "phase-01",
         "phase-03"
       ],
-      "description_vi": "Chuỗi tutorial thực hành đọc, lọc, nối, tổng hợp và trực quan hóa dữ liệu bảng.",
+      "description_vi": "Các bài hướng dẫn thực hành đọc, lọc, nối, tổng hợp và trực quan hóa dữ liệu dạng bảng.",
       "description_en": "Hands-on tutorials for reading, filtering, joining, aggregating, and inspecting tabular data.",
-      "how_to_use_vi": "Dùng để xây data cleaning CLI và kiểm tra từng bước preprocessing bằng bảng mẫu nhỏ.",
+      "how_to_use_vi": "Dùng khi viết chương trình làm sạch dữ liệu chạy từ dòng lệnh. Kiểm tra từng bước tiền xử lý bằng một bảng dữ liệu mẫu nhỏ.",
       "how_to_use_en": "Use it to build the data-cleaning CLI and inspect every preprocessing step on a small sample."
     },
     {
@@ -131,9 +131,9 @@
         "phase-02",
         "phase-03"
       ],
-      "description_vi": "Reference về estimator, pipeline, preprocessing, metrics, model selection và inspection.",
+      "description_vi": "Tài liệu tra cứu về bộ ước lượng, quy trình xử lý, tiền xử lý dữ liệu, chỉ số đánh giá, chọn mô hình và phân tích mô hình.",
       "description_en": "Reference for estimators, pipelines, preprocessing, metrics, model selection, and inspection.",
-      "how_to_use_vi": "Tra cứu API sau khi tự giải thích được baseline và metric; không copy pipeline mà không biết leakage nằm ở đâu.",
+      "how_to_use_vi": "Tra cứu API sau khi đã giải thích được mô hình làm mốc so sánh và chỉ số đánh giá. Kiểm tra nguy cơ rò rỉ dữ liệu trước khi dùng lại một quy trình có sẵn.",
       "how_to_use_en": "Use it as API reference after explaining your baseline and metric; never copy a pipeline without checking leakage."
     },
     {
@@ -150,9 +150,9 @@
         "phase-02",
         "phase-03"
       ],
-      "description_vi": "Course có visualizations và bài tập về regression, classification, data và fairness.",
+      "description_vi": "Khóa học có minh họa trực quan và bài tập về hồi quy, phân loại, dữ liệu và tính công bằng của mô hình.",
       "description_en": "A course with visualizations and exercises for regression, classification, data, and fairness.",
-      "how_to_use_vi": "Dùng làm vòng giải thích thứ hai sau Math for ML Lab; hoàn thành bài tập rồi ghi lại một lỗi trực giác.",
+      "how_to_use_vi": "Dùng để củng cố kiến thức sau bài thực hành toán cho học máy. Làm bài tập rồi ghi lại một điều bạn từng hiểu sai.",
       "how_to_use_en": "Use it as a second explanation after the Math for ML Lab, then record one intuition failure from the exercises."
     },
     {
@@ -168,9 +168,9 @@
       "phase_ids": [
         "phase-02"
       ],
-      "description_vi": "Sách tham khảo về linear algebra, analytic geometry, calculus, probability và optimization cho ML.",
+      "description_vi": "Sách tham khảo về đại số tuyến tính, hình học giải tích, giải tích, xác suất và tối ưu cho học máy.",
       "description_en": "A reference book on linear algebra, analytic geometry, calculus, probability, and optimization for ML.",
-      "how_to_use_vi": "Đọc từng chương ngắn gắn với notebook; tự viết lại công thức bằng NumPy và kiểm tra bằng finite differences.",
+      "how_to_use_vi": "Đọc từng phần ngắn gắn với bài thực hành. Viết lại công thức bằng NumPy và dùng sai phân hữu hạn để kiểm tra phần tính đạo hàm.",
       "how_to_use_en": "Read one chapter section with the notebook, reimplement formulas in NumPy, and verify gradients with finite differences."
     },
     {
@@ -187,9 +187,9 @@
         "phase-02",
         "phase-03"
       ],
-      "description_vi": "Lecture notes đại học về supervised learning, generative models, learning theory và unsupervised learning.",
+      "description_vi": "Bài giảng đại học về học có giám sát, mô hình sinh, lý thuyết học máy và học không giám sát.",
       "description_en": "University lecture notes covering supervised learning, generative models, learning theory, and unsupervised learning.",
-      "how_to_use_vi": "Chỉ mở sau khi đã làm lab; dùng để trả lời vì sao thuật toán hoạt động, không dùng để học thuộc chứng minh.",
+      "how_to_use_vi": "Đọc sau khi đã làm bài thực hành. Tập trung giải thích vì sao thuật toán hoạt động và liên hệ lập luận với ví dụ đã chạy.",
       "how_to_use_en": "Open it after the lab to answer why an algorithm works, rather than memorizing proofs in isolation."
     },
     {
@@ -207,9 +207,9 @@
         "phase-04",
         "phase-06"
       ],
-      "description_vi": "Sách tương tác kết hợp toán, code và notebook cho deep learning, CNN, attention và Transformer.",
+      "description_vi": "Sách tương tác kết hợp toán, mã nguồn và notebook về học sâu, CNN, attention và Transformer.",
       "description_en": "An interactive book combining math, code, and notebooks for deep learning, CNNs, attention, and Transformers.",
-      "how_to_use_vi": "Chạy notebook, sau đó viết lại một phần training loop bằng PyTorch mà không nhìn lời giải.",
+      "how_to_use_vi": "Chạy notebook rồi tự viết lại một phần vòng lặp huấn luyện bằng PyTorch mà không nhìn lời giải.",
       "how_to_use_en": "Run the notebook, then rewrite one part of the training loop in PyTorch without looking at the answer."
     },
     {
@@ -225,9 +225,9 @@
       "phase_ids": [
         "phase-04"
       ],
-      "description_vi": "Tutorial chính thức về tensors, datasets, training loop, transfer learning và production recipes.",
+      "description_vi": "Hướng dẫn chính thức về tensor, tập dữ liệu, vòng lặp huấn luyện, học chuyển giao và triển khai ứng dụng.",
       "description_en": "Official tutorials for tensors, datasets, training loops, transfer learning, and production recipes.",
-      "how_to_use_vi": "Mỗi tutorial phải có một biến thể nhỏ trên dữ liệu của bạn và có checkpoint/test đi kèm.",
+      "how_to_use_vi": "Với mỗi bài hướng dẫn, thử một thay đổi nhỏ trên dữ liệu của bạn. Lưu trạng thái mô hình hoặc kết quả kiểm thử để đối chiếu.",
       "how_to_use_en": "Make a small variant of each tutorial on your own data and add a checkpoint or test."
     },
     {
@@ -243,9 +243,9 @@
       "phase_ids": [
         "phase-04"
       ],
-      "description_vi": "Lộ trình ngắn để đi từ tensor đến neural network, classifier và training.",
+      "description_vi": "Lộ trình ngắn từ tensor đến mạng nơ-ron, bộ phân loại và huấn luyện mô hình.",
       "description_en": "A compact path from tensors to neural networks, classifiers, and training.",
-      "how_to_use_vi": "Dùng trong tuần đầu Phase 4 để có vòng lặp chạy được trước khi tối ưu model.",
+      "how_to_use_vi": "Dùng trong tuần đầu của giai đoạn 4 để viết được vòng lặp huấn luyện trước khi tối ưu mô hình.",
       "how_to_use_en": "Use it in the first week of Phase 4 to get a working loop before optimizing the model."
     },
     {
@@ -262,9 +262,9 @@
         "phase-04",
         "phase-06"
       ],
-      "description_vi": "Course thực hành về Transformers, tokenizers, datasets, fine-tuning và sharing model.",
+      "description_vi": "Khóa học thực hành về Transformer, tách token, tập dữ liệu, tinh chỉnh và chia sẻ mô hình.",
       "description_en": "Hands-on course on Transformers, tokenizers, datasets, fine-tuning, and model sharing.",
-      "how_to_use_vi": "Đọc phần tokenization trước, sau đó fine-tune một model nhỏ và ghi rõ data split, metric và giới hạn.",
+      "how_to_use_vi": "Đọc phần tách token trước rồi tinh chỉnh một mô hình nhỏ. Ghi rõ cách chia dữ liệu, chỉ số đánh giá và giới hạn của kết quả.",
       "how_to_use_en": "Read tokenization first, then fine-tune a small model and document splits, metrics, and limitations."
     },
     {
@@ -280,9 +280,9 @@
       "phase_ids": [
         "phase-06"
       ],
-      "description_vi": "API reference cho pretrained models, pipelines, tokenizers, generation và training.",
+      "description_vi": "Tài liệu tra cứu API cho mô hình đã huấn luyện, pipeline, bộ tách token, sinh nội dung và huấn luyện.",
       "description_en": "API reference for pretrained models, pipelines, tokenizers, generation, and training.",
-      "how_to_use_vi": "Tra cứu sau khi hiểu attention; lưu phiên bản model và tokenizer vào README để tái lập.",
+      "how_to_use_vi": "Tra cứu sau khi hiểu cơ chế attention. Ghi phiên bản mô hình và bộ tách token vào README để có thể chạy lại thí nghiệm.",
       "how_to_use_en": "Use it after understanding attention and record model and tokenizer versions for reproducibility."
     },
     {
@@ -299,9 +299,9 @@
         "phase-01",
         "phase-05"
       ],
-      "description_vi": "Documentation về path operation, Pydantic schema, dependency injection, testing và deployment.",
+      "description_vi": "Tài liệu về xử lý yêu cầu theo đường dẫn, cấu trúc dữ liệu Pydantic, cơ chế cung cấp thành phần phụ thuộc, kiểm thử và triển khai.",
       "description_en": "Documentation for path operations, Pydantic schemas, dependency injection, testing, and deployment.",
-      "how_to_use_vi": "Dùng khi biến model thành endpoint; viết request/response contract và test lỗi input trước.",
+      "how_to_use_vi": "Dùng khi đưa mô hình vào API. Viết quy định đầu vào, đầu ra và kiểm thử đầu vào sai trước.",
       "how_to_use_en": "Use it when turning a model into an endpoint; define request/response contracts and test invalid input first."
     },
     {
@@ -317,9 +317,9 @@
       "phase_ids": [
         "phase-05"
       ],
-      "description_vi": "Chuỗi tutorial về image, container, Dockerfile, compose và chia sẻ ứng dụng.",
+      "description_vi": "Các bài hướng dẫn về image, container, Dockerfile, Compose và chia sẻ ứng dụng.",
       "description_en": "Tutorials for images, containers, Dockerfiles, Compose, and sharing applications.",
-      "how_to_use_vi": "Đóng gói API inference sau khi chạy local; kiểm tra container từ một thư mục sạch.",
+      "how_to_use_vi": "Đóng gói API dự đoán sau khi đã chạy được trên máy cá nhân. Kiểm tra cách chạy container từ một thư mục mới.",
       "how_to_use_en": "Containerize the inference API after it works locally and verify it from a clean directory."
     },
     {
@@ -335,9 +335,9 @@
       "phase_ids": [
         "phase-05"
       ],
-      "description_vi": "Tracking parameters, metrics, artifacts, model versions và registry cho thí nghiệm ML.",
+      "description_vi": "Công cụ theo dõi tham số, chỉ số, tệp kết quả và phiên bản mô hình, kèm kho đăng ký mô hình cho thí nghiệm học máy.",
       "description_en": "Tracking for parameters, metrics, artifacts, model versions, and registries for ML experiments.",
-      "how_to_use_vi": "Log cùng một experiment với baseline và model tốt nhất; so sánh metric và config từ UI.",
+      "how_to_use_vi": "Ghi mô hình làm mốc so sánh và mô hình tốt nhất vào cùng một nhóm thí nghiệm. Dùng giao diện để so sánh chỉ số và cấu hình.",
       "how_to_use_en": "Log a baseline and best model in the same experiment and compare metrics with configuration."
     },
     {
@@ -355,9 +355,9 @@
         "phase-05",
         "phase-07"
       ],
-      "description_vi": "Các nguyên tắc thực tế để xây pipeline, metric, feedback loop và hệ thống ML có thể phát triển.",
+      "description_vi": "Các nguyên tắc thực tế để xây quy trình xử lý, chọn chỉ số, thu nhận phản hồi và phát triển hệ thống học máy.",
       "description_en": "Practical principles for building pipelines, metrics, feedback loops, and evolvable ML systems.",
-      "how_to_use_vi": "Đọc trước mỗi project để kiểm tra baseline, instrumentation, data dependency và rollback plan.",
+      "how_to_use_vi": "Đọc trước mỗi dự án để kiểm tra mô hình ban đầu, cách đo hoạt động hệ thống, dữ liệu phụ thuộc và kế hoạch khôi phục phiên bản trước.",
       "how_to_use_en": "Read before each project to check baselines, instrumentation, data dependencies, and rollback plans."
     },
     {
@@ -375,9 +375,9 @@
         "phase-05",
         "phase-07"
       ],
-      "description_vi": "Course về lifecycle từ problem definition, data, training, deployment đến monitoring và product.",
+      "description_vi": "Khóa học về toàn bộ vòng đời dự án: xác định bài toán, chuẩn bị dữ liệu, huấn luyện, triển khai, theo dõi và xây dựng sản phẩm.",
       "description_en": "A course covering the lifecycle from problem definition and data through training, deployment, monitoring, and product.",
-      "how_to_use_vi": "Dùng như checklist capstone; mỗi tuần phải tạo một artifact có thể review.",
+      "how_to_use_vi": "Dùng làm danh sách kiểm tra cho đồ án cuối khóa. Mỗi tuần, hoàn thành một bài làm hoặc báo cáo để người khác có thể nhận xét.",
       "how_to_use_en": "Use it as a capstone checklist and produce one reviewable artifact each week."
     },
     {
@@ -395,9 +395,9 @@
         "phase-05",
         "phase-07"
       ],
-      "description_vi": "Hướng dẫn end-to-end về data, training, serving, testing, monitoring và MLOps.",
+      "description_vi": "Hướng dẫn xuyên suốt về dữ liệu, huấn luyện, phục vụ mô hình, kiểm thử, theo dõi và MLOps.",
       "description_en": "End-to-end guides for data, training, serving, testing, monitoring, and MLOps.",
-      "how_to_use_vi": "Chọn một module áp dụng trực tiếp cho tabular project hoặc Production ML API, không đọc dàn trải.",
+      "how_to_use_vi": "Chọn một phần áp dụng trực tiếp cho dự án dữ liệu dạng bảng hoặc API học máy đang làm, rồi kiểm tra kết quả trước khi đọc tiếp.",
       "how_to_use_en": "Choose one module to apply directly to the tabular project or Production ML API instead of reading broadly."
     },
     {
@@ -414,9 +414,9 @@
         "phase-05",
         "phase-07"
       ],
-      "description_vi": "Bộ câu hỏi và ghi chú thiết kế hệ thống ML, phù hợp để luyện phỏng vấn và architecture.",
+      "description_vi": "Bộ câu hỏi và ghi chú về thiết kế hệ thống học máy, phù hợp để luyện phỏng vấn và tư duy kiến trúc.",
       "description_en": "Questions and notes for ML system design, useful for interviews and architecture practice.",
-      "how_to_use_vi": "Sau mỗi project, vẽ lại data flow, failure modes, latency và scaling trade-off bằng một ADR ngắn.",
+      "how_to_use_vi": "Sau mỗi dự án, viết một bản ghi quyết định kiến trúc (ADR) ngắn. Mô tả luồng dữ liệu, tình huống lỗi, độ trễ và sự đánh đổi khi mở rộng hệ thống.",
       "how_to_use_en": "After each project, redraw data flow, failure modes, latency, and scaling trade-offs in a short ADR."
     },
     {
@@ -433,9 +433,9 @@
         "phase-06",
         "phase-07"
       ],
-      "description_vi": "Recipe thực hành cho structured output, retrieval, evaluation và production LLM patterns.",
+      "description_vi": "Các ví dụ thực hành về đầu ra có cấu trúc, truy xuất, đánh giá và vận hành ứng dụng LLM.",
       "description_en": "Practical recipes for structured output, retrieval, evaluation, and production LLM patterns.",
-      "how_to_use_vi": "Chỉ mở sau khi viết baseline RAG; biến mỗi recipe thành một test hoặc evaluation case của bạn.",
+      "how_to_use_vi": "Đọc sau khi đã xây phiên bản RAG cơ bản. Chuyển mỗi ví dụ áp dụng được thành một kiểm thử hoặc trường hợp đánh giá của dự án.",
       "how_to_use_en": "Open it after writing a baseline RAG system and turn each recipe into a test or evaluation case."
     },
     {
@@ -451,9 +451,9 @@
       "phase_ids": [
         "phase-06"
       ],
-      "description_vi": "Tài liệu parameter-efficient fine-tuning, LoRA và adapter cho model lớn.",
+      "description_vi": "Tài liệu về tinh chỉnh tiết kiệm tham số, LoRA và adapter cho mô hình lớn.",
       "description_en": "Documentation for parameter-efficient fine-tuning, LoRA, and adapters for large models.",
-      "how_to_use_vi": "Đọc sau khi có baseline prompting/RAG; đo quality, memory và cost trước khi fine-tune.",
+      "how_to_use_vi": "Đọc sau khi có kết quả ban đầu từ prompt hoặc RAG. Đo chất lượng, lượng bộ nhớ và chi phí trước khi quyết định tinh chỉnh.",
       "how_to_use_en": "Read after a prompting/RAG baseline and measure quality, memory, and cost before fine-tuning."
     },
     {
@@ -469,9 +469,9 @@
       "phase_ids": [
         "phase-06"
       ],
-      "description_vi": "Tìm kiếm similarity trên vector và các khái niệm index cơ bản cho retrieval.",
+      "description_vi": "Tài liệu về tìm kiếm vector tương đồng và các khái niệm chỉ mục cơ bản cho truy xuất.",
       "description_en": "Similarity search over vectors and core index concepts for retrieval systems.",
-      "how_to_use_vi": "Dùng để benchmark retrieval nhỏ trước khi chọn vector database; giữ tập evaluation cố định.",
+      "how_to_use_vi": "Đo chất lượng truy xuất trên một bài toán nhỏ trước khi chọn cơ sở dữ liệu vector. Giữ cố định bộ đánh giá khi so sánh.",
       "how_to_use_en": "Use it to benchmark small retrieval workloads before choosing a vector database with a fixed evaluation set."
     },
     {
@@ -487,9 +487,9 @@
       "phase_ids": [
         "phase-06"
       ],
-      "description_vi": "Concept và API về collections, points, payload, filtering và vector search.",
+      "description_vi": "Khái niệm và API về collection, point, dữ liệu đi kèm, bộ lọc và tìm kiếm vector trong Qdrant.",
       "description_en": "Concepts and APIs for collections, points, payloads, filtering, and vector search.",
-      "how_to_use_vi": "Dùng sau khi hiểu embedding; viết retrieval contract gồm top-k, filter và lý do trả về.",
+      "how_to_use_vi": "Dùng sau khi hiểu embedding. Quy định rõ số kết quả top-k, điều kiện lọc và lý do từng kết quả được trả về.",
       "how_to_use_en": "Use it after understanding embeddings and define a retrieval contract for top-k, filters, and evidence."
     },
     {
@@ -506,9 +506,9 @@
         "phase-05",
         "phase-07"
       ],
-      "description_vi": "Sách về data distribution, training-serving skew, deployment, monitoring và system design.",
+      "description_vi": "Sách về phân phối dữ liệu, sai khác giữa huấn luyện và phục vụ mô hình, triển khai, theo dõi và thiết kế hệ thống.",
       "description_en": "A book on data distribution, training-serving skew, deployment, monitoring, and system design.",
-      "how_to_use_vi": "Đọc từng chương khi capstone gặp đúng vấn đề; ghi trade-off và quyết định kiến trúc vào ADR.",
+      "how_to_use_vi": "Đọc chương phù hợp với vấn đề của đồ án cuối khóa. Ghi sự đánh đổi và lý do chọn kiến trúc vào bản ghi quyết định kiến trúc (ADR).",
       "how_to_use_en": "Read chapters when the capstone meets the problem and record trade-offs in an architecture decision record."
     },
     {
@@ -525,9 +525,9 @@
         "phase-03",
         "phase-04"
       ],
-      "description_vi": "Notebook và code đi kèm sách thực hành ML, hữu ích để so sánh implementation và experiment.",
+      "description_vi": "Notebook và mã nguồn đi kèm sách thực hành học máy, dùng để đối chiếu cách cài đặt và tổ chức thí nghiệm.",
       "description_en": "Notebooks and code accompanying a hands-on ML book for comparing implementations and experiments.",
-      "how_to_use_vi": "Chỉ xem sau khi tự làm baseline; ghi rõ đoạn nào bạn hiểu và đoạn nào cần quay lại lesson.",
+      "how_to_use_vi": "Xem sau khi tự làm mô hình ban đầu. Ghi phần đã hiểu và phần cần quay lại bài học để ôn.",
       "how_to_use_en": "Look only after building your baseline and record what you understand versus what needs review."
     },
     {
@@ -543,9 +543,9 @@
       "phase_ids": [
         "phase-06"
       ],
-      "description_vi": "Giải thích RAG từ chunking, embeddings, retrieval đến evaluation và failure analysis.",
+      "description_vi": "Hướng dẫn RAG từ chia đoạn tài liệu, tạo embedding và truy xuất đến đánh giá và phân tích lỗi.",
       "description_en": "A practical RAG guide from chunking and embeddings through retrieval, evaluation, and failure analysis.",
-      "how_to_use_vi": "Dùng để kiểm tra từng thành phần Vietnamese Document Assistant, không đánh giá chỉ bằng cảm giác câu trả lời.",
+      "how_to_use_vi": "Dùng để kiểm tra từng thành phần của trợ lý tài liệu tiếng Việt. Đối chiếu câu trả lời với nguồn và bộ đánh giá trước khi kết luận về chất lượng.",
       "how_to_use_en": "Use it to inspect each Vietnamese Document Assistant component and evaluate evidence, not just answer fluency."
     },
     {
@@ -562,9 +562,9 @@
         "phase-05",
         "phase-07"
       ],
-      "description_vi": "Hướng dẫn test dữ liệu, model, training và serving để tìm regression sớm.",
+      "description_vi": "Hướng dẫn kiểm thử dữ liệu, mô hình, quá trình huấn luyện và phục vụ mô hình để sớm phát hiện chất lượng suy giảm.",
       "description_en": "Guidance for testing data, models, training, and serving to catch regressions early.",
-      "how_to_use_vi": "Chuyển mỗi failure mode của project thành một test hoặc monitor có ngưỡng rõ ràng.",
+      "how_to_use_vi": "Với mỗi tình huống lỗi của dự án, viết một kiểm thử hoặc thiết lập theo dõi có ngưỡng cảnh báo rõ ràng.",
       "how_to_use_en": "Turn each project failure mode into a test or monitor with an explicit threshold."
     },
     {
@@ -581,9 +581,9 @@
         "phase-05",
         "phase-07"
       ],
-      "description_vi": "Architecture guide về CI/CD, data validation, model validation và pipeline automation.",
+      "description_vi": "Hướng dẫn kiến trúc về CI/CD, kiểm tra dữ liệu, kiểm định mô hình và tự động hóa quy trình xử lý.",
       "description_en": "Architecture guidance for CI/CD, data validation, model validation, and pipeline automation.",
-      "how_to_use_vi": "Dùng khi thiết kế capstone production; tách những gì cần ngay local khỏi phần có thể mở rộng sau.",
+      "how_to_use_vi": "Dùng khi thiết kế đồ án hướng đến vận hành thực tế. Ghi rõ phần cần chạy ngay trên máy cá nhân và phần sẽ bổ sung khi mở rộng.",
       "how_to_use_en": "Use it when designing the production capstone and separate local essentials from future scale-out work."
     },
     {
@@ -600,9 +600,9 @@
         "phase-15",
         "phase-22"
       ],
-      "description_vi": "Bài viết chính thức về khi nào dùng workflow hay agent và cách giữ hệ thống đơn giản.",
+      "description_vi": "Bài viết chính thức về cách chọn giữa quy trình định sẵn và tác tử AI, cùng cách giữ hệ thống đơn giản.",
       "description_en": "Official guidance on when to use workflows or agents and how to keep systems simple.",
-      "how_to_use_vi": "Đọc trước khi thiết kế agent loop; ghi rõ lý do agent cần thiết.",
+      "how_to_use_vi": "Đọc trước khi thiết kế vòng lặp tác tử. Ghi rõ yêu cầu nào khiến bạn cần tác tử thay vì một quy trình định sẵn.",
       "how_to_use_en": "Read before designing an agent loop and write down why an agent is necessary."
     },
     {
@@ -619,9 +619,9 @@
         "phase-11",
         "phase-14"
       ],
-      "description_vi": "Tài liệu về gọi function, tool schema và structured arguments.",
+      "description_vi": "Tài liệu về gọi hàm, cấu trúc công cụ và đối số có cấu trúc.",
       "description_en": "Documentation for function calling, tool schemas, and structured arguments.",
-      "how_to_use_vi": "Dùng để viết contract tool và test invalid arguments.",
+      "how_to_use_vi": "Dùng để quy định đầu vào, đầu ra của công cụ và viết kiểm thử cho đối số không hợp lệ.",
       "how_to_use_en": "Use it to define tool contracts and test invalid arguments."
     },
     {
@@ -638,9 +638,9 @@
         "phase-11",
         "phase-14"
       ],
-      "description_vi": "Nền tảng schema để kiểm tra structured output và tool input.",
+      "description_vi": "Kiến thức nền tảng về schema để kiểm tra đầu ra có cấu trúc và đầu vào của công cụ.",
       "description_en": "Schema foundations for validating structured outputs and tool inputs.",
-      "how_to_use_vi": "Viết schema trước code; tạo test cho field thiếu, sai kiểu và giá trị ngoài miền.",
+      "how_to_use_vi": "Viết schema trước khi viết mã xử lý. Tạo kiểm thử cho trường bị thiếu, sai kiểu dữ liệu và giá trị ngoài miền cho phép.",
       "how_to_use_en": "Write the schema before code and test missing fields, wrong types, and out-of-range values."
     },
     {
@@ -656,9 +656,9 @@
       "phase_ids": [
         "phase-16"
       ],
-      "description_vi": "Giới thiệu kiến trúc MCP, client, server và capability discovery.",
+      "description_vi": "Giới thiệu kiến trúc MCP, máy khách, máy chủ và cách khám phá các khả năng được cung cấp.",
       "description_en": "Introduction to MCP architecture, clients, servers, and capability discovery.",
-      "how_to_use_vi": "Đọc message flow rồi làm MCP server read-only local.",
+      "how_to_use_vi": "Đọc luồng trao đổi thông điệp rồi xây máy chủ MCP chỉ đọc, chạy trên máy cá nhân.",
       "how_to_use_en": "Read the message flow before building a local read-only MCP server."
     },
     {
@@ -674,9 +674,9 @@
       "phase_ids": [
         "phase-16"
       ],
-      "description_vi": "Đặc tả nguồn để kiểm tra tools, resources, prompts và security boundary.",
+      "description_vi": "Đặc tả chuẩn để tra cứu tool, resource, prompt và ranh giới bảo mật trong MCP.",
       "description_en": "Normative reference for tools, resources, prompts, and security boundaries.",
-      "how_to_use_vi": "Dùng khi cần phân biệt capability và quyền truy cập; không copy config mà không hiểu.",
+      "how_to_use_vi": "Dùng để phân biệt khả năng được cung cấp với quyền truy cập. Hiểu ý nghĩa từng mục cấu hình trước khi áp dụng.",
       "how_to_use_en": "Use it to distinguish capabilities from access rights; do not copy configuration blindly."
     },
     {
@@ -692,9 +692,9 @@
       "phase_ids": [
         "phase-16"
       ],
-      "description_vi": "SDK Python để thực hành MCP client/server local.",
+      "description_vi": "Bộ công cụ phát triển Python để thực hành máy khách và máy chủ MCP trên máy cá nhân.",
       "description_en": "Python SDK for practicing local MCP clients and servers.",
-      "how_to_use_vi": "Chọn một example nhỏ, thêm validation và test quyền truy cập.",
+      "how_to_use_vi": "Chọn một ví dụ nhỏ rồi bổ sung kiểm tra dữ liệu và kiểm thử quyền truy cập.",
       "how_to_use_en": "Choose one small example and add validation plus access-control tests."
     },
     {
@@ -711,9 +711,9 @@
         "phase-13",
         "phase-17"
       ],
-      "description_vi": "Framework đánh giá RAG với dataset, metrics và experiment.",
+      "description_vi": "Bộ công cụ đánh giá RAG dựa trên tập dữ liệu, chỉ số và thí nghiệm.",
       "description_en": "A framework for RAG evaluation with datasets, metrics, and experiments.",
-      "how_to_use_vi": "Dùng sau khi có golden set; lưu version metric cùng report.",
+      "how_to_use_vi": "Dùng sau khi tạo bộ câu hỏi có đáp án chuẩn. Lưu phiên bản của cách tính chỉ số cùng báo cáo để có thể đối chiếu về sau.",
       "how_to_use_en": "Use it after creating a golden set and version the metrics with the report."
     },
     {
@@ -729,9 +729,9 @@
       "phase_ids": [
         "phase-17"
       ],
-      "description_vi": "Framework và pattern để xây evaluation suite cho model.",
+      "description_vi": "Bộ công cụ và các cách tổ chức bộ đánh giá mô hình.",
       "description_en": "Framework and patterns for building model evaluation suites.",
-      "how_to_use_vi": "Bắt đầu với evaluator deterministic trước khi thêm LLM judge.",
+      "how_to_use_vi": "Bắt đầu với cách chấm theo quy tắc xác định rồi mới bổ sung đánh giá bằng LLM.",
       "how_to_use_en": "Start with deterministic evaluators before adding an LLM judge."
     },
     {
@@ -748,9 +748,9 @@
         "phase-18",
         "phase-19"
       ],
-      "description_vi": "Instrumentation chuẩn mở cho traces, metrics và logs.",
+      "description_vi": "Chuẩn mở để ghi dữ liệu truy vết, chỉ số hoạt động và nhật ký hệ thống.",
       "description_en": "Open instrumentation standard for traces, metrics, and logs.",
-      "how_to_use_vi": "Thêm trace id vào một request end-to-end và redact prompt nhạy cảm.",
+      "how_to_use_vi": "Gắn mã truy vết cho một yêu cầu từ đầu đến cuối. Che nội dung nhạy cảm trong prompt trước khi ghi dữ liệu theo dõi.",
       "how_to_use_en": "Add a trace ID to one end-to-end request and redact sensitive prompts."
     },
     {
@@ -767,9 +767,9 @@
         "phase-18",
         "phase-19"
       ],
-      "description_vi": "Metrics time series và alerting cho service production.",
+      "description_vi": "Công cụ thu thập chỉ số theo thời gian và tạo cảnh báo cho dịch vụ đang vận hành.",
       "description_en": "Time-series metrics and alerting for production services.",
-      "how_to_use_vi": "Chọn ba metric có action rõ ràng: latency, errors và cost/budget.",
+      "how_to_use_vi": "Chọn ba nhóm chỉ số: độ trễ, lỗi và chi phí so với ngân sách. Với mỗi nhóm, ghi hành động cần thực hiện khi chạm ngưỡng.",
       "how_to_use_en": "Choose three actionable metrics: latency, errors, and cost/budget."
     },
     {
@@ -786,9 +786,9 @@
         "phase-17",
         "phase-18"
       ],
-      "description_vi": "Tracing, prompt/version management và LLM cost observability.",
+      "description_vi": "Công cụ truy vết, quản lý prompt và phiên bản, theo dõi chi phí của ứng dụng LLM.",
       "description_en": "Tracing, prompt/version management, and LLM cost observability.",
-      "how_to_use_vi": "Dùng để soi một trace lỗi; không log PII hoặc secret.",
+      "how_to_use_vi": "Dùng để lần theo một yêu cầu bị lỗi. Không ghi dữ liệu nhận dạng cá nhân hoặc thông tin bí mật vào nhật ký.",
       "how_to_use_en": "Use it to inspect a failed trace without logging PII or secrets."
     },
     {
@@ -804,9 +804,9 @@
       "phase_ids": [
         "phase-19"
       ],
-      "description_vi": "Cache, queue primitives và rate-limit building blocks.",
+      "description_vi": "Tài liệu về bộ nhớ đệm, các thành phần xây dựng hàng đợi và giới hạn tần suất yêu cầu.",
       "description_en": "Cache, queue primitives, and rate-limit building blocks.",
-      "how_to_use_vi": "So sánh cache key, TTL và failure behavior trước khi đưa vào API.",
+      "how_to_use_vi": "So sánh cách đặt khóa bộ nhớ đệm, thời gian hết hạn (TTL) và cách xử lý khi lỗi trước khi đưa Redis vào API.",
       "how_to_use_en": "Compare cache keys, TTLs, and failure behavior before adding it to the API."
     },
     {
@@ -822,9 +822,9 @@
       "phase_ids": [
         "phase-19"
       ],
-      "description_vi": "Task queue/worker pattern cho job inference hoặc ingestion dài.",
+      "description_vi": "Hướng dẫn dùng hàng đợi và tiến trình xử lý cho tác vụ suy luận hoặc tiếp nhận dữ liệu kéo dài.",
       "description_en": "Task queue and worker patterns for long inference or ingestion jobs.",
-      "how_to_use_vi": "Vẽ retry/idempotency trước khi chạy worker thật.",
+      "how_to_use_vi": "Vẽ luồng thử lại và cách tránh xử lý trùng trước khi chạy tiến trình xử lý tác vụ.",
       "how_to_use_en": "Draw retry and idempotency behavior before running a real worker."
     },
     {
@@ -841,9 +841,9 @@
         "phase-19",
         "phase-22"
       ],
-      "description_vi": "Khái niệm deployment, service, scaling và rollout.",
+      "description_vi": "Các khái niệm về triển khai ứng dụng, dịch vụ, mở rộng quy mô và cập nhật phiên bản trong Kubernetes.",
       "description_en": "Concepts for deployments, services, scaling, and rollouts.",
-      "how_to_use_vi": "Chỉ học sau Docker; map từng object với một nhu cầu production cụ thể.",
+      "how_to_use_vi": "Học sau Docker. Với mỗi loại đối tượng, chỉ ra một nhu cầu vận hành cụ thể mà nó giải quyết.",
       "how_to_use_en": "Study it after Docker and map each object to a concrete production need."
     },
     {
@@ -859,9 +859,9 @@
       "phase_ids": [
         "phase-20"
       ],
-      "description_vi": "Thư viện training và alignment cho SFT, preference optimization.",
+      "description_vi": "Thư viện huấn luyện và điều chỉnh mô hình, hỗ trợ tinh chỉnh có giám sát (SFT) và tối ưu theo dữ liệu ưu tiên.",
       "description_en": "Training and alignment library for SFT and preference optimization.",
-      "how_to_use_vi": "Đọc data collator và evaluation trước khi chạy fine-tuning.",
+      "how_to_use_vi": "Đọc phần chuẩn bị lô dữ liệu (data collator) và đánh giá trước khi chạy tinh chỉnh.",
       "how_to_use_en": "Read the data collator and evaluation sections before fine-tuning."
     },
     {
@@ -878,9 +878,9 @@
         "phase-20",
         "phase-21"
       ],
-      "description_vi": "Quantization và optimizer 8-bit/4-bit cho model lớn.",
+      "description_vi": "Tài liệu về lượng tử hóa và các bộ tối ưu tiết kiệm bộ nhớ cho mô hình lớn, với kỹ thuật 8-bit và 4-bit.",
       "description_en": "Quantization and 8-bit/4-bit optimizers for larger models.",
-      "how_to_use_vi": "Đo quality và memory trước/sau quantization; lưu hardware context.",
+      "how_to_use_vi": "Đo chất lượng và lượng bộ nhớ dùng trước, sau lượng tử hóa. Ghi cấu hình phần cứng cùng kết quả.",
       "how_to_use_en": "Measure quality and memory before and after quantization and record hardware context."
     },
     {
@@ -897,9 +897,9 @@
         "phase-21",
         "phase-22"
       ],
-      "description_vi": "Serving LLM high-throughput với batching và OpenAI-compatible API.",
+      "description_vi": "Công cụ phục vụ LLM với thông lượng cao, hỗ trợ xử lý theo lô và API tương thích OpenAI.",
       "description_en": "High-throughput LLM serving with batching and an OpenAI-compatible API.",
-      "how_to_use_vi": "Benchmark tokens/sec và p95 trên cùng prompt set với runtime khác.",
+      "how_to_use_vi": "So sánh số token mỗi giây và độ trễ p95 với một môi trường chạy khác trên cùng bộ prompt.",
       "how_to_use_en": "Benchmark tokens/sec and p95 on the same prompt set against another runtime."
     },
     {
@@ -915,9 +915,9 @@
       "phase_ids": [
         "phase-21"
       ],
-      "description_vi": "Cách chạy model local nhanh để học inference và prototyping.",
+      "description_vi": "Hướng dẫn chạy mô hình trên máy cá nhân để học cách suy luận và xây bản thử nghiệm.",
       "description_en": "A fast way to run local models for inference learning and prototyping.",
-      "how_to_use_vi": "Dùng model nhỏ, ghi rõ RAM/VRAM và không coi kết quả local là production benchmark.",
+      "how_to_use_vi": "Chọn mô hình nhỏ và ghi rõ RAM/VRAM. Kết quả đo trên máy cá nhân chỉ mô tả điều kiện thử nghiệm đó, chưa đại diện cho hệ thống vận hành thực tế.",
       "how_to_use_en": "Use a small model, record RAM/VRAM, and do not treat local results as production benchmarks."
     },
     {
@@ -933,9 +933,9 @@
       "phase_ids": [
         "phase-21"
       ],
-      "description_vi": "Runtime C/C++ phổ biến cho model GGUF và local inference.",
+      "description_vi": "Môi trường chạy viết bằng C/C++ cho mô hình GGUF và suy luận trên máy cá nhân.",
       "description_en": "A popular C/C++ runtime for GGUF models and local inference.",
-      "how_to_use_vi": "Đọc quantization/runtime trade-off rồi chạy một model nhỏ.",
+      "how_to_use_vi": "Đọc các lựa chọn lượng tử hóa và sự đánh đổi khi chạy mô hình, rồi thử một mô hình nhỏ.",
       "how_to_use_en": "Read the quantization/runtime trade-offs before running a small model."
     },
     {
@@ -951,9 +951,9 @@
       "phase_ids": [
         "phase-13"
       ],
-      "description_vi": "Reference cho inverted index, BM25 và text retrieval.",
+      "description_vi": "Tài liệu tra cứu về chỉ mục đảo, BM25 và truy xuất văn bản.",
       "description_en": "Reference for inverted indexes, BM25, and text retrieval.",
-      "how_to_use_vi": "Dùng để giải thích vì sao hybrid search bổ sung lexical signal cho vector.",
+      "how_to_use_vi": "Dùng để giải thích cách tìm kiếm kết hợp bổ sung tín hiệu từ khóa cho kết quả tìm kiếm vector.",
       "how_to_use_en": "Use it to explain why hybrid search adds lexical signals to vectors."
     }
   ]

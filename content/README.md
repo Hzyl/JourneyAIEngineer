@@ -1,29 +1,71 @@
-# Curriculum content
+# Nội dung chương trình học
 
-## Lesson playbook và tài nguyên
+Nội dung được lưu riêng với tiến trình học của bạn. Khi biên tập, sửa đúng nguồn rồi
+sinh lại danh mục; không xóa cơ sở dữ liệu để cập nhật bài học.
 
-`module_guides.json` chứa hướng dẫn riêng cho từng module: trọng tâm nghề nghiệp, bài thực hành và checkpoint. Script `build_lesson_catalog.py` dùng guide này để tạo `lessons.json`.
+## Sửa ở đâu?
 
-Mỗi lesson trong catalog có thêm `why_it_matters_vi/en`, `study_steps_vi/en`, `practice_plan` và `interview_questions`. `resources` không chỉ là tên link: mỗi tài nguyên có URL chính thức, ngôn ngữ, mục đích đọc (`purpose_*`), phần cần đọc (`read_*`) và cờ `required`. Resource `kind: in_app` trỏ về phần giải thích ngay trong lesson, còn resource external luôn là liên kết `https://` có thể mở trực tiếp.
+| Nội dung cần sửa | Nguồn cần đọc và chỉnh |
+| --- | --- |
+| Lộ trình, giai đoạn, mô-đun và thứ tự bài | `curriculum.json` |
+| Hướng dẫn thực hành và cách tự kiểm tra của mô-đun | `module_guides.json` |
+| Bài học nền | Markdown trong `lessons/`, cùng phần sinh nội dung trong `scripts/build_lesson_catalog.py` |
+| Bài đã có bản biên tập riêng | `curated/<lesson_id>.json` |
+| Công cụ, tài liệu và hướng học | `tools.json`, `resources.json`, `learning_routes.json` |
+| Đề bài, mã khởi đầu và lời giải | `exercises.json`, `exercise_templates/`, `worked_solutions/` |
 
-Khi chỉnh nội dung, hãy chạy:
+`lessons.json` là danh mục được sinh tự động. Không sửa trực tiếp tệp này: lần sinh
+kế tiếp sẽ ghi đè thay đổi. Cả bản trên máy cá nhân và bản web đều ưu tiên bài trong
+`curated/` khi ID trùng với danh mục nền. Vì vậy, sửa bài nền sẽ không thay đổi phần
+người học thấy nếu bài đó đã có bản trong `curated/`.
+
+Giữ nguyên ID bài học, giai đoạn, mô-đun, bài tập và thẻ ôn tập. Chỉ thay quan hệ bài
+cần học trước khi đã kiểm tra ảnh hưởng. Đọc [chuẩn nội dung](../docs/CURRICULUM-STANDARDS.md),
+[cách đóng góp bài học](../docs/LESSON-CONTRIBUTION.md) và
+[hướng dẫn biên tập tiếng Việt](../docs/VIETNAMESE-EDITORIAL.md).
+
+## Sinh lại và kiểm tra
+
+Chạy từ thư mục gốc của kho mã sau khi sửa nguồn:
 
 ```powershell
 python scripts/build_lesson_catalog.py
+python scripts/catalog_version.py --write
 python scripts/validate_content.py
 ```
 
-Validator sẽ chặn lesson thiếu playbook, tài nguyên không có hướng dẫn đọc, URL giả hoặc module chưa có guide.
+Đọc phần thay đổi của danh mục và chạy các kiểm thử liên quan trước khi gửi đề xuất.
+Bộ kiểm tra phát hiện bài thiếu hướng dẫn, tài nguyên thiếu cách đọc, liên kết không
+hợp lệ và mô-đun thiếu hướng dẫn. Kết quả kiểm tra tự động không thay thế việc đọc bài,
+chạy ví dụ và kiểm tra cách diễn đạt.
 
-Mỗi module cũng seed một exercise có task/checkpoint riêng từ `module_guides.json`. Workspace tạo mới gồm `starter.py`, `test_exercise.py` và README; test đầu tiên fail nếu learner chưa implement `solve()`, sau đó chuyển sang pass khi evidence có `result` và `explanation` hợp lệ.
+## Một bài học cần giúp bạn làm gì?
 
-`curriculum.json` là nguồn sự thật cho roadmap. Backend seed dữ liệu vào SQLite lần đầu khởi động.
+Mỗi bài có mục tiêu, kiến thức cần biết trước, giải thích, ví dụ, bài thực hành,
+câu hỏi ôn tập, lỗi thường gặp và cách tự kiểm tra. Các trường `why_it_matters_vi/en`,
+`study_steps_vi/en`, `practice_plan` và `interview_questions` bổ sung mục đích học và
+hướng dẫn thực hành. Giữ phần giải thích chính trong ứng dụng; liên kết ngoài để đọc sâu.
 
-Mỗi phase có module, lesson và tài liệu. Một module sinh ra một exercise workspace và mỗi lesson sinh ra một review card. Khi thay đổi curriculum sau khi database đã tồn tại, hãy xóa `.data/journey.db` trong môi trường local rồi chạy seed lại; không xóa database của người dùng nếu chưa export journal.
+Mỗi tài nguyên có mục đích (`purpose_*`), phần cần đọc (`read_*`), ngôn ngữ và cờ
+`required`. Loại `kind: in_app` dẫn tới giải thích trong bài; tài nguyên bên ngoài
+dùng URL `https://` mở được trực tiếp.
 
-`tools.json` chứa hướng dẫn dùng công cụ theo tình huống. Nội dung lesson nên giữ ngắn, có mục tiêu, ví dụ, edge case và đường dẫn tới tài liệu chính thức để người học đọc sâu hơn.
+Thư mục bài tập thường có `starter.py`, `test_exercise.py` và README. Hãy đọc quy định
+của từng bài: bài có kiểm thử hành vi khác với bài tự tổng kết. Việc có hai trường
+`result` và `explanation` không đủ chứng minh đáp án đúng hoặc bạn đã thành thạo.
 
-`lessons.json` là catalog structured của từng lesson. Mỗi record có `lesson_id`, phase/module, tiêu đề song ngữ, objectives, prerequisites, key terms, concept notes, formulas, code examples, resources, exercise/review links, completion checklist, common mistakes và next lessons. Có thể chỉnh file này rồi chạy `python scripts/build_lesson_catalog.py` để tái tạo catalog từ roadmap.
+`program.portfolio_projects` mô tả bốn mốc dự án: học máy với dữ liệu bảng, học sâu,
+RAG tiếng Việt và dự án tổng kết. `program.career_checklist` giúp bạn tự xem lại mức
+sẵn sàng nghề nghiệp và chất lượng bài làm; đây không phải cam kết tuyển dụng.
 
-Backend tự chạy migration additive cho database local hiện có và hydrate lại các trường lesson mới; không cần xóa `.data/journey.db` khi chỉ bổ sung nội dung. Trước khi thay đổi schema hoặc seed lớn, hãy export journal và tạo bản sao database.
-`program.portfolio_projects` mô tả bốn mốc project showcase (tabular ML, deep learning, Vietnamese RAG và capstone); `program.career_checklist` là checklist kiểm tra mức sẵn sàng nghề nghiệp và chất lượng artifact. Roadmap render hai phần này để mỗi phase luôn gắn với bằng chứng có thể ship lên GitHub.
+## Giữ dữ liệu học khi cập nhật nội dung
+
+Bản trên máy cá nhân khởi tạo nội dung trong SQLite và có cơ chế bổ sung cấu trúc,
+cập nhật nội dung cho cơ sở dữ liệu hiện có. Không xóa `.data/journey.db` chỉ để làm mới
+danh mục. Sau khi sinh lại nội dung, khởi động lại ứng dụng và kiểm tra bài vừa sửa,
+tiến độ cùng lịch ôn đã có.
+
+Trước thay đổi lớn về cấu trúc hoặc dữ liệu khởi tạo, tạo bản sao lưu đầy đủ bằng
+chức năng sao lưu của ứng dụng. Xuất nhật ký để đọc là thao tác riêng, không thay thế
+bản sao lưu tiến độ và lịch ôn. Nếu cập nhật lỗi, giữ nguyên dữ liệu để chẩn đoán;
+không xóa cơ sở dữ liệu như một bước khắc phục mặc định.

@@ -2,14 +2,15 @@
 lesson_id: phase-06-llm-rag-retrieval-1
 phase_id: phase-06-llm-rag
 module_id: retrieval
-title_vi: Vector search
+title_vi: Tìm kiếm vector
 title_en: Vector search
-summary_vi: Học Vector search qua một mô hình input → biến đổi → output, sau đó kiểm chứng bằng bài tập có edge case.
-summary_en: Learn Vector search through an input → transformation → output model, then verify it with an edge-case exercise.
+summary_vi: Tìm kiếm vector xếp biểu diễn theo độ tương đồng hoặc khoảng cách.
+summary_en: Learn Vector search through an input → transformation → output model, then verify it with an edge-case
+  exercise.
 learning_objectives:
-- Giải thích vector search bằng ví dụ cụ thể.
-- Viết hoặc sửa một đoạn code nhỏ áp dụng vector search.
-- Nhận diện điều kiện áp dụng, giới hạn và một lỗi thường gặp.
+- Đối chiếu kết quả gần nhất với bằng chứng cần cho câu hỏi.
+- Đọc kết quả bỏ sót hoặc sai thứ hạng trước khi thay cấu hình.
+- Giải thích kết quả và nêu một giới hạn của bài làm.
 learning_objectives_en:
 - Explain vector search with a concrete example.
 - Write or adapt a small code example applying vector search.
@@ -24,37 +25,44 @@ key_terms:
 - gradient
 - optimization
 - retrieval
-concept_notes_vi: Vector search là nền tảng biểu diễn dữ liệu số. Luôn ghi shape, đơn vị và trục của tensor; kiểm tra phép
-  nhân bằng một ví dụ nhỏ trước khi dùng batch lớn. Với similarity, chuẩn hóa cách đo để hai vector khác scale không làm sai
-  kết luận.
-concept_notes_en: Vector search is a foundation for numerical representations. Track tensor shapes, units, and axes; verify
-  multiplication on a small example before using a large batch. For similarity, normalize the measure so scale differences
-  do not change the conclusion.
-why_it_matters_vi: Thiết kế retrieval có chunk, metadata, vector search và reranking để đo được recall trước generation.
-why_it_matters_en: Design retrieval with chunks, metadata, vector search, and reranking so recall is measured before generation.
+concept_notes_vi: Tìm kiếm vector xếp biểu diễn theo độ tương đồng hoặc khoảng cách. Chất lượng phụ thuộc embedding,
+  cách biểu diễn câu hỏi và dữ liệu; kết quả gần nhất chưa chắc chứa câu trả lời.
+concept_notes_en: Vector search is a foundation for numerical representations. Track tensor shapes, units, and axes;
+  verify multiplication on a small example before using a large batch. For similarity, normalize the measure so
+  scale differences do not change the conclusion.
+why_it_matters_vi: Thiết kế cách chia đoạn, lưu siêu dữ liệu và tìm kiếm để đo chất lượng truy xuất trước khi sinh
+  câu trả lời.
+why_it_matters_en: Design retrieval with chunks, metadata, vector search, and reranking so recall is measured before
+  generation.
 study_steps_vi:
-- 'Đọc phần Concept notes để trả lời: Thiết kế retrieval có chunk, metadata, vector search và reranking để đo được recall
-  trước generation.'
-- Mở Hugging Face NLP Course, đọc đúng mục Read this lesson và ghi lại một ví dụ hoặc định nghĩa đã kiểm chứng.
-- Mở Practice Lab, bấm Tạo & mở VS Code, lưu bằng Ctrl+S, thay một tham số rồi chạy lại test.
-- 'Làm bài thực hành: Tạo 10 document chunks, viết 10 query có đáp án biết trước, đo hit@k và đọc các false negative.'
-- Trả lời review card không nhìn gợi ý, hoàn thiện checklist và lưu một artifact có thể đưa lên GitHub.
+- Đọc phần giải thích, xác định khái niệm và điều kiện cần dùng cho nhiệm vụ bên dưới.
+- Tìm mục tương ứng với “Vector search” trong tài liệu tham khảo; đối chiếu với phần giải thích của bài.
+- Đối chiếu kết quả gần nhất với bằng chứng cần cho câu hỏi.
+- Đọc kết quả bỏ sót hoặc sai thứ hạng trước khi thay cấu hình. Ghi kết quả đối chiếu và điều bạn đã sửa nếu lần
+  đầu chưa đúng.
+- Tự trả lời thẻ ôn tập, rồi kiểm tra các tiêu chí hoàn thành trước khi chuyển bài.
 study_steps_en:
-- 'Read the concept notes and answer: Design retrieval with chunks, metadata, vector search, and reranking so recall is measured
-  before generation.'
+- 'Read the concept notes and answer: Design retrieval with chunks, metadata, vector search, and reranking so recall
+  is measured before generation.'
 - Open Hugging Face NLP Course, read the section marked Read this lesson, and record one verified example or definition.
-- Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the test.
-- 'Complete the practice task: Create ten document chunks and ten known-answer queries, measure hit@k, and inspect false negatives.'
+- Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the
+  test.
+- 'Complete the practice task: Create ten document chunks and ten known-answer queries, measure hit@k, and inspect
+  false negatives.'
 - Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact.
 practice_plan:
   vi:
-    task: Tạo 10 document chunks, viết 10 query có đáp án biết trước, đo hit@k và đọc các false negative.
+    task: 'Đối chiếu kết quả gần nhất với bằng chứng cần cho câu hỏi.
+
+
+      Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Tạo 10 đoạn tài liệu và 10 câu hỏi có
+      bằng chứng biết trước; đo hit@k rồi đọc các trường hợp bỏ sót.'
     deliverables:
-    - Một file code chạy được
-    - Một test hoặc output expected
-    - Một note nêu edge case và trade-off
-    checkpoint: Bạn biết RAG fail do retrieval hay generation và có evidence cho kết luận đó.
-    stretch: Viết thêm một failure test cho vector search và giải thích kết quả.
+    - Câu hỏi, bằng chứng cần tìm và danh sách kết quả truy xuất
+    - Kết quả đối chiếu kèm dữ liệu hoặc điều kiện thực hiện
+    - Một giới hạn và cách kiểm tra thêm
+    checkpoint: Đọc kết quả bỏ sót hoặc sai thứ hạng trước khi thay cấu hình.
+    stretch: Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào.
   en:
     task: Create ten document chunks and ten known-answer queries, measure hit@k, and inspect false negatives.
     deliverables:
@@ -65,9 +73,9 @@ practice_plan:
     stretch: Add a failure test for vector search and explain the result.
 interview_questions:
   vi:
-  - Bạn sẽ giải thích vector search cho một đồng đội mới như thế nào?
-  - Một assumption nào của vector search có thể sai trong production?
-  - Bạn sẽ chọn metric hoặc test nào để chứng minh kết quả đáng tin?
+  - Bạn sẽ giải thích nội dung “Tìm kiếm vector” bằng ví dụ nào?
+  - Điều kiện nào cần kiểm tra trước khi áp dụng vào công việc thực tế?
+  - Bạn dùng bằng chứng nào để kết luận bài làm đáp ứng yêu cầu?
   en:
   - How would you explain vector search to a new teammate?
   - Which assumption behind vector search could fail in production?
@@ -78,18 +86,19 @@ formulas:
 code_examples:
 - language: python
   title: 'Vector search: inspect one complete path'
-  code: "# Topic: Vector search (phase-06-llm-rag-retrieval-1)\nfrom math import sqrt\n\ndef dot(left: list[float], right:\
-    \ list[float]) -> float:\n    if len(left) != len(right):\n        raise ValueError('vectors must have equal length')\n\
-    \    return sum(a * b for a, b in zip(left, right))\n\nleft = [1.0, 2.0]\nright = [0.5, 3.0]\nprint({'dot': dot(left,\
-    \ right), 'norm_left': sqrt(dot(left, left))})"
+  code: "# Topic: Vector search (phase-06-llm-rag-retrieval-1)\nfrom math import sqrt\n\ndef dot(left: list[float],\
+    \ right: list[float]) -> float:\n    if len(left) != len(right):\n        raise ValueError('vectors must have\
+    \ equal length')\n    return sum(a * b for a, b in zip(left, right))\n\nleft = [1.0, 2.0]\nright = [0.5, 3.0]\n\
+    print({'dot': dot(left, right), 'norm_left': sqrt(dot(left, left))})"
   status: runnable
-  purpose_vi: Minh họa đường đi input → output của vector search.
+  purpose_vi: Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.
   purpose_en: Illustrate the input-to-output path for vector search.
   setup: Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.
   expected_output: Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.
-  edge_case_vi: Thử input rỗng, shape sai hoặc dữ liệu thiếu và ghi lại lỗi.
+  edge_case_vi: Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.
   edge_case_en: Try an empty input, a wrong shape or missing data and record the failure.
-  explanation_vi: Kiểm tra shape trước phép toán; ví dụ dùng dữ liệu nhỏ để kết quả có thể tính tay.
+  explanation_vi: Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần
+    nội dung; cần hoàn thành riêng nhiệm vụ thực hành.
   explanation_en: Keep the boundary executable and inspectable; change one input and verify the expected output.
 resources:
 - language: en
@@ -97,7 +106,7 @@ resources:
   url: https://huggingface.co/learn/nlp-course/chapter1/1
   kind: official
   required: false
-  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong lesson.
+  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.
   purpose_en: Official reference to verify the lesson concept.
   read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
   read_en: Read the relevant section, run a small example, and record one verified insight.
@@ -106,7 +115,7 @@ resources:
   url: https://huggingface.co/docs/transformers/index
   kind: official
   required: false
-  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong lesson.
+  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.
   purpose_en: Official reference to verify the lesson concept.
   read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
   read_en: Read the relevant section, run a small example, and record one verified insight.
@@ -115,26 +124,26 @@ resources:
   url: https://faiss.ai/
   kind: official
   required: false
-  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong lesson.
+  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.
   purpose_en: Official reference to verify the lesson concept.
   read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
   read_en: Read the relevant section, run a small example, and record one verified insight.
 - title: NumPy Quickstart
   url: https://numpy.org/doc/stable/user/quickstart.html
   language: en
-  purpose_vi: Thực hành array, shape và phép toán vector bằng NumPy.
-  read_vi: Đọc array shape, indexing và broadcasting rồi in shape ở mỗi bước.
+  purpose_vi: Thực hành tạo mảng, kiểm tra kích thước và tính toán vector bằng NumPy.
+  read_vi: Đọc về kích thước mảng, truy cập theo chỉ số và broadcasting; in kích thước sau mỗi bước.
   purpose_en: Practice arrays, shapes, and vector operations with NumPy.
   read_en: Read array shapes, indexing, and broadcasting; print every shape.
   kind: official
   required: true
-- title: Giải thích tiếng Việt và checklist của lesson
+- title: Giải thích và hướng dẫn thực hành trong bài
   url: ''
   language: vi
   kind: in_app
-  purpose_vi: Phần giải thích, code example, checklist và tiêu chí hoàn thành ngay trong app.
+  purpose_vi: Đọc giải thích, thực hiện nhiệm vụ và đối chiếu tiêu chí hoàn thành.
   purpose_en: The explanation, code example, checklist, and completion criteria inside the app.
-  read_vi: Đọc theo thứ tự Study plan → Concept notes → Code example → Practice plan.
+  read_vi: Đọc giải thích → xem ví dụ → thực hành → tự kiểm tra.
   read_en: Follow Study plan → Concept notes → Code example → Practice plan.
   required: true
 exercise_ids:
@@ -146,69 +155,74 @@ review_item_ids:
 - phase-06-llm-rag-retrieval-1-interview
 estimated_minutes: 60
 completion_checklist:
-- Giải thích được input, biến đổi và output của vector search.
-- Chạy hoặc sửa được code example với một input mới.
-- Ghi lại một edge case, metric hoặc failure mode.
-- Trả lời review card bằng bằng chứng cụ thể.
+- Đối chiếu kết quả gần nhất với bằng chứng cần cho câu hỏi.
+- Đọc kết quả bỏ sót hoặc sai thứ hạng trước khi thay cấu hình.
+- Lưu kết quả và giải thích được một giới hạn mà không nhìn lời giải.
 completion_criteria:
-- Mô tả được khi nào dùng vector search và khi nào cần baseline khác.
-- Có artifact chạy được và output có thể kiểm tra.
-- Nêu được một giả định, edge case và cách kiểm chứng.
+- 'Bài làm đáp ứng nhiệm vụ: Đối chiếu kết quả gần nhất với bằng chứng cần cho câu hỏi.'
+- Có kết quả đối chiếu với tiêu chí hoặc dự đoán đã ghi trước.
+- Đọc kết quả bỏ sót hoặc sai thứ hạng trước khi thay cấu hình.
 common_mistakes:
-- Bỏ qua invariant hoặc shape khi áp dụng vector search.
-- Đánh giá vector search bằng một output tốt mà không có baseline hoặc failure case.
-- Sao chép ví dụ vector search mà không thay input và kiểm tra kết quả biên.
+- Đánh giá tìm kiếm chỉ bằng cảm giác từ một câu hỏi thuận lợi.
+- Kết luận từ một kết quả thuận lợi mà chưa kiểm tra trường hợp khác.
+- Chép lời giải nhưng không giải thích được quyết định trong bài làm của mình.
 next_lessons:
 - phase-06-llm-rag-retrieval-2
 - phase-06-llm-rag-retrieval-3
-review_question_vi: Định nghĩa vector search bằng lời của bạn. Input, biến đổi và output là gì?
+review_question_vi: Nội dung cốt lõi của “Tìm kiếm vector” là gì?
 review_question_en: Define vector search in your own words. What are the input, transformation and output?
-review_answer_vi: Một câu trả lời tốt nêu rõ input, phép biến đổi, output và bối cảnh dùng vector search. Hãy liên hệ cụ thể
-  với vector search trong lesson phase-06-llm-rag-retrieval-1.
-review_answer_en: A strong answer names the input, transformation, output and the context where vector search is used. Relate
-  it specifically to vector search in lesson phase-06-llm-rag-retrieval-1.
+review_answer_vi: Tìm kiếm vector xếp biểu diễn theo độ tương đồng hoặc khoảng cách. Chất lượng phụ thuộc embedding,
+  cách biểu diễn câu hỏi và dữ liệu; kết quả gần nhất chưa chắc chứa câu trả lời.
+review_answer_en: A strong answer names the input, transformation, output and the context where vector search is
+  used. Relate it specifically to vector search in lesson phase-06-llm-rag-retrieval-1.
 review_cards:
 - id: phase-06-llm-rag-retrieval-1-recall
   type: recall
-  question_vi: Định nghĩa vector search bằng lời của bạn. Input, biến đổi và output là gì?
+  question_vi: Nội dung cốt lõi của “Tìm kiếm vector” là gì?
   question_en: Define vector search in your own words. What are the input, transformation and output?
-  answer_vi: Một câu trả lời tốt nêu rõ input, phép biến đổi, output và bối cảnh dùng vector search.
+  answer_vi: Tìm kiếm vector xếp biểu diễn theo độ tương đồng hoặc khoảng cách. Chất lượng phụ thuộc embedding,
+    cách biểu diễn câu hỏi và dữ liệu; kết quả gần nhất chưa chắc chứa câu trả lời.
   answer_en: A strong answer names the input, transformation, output and the context where vector search is used.
-  hint_vi: Bắt đầu bằng một ví dụ nhỏ có thể tính bằng tay.
+  hint_vi: Nêu ý chính, sau đó minh họa bằng tình huống cụ thể.
   hint_en: Start with a small example you can calculate by hand.
 - id: phase-06-llm-rag-retrieval-1-application
   type: application
-  question_vi: Viết một ví dụ code hoặc thiết kế nhỏ áp dụng vector search cho bài toán AI Engineer.
+  question_vi: Đối chiếu kết quả gần nhất với bằng chứng cần cho câu hỏi.
   question_en: Write a small code example or design that applies vector search to an AI engineering problem.
-  answer_vi: Ví dụ cho vector search cần có input rõ ràng, output mong đợi và một cách chạy hoặc kiểm chứng (phase-06-llm-rag-retrieval-1).
-  answer_en: The vector search example should have an explicit input, expected output and a way to run or verify it (phase-06-llm-rag-retrieval-1).
-  hint_vi: Dùng code example trong lesson rồi thay một giả định.
+  answer_vi: 'Với nhiệm vụ “Đối chiếu kết quả gần nhất với bằng chứng cần cho câu hỏi”, cần lưu: câu hỏi, bằng chứng
+    cần tìm và danh sách kết quả truy xuất. Đọc kết quả bỏ sót hoặc sai thứ hạng trước khi thay cấu hình.'
+  answer_en: The vector search example should have an explicit input, expected output and a way to run or verify
+    it (phase-06-llm-rag-retrieval-1).
+  hint_vi: Bắt đầu từ nhiệm vụ thực hành của bài.
   hint_en: Start from the lesson code example and change one assumption.
 - id: phase-06-llm-rag-retrieval-1-debug
   type: debug
-  question_vi: Nếu kết quả của vector search sai hoặc metric giảm, bạn sẽ debug theo thứ tự nào?
+  question_vi: Khi làm bài “Tìm kiếm vector”, bạn cần tránh lỗi nào và kiểm tra lại ra sao?
   question_en: If vector search produces a wrong result or a metric drops, what would you debug first?
-  answer_vi: Với vector search, kiểm tra input/shape, preprocessing và baseline trước; sau đó cô lập lỗi bằng test nhỏ và
-    error analysis (phase-06-llm-rag-retrieval-1).
-  answer_en: For vector search, check inputs/shapes, preprocessing and the baseline first; then isolate the failure with a
-    small test and error analysis (phase-06-llm-rag-retrieval-1).
-  hint_vi: Đừng bắt đầu bằng việc đổi model hoặc tăng độ phức tạp.
+  answer_vi: 'Trong bài “Tìm kiếm vector”, lỗi cần tránh là: đánh giá tìm kiếm chỉ bằng cảm giác từ một câu hỏi
+    thuận lợi. Đọc kết quả bỏ sót hoặc sai thứ hạng trước khi thay cấu hình. Dùng ví dụ nhỏ để tìm bước đầu tiên
+    có kết quả khác dự kiến.'
+  answer_en: For vector search, check inputs/shapes, preprocessing and the baseline first; then isolate the failure
+    with a small test and error analysis (phase-06-llm-rag-retrieval-1).
+  hint_vi: Tìm bước đầu tiên xuất hiện khác biệt.
   hint_en: Do not start by changing the model or adding complexity.
 - id: phase-06-llm-rag-retrieval-1-interview
   type: interview
-  question_vi: Trong phỏng vấn, bạn sẽ giải thích trade-off và một edge case của vector search như thế nào?
+  question_vi: Bạn dùng kết quả nào từ bài “Tìm kiếm vector” để giải thích cách làm và giới hạn?
   question_en: In an interview, how would you explain a trade-off and one edge case of vector search?
-  answer_vi: Câu trả lời về vector search cần nêu giả định, metric/chi phí, giới hạn và cách giảm rủi ro trong production
-    (phase-06-llm-rag-retrieval-1).
-  answer_en: The answer about vector search should cover assumptions, metrics/cost, limitations and how to reduce production
-    risk (phase-06-llm-rag-retrieval-1).
-  hint_vi: Liên hệ với latency, chất lượng, chi phí hoặc khả năng quan sát nếu phù hợp.
+  answer_vi: Bắt đầu từ nhiệm vụ “Đối chiếu kết quả gần nhất với bằng chứng cần cho câu hỏi”. Trình bày kết quả
+    đã lưu, cách đối chiếu và một điều kiện có thể khiến kết luận thay đổi; không chỉ đọc lại định nghĩa.
+  answer_en: The answer about vector search should cover assumptions, metrics/cost, limitations and how to reduce
+    production risk (phase-06-llm-rag-retrieval-1).
+  hint_vi: Dùng quyết định thật trong bài làm, tránh chỉ đọc định nghĩa.
   hint_en: Relate it to latency, quality, cost or observability where relevant.
 ---
-# Vector search / Vector search
+# Tìm kiếm vector / Vector search
 
-Vector search là nền tảng biểu diễn dữ liệu số. Luôn ghi shape, đơn vị và trục của tensor; kiểm tra phép nhân bằng một ví dụ nhỏ trước khi dùng batch lớn. Với similarity, chuẩn hóa cách đo để hai vector khác scale không làm sai kết luận.
+Tìm kiếm vector xếp biểu diễn theo độ tương đồng hoặc khoảng cách. Chất lượng phụ thuộc embedding, cách biểu diễn câu hỏi và dữ liệu; kết quả gần nhất chưa chắc chứa câu trả lời.
 
-## Practice
+## Thực hành
 
-Tạo 10 document chunks, viết 10 query có đáp án biết trước, đo hit@k và đọc các false negative.
+Đối chiếu kết quả gần nhất với bằng chứng cần cho câu hỏi.
+
+Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Tạo 10 đoạn tài liệu và 10 câu hỏi có bằng chứng biết trước; đo hit@k rồi đọc các trường hợp bỏ sót.

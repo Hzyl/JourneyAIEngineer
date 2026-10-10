@@ -7,11 +7,11 @@
 
 .lesson-detail .lesson-anchor-nav a {
   min-height: 44px;
-  font-size: 12px;
+  font-size: 1rem;
 }
 
 .lesson-detail .lesson-anchor-label {
-  font-size: 11px;
+  font-size: 1rem;
 }
 
 .lesson-page-shell .lesson-detail .lesson-section h2 {
@@ -22,11 +22,11 @@
 
 .lesson-detail .study-step-copy strong {
   color: var(--ink);
-  font-size: 15px;
+  font-size: 1.125rem;
 }
 
 .lesson-detail .study-step-copy small {
-  font-size: 12px;
+  font-size: 1rem;
 }
 
 .lesson-page-shell .lesson-detail .lesson-section li,
@@ -37,19 +37,19 @@
 .lesson-detail .playbook-intro > p,
 .lesson-detail .practice-plan strong,
 .lesson-detail .practice-plan p {
-  font-size: 15px;
+  font-size: 1.125rem;
   line-height: 1.75;
 }
 
 .lesson-detail .study-step-card small,
 .lesson-detail .study-step-card a,
 .lesson-detail .study-step-answer summary {
-  font-size: 13px;
+  font-size: 1rem;
 }
 
 .lesson-detail .study-step-card pre,
 .lesson-detail .code-example pre {
-  font-size: 13px;
+  font-size: 1rem;
   line-height: 1.6;
   white-space: pre;
   overflow-wrap: normal;
@@ -77,6 +77,19 @@
 
 .lesson-detail .study-step-detail[hidden] {
   display: none;
+}
+
+.lesson-detail .concept-notes > p {
+  max-width: 72ch;
+  margin: 0 0 1em;
+}
+
+.lesson-detail .lesson-section > ul {
+  max-width: 75ch;
+}
+
+.lesson-detail .lesson-section > ul > li + li {
+  margin-top: .5em;
 }
 
 @media (max-width: 620px) {

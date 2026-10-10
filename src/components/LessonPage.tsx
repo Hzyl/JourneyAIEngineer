@@ -1,3 +1,5 @@
+import { illustrationForLesson } from './learning-illustrations'
+import { LearningIllustration } from './LearningIllustration'
 import { useEffect, useRef, useState } from 'react'
 import type { MouseEvent } from 'react'
 import type { Lesson } from '../api'
@@ -62,7 +64,7 @@ function LessonAnchorNav({ language }: { language: 'vi' | 'en' }) {
   const vi = language === 'vi'
   const items = vi
     ? [['overview', 'Tổng quan'], ['concept', 'Khái niệm'], ['practice', 'Thực hành'],
-      ['check', 'Kiểm tra hiểu'], ['resources', 'Tài liệu'], ['notes', 'Ghi chú & feedback']]
+      ['check', 'Tự kiểm tra'], ['resources', 'Tài liệu'], ['notes', 'Ghi chú và góp ý']]
     : [['overview', 'Overview'], ['concept', 'Concept'], ['practice', 'Practice'],
       ['check', 'Check understanding'], ['resources', 'Resources'], ['notes', 'Notes & feedback']]
   const jumpTo = (event: MouseEvent<HTMLAnchorElement>, id: string) => {
@@ -113,6 +115,7 @@ function LessonDetail({ lesson: original, language, onProgress, ...navigation }:
     <p className="muted">{vi ? 'Hoàn thành là tiến độ bạn tự ghi nhận; không phải chứng nhận năng lực.'
       : 'Completion records your own progress; it is not a skills certification.'}</p>
     <p className="lead">{vi ? lesson.summary_vi : lesson.summary_en}</p>
+    <LearningIllustration name={illustrationForLesson(lesson.slug)} variant="section" />
     <div className="tag-list">
       {lesson.keywords.slice(0, 6).map((keyword) => <span className="tag" key={keyword}>{keyword}</span>)}
       <span className="tag">{lesson.estimated_minutes} {vi ? 'phút' : 'min'}</span>
@@ -127,11 +130,11 @@ function LessonDetail({ lesson: original, language, onProgress, ...navigation }:
         <span>{completedCount}/{lesson.checklist.length}</span>
       </div>
       <div className="session-progress" role="progressbar"
-        aria-label={vi ? 'Tiến độ checklist bài học' : 'Lesson checklist progress'}
+        aria-label={vi ? 'Tiến độ các mục cần hoàn thành' : 'Lesson checklist progress'}
         aria-valuemin={0} aria-valuemax={lesson.checklist.length || 1} aria-valuenow={completedCount}>
         <span style={{ width: `${lesson.checklist.length ? completedCount / lesson.checklist.length * 100 : 0}%` }} />
       </div>
-      <small>{vi ? 'Hoàn thiện checklist trước khi đánh dấu hoàn thành để tự kiểm tra mức độ hiểu.'
+      <small>{vi ? 'Kiểm tra từng mục bên trên trước khi đánh dấu hoàn thành bài học.'
         : 'Finish the checklist before marking the lesson complete.'}</small>
     </div>
     <LessonReading lesson={lesson} language={language} />
@@ -147,7 +150,7 @@ function LessonDetail({ lesson: original, language, onProgress, ...navigation }:
     <div className="ask-box">
       <span className="eyebrow">{vi ? 'HỎI TRỢ LÝ CỦA BẠN' : 'ASK YOUR ASSISTANT'}</span>
       <h4>{vi ? 'Đang vướng ở đâu?' : 'Where are you stuck?'}</h4>
-      <p>{vi ? 'Mở Journal để tạo bản tóm tắt bài học, mục tiêu và câu hỏi rồi chuyển sang ChatGPT/Codex.'
+      <p>{vi ? 'Mở nhật ký để tạo bản tóm tắt bài học, mục tiêu và câu hỏi, rồi chuyển nội dung sang ChatGPT/Codex.'
         : 'Open Journal to prepare a summary of the lesson, goals and your question for ChatGPT/Codex.'}</p>
     </div>
   </div>

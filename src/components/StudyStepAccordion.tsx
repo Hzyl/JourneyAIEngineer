@@ -17,15 +17,15 @@ export function StudyStepAccordion({ step, index, lesson, language }:
   const panelId = `study-step-${lesson.slug}-${index}`
   const headingId = `${panelId}-heading`
   const titles = vi
-    ? ['Nắm ý chính trước khi làm', 'Đọc tài liệu có mục tiêu', 'Biến lý thuyết thành code',
-      'Tạo bằng chứng có thể kiểm tra', 'Tự gọi lại và sửa lỗ hổng']
+    ? ['Nắm ý chính trước khi làm', 'Đọc tài liệu có mục tiêu', 'Vận dụng lý thuyết để viết mã',
+      'Lưu lại bài làm và kết quả kiểm tra', 'Tự nhớ lại và ôn phần chưa hiểu']
     : ['Understand the idea before doing', 'Read with a focused question', 'Turn the concept into code',
       'Create verifiable evidence', 'Recall and close the gap']
   const explanations = vi ? [
     'Bắt đầu bằng phần giải thích cốt lõi và công thức liên quan. Hãy nói lại bằng lời của bạn trước khi mở tài liệu ngoài.',
     'Chọn tài liệu được gợi ý, ghi lại một định nghĩa hoặc ví dụ, rồi đối chiếu với mục tiêu của bài học.',
     'Chạy ví dụ trong môi trường thực hành của bạn, thay đổi một giả định và quan sát kết quả.',
-    'Lưu code, output hoặc test cùng một ghi chú ngắn về trường hợp biên. Dùng bằng chứng này cho portfolio sau này.',
+    'Lưu mã nguồn, kết quả chạy hoặc bài kiểm thử, kèm ghi chú về trường hợp biên. Bạn có thể dùng bài làm này trong hồ sơ dự án sau này.',
     'Trả lời câu hỏi khi chưa nhìn gợi ý. Nếu sai, quay lại đúng phần chưa hiểu để ôn lại.',
   ] : [
     'Start with the concept notes and relevant formulas. Explain the idea in your own words before opening a resource.',
@@ -65,7 +65,7 @@ export function StudyStepAccordion({ step, index, lesson, language }:
               </div>}
             </div>
             <div className="study-step-card">
-              <h4>{vi ? 'Sau bước này bạn phải làm được' : 'By the end of this step'}</h4>
+              <h4>{vi ? 'Sau bước này, bạn làm được gì?' : 'By the end of this step'}</h4>
               <ul>{lesson.objectives[language].map((item) => <li key={item}>{item}</li>)}</ul>
             </div>
           </>}
@@ -106,7 +106,7 @@ export function StudyStepAccordion({ step, index, lesson, language }:
                     <dd>{vi ? example.edge_case_vi : example.edge_case_en}</dd>
                   </>}
                 </dl>
-              </> : <p>{vi ? 'Chưa có ví dụ code riêng; hãy dùng checklist để tạo một ví dụ tối thiểu.'
+              </> : <p>{vi ? 'Chưa có ví dụ mã riêng. Dùng danh sách tự kiểm tra để tạo một ví dụ tối thiểu.'
                 : 'No code example is linked yet; use the checklist to create a minimal example.'}</p>}
             </div>
             <div className="study-step-card">
@@ -120,7 +120,7 @@ export function StudyStepAccordion({ step, index, lesson, language }:
           {stage === 3 && <>
             <div className="study-step-card">
               <span className="eyebrow">{vi ? 'BẰNG CHỨNG' : 'EVIDENCE'}</span>
-              <h4>{vi ? 'Checklist nên hoàn thành' : 'Checklist to complete'}</h4>
+              <h4>{vi ? 'Những việc cần hoàn thành' : 'Checklist to complete'}</h4>
               <ul>{lesson.checklist.slice(0, 5).map((item) => <li key={item}>{item}</li>)}</ul>
             </div>
             <div className="study-step-card">
@@ -136,7 +136,7 @@ export function StudyStepAccordion({ step, index, lesson, language }:
                 <summary>{vi ? 'Mở câu trả lời mẫu' : 'Show answer'}</summary>
                 <p>{vi ? review.answer_vi : review.answer_en}</p>
               </details>
-            </> : <p>{vi ? 'Giải thích lại bài học bằng một ví dụ và ghi điều chưa chắc vào Journal.'
+            </> : <p>{vi ? 'Giải thích lại bài học bằng một ví dụ và ghi điều còn chưa chắc vào nhật ký.'
               : 'Explain the lesson with one example and record any remaining uncertainty in your Journal.'}</p>}
           </div>}
         </div>

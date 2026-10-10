@@ -1,43 +1,49 @@
-# Public beta guide
+# Hướng dẫn thử bản beta
 
-Journey AI Engineer có bản beta **local-first trên Windows**. Mục tiêu của beta là kiểm tra app có giúp một người mới đi qua vòng Roadmap → Lesson → Practice → Review → Journal hay không, đồng thời thu thập feedback để sửa nội dung và UX.
+Journey AI Engineer có bản beta **ưu tiên lưu dữ liệu trên máy Windows**. Khi thử,
+bạn sẽ chọn bài từ lộ trình, đọc, thực hành, ôn tập rồi ghi nhật ký. Mục tiêu là kiểm tra
+người mới có thực hiện được vòng học này hay không và tìm những chỗ cần sửa.
 
-Bản ứng viên local tiếp theo là **0.1.3**, chưa phải GitHub Release đã phát hành.
-Khi tải bản public, dùng đúng version và checksum ghi trên trang Release tương ứng.
+Bản ứng viên tiếp theo cho máy cá nhân là **0.1.3**, chưa phải GitHub Release đã phát hành.
+Khi tải bản công khai, đối chiếu đúng phiên bản và mã kiểm tra trên trang phát hành.
 
-Web beta đã triển khai trên Cloudflare Pages, dùng Supabase Auth/Postgres/RLS với đăng nhập email/password
-và dữ liệu học tách theo tài khoản. Mở https://journeyaiengineer.pages.dev.
-Web không chạy exercise, mở VS Code, truy cập Git hoặc filesystem local.
-Xem [WEB-BETA.md](WEB-BETA.md) để theo dõi deployment và phạm vi kiểm thử tài khoản.
+Web beta đã triển khai trên Cloudflare Pages, dùng Supabase Auth/Postgres/RLS với đăng nhập
+bằng email và mật khẩu, lưu dữ liệu học theo tài khoản. Mở https://journeyaiengineer.pages.dev.
+Web không chạy bài tập, mở VS Code, truy cập Git hoặc hệ thống tệp trên máy cá nhân.
+Xem [WEB-BETA.md](WEB-BETA.md) để theo dõi việc triển khai và phạm vi kiểm thử tài khoản.
 
-> **Portable/source clone là bản local.** Mỗi người chạy app và lưu dữ liệu trên máy của mình,
-> không có login hoặc cloud sync. Web beta là runtime riêng; không bản nào cung cấp public code-execution server.
+> **Bản chạy trực tiếp và bản mã nguồn lưu dữ liệu trên máy cá nhân.** Mỗi người chạy ứng dụng
+> trên máy của mình, không có đăng nhập hoặc đồng bộ đám mây. Web beta hoạt động riêng;
+> cả hai cách dùng đều không cung cấp dịch vụ chạy mã công khai.
 
 ## Trước khi mời người thử
 
-- Nếu repository còn private, chỉ tài khoản được cấp quyền mới clone hoặc tải Release. Muốn ai cũng thử, maintainer cần đổi visibility sau khi scan secret/history và kiểm tra release.
-- Nếu chưa muốn public source, chỉ chia sẻ ZIP Release với nhóm thử nghiệm tin cậy.
-- Không đặt database, `.data\`, `.env`, token, journal riêng hoặc file build cá nhân vào ZIP/repository.
-- Ghi rõ version đang thử; beta tester không nên dùng data quan trọng.
+- Nếu kho mã còn riêng tư, chỉ tài khoản được cấp quyền mới lấy mã nguồn hoặc tải bản phát hành.
+  Trước khi mở công khai, người duy trì cần kiểm tra thông tin bí mật trong mã, lịch sử Git và gói phát hành.
+- Nếu chưa muốn công khai mã nguồn, chỉ chia sẻ gói ZIP đã phát hành với nhóm thử nghiệm tin cậy.
+- Không đưa cơ sở dữ liệu, `.data\`, `.env`, token, nhật ký riêng hoặc tệp đóng gói cá nhân vào ZIP/kho mã.
+- Ghi rõ phiên bản đang thử; dùng dữ liệu thử nghiệm thay cho dữ liệu quan trọng.
 
-## Chọn bản cho người thử
+## Chọn cách dùng
 
 | Mục tiêu | Bản dùng | Cách bắt đầu |
 | --- | --- | --- |
-| Chỉ muốn thử app | Portable `.exe` | Tải ZIP từ [Releases](https://github.com/Hzyl/JourneyAIEngineer/releases/latest), kiểm tra SHA-256, giải nén và mở `JourneyAIEngineer.exe` |
-| Muốn học bằng VS Code hoặc sửa lesson | Source clone | Đọc [Windows quickstart](QUICKSTART-WINDOWS.md), clone, setup rồi chạy dev |
-| Muốn đóng góp code/content | Fork + branch | Đọc [CONTRIBUTING.md](../CONTRIBUTING.md) trước khi mở PR |
-| Muốn học bằng trình duyệt và tài khoản | Web beta | Mở URL maintainer chia sẻ; xem [hướng dẫn web](WEB-BETA.md) |
+| Chỉ muốn thử ứng dụng | Bản chạy trực tiếp `.exe` | Tải ZIP từ [Releases](https://github.com/Hzyl/JourneyAIEngineer/releases/latest), kiểm tra SHA-256, giải nén và mở `JourneyAIEngineer.exe` |
+| Muốn sửa ứng dụng hoặc bài học | Bản sao mã nguồn | Đọc [hướng dẫn Windows](QUICKSTART-WINDOWS.md), lấy mã nguồn, thiết lập rồi chạy |
+| Muốn đóng góp mã hoặc nội dung | Fork và tạo nhánh | Đọc [CONTRIBUTING.md](../CONTRIBUTING.md) trước khi mở PR |
+| Muốn học bằng trình duyệt và tài khoản | Web beta | Mở địa chỉ người duy trì chia sẻ; xem [hướng dẫn web](WEB-BETA.md) |
 
-## Portable test flow
+Bản chạy trực tiếp cũng hỗ trợ bài tập khi bạn đã cài Python; VS Code là tùy chọn.
 
-1. Tải ZIP `JourneyAIEngineer-v<version>-windows-x64.zip` và `SHA256SUMS.txt` từ cùng một release.
-2. Kiểm tra checksum của **ZIP**; checksum không phải checksum riêng của `.exe` bên trong.
+## Thử gói Windows chạy trực tiếp
+
+1. Tải `JourneyAIEngineer-v<version>-windows-x64.zip` và `SHA256SUMS.txt` từ cùng một bản phát hành.
+2. Kiểm tra mã SHA-256 của **ZIP**, không dùng mã này để đối chiếu riêng tệp `.exe` bên trong.
 3. Giải nén vào thư mục có quyền ghi.
-4. Double-click `JourneyAIEngineer.exe`; app sẽ mở browser ở loopback và không để lại terminal.
-5. Đóng tab cuối cùng, chờ server local tự tắt.
+4. Nhấp đúp vào `JourneyAIEngineer.exe`; ứng dụng mở trình duyệt tại địa chỉ nội bộ, không mở cửa sổ dòng lệnh.
+5. Đóng tab cuối cùng rồi chờ máy chủ trên máy tự tắt.
 
-PowerShell checksum (ví dụ cho gói ứng viên 0.1.3; đổi tên ZIP theo bản đang thử):
+Kiểm tra bằng PowerShell (ví dụ cho gói ứng viên 0.1.3; đổi tên ZIP theo bản đang thử):
 
 ~~~powershell
 $zip = '.\JourneyAIEngineer-v0.1.3-windows-x64.zip'
@@ -52,40 +58,41 @@ if ($actual -ne $expected) { throw 'Checksum không khớp.' }
 'Checksum OK: ' + $actual
 ~~~
 
-Portable data mặc định nằm ở `%LOCALAPPDATA%\JourneyAIEngineer`; xóa data root có thể mất progress. Không có source clone thì publish GitHub bị tắt là đúng behavior.
+Bản chạy trực tiếp mặc định lưu dữ liệu ở `%LOCALAPPDATA%\JourneyAIEngineer`.
+Xóa thư mục này có thể làm mất tiến độ. Khi chưa có bản sao kho mã, chức năng công bố lên GitHub bị tắt.
 
-## Checklist thử bản local trong 15–30 phút
+## Tự kiểm tra bản trên máy trong 15–30 phút
 
-Với web beta, dùng [acceptance checklist của web](WEB-BETA.md#acceptance-checklist-for-each-deployment).
+Với web beta, dùng [danh sách kiểm tra bản web](WEB-BETA.md#acceptance-checklist-for-each-deployment).
 
-- [ ] App mở được từ portable ZIP hoặc source clone.
-- [ ] Dashboard và Roadmap hiển thị phase/track; mở được một lesson.
-- [ ] Lesson có thể cuộn; các phần overview, concept, practice, check và resource không bị cắt.
-- [ ] Mục lục lesson nhảy đúng đến section; mobile khoảng 390px không có horizontal overflow.
-- [ ] Resource ngoài mở đúng; resource in-app hiển thị trong app.
-- [ ] Practice Lab tạo được workspace; nút mở VS Code trỏ đúng folder.
-- [ ] Test runner chạy được manifest và output/error có giới hạn.
-- [ ] Đánh dấu lesson và review card làm progress cập nhật.
-- [ ] Journal lưu được; context export hiển thị nội dung trước khi copy.
-- [ ] Feedback report hiển thị preview đã redact trước khi mở GitHub.
-- [ ] Đóng rồi mở lại app; progress/review state vẫn còn.
-- [ ] Journal & Git hiển thị status/diff; không mở một loạt terminal chớp tắt.
-- [ ] Khi không có Git clone, UI nói rõ local learning mode và không hiện lỗi mơ hồ.
+- [ ] Mở được ứng dụng từ gói ZIP chạy trực tiếp hoặc bản mã nguồn.
+- [ ] Trang tổng quan và lộ trình hiển thị giai đoạn/hướng học; mở được một bài.
+- [ ] Cuộn được bài học; các phần tổng quan, giải thích, thực hành, tự kiểm tra và tài liệu không bị cắt.
+- [ ] Mục lục dẫn tới đúng phần; màn hình rộng khoảng 390px không tràn ngang.
+- [ ] Liên kết ngoài mở đúng; tài liệu nội bộ hiển thị trong ứng dụng.
+- [ ] Trang bài tập tạo được thư mục; nút mở VS Code trỏ đúng thư mục đó.
+- [ ] Bộ chạy kiểm thử dùng đúng lệnh trong tệp khai báo và giới hạn dung lượng kết quả/lỗi.
+- [ ] Đánh dấu bài học và trả lời thẻ ôn làm cập nhật tiến độ.
+- [ ] Lưu được nhật ký; nội dung gửi cho trợ lý hiển thị để bạn đọc lại trước khi gửi.
+- [ ] Báo cáo phản hồi cho xem trước nội dung đã che thông tin riêng trước khi mở GitHub.
+- [ ] Đóng rồi mở lại ứng dụng; tiến độ và lịch ôn vẫn còn.
+- [ ] Nhật ký & Git hiển thị trạng thái và phần thay đổi; không mở nhiều cửa sổ dòng lệnh chớp tắt.
+- [ ] Khi chưa có bản sao kho mã, giao diện giải thích rõ vẫn học được trên máy và thao tác nào cần Git.
 
-## Cách gửi feedback
+## Gửi phản hồi
 
-### Bug có thể tái hiện
+### Lỗi có thể tái hiện
 
-Dùng [Bug report form](https://github.com/Hzyl/JourneyAIEngineer/issues/new?template=bug_report.yml). Ghi:
+Dùng [Bug report form](https://github.com/Hzyl/JourneyAIEngineer/issues/new?template=bug_report.yml) và ghi:
 
-- Version/tag hoặc commit.
-- Mode: `Portable .exe`, `Source clone` hoặc `Web beta`.
-- Windows version, browser và viewport nếu liên quan.
-- Bước tái hiện tối thiểu.
-- Expected behavior và actual behavior.
-- Screenshot/log đã xóa path cá nhân, token và dữ liệu riêng.
+- Phiên bản/tag hoặc commit.
+- Cách chạy: `Portable .exe`, `Source clone` hoặc `Web beta`.
+- Phiên bản Windows, trình duyệt và kích thước màn hình nếu liên quan.
+- Các bước tối thiểu để gặp lại lỗi.
+- Kết quả mong đợi và kết quả thực tế.
+- Ảnh hoặc nhật ký lỗi đã che đường dẫn cá nhân, token và dữ liệu riêng.
 
-Mẫu:
+Mẫu sau giữ tên trường tiếng Anh để điền vào biểu mẫu:
 
 ~~~text
 Version: <version hoặc commit đang thử>
@@ -97,31 +104,36 @@ Actual: ...
 Evidence: screenshot/log đã redact
 ~~~
 
-### Ý tưởng lesson hoặc UX
+### Ý tưởng về bài học hoặc cách sử dụng
 
-Dùng [Feature request form](https://github.com/Hzyl/JourneyAIEngineer/issues/new?template=feature_request.yml). Hãy bắt đầu bằng vấn đề người học gặp, ví dụ thiếu prerequisite, ví dụ code không đủ, hoặc section khó tìm.
+Dùng [Feature request form](https://github.com/Hzyl/JourneyAIEngineer/issues/new?template=feature_request.yml).
+Hãy bắt đầu bằng vấn đề người học gặp, chẳng hạn chưa giải thích kiến thức cần biết trước,
+ví dụ mã chưa đủ hoặc một phần nội dung khó tìm.
 
-### Trao đổi chung
+### Trao đổi chung và báo cáo bảo mật
 
-Dùng [GitHub Discussions](https://github.com/Hzyl/JourneyAIEngineer/discussions) để chia sẻ trải nghiệm, đề xuất tài liệu hoặc cách học. Không đăng secret, database, journal riêng hay exploit.
+Dùng [GitHub Discussions](https://github.com/Hzyl/JourneyAIEngineer/discussions) để chia sẻ trải nghiệm,
+đề xuất tài liệu hoặc cách học. Không đăng thông tin bí mật, cơ sở dữ liệu, nhật ký riêng hoặc mã khai thác lỗ hổng.
 
-### Báo cáo bảo mật
+Với vấn đề bảo mật, đọc [SECURITY.md](../SECURITY.md). Không đăng dữ liệu thử tấn công hoặc
+hướng dẫn khai thác trong mục báo lỗi/thảo luận công khai.
 
-Đọc [SECURITY.md](../SECURITY.md). Không công khai payload hoặc hướng dẫn tấn công trong issue/discussion.
+## Giới hạn của bản beta
 
-## Ranh giới beta đã biết
+- v0.1 chỉ có gói chạy trực tiếp cho Windows. Chạy từ mã nguồn cần môi trường phát triển.
+- Bản chạy trực tiếp và bản mã nguồn giữ tiến độ trên máy, không có tài khoản, đồng bộ hoặc khôi phục đám mây.
+  Web beta lưu dữ liệu theo tài khoản riêng, không tự gộp dữ liệu SQLite trên máy.
+- Ứng dụng không gọi nhà cung cấp AI trực tiếp; chức năng chuẩn bị câu hỏi chỉ tạo Markdown để bạn tự gửi.
+- Bộ chạy bài tập trên máy giới hạn lệnh được phép, thời gian chạy và dung lượng kết quả;
+  không phải dịch vụ chạy mã công khai.
+- Phản hồi công khai cần người duy trì xem xét; ứng dụng không tự sửa hoặc đẩy nội dung chương trình học lên kho mã.
 
-- Chỉ portable Windows được đóng gói trong v0.1. Source clone cần môi trường phát triển.
-- Portable/source clone giữ tiến trình local, không có account, sync hoặc recovery trên cloud.
-  Web beta dùng account/cloud sync riêng, không tự merge dữ liệu SQLite local.
-- App không gọi AI provider trực tiếp; context bridge chỉ tạo Markdown để người dùng tự gửi.
-- Local workspace runner có allowlist, timeout và output cap; không phải dịch vụ chạy code công khai.
-- Feedback public cần maintainer review; app không tự sửa hoặc push curriculum.
+## Tiêu chí để phát hành bản beta mới
 
-## Tiêu chí để maintainer phát hành bản beta mới
-
-- Fresh clone và portable ZIP chạy được theo quickstart.
-- CI pass content validation, backend tests, lint/build, browser smoke và secret scan.
-- ZIP có version, `SHA256SUMS.txt` và không chứa `.data\`, database, `.env`, `.venv\`, `node_modules` hoặc journal runtime.
-- Release notes ghi rõ thay đổi, giới hạn và cách quay lại bản trước.
-- README/quickstart mô tả đúng portable, source clone, data root và security boundary.
+- Bản sao mã nguồn mới và gói ZIP chạy trực tiếp hoạt động theo hướng dẫn bắt đầu.
+- CI đạt kiểm tra nội dung, kiểm thử máy chủ, kiểm tra mã/đóng gói, kiểm tra nhanh trên trình duyệt
+  và quét thông tin bí mật.
+- ZIP có phiên bản, `SHA256SUMS.txt` và không chứa `.data\`, cơ sở dữ liệu, `.env`, `.venv\`,
+  `node_modules` hoặc nhật ký phát sinh khi dùng.
+- Ghi chú phát hành nêu rõ thay đổi, giới hạn và cách quay lại bản trước.
+- README/hướng dẫn bắt đầu mô tả đúng bản chạy trực tiếp, bản mã nguồn, thư mục dữ liệu và giới hạn bảo mật.

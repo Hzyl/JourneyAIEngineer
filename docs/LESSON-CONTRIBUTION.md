@@ -1,29 +1,30 @@
 # Đóng góp một bài học
 
-Chọn một bài đang gắn nhãn nháp. Đọc `CURRICULUM-STANDARDS.md` và bài curated gần nhất
-trước khi chỉnh sửa. Giữ nguyên ID bài, module, phase, prerequisites và bốn review card
+Chọn một bài đang gắn nhãn nháp. Đọc [chuẩn nội dung](CURRICULUM-STANDARDS.md),
+[cách biên tập tiếng Việt](VIETNAMESE-EDITORIAL.md) và bài đã biên tập gần nhất
+trước khi sửa. Giữ nguyên ID bài, mô-đun, giai đoạn, kiến thức cần biết trước và bốn thẻ ôn tập
 để không làm mất liên kết với tiến trình học đã lưu.
 
 ## Nội dung cần có trong đề xuất
 
 - Bài được sửa và đối tượng học; kiến thức cần biết trước.
 - Một việc cụ thể người học làm được sau bài, có đầu ra quan sát được.
-- Giải thích Việt/Anh, ví dụ chạy được hoặc nhãn conceptual rõ ràng.
-- Setup, lệnh chạy, output mong đợi và một trường hợp lỗi để tự sửa.
+- Giải thích Việt/Anh, ví dụ chạy được hoặc được ghi rõ là minh họa khái niệm.
+- Cách chuẩn bị, lệnh chạy, kết quả mong đợi và một trường hợp lỗi để người học tự sửa.
 - Câu hỏi ôn tập có đáp án riêng theo nội dung; không chép cùng câu trả lời cho nhiều bài.
-- Nguồn chính thức, ghi rõ giới hạn và license nếu có trích nội dung bên ngoài.
+- Nguồn chính thức, giới hạn của nội dung và giấy phép nếu có trích tài liệu bên ngoài.
 
 ## Quy trình
 
-1. Nếu có `content/curated/<lesson_id>.json`, sửa file đó. Nếu chưa có, tạo overlay
-   từ lesson cùng ID trong catalog và biên tập đủ cả hai ngôn ngữ.
-2. Chỉ đặt `quality_status: reviewed` và ngày review sau khi kiểm tra nội dung;
-   nhãn này là review nội bộ dự án, không phải chứng nhận chuyên môn.
-3. Với bài tập verified: starter phải thất bại, reference phải pass; thêm một
-   đáp án sai có vẻ hợp lý để chứng minh test phát hiện được lỗi.
+1. Nếu có `content/curated/<lesson_id>.json`, sửa tệp đó. Nếu chưa có, tạo bản nội dung ghi đè
+   từ bài cùng ID trong danh mục và biên tập đủ cả hai ngôn ngữ.
+2. Chỉ đặt `quality_status: reviewed` và ngày kiểm tra sau khi đã rà nội dung;
+   nhãn này thể hiện việc kiểm tra nội bộ dự án, không phải chứng nhận chuyên môn.
+3. Với bài tập có trạng thái `verified`, mã khởi đầu phải không đạt còn lời giải tham khảo phải đạt kiểm thử. Thêm một
+   đáp án sai có vẻ hợp lý để chứng minh kiểm thử phát hiện được lỗi.
 4. Chạy `python scripts/catalog_version.py --write`, `python scripts/validate_content.py`
-   và test nội dung phù hợp. Không dùng fingerprint mới để bỏ qua một lỗi validator.
-5. Xem bài trong app ở cả VI/EN, desktop và mobile; ghi kết quả trong PR.
+   và các kiểm thử nội dung phù hợp. Không cập nhật mã nhận diện nội dung chỉ để bỏ qua lỗi của bộ kiểm tra.
+5. Xem bài ở cả hai ngôn ngữ trên máy tính và điện thoại; ghi kết quả trong pull request.
 
 ## Mẫu mô tả PR
 
@@ -38,4 +39,4 @@ Ví dụ và test đã chạy:
 Giới hạn còn lại:
 ```
 
-Không gửi journal, `.env`, output chứa token, database hoặc thông tin cá nhân.
+Không gửi nhật ký, `.env`, kết quả chứa token, cơ sở dữ liệu hoặc thông tin cá nhân.

@@ -84,3 +84,23 @@ test('checklist reminders focus the check section and opening answers never comp
   await act(async () => host.querySelector<HTMLElement>('.study-step-answer summary')!.click())
   expect(onProgress).not.toHaveBeenCalled()
 })
+
+test.each(['vi', 'en'] as const)('%s concept notes render separate paragraphs and escape markup', async (language) => {
+  const paragraphs = [
+    language === 'vi' ? 'Đoạn đầu giải thích khái niệm.' : 'The first paragraph explains the concept.',
+    '<img src=x onerror="alert(1)"> & <script>alert(2)</script>',
+    language === 'vi' ? 'Đoạn cuối nêu cách tự kiểm tra.' : 'The last paragraph explains the self-check.',
+  ]
+  const concept = `\n${paragraphs[0]}\n\n${paragraphs[1]}\n${paragraphs[2]}\n`
+  await render(language, { ...lessonFixture,
+    concept_notes_vi: language === 'vi' ? concept : 'Không hiển thị câu này.',
+    concept_notes_en: language === 'en' ? concept : 'This sentence must not be shown.',
+  })
+  const container = host.querySelector('.concept-notes')!
+  expect([...container.querySelectorAll(':scope > p')].map((node) => node.textContent)).toEqual(paragraphs)
+  expect(container.children).toHaveLength(3)
+  expect(container.querySelector('img, script')).toBeNull()
+  expect(container.innerHTML).toContain('&lt;img')
+  expect(container.innerHTML).toContain('&lt;script&gt;')
+  expect(onProgress).not.toHaveBeenCalled()
+})

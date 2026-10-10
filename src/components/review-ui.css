@@ -7,13 +7,13 @@
 .review-card-meta {
   gap: 16px;
   flex-wrap: wrap;
-  font-size: 12px;
+  font-size: 1rem;
 }
 
 .review-answer-label {
   display: grid;
   gap: 8px;
-  font-size: 15px;
+  font-size: 1.125rem;
 }
 
 .app-shell .review-card textarea {
@@ -22,7 +22,7 @@
 }
 
 .review-card summary {
-  font-size: 15px;
+  font-size: 1.125rem;
   padding-block: 10px;
   min-height: 44px;
 }
@@ -46,7 +46,7 @@
 
 .rating-row > span {
   grid-column: 1 / -1;
-  font-size: 15px;
+  font-size: 1.125rem;
   margin-bottom: 4px;
 }
 
@@ -63,7 +63,7 @@
 }
 
 .rating-row strong {
-  font-size: 15px;
+  font-size: 1.125rem;
 }
 
 .rating-row button[aria-busy="true"] strong {
@@ -79,25 +79,25 @@
 
 .rating-row small {
   margin-top: 7px;
-  font-size: 12px;
+  font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
 }
 
 .app-shell .review-card .review-rating-note {
-  font-size: 14px;
+  font-size: 1rem;
   color: var(--muted);
 }
 
 .review-activity .review-history p,
 .review-activity .weak-topics p {
-  font-size: 15px;
+  font-size: 1.125rem;
   line-height: 1.65;
 }
 
 .weak-topics p > span {
   display: block;
-  font-size: 13px;
+  font-size: 1rem;
 }
 
 .review-activity > button {

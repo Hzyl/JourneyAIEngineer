@@ -2,14 +2,15 @@
 lesson_id: phase-06-llm-rag-quality-safety-3
 phase_id: phase-06-llm-rag
 module_id: quality-safety
-title_vi: Prompt injection
+title_vi: Tấn công chèn chỉ dẫn
 title_en: Prompt injection
-summary_vi: Học Prompt injection qua một mô hình input → biến đổi → output, sau đó kiểm chứng bằng bài tập có edge case.
-summary_en: Learn Prompt injection through an input → transformation → output model, then verify it with an edge-case exercise.
+summary_vi: Prompt injection đưa chỉ dẫn không đáng tin vào dữ liệu nhằm làm lệch nhiệm vụ hoặc vượt quyền.
+summary_en: Learn Prompt injection through an input → transformation → output model, then verify it with an edge-case
+  exercise.
 learning_objectives:
-- Giải thích prompt injection bằng ví dụ cụ thể.
-- Viết hoặc sửa một đoạn code nhỏ áp dụng prompt injection.
-- Nhận diện điều kiện áp dụng, giới hạn và một lỗi thường gặp.
+- Thử chỉ dẫn giả trong tài liệu mẫu và kiểm tra hệ thống giữ đúng phạm vi được phép.
+- So sánh thay đổi trên cùng bộ câu hỏi và ghi cả trường hợp xấu.
+- Giải thích kết quả và nêu một giới hạn của bài làm.
 learning_objectives_en:
 - Explain prompt injection with a concrete example.
 - Write or adapt a small code example applying prompt injection.
@@ -25,38 +26,43 @@ key_terms:
 - retrieval
 - evaluation
 - quality-safety
-concept_notes_vi: 'Prompt injection thuộc LLM Application Engineering: thiết kế contract giữa ứng dụng và model. Xác định
-  instruction, input, output schema, timeout, retry và giới hạn token; parse output như dữ liệu không tin cậy và trả lỗi có
-  thể xử lý.'
-concept_notes_en: 'Prompt injection belongs to LLM Application Engineering: design the contract between the application and
-  the model. Define instructions, inputs, output schema, timeout, retry, and token limits; parse model output as untrusted
-  data and return actionable errors.'
-why_it_matters_vi: Đo quality, latency, cost và safety cùng lúc; coi hallucination/injection là test case chứ không phải chuyện
-  bất ngờ.
-why_it_matters_en: Measure quality, latency, cost, and safety together; treat hallucinations and injection as test cases.
+concept_notes_vi: Prompt injection đưa chỉ dẫn không đáng tin vào dữ liệu nhằm làm lệch nhiệm vụ hoặc vượt quyền.
+  Cần kiểm soát quyền và thao tác bên ngoài mô hình; chỉ thêm lời nhắc chưa đủ.
+concept_notes_en: 'Prompt injection belongs to LLM Application Engineering: design the contract between the application
+  and the model. Define instructions, inputs, output schema, timeout, retry, and token limits; parse model output
+  as untrusted data and return actionable errors.'
+why_it_matters_vi: Đánh giá đồng thời chất lượng, độ trễ, chi phí và khả năng giữ đúng phạm vi yêu cầu.
+why_it_matters_en: Measure quality, latency, cost, and safety together; treat hallucinations and injection as test
+  cases.
 study_steps_vi:
-- 'Đọc phần Concept notes để trả lời: Đo quality, latency, cost và safety cùng lúc; coi hallucination/injection là test case
-  chứ không phải chuyện bất ngờ.'
-- Mở Hugging Face NLP Course, đọc đúng mục Read this lesson và ghi lại một ví dụ hoặc định nghĩa đã kiểm chứng.
-- Mở Practice Lab, bấm Tạo & mở VS Code, lưu bằng Ctrl+S, thay một tham số rồi chạy lại test.
-- 'Làm bài thực hành: Tạo rubric, golden set, adversarial set, cost log và dashboard lỗi theo loại.'
-- Trả lời review card không nhìn gợi ý, hoàn thiện checklist và lưu một artifact có thể đưa lên GitHub.
+- Đọc phần giải thích, xác định khái niệm và điều kiện cần dùng cho nhiệm vụ bên dưới.
+- Tìm mục tương ứng với “Prompt injection” trong tài liệu tham khảo; đối chiếu với phần giải thích của bài.
+- Thử chỉ dẫn giả trong tài liệu mẫu và kiểm tra hệ thống giữ đúng phạm vi được phép.
+- So sánh thay đổi trên cùng bộ câu hỏi và ghi cả trường hợp xấu. Ghi kết quả đối chiếu và điều bạn đã sửa nếu lần
+  đầu chưa đúng.
+- Tự trả lời thẻ ôn tập, rồi kiểm tra các tiêu chí hoàn thành trước khi chuyển bài.
 study_steps_en:
-- 'Read the concept notes and answer: Measure quality, latency, cost, and safety together; treat hallucinations and injection
-  as test cases.'
+- 'Read the concept notes and answer: Measure quality, latency, cost, and safety together; treat hallucinations
+  and injection as test cases.'
 - Open Hugging Face NLP Course, read the section marked Read this lesson, and record one verified example or definition.
-- Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the test.
-- 'Complete the practice task: Create a rubric, golden set, adversarial set, cost log, and an error dashboard by category.'
+- Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the
+  test.
+- 'Complete the practice task: Create a rubric, golden set, adversarial set, cost log, and an error dashboard by
+  category.'
 - Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact.
 practice_plan:
   vi:
-    task: Tạo rubric, golden set, adversarial set, cost log và dashboard lỗi theo loại.
+    task: 'Thử chỉ dẫn giả trong tài liệu mẫu và kiểm tra hệ thống giữ đúng phạm vi được phép.
+
+
+      Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Tạo tiêu chí chấm, bộ câu hỏi chuẩn,
+      tình huống đối kháng, nhật ký chi phí và bảng thống kê lỗi.'
     deliverables:
-    - Một file code chạy được
-    - Một test hoặc output expected
-    - Một note nêu edge case và trade-off
-    checkpoint: Bạn bảo vệ được một thay đổi model bằng số liệu quality–latency–cost, không chỉ cảm nhận.
-    stretch: Viết thêm một failure test cho prompt injection và giải thích kết quả.
+    - Bộ tình huống và bảng đánh giá chất lượng, độ trễ hoặc chi phí
+    - Kết quả đối chiếu kèm dữ liệu hoặc điều kiện thực hiện
+    - Một giới hạn và cách kiểm tra thêm
+    checkpoint: So sánh thay đổi trên cùng bộ câu hỏi và ghi cả trường hợp xấu.
+    stretch: Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào.
   en:
     task: Create a rubric, golden set, adversarial set, cost log, and an error dashboard by category.
     deliverables:
@@ -67,9 +73,9 @@ practice_plan:
     stretch: Add a failure test for prompt injection and explain the result.
 interview_questions:
   vi:
-  - Bạn sẽ giải thích prompt injection cho một đồng đội mới như thế nào?
-  - Một assumption nào của prompt injection có thể sai trong production?
-  - Bạn sẽ chọn metric hoặc test nào để chứng minh kết quả đáng tin?
+  - Bạn sẽ giải thích nội dung “Tấn công chèn chỉ dẫn” bằng ví dụ nào?
+  - Điều kiện nào cần kiểm tra trước khi áp dụng vào công việc thực tế?
+  - Bạn dùng bằng chứng nào để kết luận bài làm đáp ứng yêu cầu?
   en:
   - How would you explain prompt injection to a new teammate?
   - Which assumption behind prompt injection could fail in production?
@@ -78,17 +84,18 @@ formulas: []
 code_examples:
 - language: python
   title: 'Prompt injection: inspect one complete path'
-  code: "# Topic: Prompt injection (phase-06-llm-rag-quality-safety-3)\ndef grounded_answer(answer: str, evidence: list[str])\
-    \ -> str:\n    if not evidence:\n        return 'Insufficient evidence'\n    return answer + '\\nSources: ' + '; '.join(evidence)\n\
-    \nprint(grounded_answer('A concise answer', ['doc-1']))"
+  code: "# Topic: Prompt injection (phase-06-llm-rag-quality-safety-3)\ndef grounded_answer(answer: str, evidence:\
+    \ list[str]) -> str:\n    if not evidence:\n        return 'Insufficient evidence'\n    return answer + '\\\
+    nSources: ' + '; '.join(evidence)\n\nprint(grounded_answer('A concise answer', ['doc-1']))"
   status: runnable
-  purpose_vi: Minh họa đường đi input → output của prompt injection.
+  purpose_vi: Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.
   purpose_en: Illustrate the input-to-output path for prompt injection.
   setup: Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.
   expected_output: Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.
-  edge_case_vi: Thử input rỗng, shape sai hoặc dữ liệu thiếu và ghi lại lỗi.
+  edge_case_vi: Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.
   edge_case_en: Try an empty input, a wrong shape or missing data and record the failure.
-  explanation_vi: Tách evidence khỏi generation và từ chối khi không có bằng chứng đủ dùng.
+  explanation_vi: Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần
+    nội dung; cần hoàn thành riêng nhiệm vụ thực hành.
   explanation_en: Keep the boundary executable and inspectable; change one input and verify the expected output.
 resources:
 - language: en
@@ -96,7 +103,7 @@ resources:
   url: https://huggingface.co/learn/nlp-course/chapter1/1
   kind: official
   required: false
-  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong lesson.
+  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.
   purpose_en: Official reference to verify the lesson concept.
   read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
   read_en: Read the relevant section, run a small example, and record one verified insight.
@@ -105,7 +112,7 @@ resources:
   url: https://huggingface.co/docs/transformers/index
   kind: official
   required: false
-  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong lesson.
+  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.
   purpose_en: Official reference to verify the lesson concept.
   read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
   read_en: Read the relevant section, run a small example, and record one verified insight.
@@ -114,17 +121,17 @@ resources:
   url: https://faiss.ai/
   kind: official
   required: false
-  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong lesson.
+  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.
   purpose_en: Official reference to verify the lesson concept.
   read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
   read_en: Read the relevant section, run a small example, and record one verified insight.
-- title: Giải thích tiếng Việt và checklist của lesson
+- title: Giải thích và hướng dẫn thực hành trong bài
   url: ''
   language: vi
   kind: in_app
-  purpose_vi: Phần giải thích, code example, checklist và tiêu chí hoàn thành ngay trong app.
+  purpose_vi: Đọc giải thích, thực hiện nhiệm vụ và đối chiếu tiêu chí hoàn thành.
   purpose_en: The explanation, code example, checklist, and completion criteria inside the app.
-  read_vi: Đọc theo thứ tự Study plan → Concept notes → Code example → Practice plan.
+  read_vi: Đọc giải thích → xem ví dụ → thực hành → tự kiểm tra.
   read_en: Follow Study plan → Concept notes → Code example → Practice plan.
   required: true
 exercise_ids:
@@ -136,69 +143,76 @@ review_item_ids:
 - phase-06-llm-rag-quality-safety-3-interview
 estimated_minutes: 60
 completion_checklist:
-- Giải thích được input, biến đổi và output của prompt injection.
-- Chạy hoặc sửa được code example với một input mới.
-- Ghi lại một edge case, metric hoặc failure mode.
-- Trả lời review card bằng bằng chứng cụ thể.
+- Thử chỉ dẫn giả trong tài liệu mẫu và kiểm tra hệ thống giữ đúng phạm vi được phép.
+- So sánh thay đổi trên cùng bộ câu hỏi và ghi cả trường hợp xấu.
+- Lưu kết quả và giải thích được một giới hạn mà không nhìn lời giải.
 completion_criteria:
-- Mô tả được khi nào dùng prompt injection và khi nào cần baseline khác.
-- Có artifact chạy được và output có thể kiểm tra.
-- Nêu được một giả định, edge case và cách kiểm chứng.
+- 'Bài làm đáp ứng nhiệm vụ: Thử chỉ dẫn giả trong tài liệu mẫu và kiểm tra hệ thống giữ đúng phạm vi được phép.'
+- Có kết quả đối chiếu với tiêu chí hoặc dự đoán đã ghi trước.
+- So sánh thay đổi trên cùng bộ câu hỏi và ghi cả trường hợp xấu.
 common_mistakes:
-- Bỏ qua invariant hoặc shape khi áp dụng prompt injection.
-- Đánh giá prompt injection bằng một output tốt mà không có baseline hoặc failure case.
-- Sao chép ví dụ prompt injection mà không thay input và kiểm tra kết quả biên.
+- Chỉ báo cáo các câu trả lời tốt hoặc bỏ qua chi phí phát sinh.
+- Kết luận từ một kết quả thuận lợi mà chưa kiểm tra trường hợp khác.
+- Chép lời giải nhưng không giải thích được quyết định trong bài làm của mình.
 next_lessons:
 - phase-06-llm-rag-quality-safety-4
 - phase-06-llm-rag-adaptation-1
-review_question_vi: Định nghĩa prompt injection bằng lời của bạn. Input, biến đổi và output là gì?
+review_question_vi: Nội dung cốt lõi của “Tấn công chèn chỉ dẫn” là gì?
 review_question_en: Define prompt injection in your own words. What are the input, transformation and output?
-review_answer_vi: Một câu trả lời tốt nêu rõ input, phép biến đổi, output và bối cảnh dùng prompt injection. Hãy liên hệ cụ
-  thể với prompt injection trong lesson phase-06-llm-rag-quality-safety-3.
-review_answer_en: A strong answer names the input, transformation, output and the context where prompt injection is used.
-  Relate it specifically to prompt injection in lesson phase-06-llm-rag-quality-safety-3.
+review_answer_vi: Prompt injection đưa chỉ dẫn không đáng tin vào dữ liệu nhằm làm lệch nhiệm vụ hoặc vượt quyền.
+  Cần kiểm soát quyền và thao tác bên ngoài mô hình; chỉ thêm lời nhắc chưa đủ.
+review_answer_en: A strong answer names the input, transformation, output and the context where prompt injection
+  is used. Relate it specifically to prompt injection in lesson phase-06-llm-rag-quality-safety-3.
 review_cards:
 - id: phase-06-llm-rag-quality-safety-3-recall
   type: recall
-  question_vi: Định nghĩa prompt injection bằng lời của bạn. Input, biến đổi và output là gì?
+  question_vi: Nội dung cốt lõi của “Tấn công chèn chỉ dẫn” là gì?
   question_en: Define prompt injection in your own words. What are the input, transformation and output?
-  answer_vi: Một câu trả lời tốt nêu rõ input, phép biến đổi, output và bối cảnh dùng prompt injection.
+  answer_vi: Prompt injection đưa chỉ dẫn không đáng tin vào dữ liệu nhằm làm lệch nhiệm vụ hoặc vượt quyền. Cần
+    kiểm soát quyền và thao tác bên ngoài mô hình; chỉ thêm lời nhắc chưa đủ.
   answer_en: A strong answer names the input, transformation, output and the context where prompt injection is used.
-  hint_vi: Bắt đầu bằng một ví dụ nhỏ có thể tính bằng tay.
+  hint_vi: Nêu ý chính, sau đó minh họa bằng tình huống cụ thể.
   hint_en: Start with a small example you can calculate by hand.
 - id: phase-06-llm-rag-quality-safety-3-application
   type: application
-  question_vi: Viết một ví dụ code hoặc thiết kế nhỏ áp dụng prompt injection cho bài toán AI Engineer.
+  question_vi: Thử chỉ dẫn giả trong tài liệu mẫu và kiểm tra hệ thống giữ đúng phạm vi được phép.
   question_en: Write a small code example or design that applies prompt injection to an AI engineering problem.
-  answer_vi: Ví dụ cho prompt injection cần có input rõ ràng, output mong đợi và một cách chạy hoặc kiểm chứng (phase-06-llm-rag-quality-safety-3).
-  answer_en: The prompt injection example should have an explicit input, expected output and a way to run or verify it (phase-06-llm-rag-quality-safety-3).
-  hint_vi: Dùng code example trong lesson rồi thay một giả định.
+  answer_vi: 'Với nhiệm vụ “Thử chỉ dẫn giả trong tài liệu mẫu và kiểm tra hệ thống giữ đúng phạm vi được phép”,
+    cần lưu: bộ tình huống và bảng đánh giá chất lượng, độ trễ hoặc chi phí. So sánh thay đổi trên cùng bộ câu hỏi
+    và ghi cả trường hợp xấu.'
+  answer_en: The prompt injection example should have an explicit input, expected output and a way to run or verify
+    it (phase-06-llm-rag-quality-safety-3).
+  hint_vi: Bắt đầu từ nhiệm vụ thực hành của bài.
   hint_en: Start from the lesson code example and change one assumption.
 - id: phase-06-llm-rag-quality-safety-3-debug
   type: debug
-  question_vi: Nếu kết quả của prompt injection sai hoặc metric giảm, bạn sẽ debug theo thứ tự nào?
+  question_vi: Khi làm bài “Tấn công chèn chỉ dẫn”, bạn cần tránh lỗi nào và kiểm tra lại ra sao?
   question_en: If prompt injection produces a wrong result or a metric drops, what would you debug first?
-  answer_vi: Với prompt injection, kiểm tra input/shape, preprocessing và baseline trước; sau đó cô lập lỗi bằng test nhỏ
-    và error analysis (phase-06-llm-rag-quality-safety-3).
-  answer_en: For prompt injection, check inputs/shapes, preprocessing and the baseline first; then isolate the failure with
-    a small test and error analysis (phase-06-llm-rag-quality-safety-3).
-  hint_vi: Đừng bắt đầu bằng việc đổi model hoặc tăng độ phức tạp.
+  answer_vi: 'Trong bài “Tấn công chèn chỉ dẫn”, lỗi cần tránh là: chỉ báo cáo các câu trả lời tốt hoặc bỏ qua chi
+    phí phát sinh. So sánh thay đổi trên cùng bộ câu hỏi và ghi cả trường hợp xấu. Dùng ví dụ nhỏ để tìm bước đầu
+    tiên có kết quả khác dự kiến.'
+  answer_en: For prompt injection, check inputs/shapes, preprocessing and the baseline first; then isolate the failure
+    with a small test and error analysis (phase-06-llm-rag-quality-safety-3).
+  hint_vi: Tìm bước đầu tiên xuất hiện khác biệt.
   hint_en: Do not start by changing the model or adding complexity.
 - id: phase-06-llm-rag-quality-safety-3-interview
   type: interview
-  question_vi: Trong phỏng vấn, bạn sẽ giải thích trade-off và một edge case của prompt injection như thế nào?
+  question_vi: Bạn dùng kết quả nào từ bài “Tấn công chèn chỉ dẫn” để giải thích cách làm và giới hạn?
   question_en: In an interview, how would you explain a trade-off and one edge case of prompt injection?
-  answer_vi: Câu trả lời về prompt injection cần nêu giả định, metric/chi phí, giới hạn và cách giảm rủi ro trong production
-    (phase-06-llm-rag-quality-safety-3).
-  answer_en: The answer about prompt injection should cover assumptions, metrics/cost, limitations and how to reduce production
-    risk (phase-06-llm-rag-quality-safety-3).
-  hint_vi: Liên hệ với latency, chất lượng, chi phí hoặc khả năng quan sát nếu phù hợp.
+  answer_vi: Bắt đầu từ nhiệm vụ “Thử chỉ dẫn giả trong tài liệu mẫu và kiểm tra hệ thống giữ đúng phạm vi được
+    phép”. Trình bày kết quả đã lưu, cách đối chiếu và một điều kiện có thể khiến kết luận thay đổi; không chỉ đọc
+    lại định nghĩa.
+  answer_en: The answer about prompt injection should cover assumptions, metrics/cost, limitations and how to reduce
+    production risk (phase-06-llm-rag-quality-safety-3).
+  hint_vi: Dùng quyết định thật trong bài làm, tránh chỉ đọc định nghĩa.
   hint_en: Relate it to latency, quality, cost or observability where relevant.
 ---
-# Prompt injection / Prompt injection
+# Tấn công chèn chỉ dẫn / Prompt injection
 
-Prompt injection thuộc LLM Application Engineering: thiết kế contract giữa ứng dụng và model. Xác định instruction, input, output schema, timeout, retry và giới hạn token; parse output như dữ liệu không tin cậy và trả lỗi có thể xử lý.
+Prompt injection đưa chỉ dẫn không đáng tin vào dữ liệu nhằm làm lệch nhiệm vụ hoặc vượt quyền. Cần kiểm soát quyền và thao tác bên ngoài mô hình; chỉ thêm lời nhắc chưa đủ.
 
-## Practice
+## Thực hành
 
-Tạo rubric, golden set, adversarial set, cost log và dashboard lỗi theo loại.
+Thử chỉ dẫn giả trong tài liệu mẫu và kiểm tra hệ thống giữ đúng phạm vi được phép.
+
+Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Tạo tiêu chí chấm, bộ câu hỏi chuẩn, tình huống đối kháng, nhật ký chi phí và bảng thống kê lỗi.

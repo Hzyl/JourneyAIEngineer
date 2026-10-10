@@ -4,14 +4,14 @@ phase_id: phase-00-onboarding
 module_id: baseline
 title_vi: Bài kiểm tra Git và terminal
 title_en: Git and terminal baseline assessment
-summary_vi: Học Bài kiểm tra Git và terminal qua một mô hình input → biến đổi → output, sau đó kiểm chứng bằng bài tập có
-  edge case.
-summary_en: Learn Git and terminal baseline assessment through an input → transformation → output model, then verify it with
-  an edge-case exercise.
+summary_vi: Bài kiểm tra tập trung vào khả năng xác định thư mục hiện tại, đọc trạng thái Git và giải thích thay
+  đổi của tệp.
+summary_en: Learn Git and terminal baseline assessment through an input → transformation → output model, then verify
+  it with an edge-case exercise.
 learning_objectives:
-- Giải thích bài kiểm tra git và terminal bằng ví dụ cụ thể.
-- Viết hoặc sửa một đoạn code nhỏ áp dụng bài kiểm tra git và terminal.
-- Nhận diện điều kiện áp dụng, giới hạn và một lỗi thường gặp.
+- Trong kho thử nghiệm, sửa một tệp rồi dùng trạng thái và bản so sánh Git để mô tả thay đổi.
+- Làm lại một trường hợp khác trước khi kết luận đã nắm vững.
+- Giải thích kết quả và nêu một giới hạn của bài làm.
 learning_objectives_en:
 - Explain git and terminal baseline assessment with a concrete example.
 - Write or adapt a small code example applying git and terminal baseline assessment.
@@ -29,41 +29,46 @@ key_terms:
 - debugging
 - maintainability
 - baseline
-concept_notes_vi: 'Bài kiểm tra Git và terminal giúp một AI Engineer làm việc có thể truy vết: mỗi thay đổi cần có diff, lý
-  do và cách kiểm chứng. Thực hành bằng một repository nhỏ, tạo một lỗi có chủ ý, đọc output của terminal rồi sửa bằng commit
-  rõ nghĩa.'
-concept_notes_en: 'Bài kiểm tra Git và terminal makes AI engineering work traceable: every change needs a diff, a reason,
-  and a verification step. Practise in a small repository, introduce an intentional failure, read the terminal output, and
-  fix it with a focused commit.'
-why_it_matters_vi: Đo nền tảng hiện tại một cách trung thực để chọn nhịp học, không biến bài đánh giá thành bài học thuộc
-  lòng.
+concept_notes_vi: Bài kiểm tra tập trung vào khả năng xác định thư mục hiện tại, đọc trạng thái Git và giải thích
+  thay đổi của tệp. Thực hành trong kho thử nghiệm giúp bạn quan sát từng lệnh mà không ảnh hưởng dự án đang dùng.
+concept_notes_en: 'Bài kiểm tra Git và terminal makes AI engineering work traceable: every change needs a diff,
+  a reason, and a verification step. Practise in a small repository, introduce an intentional failure, read the
+  terminal output, and fix it with a focused commit.'
+why_it_matters_vi: Xác định kiến thức đã vững và phần cần ôn để chọn nhịp học phù hợp.
 why_it_matters_en: Measure your current baseline honestly so the learning pace follows evidence rather than confidence.
 study_steps_vi:
-- 'Đọc phần Concept notes để trả lời: Đo nền tảng hiện tại một cách trung thực để chọn nhịp học, không biến bài đánh giá thành
-  bài học thuộc lòng.'
-- Mở Python Tutorial, đọc đúng mục Read this lesson và ghi lại một ví dụ hoặc định nghĩa đã kiểm chứng.
-- Mở Practice Lab, bấm Tạo & mở VS Code, lưu bằng Ctrl+S, thay một tham số rồi chạy lại test.
-- 'Làm bài thực hành: Làm bài kiểm tra không xem tài liệu, chấm theo checklist, sau đó ghi ba lỗ hổng và một kế hoạch bù.'
-- Trả lời review card không nhìn gợi ý, hoàn thiện checklist và lưu một artifact có thể đưa lên GitHub.
+- Đọc phần giải thích, xác định khái niệm và điều kiện cần dùng cho nhiệm vụ bên dưới.
+- Tìm mục tương ứng với “Git and terminal baseline assessment” trong tài liệu tham khảo; đối chiếu với phần giải
+  thích của bài.
+- Trong kho thử nghiệm, sửa một tệp rồi dùng trạng thái và bản so sánh Git để mô tả thay đổi.
+- Làm lại một trường hợp khác trước khi kết luận đã nắm vững. Ghi kết quả đối chiếu và điều bạn đã sửa nếu lần đầu
+  chưa đúng.
+- Tự trả lời thẻ ôn tập, rồi kiểm tra các tiêu chí hoàn thành trước khi chuyển bài.
 study_steps_en:
-- 'Read the concept notes and answer: Measure your current baseline honestly so the learning pace follows evidence rather
-  than confidence.'
+- 'Read the concept notes and answer: Measure your current baseline honestly so the learning pace follows evidence
+  rather than confidence.'
 - Open Python Tutorial, read the section marked Read this lesson, and record one verified example or definition.
-- Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the test.
-- 'Complete the practice task: Take the assessment without references, score it with the checklist, then record three gaps
-  and a recovery plan.'
+- Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the
+  test.
+- 'Complete the practice task: Take the assessment without references, score it with the checklist, then record
+  three gaps and a recovery plan.'
 - Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact.
 practice_plan:
   vi:
-    task: Làm bài kiểm tra không xem tài liệu, chấm theo checklist, sau đó ghi ba lỗ hổng và một kế hoạch bù.
+    task: 'Trong kho thử nghiệm, sửa một tệp rồi dùng trạng thái và bản so sánh Git để mô tả thay đổi.
+
+
+      Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Tự làm bài đánh giá trước khi xem tài
+      liệu, đối chiếu tiêu chí rồi ghi ba phần cần ôn bổ sung.'
     deliverables:
-    - Một file code chạy được
-    - Một test hoặc output expected
-    - Một note nêu edge case và trade-off
-    checkpoint: Bạn giải thích được vì sao mình chọn track 6 tháng hoặc 12–15 tháng bằng dữ liệu của chính mình.
-    stretch: Viết thêm một failure test cho bài kiểm tra git và terminal và giải thích kết quả.
+    - Bài tự làm, kết quả kiểm tra và phần đã dùng gợi ý
+    - Kết quả đối chiếu kèm dữ liệu hoặc điều kiện thực hiện
+    - Một giới hạn và cách kiểm tra thêm
+    checkpoint: Làm lại một trường hợp khác trước khi kết luận đã nắm vững.
+    stretch: Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào.
   en:
-    task: Take the assessment without references, score it with the checklist, then record three gaps and a recovery plan.
+    task: Take the assessment without references, score it with the checklist, then record three gaps and a recovery
+      plan.
     deliverables:
     - One executable code file
     - One test or expected output
@@ -72,9 +77,9 @@ practice_plan:
     stretch: Add a failure test for git and terminal baseline assessment and explain the result.
 interview_questions:
   vi:
-  - Bạn sẽ giải thích bài kiểm tra git và terminal cho một đồng đội mới như thế nào?
-  - Một assumption nào của bài kiểm tra git và terminal có thể sai trong production?
-  - Bạn sẽ chọn metric hoặc test nào để chứng minh kết quả đáng tin?
+  - Bạn sẽ giải thích nội dung “Bài kiểm tra Git và terminal” bằng ví dụ nào?
+  - Điều kiện nào cần kiểm tra trước khi áp dụng vào công việc thực tế?
+  - Bạn dùng bằng chứng nào để kết luận bài làm đáp ứng yêu cầu?
   en:
   - How would you explain git and terminal baseline assessment to a new teammate?
   - Which assumption behind git and terminal baseline assessment could fail in production?
@@ -83,17 +88,18 @@ formulas: []
 code_examples:
 - language: python
   title: 'Git and terminal baseline assessment: inspect one complete path'
-  code: "# Topic: Git and terminal baseline assessment (phase-00-onboarding-baseline-3)\nfrom dataclasses import dataclass\n\
-    \n@dataclass(frozen=True)\nclass Result:\n    value: str\n    valid: bool\n\nresult = Result(value='ready', valid=True)\n\
-    print(result)"
+  code: "# Topic: Git and terminal baseline assessment (phase-00-onboarding-baseline-3)\nfrom dataclasses import\
+    \ dataclass\n\n@dataclass(frozen=True)\nclass Result:\n    value: str\n    valid: bool\n\nresult = Result(value='ready',\
+    \ valid=True)\nprint(result)"
   status: runnable
-  purpose_vi: Minh họa đường đi input → output của bài kiểm tra git và terminal.
+  purpose_vi: Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.
   purpose_en: Illustrate the input-to-output path for git and terminal baseline assessment.
   setup: Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.
   expected_output: Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.
-  edge_case_vi: Thử input rỗng, shape sai hoặc dữ liệu thiếu và ghi lại lỗi.
+  edge_case_vi: Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.
   edge_case_en: Try an empty input, a wrong shape or missing data and record the failure.
-  explanation_vi: Giữ input, biến đổi và output nhỏ để có thể test boundary và failure case.
+  explanation_vi: Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần
+    nội dung; cần hoàn thành riêng nhiệm vụ thực hành.
   explanation_en: Keep the boundary executable and inspectable; change one input and verify the expected output.
 resources:
 - language: en
@@ -101,7 +107,7 @@ resources:
   url: https://docs.python.org/3/tutorial/
   kind: official
   required: false
-  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong lesson.
+  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.
   purpose_en: Official reference to verify the lesson concept.
   read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
   read_en: Read the relevant section, run a small example, and record one verified insight.
@@ -110,7 +116,7 @@ resources:
   url: https://code.visualstudio.com/docs/languages/python
   kind: official
   required: false
-  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong lesson.
+  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.
   purpose_en: Official reference to verify the lesson concept.
   read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
   read_en: Read the relevant section, run a small example, and record one verified insight.
@@ -119,26 +125,26 @@ resources:
   url: https://git-scm.com/docs
   kind: official
   required: false
-  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong lesson.
+  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.
   purpose_en: Official reference to verify the lesson concept.
   read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
   read_en: Read the relevant section, run a small example, and record one verified insight.
 - title: VS Code Getting Started
   url: https://code.visualstudio.com/docs/getstarted/getting-started
   language: en
-  purpose_vi: Hướng dẫn chính thức để mở folder, terminal và workspace.
-  read_vi: Đọc phần mở folder và integrated terminal trước khi làm exercise.
+  purpose_vi: Hướng dẫn mở thư mục bài tập và terminal trong VS Code.
+  read_vi: Đọc cách mở thư mục và terminal tích hợp trước khi làm bài tập.
   purpose_en: Official guide for folders, terminals, and workspaces.
   read_en: Read the folder and integrated-terminal sections before the exercise.
   kind: official
   required: true
-- title: Giải thích tiếng Việt và checklist của lesson
+- title: Giải thích và hướng dẫn thực hành trong bài
   url: ''
   language: vi
   kind: in_app
-  purpose_vi: Phần giải thích, code example, checklist và tiêu chí hoàn thành ngay trong app.
+  purpose_vi: Đọc giải thích, thực hiện nhiệm vụ và đối chiếu tiêu chí hoàn thành.
   purpose_en: The explanation, code example, checklist, and completion criteria inside the app.
-  read_vi: Đọc theo thứ tự Study plan → Concept notes → Code example → Practice plan.
+  read_vi: Đọc giải thích → xem ví dụ → thực hành → tự kiểm tra.
   read_en: Follow Study plan → Concept notes → Code example → Practice plan.
   required: true
 exercise_ids:
@@ -150,74 +156,83 @@ review_item_ids:
 - phase-00-onboarding-baseline-3-interview
 estimated_minutes: 45
 completion_checklist:
-- Giải thích được input, biến đổi và output của bài kiểm tra git và terminal.
-- Chạy hoặc sửa được code example với một input mới.
-- Ghi lại một edge case, metric hoặc failure mode.
-- Trả lời review card bằng bằng chứng cụ thể.
+- Trong kho thử nghiệm, sửa một tệp rồi dùng trạng thái và bản so sánh Git để mô tả thay đổi.
+- Làm lại một trường hợp khác trước khi kết luận đã nắm vững.
+- Lưu kết quả và giải thích được một giới hạn mà không nhìn lời giải.
 completion_criteria:
-- Mô tả được khi nào dùng bài kiểm tra git và terminal và khi nào cần baseline khác.
-- Có artifact chạy được và output có thể kiểm tra.
-- Nêu được một giả định, edge case và cách kiểm chứng.
+- 'Bài làm đáp ứng nhiệm vụ: Trong kho thử nghiệm, sửa một tệp rồi dùng trạng thái và bản so sánh Git để mô tả thay
+  đổi.'
+- Có kết quả đối chiếu với tiêu chí hoặc dự đoán đã ghi trước.
+- Làm lại một trường hợp khác trước khi kết luận đã nắm vững.
 common_mistakes:
-- Bỏ qua invariant hoặc shape khi áp dụng bài kiểm tra git và terminal.
-- Đánh giá bài kiểm tra git và terminal bằng một output tốt mà không có baseline hoặc failure case.
-- Sao chép ví dụ bài kiểm tra git và terminal mà không thay input và kiểm tra kết quả biên.
+- Tính cả phần chép từ lời giải là kết quả tự làm.
+- Kết luận từ một kết quả thuận lợi mà chưa kiểm tra trường hợp khác.
+- Chép lời giải nhưng không giải thích được quyết định trong bài làm của mình.
 next_lessons:
 - phase-00-onboarding-baseline-4
 - phase-00-onboarding-learning-system-1
-review_question_vi: Định nghĩa bài kiểm tra git và terminal bằng lời của bạn. Input, biến đổi và output là gì?
-review_question_en: Define git and terminal baseline assessment in your own words. What are the input, transformation and
-  output?
-review_answer_vi: Một câu trả lời tốt nêu rõ input, phép biến đổi, output và bối cảnh dùng bài kiểm tra git và terminal. Hãy
-  liên hệ cụ thể với bài kiểm tra git và terminal trong lesson phase-00-onboarding-baseline-3.
-review_answer_en: A strong answer names the input, transformation, output and the context where git and terminal baseline
-  assessment is used. Relate it specifically to git and terminal baseline assessment in lesson phase-00-onboarding-baseline-3.
+review_question_vi: Nội dung cốt lõi của “Bài kiểm tra Git và terminal” là gì?
+review_question_en: Define git and terminal baseline assessment in your own words. What are the input, transformation
+  and output?
+review_answer_vi: Bài kiểm tra tập trung vào khả năng xác định thư mục hiện tại, đọc trạng thái Git và giải thích
+  thay đổi của tệp. Thực hành trong kho thử nghiệm giúp bạn quan sát từng lệnh mà không ảnh hưởng dự án đang dùng.
+review_answer_en: A strong answer names the input, transformation, output and the context where git and terminal
+  baseline assessment is used. Relate it specifically to git and terminal baseline assessment in lesson phase-00-onboarding-baseline-3.
 review_cards:
 - id: phase-00-onboarding-baseline-3-recall
   type: recall
-  question_vi: Định nghĩa bài kiểm tra git và terminal bằng lời của bạn. Input, biến đổi và output là gì?
-  question_en: Define git and terminal baseline assessment in your own words. What are the input, transformation and output?
-  answer_vi: Một câu trả lời tốt nêu rõ input, phép biến đổi, output và bối cảnh dùng bài kiểm tra git và terminal.
-  answer_en: A strong answer names the input, transformation, output and the context where git and terminal baseline assessment
-    is used.
-  hint_vi: Bắt đầu bằng một ví dụ nhỏ có thể tính bằng tay.
+  question_vi: Nội dung cốt lõi của “Bài kiểm tra Git và terminal” là gì?
+  question_en: Define git and terminal baseline assessment in your own words. What are the input, transformation
+    and output?
+  answer_vi: Bài kiểm tra tập trung vào khả năng xác định thư mục hiện tại, đọc trạng thái Git và giải thích thay
+    đổi của tệp. Thực hành trong kho thử nghiệm giúp bạn quan sát từng lệnh mà không ảnh hưởng dự án đang dùng.
+  answer_en: A strong answer names the input, transformation, output and the context where git and terminal baseline
+    assessment is used.
+  hint_vi: Nêu ý chính, sau đó minh họa bằng tình huống cụ thể.
   hint_en: Start with a small example you can calculate by hand.
 - id: phase-00-onboarding-baseline-3-application
   type: application
-  question_vi: Viết một ví dụ code hoặc thiết kế nhỏ áp dụng bài kiểm tra git và terminal cho bài toán AI Engineer.
+  question_vi: Trong kho thử nghiệm, sửa một tệp rồi dùng trạng thái và bản so sánh Git để mô tả thay đổi.
   question_en: Write a small code example or design that applies git and terminal baseline assessment to an AI engineering
     problem.
-  answer_vi: Ví dụ cho bài kiểm tra git và terminal cần có input rõ ràng, output mong đợi và một cách chạy hoặc kiểm chứng
-    (phase-00-onboarding-baseline-3).
-  answer_en: The git and terminal baseline assessment example should have an explicit input, expected output and a way to
-    run or verify it (phase-00-onboarding-baseline-3).
-  hint_vi: Dùng code example trong lesson rồi thay một giả định.
+  answer_vi: 'Với nhiệm vụ “Trong kho thử nghiệm, sửa một tệp rồi dùng trạng thái và bản so sánh Git để mô tả thay
+    đổi”, cần lưu: bài tự làm, kết quả kiểm tra và phần đã dùng gợi ý. Làm lại một trường hợp khác trước khi kết
+    luận đã nắm vững.'
+  answer_en: The git and terminal baseline assessment example should have an explicit input, expected output and
+    a way to run or verify it (phase-00-onboarding-baseline-3).
+  hint_vi: Bắt đầu từ nhiệm vụ thực hành của bài.
   hint_en: Start from the lesson code example and change one assumption.
 - id: phase-00-onboarding-baseline-3-debug
   type: debug
-  question_vi: Nếu kết quả của bài kiểm tra git và terminal sai hoặc metric giảm, bạn sẽ debug theo thứ tự nào?
-  question_en: If git and terminal baseline assessment produces a wrong result or a metric drops, what would you debug first?
-  answer_vi: Với bài kiểm tra git và terminal, kiểm tra input/shape, preprocessing và baseline trước; sau đó cô lập lỗi bằng
-    test nhỏ và error analysis (phase-00-onboarding-baseline-3).
-  answer_en: For git and terminal baseline assessment, check inputs/shapes, preprocessing and the baseline first; then isolate
-    the failure with a small test and error analysis (phase-00-onboarding-baseline-3).
-  hint_vi: Đừng bắt đầu bằng việc đổi model hoặc tăng độ phức tạp.
+  question_vi: Khi làm bài “Bài kiểm tra Git và terminal”, bạn cần tránh lỗi nào và kiểm tra lại ra sao?
+  question_en: If git and terminal baseline assessment produces a wrong result or a metric drops, what would you
+    debug first?
+  answer_vi: 'Trong bài “Bài kiểm tra Git và terminal”, lỗi cần tránh là: tính cả phần chép từ lời giải là kết quả
+    tự làm. Làm lại một trường hợp khác trước khi kết luận đã nắm vững. Dùng ví dụ nhỏ để tìm bước đầu tiên có kết
+    quả khác dự kiến.'
+  answer_en: For git and terminal baseline assessment, check inputs/shapes, preprocessing and the baseline first;
+    then isolate the failure with a small test and error analysis (phase-00-onboarding-baseline-3).
+  hint_vi: Tìm bước đầu tiên xuất hiện khác biệt.
   hint_en: Do not start by changing the model or adding complexity.
 - id: phase-00-onboarding-baseline-3-interview
   type: interview
-  question_vi: Trong phỏng vấn, bạn sẽ giải thích trade-off và một edge case của bài kiểm tra git và terminal như thế nào?
-  question_en: In an interview, how would you explain a trade-off and one edge case of git and terminal baseline assessment?
-  answer_vi: Câu trả lời về bài kiểm tra git và terminal cần nêu giả định, metric/chi phí, giới hạn và cách giảm rủi ro trong
-    production (phase-00-onboarding-baseline-3).
-  answer_en: The answer about git and terminal baseline assessment should cover assumptions, metrics/cost, limitations and
-    how to reduce production risk (phase-00-onboarding-baseline-3).
-  hint_vi: Liên hệ với latency, chất lượng, chi phí hoặc khả năng quan sát nếu phù hợp.
+  question_vi: Bạn dùng kết quả nào từ bài “Bài kiểm tra Git và terminal” để giải thích cách làm và giới hạn?
+  question_en: In an interview, how would you explain a trade-off and one edge case of git and terminal baseline
+    assessment?
+  answer_vi: Bắt đầu từ nhiệm vụ “Trong kho thử nghiệm, sửa một tệp rồi dùng trạng thái và bản so sánh Git để mô
+    tả thay đổi”. Trình bày kết quả đã lưu, cách đối chiếu và một điều kiện có thể khiến kết luận thay đổi; không
+    chỉ đọc lại định nghĩa.
+  answer_en: The answer about git and terminal baseline assessment should cover assumptions, metrics/cost, limitations
+    and how to reduce production risk (phase-00-onboarding-baseline-3).
+  hint_vi: Dùng quyết định thật trong bài làm, tránh chỉ đọc định nghĩa.
   hint_en: Relate it to latency, quality, cost or observability where relevant.
 ---
 # Bài kiểm tra Git và terminal / Git and terminal baseline assessment
 
-Bài kiểm tra Git và terminal giúp một AI Engineer làm việc có thể truy vết: mỗi thay đổi cần có diff, lý do và cách kiểm chứng. Thực hành bằng một repository nhỏ, tạo một lỗi có chủ ý, đọc output của terminal rồi sửa bằng commit rõ nghĩa.
+Bài kiểm tra tập trung vào khả năng xác định thư mục hiện tại, đọc trạng thái Git và giải thích thay đổi của tệp. Thực hành trong kho thử nghiệm giúp bạn quan sát từng lệnh mà không ảnh hưởng dự án đang dùng.
 
-## Practice
+## Thực hành
 
-Làm bài kiểm tra không xem tài liệu, chấm theo checklist, sau đó ghi ba lỗ hổng và một kế hoạch bù.
+Trong kho thử nghiệm, sửa một tệp rồi dùng trạng thái và bản so sánh Git để mô tả thay đổi.
+
+Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Tự làm bài đánh giá trước khi xem tài liệu, đối chiếu tiêu chí rồi ghi ba phần cần ôn bổ sung.

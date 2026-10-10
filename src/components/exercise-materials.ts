@@ -23,7 +23,8 @@ export function exerciseMaterial(exercise: Exercise, language: 'vi' | 'en') {
     ?? (vi ? exercise.description_vi : exercise.description_en)
   const paragraphs = description.replace(/^# .*(?:\r?\n|$)/, '').trim().split(/\r?\n\s*\r?\n/)
   const brief = paragraphs[0]?.replace(/\s+/g, ' ').replace(/`/g, '') ?? ''
-  const checkpoint = paragraphs.find((text) => text.startsWith('Checkpoint:'))?.replace(/^Checkpoint:\s*/, '')
+  const checkpoint = paragraphs.find((text) => /^(?:Checkpoint|Tự kiểm tra):/.test(text))
+    ?.replace(/^(?:Checkpoint|Tự kiểm tra):\s*/, '')
   const curated = exerciseGuides[exercise.slug]?.[language]
   const guide = curated ?? {
     summary: brief.length > 160 ? `${brief.slice(0, 157).trimEnd()}…` : brief,

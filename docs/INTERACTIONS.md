@@ -1,14 +1,14 @@
 # Phản hồi khi thao tác
 
-Nút, liên kết, checkbox và phần mở rộng dùng phản hồi nhấn ngắn theo màu teal của giao diện. Với nút và liên kết, hiệu ứng thu nhẹ xuống 98% rồi trở về trong 180 ms. Phản hồi này xác nhận cú bấm; thông báo thành công chỉ xuất hiện sau khi thao tác lưu hoàn tất.
+Nút, liên kết, ô đánh dấu và phần nội dung mở rộng dùng hiệu ứng ngắn màu xanh ngọc khi được nhấn. Nút và liên kết thu nhẹ xuống 98% rồi trở về trong 180 ms. Hiệu ứng cho biết ứng dụng đã nhận thao tác; thông báo thành công chỉ xuất hiện sau khi lưu hoàn tất.
 
-- `InteractionFeedback` gắn một listener dùng chung, không chặn điều hướng hay thay đổi focus. Bấm nhanh liên tiếp thay thế hiệu ứng cũ; listener và animation được dọn khi unmount.
-- Nút có `aria-busy="true"` hiển thị vòng chờ dùng màu chữ hiện tại. Nút làm mới quay biểu tượng sẵn có. Trạng thái chờ giữ chữ rõ thay vì giảm opacity như nút bị khóa thông thường.
+- `InteractionFeedback` dùng chung một bộ lắng nghe sự kiện, không chặn điều hướng hoặc thay đổi phần tử đang được chọn. Bấm nhanh liên tiếp sẽ thay hiệu ứng cũ; bộ lắng nghe và hiệu ứng được dọn khi thành phần rời giao diện.
+- Nút có `aria-busy="true"` hiển thị vòng chờ cùng màu chữ hiện tại. Nút làm mới quay biểu tượng sẵn có. Khi chờ, chữ vẫn rõ; không giảm độ đậm như nút bị khóa thông thường.
 - Ghi chú, tiến độ và cài đặt khóa thao tác gửi trong lúc chờ. Ghi chú và mục tiêu tuần giữ nội dung sau lỗi để thử lại. Thông báo lưu ghi chú/cài đặt giữ đến khi người dùng sửa hoặc lưu tiếp.
-- Các nút đã có trạng thái chờ ở auth, review, phiên học, cloud journal, xuất dữ liệu và xóa tài khoản sử dụng chỉ báo chung.
-- Bài tập có nhãn chờ VI/EN cho mở workspace, tạo thư mục, chạy, xuất artifact và xem lịch sử; khóa gửi trùng trong lúc xử lý. Kết quả chạy lỗi giữ nguyên output để xem và thử lại. Sửa nội dung commit yêu cầu xác nhận lại trước khi publish.
-- `prefers-reduced-motion: reduce` tắt animation mới, giữ nhãn đang xử lý và phản hồi màu tĩnh. Tùy chọn thay đổi trong phiên được áp dụng ngay.
-- Nút chính/phụ và điều hướng chỉ transition chuyển động/bóng; màu chữ và nền đổi ngay theo theme để tránh khoảng tương phản kém giữa hai bảng màu.
+- Các nút đăng nhập, ôn tập, ghi phiên học, lưu nhật ký theo tài khoản, xuất dữ liệu và xóa tài khoản dùng chung chỉ báo chờ.
+- Bài tập có nhãn chờ Việt/Anh khi mở thư mục, tạo bài, chạy, xuất bài làm và xem lịch sử; chặn gửi trùng khi đang xử lý. Nếu chạy lỗi, kết quả vẫn được giữ để bạn đọc và thử lại. Sửa thông điệp commit yêu cầu xác nhận lại trước khi công bố.
+- `prefers-reduced-motion: reduce` tắt hiệu ứng chuyển động mới, giữ nhãn đang xử lý và phản hồi màu tĩnh. Thay đổi tùy chọn trong phiên được áp dụng ngay.
+- Nút chính/phụ và điều hướng chỉ tạo chuyển tiếp cho chuyển động và bóng; màu chữ, màu nền đổi ngay theo giao diện sáng/tối để tránh giai đoạn thiếu tương phản.
 
 ## Kiểm tra ngày 2026-10-07
 

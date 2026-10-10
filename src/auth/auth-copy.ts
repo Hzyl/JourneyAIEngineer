@@ -14,10 +14,10 @@ export const authCopy = {
       mismatch: 'Hai mật khẩu chưa trùng khớp.',
     },
     notices: {
-      resend: (email: string) => `Đã gửi lại email xác nhận đến ${email}. Hãy kiểm tra Inbox và Spam.`,
+      resend: (email: string) => `Đã gửi lại email xác nhận đến ${email}. Hãy kiểm tra hộp thư đến và thư rác.`,
       unconfirmed: (email: string) => `Tài khoản ${email} chưa được xác nhận. Mở email xác nhận trước, hoặc gửi lại email mới.`,
       created: (email: string) => `Mở email gửi đến ${email} để xác nhận trước khi đăng nhập.`,
-      reset: () => 'Nếu email có tài khoản, hướng dẫn đặt lại mật khẩu đã được gửi. Hãy kiểm tra cả Spam.',
+      reset: () => 'Nếu email có tài khoản, hướng dẫn đặt lại mật khẩu đã được gửi. Hãy kiểm tra cả thư rác.',
     },
     confirm: 'Xác nhận email để tiếp tục', inbox: 'Kiểm tra hộp thư của bạn',
     signIn: 'Đăng nhập', signUp: 'Tạo tài khoản', chooseMode: 'Chọn cách truy cập', account: 'TÀI KHOẢN CỦA BẠN',
@@ -26,7 +26,7 @@ export const authCopy = {
     working: 'Đang xử lý…', create: 'Tạo tài khoản và xác nhận email', recover: 'Gửi email khôi phục',
     forgot: 'Quên mật khẩu?', back: 'Quay về đăng nhập', different: 'Dùng email khác',
     noAccount: 'Bạn chưa có tài khoản?', freeAccount: 'Tạo tài khoản miễn phí →',
-    privacy: 'Không có API key, source code hay thư mục trên máy của bạn được gửi lên web beta.',
+    privacy: 'Web beta không gửi khóa API, mã nguồn hay thư mục trên máy của bạn lên máy chủ.',
   },
   en: {
     titles: { sign_in: 'Welcome back', sign_up: 'Create your learning account', reset: 'Recover your account' },
