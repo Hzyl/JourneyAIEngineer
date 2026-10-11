@@ -9,6 +9,15 @@
   line-height: 1.15;
 }
 
+.signup-confirmation .text-button[data-action='enter-code'] {
+  min-height: 44px;
+  max-width: 100%;
+  font-size: 1rem;
+  line-height: 1.5;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
 .otp-destination {
   display: grid;
   gap: 5px;

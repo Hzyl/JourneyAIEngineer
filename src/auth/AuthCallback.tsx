@@ -6,6 +6,7 @@ import { usePublicLanguage } from '../public/public-language'
 import { PasswordField } from './PasswordField'
 import { authCopy } from './auth-copy'
 import { describeAuthError } from './auth-utils'
+import { consumeConfirmationReturn } from './confirmation-return'
 import './auth.css'
 import './auth-layout.css'
 
@@ -32,7 +33,7 @@ export function AuthCallback() {
 
   useEffect(() => {
     if (callbackError || recovery || auth.state !== 'signed_in') return
-    const timer = window.setTimeout(() => window.location.replace('/'), 900)
+    const timer = window.setTimeout(() => window.location.replace(consumeConfirmationReturn()), 900)
     return () => window.clearTimeout(timer)
   }, [auth.state, recovery, callbackError])
 

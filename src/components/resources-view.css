@@ -1,0 +1,88 @@
+/* Inherit the app reading scale; legacy library rules used fixed 9–12px text. */
+.resources-view {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.resources-view .resources-intro > p,
+.resources-view .resource-library-header p,
+.resources-view .resource-card > p:not(.resource-provider),
+.resources-view .resource-how p,
+.resources-view .empty-state p {
+  font-size: 1em;
+  line-height: 1.75;
+}
+
+.resources-view .resource-library-header h3 {
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+
+.resources-view .resource-card h4 {
+  font-size: 1.375rem;
+  line-height: 1.4;
+}
+
+/* The shared legacy provider rule is important; scope its override to this view. */
+.resources-view .resource-provider {
+  font-size: 1rem !important;
+  line-height: 1.6;
+}
+
+.resources-view .resource-card-top .tag,
+.resources-view .resource-language,
+.resources-view .resource-phases span,
+.resources-view .resource-how strong,
+.resources-view .resource-card .resource-link,
+.resources-view .resource-filters > [role="status"] {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.resources-view .resource-card-top {
+  flex-wrap: wrap;
+}
+
+.resources-view .resource-card-top .tag {
+  white-space: normal;
+}
+
+.resources-view .resource-card .resource-link {
+  min-height: 44px;
+}
+
+.resources-view .resource-filters {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, .8fr);
+  gap: 12px;
+}
+
+.resources-view .resource-filters input,
+.resources-view .resource-filters select {
+  min-width: 0;
+  width: 100%;
+  min-height: 44px;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.resources-view .resource-filters > [role="status"] {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 1100px) {
+  .resources-view .resource-library-header,
+  .resources-view .resource-filters {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 620px) {
+  .resources-view .resource-card {
+    padding: 14px;
+  }
+
+  .resources-view .empty-state {
+    padding: 24px 12px;
+  }
+}

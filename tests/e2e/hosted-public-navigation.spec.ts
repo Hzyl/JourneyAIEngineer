@@ -43,6 +43,11 @@ for (const language of ['vi', 'en'] as const) {
     await page.reload()
     await expect(page.locator('html')).toHaveAttribute('lang', language)
     await page.getByRole('button', { name: vi ? 'Tạo tài khoản' : 'Create account', exact: true }).click()
+    await expect(page).toHaveURL(/\/auth\/sign-up\?next=/)
+    await page.reload()
+    await expect(page.getByRole('heading', {
+      name: vi ? 'Tạo tài khoản học tập' : 'Create your learning account',
+    })).toBeVisible()
     await page.getByLabel('Email').fill('learner@example.com')
     await page.getByLabel(vi ? 'Mật khẩu' : 'Password', { exact: true }).fill('example-password')
     await page.getByLabel(vi ? 'Nhập lại mật khẩu' : 'Confirm password', { exact: true }).fill('different-password')

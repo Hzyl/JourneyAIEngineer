@@ -65,6 +65,23 @@ for (const language of ['vi', 'en'] as const) {
     await page.locator('input[autocomplete="new-password"]').nth(1).fill('synthetic-password')
     await page.locator('.auth-submit').click()
     const code = page.locator('#signup-code')
+    await expect(code).toHaveCount(0)
+    await expect(page.getByRole('heading', { name: vi ? 'Kiểm tra email của bạn' : 'Check your email' }))
+      .toBeFocused()
+    for (const width of [1440, 390, 320]) {
+      await page.setViewportSize({ width, height: 950 })
+      for (const theme of ['light', 'dark'] as const) {
+        await page.emulateMedia({ colorScheme: theme, reducedMotion: 'reduce' })
+        await checkThemeContrast(page)
+        const action = page.locator('[data-action="enter-code"]')
+        expect(await action.evaluate((element) => parseFloat(getComputedStyle(element).fontSize))).toBeGreaterThanOrEqual(16)
+        expect((await action.boundingBox())!.height).toBeGreaterThanOrEqual(44)
+        await page.locator('.auth-form-panel').screenshot({
+          path: `.build/signup-otp-evidence/${language}-${theme}-${width}-link.png`,
+        })
+      }
+    }
+    await page.locator('[data-action="enter-code"]').click()
     await expect(code).toBeFocused()
     await expect(page.locator('.password-control')).toHaveCount(0)
     await expect(page.locator('[data-action="resend"]')).toBeDisabled()

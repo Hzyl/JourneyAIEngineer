@@ -1,5 +1,4 @@
-export function authReturnPath(): string {
-  const value = new URLSearchParams(window.location.search).get('next') ?? '/'
+export function authReturnPath(value = new URLSearchParams(window.location.search).get('next') ?? '/'): string {
   try {
     const url = new URL(value, window.location.origin)
     const allowed = ['/', '/roadmap', '/exercises'].includes(url.pathname) || url.pathname.startsWith('/lesson/')

@@ -1,6 +1,7 @@
 import { LearningIllustration } from './LearningIllustration'
 import { useEffect, useState } from 'react'
 import type { ReferenceResource } from '../api'
+import './resources-view.css'
 
 const phaseTitles = [
   'Onboarding', 'Python & Software Engineering', 'Math & Machine Learning',
@@ -77,7 +78,7 @@ export function ResourcesView({ resources, language }: {
   })
   const types = Array.from(new Set(resources.map((resource) => resource.type)))
 
-  return <div>
+  return <div className="resources-view">
     <div className="page-intro resources-intro">
       <div>
         <span className="eyebrow accent">{vi ? 'THƯ VIỆN THAM KHẢO' : 'REFERENCE LIBRARY'}</span>

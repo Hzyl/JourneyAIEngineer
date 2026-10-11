@@ -9,6 +9,7 @@ vi.mock('../platform/hosted/supabase-client', () => ({ requireSupabase: () => ({
 let host: HTMLDivElement
 let root: Root
 const back = vi.fn()
+const openCode = () => act(async () => host.querySelector<HTMLButtonElement>('[data-action="enter-code"]')!.click())
 const render = (language: 'vi' | 'en' = 'en', justSent = false) => act(async () => {
   root.render(<SignupConfirmation email="learner@example.com" language={language}
     justSent={justSent} onChangeEmail={back} onBack={back} loading={false} />)
@@ -39,6 +40,7 @@ afterEach(async () => {
 
 test('code entry accepts pasted spaces and calls the provider for the bound email only once', async () => {
   await render()
+  await openCode()
   let resolve!: (value: unknown) => void
   auth.verifyOtp.mockReturnValueOnce(new Promise((done) => { resolve = done }))
   await fill(' 123 456 ')
@@ -54,6 +56,7 @@ test('code entry accepts pasted spaces and calls the provider for the bound emai
 
 test('blank and nonnumeric codes are rejected before contacting Auth', async () => {
   await render()
+  await openCode()
   await act(async () => { submit() })
   expect(auth.verifyOtp).not.toHaveBeenCalled()
   await fill('abcdef')
@@ -65,6 +68,7 @@ test('blank and nonnumeric codes are rejected before contacting Auth', async () 
 test('expired code preserves input, translates feedback and allows a retry', async () => {
   auth.verifyOtp.mockResolvedValueOnce({ data: { session: null }, error: { code: 'otp_expired' } })
   await render()
+  await openCode()
   await fill('123456')
   await act(async () => { submit() })
   expect(host.querySelector('[role="alert"]')!.textContent).toContain('expired')
@@ -78,6 +82,7 @@ test('expired code preserves input, translates feedback and allows a retry', asy
 test('an empty successful provider response is not treated as confirmed', async () => {
   auth.verifyOtp.mockResolvedValueOnce({ data: { session: null }, error: null })
   await render()
+  await openCode()
   await fill('123456')
   await act(async () => { submit() })
   expect(host.querySelector('[role="alert"]')).not.toBeNull()
@@ -109,5 +114,21 @@ test('email correction and back remain available before verification', async () 
   await render()
   await act(async () => host.querySelector<HTMLButtonElement>('[data-action="change-email"]')!.click())
   expect(back).toHaveBeenCalledTimes(1)
+  expect(host.querySelector('input')).toBeNull()
+})
+
+test('link instructions do not promise a code or a branded sender and code entry is optional', async () => {
+  await render()
+  expect(host.querySelector('#auth-title')!.textContent).toBe('Check your email')
+  expect(host.textContent).toContain('confirmation link')
+  expect(host.textContent).not.toContain('email from Journey AI Engineer')
+  expect(host.querySelector('form')).toBeNull()
+  await openCode()
   expect(host.querySelector('input')!.getAttribute('inputmode')).toBe('numeric')
+  expect(document.activeElement).toBe(host.querySelector('input'))
+  await fill('123456')
+  await act(async () => host.querySelector<HTMLButtonElement>('[data-action="enter-code"]')!.click())
+  expect(host.querySelector('input')).toBeNull()
+  await openCode()
+  expect(host.querySelector('input')!.value).toBe('')
 })

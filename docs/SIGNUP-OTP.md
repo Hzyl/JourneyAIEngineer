@@ -1,5 +1,31 @@
 # Signup OTP and email identity
 
+## Local correction — 2026-10-11
+
+The confirmation screen now starts with instructions to open the link in the
+confirmation email. Numeric code entry is available only after the learner selects
+“My email contains a confirmation code”. The UI does not promise a branded sender,
+a delivered code, or successful inbox delivery. Resend requests are described as
+confirmation emails and retain the 60-second cooldown.
+
+`/auth/sign-up` opens account creation directly. Selecting Create account keeps that
+intent in the URL across reload, including the existing `next` destination. The
+existing public sign-in buttons still intentionally open sign-in. Invalid sign-in
+feedback remains generic about whether an email exists and points new learners to
+Create account; signup errors use signup-specific language.
+
+Confirmation links keep the existing allowlisted callback URL unchanged. A safe
+learning destination is kept in browser storage for up to one hour and consumed
+once after confirmation, including when the email opens a new tab in that browser.
+External destinations are rejected. Another browser or blocked/expired storage
+falls back to the home page; password recovery keeps its separate flow.
+
+This is a local frontend correction, not a hosted email/template rollout. The sender
+configuration dependency below remains open. No real account or external email is
+needed for the synthetic regression tests.
+
+## Previous hosted release
+
 Frontend deployed on 2026-10-09 at commit `dc6d47f` after approval of commit, push
 and the controlled Confirm signup template rollout. The pre-rollout frontend
 checkpoint was `128b353`. **The hosted email template update was rejected; signup
@@ -33,13 +59,15 @@ Ignored operational evidence is in `.build/signup-otp-deployment/`.
 
 ## User flow
 
-Password signup now opens an email confirmation form. The learner can paste the
-code, correct the email address, return to sign-in, or resend after a 60-second
-cooldown. Incorrect/expired codes, rate limits and transport failures have localized
-feedback. Passwords are cleared when entering this form; codes are never persisted.
+Password signup opens an email confirmation screen. The learner follows the link
+in their email, or selects optional code entry if their actual email includes a
+numeric code. They can correct the address, return to sign-in, or resend after a
+60-second cooldown. Incorrect/expired codes, rate limits and transport failures
+have localized feedback. Passwords are cleared on entering confirmation; codes are
+never persisted and are cleared when hiding the optional code form.
 
-An unconfirmed password sign-in opens the same form. After reloading or reopening
-the site, sign in with the email and password just created to reach code entry.
+An unconfirmed password sign-in opens the same screen. After reloading or reopening
+the site, sign in with the email and password just created to reach confirmation.
 Existing confirmation links and password-recovery callbacks continue to work.
 
 The frontend uses `auth.verifyOtp({ email, token, type: 'email' })` and
@@ -73,7 +101,13 @@ intended for public production delivery; custom SMTP requires separate configura
 
 ## Verification
 
-On the isolated `journey-readiness-otp` stack, real Auth and Mailpit passed 17
+The 2026-10-11 local regression suite reproduces link-only email UI, direct signup
+mode, mode persistence on reload, and operation-specific error handling. Browser
+tests use synthetic Supabase responses for both optional OTP verification and the
+post-validation link callback. These do not validate hosted link tokens or delivery.
+See `.build/auth-fix-report.md` for the current run results.
+
+During the previous rollout, on the isolated `journey-readiness-otp` stack, real Auth and Mailpit passed 17
 assertions: signup without a session, branded subject/body, numeric code delivery,
 rejected password login before confirmation, wrong/expired codes, signup resend,
 successful `type: email` verification, session policy RPC, single-use enforcement,
@@ -91,7 +125,7 @@ duplicate-submit guards, retry focus, theme contrast and horizontal overflow at
 Evidence is under ignored `.build/signup-otp-evidence/`; it contains no live OTP.
 These checks do not prove Gmail/Outlook rendering or production inbox delivery.
 
-Validation results: 218 frontend unit tests passed; after the final focus adjustment,
+Previous rollout validation: 218 frontend unit tests passed; after the final focus adjustment,
 all 12 affected auth tests passed again. All 31 production-browser tests passed.
 TypeScript and lint passed with one pre-existing AuthProvider Fast Refresh warning.
 The production build passed with its existing large-chunk warning.
@@ -104,17 +138,17 @@ The production build passed with its existing large-chunk warning.
 2. Retain the existing hosted confirmation template/settings for rollback without
    copying secrets into Git. Verify Confirm email remains enabled and inspect the
    configured code lifetime/length. Do not change them incidentally.
-3. Deploy the frontend first and verify the OTP form is available on the deployed
-   commit. Keep callback support so previously sent confirmation links still work.
+3. Deploy the frontend first and verify link instructions and optional code entry
+   are available on the deployed commit. Keep callback support for confirmation links.
 4. Apply the reviewed subject/body to **Confirm signup**, then verify the saved
    template. This is a separate Auth dashboard/Management API operation: the current
    Supabase MCP tools do not expose Auth template configuration.
 5. Complete an approved real signup with a maintainer-controlled address. Confirm
    brand, code entry, resend, password sign-in and progress after reload. Stop on a
    mail-provider rejection; do not repeatedly consume the sender's rate limit.
-6. During the frontend/template transition, earlier messages may still contain links;
-   those callbacks remain supported. For an old open tab without a code field,
-   reload and sign in with the new account credentials to open the confirmation form.
+6. During the frontend/template transition, messages may contain links or codes;
+   follow the actual message. For a code, choose the optional code-entry action.
+   Both routes must remain supported even if a hosted template changes later.
 7. If rolling back the frontend, restore the link-capable confirmation template first.
    A code-only email cannot be completed in the old UI. No database rollback is needed.
 

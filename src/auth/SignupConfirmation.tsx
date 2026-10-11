@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { requireSupabase } from '../platform/hosted/supabase-client'
 import type { PublicLanguage } from '../public/public-language'
 import { otpCopy, otpFailure } from './otp-copy'
+import { clearConfirmationReturn, rememberConfirmationReturn } from './confirmation-return'
 import './signup-confirmation.css'
 
 type Props = {
@@ -17,6 +18,7 @@ type Failure = 'validation' | 'invalid' | 'rateLimit' | 'failure' | 'resendFailu
 export function SignupConfirmation({ email, language, justSent, loading, onChangeEmail, onBack }: Props) {
   const text = otpCopy[language]
   const [token, setToken] = useState('')
+  const [enterCode, setEnterCode] = useState(false)
   const [pending, setPending] = useState<'verify' | 'resend' | null>(null)
   const [error, setError] = useState<Failure | null>(null)
   const [notice, setNotice] = useState<'sent' | 'confirmed' | null>(null)
@@ -30,9 +32,12 @@ export function SignupConfirmation({ email, language, justSent, loading, onChang
 
   useEffect(() => {
     active.current = true
-    input.current?.focus()
     return () => { active.current = false }
   }, [])
+  useEffect(() => {
+    if (enterCode) input.current?.focus()
+    else document.getElementById('auth-title')?.focus()
+  }, [enterCode])
   useEffect(() => {
     if (error && !disabled) input.current?.focus()
   }, [error, disabled])
@@ -63,6 +68,7 @@ export function SignupConfirmation({ email, language, justSent, loading, onChang
       const { data, error: authError } = await requireSupabase().auth.verifyOtp({ email, token: code, type: 'email' })
       if (authError) throw authError
       if (!data.session) throw new Error('Missing verified session')
+      clearConfirmationReturn()
       if (active.current) {
         setToken('')
         setNotice('confirmed')
@@ -91,6 +97,7 @@ export function SignupConfirmation({ email, language, justSent, loading, onChang
         type: 'signup', email, options: { emailRedirectTo: callback.href },
       })
       if (authError) throw authError
+      rememberConfirmationReturn()
       if (active.current) setNotice('sent')
     } catch (cause) {
       if (active.current) setError(otpFailure(cause) === 'rateLimit' ? 'rateLimit' : 'resendFailure')
@@ -103,7 +110,7 @@ export function SignupConfirmation({ email, language, justSent, loading, onChang
   return <div className="signup-confirmation" aria-busy={disabled}>
     <div className="auth-heading">
       <span className="eyebrow accent">{text.step}</span>
-      <h2 id="auth-title" tabIndex={-1}>{text.title}</h2>
+      <h2 id="auth-title" tabIndex={-1}>{enterCode ? text.codeTitle : text.title}</h2>
       <p>{text.intro}</p>
     </div>
     <p className="otp-destination"><span>{text.destination}</span><strong>{email}</strong></p>
@@ -112,7 +119,12 @@ export function SignupConfirmation({ email, language, justSent, loading, onChang
       <span className="auth-notice-mark" aria-hidden="true">{error ? '!' : '✓'}</span>
       <div className="auth-notice-copy" id="otp-feedback">{error ? text[error] : text[notice!]}</div>
     </div>}
-    <form className="auth-form" onSubmit={(event) => void verify(event)} noValidate>
+    <button className="text-button" type="button" data-action="enter-code" disabled={disabled}
+      aria-expanded={enterCode} aria-controls={enterCode ? 'signup-code-form' : undefined}
+      onClick={() => { setEnterCode(!enterCode); setToken(''); setError(null) }}>
+      {enterCode ? text.useLink : text.enterCode}
+    </button>
+    {enterCode && <form id="signup-code-form" className="auth-form" onSubmit={(event) => void verify(event)} noValidate>
       <label className="auth-field" htmlFor="signup-code"><span>{text.label}</span></label>
       <input ref={input} id="signup-code" className="otp-input" name="confirmation-code" type="text"
         inputMode="numeric" autoComplete="one-time-code" maxLength={64} spellCheck={false}
@@ -123,7 +135,7 @@ export function SignupConfirmation({ email, language, justSent, loading, onChang
       <p className="field-hint" id="otp-hint">{text.hint}</p>
       <button className="primary-button auth-submit" type="submit" disabled={disabled}
         aria-busy={pending === 'verify'}>{pending === 'verify' ? text.verifying : text.verify}</button>
-    </form>
+    </form>}
     <div className="otp-resend">
       <p>{text.help}</p>
       <button className="secondary-button" type="button" data-action="resend"

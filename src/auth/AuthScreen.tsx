@@ -7,6 +7,7 @@ import { authCopy } from './auth-copy'
 import { AuthIntro } from './AuthIntro'
 import { PasswordField } from './PasswordField'
 import { SignupConfirmation } from './SignupConfirmation'
+import { clearConfirmationReturn, rememberConfirmationReturn } from './confirmation-return'
 import './auth.css'
 import './auth-layout.css'
 
@@ -18,7 +19,8 @@ export function AuthScreen({ loading, language = 'vi', expired = false }: {
   loading: boolean; language?: PublicLanguage; expired?: boolean
 }) {
   const text = authCopy[language]
-  const [mode, setMode] = useState<Mode>('sign_in')
+  const [mode, setMode] = useState<Mode>(() =>
+    !expired && window.location.pathname === '/auth/sign-up' ? 'sign_up' : 'sign_in')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmation, setConfirmation] = useState('')
@@ -28,13 +30,19 @@ export function AuthScreen({ loading, language = 'vi', expired = false }: {
   const [notice, setNotice] = useState<Notice | null>(null)
   const [error, setError] = useState<FormError | null>(null)
   const disabled = loading || pending !== null
-  const errorText = error && ('key' in error ? text.validation[error.key] : describeAuthError(error.cause, language))
+  const errorText = error && ('key' in error ? text.validation[error.key]
+    : describeAuthError(error.cause, language, mode))
   const message = notice ? text.notices[notice.kind](notice.email) : ''
 
   const resetNotice = () => { setError(null); setNotice(null) }
   const switchMode = (next: Mode) => {
     if (inFlight.current || loading) return
     setMode(next)
+    if (window.location.pathname === '/auth/sign-in' || window.location.pathname === '/auth/sign-up') {
+      const url = new URL(window.location.href)
+      url.pathname = next === 'sign_up' ? '/auth/sign-up' : '/auth/sign-in'
+      window.history.replaceState(window.history.state, '', url)
+    }
     setChallenge(null)
     resetNotice()
   }
@@ -46,6 +54,7 @@ export function AuthScreen({ loading, language = 'vi', expired = false }: {
   }
   const finish = () => { inFlight.current = false; setPending(null) }
   const openConfirmation = (justSent: boolean) => {
+    rememberConfirmationReturn()
     setChallenge({ email: email.trim(), justSent })
     setPassword('')
     setConfirmation('')
@@ -70,12 +79,14 @@ export function AuthScreen({ loading, language = 'vi', expired = false }: {
           }
           throw authError
         }
+        clearConfirmationReturn()
       } else if (mode === 'sign_up') {
         const { data, error: authError } = await client.auth.signUp({
           email: email.trim(), password, options: { emailRedirectTo: callbackUrl() },
         })
         if (authError) throw authError
         if (!data?.session) openConfirmation(true)
+        else clearConfirmationReturn()
       } else {
         const { error: authError } = await client.auth.resetPasswordForEmail(email, { redirectTo: callbackUrl(true) })
         if (authError) throw authError

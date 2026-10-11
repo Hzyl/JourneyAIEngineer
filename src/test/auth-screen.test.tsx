@@ -22,6 +22,8 @@ const fill = (selector: string, value: string) => act(async () => {
 const click = (selector: string) => act(async () => host.querySelector<HTMLButtonElement>(selector)!.click())
 const submit = () => host.querySelector('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
 beforeEach(async () => {
+  localStorage.clear()
+  window.history.replaceState({}, '', '/auth/sign-in')
   Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true })
   vi.resetAllMocks()
   for (const call of Object.values(auth)) call.mockResolvedValue({ error: null })
@@ -58,16 +60,18 @@ test('one sign-in stays pending across duplicate submits and mode controls then 
     .every((button) => button.disabled)).toBe(true)
   await render('vi')
   await act(async () => resolve({ error: { code: 'invalid_credentials' } }))
-  expect(host.querySelector('[role="alert"]')!.textContent).toContain('Email hoặc mật khẩu chưa đúng')
+  expect(host.querySelector('[role="alert"]')!.textContent).toContain('Không thể đăng nhập bằng thông tin này')
   expect(host.querySelector<HTMLInputElement>('.password-control input')!.value).toBe('example-password')
   await act(async () => { submit() })
   expect(auth.signInWithPassword).toHaveBeenCalledTimes(2)
 })
 
 test('unconfirmed-email resend keeps the same address, language and duplicate guard', async () => {
+  window.history.replaceState({}, '', '/auth/sign-in?next=%2Froadmap')
   auth.signInWithPassword.mockResolvedValueOnce({ error: { code: 'email_not_confirmed' } })
   await act(async () => { submit() })
-  expect(host.querySelector('#signup-code')).not.toBeNull()
+  expect(host.querySelector('#signup-code')).toBeNull()
+  expect(host.textContent).toContain('confirmation link')
   expect(host.querySelector('.password-control')).toBeNull()
   let resolve!: (result: unknown) => void
   auth.resend.mockReturnValueOnce(new Promise((done) => { resolve = done }))
@@ -81,21 +85,61 @@ test('unconfirmed-email resend keeps the same address, language and duplicate gu
   await render('vi')
   await act(async () => resolve({ error: null }))
   expect(host.querySelector('[role="status"]')!.textContent).toContain('Nếu địa chỉ này cần xác nhận')
+  expect(auth.resend.mock.calls[0][0].options.emailRedirectTo).toBe(`${window.location.origin}/auth/callback?lang=en`)
+  expect(JSON.parse(localStorage.getItem('journey-confirmation-return') ?? 'null')).toMatchObject({ path: '/roadmap' })
 })
 
-test('signup enters code confirmation and correcting the address clears password fields', async () => {
+test('signup explains the email link and correcting the address clears password fields', async () => {
   await click('.auth-mode-switch button:last-child')
   await fill('input[autocomplete="new-password"]', 'example-password')
   const inputs = host.querySelectorAll<HTMLInputElement>('input[autocomplete="new-password"]')
   await fill(`#${inputs[1].id}`, 'example-password')
   await act(async () => { submit() })
   expect(auth.signUp).toHaveBeenCalledTimes(1)
-  expect(host.querySelector('#signup-code')).not.toBeNull()
+  expect(host.querySelector('#signup-code')).toBeNull()
+  expect(host.textContent).toContain('confirmation link')
   expect(host.querySelector('.otp-destination')!.textContent).toContain('learner@example.com')
   await click('[data-action="change-email"]')
   expect(host.querySelector<HTMLInputElement>('input[type="email"]')!.value).toBe('learner@example.com')
   expect([...host.querySelectorAll<HTMLInputElement>('input[autocomplete="new-password"]')]
     .every((input) => input.value === '')).toBe(true)
+})
+
+test('a direct signup route opens account creation and never sends a password login', async () => {
+  window.history.replaceState({}, '', '/auth/sign-up?next=%2Froadmap')
+  await act(async () => root.unmount())
+  root = createRoot(host)
+  await render()
+  expect(host.querySelector('#auth-title')!.textContent).toBe('Create your learning account')
+  await fill('input[type="email"]', 'new-learner@example.test')
+  const inputs = host.querySelectorAll<HTMLInputElement>('input[autocomplete="new-password"]')
+  await fill(`#${inputs[0].id}`, 'example-password')
+  await fill(`#${inputs[1].id}`, 'example-password')
+  await act(async () => { submit() })
+  expect(auth.signUp).toHaveBeenCalledTimes(1)
+  expect(auth.signInWithPassword).not.toHaveBeenCalled()
+  expect(auth.signUp.mock.calls[0][0].options.emailRedirectTo).toBe(`${window.location.origin}/auth/callback?lang=en`)
+  expect(JSON.parse(localStorage.getItem('journey-confirmation-return') ?? 'null')).toMatchObject({ path: '/roadmap' })
+})
+
+test('signup errors never describe an invalid password login', async () => {
+  auth.signUp.mockResolvedValueOnce({ error: { code: 'invalid_credentials' } })
+  await click('.auth-mode-switch button:last-child')
+  const inputs = host.querySelectorAll<HTMLInputElement>('input[autocomplete="new-password"]')
+  await fill(`#${inputs[1].id}`, 'example-password')
+  await act(async () => { submit() })
+  expect(host.querySelector('[role="alert"]')!.textContent).not.toContain("We couldn't sign you in")
+  expect(host.querySelector('[role="alert"]')!.textContent).toContain('account')
+})
+
+test('invalid sign-in stays generic and directs new learners to create an account', async () => {
+  auth.signInWithPassword.mockResolvedValueOnce({ error: { code: 'invalid_credentials' } })
+  await act(async () => { submit() })
+  expect(host.querySelector('[role="alert"]')!.textContent).toContain("We couldn't sign you in with these details")
+  expect(host.querySelector('[role="alert"]')!.textContent).toContain('create an account')
+  await click('.auth-create-account-link')
+  expect(host.querySelector('#auth-title')!.textContent).toBe('Create your learning account')
+  expect(window.location.pathname).toBe('/auth/sign-up')
 })
 
 test('recovery notice stays generic about account existence and retains the email-link language', async () => {
