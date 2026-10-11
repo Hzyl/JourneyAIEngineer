@@ -1,6 +1,6 @@
 # Journey AI Engineer
 
-> Không gian tự học kỹ thuật AI bằng tiếng Việt và tiếng Anh: đọc bài, thực hành, ôn tập và ghi lại điều đã hiểu.
+> Không gian tự học AI Engineer bằng tiếng Việt và tiếng Anh: đọc bài, thực hành, ôn tập và ghi lại điều đã hiểu.
 
 **[Mở Journey AI Engineer trên web](https://journeyaiengineer.pages.dev)** ·
 [Học thử bài đầu tiên](https://journeyaiengineer.pages.dev/lesson/phase-00-onboarding-environment-1) ·
