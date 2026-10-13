@@ -202,58 +202,43 @@ common_mistakes:
 next_lessons:
 - phase-12-genai-rag-rag-foundations-4
 - phase-13-genai-advanced-rag-advanced-rag-1
-review_question_vi: Nội dung cốt lõi của “Embedding và cơ sở dữ liệu vector” là gì?
-review_question_en: Define embeddings and vector databases in your own words. What are the input, transformation
-  and output?
-review_answer_vi: Embedding cung cấp biểu diễn để tìm kiếm; cơ sở dữ liệu vector lưu và truy vấn các biểu diễn cùng
-  siêu dữ liệu. Khi đổi mô hình embedding, cần kiểm tra tương thích của chỉ mục.
-review_answer_en: A strong answer names the input, transformation, output and the context where embeddings and vector
-  databases is used. Relate it specifically to embeddings and vector databases in lesson phase-12-genai-rag-rag-foundations-3.
+review_question_vi: "Embedding và kho vector đảm nhiệm những bước nào khi truy xuất một đoạn văn?"
+review_question_en: "What roles do embeddings and a vector store play when retrieving a passage?"
+review_answer_vi: "Embedding model biến truy vấn và đoạn văn thành vector trong cùng không gian tương thích. Kho vector lưu các vector cùng siêu dữ liệu và tìm các đoạn gần truy vấn theo thước đo đã chọn. Giữ document_id, version, chunk_id và line để lần về nguồn; độ gần vector không bảo đảm câu trả lời đúng."
+review_answer_en: "An embedding model maps queries and passages to vectors in a compatible space. A vector store keeps those vectors with metadata and finds passages close to the query under the chosen metric. Preserve document_id, version, chunk_id and line to trace the source; vector similarity does not guarantee a correct answer."
 review_cards:
 - id: phase-12-genai-rag-rag-foundations-3-recall
   type: recall
-  question_vi: Nội dung cốt lõi của “Embedding và cơ sở dữ liệu vector” là gì?
-  question_en: Define embeddings and vector databases in your own words. What are the input, transformation and
-    output?
-  answer_vi: Embedding cung cấp biểu diễn để tìm kiếm; cơ sở dữ liệu vector lưu và truy vấn các biểu diễn cùng siêu
-    dữ liệu. Khi đổi mô hình embedding, cần kiểm tra tương thích của chỉ mục.
-  answer_en: A strong answer names the input, transformation, output and the context where embeddings and vector
-    databases is used.
-  hint_vi: Nêu ý chính, sau đó minh họa bằng tình huống cụ thể.
-  hint_en: Start with a small example you can calculate by hand.
+  question_vi: "Embedding và kho vector đảm nhiệm những bước nào khi truy xuất một đoạn văn?"
+  question_en: "What roles do embeddings and a vector store play when retrieving a passage?"
+  answer_vi: "Embedding model biến truy vấn và đoạn văn thành vector trong cùng không gian tương thích. Kho vector lưu các vector cùng siêu dữ liệu và tìm các đoạn gần truy vấn theo thước đo đã chọn. Giữ document_id, version, chunk_id và line để lần về nguồn; độ gần vector không bảo đảm câu trả lời đúng."
+  answer_en: "An embedding model maps queries and passages to vectors in a compatible space. A vector store keeps those vectors with metadata and finds passages close to the query under the chosen metric. Preserve document_id, version, chunk_id and line to trace the source; vector similarity does not guarantee a correct answer."
+  hint_vi: "Theo dõi từ truy vấn và đoạn văn đến vector, kết quả xếp hạng và vị trí nguồn."
+  hint_en: "Trace the query and passage through vectors, ranked results and source locations."
 - id: phase-12-genai-rag-rag-foundations-3-application
   type: application
-  question_vi: Ghi phiên bản embedding và kiểm tra truy vấn trả về đúng nguồn.
-  question_en: Write a small code example or design that applies embeddings and vector databases to an AI engineering
-    problem.
-  answer_vi: 'Với nhiệm vụ “Ghi phiên bản embedding và kiểm tra truy vấn trả về đúng nguồn”, cần lưu: đoạn tài liệu,
-    siêu dữ liệu và kết quả của từng bước RAG. Lần từ câu trả lời về đúng đoạn nguồn và bản tài liệu.'
-  answer_en: The embeddings and vector databases example should have an explicit input, expected output and a way
-    to run or verify it (phase-12-genai-rag-rag-foundations-3).
-  hint_vi: Bắt đầu từ nhiệm vụ thực hành của bài.
-  hint_en: Start from the lesson code example and change one assumption.
+  question_vi: "Trong ví dụ mã, tính cosine của truy vấn [1, 0] với guide:1 và faq:3. Nếu đổi truy vấn thành [0, 1], kết quả đứng đầu và thông tin nguồn là gì?"
+  question_en: "In the snippet, calculate the cosine of query [1, 0] with guide:1 and faq:3. If the query changes to [0, 1], which result ranks first and what is its source metadata?"
+  answer_vi: "Với [1, 0], cosine của guide:1 là 1 và faq:3 là 0, nên guide:1 đứng đầu. Với [0, 1], hai điểm lần lượt là 0 và 1, nên faq:3 đứng đầu. Kết quả này giữ document_id=faq, version=v2, chunk_id=faq:3 và line=3. Đây là vector viết tay, không phải phép đo chất lượng embedding thật."
+  answer_en: "For [1, 0], guide:1 has cosine 1 and faq:3 has cosine 0, so guide:1 ranks first. For [0, 1], their scores are 0 and 1 respectively, so faq:3 ranks first. That result retains document_id=faq, version=v2, chunk_id=faq:3 and line=3. These are hand-written vectors, not a measurement of real embedding quality."
+  hint_vi: "Tính tích vô hướng và norm cho từng cặp; đổi truy vấn không làm đổi siêu dữ liệu của chunk."
+  hint_en: "Calculate the dot product and norms for each pair; changing the query does not change chunk metadata."
 - id: phase-12-genai-rag-rag-foundations-3-debug
   type: debug
-  question_vi: Khi làm bài “Embedding và cơ sở dữ liệu vector”, bạn cần tránh lỗi nào và kiểm tra lại ra sao?
-  question_en: If embeddings and vector databases produces a wrong result or a metric drops, what would you debug
-    first?
-  answer_vi: 'Trong bài “Embedding và cơ sở dữ liệu vector”, lỗi cần tránh là: để lỗi trích xuất tài liệu lan sang
-    truy xuất mà không kiểm tra. Lần từ câu trả lời về đúng đoạn nguồn và bản tài liệu. Dùng ví dụ nhỏ để tìm bước
-    đầu tiên có kết quả khác dự kiến.'
-  answer_en: For embeddings and vector databases, check inputs/shapes, preprocessing and the baseline first; then
-    isolate the failure with a small test and error analysis (phase-12-genai-rag-rag-foundations-3).
-  hint_vi: Tìm bước đầu tiên xuất hiện khác biệt.
-  hint_en: Do not start by changing the model or adding complexity.
+  question_vi: "Hàm cosine xử lý [0, 0] và [1] ra sao khi vector còn lại là [1, 0]? Nếu đổi embedding model nhưng giữ vector tài liệu cũ, chỉ kiểm tra số chiều đã đủ chưa?"
+  question_en: "How does cosine handle [0, 0] and [1] when the other vector is [1, 0]? If the embedding model changes but document vectors remain old, is checking dimensions sufficient?"
+  answer_vi: "Với [0, 0], hàm báo ValueError(\"zero norm\") vì mẫu số bằng 0; với [1], hàm báo ValueError(\"dimension mismatch\"). Cùng số chiều chưa chứng minh hai model dùng không gian tương thích. Kiểm tra model, revision và cách tiền xử lý của cả truy vấn lẫn tài liệu; khi không tương thích, tạo lại embedding tài liệu và cập nhật chỉ mục trước khi so sánh."
+  answer_en: "For [0, 0], the function raises ValueError(\"zero norm\") because the denominator is zero; for [1], it raises ValueError(\"dimension mismatch\"). Equal dimensions do not prove that two models use compatible spaces. Check the model, revision and preprocessing for both queries and documents; if incompatible, re-embed the documents and update the index before comparing."
+  hint_vi: "Tách lỗi hình dạng và norm khỏi lỗi tương thích không gian embedding."
+  hint_en: "Separate shape and norm errors from embedding-space compatibility errors."
 - id: phase-12-genai-rag-rag-foundations-3-interview
   type: interview
-  question_vi: Bạn dùng kết quả nào từ bài “Embedding và cơ sở dữ liệu vector” để giải thích cách làm và giới hạn?
-  question_en: In an interview, how would you explain a trade-off and one edge case of embeddings and vector databases?
-  answer_vi: Bắt đầu từ nhiệm vụ “Ghi phiên bản embedding và kiểm tra truy vấn trả về đúng nguồn”. Trình bày kết
-    quả đã lưu, cách đối chiếu và một điều kiện có thể khiến kết luận thay đổi; không chỉ đọc lại định nghĩa.
-  answer_en: The answer about embeddings and vector databases should cover assumptions, metrics/cost, limitations
-    and how to reduce production risk (phase-12-genai-rag-rag-foundations-3).
-  hint_vi: Dùng quyết định thật trong bài làm, tránh chỉ đọc định nghĩa.
-  hint_en: Relate it to latency, quality, cost or observability where relevant.
+  question_vi: "Khi đổi embedding model, bạn cân nhắc gì giữa tái sử dụng vector tài liệu cũ và tạo lại embedding? Cosine 1 trong ví dụ chứng minh được điều gì?"
+  question_en: "When changing the embedding model, what trade-off do you consider between reusing old document vectors and re-embedding them? What does cosine 1 in the fixture establish?"
+  answer_vi: "Tái sử dụng tiết kiệm thời gian và chi phí tạo vector nhưng chỉ hợp lệ khi không gian biểu diễn tương thích; tạo lại embedding tốn chi phí nhưng tránh trộn hai không gian không tương thích. Ghi model/revision và đánh giá truy xuất trên cùng corpus, câu hỏi có nhãn, đồng thời giữ định danh nguồn. Cosine 1 chỉ cho biết hai vector viết tay cùng hướng, không chứng minh chất lượng model, quyền truy cập hay tính đúng của câu trả lời."
+  answer_en: "Reuse saves embedding time and cost but is valid only when the representation spaces are compatible; re-embedding costs more but avoids mixing incompatible spaces. Record the model/revision and evaluate retrieval on the same corpus and labeled questions while preserving source identity. Cosine 1 only shows that the hand-written vectors point in the same direction; it does not establish model quality, access rights or answer correctness."
+  hint_vi: "Cân nhắc chi phí tạo lại vector, tính tương thích và giới hạn của phép đo cosine."
+  hint_en: "Consider re-embedding cost, compatibility and the limits of cosine similarity."
 ---
 # Embedding và cơ sở dữ liệu vector / Embeddings and vector databases
 

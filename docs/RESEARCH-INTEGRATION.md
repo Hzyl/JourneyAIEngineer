@@ -237,3 +237,52 @@ Cảnh báo Fast Refresh, bundle lớn và 32 mục audit thụ động cần ng
 còn; không coi chúng là 32 lỗ hổng đã chứng minh. Chưa chạy Colab/model,
 Docling/PDF/OCR, Supabase thật hoặc kiểm thử tài khoản/thiết bị thật.
 Các thay đổi của lượt này chưa commit, push hay xuất bản.
+
+## Rà tiếp thẻ ôn tập retrieval và cỡ chữ — 2026-10-14
+
+Phần trên ghi trạng thái lúc kiểm chứng local. Sau đó, commit `6ad4363` đã
+được push; CI run `38452326531` có cả quality và hosted-database thành công,
+Cloudflare deployment `58527803-1bd2-4aed-aff1-8193016cce6c` cũng thành công.
+Kết quả này thuộc bản trước, không phải bằng chứng triển khai lô dưới đây.
+
+### Nội dung và phạm vi
+
+- Giữ nguyên ví dụ chạy được và Lab A. Sửa phần ôn tập ở bài `12-3` embedding,
+  `13-1` hybrid retrieval và `13-2` reranking: 12 thẻ Việt/Anh và câu hỏi/đáp án
+  ôn nhanh tương ứng. Đáp án tiếng Anh trước đây chủ yếu mô tả tiêu chí trả lời;
+  nay đưa ra lời giải cụ thể, khớp với tiếng Việt và ví dụ trong từng bài.
+- Tính lại cosine, RRF và MRR từ các đoạn mã sẵn có. Ví dụ RRF dùng thứ hạng
+  bắt đầu từ 1, hằng số 60 của chính bài học; không tuyên bố đây là mặc định
+  của Qdrant. Các con số là kết quả ví dụ nhỏ, không phải benchmark model thật.
+- Tái sử dụng nguồn [Sentence Transformers Retrieve & Re-Rank](https://sbert.net/examples/sentence_transformer/applications/retrieve_rerank/README.html)
+  và [Qdrant Hybrid Queries](https://qdrant.tech/documentation/search/hybrid-queries/).
+  Đã đối chiếu nguyên tắc lấy tập ứng viên rồi chấm lại và hợp nhất thứ hạng.
+- Sửa đúng ba tệp Markdown nguồn, sinh lại catalog và fingerprint. Giữ đủ
+  208 ID bài; 205 bản ghi bài khác không đổi. ID/loại thẻ, mã nguồn, output,
+  thân Markdown và metadata ngoài phần ôn tập của ba bài đều giữ nguyên.
+- Browser phát hiện chữ câu hỏi/đáp án chỉ 11px, nút mở đáp án 10px. Quy tắc
+  trong `src/components/lesson-reading.css` nay cho nội dung 18px, nút 16px
+  ở cỡ chữ gốc 16px; vùng bấm cao tối thiểu 44px và chuỗi dài tự xuống dòng.
+
+### Bằng chứng kiểm chứng
+
+- `npm test` sau sửa nội dung/catalog, trước sửa CSS cuối: 318 Python và
+  262 Vitest (43 tệp) đạt; validator, fingerprint, lint, TypeScript và Vite build
+  đạt, exit 0. Log: `.build/audit-20261014/followup-integration/npm-test.log`.
+- Sau sửa CSS, production build mới và tám Playwright đạt (34,6 giây):
+  VI/EN × 320/1440px × sáng/tối, mỗi cấu hình kiểm tra cả ba bài và bốn thẻ.
+  Kiểm tra đáp án, keyboard/focus, font, tương phản, vùng bấm và tràn ngang.
+  Log đỏ trước sửa được giữ ở `followup-integration/browser-red.log`; log xanh
+  ở `followup-integration/browser.log`, cùng dưới `.build/audit-20261014/`.
+- Đã xem ảnh VI 320px sáng và EN 1440px tối của bản cuối. Đây là viewport
+  trình duyệt giả lập, chưa phải nghiệm thu trên thiết bị thật.
+- Khởi tạo lại backend với 12 thẻ dữ liệu giả cập nhật đủ đáp án, giữ nguyên
+  ID thẻ và toàn bộ hàng `review_state`. SHA-256 database người học thật trước/
+  sau không đổi. Các helper và database giả nằm trong `.build`, không đưa lên Git.
+- Rà luồng bài tập local không tìm thấy lỗi cụ thể ở tạo workspace, giữ tệp
+  người học, phục hồi tệp thiếu, runner và xuất thư mục có kiểm tra secret.
+  Năm test hiện có đạt; không mở VS Code hay chạy workspace của người học thật.
+
+Người dùng đã xác nhận commit/push lô này. CI/deployment của commit mới cần
+được kiểm tra riêng sau push; các bằng chứng local trên không thay thế bước đó.
+Không chạy model/Colab, Docling/PDF/OCR hoặc nghiệm thu tài khoản Supabase thật.

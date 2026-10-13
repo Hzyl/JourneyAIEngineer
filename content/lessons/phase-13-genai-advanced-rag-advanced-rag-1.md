@@ -202,60 +202,43 @@ common_mistakes:
 next_lessons:
 - phase-13-genai-advanced-rag-advanced-rag-2
 - phase-13-genai-advanced-rag-advanced-rag-3
-review_question_vi: Nội dung cốt lõi của “Tìm kiếm kết hợp BM25 và vector” là gì?
-review_question_en: 'Define hybrid search: bm25 and vector search in your own words. What are the input, transformation
-  and output?'
-review_answer_vi: BM25 phù hợp với tín hiệu từ khóa; tìm kiếm vector bổ sung quan hệ ngữ nghĩa. Cách kết hợp cần
-  được đánh giá vì điểm số hai hệ thống không nhất thiết cùng thang đo.
-review_answer_en: 'A strong answer names the input, transformation, output and the context where hybrid search:
-  bm25 and vector search is used. Relate it specifically to hybrid search: bm25 and vector search in lesson phase-13-genai-advanced-rag-advanced-rag-1.'
+review_question_vi: "Tìm kiếm kết hợp BM25 và vector bổ sung tín hiệu gì cho nhau, và RRF hợp nhất hai danh sách như thế nào?"
+review_question_en: "How do BM25 and vector search complement each other, and how does RRF combine their ranked lists?"
+review_answer_vi: "BM25 dùng thống kê từ khóa và độ dài tài liệu, hữu ích cho mã chính xác; vector search dùng biểu diễn học được để tìm các cách diễn đạt liên quan. RRF cộng 1/(c + rank) cho mỗi tài liệu xuất hiện trong các danh sách; trong bài, rank bắt đầu từ 1 và c=60. RRF dùng thứ hạng thay vì cộng trực tiếp điểm thô khác thang đo."
+review_answer_en: "BM25 uses term statistics and document length, which helps with exact identifiers; vector search uses learned representations to find related phrasing. RRF sums 1/(c + rank) for each document appearing in the lists; this lesson uses ranks starting at 1 and c=60. RRF uses ranks instead of directly adding raw scores on different scales."
 review_cards:
 - id: phase-13-genai-advanced-rag-advanced-rag-1-recall
   type: recall
-  question_vi: Nội dung cốt lõi của “Tìm kiếm kết hợp BM25 và vector” là gì?
-  question_en: 'Define hybrid search: bm25 and vector search in your own words. What are the input, transformation
-    and output?'
-  answer_vi: BM25 phù hợp với tín hiệu từ khóa; tìm kiếm vector bổ sung quan hệ ngữ nghĩa. Cách kết hợp cần được
-    đánh giá vì điểm số hai hệ thống không nhất thiết cùng thang đo.
-  answer_en: 'A strong answer names the input, transformation, output and the context where hybrid search: bm25
-    and vector search is used.'
-  hint_vi: Nêu ý chính, sau đó minh họa bằng tình huống cụ thể.
-  hint_en: Start with a small example you can calculate by hand.
+  question_vi: "Tìm kiếm kết hợp BM25 và vector bổ sung tín hiệu gì cho nhau, và RRF hợp nhất hai danh sách như thế nào?"
+  question_en: "How do BM25 and vector search complement each other, and how does RRF combine their ranked lists?"
+  answer_vi: "BM25 dùng thống kê từ khóa và độ dài tài liệu, hữu ích cho mã chính xác; vector search dùng biểu diễn học được để tìm các cách diễn đạt liên quan. RRF cộng 1/(c + rank) cho mỗi tài liệu xuất hiện trong các danh sách; trong bài, rank bắt đầu từ 1 và c=60. RRF dùng thứ hạng thay vì cộng trực tiếp điểm thô khác thang đo."
+  answer_en: "BM25 uses term statistics and document length, which helps with exact identifiers; vector search uses learned representations to find related phrasing. RRF sums 1/(c + rank) for each document appearing in the lists; this lesson uses ranks starting at 1 and c=60. RRF uses ranks instead of directly adding raw scores on different scales."
+  hint_vi: "Phân biệt tín hiệu từ khóa, biểu diễn ngữ nghĩa và thứ hạng được dùng để fusion."
+  hint_en: "Distinguish keyword signals, semantic representations and the ranks used for fusion."
 - id: phase-13-genai-advanced-rag-advanced-rag-1-application
   type: application
-  question_vi: So sánh truy xuất từ khóa, vector và kết hợp trên cùng bộ câu hỏi.
-  question_en: 'Write a small code example or design that applies hybrid search: bm25 and vector search to an AI
-    engineering problem.'
-  answer_vi: 'Với nhiệm vụ “So sánh truy xuất từ khóa, vector và kết hợp trên cùng bộ câu hỏi”, cần lưu: bảng so
-    sánh truy xuất trên cùng bộ câu hỏi có nguồn chuẩn. Đọc riêng các trường hợp bỏ sót, sai thứ hạng và sai trích
-    dẫn.'
-  answer_en: 'The hybrid search: bm25 and vector search example should have an explicit input, expected output and
-    a way to run or verify it (phase-13-genai-advanced-rag-advanced-rag-1).'
-  hint_vi: Bắt đầu từ nhiệm vụ thực hành của bài.
-  hint_en: Start from the lesson code example and change one assumption.
+  question_vi: "Với lexical=[d1, d2, d3], dense giả lập=[d2, d3, d1], c=60 và nhãn {d2, d3}, tính thứ hạng RRF, Recall@1 và Recall@2 trong ví dụ mã."
+  question_en: "With lexical=[d1, d2, d3], simulated dense=[d2, d3, d1], c=60 and relevance labels {d2, d3}, calculate the snippet’s RRF ranking, Recall@1 and Recall@2."
+  answer_vi: "Điểm d2 = 1/62 + 1/61, d1 = 1/61 + 1/63 và d3 = 1/63 + 1/62, nên thứ hạng là [d2, d1, d3]. Top-1 và top-2 đều chỉ chứa một trong hai nguồn liên quan là d2; vì vậy Recall@1 = Recall@2 = 1/2 = 0,5. Thêm d1 ở vị trí thứ hai không làm tăng recall."
+  answer_en: "The scores are d2 = 1/62 + 1/61, d1 = 1/61 + 1/63 and d3 = 1/63 + 1/62, so the ranking is [d2, d1, d3]. Both top-1 and top-2 contain only one of the two relevant sources, d2; therefore Recall@1 = Recall@2 = 1/2 = 0.5. Adding d1 in second place does not increase recall."
+  hint_vi: "Cộng hai phần điểm của từng ID theo thứ hạng bắt đầu từ 1, rồi đếm nguồn đúng trong top-k."
+  hint_en: "Add each ID’s two rank contributions using ranks starting at 1, then count relevant sources in top-k."
 - id: phase-13-genai-advanced-rag-advanced-rag-1-debug
   type: debug
-  question_vi: Khi làm bài “Tìm kiếm kết hợp BM25 và vector”, bạn cần tránh lỗi nào và kiểm tra lại ra sao?
-  question_en: 'If hybrid search: bm25 and vector search produces a wrong result or a metric drops, what would you
-    debug first?'
-  answer_vi: 'Trong bài “Tìm kiếm kết hợp BM25 và vector”, lỗi cần tránh là: gộp điểm BM25 với điểm vector mà chưa
-    xét thang đo. Đọc riêng các trường hợp bỏ sót, sai thứ hạng và sai trích dẫn. Dùng ví dụ nhỏ để tìm bước đầu
-    tiên có kết quả khác dự kiến.'
-  answer_en: 'For hybrid search: bm25 and vector search, check inputs/shapes, preprocessing and the baseline first;
-    then isolate the failure with a small test and error analysis (phase-13-genai-advanced-rag-advanced-rag-1).'
-  hint_vi: Tìm bước đầu tiên xuất hiện khác biệt.
-  hint_en: Do not start by changing the model or adding complexity.
+  question_vi: "Nếu xóa d2 khỏi cả hai danh sách mà vẫn giữ nhãn {d2, d3}, đổi c có thể đưa d2 trở lại không? Hàm recall xử lý nhãn rỗng như thế nào?"
+  question_en: "If d2 is removed from both lists while the labels remain {d2, d3}, can changing c bring d2 back? How does recall handle empty labels?"
+  answer_vi: "Không. RRF chỉ chấm các ID có trong đầu vào; sau khi xóa d2, không giá trị c hợp lệ nào tạo lại được d2. Kiểm tra tập ứng viên của từng retriever, bộ lọc quyền và dữ liệu nguồn để tìm bước bỏ sót trước khi chỉnh fusion. Hàm recall báo ValueError(\"answerable labels required\") khi nhãn rỗng; tách trường hợp không có đáp án khỏi phép tính recall này."
+  answer_en: "No. RRF only scores IDs present in its inputs; after removing d2, no valid c can recreate it. Inspect each retriever’s candidates, permission filters and source data to locate the omission before tuning fusion. The recall function raises ValueError(\"answerable labels required\") for empty labels; handle unanswerable cases separately from this recall calculation."
+  hint_vi: "Kiểm tra hợp của các ID đầu vào trước khi xem điểm fusion; recall cần mẫu số khác 0."
+  hint_en: "Check the union of input IDs before fusion scores; recall needs a nonzero denominator."
 - id: phase-13-genai-advanced-rag-advanced-rag-1-interview
   type: interview
-  question_vi: Bạn dùng kết quả nào từ bài “Tìm kiếm kết hợp BM25 và vector” để giải thích cách làm và giới hạn?
-  question_en: 'In an interview, how would you explain a trade-off and one edge case of hybrid search: bm25 and
-    vector search?'
-  answer_vi: Bắt đầu từ nhiệm vụ “So sánh truy xuất từ khóa, vector và kết hợp trên cùng bộ câu hỏi”. Trình bày
-    kết quả đã lưu, cách đối chiếu và một điều kiện có thể khiến kết luận thay đổi; không chỉ đọc lại định nghĩa.
-  answer_en: 'The answer about hybrid search: bm25 and vector search should cover assumptions, metrics/cost, limitations
-    and how to reduce production risk (phase-13-genai-advanced-rag-advanced-rag-1).'
-  hint_vi: Dùng quyết định thật trong bài làm, tránh chỉ đọc định nghĩa.
-  hint_en: Relate it to latency, quality, cost or observability where relevant.
+  question_vi: "Vì sao dùng RRF thay vì cộng điểm BM25 và vector thô, và bạn cần đo gì trước khi chọn hybrid search cho hệ thống thật?"
+  question_en: "Why use RRF instead of adding raw BM25 and vector scores, and what should you measure before choosing hybrid search for a real system?"
+  answer_vi: "RRF tránh để một thang điểm thô lấn át thang còn lại, nhưng bỏ qua độ chênh điểm giữa các kết quả và vẫn phụ thuộc chất lượng ứng viên. Chạy hai retriever cũng thêm chi phí và độ trễ. So lexical, vector và fusion trên cùng corpus, câu hỏi, quyền và k; đo Recall@k, độ trễ và xem riêng mã hiếm, diễn đạt khác, thiếu đáp án. Ví dụ chỉ hợp nhất danh sách giả lập, chưa chứng minh hybrid tốt hơn BM25 hay embedding thật."
+  answer_en: "RRF avoids letting one raw score scale dominate the other, but discards score gaps between results and still depends on candidate quality. Running two retrievers also adds cost and latency. Compare lexical, vector and fused results with the same corpus, questions, permissions and k; measure Recall@k and latency, and inspect rare identifiers, paraphrases and unanswerable cases separately. The fixture only fuses simulated lists; it does not establish that hybrid search outperforms real BM25 or embeddings."
+  hint_vi: "Cân nhắc tính ổn định giữa thang điểm, thông tin bị bỏ qua và chi phí chạy hai retriever."
+  hint_en: "Consider robustness across score scales, discarded information and the cost of running two retrievers."
 ---
 # Tìm kiếm kết hợp BM25 và vector / Hybrid search: BM25 and vector search
 

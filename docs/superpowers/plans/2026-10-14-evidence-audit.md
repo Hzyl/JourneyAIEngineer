@@ -130,3 +130,58 @@ NO_COLOR/FORCE_COLOR in browser tooling, and 32 passive security items requiring
 human review. Those static items are not 32 demonstrated vulnerabilities.
 No real Supabase account/device, Colab/model, Docling/PDF/OCR, production write,
 commit, push or deployment was part of the final local verification.
+
+## Follow-up: retrieval answer parity and readable review cards
+
+Baseline `6ad4363ae59643629994dafe329fa3a2db9ab86c` was subsequently pushed.
+CI run `38452326531` passed both quality and hosted-database; Cloudflare deployment
+`58527803-1bd2-4aed-aff1-8193016cce6c` succeeded. These results apply to that
+baseline only, not the following working-tree changes.
+
+The bounded audit retained existing runnable embedding, hybrid retrieval,
+reranking and Lab A examples. It found a concrete review-answer mismatch:
+Vietnamese cards supplied answers, while English cards mostly supplied rubrics.
+Canonical lesson Markdown for 12-3, 13-1 and 13-2 now has twelve aligned bilingual
+cards and matching top-level recall fields. No IDs, types, code, outputs, links,
+other metadata or Markdown bodies changed. Catalog and fingerprint were rebuilt;
+205 other lesson records and all 208 lesson identities were preserved.
+
+Numerical answers were computed from existing snippets: cosine rankings reverse
+when the query switches axes; one-based RRF with c=60 ranks d2, d1, d3; the two
+reranking fixtures raise mean reciprocal rank from 0.25 to 0.5. These are toy
+examples, not model benchmarks or claims about Qdrant defaults. Existing official
+Sentence Transformers Retrieve & Re-Rank and Qdrant Hybrid Queries sources were
+cross-checked; no dependency or resource was added.
+
+The first browser run then exposed actual 11px review paragraphs and 10px answer
+controls. The small lesson-reading.css extension sets paragraphs to 1.125rem,
+summary controls to 1rem with a 44px minimum target, and wraps long strings.
+At the tested 16px root font these are 18px and 16px. Existing theme tokens remain.
+
+Verification artifacts are ignored beneath `.build/audit-20261014/`:
+
+- `followup-integration/npm-test.log`: one full suite after final content/catalog,
+  before the final CSS fix; 318 Python (58.05s), 262 Vitest / 43 files (7.75s),
+  content/fingerprint/lint/TypeScript/production build all passed, exit 0.
+- `followup-integration/browser-red.log` and `review-font-before.png` preserve
+  the font failure. Final `browser.log`: eight passed in 34.6s after the CSS fix
+  and a fresh production build, exit 0. No full-suite rerun is implied.
+- `followup-ui/`: VI/EN × 320/1440px × light/dark, each visiting three lessons
+  and opening four answer cards by keyboard. Checks cover text parity, focus,
+  font, contrast, control size, no page errors and no horizontal overflow.
+  Synthetic auth/Supabase fixtures reject unexpected requests. Twenty-four
+  screenshots saved; root inspected VI 320px light and EN 1440px dark.
+- `verify-review-scope.py`: source/catalog scope and unchanged real learner DB
+  SHA-256 verified. `verify-review-refresh.py`: isolated backend initialization
+  refreshed all twelve synthetic answers while preserving card IDs and entire
+  review_state rows. Both exited 0; no real learner rows were read or changed.
+- `followup-retrieval/review-verification.json`: independent source-field,
+  identity, body and numerical checks. Independent read-only CSS review found
+  no material blocker. Local exercise review kept existing code unchanged;
+  five existing workspace/runner/export/template tests passed.
+
+User has now confirmed this batch's commit and push. Root owns publication with
+message `fix: clarify bilingual retrieval reviews and improve readability` to
+`https://github.com/Hzyl/JourneyAIEngineer.git`, `origin/main`. Publication and
+new CI/provider results must be checked separately after push. No physical-device,
+real-account, Colab/model or Docling/PDF/OCR acceptance is claimed.

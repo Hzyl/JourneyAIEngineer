@@ -216,57 +216,43 @@ common_mistakes:
 next_lessons:
 - phase-13-genai-advanced-rag-advanced-rag-3
 - phase-13-genai-advanced-rag-advanced-rag-4
-review_question_vi: Nội dung cốt lõi của “Xếp hạng lại và chọn top-k” là gì?
-review_question_en: Define reranking and top-k selection in your own words. What are the input, transformation and
-  output?
-review_answer_vi: Xếp hạng lại sắp lại tập ứng viên theo mức liên quan. Chọn số kết quả cần cân bằng độ bao phủ,
-  nhiễu trong ngữ cảnh và chi phí xử lý.
-review_answer_en: A strong answer names the input, transformation, output and the context where reranking and top-k
-  selection is used. Relate it specifically to reranking and top-k selection in lesson phase-13-genai-advanced-rag-advanced-rag-2.
+review_question_vi: "Retriever, reranker và bước chọn top-k khác nhau như thế nào? Reranker có tìm lại được đoạn vắng trong tập ứng viên không?"
+review_question_en: "How do retrieval, reranking and top-k selection differ? Can a reranker recover a passage absent from the candidates?"
+review_answer_vi: "Retriever lấy tập ứng viên từ corpus; reranker chấm mức liên quan của từng cặp truy vấn–đoạn và sắp lại tập đó; chọn top-k giữ k kết quả đầu để dùng tiếp. Bi-encoder biểu diễn truy vấn và đoạn riêng, còn cross-encoder xử lý cặp cùng nhau. Reranker không tạo thêm nguồn ngoài tập ứng viên."
+review_answer_en: "A retriever selects candidates from the corpus; a reranker scores the relevance of each query–passage pair and reorders that set; top-k selection keeps the first k results for downstream use. A bi-encoder represents the query and passage separately, while a cross-encoder processes the pair jointly. A reranker cannot add sources outside the candidate set."
 review_cards:
 - id: phase-13-genai-advanced-rag-advanced-rag-2-recall
   type: recall
-  question_vi: Nội dung cốt lõi của “Xếp hạng lại và chọn top-k” là gì?
-  question_en: Define reranking and top-k selection in your own words. What are the input, transformation and output?
-  answer_vi: Xếp hạng lại sắp lại tập ứng viên theo mức liên quan. Chọn số kết quả cần cân bằng độ bao phủ, nhiễu
-    trong ngữ cảnh và chi phí xử lý.
-  answer_en: A strong answer names the input, transformation, output and the context where reranking and top-k selection
-    is used.
-  hint_vi: Nêu ý chính, sau đó minh họa bằng tình huống cụ thể.
-  hint_en: Start with a small example you can calculate by hand.
+  question_vi: "Retriever, reranker và bước chọn top-k khác nhau như thế nào? Reranker có tìm lại được đoạn vắng trong tập ứng viên không?"
+  question_en: "How do retrieval, reranking and top-k selection differ? Can a reranker recover a passage absent from the candidates?"
+  answer_vi: "Retriever lấy tập ứng viên từ corpus; reranker chấm mức liên quan của từng cặp truy vấn–đoạn và sắp lại tập đó; chọn top-k giữ k kết quả đầu để dùng tiếp. Bi-encoder biểu diễn truy vấn và đoạn riêng, còn cross-encoder xử lý cặp cùng nhau. Reranker không tạo thêm nguồn ngoài tập ứng viên."
+  answer_en: "A retriever selects candidates from the corpus; a reranker scores the relevance of each query–passage pair and reorders that set; top-k selection keeps the first k results for downstream use. A bi-encoder represents the query and passage separately, while a cross-encoder processes the pair jointly. A reranker cannot add sources outside the candidate set."
+  hint_vi: "Theo dõi nguồn từ corpus đến ứng viên, thứ hạng mới và context cuối cùng."
+  hint_en: "Trace sources from the corpus to candidates, the new ranking and the final context."
 - id: phase-13-genai-advanced-rag-advanced-rag-2-application
   type: application
-  question_vi: Thử hai giá trị k và đọc các bằng chứng được thêm hoặc bị bỏ.
-  question_en: Write a small code example or design that applies reranking and top-k selection to an AI engineering
-    problem.
-  answer_vi: 'Với nhiệm vụ “Thử hai giá trị k và đọc các bằng chứng được thêm hoặc bị bỏ”, cần lưu: bảng so sánh
-    truy xuất trên cùng bộ câu hỏi có nguồn chuẩn. Đọc riêng các trường hợp bỏ sót, sai thứ hạng và sai trích dẫn.'
-  answer_en: The reranking and top-k selection example should have an explicit input, expected output and a way
-    to run or verify it (phase-13-genai-advanced-rag-advanced-rag-2).
-  hint_vi: Bắt đầu từ nhiệm vụ thực hành của bài.
-  hint_en: Start from the lesson code example and change one assumption.
+  question_vi: "Trong ví dụ mã, hai tập ứng viên là [d1, d2] và [d1, d3], cùng có nhãn {d2}. Tính RR từng trường hợp, MRR và Recall@1 trung bình trước/sau khi dùng mock_scores."
+  question_en: "In the snippet, the candidate sets are [d1, d2] and [d1, d3], both labeled {d2}. Calculate each case’s RR, MRR and mean Recall@1 before and after applying mock_scores."
+  answer_vi: "Trước rerank, RR là [1/2, 0], nên MRR = 0,25; Recall@1 của cả hai trường hợp bằng 0, nên trung bình bằng 0. Sau rerank, thứ tự là [d2, d1] và [d1, d3], RR là [1, 0], nên MRR = 0,5. Recall@1 lần lượt là [1, 0], trung bình bằng 0,5. Trường hợp thứ hai vẫn thiếu d2; đây là kết quả quy tắc giả lập, không phải benchmark cross-encoder."
+  answer_en: "Before reranking, RR is [1/2, 0], so MRR is 0.25; Recall@1 is zero for both cases, giving a mean of 0. After reranking, the orders are [d2, d1] and [d1, d3], with RR [1, 0], so MRR is 0.5. Recall@1 is [1, 0], averaging 0.5. The second case still lacks d2; these are results from a synthetic rule, not a cross-encoder benchmark."
+  hint_vi: "RR là nghịch đảo vị trí nguồn đúng đầu tiên, hoặc 0 nếu thiếu; lấy trung bình trên cả hai trường hợp."
+  hint_en: "RR is the reciprocal of the first relevant position, or zero if absent; average across both cases."
 - id: phase-13-genai-advanced-rag-advanced-rag-2-debug
   type: debug
-  question_vi: Khi làm bài “Xếp hạng lại và chọn top-k”, bạn cần tránh lỗi nào và kiểm tra lại ra sao?
-  question_en: If reranking and top-k selection produces a wrong result or a metric drops, what would you debug
-    first?
-  answer_vi: 'Trong bài “Xếp hạng lại và chọn top-k”, lỗi cần tránh là: gộp điểm BM25 với điểm vector mà chưa xét
-    thang đo. Đọc riêng các trường hợp bỏ sót, sai thứ hạng và sai trích dẫn. Dùng ví dụ nhỏ để tìm bước đầu tiên
-    có kết quả khác dự kiến.'
-  answer_en: For reranking and top-k selection, check inputs/shapes, preprocessing and the baseline first; then
-    isolate the failure with a small test and error analysis (phase-13-genai-advanced-rag-advanced-rag-2).
-  hint_vi: Tìm bước đầu tiên xuất hiện khác biệt.
-  hint_en: Do not start by changing the model or adding complexity.
+  question_vi: "Sau rerank, trường hợp [d1, d3] vẫn có RR=0 với nhãn {d2}. Bạn cần kiểm tra bước nào, và tăng điểm của d2 trong mock_scores có sửa được không?"
+  question_en: "After reranking, the [d1, d3] case still has RR=0 for label {d2}. Which stage should you inspect, and would increasing d2’s mock_scores value fix it?"
+  answer_vi: "Kiểm tra bước lấy ứng viên vì d2 chưa có trong đầu vào reranker. Đối chiếu d2 với corpus, bộ lọc quyền và danh sách retriever trả về để tìm nguyên nhân bỏ sót. Tăng điểm d2 không giúp vì sorted chỉ duyệt d1 và d3; RR vẫn bằng 0. Chỉ chẩn đoán lỗi thứ hạng khi nguồn đúng đã có trong tập ứng viên."
+  answer_en: "Inspect candidate retrieval because d2 never entered the reranker. Check d2 against the corpus, permission filters and the retriever’s returned list to locate the omission. Increasing d2’s score does not help because sorted only processes d1 and d3; RR remains zero. Diagnose a ranking failure only when the relevant source is already among the candidates."
+  hint_vi: "Tìm d2 trong danh sách được đưa vào sorted trước khi sửa điểm."
+  hint_en: "Look for d2 in the list passed to sorted before changing scores."
 - id: phase-13-genai-advanced-rag-advanced-rag-2-interview
   type: interview
-  question_vi: Bạn dùng kết quả nào từ bài “Xếp hạng lại và chọn top-k” để giải thích cách làm và giới hạn?
-  question_en: In an interview, how would you explain a trade-off and one edge case of reranking and top-k selection?
-  answer_vi: Bắt đầu từ nhiệm vụ “Thử hai giá trị k và đọc các bằng chứng được thêm hoặc bị bỏ”. Trình bày kết quả
-    đã lưu, cách đối chiếu và một điều kiện có thể khiến kết luận thay đổi; không chỉ đọc lại định nghĩa.
-  answer_en: The answer about reranking and top-k selection should cover assumptions, metrics/cost, limitations
-    and how to reduce production risk (phase-13-genai-advanced-rag-advanced-rag-2).
-  hint_vi: Dùng quyết định thật trong bài làm, tránh chỉ đọc định nghĩa.
-  hint_en: Relate it to latency, quality, cost or observability where relevant.
+  question_vi: "Bạn cân bằng số ứng viên và k như thế nào khi thêm cross-encoder? Vì sao MRR tăng trong ví dụ chưa đủ để kết luận câu trả lời tốt hơn?"
+  question_en: "How do you balance candidate count and k when adding a cross-encoder? Why is the fixture’s higher MRR insufficient to conclude that answers are better?"
+  answer_vi: "Nhiều ứng viên hơn có thể tăng cơ hội lấy được nguồn đúng nhưng cần chấm nhiều cặp hơn; k lớn hơn có thể tăng độ bao phủ nhưng thêm nhiễu và chi phí context. Giữ tập câu hỏi cố định, ghi số ứng viên và k, đo Recall@k, MRR, thời gian và chi phí thực tế. Đánh giá riêng câu trả lời và trích dẫn. Ví dụ chỉ dùng mock_scores và còn một trường hợp mất nguồn, nên không chứng minh chất lượng hay độ trễ của cross-encoder thật."
+  answer_en: "More candidates may improve the chance of retrieving a relevant source but require scoring more pairs; a larger k may improve coverage while adding noise and context cost. Hold the questions fixed, record candidate count and k, and measure Recall@k, MRR, actual runtime and cost. Evaluate answers and citations separately. The fixture only uses mock_scores and still has a missing-source case, so it establishes neither the quality nor latency of a real cross-encoder."
+  hint_vi: "Phân biệt số cặp cần chấm với số đoạn được đưa vào context; đo retrieval và generation riêng."
+  hint_en: "Distinguish the number of pairs scored from the passages placed in context; evaluate retrieval and generation separately."
 ---
 # Xếp hạng lại và chọn top-k / Reranking and top-k selection
 
