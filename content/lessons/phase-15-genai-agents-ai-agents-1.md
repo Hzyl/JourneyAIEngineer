@@ -135,6 +135,15 @@ code_examples:
     outperforms a workflow. Timeout is a simulated tool exception, not cancellation of a hanging API. Traces
     contain tools, inputs, outputs or errors, not private model reasoning.
 resources:
+- title: Lab B · Colab
+  url: https://colab.research.google.com/github/Hzyl/JourneyAIEngineer/blob/main/notebooks/lab-b-workflow-agent.ipynb
+  language: vi
+  kind: practice
+  required: false
+  purpose_vi: So sánh workflow và agent theo kịch bản trên Colab, không gọi model hay API trả phí.
+  purpose_en: Compare a workflow and scripted agent on Colab without a model or paid API.
+  read_vi: Đọc trace, giới hạn số lần gọi và lý do dừng; giải thích một ca sai rồi tải báo cáo.
+  read_en: Inspect traces, call limits and stop reasons; explain one failure and download the report.
 - language: en
   title: Building Effective Agents
   url: https://www.anthropic.com/research/building-effective-agents

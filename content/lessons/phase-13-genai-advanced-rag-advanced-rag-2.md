@@ -4,17 +4,19 @@ phase_id: phase-13-genai-advanced-rag
 module_id: advanced-rag
 title_vi: Xếp hạng lại và chọn top-k
 title_en: Reranking and top-k selection
-summary_vi: Xếp hạng lại sắp lại tập ứng viên theo mức liên quan.
-summary_en: Learn Reranking and top-k selection through an input → transformation → output model, then verify it
-  with an edge-case exercise.
+summary_vi: Tách lỗi mất ứng viên khỏi lỗi xếp hạng; đo Recall@k và MRR trước/sau rerank.
+summary_en: Separate missing-candidate failures from ranking failures; measure Recall@k and MRR before and after
+  reranking.
 learning_objectives:
-- Thử hai giá trị k và đọc các bằng chứng được thêm hoặc bị bỏ.
-- Đọc riêng các trường hợp bỏ sót, sai thứ hạng và sai trích dẫn.
-- Giải thích kết quả và nêu một giới hạn của bài làm.
+- Tách lỗi mất ứng viên khỏi lỗi xếp hạng; đo Recall@k và MRR trước/sau rerank.
+- Đổi quy tắc rerank rồi so hai trường hợp; trường hợp mất nguồn phải tiếp tục thất bại. Trong Lab A, lưu cả số
+  ứng viên và k cùng báo cáo.
+- 'Xóa d2 khỏi ứng viên: reciprocal rank vẫn bằng 0 dù đổi điểm rerank.'
 learning_objectives_en:
-- Explain reranking and top-k selection with a concrete example.
-- Write or adapt a small code example applying reranking and top-k selection.
-- Recognize its assumptions, limits and one common failure mode.
+- Separate missing-candidate failures from ranking failures; measure Recall@k and MRR before and after reranking.
+- Change the reranking rule and compare both cases; the missing-source case must still fail. In Lab A, save candidate
+  count and k with the report.
+- 'Remove d2 from the candidates: reciprocal rank remains zero regardless of reranking scores.'
 prerequisites:
 - phase-13-genai-advanced-rag-advanced-rag-1
 - phase-12-genai-rag-rag-foundations-1
@@ -27,60 +29,69 @@ key_terms:
 - retrieval
 - evaluation
 - advanced-rag
-concept_notes_vi: |-
-  Xếp hạng lại sắp lại tập ứng viên theo mức liên quan. Chọn số kết quả cần cân bằng độ bao phủ, nhiễu trong ngữ cảnh và chi phí xử lý.
+concept_notes_vi: 'Retriever lấy tập ứng viên trước; reranker chấm lại từng cặp truy vấn–đoạn rồi đổi thứ tự trong
+  tập đó. Bi-encoder tính vector riêng cho truy vấn và đoạn; cross-encoder xử lý cặp cùng nhau. Reranker không thể
+  khôi phục đoạn mà retriever chưa lấy được.
 
-  Retriever lấy một tập ứng viên rộng; reranker đánh giá lại các ứng viên đó theo câu hỏi. Reranker thông thường chỉ đổi thứ tự trong tập nhận được, nên không thể cứu tài liệu đã bị bỏ qua hoàn toàn ở truy xuất.
 
-  Ví dụ, lấy nhiều ứng viên rồi chọn vài đoạn có đủ quy định và ngoại lệ để dựng ngữ cảnh. Tự kiểm tra: tăng top-k gửi cho LLM có luôn làm câu trả lời tốt hơn không? Không; thêm đoạn có thể tăng bao phủ nhưng cũng tăng nhiễu và chi phí. Theo dõi câu hỏi thiếu bằng chứng và câu hỏi bị nội dung không liên quan làm lệch.
-concept_notes_en: |-
-  Reranking reorders candidates by relevance. Selecting top-k balances coverage, distracting context and processing cost.
+  Ví dụ dùng quy tắc chấm tự tạo để học cách đo, không chạy cross-encoder. MRR lấy trung bình nghịch đảo thứ hạng
+  của nguồn đúng đầu tiên, quy ước 0 nếu không có. Recall@k đo độ bao phủ nguồn đúng trong k kết quả đầu. Tăng k
+  có thể tăng recall nhưng đưa thêm nhiễu và tăng context/độ trễ; phải ghi cả số ứng viên, k và điều kiện chạy.
 
-  A retriever gathers candidates; a reranker reassesses those candidates for the query. A conventional reranker cannot recover a document absent from its input set.
 
-  Retrieve a broader pool, then choose passages containing both a policy and its exceptions. Self-check: does increasing the number sent to the LLM always help? No: extra passages can improve coverage but also add noise and cost. Track missing-evidence failures separately from distraction by irrelevant content.
-why_it_matters_vi: Đánh giá cải tiến truy xuất bằng số liệu để biết thành phần nào đáng giữ.
-why_it_matters_en: Advanced RAG should improve retrieval with measurements rather than simply adding components.
+  Tự kiểm tra: MRR tăng có đủ kết luận câu trả lời tốt hơn không? Không; cần đánh giá riêng generation và trích
+  dẫn. Trong Colab, giữ tập câu hỏi cố định, đo từng trường hợp và thời gian thực; điểm của dữ liệu mô phỏng dưới
+  đây không dự đoán chất lượng tiếng Việt.'
+concept_notes_en: 'A retriever first selects candidates; a reranker scores each query–passage pair and reorders
+  that set. A bi-encoder represents queries and passages independently, while a cross-encoder processes the pair
+  jointly. A reranker cannot recover a passage the retriever never selected.
+
+
+  This example uses a synthetic scoring rule, not a cross-encoder. MRR averages the reciprocal rank of the first
+  relevant source, using zero when none is found. Recall@k measures relevant-source coverage within the first k
+  results. Larger k may improve recall but add noise, context and latency; record candidate count, k and execution
+  conditions.
+
+
+  Self-check: does higher MRR establish better answers? No; generation and citations need separate evaluation. In
+  Colab, hold questions fixed and measure per-case outcomes and real elapsed time; the fixture scores below do not
+  predict Vietnamese model quality.'
+why_it_matters_vi: Tách lỗi mất ứng viên khỏi lỗi xếp hạng; đo Recall@k và MRR trước/sau rerank.
+why_it_matters_en: Separate missing-candidate failures from ranking failures; measure Recall@k and MRR before and
+  after reranking.
 study_steps_vi:
-- Đọc phần giải thích, xác định khái niệm và điều kiện cần dùng cho nhiệm vụ bên dưới.
-- Tìm mục tương ứng với “Reranking and top-k selection” trong tài liệu tham khảo; đối chiếu với phần giải thích
-  của bài.
-- Thử hai giá trị k và đọc các bằng chứng được thêm hoặc bị bỏ.
-- Đọc riêng các trường hợp bỏ sót, sai thứ hạng và sai trích dẫn. Ghi kết quả đối chiếu và điều bạn đã sửa nếu lần
-  đầu chưa đúng.
-- Tự trả lời thẻ ôn tập, rồi kiểm tra các tiêu chí hoàn thành trước khi chuyển bài.
+- Đọc phần giải thích và dự đoán đầu ra của ví dụ trước khi chạy.
+- Chạy mã Python trong một ô Google Colab; ví dụ chỉ dùng thư viện chuẩn, không cần cài thêm.
+- Đổi quy tắc rerank rồi so hai trường hợp; trường hợp mất nguồn phải tiếp tục thất bại. Trong Lab A, lưu cả số
+  ứng viên và k cùng báo cáo.
+- 'Xóa d2 khỏi ứng viên: reciprocal rank vẫn bằng 0 dù đổi điểm rerank.'
+- Lưu đầu ra, đối chiếu với kết quả mong đợi và ghi rõ giới hạn của dữ liệu mô phỏng.
 study_steps_en:
-- 'Read the concept notes and answer: Advanced RAG should improve retrieval with measurements rather than simply
-  adding components.'
-- Open Elasticsearch Reference, read the section marked Read this lesson, and record one verified example or definition.
-- Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the
-  test.
-- 'Complete the practice task: Create a 30-question evaluation set, compare vector/BM25/hybrid retrieval, add a
-  reranker, and slice failures by query type.'
-- Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact.
+- Read the explanation and predict the example output before running it.
+- Run the Python code in a Google Colab cell; this example uses only the standard library.
+- Change the reranking rule and compare both cases; the missing-source case must still fail. In Lab A, save candidate
+  count and k with the report.
+- 'Remove d2 from the candidates: reciprocal rank remains zero regardless of reranking scores.'
+- Save the output, compare it with the expected result and state the limits of the synthetic data.
 practice_plan:
   vi:
-    task: 'Thử hai giá trị k và đọc các bằng chứng được thêm hoặc bị bỏ.
-
-
-      Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Tạo 30 câu đánh giá, so sánh vector,
-      BM25, tìm kiếm kết hợp và xếp hạng lại; phân tích lỗi theo loại câu hỏi.'
+    task: Đổi quy tắc rerank rồi so hai trường hợp; trường hợp mất nguồn phải tiếp tục thất bại. Trong Lab A, lưu
+      cả số ứng viên và k cùng báo cáo.
     deliverables:
-    - Bảng so sánh truy xuất trên cùng bộ câu hỏi có nguồn chuẩn
-    - Kết quả đối chiếu kèm dữ liệu hoặc điều kiện thực hiện
-    - Một giới hạn và cách kiểm tra thêm
-    checkpoint: Đọc riêng các trường hợp bỏ sót, sai thứ hạng và sai trích dẫn.
-    stretch: Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào.
+    - Báo cáo trước/sau gồm MRR, Recall@k và trường hợp không có nguồn trong ứng viên
+    - Đầu ra gốc và kết quả sau khi đổi một điều kiện
+    - Giải thích một lỗi và giới hạn của phép đo
+    checkpoint: 'Xóa d2 khỏi ứng viên: reciprocal rank vẫn bằng 0 dù đổi điểm rerank.'
+    stretch: Mở notebook liên kết, chạy trong Colab và ghi cấu hình thực tế.
   en:
-    task: Create a 30-question evaluation set, compare vector/BM25/hybrid retrieval, add a reranker, and slice failures
-      by query type.
+    task: Change the reranking rule and compare both cases; the missing-source case must still fail. In Lab A, save
+      candidate count and k with the report.
     deliverables:
-    - One working implementation
-    - One test or benchmark
-    - One note on failure modes and trade-offs
-    checkpoint: You can tell whether retrieval failed on recall or ranking, whether citations support claims, and
-      which change is worth keeping.
-    stretch: Add a failure test for reranking and top-k selection and explain the result.
+    - A before/after report with MRR, Recall@k and a missing-candidate case
+    - Original output and output after changing one condition
+    - An explanation of one failure and the measurement limits
+    checkpoint: 'Remove d2 from the candidates: reciprocal rank remains zero regardless of reranking scores.'
+    stretch: Open the linked notebook, run in Colab and record the actual configuration.
 interview_questions:
   vi:
   - Bạn sẽ giải thích nội dung “Xếp hạng lại và chọn top-k” bằng ví dụ nào?
@@ -91,23 +102,30 @@ interview_questions:
   - Which assumption behind reranking and top-k selection could fail in production?
   - Which metric or test would prove the result is trustworthy?
 formulas:
-- similarity(a,b) = (a · b) / (||a||₂ ||b||₂)
+- MRR = mean(1 / rank of first relevant result); missing result contributes 0
+- Recall@k = relevant sources in top-k / all relevant sources
 code_examples:
 - language: python
-  title: 'Reranking and top-k selection: inspect one complete path'
-  code: "# Topic: Reranking and top-k selection (phase-13-genai-advanced-rag-advanced-rag-2)\nfrom dataclasses import\
-    \ dataclass\n\n@dataclass(frozen=True)\nclass Result:\n    value: str\n    valid: bool\n\nresult = Result(value='ready',\
-    \ valid=True)\nprint(result)"
+  title: Evaluate a deterministic reranker on fixed candidates
+  code: "import json\ndef reciprocal_rank(ranking, relevant):\n    return next((1 / rank for rank, doc in enumerate(ranking,\
+    \ 1)\n                 if doc in relevant), 0.0)\ndef recall_at_k(ranking, relevant, k):\n    return len(set(ranking[:k])\
+    \ & relevant) / len(relevant)\ncases = [([\"d1\", \"d2\"], {\"d2\"}), ([\"d1\", \"d3\"], {\"d2\"})]\nmock_scores\
+    \ = {\"d1\": 0.2, \"d2\": 0.9, \"d3\": 0.1}\nafter = [(sorted(r, key=lambda d: -mock_scores[d]), gold) for r,\
+    \ gold in cases]\ndef evaluate(rows):\n    return {\"mrr\": sum(reciprocal_rank(r, g) for r, g in rows) / len(rows),\n\
+    \            \"recall_at_1\": sum(recall_at_k(r, g, 1) for r, g in rows) / len(rows)}\nprint(json.dumps({\"\
+    before\": evaluate(cases), \"after\": evaluate(after),\n                  \"missing_candidate_rr\": reciprocal_rank(after[1][0],\
+    \ {\"d2\"})}))\n"
   status: runnable
-  purpose_vi: Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.
-  purpose_en: Illustrate the input-to-output path for reranking and top-k selection.
-  setup: Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.
-  expected_output: Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.
-  edge_case_vi: Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.
-  edge_case_en: Try an empty input, a wrong shape or missing data and record the failure.
-  explanation_vi: Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần
-    nội dung; cần hoàn thành riêng nhiệm vụ thực hành.
-  explanation_en: Keep the boundary executable and inspectable; change one input and verify the expected output.
+  purpose_vi: Tách lỗi mất ứng viên khỏi lỗi xếp hạng; đo Recall@k và MRR trước/sau rerank.
+  purpose_en: Separate missing-candidate failures from ranking failures; measure Recall@k and MRR before and after
+    reranking.
+  setup: 'Python 3.11+; standard library only. Google Colab: paste into one code cell and Run.'
+  expected_output: '{"before": {"mrr": 0.25, "recall_at_1": 0.0}, "after": {"mrr": 0.5, "recall_at_1": 0.5}, "missing_candidate_rr":
+    0.0}'
+  edge_case_vi: 'Xóa d2 khỏi ứng viên: reciprocal rank vẫn bằng 0 dù đổi điểm rerank.'
+  edge_case_en: 'Remove d2 from the candidates: reciprocal rank remains zero regardless of reranking scores.'
+  explanation_vi: Cải thiện chỉ đúng với nhãn và quy tắc giả lập đang chạy; không phải benchmark một model.
+  explanation_en: The improvement applies only to these executed fixtures and rules; it is not a model benchmark.
 resources:
 - language: en
   title: Elasticsearch Reference
@@ -144,16 +162,7 @@ resources:
   purpose_en: Try indexing and top-k retrieval before adding generation.
   read_en: Read indexes, distance metrics, and hit@k evaluation.
   kind: official
-  required: true
-- language: en
-  title: "Sentence Transformers: Retrieve & Re-Rank"
-  url: https://sbert.net/examples/sentence_transformer/applications/retrieve_rerank/README.html
-  kind: official
   required: false
-  purpose_vi: "Tài liệu tham khảo về lấy ứng viên bằng tìm kiếm từ khóa hoặc bi-encoder rồi tùy chọn xếp hạng lại bằng CrossEncoder."
-  purpose_en: "Reference for retrieving candidates with lexical search or a bi-encoder, then optionally reranking with a CrossEncoder."
-  read_vi: "Đọc pipeline retrieve/rerank; xem điểm CrossEncoder là điểm liên quan chứ không mặc nhiên là xác suất, rồi đánh giá trên truy vấn tiếng Việt riêng."
-  read_en: "Read the retrieve/rerank pipeline; treat CrossEncoder outputs as relevance scores, not inherent probabilities, and evaluate Vietnamese queries separately."
 - title: Giải thích và hướng dẫn thực hành trong bài
   url: ''
   language: vi
@@ -163,6 +172,26 @@ resources:
   read_vi: Đọc giải thích → xem ví dụ → thực hành → tự kiểm tra.
   read_en: Follow Study plan → Concept notes → Code example → Practice plan.
   required: true
+- title: Google Colab — Lab A
+  language: vi/en
+  url: https://colab.research.google.com/github/Hzyl/JourneyAIEngineer/blob/main/notebooks/lab-a-evidence-retrieval.ipynb
+  kind: external
+  required: false
+  purpose_vi: Chạy trong Colab để mở rộng ví dụ bằng dữ liệu và báo cáo của lab.
+  purpose_en: Run in Colab to extend this example with the lab dataset and reports.
+  read_vi: Chọn môi trường CPU do Google lưu trữ, chạy baseline rồi phần embedding tùy chọn. Dùng tập dev trước
+    khi đánh giá test và tải báo cáo về.
+  read_en: 'Run in Colab on a Google-hosted CPU runtime: baseline first, then optional embeddings. Use dev before
+    evaluating test and download the report.'
+- title: Sentence Transformers — Retrieve & Re-Rank
+  url: https://sbert.net/examples/sentence_transformer/applications/retrieve_rerank/README.html
+  purpose_vi: Phân biệt bi-encoder lấy ứng viên và cross-encoder xếp hạng lại.
+  purpose_en: Distinguish bi-encoder candidate retrieval from cross-encoder reranking.
+  read_vi: 'Đọc Retrieve & Re-Rank Pipeline và Re-Ranker: Cross-Encoder; đối chiếu giới hạn tập ứng viên.'
+  read_en: 'Read Retrieve & Re-Rank Pipeline and Re-Ranker: Cross-Encoder; inspect candidate-set limitations.'
+  language: en
+  kind: official
+  required: false
 exercise_ids:
 - exercise-13-advanced-rag
 review_item_ids:
@@ -172,13 +201,14 @@ review_item_ids:
 - phase-13-genai-advanced-rag-advanced-rag-2-interview
 estimated_minutes: 60
 completion_checklist:
-- Thử hai giá trị k và đọc các bằng chứng được thêm hoặc bị bỏ.
-- Đọc riêng các trường hợp bỏ sót, sai thứ hạng và sai trích dẫn.
-- Lưu kết quả và giải thích được một giới hạn mà không nhìn lời giải.
+- Đổi quy tắc rerank rồi so hai trường hợp; trường hợp mất nguồn phải tiếp tục thất bại. Trong Lab A, lưu cả số
+  ứng viên và k cùng báo cáo.
+- 'Xóa d2 khỏi ứng viên: reciprocal rank vẫn bằng 0 dù đổi điểm rerank.'
+- Lưu đầu ra và ghi đúng giới hạn của ví dụ.
 completion_criteria:
-- 'Bài làm đáp ứng nhiệm vụ: Thử hai giá trị k và đọc các bằng chứng được thêm hoặc bị bỏ.'
-- Có kết quả đối chiếu với tiêu chí hoặc dự đoán đã ghi trước.
-- Đọc riêng các trường hợp bỏ sót, sai thứ hạng và sai trích dẫn.
+- Báo cáo trước/sau gồm MRR, Recall@k và trường hợp không có nguồn trong ứng viên
+- 'Xóa d2 khỏi ứng viên: reciprocal rank vẫn bằng 0 dù đổi điểm rerank.'
+- Không suy kết quả model thật từ dữ liệu mô phỏng.
 common_mistakes:
 - Gộp điểm BM25 với điểm vector mà chưa xét thang đo.
 - Kết luận từ một kết quả thuận lợi mà chưa kiểm tra trường hợp khác.
@@ -240,14 +270,22 @@ review_cards:
 ---
 # Xếp hạng lại và chọn top-k / Reranking and top-k selection
 
-Xếp hạng lại sắp lại tập ứng viên theo mức liên quan. Chọn số kết quả cần cân bằng độ bao phủ, nhiễu trong ngữ cảnh và chi phí xử lý.
+Retriever lấy tập ứng viên trước; reranker chấm lại từng cặp truy vấn–đoạn rồi đổi thứ tự trong tập đó. Bi-encoder tính vector riêng cho truy vấn và đoạn; cross-encoder xử lý cặp cùng nhau. Reranker không thể khôi phục đoạn mà retriever chưa lấy được.
 
-Retriever lấy một tập ứng viên rộng; reranker đánh giá lại các ứng viên đó theo câu hỏi. Reranker thông thường chỉ đổi thứ tự trong tập nhận được, nên không thể cứu tài liệu đã bị bỏ qua hoàn toàn ở truy xuất.
+Ví dụ dùng quy tắc chấm tự tạo để học cách đo, không chạy cross-encoder. MRR lấy trung bình nghịch đảo thứ hạng của nguồn đúng đầu tiên, quy ước 0 nếu không có. Recall@k đo độ bao phủ nguồn đúng trong k kết quả đầu. Tăng k có thể tăng recall nhưng đưa thêm nhiễu và tăng context/độ trễ; phải ghi cả số ứng viên, k và điều kiện chạy.
 
-Ví dụ, lấy nhiều ứng viên rồi chọn vài đoạn có đủ quy định và ngoại lệ để dựng ngữ cảnh. Tự kiểm tra: tăng top-k gửi cho LLM có luôn làm câu trả lời tốt hơn không? Không; thêm đoạn có thể tăng bao phủ nhưng cũng tăng nhiễu và chi phí. Theo dõi câu hỏi thiếu bằng chứng và câu hỏi bị nội dung không liên quan làm lệch.
+Tự kiểm tra: MRR tăng có đủ kết luận câu trả lời tốt hơn không? Không; cần đánh giá riêng generation và trích dẫn. Trong Colab, giữ tập câu hỏi cố định, đo từng trường hợp và thời gian thực; điểm của dữ liệu mô phỏng dưới đây không dự đoán chất lượng tiếng Việt.
 
-## Thực hành
+## English
 
-Thử hai giá trị k và đọc các bằng chứng được thêm hoặc bị bỏ.
+A retriever first selects candidates; a reranker scores each query–passage pair and reorders that set. A bi-encoder represents queries and passages independently, while a cross-encoder processes the pair jointly. A reranker cannot recover a passage the retriever never selected.
 
-Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Tạo 30 câu đánh giá, so sánh vector, BM25, tìm kiếm kết hợp và xếp hạng lại; phân tích lỗi theo loại câu hỏi.
+This example uses a synthetic scoring rule, not a cross-encoder. MRR averages the reciprocal rank of the first relevant source, using zero when none is found. Recall@k measures relevant-source coverage within the first k results. Larger k may improve recall but add noise, context and latency; record candidate count, k and execution conditions.
+
+Self-check: does higher MRR establish better answers? No; generation and citations need separate evaluation. In Colab, hold questions fixed and measure per-case outcomes and real elapsed time; the fixture scores below do not predict Vietnamese model quality.
+
+## Thực hành / Practice
+
+Đổi quy tắc rerank rồi so hai trường hợp; trường hợp mất nguồn phải tiếp tục thất bại. Trong Lab A, lưu cả số ứng viên và k cùng báo cáo.
+
+Change the reranking rule and compare both cases; the missing-source case must still fail. In Lab A, save candidate count and k with the report.

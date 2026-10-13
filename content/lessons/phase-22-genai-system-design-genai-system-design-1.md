@@ -4,17 +4,18 @@ phase_id: phase-22-genai-system-design
 module_id: genai-system-design
 title_vi: Kiến trúc toàn hệ thống cho sản phẩm AI
 title_en: End-to-end architecture for an AI product
-summary_vi: Thiết kế toàn hệ thống nối nhu cầu người dùng với dữ liệu, mô hình, API và vận hành.
-summary_en: Learn End-to-end architecture for an AI product through an input → transformation → output model, then
-  verify it with an edge-case exercise.
+summary_vi: Chọn kiến trúc theo bài toán, quyền dữ liệu và tiêu chí chất lượng, độ trễ, chi phí.
+summary_en: Choose architecture from task needs, data permissions and quality, latency and cost criteria.
 learning_objectives:
-- Vẽ luồng dữ liệu từ người dùng tới kết quả và chỉ ra các điểm phụ thuộc.
-- Lần theo luồng dữ liệu và xét một tình huống lỗi cho mỗi thành phần chính.
-- Giải thích kết quả và nêu một giới hạn của bài làm.
+- Chọn kiến trúc theo bài toán, quyền dữ liệu và tiêu chí chất lượng, độ trễ, chi phí.
+- Đổi ngưỡng latency rồi chọn lại; vẽ luồng dữ liệu của phương án được chọn và đánh dấu nơi kiểm tra quyền, phiên
+  bản và thiếu nguồn.
+- Khi không có phương án đạt ngưỡng, trả None; không tự bỏ kiểm tra quyền để có kết quả.
 learning_objectives_en:
-- Explain end-to-end architecture for an ai product with a concrete example.
-- Write or adapt a small code example applying end-to-end architecture for an ai product.
-- Recognize its assumptions, limits and one common failure mode.
+- Choose architecture from task needs, data permissions and quality, latency and cost criteria.
+- Change the latency threshold and reselect; diagram the chosen data flow and mark permission, version and missing-evidence
+  checks.
+- Return None when no option meets the thresholds; never remove permission checks to obtain a result.
 prerequisites:
 - phase-21-genai-local-llm-local-llm-4
 - phase-21-genai-local-llm-local-llm-1
@@ -28,61 +29,70 @@ key_terms:
 - reproducibility
 - deployment
 - genai-system-design
-concept_notes_vi: |-
-  Thiết kế toàn hệ thống nối nhu cầu người dùng với dữ liệu, mô hình, API và vận hành. Mỗi thành phần cần trách nhiệm rõ và cách kiểm tra khi gặp lỗi.
+concept_notes_vi: 'Bắt đầu từ nhiệm vụ và đường đi dữ liệu: nhận câu hỏi, xác định danh tính, truy xuất nguồn được
+  phép, tạo câu trả lời, kiểm tra dẫn nguồn rồi trả kết quả. Nhu cầu tài liệu thay đổi có thể dùng RAG; workflow
+  điều phối bước rõ; agent chỉ đáng thêm khi quyết định động có lợi ích được đo. Không xem LLM, RAG và agent là
+  các cấp độ bắt buộc nối tiếp.
 
-  Kiến trúc mô tả trách nhiệm và quan hệ giữa các phần; lựa chọn thư viện chỉ là cách hiện thực chúng. Một sơ đồ hữu ích thể hiện dữ liệu đi đâu, ai được đọc và điều gì xảy ra khi một phụ thuộc lỗi.
 
-  Ví dụ, hệ hỏi đáp tách nhập tài liệu, kiểm tra quyền, truy xuất và sinh câu trả lời để theo dõi nguồn lỗi. Tự kiểm tra: thêm nhiều dịch vụ có tự làm hệ thống tốt hơn không? Không; mỗi ranh giới tăng chi phí giao tiếp và vận hành. Bắt đầu từ yêu cầu rồi chỉ tách thành phần khi có lợi ích cụ thể có thể kiểm tra.
-concept_notes_en: |-
-  End-to-end design connects user needs with data, models, APIs and operations. Give each component a clear responsibility and failure check.
+  Thiết kế cần chỉ ra nơi lưu phiên bản nguồn, lọc quyền, đặt timeout, ghi telemetry, chấm eval và xử lý câu thiếu
+  đáp án. Ví dụ lọc ba ứng viên bằng ngưỡng chất lượng, latency, chi phí và quyền. Các con số là giả định bài tập,
+  không phải kết quả model hay giá dịch vụ; khi làm thật thay bằng báo cáo đo cùng workload.
 
-  Architecture describes responsibilities and relationships; libraries implement them. A useful diagram shows data flow, access and dependency failure behavior.
 
-  A question-answering system can separate ingestion, authorization, retrieval and generation to locate failures. Self-check: do more services automatically improve the system? No: boundaries add communication and operational costs. Start from requirements and split components only for a concrete, verifiable benefit.
-why_it_matters_vi: Giải thích lựa chọn kiến trúc bằng nhu cầu người dùng, độ tin cậy, bảo mật và chi phí.
-why_it_matters_en: A senior AI Engineer explains system decisions through user value, reliability, security, and
-  cost.
+  Tự kiểm tra: phương án chất lượng cao nhất có luôn được chọn không? Không; vượt quyền dữ liệu là điều kiện loại,
+  và latency/chi phí có thể vi phạm yêu cầu. Nếu không ứng viên nào đạt, báo không có phương án thay vì nới ngưỡng
+  âm thầm. Có thể dùng Lab A làm nguồn bằng chứng truy xuất và Lab B cho quyết định workflow/agent.'
+concept_notes_en: 'Start from the task and data flow: receive a question, establish identity, retrieve authorized
+  sources, generate an answer, validate citations and return the result. Changing documents may justify RAG; workflows
+  coordinate known steps; agents need measured benefits from dynamic choices. LLM, RAG and agents are not mandatory
+  successive tiers.
+
+
+  Identify where source versions, authorization, timeouts, telemetry, evaluations and unanswerable handling belong.
+  This example filters three candidates by quality, latency, cost and permission criteria. Numbers are exercise
+  assumptions, not model results or service prices; replace them with measurements from the same workload for a
+  real decision.
+
+
+  Self-check: must the highest-quality candidate win? No; unauthorized data flow is disqualifying, and latency/cost
+  may violate requirements. If no candidate qualifies, report no option instead of silently weakening thresholds.
+  Lab A can supply retrieval evidence and Lab B can inform workflow/agent selection.'
+why_it_matters_vi: Chọn kiến trúc theo bài toán, quyền dữ liệu và tiêu chí chất lượng, độ trễ, chi phí.
+why_it_matters_en: Choose architecture from task needs, data permissions and quality, latency and cost criteria.
 study_steps_vi:
-- Đọc phần giải thích, xác định khái niệm và điều kiện cần dùng cho nhiệm vụ bên dưới.
-- Tìm mục tương ứng với “End-to-end architecture for an AI product” trong tài liệu tham khảo; đối chiếu với phần
-  giải thích của bài.
-- Vẽ luồng dữ liệu từ người dùng tới kết quả và chỉ ra các điểm phụ thuộc.
-- Lần theo luồng dữ liệu và xét một tình huống lỗi cho mỗi thành phần chính. Ghi kết quả đối chiếu và điều bạn đã
-  sửa nếu lần đầu chưa đúng.
-- Tự trả lời thẻ ôn tập, rồi kiểm tra các tiêu chí hoàn thành trước khi chuyển bài.
+- Đọc phần giải thích và dự đoán đầu ra của ví dụ trước khi chạy.
+- Chạy mã Python trong một ô Google Colab; ví dụ chỉ dùng thư viện chuẩn, không cần cài thêm.
+- Đổi ngưỡng latency rồi chọn lại; vẽ luồng dữ liệu của phương án được chọn và đánh dấu nơi kiểm tra quyền, phiên
+  bản và thiếu nguồn.
+- Khi không có phương án đạt ngưỡng, trả None; không tự bỏ kiểm tra quyền để có kết quả.
+- Lưu đầu ra, đối chiếu với kết quả mong đợi và ghi rõ giới hạn của dữ liệu mô phỏng.
 study_steps_en:
-- 'Read the concept notes and answer: A senior AI Engineer explains system decisions through user value, reliability,
-  security, and cost.'
-- Open Google Rules of Machine Learning, read the section marked Read this lesson, and record one verified example
-  or definition.
-- Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the
-  test.
-- 'Complete the practice task: Write a design document for a Production GenAI System with data flow, SLOs, threat
-  model, cost estimate, and rollout plan.'
-- Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact.
+- Read the explanation and predict the example output before running it.
+- Run the Python code in a Google Colab cell; this example uses only the standard library.
+- Change the latency threshold and reselect; diagram the chosen data flow and mark permission, version and missing-evidence
+  checks.
+- Return None when no option meets the thresholds; never remove permission checks to obtain a result.
+- Save the output, compare it with the expected result and state the limits of the synthetic data.
 practice_plan:
   vi:
-    task: 'Vẽ luồng dữ liệu từ người dùng tới kết quả và chỉ ra các điểm phụ thuộc.
-
-
-      Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Viết tài liệu thiết kế hệ thống GenAI
-      gồm luồng dữ liệu, SLO, mô hình đe dọa, ước tính chi phí và kế hoạch triển khai.'
+    task: Đổi ngưỡng latency rồi chọn lại; vẽ luồng dữ liệu của phương án được chọn và đánh dấu nơi kiểm tra quyền,
+      phiên bản và thiếu nguồn.
     deliverables:
-    - Sơ đồ hoặc tài liệu quyết định có ràng buộc và cách kiểm chứng
-    - Kết quả đối chiếu kèm dữ liệu hoặc điều kiện thực hiện
-    - Một giới hạn và cách kiểm tra thêm
-    checkpoint: Lần theo luồng dữ liệu và xét một tình huống lỗi cho mỗi thành phần chính.
-    stretch: Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào.
+    - Sơ đồ hệ thống và bảng quyết định kèm giả định, số đo cần có và phương án bị loại
+    - Đầu ra gốc và kết quả sau khi đổi một điều kiện
+    - Giải thích một lỗi và giới hạn của phép đo
+    checkpoint: Khi không có phương án đạt ngưỡng, trả None; không tự bỏ kiểm tra quyền để có kết quả.
+    stretch: Mở notebook liên kết, chạy trong Colab và ghi cấu hình thực tế.
   en:
-    task: Write a design document for a Production GenAI System with data flow, SLOs, threat model, cost estimate,
-      and rollout plan.
+    task: Change the latency threshold and reselect; diagram the chosen data flow and mark permission, version and
+      missing-evidence checks.
     deliverables:
-    - One working implementation
-    - One test or benchmark
-    - One note on failure modes and trade-offs
-    checkpoint: A reviewer can trace every decision, failure mode, metric, and rollback plan in the design document.
-    stretch: Add a failure test for end-to-end architecture for an ai product and explain the result.
+    - A system diagram and decision table with assumptions, required measurements and excluded candidates
+    - Original output and output after changing one condition
+    - An explanation of one failure and the measurement limits
+    checkpoint: Return None when no option meets the thresholds; never remove permission checks to obtain a result.
+    stretch: Open the linked notebook, run in Colab and record the actual configuration.
 interview_questions:
   vi:
   - Bạn sẽ giải thích nội dung “Kiến trúc toàn hệ thống cho sản phẩm AI” bằng ví dụ nào?
@@ -95,20 +105,23 @@ interview_questions:
 formulas: []
 code_examples:
 - language: python
-  title: 'End-to-end architecture for an AI product: inspect one complete path'
-  code: "# Topic: End-to-end architecture for an AI product (phase-22-genai-system-design-genai-system-design-1)\n\
-    from dataclasses import dataclass\n\n@dataclass(frozen=True)\nclass Result:\n    value: str\n    valid: bool\n\
-    \nresult = Result(value='ready', valid=True)\nprint(result)"
+  title: Choose an architecture using measured-criterion placeholders
+  code: "import json\noptions = [\n    dict(name=\"workflow-rag\", quality=0.8, latency_ms=300, cost_units=2, authorized=True),\n\
+    \    dict(name=\"agent-rag\", quality=0.9, latency_ms=900, cost_units=5, authorized=True),\n    dict(name=\"\
+    unrestricted-search\", quality=0.95, latency_ms=200, cost_units=1, authorized=False),\n]\ndef choose(rows, latency_limit):\n\
+    \    valid = [r for r in rows if r[\"authorized\"] and r[\"quality\"] >= 0.75\n             and r[\"latency_ms\"\
+    ] <= latency_limit and r[\"cost_units\"] <= 5]\n    return min(valid, key=lambda r: (r[\"cost_units\"], -r[\"\
+    quality\"]))[\"name\"] if valid else None\nprint(json.dumps({\"assumed_conditions\": choose(options, 500),\n\
+    \                  \"strict_latency\": choose(options, 100),\n                  \"real_model_comparison\": False}))\n"
   status: runnable
-  purpose_vi: Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.
-  purpose_en: Illustrate the input-to-output path for end-to-end architecture for an ai product.
-  setup: Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.
-  expected_output: Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.
-  edge_case_vi: Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.
-  edge_case_en: Try an empty input, a wrong shape or missing data and record the failure.
-  explanation_vi: Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần
-    nội dung; cần hoàn thành riêng nhiệm vụ thực hành.
-  explanation_en: Keep the boundary executable and inspectable; change one input and verify the expected output.
+  purpose_vi: Chọn kiến trúc theo bài toán, quyền dữ liệu và tiêu chí chất lượng, độ trễ, chi phí.
+  purpose_en: Choose architecture from task needs, data permissions and quality, latency and cost criteria.
+  setup: 'Python 3.11+; standard library only. Google Colab: paste into one code cell and Run.'
+  expected_output: '{"assumed_conditions": "workflow-rag", "strict_latency": null, "real_model_comparison": false}'
+  edge_case_vi: Khi không có phương án đạt ngưỡng, trả None; không tự bỏ kiểm tra quyền để có kết quả.
+  edge_case_en: Return None when no option meets the thresholds; never remove permission checks to obtain a result.
+  explanation_vi: Lựa chọn chỉ đúng với giả định đang nhập, không phải khuyến nghị một kiến trúc cho mọi sản phẩm.
+  explanation_en: The selection holds only for the supplied assumptions, not every product architecture.
 resources:
 - language: en
   title: Google Rules of Machine Learning
@@ -146,6 +159,17 @@ resources:
   read_vi: Đọc giải thích → xem ví dụ → thực hành → tự kiểm tra.
   read_en: Follow Study plan → Concept notes → Code example → Practice plan.
   required: true
+- title: Google Colab — Lab A
+  language: vi/en
+  url: https://colab.research.google.com/github/Hzyl/JourneyAIEngineer/blob/main/notebooks/lab-a-evidence-retrieval.ipynb
+  kind: external
+  required: false
+  purpose_vi: Chạy trong Colab để mở rộng ví dụ bằng dữ liệu và báo cáo của lab.
+  purpose_en: Run in Colab to extend this example with the lab dataset and reports.
+  read_vi: Chọn môi trường CPU do Google lưu trữ, chạy baseline rồi phần embedding tùy chọn. Dùng tập dev trước
+    khi đánh giá test và tải báo cáo về.
+  read_en: 'Run in Colab on a Google-hosted CPU runtime: baseline first, then optional embeddings. Use dev before
+    evaluating test and download the report.'
 exercise_ids:
 - exercise-22-genai-system-design
 review_item_ids:
@@ -155,13 +179,14 @@ review_item_ids:
 - phase-22-genai-system-design-genai-system-design-1-interview
 estimated_minutes: 60
 completion_checklist:
-- Vẽ luồng dữ liệu từ người dùng tới kết quả và chỉ ra các điểm phụ thuộc.
-- Lần theo luồng dữ liệu và xét một tình huống lỗi cho mỗi thành phần chính.
-- Lưu kết quả và giải thích được một giới hạn mà không nhìn lời giải.
+- Đổi ngưỡng latency rồi chọn lại; vẽ luồng dữ liệu của phương án được chọn và đánh dấu nơi kiểm tra quyền, phiên
+  bản và thiếu nguồn.
+- Khi không có phương án đạt ngưỡng, trả None; không tự bỏ kiểm tra quyền để có kết quả.
+- Lưu đầu ra và ghi đúng giới hạn của ví dụ.
 completion_criteria:
-- 'Bài làm đáp ứng nhiệm vụ: Vẽ luồng dữ liệu từ người dùng tới kết quả và chỉ ra các điểm phụ thuộc.'
-- Có kết quả đối chiếu với tiêu chí hoặc dự đoán đã ghi trước.
-- Lần theo luồng dữ liệu và xét một tình huống lỗi cho mỗi thành phần chính.
+- Sơ đồ hệ thống và bảng quyết định kèm giả định, số đo cần có và phương án bị loại
+- Khi không có phương án đạt ngưỡng, trả None; không tự bỏ kiểm tra quyền để có kết quả.
+- Không suy kết quả model thật từ dữ liệu mô phỏng.
 common_mistakes:
 - Vẽ nhiều thành phần nhưng thiếu căn cứ về tải, chi phí và yêu cầu dữ liệu.
 - Kết luận từ một kết quả thuận lợi mà chưa kiểm tra trường hợp khác.
@@ -227,14 +252,22 @@ review_cards:
 ---
 # Kiến trúc toàn hệ thống cho sản phẩm AI / End-to-end architecture for an AI product
 
-Thiết kế toàn hệ thống nối nhu cầu người dùng với dữ liệu, mô hình, API và vận hành. Mỗi thành phần cần trách nhiệm rõ và cách kiểm tra khi gặp lỗi.
+Bắt đầu từ nhiệm vụ và đường đi dữ liệu: nhận câu hỏi, xác định danh tính, truy xuất nguồn được phép, tạo câu trả lời, kiểm tra dẫn nguồn rồi trả kết quả. Nhu cầu tài liệu thay đổi có thể dùng RAG; workflow điều phối bước rõ; agent chỉ đáng thêm khi quyết định động có lợi ích được đo. Không xem LLM, RAG và agent là các cấp độ bắt buộc nối tiếp.
 
-Kiến trúc mô tả trách nhiệm và quan hệ giữa các phần; lựa chọn thư viện chỉ là cách hiện thực chúng. Một sơ đồ hữu ích thể hiện dữ liệu đi đâu, ai được đọc và điều gì xảy ra khi một phụ thuộc lỗi.
+Thiết kế cần chỉ ra nơi lưu phiên bản nguồn, lọc quyền, đặt timeout, ghi telemetry, chấm eval và xử lý câu thiếu đáp án. Ví dụ lọc ba ứng viên bằng ngưỡng chất lượng, latency, chi phí và quyền. Các con số là giả định bài tập, không phải kết quả model hay giá dịch vụ; khi làm thật thay bằng báo cáo đo cùng workload.
 
-Ví dụ, hệ hỏi đáp tách nhập tài liệu, kiểm tra quyền, truy xuất và sinh câu trả lời để theo dõi nguồn lỗi. Tự kiểm tra: thêm nhiều dịch vụ có tự làm hệ thống tốt hơn không? Không; mỗi ranh giới tăng chi phí giao tiếp và vận hành. Bắt đầu từ yêu cầu rồi chỉ tách thành phần khi có lợi ích cụ thể có thể kiểm tra.
+Tự kiểm tra: phương án chất lượng cao nhất có luôn được chọn không? Không; vượt quyền dữ liệu là điều kiện loại, và latency/chi phí có thể vi phạm yêu cầu. Nếu không ứng viên nào đạt, báo không có phương án thay vì nới ngưỡng âm thầm. Có thể dùng Lab A làm nguồn bằng chứng truy xuất và Lab B cho quyết định workflow/agent.
 
-## Thực hành
+## English
 
-Vẽ luồng dữ liệu từ người dùng tới kết quả và chỉ ra các điểm phụ thuộc.
+Start from the task and data flow: receive a question, establish identity, retrieve authorized sources, generate an answer, validate citations and return the result. Changing documents may justify RAG; workflows coordinate known steps; agents need measured benefits from dynamic choices. LLM, RAG and agents are not mandatory successive tiers.
 
-Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Viết tài liệu thiết kế hệ thống GenAI gồm luồng dữ liệu, SLO, mô hình đe dọa, ước tính chi phí và kế hoạch triển khai.
+Identify where source versions, authorization, timeouts, telemetry, evaluations and unanswerable handling belong. This example filters three candidates by quality, latency, cost and permission criteria. Numbers are exercise assumptions, not model results or service prices; replace them with measurements from the same workload for a real decision.
+
+Self-check: must the highest-quality candidate win? No; unauthorized data flow is disqualifying, and latency/cost may violate requirements. If no candidate qualifies, report no option instead of silently weakening thresholds. Lab A can supply retrieval evidence and Lab B can inform workflow/agent selection.
+
+## Thực hành / Practice
+
+Đổi ngưỡng latency rồi chọn lại; vẽ luồng dữ liệu của phương án được chọn và đánh dấu nơi kiểm tra quyền, phiên bản và thiếu nguồn.
+
+Change the latency threshold and reselect; diagram the chosen data flow and mark permission, version and missing-evidence checks.

@@ -4,17 +4,18 @@ phase_id: phase-20-genai-finetuning
 module_id: fine-tuning
 title_vi: Đánh giá sau tinh chỉnh
 title_en: Fine-tuning evaluation
-summary_vi: So sánh mô hình tinh chỉnh với mô hình cơ sở bằng cùng tập kiểm tra và cách sinh.
-summary_en: Learn Fine-tuning evaluation through an input → transformation → output model, then verify it with an
-  edge-case exercise.
+summary_vi: Đánh giá trước/sau tinh chỉnh trên tập giữ riêng, phát hiện leakage và lỗi theo nhóm.
+summary_en: Evaluate baseline and tuned candidates on held-out data and detect leakage and slice regressions.
 learning_objectives:
-- Lập bảng trước, sau tinh chỉnh và đọc những trường hợp chất lượng giảm.
-- So sánh trên tập giữ riêng và đọc các trường hợp chất lượng giảm.
-- Giải thích kết quả và nêu một giới hạn của bài làm.
+- Đánh giá trước/sau tinh chỉnh trên tập giữ riêng, phát hiện leakage và lỗi theo nhóm.
+- Đối chiếu baseline/candidate trên ba câu giữ riêng; đổi một nhãn để thấy điểm đổi. Thêm test ID vào train để phát
+  hiện leakage.
+- ID trùng giữa train và test phải làm kiểm tra thất bại, không được tự bỏ dòng rồi báo đạt.
 learning_objectives_en:
-- Explain fine-tuning evaluation with a concrete example.
-- Write or adapt a small code example applying fine-tuning evaluation.
-- Recognize its assumptions, limits and one common failure mode.
+- Evaluate baseline and tuned candidates on held-out data and detect leakage and slice regressions.
+- Compare baseline/candidate on three held-out questions; change one label to observe the score change. Add a test
+  ID to train to detect leakage.
+- An ID overlap between train and test must fail validation rather than silently dropping the row.
 prerequisites:
 - phase-20-genai-finetuning-fine-tuning-2
 - phase-19-genai-production-genai-production-1
@@ -26,58 +27,69 @@ key_terms:
 - embedding
 - retrieval
 - fine-tuning
-concept_notes_vi: |-
-  So sánh mô hình tinh chỉnh với mô hình cơ sở bằng cùng tập kiểm tra và cách sinh. Cần xem cả nhiệm vụ mục tiêu và khả năng suy giảm ở các tình huống liên quan.
+concept_notes_vi: 'Fine-tuning thay đổi tham số mô hình; RAG đưa thêm bằng chứng vào lúc xử lý. Không dùng fine-tuning
+  như cách thay thế mặc định cho tài liệu mới. Trước khi tinh chỉnh, cần baseline, dữ liệu có quyền sử dụng, giấy
+  phép model, tiêu chí đánh giá và ngân sách tài nguyên.
 
-  Cải thiện nhiệm vụ mục tiêu khác bảo toàn năng lực chung. Mô hình học tốt định dạng hỗ trợ khách hàng có thể trả lời kém hơn khi gặp câu hỏi ngoài phạm vi, nên đánh giá cần chứa cả ví dụ mục tiêu và kiểm tra hồi quy.
 
-  Ví dụ, so câu trả lời đúng, trường bị thiếu và cách từ chối câu không đủ dữ liệu ở cả hai phiên bản. Tự kiểm tra: dùng một prompt thuận lợi riêng cho bản tinh chỉnh có tạo so sánh công bằng không? Chưa; công bố rõ cấu hình từng bên và giữ điều kiện, tiêu chí tương đương. Đừng chọn bản tốt chỉ từ loss train.
-concept_notes_en: |-
-  Compare a fine-tuned model with its baseline using the same test set and generation procedure. Check both target gains and regressions in related situations.
+  Tách train, dev và test theo đơn vị có nguy cơ trùng, chẳng hạn cùng tài liệu hoặc người viết. Dùng dev để chọn
+  cấu hình; giữ test riêng đến lúc so cuối. Nếu nhiều lần chọn theo điểm test, nó đã trở thành dữ liệu phục vụ lựa
+  chọn. Ví dụ so các dự đoán tự tạo bằng exact match và phát hiện ID train/test trùng; không chạy huấn luyện hay
+  khẳng định model đã tốt hơn.
 
-  Improving the target task differs from preserving general capabilities. A customer-support model may improve formatting but worsen outside its narrow domain, so include target examples and regression checks.
 
-  Compare correctness, missing fields and abstention when evidence is absent. Self-check: is a specially favorable prompt for only the tuned model a fair comparison? Not without disclosure and equivalent conditions and criteria. Training loss alone cannot select the better deployed model.
-why_it_matters_vi: Chỉ chọn tinh chỉnh khi dữ liệu và đánh giá cho thấy giải pháp hiện tại chưa đáp ứng nhiệm vụ.
-why_it_matters_en: Fine-tuning is justified only when data and evaluation show prompting/RAG are insufficient.
+  Tự kiểm tra: điểm chung tăng có đủ chấp nhận model mới không? Không; kiểm tra lỗi theo nhóm, từ chối câu thiếu
+  dữ liệu, chi phí và latency trong cùng workload. Exact match phù hợp đáp án ngắn chuẩn hóa; với câu mở cần rubric
+  hỗ trợ nguồn hoặc người chấm. PEFT giảm phần tham số cần học nhưng không bảo đảm chất lượng.'
+concept_notes_en: 'Fine-tuning changes model parameters; RAG adds evidence at inference time. Fine-tuning is not
+  the default substitute for updated documents. Establish a baseline, permitted data use, model license, evaluation
+  criteria and resource budget first.
+
+
+  Split train, dev and test by the unit likely to leak, such as source document or author. Use dev for configuration
+  selection and reserve test for the final comparison. Repeatedly choosing by test scores turns test into selection
+  data. This example compares synthetic predictions with exact match and detects overlapping train/test IDs; it
+  performs no training and establishes no real model improvement.
+
+
+  Self-check: is a higher aggregate score sufficient to accept a candidate? No; inspect slice regressions, abstention,
+  cost and latency under the same workload. Exact match suits short normalized answers; open responses need evidence-based
+  rubrics or human review. PEFT reduces trainable parameters but does not guarantee quality.'
+why_it_matters_vi: Đánh giá trước/sau tinh chỉnh trên tập giữ riêng, phát hiện leakage và lỗi theo nhóm.
+why_it_matters_en: Evaluate baseline and tuned candidates on held-out data and detect leakage and slice regressions.
 study_steps_vi:
-- Đọc phần giải thích, xác định khái niệm và điều kiện cần dùng cho nhiệm vụ bên dưới.
-- Tìm mục tương ứng với “Fine-tuning evaluation” trong tài liệu tham khảo; đối chiếu với phần giải thích của bài.
-- Lập bảng trước, sau tinh chỉnh và đọc những trường hợp chất lượng giảm.
-- So sánh trên tập giữ riêng và đọc các trường hợp chất lượng giảm. Ghi kết quả đối chiếu và điều bạn đã sửa nếu
-  lần đầu chưa đúng.
-- Tự trả lời thẻ ôn tập, rồi kiểm tra các tiêu chí hoàn thành trước khi chuyển bài.
+- Đọc phần giải thích và dự đoán đầu ra của ví dụ trước khi chạy.
+- Chạy mã Python trong một ô Google Colab; ví dụ chỉ dùng thư viện chuẩn, không cần cài thêm.
+- Đối chiếu baseline/candidate trên ba câu giữ riêng; đổi một nhãn để thấy điểm đổi. Thêm test ID vào train để phát
+  hiện leakage.
+- ID trùng giữa train và test phải làm kiểm tra thất bại, không được tự bỏ dòng rồi báo đạt.
+- Lưu đầu ra, đối chiếu với kết quả mong đợi và ghi rõ giới hạn của dữ liệu mô phỏng.
 study_steps_en:
-- 'Read the concept notes and answer: Fine-tuning is justified only when data and evaluation show prompting/RAG
-  are insufficient.'
-- Open Hugging Face PEFT, read the section marked Read this lesson, and record one verified example or definition.
-- Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the
-  test.
-- 'Complete the practice task: Prepare a dataset with explicit splits and licensing, run a small LoRA experiment,
-  and compare memory and quality to baseline.'
-- Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact.
+- Read the explanation and predict the example output before running it.
+- Run the Python code in a Google Colab cell; this example uses only the standard library.
+- Compare baseline/candidate on three held-out questions; change one label to observe the score change. Add a test
+  ID to train to detect leakage.
+- An ID overlap between train and test must fail validation rather than silently dropping the row.
+- Save the output, compare it with the expected result and state the limits of the synthetic data.
 practice_plan:
   vi:
-    task: 'Lập bảng trước, sau tinh chỉnh và đọc những trường hợp chất lượng giảm.
-
-
-      Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Chuẩn bị dữ liệu có cách chia và giấy
-      phép rõ, chạy LoRA nhỏ rồi so sánh chất lượng, bộ nhớ với mô hình cơ sở.'
+    task: Đối chiếu baseline/candidate trên ba câu giữ riêng; đổi một nhãn để thấy điểm đổi. Thêm test ID vào train
+      để phát hiện leakage.
     deliverables:
-    - Bảng dữ liệu hoặc kết quả trước, sau thay đổi với cấu hình rõ
-    - Kết quả đối chiếu kèm dữ liệu hoặc điều kiện thực hiện
-    - Một giới hạn và cách kiểm tra thêm
-    checkpoint: So sánh trên tập giữ riêng và đọc các trường hợp chất lượng giảm.
-    stretch: Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào.
+    - Bảng dữ liệu train/dev/test, dự đoán trước/sau và lỗi theo từng câu
+    - Đầu ra gốc và kết quả sau khi đổi một điều kiện
+    - Giải thích một lỗi và giới hạn của phép đo
+    checkpoint: ID trùng giữa train và test phải làm kiểm tra thất bại, không được tự bỏ dòng rồi báo đạt.
+    stretch: Mở notebook liên kết, chạy trong Colab và ghi cấu hình thực tế.
   en:
-    task: Prepare a dataset with explicit splits and licensing, run a small LoRA experiment, and compare memory
-      and quality to baseline.
+    task: Compare baseline/candidate on three held-out questions; change one label to observe the score change.
+      Add a test ID to train to detect leakage.
     deliverables:
-    - One working implementation
-    - One test or benchmark
-    - One note on failure modes and trade-offs
-    checkpoint: You can defend whether to fine-tune using quality, cost, data volume, and maintenance risk.
-    stretch: Add a failure test for fine-tuning evaluation and explain the result.
+    - A train/dev/test manifest, before/after predictions and per-question failures
+    - Original output and output after changing one condition
+    - An explanation of one failure and the measurement limits
+    checkpoint: An ID overlap between train and test must fail validation rather than silently dropping the row.
+    stretch: Open the linked notebook, run in Colab and record the actual configuration.
 interview_questions:
   vi:
   - Bạn sẽ giải thích nội dung “Đánh giá sau tinh chỉnh” bằng ví dụ nào?
@@ -87,23 +99,31 @@ interview_questions:
   - How would you explain fine-tuning evaluation to a new teammate?
   - Which assumption behind fine-tuning evaluation could fail in production?
   - Which metric or test would prove the result is trustworthy?
-formulas: []
+formulas:
+- Exact-match accuracy = matching predictions / evaluated examples
 code_examples:
 - language: python
-  title: 'Fine-tuning evaluation: inspect one complete path'
-  code: "# Topic: Fine-tuning evaluation (phase-20-genai-finetuning-fine-tuning-3)\nfrom dataclasses import dataclass\n\
-    \n@dataclass(frozen=True)\nclass Result:\n    value: str\n    valid: bool\n\nresult = Result(value='ready',\
-    \ valid=True)\nprint(result)"
+  title: Compare baseline and candidate on a fixed held-out fixture
+  code: "import json\ndef check_split(train_ids, test_ids):\n    if set(train_ids) & set(test_ids):\n        raise\
+    \ ValueError(\"train/test overlap\")\ndef accuracy(predictions, gold):\n    if set(predictions) != set(gold):\n\
+    \        raise ValueError(\"prediction IDs differ\")\n    return sum(predictions[k] == value for k, value in\
+    \ gold.items()) / len(gold)\ngold = {\"test-1\": \"yes\", \"test-2\": \"no\", \"test-3\": \"abstain\"}\nbaseline\
+    \ = {\"test-1\": \"yes\", \"test-2\": \"yes\", \"test-3\": \"answer\"}\ncandidate = {\"test-1\": \"yes\", \"\
+    test-2\": \"no\", \"test-3\": \"answer\"}\ncheck_split([\"train-1\"], gold)\ntry:\n    check_split([\"test-1\"\
+    ], gold)\nexcept ValueError as error:\n    leakage = str(error)\nprint(json.dumps({\"baseline\": round(accuracy(baseline,\
+    \ gold), 3),\n                  \"candidate\": round(accuracy(candidate, gold), 3),\n                  \"remaining_failures\"\
+    : [k for k in gold if candidate[k] != gold[k]],\n                  \"leakage\": leakage}))\n"
   status: runnable
-  purpose_vi: Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.
-  purpose_en: Illustrate the input-to-output path for fine-tuning evaluation.
-  setup: Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.
-  expected_output: Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.
-  edge_case_vi: Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.
-  edge_case_en: Try an empty input, a wrong shape or missing data and record the failure.
-  explanation_vi: Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần
-    nội dung; cần hoàn thành riêng nhiệm vụ thực hành.
-  explanation_en: Keep the boundary executable and inspectable; change one input and verify the expected output.
+  purpose_vi: Đánh giá trước/sau tinh chỉnh trên tập giữ riêng, phát hiện leakage và lỗi theo nhóm.
+  purpose_en: Evaluate baseline and tuned candidates on held-out data and detect leakage and slice regressions.
+  setup: 'Python 3.11+; standard library only. Google Colab: paste into one code cell and Run.'
+  expected_output: '{"baseline": 0.333, "candidate": 0.667, "remaining_failures": ["test-3"], "leakage": "train/test
+    overlap"}'
+  edge_case_vi: ID trùng giữa train và test phải làm kiểm tra thất bại, không được tự bỏ dòng rồi báo đạt.
+  edge_case_en: An ID overlap between train and test must fail validation rather than silently dropping the row.
+  explanation_vi: Các dự đoán là dữ liệu mô phỏng; kết quả tính được chỉ minh họa đánh giá và không chứng minh fine-tuning
+    hiệu quả.
+  explanation_en: Predictions are fixtures; computed scores demonstrate evaluation rather than successful fine-tuning.
 resources:
 - language: en
   title: Hugging Face PEFT
@@ -141,6 +161,17 @@ resources:
   read_vi: Đọc giải thích → xem ví dụ → thực hành → tự kiểm tra.
   read_en: Follow Study plan → Concept notes → Code example → Practice plan.
   required: true
+- title: Google Colab — Lab A
+  language: vi/en
+  url: https://colab.research.google.com/github/Hzyl/JourneyAIEngineer/blob/main/notebooks/lab-a-evidence-retrieval.ipynb
+  kind: external
+  required: false
+  purpose_vi: Chạy trong Colab để mở rộng ví dụ bằng dữ liệu và báo cáo của lab.
+  purpose_en: Run in Colab to extend this example with the lab dataset and reports.
+  read_vi: Chọn môi trường CPU do Google lưu trữ, chạy baseline rồi phần embedding tùy chọn. Dùng tập dev trước
+    khi đánh giá test và tải báo cáo về.
+  read_en: 'Run in Colab on a Google-hosted CPU runtime: baseline first, then optional embeddings. Use dev before
+    evaluating test and download the report.'
 exercise_ids:
 - exercise-20-fine-tuning
 review_item_ids:
@@ -150,13 +181,14 @@ review_item_ids:
 - phase-20-genai-finetuning-fine-tuning-3-interview
 estimated_minutes: 60
 completion_checklist:
-- Lập bảng trước, sau tinh chỉnh và đọc những trường hợp chất lượng giảm.
-- So sánh trên tập giữ riêng và đọc các trường hợp chất lượng giảm.
-- Lưu kết quả và giải thích được một giới hạn mà không nhìn lời giải.
+- Đối chiếu baseline/candidate trên ba câu giữ riêng; đổi một nhãn để thấy điểm đổi. Thêm test ID vào train để phát
+  hiện leakage.
+- ID trùng giữa train và test phải làm kiểm tra thất bại, không được tự bỏ dòng rồi báo đạt.
+- Lưu đầu ra và ghi đúng giới hạn của ví dụ.
 completion_criteria:
-- 'Bài làm đáp ứng nhiệm vụ: Lập bảng trước, sau tinh chỉnh và đọc những trường hợp chất lượng giảm.'
-- Có kết quả đối chiếu với tiêu chí hoặc dự đoán đã ghi trước.
-- So sánh trên tập giữ riêng và đọc các trường hợp chất lượng giảm.
+- Bảng dữ liệu train/dev/test, dự đoán trước/sau và lỗi theo từng câu
+- ID trùng giữa train và test phải làm kiểm tra thất bại, không được tự bỏ dòng rồi báo đạt.
+- Không suy kết quả model thật từ dữ liệu mô phỏng.
 common_mistakes:
 - Kết luận tinh chỉnh tốt chỉ từ dữ liệu đã dùng để huấn luyện.
 - Kết luận từ một kết quả thuận lợi mà chưa kiểm tra trường hợp khác.
@@ -216,14 +248,22 @@ review_cards:
 ---
 # Đánh giá sau tinh chỉnh / Fine-tuning evaluation
 
-So sánh mô hình tinh chỉnh với mô hình cơ sở bằng cùng tập kiểm tra và cách sinh. Cần xem cả nhiệm vụ mục tiêu và khả năng suy giảm ở các tình huống liên quan.
+Fine-tuning thay đổi tham số mô hình; RAG đưa thêm bằng chứng vào lúc xử lý. Không dùng fine-tuning như cách thay thế mặc định cho tài liệu mới. Trước khi tinh chỉnh, cần baseline, dữ liệu có quyền sử dụng, giấy phép model, tiêu chí đánh giá và ngân sách tài nguyên.
 
-Cải thiện nhiệm vụ mục tiêu khác bảo toàn năng lực chung. Mô hình học tốt định dạng hỗ trợ khách hàng có thể trả lời kém hơn khi gặp câu hỏi ngoài phạm vi, nên đánh giá cần chứa cả ví dụ mục tiêu và kiểm tra hồi quy.
+Tách train, dev và test theo đơn vị có nguy cơ trùng, chẳng hạn cùng tài liệu hoặc người viết. Dùng dev để chọn cấu hình; giữ test riêng đến lúc so cuối. Nếu nhiều lần chọn theo điểm test, nó đã trở thành dữ liệu phục vụ lựa chọn. Ví dụ so các dự đoán tự tạo bằng exact match và phát hiện ID train/test trùng; không chạy huấn luyện hay khẳng định model đã tốt hơn.
 
-Ví dụ, so câu trả lời đúng, trường bị thiếu và cách từ chối câu không đủ dữ liệu ở cả hai phiên bản. Tự kiểm tra: dùng một prompt thuận lợi riêng cho bản tinh chỉnh có tạo so sánh công bằng không? Chưa; công bố rõ cấu hình từng bên và giữ điều kiện, tiêu chí tương đương. Đừng chọn bản tốt chỉ từ loss train.
+Tự kiểm tra: điểm chung tăng có đủ chấp nhận model mới không? Không; kiểm tra lỗi theo nhóm, từ chối câu thiếu dữ liệu, chi phí và latency trong cùng workload. Exact match phù hợp đáp án ngắn chuẩn hóa; với câu mở cần rubric hỗ trợ nguồn hoặc người chấm. PEFT giảm phần tham số cần học nhưng không bảo đảm chất lượng.
 
-## Thực hành
+## English
 
-Lập bảng trước, sau tinh chỉnh và đọc những trường hợp chất lượng giảm.
+Fine-tuning changes model parameters; RAG adds evidence at inference time. Fine-tuning is not the default substitute for updated documents. Establish a baseline, permitted data use, model license, evaluation criteria and resource budget first.
 
-Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Chuẩn bị dữ liệu có cách chia và giấy phép rõ, chạy LoRA nhỏ rồi so sánh chất lượng, bộ nhớ với mô hình cơ sở.
+Split train, dev and test by the unit likely to leak, such as source document or author. Use dev for configuration selection and reserve test for the final comparison. Repeatedly choosing by test scores turns test into selection data. This example compares synthetic predictions with exact match and detects overlapping train/test IDs; it performs no training and establishes no real model improvement.
+
+Self-check: is a higher aggregate score sufficient to accept a candidate? No; inspect slice regressions, abstention, cost and latency under the same workload. Exact match suits short normalized answers; open responses need evidence-based rubrics or human review. PEFT reduces trainable parameters but does not guarantee quality.
+
+## Thực hành / Practice
+
+Đối chiếu baseline/candidate trên ba câu giữ riêng; đổi một nhãn để thấy điểm đổi. Thêm test ID vào train để phát hiện leakage.
+
+Compare baseline/candidate on three held-out questions; change one label to observe the score change. Add a test ID to train to detect leakage.

@@ -32,6 +32,7 @@
 .lesson-page-shell .lesson-detail .lesson-section li,
 .lesson-page-shell .lesson-detail .concept-notes,
 .lesson-page-shell .lesson-detail .study-step-card p,
+.lesson-detail .code-example > p,
 .lesson-detail .study-step-explanation,
 .lesson-detail .study-step-answer p,
 .lesson-detail .playbook-intro > p,
@@ -39,6 +40,11 @@
 .lesson-detail .practice-plan p {
   font-size: 1.125rem;
   line-height: 1.75;
+}
+
+.lesson-detail .code-example > strong {
+  font-size: 1.125rem;
+  line-height: 1.5;
 }
 
 .lesson-detail .study-step-card small,
@@ -82,6 +88,33 @@
 .lesson-detail .concept-notes > p {
   max-width: 72ch;
   margin: 0 0 1em;
+}
+
+.lesson-colab {
+  margin: 1.5rem 0;
+  padding: clamp(1rem, 3vw, 1.5rem);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  min-width: 0;
+}
+
+.lesson-colab p {
+  max-width: 72ch;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.lesson-colab-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+}
+
+.lesson-colab-actions a {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: start;
 }
 
 .lesson-detail .lesson-section > ul {

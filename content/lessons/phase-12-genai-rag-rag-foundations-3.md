@@ -4,18 +4,18 @@ phase_id: phase-12-genai-rag
 module_id: rag-foundations
 title_vi: Embedding và cơ sở dữ liệu vector
 title_en: Embeddings and vector databases
-summary_vi: Embedding cung cấp biểu diễn để tìm kiếm; cơ sở dữ liệu vector lưu và truy vấn các biểu diễn cùng siêu
-  dữ liệu.
-summary_en: Learn Embeddings and vector databases through an input → transformation → output model, then verify
-  it with an edge-case exercise.
+summary_vi: Tính cosine trên vector minh họa và giữ ID, phiên bản, vị trí nguồn khi truy xuất.
+summary_en: Compute cosine on illustrative vectors while preserving source IDs, versions and locations.
 learning_objectives:
-- Ghi phiên bản embedding và kiểm tra truy vấn trả về đúng nguồn.
-- Lần từ câu trả lời về đúng đoạn nguồn và bản tài liệu.
-- Giải thích kết quả và nêu một giới hạn của bài làm.
+- Tính cosine trên vector minh họa và giữ ID, phiên bản, vị trí nguồn khi truy xuất.
+- Đổi vector truy vấn rồi so thứ hạng; giữ nguyên ID nguồn. Chạy lexical baseline và embedding tùy chọn trong Colab
+  Lab A, lưu riêng cấu hình và lỗi từng cách.
+- Thử vector [0, 0] và sai số chiều; cả hai phải bị từ chối bằng ValueError.
 learning_objectives_en:
-- Explain embeddings and vector databases with a concrete example.
-- Write or adapt a small code example applying embeddings and vector databases.
-- Recognize its assumptions, limits and one common failure mode.
+- Compute cosine on illustrative vectors while preserving source IDs, versions and locations.
+- Change the query vector and compare ranking while preserving source IDs. Run the lexical baseline and optional
+  embeddings in Colab Lab A; save each configuration and its failures separately.
+- Try [0, 0] and a dimension mismatch; both must raise ValueError.
 prerequisites:
 - phase-12-genai-rag-rag-foundations-2
 - phase-11-llm-application-llm-application-1
@@ -27,60 +27,67 @@ key_terms:
 - retrieval
 - evaluation
 - rag-foundations
-concept_notes_vi: |-
-  Embedding cung cấp biểu diễn để tìm kiếm; cơ sở dữ liệu vector lưu và truy vấn các biểu diễn cùng siêu dữ liệu. Khi đổi mô hình embedding, cần kiểm tra tương thích của chỉ mục.
+concept_notes_vi: 'Embedding model biến truy vấn và đoạn văn thành vector trong không gian tương thích. Kho vector
+  lưu vector cùng metadata; một chỉ mục tìm kiếm không tự kiểm tra quyền hay độ đúng của câu trả lời. Khi đổi model
+  hoặc revision, thường phải tạo lại embedding tài liệu để không trộn hai không gian biểu diễn.
 
-  Mô hình embedding quyết định ý nghĩa tọa độ; cơ sở dữ liệu vector tổ chức lưu trữ và tìm hàng xóm theo phép đo đã chọn. Hai mô hình trả vector cùng số chiều vẫn có thể tạo hai không gian không tương thích.
 
-  Ví dụ, đổi mô hình mã hóa câu hỏi mà giữ nguyên vector tài liệu cũ có thể làm thứ hạng mất ý nghĩa. Tự kiểm tra: chỉ sửa tên mô hình trong cấu hình đã đủ nâng cấp chỉ mục chưa? Chưa; cần đánh giá lại cách mã hóa, tạo lại vector khi cần và ghi phiên bản để truy vấn, chỉ mục khớp nhau.
-concept_notes_en: |-
-  Embeddings supply searchable representations; a vector database stores and queries them with metadata. Changing embedding models requires index compatibility checks.
+  Ví dụ dùng vector viết tay, không phải embedding học được. Mỗi kết quả giữ document_id, version, chunk_id và line
+  để người đọc lần ngược về đoạn nguồn. Lọc quyền trước khi đưa dữ liệu vào context; kiểm tra nguồn còn đúng phiên
+  bản khi mở trích dẫn. Vector rỗng, sai số chiều hoặc có norm bằng 0 phải được xử lý rõ.
 
-  The embedding model determines coordinate meaning; the database organizes storage and neighbor search under a chosen measure. Equal vector dimensions do not make different embedding spaces compatible.
 
-  Encoding queries with a new model against old document vectors can invalidate rankings. Self-check: is changing a configuration model name enough to upgrade the index? No: reassess encoding, regenerate vectors when needed and record versions so queries match the index.
-why_it_matters_vi: Tách truy xuất khỏi sinh câu trả lời để truy nguồn và xử lý thiếu bằng chứng.
-why_it_matters_en: RAG separates retrieval from generation so answers can be sourced and can abstain without evidence.
+  Tự kiểm tra: cosine bằng 1 có nghĩa câu trả lời chắc chắn đúng không? Không; nó chỉ mô tả góc giữa hai vector.
+  Lab A cho phép chạy embedding thật trong Colab, so cùng corpus và câu hỏi với lexical baseline; không cần tải
+  model vào máy cá nhân.'
+concept_notes_en: 'An embedding model maps queries and passages into a compatible vector space. A vector store keeps
+  vectors and metadata; an index does not automatically establish authorization or answer correctness. Changing
+  a model or revision generally requires re-embedding documents to avoid mixing representation spaces.
+
+
+  The example uses hand-written vectors, not learned embeddings. Each result retains document_id, version, chunk_id
+  and line so readers can locate the source. Filter permissions before placing data in context and verify source
+  versions when resolving citations. Empty vectors, dimension mismatches and zero norms require explicit handling.
+
+
+  Self-check: does cosine 1 guarantee a correct answer? No; it only describes the angle between vectors. Lab A optionally
+  runs real embeddings in Colab against the same corpus and questions as the lexical baseline, without downloading
+  a model to your personal computer.'
+why_it_matters_vi: Tính cosine trên vector minh họa và giữ ID, phiên bản, vị trí nguồn khi truy xuất.
+why_it_matters_en: Compute cosine on illustrative vectors while preserving source IDs, versions and locations.
 study_steps_vi:
-- Đọc phần giải thích, xác định khái niệm và điều kiện cần dùng cho nhiệm vụ bên dưới.
-- Tìm mục tương ứng với “Embeddings and vector databases” trong tài liệu tham khảo; đối chiếu với phần giải thích
-  của bài.
-- Ghi phiên bản embedding và kiểm tra truy vấn trả về đúng nguồn.
-- Lần từ câu trả lời về đúng đoạn nguồn và bản tài liệu. Ghi kết quả đối chiếu và điều bạn đã sửa nếu lần đầu chưa
-  đúng.
-- Tự trả lời thẻ ôn tập, rồi kiểm tra các tiêu chí hoàn thành trước khi chuyển bài.
+- Đọc phần giải thích và dự đoán đầu ra của ví dụ trước khi chạy.
+- Chạy mã Python trong một ô Google Colab; ví dụ chỉ dùng thư viện chuẩn, không cần cài thêm.
+- Đổi vector truy vấn rồi so thứ hạng; giữ nguyên ID nguồn. Chạy lexical baseline và embedding tùy chọn trong Colab
+  Lab A, lưu riêng cấu hình và lỗi từng cách.
+- Thử vector [0, 0] và sai số chiều; cả hai phải bị từ chối bằng ValueError.
+- Lưu đầu ra, đối chiếu với kết quả mong đợi và ghi rõ giới hạn của dữ liệu mô phỏng.
 study_steps_en:
-- 'Read the concept notes and answer: RAG separates retrieval from generation so answers can be sourced and can
-  abstain without evidence.'
-- Open Qdrant Concepts, read the section marked Read this lesson, and record one verified example or definition.
-- Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the
-  test.
-- 'Complete the practice task: Build an ingestion pipeline for Vietnamese documents, preserve metadata, benchmark
-  top-k, and answer with evidence chunks.'
-- Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact.
+- Read the explanation and predict the example output before running it.
+- Run the Python code in a Google Colab cell; this example uses only the standard library.
+- Change the query vector and compare ranking while preserving source IDs. Run the lexical baseline and optional
+  embeddings in Colab Lab A; save each configuration and its failures separately.
+- Try [0, 0] and a dimension mismatch; both must raise ValueError.
+- Save the output, compare it with the expected result and state the limits of the synthetic data.
 practice_plan:
   vi:
-    task: 'Ghi phiên bản embedding và kiểm tra truy vấn trả về đúng nguồn.
-
-
-      Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Xây quy trình nhập tài liệu tiếng Việt,
-      lưu siêu dữ liệu, đánh giá top-k và trả lời kèm đoạn nguồn.'
+    task: Đổi vector truy vấn rồi so thứ hạng; giữ nguyên ID nguồn. Chạy lexical baseline và embedding tùy chọn
+      trong Colab Lab A, lưu riêng cấu hình và lỗi từng cách.
     deliverables:
-    - Đoạn tài liệu, siêu dữ liệu và kết quả của từng bước RAG
-    - Kết quả đối chiếu kèm dữ liệu hoặc điều kiện thực hiện
-    - Một giới hạn và cách kiểm tra thêm
-    checkpoint: Lần từ câu trả lời về đúng đoạn nguồn và bản tài liệu.
-    stretch: Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào.
+    - Danh sách xếp hạng có document_id/version/chunk_id/line và cấu hình retriever
+    - Đầu ra gốc và kết quả sau khi đổi một điều kiện
+    - Giải thích một lỗi và giới hạn của phép đo
+    checkpoint: Thử vector [0, 0] và sai số chiều; cả hai phải bị từ chối bằng ValueError.
+    stretch: Mở notebook liên kết, chạy trong Colab và ghi cấu hình thực tế.
   en:
-    task: Build an ingestion pipeline for Vietnamese documents, preserve metadata, benchmark top-k, and answer with
-      evidence chunks.
+    task: Change the query vector and compare ranking while preserving source IDs. Run the lexical baseline and
+      optional embeddings in Colab Lab A; save each configuration and its failures separately.
     deliverables:
-    - One working implementation
-    - One test or benchmark
-    - One note on failure modes and trade-offs
-    checkpoint: You can attribute a failure to parsing, chunking, retrieval, or generation with a concrete evaluation
-      case.
-    stretch: Add a failure test for embeddings and vector databases and explain the result.
+    - A ranking with document_id/version/chunk_id/line and retriever configuration
+    - Original output and output after changing one condition
+    - An explanation of one failure and the measurement limits
+    checkpoint: Try [0, 0] and a dimension mismatch; both must raise ValueError.
+    stretch: Open the linked notebook, run in Colab and record the actual configuration.
 interview_questions:
   vi:
   - Bạn sẽ giải thích nội dung “Embedding và cơ sở dữ liệu vector” bằng ví dụ nào?
@@ -91,24 +98,29 @@ interview_questions:
   - Which assumption behind embeddings and vector databases could fail in production?
   - Which metric or test would prove the result is trustworthy?
 formulas:
-- similarity(a,b) = (a · b) / (||a||₂ ||b||₂)
+- cosine(a,b) = (a dot b) / (norm(a) * norm(b)); nonzero equal-length vectors
 code_examples:
 - language: python
-  title: 'Embeddings and vector databases: inspect one complete path'
-  code: "# Topic: Embeddings and vector databases (phase-12-genai-rag-rag-foundations-3)\nfrom math import sqrt\n\
-    \ndef dot(left: list[float], right: list[float]) -> float:\n    if len(left) != len(right):\n        raise ValueError('vectors\
-    \ must have equal length')\n    return sum(a * b for a, b in zip(left, right))\n\nleft = [1.0, 2.0]\nright =\
-    \ [0.5, 3.0]\nprint({'dot': dot(left, right), 'norm_left': sqrt(dot(left, left))})"
+  title: Rank hand-written vectors and preserve source identity
+  code: "import json\nfrom math import sqrt\ndef cosine(a, b):\n    if not a or len(a) != len(b):\n        raise\
+    \ ValueError(\"dimension mismatch\")\n    scale = sqrt(sum(x*x for x in a) * sum(x*x for x in b))\n    if scale\
+    \ == 0:\n        raise ValueError(\"zero norm\")\n    return sum(x*y for x, y in zip(a, b)) / scale\nchunks\
+    \ = [\n    dict(document_id=\"guide\", version=\"v1\", chunk_id=\"guide:1\", line=1, vector=[1, 0]),\n    dict(document_id=\"\
+    faq\", version=\"v2\", chunk_id=\"faq:3\", line=3, vector=[0, 1]),\n]\nranked = sorted(chunks, key=lambda c:\
+    \ -cosine([1, 0], c[\"vector\"]))\nerrors = []\nfor bad in ([0, 0], [1]):\n    try:\n        cosine([1, 0],\
+    \ bad)\n    except ValueError as error:\n        errors.append(str(error))\nprint(json.dumps({\"top\": ranked[0][\"\
+    chunk_id\"], \"version\": ranked[0][\"version\"],\n                  \"score\": cosine([1, 0], ranked[0][\"\
+    vector\"]), \"errors\": errors}))\n"
   status: runnable
-  purpose_vi: Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.
-  purpose_en: Illustrate the input-to-output path for embeddings and vector databases.
-  setup: Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.
-  expected_output: Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.
-  edge_case_vi: Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.
-  edge_case_en: Try an empty input, a wrong shape or missing data and record the failure.
-  explanation_vi: Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần
-    nội dung; cần hoàn thành riêng nhiệm vụ thực hành.
-  explanation_en: Keep the boundary executable and inspectable; change one input and verify the expected output.
+  purpose_vi: Tính cosine trên vector minh họa và giữ ID, phiên bản, vị trí nguồn khi truy xuất.
+  purpose_en: Compute cosine on illustrative vectors while preserving source IDs, versions and locations.
+  setup: 'Python 3.11+; standard library only. Google Colab: paste into one code cell and Run.'
+  expected_output: '{"top": "guide:1", "version": "v1", "score": 1.0, "errors": ["zero norm", "dimension mismatch"]}'
+  edge_case_vi: Thử vector [0, 0] và sai số chiều; cả hai phải bị từ chối bằng ValueError.
+  edge_case_en: Try [0, 0] and a dimension mismatch; both must raise ValueError.
+  explanation_vi: Điểm số được tính thật trên vector viết tay; không dùng nó để tuyên bố chất lượng embedding tiếng
+    Việt.
+  explanation_en: Scores are computed from hand-written vectors; they do not measure Vietnamese embedding quality.
 resources:
 - language: en
   title: Qdrant Concepts
@@ -145,7 +157,7 @@ resources:
   purpose_en: Practice arrays, shapes, and vector operations with NumPy.
   read_en: Read array shapes, indexing, and broadcasting; print every shape.
   kind: official
-  required: true
+  required: false
 - title: Giải thích và hướng dẫn thực hành trong bài
   url: ''
   language: vi
@@ -155,6 +167,17 @@ resources:
   read_vi: Đọc giải thích → xem ví dụ → thực hành → tự kiểm tra.
   read_en: Follow Study plan → Concept notes → Code example → Practice plan.
   required: true
+- title: Google Colab — Lab A
+  language: vi/en
+  url: https://colab.research.google.com/github/Hzyl/JourneyAIEngineer/blob/main/notebooks/lab-a-evidence-retrieval.ipynb
+  kind: external
+  required: false
+  purpose_vi: Chạy trong Colab để mở rộng ví dụ bằng dữ liệu và báo cáo của lab.
+  purpose_en: Run in Colab to extend this example with the lab dataset and reports.
+  read_vi: Chọn môi trường CPU do Google lưu trữ, chạy baseline rồi phần embedding tùy chọn. Dùng tập dev trước
+    khi đánh giá test và tải báo cáo về.
+  read_en: 'Run in Colab on a Google-hosted CPU runtime: baseline first, then optional embeddings. Use dev before
+    evaluating test and download the report.'
 exercise_ids:
 - exercise-12-rag-foundations
 review_item_ids:
@@ -164,13 +187,14 @@ review_item_ids:
 - phase-12-genai-rag-rag-foundations-3-interview
 estimated_minutes: 60
 completion_checklist:
-- Ghi phiên bản embedding và kiểm tra truy vấn trả về đúng nguồn.
-- Lần từ câu trả lời về đúng đoạn nguồn và bản tài liệu.
-- Lưu kết quả và giải thích được một giới hạn mà không nhìn lời giải.
+- Đổi vector truy vấn rồi so thứ hạng; giữ nguyên ID nguồn. Chạy lexical baseline và embedding tùy chọn trong Colab
+  Lab A, lưu riêng cấu hình và lỗi từng cách.
+- Thử vector [0, 0] và sai số chiều; cả hai phải bị từ chối bằng ValueError.
+- Lưu đầu ra và ghi đúng giới hạn của ví dụ.
 completion_criteria:
-- 'Bài làm đáp ứng nhiệm vụ: Ghi phiên bản embedding và kiểm tra truy vấn trả về đúng nguồn.'
-- Có kết quả đối chiếu với tiêu chí hoặc dự đoán đã ghi trước.
-- Lần từ câu trả lời về đúng đoạn nguồn và bản tài liệu.
+- Danh sách xếp hạng có document_id/version/chunk_id/line và cấu hình retriever
+- Thử vector [0, 0] và sai số chiều; cả hai phải bị từ chối bằng ValueError.
+- Không suy kết quả model thật từ dữ liệu mô phỏng.
 common_mistakes:
 - Để lỗi trích xuất tài liệu lan sang truy xuất mà không kiểm tra.
 - Kết luận từ một kết quả thuận lợi mà chưa kiểm tra trường hợp khác.
@@ -233,14 +257,22 @@ review_cards:
 ---
 # Embedding và cơ sở dữ liệu vector / Embeddings and vector databases
 
-Embedding cung cấp biểu diễn để tìm kiếm; cơ sở dữ liệu vector lưu và truy vấn các biểu diễn cùng siêu dữ liệu. Khi đổi mô hình embedding, cần kiểm tra tương thích của chỉ mục.
+Embedding model biến truy vấn và đoạn văn thành vector trong không gian tương thích. Kho vector lưu vector cùng metadata; một chỉ mục tìm kiếm không tự kiểm tra quyền hay độ đúng của câu trả lời. Khi đổi model hoặc revision, thường phải tạo lại embedding tài liệu để không trộn hai không gian biểu diễn.
 
-Mô hình embedding quyết định ý nghĩa tọa độ; cơ sở dữ liệu vector tổ chức lưu trữ và tìm hàng xóm theo phép đo đã chọn. Hai mô hình trả vector cùng số chiều vẫn có thể tạo hai không gian không tương thích.
+Ví dụ dùng vector viết tay, không phải embedding học được. Mỗi kết quả giữ document_id, version, chunk_id và line để người đọc lần ngược về đoạn nguồn. Lọc quyền trước khi đưa dữ liệu vào context; kiểm tra nguồn còn đúng phiên bản khi mở trích dẫn. Vector rỗng, sai số chiều hoặc có norm bằng 0 phải được xử lý rõ.
 
-Ví dụ, đổi mô hình mã hóa câu hỏi mà giữ nguyên vector tài liệu cũ có thể làm thứ hạng mất ý nghĩa. Tự kiểm tra: chỉ sửa tên mô hình trong cấu hình đã đủ nâng cấp chỉ mục chưa? Chưa; cần đánh giá lại cách mã hóa, tạo lại vector khi cần và ghi phiên bản để truy vấn, chỉ mục khớp nhau.
+Tự kiểm tra: cosine bằng 1 có nghĩa câu trả lời chắc chắn đúng không? Không; nó chỉ mô tả góc giữa hai vector. Lab A cho phép chạy embedding thật trong Colab, so cùng corpus và câu hỏi với lexical baseline; không cần tải model vào máy cá nhân.
 
-## Thực hành
+## English
 
-Ghi phiên bản embedding và kiểm tra truy vấn trả về đúng nguồn.
+An embedding model maps queries and passages into a compatible vector space. A vector store keeps vectors and metadata; an index does not automatically establish authorization or answer correctness. Changing a model or revision generally requires re-embedding documents to avoid mixing representation spaces.
 
-Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Xây quy trình nhập tài liệu tiếng Việt, lưu siêu dữ liệu, đánh giá top-k và trả lời kèm đoạn nguồn.
+The example uses hand-written vectors, not learned embeddings. Each result retains document_id, version, chunk_id and line so readers can locate the source. Filter permissions before placing data in context and verify source versions when resolving citations. Empty vectors, dimension mismatches and zero norms require explicit handling.
+
+Self-check: does cosine 1 guarantee a correct answer? No; it only describes the angle between vectors. Lab A optionally runs real embeddings in Colab against the same corpus and questions as the lexical baseline, without downloading a model to your personal computer.
+
+## Thực hành / Practice
+
+Đổi vector truy vấn rồi so thứ hạng; giữ nguyên ID nguồn. Chạy lexical baseline và embedding tùy chọn trong Colab Lab A, lưu riêng cấu hình và lỗi từng cách.
+
+Change the query vector and compare ranking while preserving source IDs. Run the lexical baseline and optional embeddings in Colab Lab A; save each configuration and its failures separately.

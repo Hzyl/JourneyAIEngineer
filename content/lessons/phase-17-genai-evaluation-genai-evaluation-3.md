@@ -4,18 +4,18 @@ phase_id: phase-17-genai-evaluation
 module_id: genai-evaluation
 title_vi: Đánh giá agent và chuỗi hành động
 title_en: Agent evaluation and trajectories
-summary_vi: 'Agent cần được đánh giá cả kết quả lẫn đường đi: công cụ đã gọi, quyền sử dụng, lỗi, số bước và chi
-  phí.'
-summary_en: Learn Agent evaluation and trajectories through an input → transformation → output model, then verify
-  it with an edge-case exercise.
+summary_vi: So workflow và agent trên cùng trường hợp, chấm đúng nhiệm vụ cùng quyền và số bước.
+summary_en: Compare workflow and agent on identical cases, scoring task success alongside permissions and step count.
 learning_objectives:
-- Đọc chuỗi hành động và kiểm tra mục tiêu, quyền, điều kiện dừng.
-- Chấm nhất quán và phân biệt chất lượng truy xuất với chất lượng câu trả lời.
-- Giải thích kết quả và nêu một giới hạn của bài làm.
+- So workflow và agent trên cùng trường hợp, chấm đúng nhiệm vụ cùng quyền và số bước.
+- Chấm cùng hai trường hợp với hai solver giả lập; thêm hành động write vào trace có đáp án đúng và xác nhận scorer
+  đánh trượt.
+- Đúng đáp án nhưng có write hoặc hơn 5 tool call vẫn phải không đạt.
 learning_objectives_en:
-- Explain agent evaluation and trajectories with a concrete example.
-- Write or adapt a small code example applying agent evaluation and trajectories.
-- Recognize its assumptions, limits and one common failure mode.
+- Compare workflow and agent on identical cases, scoring task success alongside permissions and step count.
+- Score the same two cases for two simulated solvers; add write to a correct-answer trace and confirm the scorer
+  rejects it.
+- A correct answer with write or more than five tool calls must fail.
 prerequisites:
 - phase-17-genai-evaluation-genai-evaluation-2
 - phase-16-genai-mcp-mcp-1
@@ -27,59 +27,68 @@ key_terms:
 - embedding
 - retrieval
 - genai-evaluation
-concept_notes_vi: |-
-  Agent cần được đánh giá cả kết quả lẫn đường đi: công cụ đã gọi, quyền sử dụng, lỗi, số bước và chi phí. Hoàn thành nhiệm vụ không bù được thao tác ngoài phạm vi cho phép.
+concept_notes_vi: 'Bộ đánh giá gồm dataset nêu nhiệm vụ, solver thực hiện chiến lược và scorer áp tiêu chí đã định.
+  Workflow cố định bước; agent có thể chọn bước dựa trên quan sát. So sánh chỉ có ý nghĩa khi giữ trường hợp, công
+  cụ, dữ liệu, quyền và ngân sách tương đương.
 
-  Đánh giá kết quả hỏi nhiệm vụ đã đạt chưa; đánh giá trajectory, tức chuỗi hành động, hỏi hệ thống đã làm gì để đạt nó. Hai agent tạo cùng tệp cuối có thể khác nhau về quyền, độ bền và lượng công việc thừa.
 
-  Ví dụ, agent sửa tài liệu đúng nhưng đọc thêm thư mục ngoài phạm vi vẫn thất bại tiêu chí quyền. Tự kiểm tra: có nên buộc mọi agent theo một chuỗi công cụ duy nhất không? Không nhất thiết; cho phép đường đi hợp lệ khác nếu đáp ứng kết quả, ràng buộc và ngân sách. Chấm vi phạm cụ thể thay vì chỉ so khớp tên công cụ.
-concept_notes_en: |-
-  Agent evaluation covers both outcome and trajectory: tool calls, permissions, errors, steps and cost. Completing a task does not excuse out-of-scope actions.
+  Đáp án trông đúng vẫn có thể dùng tool trái quyền. Scorer nên kiểm tra hoàn thành nhiệm vụ, hành động cho phép,
+  giới hạn số lần gọi, thời gian và trường hợp từ chối. Ví dụ dưới đây chấm trace giả lập bằng quy tắc công khai;
+  không chạy LLM hay Inspect. Kết quả tốt của trace không chứng minh model sẽ tạo trace đó.
 
-  Outcome scoring asks what was achieved; trajectory scoring asks how. Agents producing the same file can differ in authorization, robustness and wasted work.
 
-  An agent that correctly edits a document but reads forbidden folders fails the access criterion. Self-check: must all agents follow one fixed tool sequence? Not necessarily: alternative paths can be valid within outcome, policy and budget constraints. Score actual violations instead of merely matching tool names.
-why_it_matters_vi: Dùng tiêu chí và dữ liệu đại diện để biết hệ thống tốt ở đâu, còn lỗi ở đâu.
-why_it_matters_en: Evaluation distinguishes a fluent demo from a trustworthy system that can improve.
+  Tự kiểm tra: agent sửa truy vấn và thành công trên một trường hợp có nghĩa nên thay workflow không? Không; cần
+  đọc các trường hợp còn lại và đánh đổi số bước/độ trễ. Lưu lỗi từng trường hợp cùng cấu hình; chỉ giữ cải tiến
+  khi đạt tiêu chí trên tập tách biệt.'
+concept_notes_en: 'An evaluation combines a dataset of tasks, a solver implementing a strategy and a scorer applying
+  predetermined criteria. A workflow fixes its steps; an agent can select steps using observations. Comparison requires
+  equivalent cases, tools, data, permissions and budgets.
+
+
+  An apparently correct answer may still involve an unauthorized tool. Score task success, permitted actions, call
+  limits, elapsed time and denial behavior. This example scores synthetic traces using explicit rules; it runs neither
+  an LLM nor Inspect. A successful fixture trace does not establish that a model will produce it.
+
+
+  Self-check: does an agent succeeding after a query rewrite on one case justify replacing a workflow? No; inspect
+  other cases and step/latency tradeoffs. Save per-case failures and configuration; retain a change only when it
+  meets criteria on held-out cases.'
+why_it_matters_vi: So workflow và agent trên cùng trường hợp, chấm đúng nhiệm vụ cùng quyền và số bước.
+why_it_matters_en: Compare workflow and agent on identical cases, scoring task success alongside permissions and
+  step count.
 study_steps_vi:
-- Đọc phần giải thích, xác định khái niệm và điều kiện cần dùng cho nhiệm vụ bên dưới.
-- Tìm mục tương ứng với “Agent evaluation and trajectories” trong tài liệu tham khảo; đối chiếu với phần giải thích
-  của bài.
-- Đọc chuỗi hành động và kiểm tra mục tiêu, quyền, điều kiện dừng.
-- Chấm nhất quán và phân biệt chất lượng truy xuất với chất lượng câu trả lời. Ghi kết quả đối chiếu và điều bạn
-  đã sửa nếu lần đầu chưa đúng.
-- Tự trả lời thẻ ôn tập, rồi kiểm tra các tiêu chí hoàn thành trước khi chuyển bài.
+- Đọc phần giải thích và dự đoán đầu ra của ví dụ trước khi chạy.
+- Chạy mã Python trong một ô Google Colab; ví dụ chỉ dùng thư viện chuẩn, không cần cài thêm.
+- Chấm cùng hai trường hợp với hai solver giả lập; thêm hành động write vào trace có đáp án đúng và xác nhận scorer
+  đánh trượt.
+- Đúng đáp án nhưng có write hoặc hơn 5 tool call vẫn phải không đạt.
+- Lưu đầu ra, đối chiếu với kết quả mong đợi và ghi rõ giới hạn của dữ liệu mô phỏng.
 study_steps_en:
-- 'Read the concept notes and answer: Evaluation distinguishes a fluent demo from a trustworthy system that can
-  improve.'
-- Open OpenAI Evals, read the section marked Read this lesson, and record one verified example or definition.
-- Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the
-  test.
-- 'Complete the practice task: Create a golden set, rubric, and regression suite for RAG/agents, recording failures
-  and cost for every run.'
-- Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact.
+- Read the explanation and predict the example output before running it.
+- Run the Python code in a Google Colab cell; this example uses only the standard library.
+- Score the same two cases for two simulated solvers; add write to a correct-answer trace and confirm the scorer
+  rejects it.
+- A correct answer with write or more than five tool calls must fail.
+- Save the output, compare it with the expected result and state the limits of the synthetic data.
 practice_plan:
   vi:
-    task: 'Đọc chuỗi hành động và kiểm tra mục tiêu, quyền, điều kiện dừng.
-
-
-      Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Tạo bộ đánh giá chuẩn, tiêu chí chấm
-      và kiểm thử hồi quy cho RAG/agent; ghi cả lỗi và chi phí từng lần chạy.'
+    task: Chấm cùng hai trường hợp với hai solver giả lập; thêm hành động write vào trace có đáp án đúng và xác
+      nhận scorer đánh trượt.
     deliverables:
-    - Tiêu chí chấm và kết quả trên tình huống đúng, sai
-    - Kết quả đối chiếu kèm dữ liệu hoặc điều kiện thực hiện
-    - Một giới hạn và cách kiểm tra thêm
-    checkpoint: Chấm nhất quán và phân biệt chất lượng truy xuất với chất lượng câu trả lời.
-    stretch: Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào.
+    - Bảng dataset/solver/scorer, kết quả từng trường hợp và hành động bị từ chối
+    - Đầu ra gốc và kết quả sau khi đổi một điều kiện
+    - Giải thích một lỗi và giới hạn của phép đo
+    checkpoint: Đúng đáp án nhưng có write hoặc hơn 5 tool call vẫn phải không đạt.
+    stretch: Mở notebook liên kết, chạy trong Colab và ghi cấu hình thực tế.
   en:
-    task: Create a golden set, rubric, and regression suite for RAG/agents, recording failures and cost for every
-      run.
+    task: Score the same two cases for two simulated solvers; add write to a correct-answer trace and confirm the
+      scorer rejects it.
     deliverables:
-    - One working implementation
-    - One test or benchmark
-    - One note on failure modes and trade-offs
-    checkpoint: You can identify retrieval metrics, grounded-answer metrics, and when human review is required.
-    stretch: Add a failure test for agent evaluation and trajectories and explain the result.
+    - A dataset/solver/scorer table, per-case results and rejected actions
+    - Original output and output after changing one condition
+    - An explanation of one failure and the measurement limits
+    checkpoint: A correct answer with write or more than five tool calls must fail.
+    stretch: Open the linked notebook, run in Colab and record the actual configuration.
 interview_questions:
   vi:
   - Bạn sẽ giải thích nội dung “Đánh giá agent và chuỗi hành động” bằng ví dụ nào?
@@ -89,23 +98,33 @@ interview_questions:
   - How would you explain agent evaluation and trajectories to a new teammate?
   - Which assumption behind agent evaluation and trajectories could fail in production?
   - Which metric or test would prove the result is trustworthy?
-formulas: []
+formulas:
+- Pass rate = cases satisfying every criterion / all evaluated cases
 code_examples:
 - language: python
-  title: 'Agent evaluation and trajectories: inspect one complete path'
-  code: "# Topic: Agent evaluation and trajectories (phase-17-genai-evaluation-genai-evaluation-3)\ndef grounded_answer(answer:\
-    \ str, evidence: list[str]) -> str:\n    if not evidence:\n        return 'Insufficient evidence'\n    return\
-    \ answer + '\\nSources: ' + '; '.join(evidence)\n\nprint(grounded_answer('A concise answer', ['doc-1']))"
+  title: Compare two fixed traces with an authorization-aware scorer
+  code: "import json\ndef score(trace):\n    allowed = all(tool in {\"search\", \"read_document\"} for tool in trace[\"\
+    tools\"])\n    return trace[\"correct\"] and allowed and len(trace[\"tools\"]) <= 5 and trace[\"seconds\"] <=\
+    \ 2\nsolvers = {\n    \"workflow\": [dict(correct=True, tools=[\"search\", \"read_document\"], seconds=1),\n\
+    \                 dict(correct=False, tools=[\"search\"], seconds=1)],\n    \"agent\": [dict(correct=True, tools=[\"\
+    search\", \"read_document\"], seconds=1),\n              dict(correct=True, tools=[\"search\", \"search\", \"\
+    read_document\"], seconds=2)],\n}\nrates = {name: sum(score(t) for t in traces) / len(traces) for name, traces\
+    \ in solvers.items()}\nunsafe = dict(correct=True, tools=[\"write\"], seconds=1)\nover_budget = dict(correct=True,\
+    \ tools=[\"search\"] * 6, seconds=1)\nprint(json.dumps({\"synthetic_pass_rates\": rates, \"unsafe_passes\":\
+    \ score(unsafe),\n                  \"over_budget_passes\": score(over_budget)}))\n"
   status: runnable
-  purpose_vi: Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.
-  purpose_en: Illustrate the input-to-output path for agent evaluation and trajectories.
-  setup: Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.
-  expected_output: Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.
-  edge_case_vi: Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.
-  edge_case_en: Try an empty input, a wrong shape or missing data and record the failure.
-  explanation_vi: Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần
-    nội dung; cần hoàn thành riêng nhiệm vụ thực hành.
-  explanation_en: Keep the boundary executable and inspectable; change one input and verify the expected output.
+  purpose_vi: So workflow và agent trên cùng trường hợp, chấm đúng nhiệm vụ cùng quyền và số bước.
+  purpose_en: Compare workflow and agent on identical cases, scoring task success alongside permissions and step
+    count.
+  setup: 'Python 3.11+; standard library only. Google Colab: paste into one code cell and Run.'
+  expected_output: '{"synthetic_pass_rates": {"workflow": 0.5, "agent": 1.0}, "unsafe_passes": false, "over_budget_passes":
+    false}'
+  edge_case_vi: Đúng đáp án nhưng có write hoặc hơn 5 tool call vẫn phải không đạt.
+  edge_case_en: A correct answer with write or more than five tool calls must fail.
+  explanation_vi: Đây là đánh giá trace cố định; Lab B chạy workflow/agent quy tắc thật trên công cụ giả lập chỉ
+    đọc.
+  explanation_en: This scores fixed traces; Lab B executes rule-based workflow/agent variants against read-only
+    fake tools.
 resources:
 - language: en
   title: OpenAI Evals
@@ -143,6 +162,26 @@ resources:
   read_vi: Đọc giải thích → xem ví dụ → thực hành → tự kiểm tra.
   read_en: Follow Study plan → Concept notes → Code example → Practice plan.
   required: true
+- title: Google Colab — Lab B
+  language: vi/en
+  url: https://colab.research.google.com/github/Hzyl/JourneyAIEngineer/blob/main/notebooks/lab-b-workflow-agent.ipynb
+  kind: external
+  required: false
+  purpose_vi: Chạy trong Colab để mở rộng ví dụ bằng dữ liệu và báo cáo của lab.
+  purpose_en: Run in Colab to extend this example with the lab dataset and reports.
+  read_vi: Chọn môi trường CPU do Google lưu trữ, chạy từng ô và đối chiếu báo cáo. Lab dùng công cụ giả lập chỉ
+    đọc, không tải model; tải báo cáo để lưu kết quả.
+  read_en: Run in Colab on a Google-hosted CPU runtime and inspect each report. This lab uses read-only fake tools
+    and downloads no model; download the report to retain results.
+- title: Inspect — Tasks
+  url: https://inspect.aisi.org.uk/tasks.html
+  purpose_vi: Hiểu cách tách dataset, solver và scorer khi thiết kế đánh giá.
+  purpose_en: Understand dataset, solver and scorer separation in evaluation design.
+  read_vi: Đọc Task Basics và Task Options; ví dụ bài học dùng stdlib, không yêu cầu cài Inspect.
+  read_en: Read Task Basics and Task Options; the lesson uses stdlib and does not require Inspect installation.
+  language: en
+  kind: official
+  required: false
 exercise_ids:
 - exercise-17-genai-evaluation
 review_item_ids:
@@ -152,13 +191,14 @@ review_item_ids:
 - phase-17-genai-evaluation-genai-evaluation-3-interview
 estimated_minutes: 60
 completion_checklist:
-- Đọc chuỗi hành động và kiểm tra mục tiêu, quyền, điều kiện dừng.
-- Chấm nhất quán và phân biệt chất lượng truy xuất với chất lượng câu trả lời.
-- Lưu kết quả và giải thích được một giới hạn mà không nhìn lời giải.
+- Chấm cùng hai trường hợp với hai solver giả lập; thêm hành động write vào trace có đáp án đúng và xác nhận scorer
+  đánh trượt.
+- Đúng đáp án nhưng có write hoặc hơn 5 tool call vẫn phải không đạt.
+- Lưu đầu ra và ghi đúng giới hạn của ví dụ.
 completion_criteria:
-- 'Bài làm đáp ứng nhiệm vụ: Đọc chuỗi hành động và kiểm tra mục tiêu, quyền, điều kiện dừng.'
-- Có kết quả đối chiếu với tiêu chí hoặc dự đoán đã ghi trước.
-- Chấm nhất quán và phân biệt chất lượng truy xuất với chất lượng câu trả lời.
+- Bảng dataset/solver/scorer, kết quả từng trường hợp và hành động bị từ chối
+- Đúng đáp án nhưng có write hoặc hơn 5 tool call vẫn phải không đạt.
+- Không suy kết quả model thật từ dữ liệu mô phỏng.
 common_mistakes:
 - Chỉ dùng một điểm tổng để kết luận mọi thành phần đều tốt.
 - Kết luận từ một kết quả thuận lợi mà chưa kiểm tra trường hợp khác.
@@ -222,14 +262,22 @@ review_cards:
 ---
 # Đánh giá agent và chuỗi hành động / Agent evaluation and trajectories
 
-Agent cần được đánh giá cả kết quả lẫn đường đi: công cụ đã gọi, quyền sử dụng, lỗi, số bước và chi phí. Hoàn thành nhiệm vụ không bù được thao tác ngoài phạm vi cho phép.
+Bộ đánh giá gồm dataset nêu nhiệm vụ, solver thực hiện chiến lược và scorer áp tiêu chí đã định. Workflow cố định bước; agent có thể chọn bước dựa trên quan sát. So sánh chỉ có ý nghĩa khi giữ trường hợp, công cụ, dữ liệu, quyền và ngân sách tương đương.
 
-Đánh giá kết quả hỏi nhiệm vụ đã đạt chưa; đánh giá trajectory, tức chuỗi hành động, hỏi hệ thống đã làm gì để đạt nó. Hai agent tạo cùng tệp cuối có thể khác nhau về quyền, độ bền và lượng công việc thừa.
+Đáp án trông đúng vẫn có thể dùng tool trái quyền. Scorer nên kiểm tra hoàn thành nhiệm vụ, hành động cho phép, giới hạn số lần gọi, thời gian và trường hợp từ chối. Ví dụ dưới đây chấm trace giả lập bằng quy tắc công khai; không chạy LLM hay Inspect. Kết quả tốt của trace không chứng minh model sẽ tạo trace đó.
 
-Ví dụ, agent sửa tài liệu đúng nhưng đọc thêm thư mục ngoài phạm vi vẫn thất bại tiêu chí quyền. Tự kiểm tra: có nên buộc mọi agent theo một chuỗi công cụ duy nhất không? Không nhất thiết; cho phép đường đi hợp lệ khác nếu đáp ứng kết quả, ràng buộc và ngân sách. Chấm vi phạm cụ thể thay vì chỉ so khớp tên công cụ.
+Tự kiểm tra: agent sửa truy vấn và thành công trên một trường hợp có nghĩa nên thay workflow không? Không; cần đọc các trường hợp còn lại và đánh đổi số bước/độ trễ. Lưu lỗi từng trường hợp cùng cấu hình; chỉ giữ cải tiến khi đạt tiêu chí trên tập tách biệt.
 
-## Thực hành
+## English
 
-Đọc chuỗi hành động và kiểm tra mục tiêu, quyền, điều kiện dừng.
+An evaluation combines a dataset of tasks, a solver implementing a strategy and a scorer applying predetermined criteria. A workflow fixes its steps; an agent can select steps using observations. Comparison requires equivalent cases, tools, data, permissions and budgets.
 
-Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Tạo bộ đánh giá chuẩn, tiêu chí chấm và kiểm thử hồi quy cho RAG/agent; ghi cả lỗi và chi phí từng lần chạy.
+An apparently correct answer may still involve an unauthorized tool. Score task success, permitted actions, call limits, elapsed time and denial behavior. This example scores synthetic traces using explicit rules; it runs neither an LLM nor Inspect. A successful fixture trace does not establish that a model will produce it.
+
+Self-check: does an agent succeeding after a query rewrite on one case justify replacing a workflow? No; inspect other cases and step/latency tradeoffs. Save per-case failures and configuration; retain a change only when it meets criteria on held-out cases.
+
+## Thực hành / Practice
+
+Chấm cùng hai trường hợp với hai solver giả lập; thêm hành động write vào trace có đáp án đúng và xác nhận scorer đánh trượt.
+
+Score the same two cases for two simulated solvers; add write to a correct-answer trace and confirm the scorer rejects it.

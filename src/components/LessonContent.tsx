@@ -4,11 +4,16 @@ import { StudyStepAccordion } from './StudyStepAccordion'
 type ContentProps = { lesson: Lesson; language: 'vi' | 'en' }
 type NavigationProps = { onOpenLesson: (slug: string) => void; nextLessonTitles: Record<string, string> }
 
+function isColabNotebook(url?: string) {
+  return /^https:\/\/colab\.research\.google\.com\/github\/Hzyl\/JourneyAIEngineer\/blob\/main\/notebooks\/[a-z-]+\.ipynb$/.test(url ?? '')
+}
+
 export function LessonReading({ lesson, language }: ContentProps) {
   const vi = language === 'vi'
   const guide = lesson.guide ?? lesson
   const steps = vi ? guide.study_steps_vi : guide.study_steps_en
   const plan = guide.practice_plan?.[language]
+  const notebooks = lesson.resources.filter((resource) => isColabNotebook(resource.url))
   return <>
     <section id="overview-objectives" className="detail-section lesson-section lesson-section-overview"
       aria-labelledby="lesson-overview-title" tabIndex={-1}>
@@ -35,6 +40,19 @@ export function LessonReading({ lesson, language }: ContentProps) {
           : 'Follow a repeatable study process'}</h2>
         <p>{vi ? guide.why_it_matters_vi : guide.why_it_matters_en}</p>
       </div>
+      {notebooks.length > 0 && <aside className="lesson-colab" aria-label={vi ? 'Thực hành trên Colab' : 'Practice on Colab'}>
+        <h3>{vi ? 'Chạy lab ngay trên Google Colab' : 'Run this lab on Google Colab'}</h3>
+        <p>{vi
+          ? 'Mở notebook và chạy từng ô theo hướng dẫn. Chọn runtime của Google để thư viện và model chạy trên máy chủ Colab; máy bạn chỉ cần trình duyệt.'
+          : 'Open the notebook and run its cells in order. Choose a Google-hosted runtime so libraries and models run on Colab; your computer only needs a browser.'}</p>
+        <div className="lesson-colab-actions">{notebooks.map((resource) =>
+          <a className="secondary-button" key={resource.url} href={resource.url} target="_blank" rel="noopener noreferrer">
+            {vi ? 'Mở' : 'Open'} {resource.title} ↗
+          </a>)}</div>
+        <p className="muted">{vi
+          ? 'Colab yêu cầu tài khoản Google và có giới hạn tài nguyên miễn phí. Tải báo cáo về sau khi làm xong; kết quả không tự lưu vào tiến độ Journey.'
+          : 'Colab requires a Google account and has free resource limits. Download your report when finished; results are not automatically saved to Journey progress.'}</p>
+      </aside>}
       <ol className="study-step-list">{steps.map((step, index) =>
         <StudyStepAccordion key={`${lesson.slug}-${index}`} step={step} index={index}
           lesson={lesson} language={language} />)}
@@ -174,7 +192,8 @@ export function LessonResources({ lesson, language }: ContentProps) {
         : <a className="lesson-resource resource-link" href={resource.url} target="_blank" rel="noreferrer" key={index}>
           {content}
           <code className="resource-url">{resource.url}</code>
-          <b>{vi ? 'Mở tài liệu' : 'Open resource'} ↗</b>
+          <b>{isColabNotebook(resource.url) ? (vi ? 'Mở notebook Colab' : 'Open Colab notebook')
+            : (vi ? 'Mở tài liệu' : 'Open resource')} ↗</b>
         </a>
     })}</div>
   </section>

@@ -4,17 +4,18 @@ phase_id: phase-17-genai-evaluation
 module_id: genai-evaluation
 title_vi: 'Đánh giá RAG: truy xuất và câu trả lời'
 title_en: 'RAG evaluation: retrieval and answers'
-summary_vi: Chất lượng truy xuất và chất lượng câu trả lời là hai phần riêng.
-summary_en: 'Learn RAG evaluation: retrieval and answers through an input → transformation → output model, then
-  verify it with an edge-case exercise.'
+summary_vi: Chấm truy xuất, hỗ trợ dẫn nguồn và cách xử lý câu thiếu đáp án bằng các tiêu chí riêng.
+summary_en: Score retrieval, citation support and unanswerable handling with separate criteria.
 learning_objectives:
-- Chấm riêng việc tìm được bằng chứng và việc sử dụng đúng bằng chứng.
-- Chấm nhất quán và phân biệt chất lượng truy xuất với chất lượng câu trả lời.
-- Giải thích kết quả và nêu một giới hạn của bài làm.
+- Chấm truy xuất, hỗ trợ dẫn nguồn và cách xử lý câu thiếu đáp án bằng các tiêu chí riêng.
+- Đổi đáp án q2 thành đúng rồi chạy lại; chỉ supported-answer rate được tăng. Thêm một trường hợp dẫn nguồn có thật
+  nhưng sai khẳng định.
+- Không chia cho tập gold rỗng; trường hợp unanswerable/ambiguous phải chấm theo hành vi riêng.
 learning_objectives_en:
-- 'Explain rag evaluation: retrieval and answers with a concrete example.'
-- 'Write or adapt a small code example applying rag evaluation: retrieval and answers.'
-- Recognize its assumptions, limits and one common failure mode.
+- Score retrieval, citation support and unanswerable handling with separate criteria.
+- Correct q2 and rerun; only supported-answer rate should increase. Add a case with an existing citation that supports
+  the wrong claim.
+- Never divide by an empty gold set; score unanswerable/ambiguous cases by their separate behaviors.
 prerequisites:
 - phase-17-genai-evaluation-genai-evaluation-1
 - phase-16-genai-mcp-mcp-1
@@ -26,59 +27,68 @@ key_terms:
 - token
 - embedding
 - genai-evaluation
-concept_notes_vi: |-
-  Chất lượng truy xuất và chất lượng câu trả lời là hai phần riêng. Nếu nguồn cần thiết không có trong ứng viên, cần sửa truy xuất; nếu nguồn đủ mà trả lời sai, xem bước dùng ngữ cảnh.
+concept_notes_vi: 'Retrieval đúng là tìm được nguồn liên quan; generation đúng còn đòi hỏi câu trả lời được nguồn
+  hỗ trợ. Có thể tìm đúng đoạn nhưng trả lời sai, hoặc dẫn nguồn có thật nhưng không hỗ trợ khẳng định. Vì vậy tách
+  Recall@k, đáp án được hỗ trợ và hành vi từ chối/hỏi rõ khi dữ liệu thiếu.
 
-  Độ bao phủ truy xuất xét bằng chứng cần thiết có được tìm thấy không; đánh giá câu trả lời xét hệ thống sử dụng bằng chứng thế nào. Trả lời đúng từ kiến thức sẵn có không chứng minh truy xuất đã tốt hoặc nguồn đã hỗ trợ kết luận.
 
-  Ví dụ, bộ kiểm tra biết đoạn chứa ngoại lệ và xem đoạn đó có vào ngữ cảnh cuối không, rồi chấm câu trả lời có nêu ngoại lệ. Tự kiểm tra: mô hình trả lời sai thì đổi embedding ngay có hợp lý không? Chưa; kiểm tra chuỗi ứng viên, đoạn được gửi và cách sinh để xác định bước thật sự mất thông tin.
-concept_notes_en: |-
-  Retrieval quality and answer quality are separate. Missing evidence suggests retrieval problems; sufficient evidence with a wrong answer suggests context-use problems.
+  Ví dụ dùng nhãn do người biên soạn dữ liệu mô phỏng đặt trước, không nhờ model chấm. Case q2 tìm đúng nguồn nhưng
+  trả lời sai nên recall vẫn cao trong khi supported-answer rate giảm. Câu không có đáp án và câu mơ hồ không có
+  nhãn nguồn để tính recall; chấm lần lượt abstain và clarify riêng.
 
-  Retrieval coverage asks whether necessary evidence was found. Answer evaluation asks how it was used. A correct answer from prior model knowledge does not prove successful retrieval or grounding.
 
-  Track whether a known exception passage reaches final context, then whether the answer includes it. Self-check: should every wrong answer trigger an embedding change? No: inspect candidates, submitted passages and generation to locate where information was lost.
-why_it_matters_vi: Dùng tiêu chí và dữ liệu đại diện để biết hệ thống tốt ở đâu, còn lỗi ở đâu.
-why_it_matters_en: Evaluation distinguishes a fluent demo from a trustworthy system that can improve.
+  Tự kiểm tra: 100% recall có chứng minh hệ RAG đúng 100% không? Không. Lab A có 20 câu có đáp án, 5 thiếu đáp án
+  và 5 mơ hồ; chia dev/test trước khi chỉnh cách truy xuất. Với LLM-as-judge, cần rubric rõ và đối chiếu mẫu chấm
+  tay; không xem điểm tự động là sự thật tuyệt đối.'
+concept_notes_en: 'Successful retrieval finds relevant sources; correct generation additionally requires that sources
+  support the answer. A system may retrieve the right passage but answer incorrectly, or cite a real source that
+  does not support its claim. Separate Recall@k, supported-answer rate and abstain/clarify behavior when evidence
+  is missing.
+
+
+  This example uses author-labeled fixtures rather than a model grader. Case q2 retrieves the right source but answers
+  incorrectly, so recall remains high while supported-answer rate falls. Unanswerable and ambiguous questions have
+  no relevant-source labels for recall; score abstention and clarification separately.
+
+
+  Self-check: does 100% recall imply 100% correct RAG answers? No. Lab A contains 20 answerable, 5 unanswerable
+  and 5 ambiguous questions; establish dev/test splits before tuning retrieval. LLM-as-judge needs an explicit rubric
+  and human calibration rather than treating automated scores as ground truth.'
+why_it_matters_vi: Chấm truy xuất, hỗ trợ dẫn nguồn và cách xử lý câu thiếu đáp án bằng các tiêu chí riêng.
+why_it_matters_en: Score retrieval, citation support and unanswerable handling with separate criteria.
 study_steps_vi:
-- Đọc phần giải thích, xác định khái niệm và điều kiện cần dùng cho nhiệm vụ bên dưới.
-- 'Tìm mục tương ứng với “RAG evaluation: retrieval and answers” trong tài liệu tham khảo; đối chiếu với phần giải
-  thích của bài.'
-- Chấm riêng việc tìm được bằng chứng và việc sử dụng đúng bằng chứng.
-- Chấm nhất quán và phân biệt chất lượng truy xuất với chất lượng câu trả lời. Ghi kết quả đối chiếu và điều bạn
-  đã sửa nếu lần đầu chưa đúng.
-- Tự trả lời thẻ ôn tập, rồi kiểm tra các tiêu chí hoàn thành trước khi chuyển bài.
+- Đọc phần giải thích và dự đoán đầu ra của ví dụ trước khi chạy.
+- Chạy mã Python trong một ô Google Colab; ví dụ chỉ dùng thư viện chuẩn, không cần cài thêm.
+- Đổi đáp án q2 thành đúng rồi chạy lại; chỉ supported-answer rate được tăng. Thêm một trường hợp dẫn nguồn có thật
+  nhưng sai khẳng định.
+- Không chia cho tập gold rỗng; trường hợp unanswerable/ambiguous phải chấm theo hành vi riêng.
+- Lưu đầu ra, đối chiếu với kết quả mong đợi và ghi rõ giới hạn của dữ liệu mô phỏng.
 study_steps_en:
-- 'Read the concept notes and answer: Evaluation distinguishes a fluent demo from a trustworthy system that can
-  improve.'
-- Open OpenAI Evals, read the section marked Read this lesson, and record one verified example or definition.
-- Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the
-  test.
-- 'Complete the practice task: Create a golden set, rubric, and regression suite for RAG/agents, recording failures
-  and cost for every run.'
-- Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact.
+- Read the explanation and predict the example output before running it.
+- Run the Python code in a Google Colab cell; this example uses only the standard library.
+- Correct q2 and rerun; only supported-answer rate should increase. Add a case with an existing citation that supports
+  the wrong claim.
+- Never divide by an empty gold set; score unanswerable/ambiguous cases by their separate behaviors.
+- Save the output, compare it with the expected result and state the limits of the synthetic data.
 practice_plan:
   vi:
-    task: 'Chấm riêng việc tìm được bằng chứng và việc sử dụng đúng bằng chứng.
-
-
-      Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Tạo bộ đánh giá chuẩn, tiêu chí chấm
-      và kiểm thử hồi quy cho RAG/agent; ghi cả lỗi và chi phí từng lần chạy.'
+    task: Đổi đáp án q2 thành đúng rồi chạy lại; chỉ supported-answer rate được tăng. Thêm một trường hợp dẫn nguồn
+      có thật nhưng sai khẳng định.
     deliverables:
-    - Tiêu chí chấm và kết quả trên tình huống đúng, sai
-    - Kết quả đối chiếu kèm dữ liệu hoặc điều kiện thực hiện
-    - Một giới hạn và cách kiểm tra thêm
-    checkpoint: Chấm nhất quán và phân biệt chất lượng truy xuất với chất lượng câu trả lời.
-    stretch: Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào.
+    - Báo cáo từng trường hợp tách recall, câu trả lời có hỗ trợ, abstain và clarify
+    - Đầu ra gốc và kết quả sau khi đổi một điều kiện
+    - Giải thích một lỗi và giới hạn của phép đo
+    checkpoint: Không chia cho tập gold rỗng; trường hợp unanswerable/ambiguous phải chấm theo hành vi riêng.
+    stretch: Mở notebook liên kết, chạy trong Colab và ghi cấu hình thực tế.
   en:
-    task: Create a golden set, rubric, and regression suite for RAG/agents, recording failures and cost for every
-      run.
+    task: Correct q2 and rerun; only supported-answer rate should increase. Add a case with an existing citation
+      that supports the wrong claim.
     deliverables:
-    - One working implementation
-    - One test or benchmark
-    - One note on failure modes and trade-offs
-    checkpoint: You can identify retrieval metrics, grounded-answer metrics, and when human review is required.
-    stretch: 'Add a failure test for rag evaluation: retrieval and answers and explain the result.'
+    - A per-case report separating recall, supported answers, abstention and clarification
+    - Original output and output after changing one condition
+    - An explanation of one failure and the measurement limits
+    checkpoint: Never divide by an empty gold set; score unanswerable/ambiguous cases by their separate behaviors.
+    stretch: Open the linked notebook, run in Colab and record the actual configuration.
 interview_questions:
   vi:
   - 'Bạn sẽ giải thích nội dung “Đánh giá RAG: truy xuất và câu trả lời” bằng ví dụ nào?'
@@ -89,23 +99,31 @@ interview_questions:
   - 'Which assumption behind rag evaluation: retrieval and answers could fail in production?'
   - Which metric or test would prove the result is trustworthy?
 formulas:
-- similarity(a,b) = (a · b) / (||a||₂ ||b||₂)
+- Recall@k = relevant sources in top-k / all relevant sources
+- Supported-answer rate = supported answers / answerable questions
 code_examples:
 - language: python
-  title: 'RAG evaluation: retrieval and answers: inspect one complete path'
-  code: "# Topic: RAG evaluation: retrieval and answers (phase-17-genai-evaluation-genai-evaluation-2)\ndef grounded_answer(answer:\
-    \ str, evidence: list[str]) -> str:\n    if not evidence:\n        return 'Insufficient evidence'\n    return\
-    \ answer + '\\nSources: ' + '; '.join(evidence)\n\nprint(grounded_answer('A concise answer', ['doc-1']))"
+  title: Score retrieval, supported answers and abstention separately
+  code: "import json\ncases = [\n    dict(id=\"q1\", kind=\"answerable\", gold={\"d1\"}, found=[\"d1\"], supported=True),\n\
+    \    dict(id=\"q2\", kind=\"answerable\", gold={\"d2\"}, found=[\"d2\"], supported=False),\n    dict(id=\"q3\"\
+    , kind=\"unanswerable\", gold=set(), found=[], action=\"abstain\"),\n    dict(id=\"q4\", kind=\"ambiguous\"\
+    , gold=set(), found=[], action=\"clarify\"),\n]\nanswerable = [c for c in cases if c[\"kind\"] == \"answerable\"\
+    ]\nrecall = sum(len(set(c[\"found\"]) & c[\"gold\"]) / len(c[\"gold\"]) for c in answerable) / len(answerable)\n\
+    supported = sum(c[\"supported\"] for c in answerable) / len(answerable)\nspecial = [c for c in cases if c[\"\
+    kind\"] != \"answerable\"]\nexpected = {\"unanswerable\": \"abstain\", \"ambiguous\": \"clarify\"}\ncorrect_behavior\
+    \ = sum(c[\"action\"] == expected[c[\"kind\"]] for c in special)\nprint(json.dumps({\"retrieval_recall\": recall,\
+    \ \"supported_answer_rate\": supported,\n                  \"special_cases_correct\": correct_behavior,\n  \
+    \                \"failures\": [c[\"id\"] for c in answerable if not c[\"supported\"]]}))\n"
   status: runnable
-  purpose_vi: Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.
-  purpose_en: 'Illustrate the input-to-output path for rag evaluation: retrieval and answers.'
-  setup: Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.
-  expected_output: Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.
-  edge_case_vi: Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.
-  edge_case_en: Try an empty input, a wrong shape or missing data and record the failure.
-  explanation_vi: Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần
-    nội dung; cần hoàn thành riêng nhiệm vụ thực hành.
-  explanation_en: Keep the boundary executable and inspectable; change one input and verify the expected output.
+  purpose_vi: Chấm truy xuất, hỗ trợ dẫn nguồn và cách xử lý câu thiếu đáp án bằng các tiêu chí riêng.
+  purpose_en: Score retrieval, citation support and unanswerable handling with separate criteria.
+  setup: 'Python 3.11+; standard library only. Google Colab: paste into one code cell and Run.'
+  expected_output: '{"retrieval_recall": 1.0, "supported_answer_rate": 0.5, "special_cases_correct": 2, "failures":
+    ["q2"]}'
+  edge_case_vi: Không chia cho tập gold rỗng; trường hợp unanswerable/ambiguous phải chấm theo hành vi riêng.
+  edge_case_en: Never divide by an empty gold set; score unanswerable/ambiguous cases by their separate behaviors.
+  explanation_vi: Groundedness trong ví dụ là nhãn hỗ trợ đặt trước, không phải bộ suy luận ngữ nghĩa tự động.
+  explanation_en: Groundedness here is a preassigned support label, not an automated semantic entailment system.
 resources:
 - language: en
   title: OpenAI Evals
@@ -142,7 +160,7 @@ resources:
   purpose_en: Build transformer and safety foundations for NLP/LLM applications.
   read_en: Read the relevant chapter, then record assumptions and failure cases.
   kind: official
-  required: true
+  required: false
 - title: Giải thích và hướng dẫn thực hành trong bài
   url: ''
   language: vi
@@ -152,6 +170,17 @@ resources:
   read_vi: Đọc giải thích → xem ví dụ → thực hành → tự kiểm tra.
   read_en: Follow Study plan → Concept notes → Code example → Practice plan.
   required: true
+- title: Google Colab — Lab A
+  language: vi/en
+  url: https://colab.research.google.com/github/Hzyl/JourneyAIEngineer/blob/main/notebooks/lab-a-evidence-retrieval.ipynb
+  kind: external
+  required: false
+  purpose_vi: Chạy trong Colab để mở rộng ví dụ bằng dữ liệu và báo cáo của lab.
+  purpose_en: Run in Colab to extend this example with the lab dataset and reports.
+  read_vi: Chọn môi trường CPU do Google lưu trữ, chạy baseline rồi phần embedding tùy chọn. Dùng tập dev trước
+    khi đánh giá test và tải báo cáo về.
+  read_en: 'Run in Colab on a Google-hosted CPU runtime: baseline first, then optional embeddings. Use dev before
+    evaluating test and download the report.'
 exercise_ids:
 - exercise-17-genai-evaluation
 review_item_ids:
@@ -161,13 +190,14 @@ review_item_ids:
 - phase-17-genai-evaluation-genai-evaluation-2-interview
 estimated_minutes: 60
 completion_checklist:
-- Chấm riêng việc tìm được bằng chứng và việc sử dụng đúng bằng chứng.
-- Chấm nhất quán và phân biệt chất lượng truy xuất với chất lượng câu trả lời.
-- Lưu kết quả và giải thích được một giới hạn mà không nhìn lời giải.
+- Đổi đáp án q2 thành đúng rồi chạy lại; chỉ supported-answer rate được tăng. Thêm một trường hợp dẫn nguồn có thật
+  nhưng sai khẳng định.
+- Không chia cho tập gold rỗng; trường hợp unanswerable/ambiguous phải chấm theo hành vi riêng.
+- Lưu đầu ra và ghi đúng giới hạn của ví dụ.
 completion_criteria:
-- 'Bài làm đáp ứng nhiệm vụ: Chấm riêng việc tìm được bằng chứng và việc sử dụng đúng bằng chứng.'
-- Có kết quả đối chiếu với tiêu chí hoặc dự đoán đã ghi trước.
-- Chấm nhất quán và phân biệt chất lượng truy xuất với chất lượng câu trả lời.
+- Báo cáo từng trường hợp tách recall, câu trả lời có hỗ trợ, abstain và clarify
+- Không chia cho tập gold rỗng; trường hợp unanswerable/ambiguous phải chấm theo hành vi riêng.
+- Không suy kết quả model thật từ dữ liệu mô phỏng.
 common_mistakes:
 - Chỉ dùng một điểm tổng để kết luận mọi thành phần đều tốt.
 - Kết luận từ một kết quả thuận lợi mà chưa kiểm tra trường hợp khác.
@@ -233,14 +263,22 @@ review_cards:
 ---
 # Đánh giá RAG: truy xuất và câu trả lời / RAG evaluation: retrieval and answers
 
-Chất lượng truy xuất và chất lượng câu trả lời là hai phần riêng. Nếu nguồn cần thiết không có trong ứng viên, cần sửa truy xuất; nếu nguồn đủ mà trả lời sai, xem bước dùng ngữ cảnh.
+Retrieval đúng là tìm được nguồn liên quan; generation đúng còn đòi hỏi câu trả lời được nguồn hỗ trợ. Có thể tìm đúng đoạn nhưng trả lời sai, hoặc dẫn nguồn có thật nhưng không hỗ trợ khẳng định. Vì vậy tách Recall@k, đáp án được hỗ trợ và hành vi từ chối/hỏi rõ khi dữ liệu thiếu.
 
-Độ bao phủ truy xuất xét bằng chứng cần thiết có được tìm thấy không; đánh giá câu trả lời xét hệ thống sử dụng bằng chứng thế nào. Trả lời đúng từ kiến thức sẵn có không chứng minh truy xuất đã tốt hoặc nguồn đã hỗ trợ kết luận.
+Ví dụ dùng nhãn do người biên soạn dữ liệu mô phỏng đặt trước, không nhờ model chấm. Case q2 tìm đúng nguồn nhưng trả lời sai nên recall vẫn cao trong khi supported-answer rate giảm. Câu không có đáp án và câu mơ hồ không có nhãn nguồn để tính recall; chấm lần lượt abstain và clarify riêng.
 
-Ví dụ, bộ kiểm tra biết đoạn chứa ngoại lệ và xem đoạn đó có vào ngữ cảnh cuối không, rồi chấm câu trả lời có nêu ngoại lệ. Tự kiểm tra: mô hình trả lời sai thì đổi embedding ngay có hợp lý không? Chưa; kiểm tra chuỗi ứng viên, đoạn được gửi và cách sinh để xác định bước thật sự mất thông tin.
+Tự kiểm tra: 100% recall có chứng minh hệ RAG đúng 100% không? Không. Lab A có 20 câu có đáp án, 5 thiếu đáp án và 5 mơ hồ; chia dev/test trước khi chỉnh cách truy xuất. Với LLM-as-judge, cần rubric rõ và đối chiếu mẫu chấm tay; không xem điểm tự động là sự thật tuyệt đối.
 
-## Thực hành
+## English
 
-Chấm riêng việc tìm được bằng chứng và việc sử dụng đúng bằng chứng.
+Successful retrieval finds relevant sources; correct generation additionally requires that sources support the answer. A system may retrieve the right passage but answer incorrectly, or cite a real source that does not support its claim. Separate Recall@k, supported-answer rate and abstain/clarify behavior when evidence is missing.
 
-Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Tạo bộ đánh giá chuẩn, tiêu chí chấm và kiểm thử hồi quy cho RAG/agent; ghi cả lỗi và chi phí từng lần chạy.
+This example uses author-labeled fixtures rather than a model grader. Case q2 retrieves the right source but answers incorrectly, so recall remains high while supported-answer rate falls. Unanswerable and ambiguous questions have no relevant-source labels for recall; score abstention and clarification separately.
+
+Self-check: does 100% recall imply 100% correct RAG answers? No. Lab A contains 20 answerable, 5 unanswerable and 5 ambiguous questions; establish dev/test splits before tuning retrieval. LLM-as-judge needs an explicit rubric and human calibration rather than treating automated scores as ground truth.
+
+## Thực hành / Practice
+
+Đổi đáp án q2 thành đúng rồi chạy lại; chỉ supported-answer rate được tăng. Thêm một trường hợp dẫn nguồn có thật nhưng sai khẳng định.
+
+Correct q2 and rerun; only supported-answer rate should increase. Add a case with an existing citation that supports the wrong claim.

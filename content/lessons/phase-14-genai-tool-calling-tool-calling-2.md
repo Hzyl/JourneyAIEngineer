@@ -4,17 +4,16 @@ phase_id: phase-14-genai-tool-calling
 module_id: tool-calling
 title_vi: Kiểm tra công cụ và chính sách tham số
 title_en: Tool validation and argument policies
-summary_vi: Tham số đúng kiểu vẫn có thể vượt phạm vi được phép, chẳng hạn đường dẫn ngoài thư mục cho phép.
-summary_en: Learn Tool validation and argument policies through an input → transformation → output model, then verify
-  it with an edge-case exercise.
+summary_vi: Kiểm tra cấu trúc tham số và quyền ứng dụng độc lập trước khi đọc tài liệu.
+summary_en: Validate argument structure and application authorization independently before reading a document.
 learning_objectives:
-- Thử tham số đúng kiểu nhưng ngoài phạm vi cho phép và xác nhận bị chặn.
-- Xác nhận lời gọi sai bị chặn và việc thử lại không tạo tác dụng phụ lặp.
-- Giải thích kết quả và nêu một giới hạn của bài làm.
+- Kiểm tra cấu trúc tham số và quyền ứng dụng độc lập trước khi đọc tài liệu.
+- Thêm một người dùng và một tài liệu; kiểm tra quyền từ session, trường lạ và một ID sai kiểu.
+- Lời gọi đúng schema vào private vẫn phải denied; user_id do model đưa vào phải invalid_arguments.
 learning_objectives_en:
-- Explain tool validation and argument policies with a concrete example.
-- Write or adapt a small code example applying tool validation and argument policies.
-- Recognize its assumptions, limits and one common failure mode.
+- Validate argument structure and application authorization independently before reading a document.
+- Add one user and one document; test session-based authorization, unknown fields and an incorrectly typed ID.
+- A schema-valid private request must still be denied; model-supplied user_id must yield invalid_arguments.
 prerequisites:
 - phase-14-genai-tool-calling-tool-calling-1
 - phase-13-genai-advanced-rag-advanced-rag-1
@@ -28,62 +27,62 @@ key_terms:
 - retrieval
 - evaluation
 - tool-calling
-concept_notes_vi: |-
-  Tham số đúng kiểu vẫn có thể vượt phạm vi được phép, chẳng hạn đường dẫn ngoài thư mục cho phép. Cần kiểm tra cả cấu trúc lẫn ràng buộc nghiệp vụ trước thực thi.
+concept_notes_vi: 'Schema mô tả tham số được phép: tên trường, kiểu dữ liệu và giới hạn giá trị. Một JSON hợp schema
+  vẫn có thể yêu cầu tài liệu của người khác. Vì vậy ứng dụng phải xác thực người gọi, kiểm tra quyền trên đối tượng
+  rồi mới thực thi công cụ; không lấy user_id từ lời model làm danh tính tin cậy.
 
-  Kiểm tra schema xét cấu trúc; kiểm tra chính sách xét thao tác có nằm trong phạm vi được phép không. Giá trị chuỗi hợp lệ vẫn có thể chứa đường dẫn thoát thư mục, địa chỉ không được phép hoặc mã tài nguyên của người khác.
 
-  Ví dụ, công cụ đọc tệp cần giải đường dẫn thật rồi kiểm tra nó nằm trong thư mục cho phép, kể cả khi có liên kết hoặc thành phần đi lên thư mục cha. Tự kiểm tra: chỉ kiểm tra tên bắt đầu bằng tiền tố có đủ không? Không; chuẩn hóa, kiểm tra ranh giới đường dẫn và áp dụng quyền ngay tại nơi đọc.
-concept_notes_en: |-
-  Well-typed arguments can still exceed allowed scope, such as a path outside an approved directory. Validate structure and business constraints before execution.
+  Ví dụ giả lập công cụ chỉ đọc, danh tính lấy từ session riêng. Trường lạ, ID không phải chuỗi và truy cập ngoài
+  quyền bị chặn trước khi trả nội dung. Nội dung truy xuất có thể chứa lệnh giả như ''bỏ qua quyền''; đó vẫn là
+  dữ liệu, không thay đổi chính sách thực thi.
 
-  Schema checks assess shape; policy checks assess authorization. A valid string can name a forbidden address, an escaping path or someone else's resource.
 
-  A file-reading tool should resolve the actual path and verify it remains under the allowed root, including links and parent-directory components. Self-check: is checking a textual prefix enough? No: normalize, check path boundaries and enforce permissions at the point of access.
-why_it_matters_vi: Kiểm tra lời gọi và quyền trước khi biến đề xuất của mô hình thành hành động.
-why_it_matters_en: Tool calling turns model output into actions, so its contracts must be stricter than ordinary
-  chat.
+  Tự kiểm tra: thêm allowed_users vào prompt có đủ bảo vệ tài liệu không? Không; kiểm tra phải ở ứng dụng/hệ thống
+  đích. Lab C kiểm tra các lời gọi trái quyền bằng dữ liệu mô phỏng, không chứng nhận an toàn của một dịch vụ production.'
+concept_notes_en: 'A schema describes permitted argument names, types and value constraints. A schema-valid JSON
+  request may still target someone else''s document. The application must therefore authenticate the caller and
+  authorize the object before tool execution; model-supplied user_id is not a trusted identity.
+
+
+  This fixture implements a read-only tool whose identity comes from a separate session. Unknown fields, non-string
+  IDs and unauthorized access are rejected before returning content. Retrieved text may contain instructions such
+  as ''ignore permissions''; that remains data and cannot alter execution policy.
+
+
+  Self-check: does putting allowed_users in a prompt secure a document? No; enforcement belongs in the application
+  or target system. Lab C tests unauthorized fixture requests and does not certify a production service.'
+why_it_matters_vi: Kiểm tra cấu trúc tham số và quyền ứng dụng độc lập trước khi đọc tài liệu.
+why_it_matters_en: Validate argument structure and application authorization independently before reading a document.
 study_steps_vi:
-- Đọc phần giải thích, xác định khái niệm và điều kiện cần dùng cho nhiệm vụ bên dưới.
-- Tìm mục tương ứng với “Tool validation and argument policies” trong tài liệu tham khảo; đối chiếu với phần giải
-  thích của bài.
-- Thử tham số đúng kiểu nhưng ngoài phạm vi cho phép và xác nhận bị chặn.
-- Xác nhận lời gọi sai bị chặn và việc thử lại không tạo tác dụng phụ lặp. Ghi kết quả đối chiếu và điều bạn đã
-  sửa nếu lần đầu chưa đúng.
-- Tự trả lời thẻ ôn tập, rồi kiểm tra các tiêu chí hoàn thành trước khi chuyển bài.
+- Đọc phần giải thích và dự đoán đầu ra của ví dụ trước khi chạy.
+- Chạy mã Python trong một ô Google Colab; ví dụ chỉ dùng thư viện chuẩn, không cần cài thêm.
+- Thêm một người dùng và một tài liệu; kiểm tra quyền từ session, trường lạ và một ID sai kiểu.
+- Lời gọi đúng schema vào private vẫn phải denied; user_id do model đưa vào phải invalid_arguments.
+- Lưu đầu ra, đối chiếu với kết quả mong đợi và ghi rõ giới hạn của dữ liệu mô phỏng.
 study_steps_en:
-- 'Read the concept notes and answer: Tool calling turns model output into actions, so its contracts must be stricter
-  than ordinary chat.'
-- Open OpenAI Function Calling Guide, read the section marked Read this lesson, and record one verified example
-  or definition.
-- Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the
-  test.
-- 'Complete the practice task: Build a mock database tool with schema validation, bounded retries, timeouts, and
-  an audit log without secrets.'
-- Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact.
+- Read the explanation and predict the example output before running it.
+- Run the Python code in a Google Colab cell; this example uses only the standard library.
+- Add one user and one document; test session-based authorization, unknown fields and an incorrectly typed ID.
+- A schema-valid private request must still be denied; model-supplied user_id must yield invalid_arguments.
+- Save the output, compare it with the expected result and state the limits of the synthetic data.
 practice_plan:
   vi:
-    task: 'Thử tham số đúng kiểu nhưng ngoài phạm vi cho phép và xác nhận bị chặn.
-
-
-      Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Xây công cụ đọc cơ sở dữ liệu giả lập
-      có kiểm tra schema, thời gian chờ, thử lại giới hạn và nhật ký không chứa bí mật.'
+    task: Thêm một người dùng và một tài liệu; kiểm tra quyền từ session, trường lạ và một ID sai kiểu.
     deliverables:
-    - Lời gọi công cụ mẫu và kết quả kiểm tra quyền, tham số hoặc lỗi
-    - Kết quả đối chiếu kèm dữ liệu hoặc điều kiện thực hiện
-    - Một giới hạn và cách kiểm tra thêm
-    checkpoint: Xác nhận lời gọi sai bị chặn và việc thử lại không tạo tác dụng phụ lặp.
-    stretch: Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào.
+    - Ma trận lời gọi hợp lệ/sai schema/trái quyền và kết quả không lộ nội dung
+    - Đầu ra gốc và kết quả sau khi đổi một điều kiện
+    - Giải thích một lỗi và giới hạn của phép đo
+    checkpoint: Lời gọi đúng schema vào private vẫn phải denied; user_id do model đưa vào phải invalid_arguments.
+    stretch: Mở notebook liên kết, chạy trong Colab và ghi cấu hình thực tế.
   en:
-    task: Build a mock database tool with schema validation, bounded retries, timeouts, and an audit log without
-      secrets.
+    task: Add one user and one document; test session-based authorization, unknown fields and an incorrectly typed
+      ID.
     deliverables:
-    - One working implementation
-    - One test or benchmark
-    - One note on failure modes and trade-offs
-    checkpoint: Invalid tool input cannot cause side effects, retries do not duplicate transactions, and errors
-      are actionable.
-    stretch: Add a failure test for tool validation and argument policies and explain the result.
+    - A matrix of valid, schema-invalid and unauthorized calls with non-leaking outcomes
+    - Original output and output after changing one condition
+    - An explanation of one failure and the measurement limits
+    checkpoint: A schema-valid private request must still be denied; model-supplied user_id must yield invalid_arguments.
+    stretch: Open the linked notebook, run in Colab and record the actual configuration.
 interview_questions:
   vi:
   - Bạn sẽ giải thích nội dung “Kiểm tra công cụ và chính sách tham số” bằng ví dụ nào?
@@ -96,20 +95,27 @@ interview_questions:
 formulas: []
 code_examples:
 - language: python
-  title: 'Tool validation and argument policies: inspect one complete path'
-  code: "# Topic: Tool validation and argument policies (phase-14-genai-tool-calling-tool-calling-2)\ndef grounded_answer(answer:\
-    \ str, evidence: list[str]) -> str:\n    if not evidence:\n        return 'Insufficient evidence'\n    return\
-    \ answer + '\\nSources: ' + '; '.join(evidence)\n\nprint(grounded_answer('A concise answer', ['doc-1']))"
+  title: Validate tool arguments and authorize the caller
+  code: "import json\ndocuments = {\n    \"public\": {\"text\": \"Public guide\", \"allowed_users\": [\"an\", \"\
+    binh\"]},\n    \"private\": {\"text\": \"Private fixture\", \"allowed_users\": [\"an\"]},\n}\ndef read_document(arguments,\
+    \ session_user):\n    if set(arguments) != {\"document_id\"} or not isinstance(arguments[\"document_id\"], str):\n\
+    \        return {\"status\": \"invalid_arguments\"}\n    document = documents.get(arguments[\"document_id\"\
+    ])\n    if document is None or session_user not in document[\"allowed_users\"]:\n        return {\"status\"\
+    : \"denied\"}\n    return {\"status\": \"ok\", \"text\": document[\"text\"]}\ncalls = [\n    ({\"document_id\"\
+    : \"public\"}, \"binh\"),\n    ({\"document_id\": \"private\"}, \"binh\"),\n    ({\"document_id\": \"private\"\
+    , \"user_id\": \"an\"}, \"binh\"),\n    ({\"document_id\": 42}, \"an\"),\n]\nprint(json.dumps([read_document(args,\
+    \ user)[\"status\"] for args, user in calls]))\n"
   status: runnable
-  purpose_vi: Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.
-  purpose_en: Illustrate the input-to-output path for tool validation and argument policies.
-  setup: Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.
-  expected_output: Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.
-  edge_case_vi: Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.
-  edge_case_en: Try an empty input, a wrong shape or missing data and record the failure.
-  explanation_vi: Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần
-    nội dung; cần hoàn thành riêng nhiệm vụ thực hành.
-  explanation_en: Keep the boundary executable and inspectable; change one input and verify the expected output.
+  purpose_vi: Kiểm tra cấu trúc tham số và quyền ứng dụng độc lập trước khi đọc tài liệu.
+  purpose_en: Validate argument structure and application authorization independently before reading a document.
+  setup: 'Python 3.11+; standard library only. Google Colab: paste into one code cell and Run.'
+  expected_output: '["ok", "denied", "invalid_arguments", "invalid_arguments"]'
+  edge_case_vi: Lời gọi đúng schema vào private vẫn phải denied; user_id do model đưa vào phải invalid_arguments.
+  edge_case_en: A schema-valid private request must still be denied; model-supplied user_id must yield invalid_arguments.
+  explanation_vi: Schema kiểm tra hình dạng; allowed_users kiểm tra quyền. Không có request mạng hoặc thay đổi tài
+    liệu.
+  explanation_en: The schema checks shape; allowed_users checks authorization. No network request or document mutation
+    occurs.
 resources:
 - language: en
   title: OpenAI Function Calling Guide
@@ -147,6 +153,17 @@ resources:
   read_vi: Đọc giải thích → xem ví dụ → thực hành → tự kiểm tra.
   read_en: Follow Study plan → Concept notes → Code example → Practice plan.
   required: true
+- title: Google Colab — Lab C
+  language: vi/en
+  url: https://colab.research.google.com/github/Hzyl/JourneyAIEngineer/blob/main/notebooks/lab-c-security-regression.ipynb
+  kind: external
+  required: false
+  purpose_vi: Chạy trong Colab để mở rộng ví dụ bằng dữ liệu và báo cáo của lab.
+  purpose_en: Run in Colab to extend this example with the lab dataset and reports.
+  read_vi: Chọn môi trường CPU do Google lưu trữ, chạy từng ô và đối chiếu báo cáo. Lab dùng công cụ giả lập chỉ
+    đọc, không tải model; tải báo cáo để lưu kết quả.
+  read_en: Run in Colab on a Google-hosted CPU runtime and inspect each report. This lab uses read-only fake tools
+    and downloads no model; download the report to retain results.
 exercise_ids:
 - exercise-14-tool-calling
 review_item_ids:
@@ -156,13 +173,13 @@ review_item_ids:
 - phase-14-genai-tool-calling-tool-calling-2-interview
 estimated_minutes: 60
 completion_checklist:
-- Thử tham số đúng kiểu nhưng ngoài phạm vi cho phép và xác nhận bị chặn.
-- Xác nhận lời gọi sai bị chặn và việc thử lại không tạo tác dụng phụ lặp.
-- Lưu kết quả và giải thích được một giới hạn mà không nhìn lời giải.
+- Thêm một người dùng và một tài liệu; kiểm tra quyền từ session, trường lạ và một ID sai kiểu.
+- Lời gọi đúng schema vào private vẫn phải denied; user_id do model đưa vào phải invalid_arguments.
+- Lưu đầu ra và ghi đúng giới hạn của ví dụ.
 completion_criteria:
-- 'Bài làm đáp ứng nhiệm vụ: Thử tham số đúng kiểu nhưng ngoài phạm vi cho phép và xác nhận bị chặn.'
-- Có kết quả đối chiếu với tiêu chí hoặc dự đoán đã ghi trước.
-- Xác nhận lời gọi sai bị chặn và việc thử lại không tạo tác dụng phụ lặp.
+- Ma trận lời gọi hợp lệ/sai schema/trái quyền và kết quả không lộ nội dung
+- Lời gọi đúng schema vào private vẫn phải denied; user_id do model đưa vào phải invalid_arguments.
+- Không suy kết quả model thật từ dữ liệu mô phỏng.
 common_mistakes:
 - Coi đề xuất của mô hình là quyền tự động thực thi công cụ.
 - Kết luận từ một kết quả thuận lợi mà chưa kiểm tra trường hợp khác.
@@ -228,14 +245,22 @@ review_cards:
 ---
 # Kiểm tra công cụ và chính sách tham số / Tool validation and argument policies
 
-Tham số đúng kiểu vẫn có thể vượt phạm vi được phép, chẳng hạn đường dẫn ngoài thư mục cho phép. Cần kiểm tra cả cấu trúc lẫn ràng buộc nghiệp vụ trước thực thi.
+Schema mô tả tham số được phép: tên trường, kiểu dữ liệu và giới hạn giá trị. Một JSON hợp schema vẫn có thể yêu cầu tài liệu của người khác. Vì vậy ứng dụng phải xác thực người gọi, kiểm tra quyền trên đối tượng rồi mới thực thi công cụ; không lấy user_id từ lời model làm danh tính tin cậy.
 
-Kiểm tra schema xét cấu trúc; kiểm tra chính sách xét thao tác có nằm trong phạm vi được phép không. Giá trị chuỗi hợp lệ vẫn có thể chứa đường dẫn thoát thư mục, địa chỉ không được phép hoặc mã tài nguyên của người khác.
+Ví dụ giả lập công cụ chỉ đọc, danh tính lấy từ session riêng. Trường lạ, ID không phải chuỗi và truy cập ngoài quyền bị chặn trước khi trả nội dung. Nội dung truy xuất có thể chứa lệnh giả như 'bỏ qua quyền'; đó vẫn là dữ liệu, không thay đổi chính sách thực thi.
 
-Ví dụ, công cụ đọc tệp cần giải đường dẫn thật rồi kiểm tra nó nằm trong thư mục cho phép, kể cả khi có liên kết hoặc thành phần đi lên thư mục cha. Tự kiểm tra: chỉ kiểm tra tên bắt đầu bằng tiền tố có đủ không? Không; chuẩn hóa, kiểm tra ranh giới đường dẫn và áp dụng quyền ngay tại nơi đọc.
+Tự kiểm tra: thêm allowed_users vào prompt có đủ bảo vệ tài liệu không? Không; kiểm tra phải ở ứng dụng/hệ thống đích. Lab C kiểm tra các lời gọi trái quyền bằng dữ liệu mô phỏng, không chứng nhận an toàn của một dịch vụ production.
 
-## Thực hành
+## English
 
-Thử tham số đúng kiểu nhưng ngoài phạm vi cho phép và xác nhận bị chặn.
+A schema describes permitted argument names, types and value constraints. A schema-valid JSON request may still target someone else's document. The application must therefore authenticate the caller and authorize the object before tool execution; model-supplied user_id is not a trusted identity.
 
-Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Xây công cụ đọc cơ sở dữ liệu giả lập có kiểm tra schema, thời gian chờ, thử lại giới hạn và nhật ký không chứa bí mật.
+This fixture implements a read-only tool whose identity comes from a separate session. Unknown fields, non-string IDs and unauthorized access are rejected before returning content. Retrieved text may contain instructions such as 'ignore permissions'; that remains data and cannot alter execution policy.
+
+Self-check: does putting allowed_users in a prompt secure a document? No; enforcement belongs in the application or target system. Lab C tests unauthorized fixture requests and does not certify a production service.
+
+## Thực hành / Practice
+
+Thêm một người dùng và một tài liệu; kiểm tra quyền từ session, trường lạ và một ID sai kiểu.
+
+Add one user and one document; test session-based authorization, unknown fields and an incorrectly typed ID.

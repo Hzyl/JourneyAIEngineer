@@ -1,0 +1,71 @@
+[
+  {
+    "id": "dev-location", "split": "dev", "category": "answerable",
+    "question": "Buổi học Python tại phòng nào?",
+    "expected": {"abstained": false, "citation": {"source": "workshop.md", "line": 3, "quote": "Buổi học Python bắt đầu lúc 19:00 thứ Ba, tại phòng A2."}},
+    "rationale": "A single line names the room."
+  },
+  {
+    "id": "dev-project", "split": "dev", "category": "answerable",
+    "question": "Bài tập cuối workshop phân tích dữ liệu gì?",
+    "expected": {"abstained": false, "citation": {"source": "project.md", "line": 3, "quote": "Bài tập cuối workshop là phân tích dữ liệu chi tiêu bằng Python, có ít nhất ba kiểm thử."}},
+    "rationale": "A single line identifies the spending-data assignment."
+  },
+  {
+    "id": "dev-report", "split": "dev", "category": "answerable",
+    "question": "Báo cáo đánh giá cần ghi câu hỏi và nguồn thế nào?",
+    "expected": {"abstained": false, "citation": {"source": "project.md", "line": 5, "quote": "Báo cáo đánh giá cần ghi các câu hỏi chưa trả lời được và nguồn trích dẫn của câu trả lời."}},
+    "rationale": "The report line directly states both requirements."
+  },
+  {
+    "id": "dev-fee", "split": "dev", "category": "unanswerable",
+    "question": "Học phí workshop là bao nhiêu đồng?",
+    "expected": {"abstained": true}, "rationale": "No price exists in the corpus."
+  },
+  {
+    "id": "dev-contact", "split": "dev", "category": "unanswerable",
+    "question": "Số điện thoại giảng viên là gì?",
+    "expected": {"abstained": true}, "rationale": "No phone number exists in the corpus."
+  },
+  {
+    "id": "dev-unspecified-python", "split": "dev", "category": "ambiguous",
+    "question": "Python workshop?",
+    "expected": {"abstained": true},
+    "rationale": "No requested fact: this could ask about the schedule, preparation, or assignment; clarification is needed."
+  },
+  {
+    "id": "test-registration-route", "split": "test", "category": "answerable",
+    "question": "Muốn đăng ký workshop thì dùng biểu mẫu của ai?",
+    "expected": {"abstained": false, "citation": {"source": "workshop.md", "line": 4, "quote": "Đăng ký workshop bằng biểu mẫu của câu lạc bộ, hạn chót là thứ Hai."}},
+    "rationale": "The registration line identifies the club form."
+  },
+  {
+    "id": "test-editor", "split": "test", "category": "answerable",
+    "question": "Ngoài Python, người tham gia chuẩn bị công cụ soạn thảo nào?",
+    "expected": {"abstained": false, "citation": {"source": "workshop.md", "line": 5, "quote": "Người tham gia chuẩn bị Python 3.11 trở lên và một trình soạn thảo mã nguồn."}},
+    "rationale": "The preparation line requires a code editor."
+  },
+  {
+    "id": "test-paraphrase-submit", "split": "test", "category": "answerable",
+    "question": "Gói sản phẩm gửi đi phải kèm những thành phần nào?",
+    "expected": {"abstained": false, "citation": {"source": "project.md", "line": 4, "quote": "Nộp bài tập bằng file ZIP gồm source, README và kết quả kiểm thử; không cần dùng Git."}},
+    "rationale": "A contextual paraphrase of the deliverable contents; lexical retrieval may fail."
+  },
+  {
+    "id": "test-instructor", "split": "test", "category": "unanswerable",
+    "question": "Giảng viên phụ trách tên gì?",
+    "expected": {"abstained": true}, "rationale": "No instructor identity exists in the corpus."
+  },
+  {
+    "id": "test-schedule-mismatch", "split": "test", "category": "unanswerable",
+    "question": "Buổi học Python nâng cao thứ Sáu bắt đầu lúc nào?",
+    "expected": {"abstained": true},
+    "rationale": "The corpus only gives a Tuesday class; it cannot support a Friday advanced-class time."
+  },
+  {
+    "id": "test-unspecified-report", "split": "test", "category": "ambiguous",
+    "question": "Bài tập và báo cáo đánh giá?",
+    "expected": {"abstained": true},
+    "rationale": "No requested fact: assignment topic, delivery format and report contents are distinct possible intents."
+  }
+]

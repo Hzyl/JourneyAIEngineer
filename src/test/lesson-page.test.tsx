@@ -33,6 +33,31 @@ beforeEach(() => {
   document.body.append(host)
   root = createRoot(host)
 })
+
+test.each(['vi', 'en'] as const)('Colab practice opens the lesson notebook safely in %s', async (language) => {
+  const url = 'https://colab.research.google.com/github/Hzyl/JourneyAIEngineer/blob/main/notebooks/lab-a-evidence-retrieval.ipynb'
+  await render(language, { ...lessonFixture, resources: [{ ...lessonFixture.resources[0],
+    title: 'Lab A', url }] })
+  const callout = host.querySelector('.lesson-colab')!
+  expect(callout).not.toBeNull()
+  const link = callout.querySelector('a')!
+  expect(link.href).toBe(url)
+  expect(link.target).toBe('_blank')
+  expect(link.rel).toContain('noopener')
+  expect(link.rel).toContain('noreferrer')
+  expect(link.textContent).toBe(language === 'vi' ? 'Mở Lab A ↗' : 'Open Lab A ↗')
+  expect(callout.textContent).toContain(language === 'vi' ? 'không tự lưu' : 'not automatically saved')
+  expect(host.querySelector('#resources')!.textContent).toContain(
+    language === 'vi' ? 'Mở notebook Colab' : 'Open Colab notebook')
+})
+
+test('ordinary resources do not promise a hosted notebook runtime', async () => {
+  await render()
+  expect(host.querySelector('.lesson-colab')).toBeNull()
+  await render('en', { ...lessonFixture, resources: [{ ...lessonFixture.resources[0],
+    url: 'https://colab.research.google.com.example.test/lab.ipynb' }] })
+  expect(host.querySelector('.lesson-colab')).toBeNull()
+})
 afterEach(async () => {
   await act(async () => root.unmount())
   host.remove()

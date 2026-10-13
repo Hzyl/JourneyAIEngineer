@@ -4,17 +4,17 @@ phase_id: phase-16-genai-mcp
 module_id: mcp
 title_vi: Kiến trúc MCP và luồng thông điệp
 title_en: MCP architecture and message flow
-summary_vi: MCP chuẩn hóa trao đổi giữa ứng dụng và nguồn công cụ, ngữ cảnh.
-summary_en: Learn MCP architecture and message flow through an input → transformation → output model, then verify
-  it with an edge-case exercise.
+summary_vi: Phân biệt host/client/server và kiểm tra thứ tự initialize, initialized, tools/list của MCP.
+summary_en: Distinguish MCP host/client/server and validate the initialize, initialized, tools/list sequence.
 learning_objectives:
-- Vẽ luồng khám phá công cụ và gọi công cụ qua client, server.
-- Xác định nơi khám phá khả năng, kiểm tra quyền và thực thi.
-- Giải thích kết quả và nêu một giới hạn của bài làm.
+- Phân biệt host/client/server và kiểm tra thứ tự initialize, initialized, tools/list của MCP.
+- Chạy luồng hợp lệ rồi thử tools/list trước khởi tạo và sai phiên bản; ghi vị trí bị từ chối.
+- tools/list trước notifications/initialized phải bị từ chối; không gọi ví dụ này là SDK integration test.
 learning_objectives_en:
-- Explain mcp architecture and message flow with a concrete example.
-- Write or adapt a small code example applying mcp architecture and message flow.
-- Recognize its assumptions, limits and one common failure mode.
+- Distinguish MCP host/client/server and validate the initialize, initialized, tools/list sequence.
+- Run the valid sequence, then try tools/list before initialization and a version mismatch; record where each is
+  rejected.
+- tools/list before notifications/initialized must be rejected; do not label this as an SDK integration test.
 prerequisites:
 - phase-15-genai-agents-ai-agents-4
 - phase-15-genai-agents-ai-agents-1
@@ -27,60 +27,69 @@ key_terms:
 - embedding
 - retrieval
 - evaluation
-concept_notes_vi: |-
-  MCP chuẩn hóa trao đổi giữa ứng dụng và nguồn công cụ, ngữ cảnh. Phân biệt ứng dụng chủ, client và server để biết phần nào khám phá khả năng, gửi yêu cầu và thực thi.
+concept_notes_vi: 'Host là ứng dụng giữ tương tác và chính sách với người dùng; host quản lý client kết nối tới
+  server. Server cung cấp capability như tools và resources. MCP chuẩn hóa trao đổi khả năng và thông điệp; nó không
+  phải mô hình, không tự điều phối agent và không thay thế kiểm tra quyền của ứng dụng.
 
-  MCP là giao thức trao đổi, không phải mô hình hay thuật toán quyết định hành động. Host tổ chức ứng dụng; client giao tiếp với server; server cung cấp khả năng theo giao thức. Chuẩn chung không tự bảo đảm nội dung đúng hoặc thao tác an toàn.
 
-  Ví dụ, ứng dụng có thể dùng server tài liệu để đọc nội dung rồi gửi phần phù hợp vào mô hình. Tự kiểm tra: kết nối MCP thành công có chứng minh agent dùng đúng công cụ không? Không; phải kiểm tra khả năng được công bố, đối số, quyền và kết quả trong luồng ứng dụng cụ thể.
-concept_notes_en: |-
-  MCP standardizes exchanges between applications and sources of tools or context. Distinguish the host, client and server responsibilities.
+  Bài cố định spec 2025-06-18. Client gửi initialize với protocolVersion, capabilities và clientInfo; server phản
+  hồi phiên bản/capability hỗ trợ. Client kiểm tra tương thích rồi gửi notifications/initialized trước thao tác
+  thông thường. Chỉ sử dụng capability đã thương lượng. Phiên bản không hỗ trợ cần xử lý lỗi/ngắt kết nối, không
+  im lặng tiếp tục.
 
-  It is a communication protocol, not a model or action-selection algorithm. The host organizes the application, clients communicate and servers provide capabilities. Standardization alone does not establish correctness or safety.
 
-  An application can read material through a document server and pass relevant content to its model. Self-check: does a successful MCP connection prove correct tool use? No: inspect advertised capabilities, arguments, permissions and results in the actual application workflow.
-why_it_matters_vi: Hiểu cách kết nối công cụ, ngữ cảnh và giữ ranh giới quyền truy cập.
-why_it_matters_en: MCP standardizes how models discover context and capabilities without removing access-control
-  responsibility.
+  Ví dụ là máy trạng thái thông điệp tối giản, không phải MCP server hoặc SDK đang chạy. Nó không triển khai transport
+  stdio/HTTP, timeout hay JSON-RPC đầy đủ. Tự kiểm tra: tools/list thành công có chứng minh người dùng được gọi
+  mọi tool không? Không; khám phá tool khác với cấp quyền thực thi.'
+concept_notes_en: 'A host is the user-facing application that owns policy and manages clients connecting to servers.
+  Servers expose capabilities such as tools and resources. MCP standardizes capability and message exchange; it
+  is not a model, an agent orchestrator or a replacement for application authorization.
+
+
+  This lesson pins specification 2025-06-18. The client sends initialize with protocolVersion, capabilities and
+  clientInfo; the server returns its supported version and capabilities. The client checks compatibility and sends
+  notifications/initialized before normal operations. Use only negotiated capabilities. Handle unsupported versions
+  as an error or disconnect rather than silently continuing.
+
+
+  The example is a minimal message-state simulation, not an MCP server or an executed SDK integration. It implements
+  neither stdio/HTTP transport nor complete timeout or JSON-RPC handling. Self-check: does a successful tools/list
+  grant access to every tool? No; discovery and execution authorization are separate.'
+why_it_matters_vi: Phân biệt host/client/server và kiểm tra thứ tự initialize, initialized, tools/list của MCP.
+why_it_matters_en: Distinguish MCP host/client/server and validate the initialize, initialized, tools/list sequence.
 study_steps_vi:
-- Đọc phần giải thích, xác định khái niệm và điều kiện cần dùng cho nhiệm vụ bên dưới.
-- Tìm mục tương ứng với “MCP architecture and message flow” trong tài liệu tham khảo; đối chiếu với phần giải thích
-  của bài.
-- Vẽ luồng khám phá công cụ và gọi công cụ qua client, server.
-- Xác định nơi khám phá khả năng, kiểm tra quyền và thực thi. Ghi kết quả đối chiếu và điều bạn đã sửa nếu lần đầu
-  chưa đúng.
-- Tự trả lời thẻ ôn tập, rồi kiểm tra các tiêu chí hoàn thành trước khi chuyển bài.
+- Đọc phần giải thích và dự đoán đầu ra của ví dụ trước khi chạy.
+- Chạy mã Python trong một ô Google Colab; ví dụ chỉ dùng thư viện chuẩn, không cần cài thêm.
+- Chạy luồng hợp lệ rồi thử tools/list trước khởi tạo và sai phiên bản; ghi vị trí bị từ chối.
+- tools/list trước notifications/initialized phải bị từ chối; không gọi ví dụ này là SDK integration test.
+- Lưu đầu ra, đối chiếu với kết quả mong đợi và ghi rõ giới hạn của dữ liệu mô phỏng.
 study_steps_en:
-- 'Read the concept notes and answer: MCP standardizes how models discover context and capabilities without removing
-  access-control responsibility.'
-- Open MCP Getting Started, read the section marked Read this lesson, and record one verified example or definition.
-- Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the
-  test.
-- 'Complete the practice task: Write a local MCP server exposing one resource and one read-only tool, then test
-  schemas and access control.'
-- Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact.
+- Read the explanation and predict the example output before running it.
+- Run the Python code in a Google Colab cell; this example uses only the standard library.
+- Run the valid sequence, then try tools/list before initialization and a version mismatch; record where each is
+  rejected.
+- tools/list before notifications/initialized must be rejected; do not label this as an SDK integration test.
+- Save the output, compare it with the expected result and state the limits of the synthetic data.
 practice_plan:
   vi:
-    task: 'Vẽ luồng khám phá công cụ và gọi công cụ qua client, server.
-
-
-      Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Viết server MCP cục bộ cung cấp một
-      tài nguyên và một công cụ chỉ đọc; kiểm tra schema cùng quyền.'
+    task: Chạy luồng hợp lệ rồi thử tools/list trước khởi tạo và sai phiên bản; ghi vị trí bị từ chối.
     deliverables:
-    - Sơ đồ hoặc thông điệp mẫu thể hiện client, server và quyền
-    - Kết quả đối chiếu kèm dữ liệu hoặc điều kiện thực hiện
-    - Một giới hạn và cách kiểm tra thêm
-    checkpoint: Xác định nơi khám phá khả năng, kiểm tra quyền và thực thi.
-    stretch: Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào.
+    - Sơ đồ host–client–server và bảng thứ tự thông điệp cho spec 2025-06-18
+    - Đầu ra gốc và kết quả sau khi đổi một điều kiện
+    - Giải thích một lỗi và giới hạn của phép đo
+    checkpoint: tools/list trước notifications/initialized phải bị từ chối; không gọi ví dụ này là SDK integration
+      test.
+    stretch: Mở notebook liên kết, chạy trong Colab và ghi cấu hình thực tế.
   en:
-    task: Write a local MCP server exposing one resource and one read-only tool, then test schemas and access control.
+    task: Run the valid sequence, then try tools/list before initialization and a version mismatch; record where
+      each is rejected.
     deliverables:
-    - One working implementation
-    - One test or benchmark
-    - One note on failure modes and trade-offs
-    checkpoint: You can draw the client/server flow, distinguish tools from resources/prompts, and state a minimum
-      threat model.
-    stretch: Add a failure test for mcp architecture and message flow and explain the result.
+    - A host–client–server diagram and message-order table for specification 2025-06-18
+    - Original output and output after changing one condition
+    - An explanation of one failure and the measurement limits
+    checkpoint: tools/list before notifications/initialized must be rejected; do not label this as an SDK integration
+      test.
+    stretch: Open the linked notebook, run in Colab and record the actual configuration.
 interview_questions:
   vi:
   - Bạn sẽ giải thích nội dung “Kiến trúc MCP và luồng thông điệp” bằng ví dụ nào?
@@ -93,20 +102,32 @@ interview_questions:
 formulas: []
 code_examples:
 - language: python
-  title: 'MCP architecture and message flow: inspect one complete path'
-  code: "# Topic: MCP architecture and message flow (phase-16-genai-mcp-mcp-1)\ndef grounded_answer(answer: str,\
-    \ evidence: list[str]) -> str:\n    if not evidence:\n        return 'Insufficient evidence'\n    return answer\
-    \ + '\\nSources: ' + '; '.join(evidence)\n\nprint(grounded_answer('A concise answer', ['doc-1']))"
+  title: Check the MCP 2025-06-18 initialization order
+  code: "import json\nVERSION = \"2025-06-18\"\nclass Session:\n    def __init__(self):\n        self.state = \"\
+    new\"\n    def receive(self, message):\n        method = message[\"method\"]\n        if method == \"initialize\"\
+    \ and self.state == \"new\":\n            if message[\"params\"][\"protocolVersion\"] != VERSION:\n        \
+    \        return \"unsupported_version\"\n            self.state = \"negotiated\"\n            return {\"protocolVersion\"\
+    : VERSION, \"capabilities\": {\"tools\": {}}}\n        if method == \"notifications/initialized\" and self.state\
+    \ == \"negotiated\":\n            self.state = \"ready\"\n            return \"ready\"\n        if method ==\
+    \ \"tools/list\" and self.state == \"ready\":\n            return [\"read_document\"]\n        return \"invalid_sequence\"\
+    \nsession = Session()\nearly = session.receive({\"method\": \"tools/list\"})\nreply = session.receive({\"method\"\
+    : \"initialize\", \"params\": {\n    \"protocolVersion\": VERSION, \"capabilities\": {},\n    \"clientInfo\"\
+    : {\"name\": \"lesson-fixture\", \"version\": \"1\"}}})\nsession.receive({\"method\": \"notifications/initialized\"\
+    })\nwrong = Session().receive({\"method\": \"initialize\", \"params\": {\"protocolVersion\": \"unsupported\"\
+    }})\nprint(json.dumps({\"early\": early, \"version\": reply[\"protocolVersion\"],\n                  \"tools\"\
+    : session.receive({\"method\": \"tools/list\"}), \"wrong\": wrong}))\n"
   status: runnable
-  purpose_vi: Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.
-  purpose_en: Illustrate the input-to-output path for mcp architecture and message flow.
-  setup: Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.
-  expected_output: Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.
-  edge_case_vi: Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.
-  edge_case_en: Try an empty input, a wrong shape or missing data and record the failure.
-  explanation_vi: Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần
-    nội dung; cần hoàn thành riêng nhiệm vụ thực hành.
-  explanation_en: Keep the boundary executable and inspectable; change one input and verify the expected output.
+  purpose_vi: Phân biệt host/client/server và kiểm tra thứ tự initialize, initialized, tools/list của MCP.
+  purpose_en: Distinguish MCP host/client/server and validate the initialize, initialized, tools/list sequence.
+  setup: 'Python 3.11+; standard library only. Google Colab: paste into one code cell and Run.'
+  expected_output: '{"early": "invalid_sequence", "version": "2025-06-18", "tools": ["read_document"], "wrong":
+    "unsupported_version"}'
+  edge_case_vi: tools/list trước notifications/initialized phải bị từ chối; không gọi ví dụ này là SDK integration
+    test.
+  edge_case_en: tools/list before notifications/initialized must be rejected; do not label this as an SDK integration
+    test.
+  explanation_vi: State machine mô phỏng bước thương lượng, không kiểm chứng kết nối MCP thật hoặc transport.
+  explanation_en: The state machine simulates negotiation and does not verify a real MCP connection or transport.
 resources:
 - language: en
   title: MCP Getting Started
@@ -144,6 +165,26 @@ resources:
   read_vi: Đọc giải thích → xem ví dụ → thực hành → tự kiểm tra.
   read_en: Follow Study plan → Concept notes → Code example → Practice plan.
   required: true
+- title: Google Colab — Lab B
+  language: vi/en
+  url: https://colab.research.google.com/github/Hzyl/JourneyAIEngineer/blob/main/notebooks/lab-b-workflow-agent.ipynb
+  kind: external
+  required: false
+  purpose_vi: Chạy trong Colab để mở rộng ví dụ bằng dữ liệu và báo cáo của lab.
+  purpose_en: Run in Colab to extend this example with the lab dataset and reports.
+  read_vi: Chọn môi trường CPU do Google lưu trữ, chạy từng ô và đối chiếu báo cáo. Lab dùng công cụ giả lập chỉ
+    đọc, không tải model; tải báo cáo để lưu kết quả.
+  read_en: Run in Colab on a Google-hosted CPU runtime and inspect each report. This lab uses read-only fake tools
+    and downloads no model; download the report to retain results.
+- title: MCP 2025-06-18 — Lifecycle
+  url: https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle
+  purpose_vi: Đối chiếu trình tự khởi tạo và thương lượng capability với spec cố định.
+  purpose_en: Check initialization and capability negotiation against the pinned specification.
+  read_vi: Đọc Initialization, Version Negotiation và Capability Negotiation; bài không dùng SDK.
+  read_en: Read Initialization, Version Negotiation and Capability Negotiation; this lesson uses no SDK.
+  language: en
+  kind: official
+  required: false
 exercise_ids:
 - exercise-16-mcp
 review_item_ids:
@@ -153,13 +194,13 @@ review_item_ids:
 - phase-16-genai-mcp-mcp-1-interview
 estimated_minutes: 60
 completion_checklist:
-- Vẽ luồng khám phá công cụ và gọi công cụ qua client, server.
-- Xác định nơi khám phá khả năng, kiểm tra quyền và thực thi.
-- Lưu kết quả và giải thích được một giới hạn mà không nhìn lời giải.
+- Chạy luồng hợp lệ rồi thử tools/list trước khởi tạo và sai phiên bản; ghi vị trí bị từ chối.
+- tools/list trước notifications/initialized phải bị từ chối; không gọi ví dụ này là SDK integration test.
+- Lưu đầu ra và ghi đúng giới hạn của ví dụ.
 completion_criteria:
-- 'Bài làm đáp ứng nhiệm vụ: Vẽ luồng khám phá công cụ và gọi công cụ qua client, server.'
-- Có kết quả đối chiếu với tiêu chí hoặc dự đoán đã ghi trước.
-- Xác định nơi khám phá khả năng, kiểm tra quyền và thực thi.
+- Sơ đồ host–client–server và bảng thứ tự thông điệp cho spec 2025-06-18
+- tools/list trước notifications/initialized phải bị từ chối; không gọi ví dụ này là SDK integration test.
+- Không suy kết quả model thật từ dữ liệu mô phỏng.
 common_mistakes:
 - Cho rằng giao thức kết nối tự thay thế việc kiểm soát quyền truy cập.
 - Kết luận từ một kết quả thuận lợi mà chưa kiểm tra trường hợp khác.
@@ -223,14 +264,22 @@ review_cards:
 ---
 # Kiến trúc MCP và luồng thông điệp / MCP architecture and message flow
 
-MCP chuẩn hóa trao đổi giữa ứng dụng và nguồn công cụ, ngữ cảnh. Phân biệt ứng dụng chủ, client và server để biết phần nào khám phá khả năng, gửi yêu cầu và thực thi.
+Host là ứng dụng giữ tương tác và chính sách với người dùng; host quản lý client kết nối tới server. Server cung cấp capability như tools và resources. MCP chuẩn hóa trao đổi khả năng và thông điệp; nó không phải mô hình, không tự điều phối agent và không thay thế kiểm tra quyền của ứng dụng.
 
-MCP là giao thức trao đổi, không phải mô hình hay thuật toán quyết định hành động. Host tổ chức ứng dụng; client giao tiếp với server; server cung cấp khả năng theo giao thức. Chuẩn chung không tự bảo đảm nội dung đúng hoặc thao tác an toàn.
+Bài cố định spec 2025-06-18. Client gửi initialize với protocolVersion, capabilities và clientInfo; server phản hồi phiên bản/capability hỗ trợ. Client kiểm tra tương thích rồi gửi notifications/initialized trước thao tác thông thường. Chỉ sử dụng capability đã thương lượng. Phiên bản không hỗ trợ cần xử lý lỗi/ngắt kết nối, không im lặng tiếp tục.
 
-Ví dụ, ứng dụng có thể dùng server tài liệu để đọc nội dung rồi gửi phần phù hợp vào mô hình. Tự kiểm tra: kết nối MCP thành công có chứng minh agent dùng đúng công cụ không? Không; phải kiểm tra khả năng được công bố, đối số, quyền và kết quả trong luồng ứng dụng cụ thể.
+Ví dụ là máy trạng thái thông điệp tối giản, không phải MCP server hoặc SDK đang chạy. Nó không triển khai transport stdio/HTTP, timeout hay JSON-RPC đầy đủ. Tự kiểm tra: tools/list thành công có chứng minh người dùng được gọi mọi tool không? Không; khám phá tool khác với cấp quyền thực thi.
 
-## Thực hành
+## English
 
-Vẽ luồng khám phá công cụ và gọi công cụ qua client, server.
+A host is the user-facing application that owns policy and manages clients connecting to servers. Servers expose capabilities such as tools and resources. MCP standardizes capability and message exchange; it is not a model, an agent orchestrator or a replacement for application authorization.
 
-Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Viết server MCP cục bộ cung cấp một tài nguyên và một công cụ chỉ đọc; kiểm tra schema cùng quyền.
+This lesson pins specification 2025-06-18. The client sends initialize with protocolVersion, capabilities and clientInfo; the server returns its supported version and capabilities. The client checks compatibility and sends notifications/initialized before normal operations. Use only negotiated capabilities. Handle unsupported versions as an error or disconnect rather than silently continuing.
+
+The example is a minimal message-state simulation, not an MCP server or an executed SDK integration. It implements neither stdio/HTTP transport nor complete timeout or JSON-RPC handling. Self-check: does a successful tools/list grant access to every tool? No; discovery and execution authorization are separate.
+
+## Thực hành / Practice
+
+Chạy luồng hợp lệ rồi thử tools/list trước khởi tạo và sai phiên bản; ghi vị trí bị từ chối.
+
+Run the valid sequence, then try tools/list before initialization and a version mismatch; record where each is rejected.

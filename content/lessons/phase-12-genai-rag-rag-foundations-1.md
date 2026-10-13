@@ -118,6 +118,15 @@ code_examples:
   explanation_en: Each chunk retains its original text line and a verifiable source locator. This is plain-text
     ingestion, without embeddings, an LLM, OCR or table parsing. PDF extraction needs separate structural checks.
 resources:
+- title: Lab A · Colab
+  url: https://colab.research.google.com/github/Hzyl/JourneyAIEngineer/blob/main/notebooks/lab-a-evidence-retrieval.ipynb
+  language: vi
+  kind: practice
+  required: false
+  purpose_vi: Chạy bộ nhập và truy xuất 12 tài liệu giả trên Colab; không cần cài model trên máy cá nhân.
+  purpose_en: Run ingestion and retrieval over 12 synthetic documents on Colab without installing a model on your computer.
+  read_vi: Chạy baseline trước, kiểm tra phiên bản và dòng nguồn; sau đó mới thử embedding và lưu báo cáo.
+  read_en: Run the baseline first, inspect document versions and source lines, then try embeddings and save the report.
 - language: en
   title: Qdrant Concepts
   url: https://qdrant.tech/documentation/concepts/

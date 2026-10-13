@@ -1,0 +1,18 @@
+{
+  "version": "synthetic-docs-v1",
+  "description": "Invented Vietnamese training documents. These are not real organizational policies.",
+  "documents": [
+    {"document_id":"library","version":"1.0","allowed_users":["A","B"],"fact_keys":["library_hours","library_loan"],"text":"Thư viện mở cửa lúc 08:00 mỗi ngày.\nThư viện cho mượn tối đa 3 cuốn sách."},
+    {"document_id":"workshop","version":"1.0","allowed_users":["A","B"],"fact_keys":["workshop_room","workshop_time"],"text":"Workshop Python diễn ra tại phòng B204.\nWorkshop Python bắt đầu lúc 09:30 thứ Bảy."},
+    {"document_id":"submission","version":"2.0","allowed_users":["A","B"],"fact_keys":["submission_format","submission_deadline"],"text":"Bài tập cuối kỳ nộp bằng định dạng PDF.\nBài tập cuối kỳ có hạn nộp ngày 20 tháng 11."},
+    {"document_id":"support","version":"1.0","allowed_users":["A","B"],"fact_keys":["support_channel","support_response"],"text":"Hỗ trợ kỹ thuật tiếp nhận yêu cầu qua cổng Helpdesk.\nHỗ trợ kỹ thuật phản hồi trong 2 ngày làm việc."},
+    {"document_id":"backup","version":"1.1","allowed_users":["A","B"],"fact_keys":["backup_time","backup_retention"],"text":"Bản sao lưu chạy mỗi đêm lúc 02:00.\nBản sao lưu được giữ trong 14 ngày."},
+    {"document_id":"meeting","version":"1.0","allowed_users":["A","B"],"fact_keys":["meeting_capacity","meeting_booking"],"text":"Phòng họp Hoa Sen có sức chứa 12 người.\nPhòng họp Hoa Sen phải đặt trước 24 giờ."},
+    {"document_id":"equipment","version":"1.0","allowed_users":["A","B"],"fact_keys":["equipment_location","equipment_return"],"text":"Máy chiếu được nhận tại quầy thiết bị tầng 2.\nMáy chiếu phải trả trước 17:00 cùng ngày."},
+    {"document_id":"course","version":"3.0","allowed_users":["A","B"],"fact_keys":["course_prerequisite","course_duration"],"text":"Khóa học RAG yêu cầu kiến thức Python cơ bản.\nKhóa học RAG kéo dài 6 tuần."},
+    {"document_id":"transport","version":"1.0","allowed_users":["A","B"],"fact_keys":["transport_stop","transport_departure"],"text":"Xe buýt nội bộ đón tại cổng phía Đông.\nXe buýt nội bộ khởi hành lúc 07:15."},
+    {"document_id":"assessment","version":"1.0","allowed_users":["B"],"fact_keys":["assessment_rubric","assessment_review"],"text":"Hội đồng đánh giá chấm báo cáo theo 4 tiêu chí.\nHội đồng đánh giá họp vào ngày 25 tháng 11."},
+    {"document_id":"refund-office","version":"1.0","allowed_users":["A","B"],"fact_keys":["refund_deadline"],"text":"Hạn hoàn phí hội thảo là 7 ngày sau đăng ký."},
+    {"document_id":"refund-notice","version":"1.0","allowed_users":["A","B"],"fact_keys":["refund_deadline"],"text":"Hạn hoàn phí hội thảo là 14 ngày sau đăng ký."}
+  ]
+}

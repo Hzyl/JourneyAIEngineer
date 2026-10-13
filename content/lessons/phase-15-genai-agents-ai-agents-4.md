@@ -4,17 +4,18 @@ phase_id: phase-15-genai-agents
 module_id: ai-agents
 title_vi: Người duyệt và giới hạn an toàn
 title_en: Human in the loop and guardrails
-summary_vi: Bước người duyệt cho phép kiểm tra thao tác có ảnh hưởng trước khi thực hiện.
-summary_en: Learn Human in the loop and guardrails through an input → transformation → output model, then verify
-  it with an edge-case exercise.
+summary_vi: Lưu điểm chờ duyệt vào đĩa, phục hồi ở tiến trình mới và kiểm tra lại quyền khi tiếp tục.
+summary_en: Persist a review checkpoint to disk, recover it in a new process and recheck authorization on resume.
 learning_objectives:
-- Thiết kế yêu cầu duyệt cho một thao tác ghi và thử trường hợp bị từ chối.
-- Thử tình huống không đạt mục tiêu và xác nhận điều kiện dừng.
-- Giải thích kết quả và nêu một giới hạn của bài làm.
+- Lưu điểm chờ duyệt vào đĩa, phục hồi ở tiến trình mới và kiểm tra lại quyền khi tiếp tục.
+- Chạy ví dụ để thấy tiến trình mới phục hồi waiting_review; đổi approved hoặc can_read thành False và kiểm tra
+  denied.
+- Duyệt nhưng mất quyền đọc vẫn phải denied; không dùng RAM để tuyên bố phục hồi sau restart.
 learning_objectives_en:
-- Explain human in the loop and guardrails with a concrete example.
-- Write or adapt a small code example applying human in the loop and guardrails.
-- Recognize its assumptions, limits and one common failure mode.
+- Persist a review checkpoint to disk, recover it in a new process and recheck authorization on resume.
+- Run the example to recover waiting_review in a new process; change approved or can_read to False and check for
+  denied.
+- Approval with revoked read access must still be denied; RAM state cannot establish restart recovery.
 prerequisites:
 - phase-15-genai-agents-ai-agents-3
 - phase-14-genai-tool-calling-tool-calling-1
@@ -28,60 +29,70 @@ key_terms:
 - retrieval
 - evaluation
 - ai-agents
-concept_notes_vi: |-
-  Bước người duyệt cho phép kiểm tra thao tác có ảnh hưởng trước khi thực hiện. Yêu cầu duyệt cần nêu hành động, dữ liệu liên quan và tác dụng dự kiến để người dùng quyết định rõ ràng.
+concept_notes_vi: 'Người duyệt là điểm kiểm soát trước hành động có tác động, không phải cách cho model thêm quyền.
+  Quyết định duyệt cần gắn với yêu cầu, đối tượng và thời hạn; khi tiếp tục vẫn phải kiểm tra lại quyền vì quyền
+  có thể đã thay đổi trong lúc chờ.
 
-  Xin duyệt là điểm ra quyết định trước tác dụng phụ; gửi thông báo sau thao tác chỉ cung cấp thông tin. Sự đồng ý cần gắn với hành động và dữ liệu cụ thể, vì thay người nhận hoặc nội dung có thể thay ý nghĩa phê duyệt.
 
-  Ví dụ, trước khi gửi báo cáo ra ngoài, hiển thị bản cuối và người nhận để người dùng duyệt. Tự kiểm tra: người dùng đồng ý đọc tài liệu có đồng nghĩa đồng ý gửi tài liệu đó không? Không; quyền đọc và quyền chia sẻ khác nhau. Giữ kết quả đã chuẩn bị và chỉ thực thi trong phạm vi được cho phép.
-concept_notes_en: |-
-  Human review checks consequential actions before execution. A review request should identify the action, relevant data and expected effects.
+  Checkpoint lưu trạng thái để tiếp tục một luồng; store dùng chung có thể lưu dữ liệu xuyên nhiều luồng. Một dict
+  hay InMemorySaver trong RAM không tồn tại sau khi tiến trình dừng. Ví dụ dùng tệp JSON tạm và thực sự mở tiến
+  trình Python mới để đọc lại điểm chờ. Đây là mô hình lưu đĩa tối thiểu; production cần kiểm soát truy cập, tính
+  nguyên tử, version schema và chống thực thi lặp.
 
-  Approval is a decision before a side effect; a notification afterward merely reports it. Consent must apply to concrete content and actions because changing a recipient or payload may change what was approved.
 
-  Before externally sending a report, show its final content and recipient. Self-check: does permission to read a document imply permission to send it? No: reading and sharing are different scopes. Preserve prepared work and execute only within authorization.
-why_it_matters_vi: Agent cần trạng thái, giới hạn và dấu vết rõ để hành động có thể kiểm tra.
-why_it_matters_en: An agent is a control loop with state and side effects; reliability comes from limits and observability.
+  Tự kiểm tra: đã lưu checkpoint có nghĩa hành động chỉ chạy một lần không? Không; retry sau lỗi có thể lặp tác
+  động. Dùng idempotency key và trạng thái hoàn tất thích hợp ở hệ thống đích. Ví dụ chỉ đọc, mô phỏng người duyệt
+  và không gửi dữ liệu ra ngoài.'
+concept_notes_en: 'Human review is a control before consequential actions, not a way to grant the model extra authority.
+  Approval must bind to a request, target and expiry; authorization still needs rechecking on resume because permissions
+  may change while waiting.
+
+
+  A checkpoint stores progress for one execution thread; a shared store may hold data across threads. A dictionary
+  or InMemorySaver in RAM does not survive process termination. This example uses a temporary JSON file and actually
+  starts a fresh Python process to read the pending checkpoint. It is a minimal disk-persistence model; production
+  needs access controls, atomicity, schema versions and duplicate-execution protection.
+
+
+  Self-check: does saving a checkpoint imply an action runs exactly once? No; retry after failure can duplicate
+  effects. Use an idempotency key and completion state at the target system. This read-only fixture simulates approval
+  and sends no external data.'
+why_it_matters_vi: Lưu điểm chờ duyệt vào đĩa, phục hồi ở tiến trình mới và kiểm tra lại quyền khi tiếp tục.
+why_it_matters_en: Persist a review checkpoint to disk, recover it in a new process and recheck authorization on
+  resume.
 study_steps_vi:
-- Đọc phần giải thích, xác định khái niệm và điều kiện cần dùng cho nhiệm vụ bên dưới.
-- Tìm mục tương ứng với “Human in the loop and guardrails” trong tài liệu tham khảo; đối chiếu với phần giải thích
-  của bài.
-- Thiết kế yêu cầu duyệt cho một thao tác ghi và thử trường hợp bị từ chối.
-- Thử tình huống không đạt mục tiêu và xác nhận điều kiện dừng. Ghi kết quả đối chiếu và điều bạn đã sửa nếu lần
-  đầu chưa đúng.
-- Tự trả lời thẻ ôn tập, rồi kiểm tra các tiêu chí hoàn thành trước khi chuyển bài.
+- Đọc phần giải thích và dự đoán đầu ra của ví dụ trước khi chạy.
+- Chạy mã Python trong một ô Google Colab; ví dụ chỉ dùng thư viện chuẩn, không cần cài thêm.
+- Chạy ví dụ để thấy tiến trình mới phục hồi waiting_review; đổi approved hoặc can_read thành False và kiểm tra
+  denied.
+- Duyệt nhưng mất quyền đọc vẫn phải denied; không dùng RAM để tuyên bố phục hồi sau restart.
+- Lưu đầu ra, đối chiếu với kết quả mong đợi và ghi rõ giới hạn của dữ liệu mô phỏng.
 study_steps_en:
-- 'Read the concept notes and answer: An agent is a control loop with state and side effects; reliability comes
-  from limits and observability.'
-- Open Building Effective Agents, read the section marked Read this lesson, and record one verified example or definition.
-- Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the
-  test.
-- 'Complete the practice task: Build a minimal research agent with max steps, a tool allowlist, memory state, and
-  approval before side effects.'
-- Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact.
+- Read the explanation and predict the example output before running it.
+- Run the Python code in a Google Colab cell; this example uses only the standard library.
+- Run the example to recover waiting_review in a new process; change approved or can_read to False and check for
+  denied.
+- Approval with revoked read access must still be denied; RAM state cannot establish restart recovery.
+- Save the output, compare it with the expected result and state the limits of the synthetic data.
 practice_plan:
   vi:
-    task: 'Thiết kế yêu cầu duyệt cho một thao tác ghi và thử trường hợp bị từ chối.
-
-
-      Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Xây agent nghiên cứu nhỏ có giới hạn
-      bước, danh sách công cụ được phép, trạng thái và bước duyệt trước thao tác có ảnh hưởng.'
+    task: Chạy ví dụ để thấy tiến trình mới phục hồi waiting_review; đổi approved hoặc can_read thành False và kiểm
+      tra denied.
     deliverables:
-    - Kế hoạch hoặc chuỗi hành động có trạng thái và giới hạn
-    - Kết quả đối chiếu kèm dữ liệu hoặc điều kiện thực hiện
-    - Một giới hạn và cách kiểm tra thêm
-    checkpoint: Thử tình huống không đạt mục tiêu và xác nhận điều kiện dừng.
-    stretch: Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào.
+    - Checkpoint có thread_id, yêu cầu, trạng thái và kết quả phục hồi từ tiến trình mới
+    - Đầu ra gốc và kết quả sau khi đổi một điều kiện
+    - Giải thích một lỗi và giới hạn của phép đo
+    checkpoint: Duyệt nhưng mất quyền đọc vẫn phải denied; không dùng RAM để tuyên bố phục hồi sau restart.
+    stretch: Mở notebook liên kết, chạy trong Colab và ghi cấu hình thực tế.
   en:
-    task: Build a minimal research agent with max steps, a tool allowlist, memory state, and approval before side
-      effects.
+    task: Run the example to recover waiting_review in a new process; change approved or can_read to False and check
+      for denied.
     deliverables:
-    - One working implementation
-    - One test or benchmark
-    - One note on failure modes and trade-offs
-    checkpoint: The agent stops when it reaches the goal or a guardrail, and every tool call has reviewable intent,
-      input, and output.
-    stretch: Add a failure test for human in the loop and guardrails and explain the result.
+    - A checkpoint containing thread_id, request, state and recovery output from a new process
+    - Original output and output after changing one condition
+    - An explanation of one failure and the measurement limits
+    checkpoint: Approval with revoked read access must still be denied; RAM state cannot establish restart recovery.
+    stretch: Open the linked notebook, run in Colab and record the actual configuration.
 interview_questions:
   vi:
   - Bạn sẽ giải thích nội dung “Người duyệt và giới hạn an toàn” bằng ví dụ nào?
@@ -94,20 +105,29 @@ interview_questions:
 formulas: []
 code_examples:
 - language: python
-  title: 'Human in the loop and guardrails: inspect one complete path'
-  code: "# Topic: Human in the loop and guardrails (phase-15-genai-agents-ai-agents-4)\nfrom dataclasses import\
-    \ dataclass\n\n@dataclass(frozen=True)\nclass Result:\n    value: str\n    valid: bool\n\nresult = Result(value='ready',\
-    \ valid=True)\nprint(result)"
+  title: Persist a review checkpoint and resume in a new process
+  code: "import json\nfrom pathlib import Path\nimport subprocess\nimport sys\nfrom tempfile import TemporaryDirectory\n\
+    def resume(state, approved, can_read):\n    if state[\"status\"] != \"waiting_review\":\n        raise ValueError(\"\
+    checkpoint is not waiting\")\n    return \"read_only_complete\" if approved and can_read else \"denied\"\nwith\
+    \ TemporaryDirectory() as folder:\n    path = Path(folder) / \"checkpoint.json\"\n    path.write_text(json.dumps({\"\
+    schema_version\": 1, \"thread_id\": \"case-1\",\n                               \"request\": \"read:guide\"\
+    , \"status\": \"waiting_review\"}), encoding=\"utf-8\")\n    child = \"import json,sys; print(json.load(open(sys.argv[1],\
+    \ encoding='utf-8'))['status'])\"\n    fresh = subprocess.check_output([sys.executable, \"-c\", child, str(path)],\
+    \ text=True).strip()\n    restored = json.loads(path.read_text(encoding=\"utf-8\"))\n    print(json.dumps({\"\
+    fresh_process_state\": fresh,\n                      \"approved\": resume(restored, True, True),\n         \
+    \             \"permission_revoked\": resume(restored, True, False)}))\n"
   status: runnable
-  purpose_vi: Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.
-  purpose_en: Illustrate the input-to-output path for human in the loop and guardrails.
-  setup: Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.
-  expected_output: Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.
-  edge_case_vi: Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.
-  edge_case_en: Try an empty input, a wrong shape or missing data and record the failure.
-  explanation_vi: Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần
-    nội dung; cần hoàn thành riêng nhiệm vụ thực hành.
-  explanation_en: Keep the boundary executable and inspectable; change one input and verify the expected output.
+  purpose_vi: Lưu điểm chờ duyệt vào đĩa, phục hồi ở tiến trình mới và kiểm tra lại quyền khi tiếp tục.
+  purpose_en: Persist a review checkpoint to disk, recover it in a new process and recheck authorization on resume.
+  setup: 'Python 3.11+; standard library only. Google Colab: paste into one code cell and Run.'
+  expected_output: '{"fresh_process_state": "waiting_review", "approved": "read_only_complete", "permission_revoked":
+    "denied"}'
+  edge_case_vi: Duyệt nhưng mất quyền đọc vẫn phải denied; không dùng RAM để tuyên bố phục hồi sau restart.
+  edge_case_en: Approval with revoked read access must still be denied; RAM state cannot establish restart recovery.
+  explanation_vi: TemporaryDirectory giữ file đủ lâu để tiến trình con đọc, rồi dọn file do ví dụ tạo; không thay
+    đổi tài liệu thật.
+  explanation_en: TemporaryDirectory retains the file for the child process and then cleans up only fixture files;
+    no real document changes.
 resources:
 - language: en
   title: Building Effective Agents
@@ -137,14 +157,17 @@ resources:
   read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
   read_en: Read the relevant section, run a small example, and record one verified insight.
 - language: en
-  title: "Hugging Face Agents Course"
+  title: Hugging Face Agents Course
   url: https://huggingface.co/learn/agents-course/unit0/introduction
   kind: official
   required: false
-  purpose_vi: "Lộ trình tác nhân gồm nền tảng, công cụ và vòng lặp hành động/quan sát; có Agentic RAG cùng phần đánh giá/quan sát tùy chọn."
-  purpose_en: "Agent learning path covering fundamentals, tools, and action/observation loops, with Agentic RAG and optional evaluation/observability."
-  read_vi: "Đọc Unit 1 để ôn nền tảng, Unit 3 về Agentic RAG; chỉ mở phần Observability/Evaluation khi cần."
-  read_en: "Use Unit 1 to review foundations and Unit 3 for Agentic RAG; consult Observability/Evaluation only when relevant."
+  purpose_vi: Lộ trình tác nhân gồm nền tảng, công cụ và vòng lặp hành động/quan sát; có Agentic RAG cùng phần đánh
+    giá/quan sát tùy chọn.
+  purpose_en: Agent learning path covering fundamentals, tools, and action/observation loops, with Agentic RAG and
+    optional evaluation/observability.
+  read_vi: Đọc Unit 1 để ôn nền tảng, Unit 3 về Agentic RAG; chỉ mở phần Observability/Evaluation khi cần.
+  read_en: Use Unit 1 to review foundations and Unit 3 for Agentic RAG; consult Observability/Evaluation only when
+    relevant.
 - title: Giải thích và hướng dẫn thực hành trong bài
   url: ''
   language: vi
@@ -154,6 +177,26 @@ resources:
   read_vi: Đọc giải thích → xem ví dụ → thực hành → tự kiểm tra.
   read_en: Follow Study plan → Concept notes → Code example → Practice plan.
   required: true
+- title: Google Colab — Lab B
+  language: vi/en
+  url: https://colab.research.google.com/github/Hzyl/JourneyAIEngineer/blob/main/notebooks/lab-b-workflow-agent.ipynb
+  kind: external
+  required: false
+  purpose_vi: Chạy trong Colab để mở rộng ví dụ bằng dữ liệu và báo cáo của lab.
+  purpose_en: Run in Colab to extend this example with the lab dataset and reports.
+  read_vi: Chọn môi trường CPU do Google lưu trữ, chạy từng ô và đối chiếu báo cáo. Lab dùng công cụ giả lập chỉ
+    đọc, không tải model; tải báo cáo để lưu kết quả.
+  read_en: Run in Colab on a Google-hosted CPU runtime and inspect each report. This lab uses read-only fake tools
+    and downloads no model; download the report to retain results.
+- title: LangGraph — Persistence
+  url: https://docs.langchain.com/oss/python/langgraph/persistence
+  purpose_vi: Phân biệt checkpoint theo thread, store và backend lưu bền.
+  purpose_en: Distinguish per-thread checkpoints, stores and durable backends.
+  read_vi: Đọc Checkpoints, Threads và Checkpointer libraries; phân biệt InMemorySaver với backend lưu đĩa.
+  read_en: Read Checkpoints, Threads and Checkpointer libraries; distinguish InMemorySaver from disk-backed persistence.
+  language: en
+  kind: official
+  required: false
 exercise_ids:
 - exercise-15-ai-agents
 review_item_ids:
@@ -163,13 +206,14 @@ review_item_ids:
 - phase-15-genai-agents-ai-agents-4-interview
 estimated_minutes: 60
 completion_checklist:
-- Thiết kế yêu cầu duyệt cho một thao tác ghi và thử trường hợp bị từ chối.
-- Thử tình huống không đạt mục tiêu và xác nhận điều kiện dừng.
-- Lưu kết quả và giải thích được một giới hạn mà không nhìn lời giải.
+- Chạy ví dụ để thấy tiến trình mới phục hồi waiting_review; đổi approved hoặc can_read thành False và kiểm tra
+  denied.
+- Duyệt nhưng mất quyền đọc vẫn phải denied; không dùng RAM để tuyên bố phục hồi sau restart.
+- Lưu đầu ra và ghi đúng giới hạn của ví dụ.
 completion_criteria:
-- 'Bài làm đáp ứng nhiệm vụ: Thiết kế yêu cầu duyệt cho một thao tác ghi và thử trường hợp bị từ chối.'
-- Có kết quả đối chiếu với tiêu chí hoặc dự đoán đã ghi trước.
-- Thử tình huống không đạt mục tiêu và xác nhận điều kiện dừng.
+- Checkpoint có thread_id, yêu cầu, trạng thái và kết quả phục hồi từ tiến trình mới
+- Duyệt nhưng mất quyền đọc vẫn phải denied; không dùng RAM để tuyên bố phục hồi sau restart.
+- Không suy kết quả model thật từ dữ liệu mô phỏng.
 common_mistakes:
 - Cho agent tiếp tục vô hạn hoặc bỏ qua yêu cầu người duyệt.
 - Kết luận từ một kết quả thuận lợi mà chưa kiểm tra trường hợp khác.
@@ -233,14 +277,22 @@ review_cards:
 ---
 # Người duyệt và giới hạn an toàn / Human in the loop and guardrails
 
-Bước người duyệt cho phép kiểm tra thao tác có ảnh hưởng trước khi thực hiện. Yêu cầu duyệt cần nêu hành động, dữ liệu liên quan và tác dụng dự kiến để người dùng quyết định rõ ràng.
+Người duyệt là điểm kiểm soát trước hành động có tác động, không phải cách cho model thêm quyền. Quyết định duyệt cần gắn với yêu cầu, đối tượng và thời hạn; khi tiếp tục vẫn phải kiểm tra lại quyền vì quyền có thể đã thay đổi trong lúc chờ.
 
-Xin duyệt là điểm ra quyết định trước tác dụng phụ; gửi thông báo sau thao tác chỉ cung cấp thông tin. Sự đồng ý cần gắn với hành động và dữ liệu cụ thể, vì thay người nhận hoặc nội dung có thể thay ý nghĩa phê duyệt.
+Checkpoint lưu trạng thái để tiếp tục một luồng; store dùng chung có thể lưu dữ liệu xuyên nhiều luồng. Một dict hay InMemorySaver trong RAM không tồn tại sau khi tiến trình dừng. Ví dụ dùng tệp JSON tạm và thực sự mở tiến trình Python mới để đọc lại điểm chờ. Đây là mô hình lưu đĩa tối thiểu; production cần kiểm soát truy cập, tính nguyên tử, version schema và chống thực thi lặp.
 
-Ví dụ, trước khi gửi báo cáo ra ngoài, hiển thị bản cuối và người nhận để người dùng duyệt. Tự kiểm tra: người dùng đồng ý đọc tài liệu có đồng nghĩa đồng ý gửi tài liệu đó không? Không; quyền đọc và quyền chia sẻ khác nhau. Giữ kết quả đã chuẩn bị và chỉ thực thi trong phạm vi được cho phép.
+Tự kiểm tra: đã lưu checkpoint có nghĩa hành động chỉ chạy một lần không? Không; retry sau lỗi có thể lặp tác động. Dùng idempotency key và trạng thái hoàn tất thích hợp ở hệ thống đích. Ví dụ chỉ đọc, mô phỏng người duyệt và không gửi dữ liệu ra ngoài.
 
-## Thực hành
+## English
 
-Thiết kế yêu cầu duyệt cho một thao tác ghi và thử trường hợp bị từ chối.
+Human review is a control before consequential actions, not a way to grant the model extra authority. Approval must bind to a request, target and expiry; authorization still needs rechecking on resume because permissions may change while waiting.
 
-Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Xây agent nghiên cứu nhỏ có giới hạn bước, danh sách công cụ được phép, trạng thái và bước duyệt trước thao tác có ảnh hưởng.
+A checkpoint stores progress for one execution thread; a shared store may hold data across threads. A dictionary or InMemorySaver in RAM does not survive process termination. This example uses a temporary JSON file and actually starts a fresh Python process to read the pending checkpoint. It is a minimal disk-persistence model; production needs access controls, atomicity, schema versions and duplicate-execution protection.
+
+Self-check: does saving a checkpoint imply an action runs exactly once? No; retry after failure can duplicate effects. Use an idempotency key and completion state at the target system. This read-only fixture simulates approval and sends no external data.
+
+## Thực hành / Practice
+
+Chạy ví dụ để thấy tiến trình mới phục hồi waiting_review; đổi approved hoặc can_read thành False và kiểm tra denied.
+
+Run the example to recover waiting_review in a new process; change approved or can_read to False and check for denied.

@@ -4,17 +4,18 @@ phase_id: phase-21-genai-local-llm
 module_id: local-llm
 title_vi: vLLM và thông lượng phục vụ
 title_en: vLLM and serving throughput
-summary_vi: Thông lượng đo lượng công việc hoàn tất theo thời gian.
-summary_en: Learn vLLM and serving throughput through an input → transformation → output model, then verify it with
-  an edge-case exercise.
+summary_vi: Phân biệt TTFT, latency và thông lượng token; ghi cấu hình CPU/GPU và workload trước khi so.
+summary_en: Distinguish TTFT, latency and token throughput; record CPU/GPU configuration and workload before comparison.
 learning_objectives:
-- Đo thông lượng cùng độ trễ dưới các mức đồng thời khác nhau.
-- Tách thời gian nạp mô hình khỏi thời gian sinh và giữ điều kiện đo nhất quán.
-- Giải thích kết quả và nêu một giới hạn của bài làm.
+- Phân biệt TTFT, latency và thông lượng token; ghi cấu hình CPU/GPU và workload trước khi so.
+- Tính ba metric từ log giả lập rồi đổi thời điểm token đầu mà giữ token cuối; giải thích TTFT đổi nhưng throughput
+  không đổi.
+- Thời gian kết thúc bằng bắt đầu phải bị từ chối; không ghi hardware benchmark cho số liệu tự tạo.
 learning_objectives_en:
-- Explain vllm and serving throughput with a concrete example.
-- Write or adapt a small code example applying vllm and serving throughput.
-- Recognize its assumptions, limits and one common failure mode.
+- Distinguish TTFT, latency and token throughput; record CPU/GPU configuration and workload before comparison.
+- Compute the three metrics from synthetic logs, then change first-token time while holding final-token time fixed;
+  explain why TTFT changes but throughput does not.
+- Equal start/end timestamps must be rejected; synthetic data must not be labeled a hardware benchmark.
 prerequisites:
 - phase-21-genai-local-llm-local-llm-1
 - phase-20-genai-finetuning-fine-tuning-1
@@ -27,59 +28,71 @@ key_terms:
 - retrieval
 - evaluation
 - local-llm
-concept_notes_vi: |-
-  Thông lượng đo lượng công việc hoàn tất theo thời gian. Khi đánh giá hệ phục vụ, cần ghi số yêu cầu đồng thời, độ dài chuỗi và độ trễ để biết thông lượng tăng có làm chờ lâu hơn.
+concept_notes_vi: 'Serving nhận request và chạy suy luận; vLLM là một lựa chọn phục vụ model, không phải thước đo
+  chất lượng. TTFT là thời gian từ nhận yêu cầu đến token đầu; latency toàn yêu cầu đến token cuối; thông lượng
+  token đầu ra của hệ là tổng token hoàn tất chia thời gian quan sát chung. Không cộng thông lượng từng request
+  đồng thời để suy ra thông lượng hệ.
 
-  Thông lượng toàn hệ thống khác tốc độ của một người dùng. Gom nhiều yêu cầu có thể sử dụng thiết bị hiệu quả hơn, nhưng thời gian chờ và bộ nhớ dành cho các chuỗi cùng chạy cũng tăng theo tải và cách lập lịch.
 
-  Ví dụ, so cấu hình phục vụ bằng cùng phân bố độ dài prompt, đầu ra và số người dùng đồng thời. Tự kiểm tra: báo token mỗi giây cao nhất đã đủ chọn hệ phục vụ chưa? Không; phải nêu đó là tổng hay từng yêu cầu, đo thời gian tới token đầu và độ trễ nhóm chậm, đồng thời kiểm tra lỗi và chất lượng đầu ra.
-concept_notes_en: |-
-  Throughput measures completed work over time. Serving comparisons need concurrency, sequence lengths and latency to reveal waiting costs.
+  Muốn so cấu hình, giữ model ID/revision, tokenizer, lượng tử hóa, độ dài input/output, batch, concurrency và cách
+  warmup; ghi CPU/GPU, RAM/VRAM, phiên bản phần mềm và lỗi OOM. Đếm token bằng tokenizer của model, không bằng số
+  từ. Ví dụ chỉ tính số học từ log tự tạo, không gọi vLLM, không tải model và không đo máy của bạn.
 
-  System throughput differs from one user's generation speed. Batching may use hardware more efficiently, while waiting and memory depend on load and scheduling.
 
-  Compare serving configurations using the same prompt-length, output-length and concurrency distributions. Self-check: is the highest tokens-per-second figure sufficient to choose a server? No: specify aggregate versus per-request measurement, check time to first token and slow-tail latency, and examine errors and output quality.
-why_it_matters_vi: Đo tài nguyên và chất lượng để chọn mô hình cục bộ phù hợp phần cứng, nhu cầu riêng tư.
-why_it_matters_en: Local LLMs expose the trade-offs among memory, throughput, model size, quality, and privacy.
+  Tự kiểm tra: hệ có token/s cao hơn có chắc tương tác tốt hơn không? Không; TTFT hoặc p95 latency có thể tăng.
+  Lab A trong Colab dành cho embedding nhỏ; không thay cho benchmark vLLM hay chứng minh mọi GPU/CPU hỗ trợ một
+  model. Kiểm tra yêu cầu chính thức theo phiên bản trước một thí nghiệm serving riêng.'
+concept_notes_en: 'Serving accepts requests and runs inference; vLLM is one serving option, not a quality metric.
+  TTFT measures request receipt to the first token, end-to-end latency runs through the final token, and system
+  output throughput divides total completed tokens by one shared observation interval. Do not add concurrent per-request
+  rates to infer system throughput.
+
+
+  Compare configurations using fixed model ID/revision, tokenizer, quantization, input/output lengths, batch, concurrency
+  and warmup. Record CPU/GPU, RAM/VRAM, software versions and OOM failures. Count tokens with the model tokenizer
+  rather than word counts. This example computes arithmetic from synthetic logs; it calls no vLLM, downloads no
+  model and benchmarks no hardware.
+
+
+  Self-check: does higher tokens/s guarantee better interaction? No; TTFT or p95 latency can worsen. Colab Lab A
+  uses a small embedding model, not a vLLM benchmark or proof of arbitrary CPU/GPU support. Check version-specific
+  official requirements before a separate serving experiment.'
+why_it_matters_vi: Phân biệt TTFT, latency và thông lượng token; ghi cấu hình CPU/GPU và workload trước khi so.
+why_it_matters_en: Distinguish TTFT, latency and token throughput; record CPU/GPU configuration and workload before
+  comparison.
 study_steps_vi:
-- Đọc phần giải thích, xác định khái niệm và điều kiện cần dùng cho nhiệm vụ bên dưới.
-- Tìm mục tương ứng với “vLLM and serving throughput” trong tài liệu tham khảo; đối chiếu với phần giải thích của
-  bài.
-- Đo thông lượng cùng độ trễ dưới các mức đồng thời khác nhau.
-- Tách thời gian nạp mô hình khỏi thời gian sinh và giữ điều kiện đo nhất quán. Ghi kết quả đối chiếu và điều bạn
-  đã sửa nếu lần đầu chưa đúng.
-- Tự trả lời thẻ ôn tập, rồi kiểm tra các tiêu chí hoàn thành trước khi chuyển bài.
+- Đọc phần giải thích và dự đoán đầu ra của ví dụ trước khi chạy.
+- Chạy mã Python trong một ô Google Colab; ví dụ chỉ dùng thư viện chuẩn, không cần cài thêm.
+- Tính ba metric từ log giả lập rồi đổi thời điểm token đầu mà giữ token cuối; giải thích TTFT đổi nhưng throughput
+  không đổi.
+- Thời gian kết thúc bằng bắt đầu phải bị từ chối; không ghi hardware benchmark cho số liệu tự tạo.
+- Lưu đầu ra, đối chiếu với kết quả mong đợi và ghi rõ giới hạn của dữ liệu mô phỏng.
 study_steps_en:
-- 'Read the concept notes and answer: Local LLMs expose the trade-offs among memory, throughput, model size, quality,
-  and privacy.'
-- Open vLLM Documentation, read the section marked Read this lesson, and record one verified example or definition.
-- Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the
-  test.
-- 'Complete the practice task: Run a small local model, measure cold/warm latency, tokens/sec, VRAM, and compare
-  quantized with full precision.'
-- Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact.
+- Read the explanation and predict the example output before running it.
+- Run the Python code in a Google Colab cell; this example uses only the standard library.
+- Compute the three metrics from synthetic logs, then change first-token time while holding final-token time fixed;
+  explain why TTFT changes but throughput does not.
+- Equal start/end timestamps must be rejected; synthetic data must not be labeled a hardware benchmark.
+- Save the output, compare it with the expected result and state the limits of the synthetic data.
 practice_plan:
   vi:
-    task: 'Đo thông lượng cùng độ trễ dưới các mức đồng thời khác nhau.
-
-
-      Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Chạy mô hình nhỏ, đo thời gian trước
-      và sau khi nạp, token/giây, VRAM; so sánh bản lượng tử hóa với bản đầy đủ.'
+    task: Tính ba metric từ log giả lập rồi đổi thời điểm token đầu mà giữ token cuối; giải thích TTFT đổi nhưng
+      throughput không đổi.
     deliverables:
-    - Cấu hình phần cứng, mô hình và bảng đo hiệu năng
-    - Kết quả đối chiếu kèm dữ liệu hoặc điều kiện thực hiện
-    - Một giới hạn và cách kiểm tra thêm
-    checkpoint: Tách thời gian nạp mô hình khỏi thời gian sinh và giữ điều kiện đo nhất quán.
-    stretch: Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào.
+    - Bảng TTFT, latency, output tokens/s cùng nhãn synthetic và mẫu cấu hình phần cứng
+    - Đầu ra gốc và kết quả sau khi đổi một điều kiện
+    - Giải thích một lỗi và giới hạn của phép đo
+    checkpoint: Thời gian kết thúc bằng bắt đầu phải bị từ chối; không ghi hardware benchmark cho số liệu tự tạo.
+    stretch: Mở notebook liên kết, chạy trong Colab và ghi cấu hình thực tế.
   en:
-    task: Run a small local model, measure cold/warm latency, tokens/sec, VRAM, and compare quantized with full
-      precision.
+    task: Compute the three metrics from synthetic logs, then change first-token time while holding final-token
+      time fixed; explain why TTFT changes but throughput does not.
     deliverables:
-    - One working implementation
-    - One test or benchmark
-    - One note on failure modes and trade-offs
-    checkpoint: You can choose a runtime from hardware, workload, and privacy requirements rather than hype.
-    stretch: Add a failure test for vllm and serving throughput and explain the result.
+    - A TTFT, latency and output tokens/s table labeled synthetic with a hardware configuration template
+    - Original output and output after changing one condition
+    - An explanation of one failure and the measurement limits
+    checkpoint: Equal start/end timestamps must be rejected; synthetic data must not be labeled a hardware benchmark.
+    stretch: Open the linked notebook, run in Colab and record the actual configuration.
 interview_questions:
   vi:
   - Bạn sẽ giải thích nội dung “vLLM và thông lượng phục vụ” bằng ví dụ nào?
@@ -89,23 +102,34 @@ interview_questions:
   - How would you explain vllm and serving throughput to a new teammate?
   - Which assumption behind vllm and serving throughput could fail in production?
   - Which metric or test would prove the result is trustworthy?
-formulas: []
+formulas:
+- TTFT = first_token_time - request_start
+- Latency = last_token_time - request_start
+- Output throughput = total completed output tokens / shared observation seconds
 code_examples:
 - language: python
-  title: 'vLLM and serving throughput: inspect one complete path'
-  code: "# Topic: vLLM and serving throughput (phase-21-genai-local-llm-local-llm-2)\nfrom dataclasses import dataclass\n\
-    \n@dataclass(frozen=True)\nclass Result:\n    value: str\n    valid: bool\n\nresult = Result(value='ready',\
-    \ valid=True)\nprint(result)"
+  title: Compute serving metrics from explicitly synthetic timing records
+  code: "import json\ndef metrics(rows):\n    if not rows or any(not (r[\"start\"] <= r[\"first\"] <= r[\"end\"\
+    ]) or\n                       r[\"end\"] <= r[\"start\"] or r[\"tokens\"] < 1 for r in rows):\n        raise\
+    \ ValueError(\"invalid timing record\")\n    window = max(r[\"end\"] for r in rows) - min(r[\"start\"] for r\
+    \ in rows)\n    return {\"mean_ttft_s\": sum(r[\"first\"] - r[\"start\"] for r in rows) / len(rows),\n     \
+    \       \"mean_latency_s\": sum(r[\"end\"] - r[\"start\"] for r in rows) / len(rows),\n            \"output_tokens_per_s\"\
+    : sum(r[\"tokens\"] for r in rows) / window}\nsynthetic = [dict(start=0, first=0.25, end=2, tokens=20),\n  \
+    \           dict(start=0, first=0.5, end=1, tokens=10)]\ntry:\n    metrics([dict(start=1, first=1, end=1, tokens=1)])\n\
+    except ValueError as error:\n    invalid = str(error)\nprint(json.dumps({\"synthetic_metrics\": metrics(synthetic),\
+    \ \"invalid\": invalid,\n                  \"hardware_benchmarked\": False}))\n"
   status: runnable
-  purpose_vi: Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.
-  purpose_en: Illustrate the input-to-output path for vllm and serving throughput.
-  setup: Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.
-  expected_output: Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.
-  edge_case_vi: Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.
-  edge_case_en: Try an empty input, a wrong shape or missing data and record the failure.
-  explanation_vi: Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần
-    nội dung; cần hoàn thành riêng nhiệm vụ thực hành.
-  explanation_en: Keep the boundary executable and inspectable; change one input and verify the expected output.
+  purpose_vi: Phân biệt TTFT, latency và thông lượng token; ghi cấu hình CPU/GPU và workload trước khi so.
+  purpose_en: Distinguish TTFT, latency and token throughput; record CPU/GPU configuration and workload before comparison.
+  setup: 'Python 3.11+; standard library only. Google Colab: paste into one code cell and Run.'
+  expected_output: '{"synthetic_metrics": {"mean_ttft_s": 0.375, "mean_latency_s": 1.5, "output_tokens_per_s": 15.0},
+    "invalid": "invalid timing record", "hardware_benchmarked": false}'
+  edge_case_vi: Thời gian kết thúc bằng bắt đầu phải bị từ chối; không ghi hardware benchmark cho số liệu tự tạo.
+  edge_case_en: Equal start/end timestamps must be rejected; synthetic data must not be labeled a hardware benchmark.
+  explanation_vi: Hai request chồng thời gian nên dùng cửa sổ chung 0–2 giây; 30/2 cho thông lượng 15 token/s giả
+    lập.
+  explanation_en: The two requests overlap, so the shared interval is 0–2 seconds; 30/2 gives a synthetic throughput
+    of 15 tokens/s.
 resources:
 - language: en
   title: vLLM Documentation
@@ -143,6 +167,17 @@ resources:
   read_vi: Đọc giải thích → xem ví dụ → thực hành → tự kiểm tra.
   read_en: Follow Study plan → Concept notes → Code example → Practice plan.
   required: true
+- title: Google Colab — Lab A
+  language: vi/en
+  url: https://colab.research.google.com/github/Hzyl/JourneyAIEngineer/blob/main/notebooks/lab-a-evidence-retrieval.ipynb
+  kind: external
+  required: false
+  purpose_vi: Chạy trong Colab để mở rộng ví dụ bằng dữ liệu và báo cáo của lab.
+  purpose_en: Run in Colab to extend this example with the lab dataset and reports.
+  read_vi: Chọn môi trường CPU do Google lưu trữ, chạy baseline rồi phần embedding tùy chọn. Dùng tập dev trước
+    khi đánh giá test và tải báo cáo về.
+  read_en: 'Run in Colab on a Google-hosted CPU runtime: baseline first, then optional embeddings. Use dev before
+    evaluating test and download the report.'
 exercise_ids:
 - exercise-21-local-llm
 review_item_ids:
@@ -152,13 +187,14 @@ review_item_ids:
 - phase-21-genai-local-llm-local-llm-2-interview
 estimated_minutes: 60
 completion_checklist:
-- Đo thông lượng cùng độ trễ dưới các mức đồng thời khác nhau.
-- Tách thời gian nạp mô hình khỏi thời gian sinh và giữ điều kiện đo nhất quán.
-- Lưu kết quả và giải thích được một giới hạn mà không nhìn lời giải.
+- Tính ba metric từ log giả lập rồi đổi thời điểm token đầu mà giữ token cuối; giải thích TTFT đổi nhưng throughput
+  không đổi.
+- Thời gian kết thúc bằng bắt đầu phải bị từ chối; không ghi hardware benchmark cho số liệu tự tạo.
+- Lưu đầu ra và ghi đúng giới hạn của ví dụ.
 completion_criteria:
-- 'Bài làm đáp ứng nhiệm vụ: Đo thông lượng cùng độ trễ dưới các mức đồng thời khác nhau.'
-- Có kết quả đối chiếu với tiêu chí hoặc dự đoán đã ghi trước.
-- Tách thời gian nạp mô hình khỏi thời gian sinh và giữ điều kiện đo nhất quán.
+- Bảng TTFT, latency, output tokens/s cùng nhãn synthetic và mẫu cấu hình phần cứng
+- Thời gian kết thúc bằng bắt đầu phải bị từ chối; không ghi hardware benchmark cho số liệu tự tạo.
+- Không suy kết quả model thật từ dữ liệu mô phỏng.
 common_mistakes:
 - So sánh token mỗi giây giữa các lần chạy khác tải hoặc khác độ dài chuỗi.
 - Kết luận từ một kết quả thuận lợi mà chưa kiểm tra trường hợp khác.
@@ -220,14 +256,22 @@ review_cards:
 ---
 # vLLM và thông lượng phục vụ / vLLM and serving throughput
 
-Thông lượng đo lượng công việc hoàn tất theo thời gian. Khi đánh giá hệ phục vụ, cần ghi số yêu cầu đồng thời, độ dài chuỗi và độ trễ để biết thông lượng tăng có làm chờ lâu hơn.
+Serving nhận request và chạy suy luận; vLLM là một lựa chọn phục vụ model, không phải thước đo chất lượng. TTFT là thời gian từ nhận yêu cầu đến token đầu; latency toàn yêu cầu đến token cuối; thông lượng token đầu ra của hệ là tổng token hoàn tất chia thời gian quan sát chung. Không cộng thông lượng từng request đồng thời để suy ra thông lượng hệ.
 
-Thông lượng toàn hệ thống khác tốc độ của một người dùng. Gom nhiều yêu cầu có thể sử dụng thiết bị hiệu quả hơn, nhưng thời gian chờ và bộ nhớ dành cho các chuỗi cùng chạy cũng tăng theo tải và cách lập lịch.
+Muốn so cấu hình, giữ model ID/revision, tokenizer, lượng tử hóa, độ dài input/output, batch, concurrency và cách warmup; ghi CPU/GPU, RAM/VRAM, phiên bản phần mềm và lỗi OOM. Đếm token bằng tokenizer của model, không bằng số từ. Ví dụ chỉ tính số học từ log tự tạo, không gọi vLLM, không tải model và không đo máy của bạn.
 
-Ví dụ, so cấu hình phục vụ bằng cùng phân bố độ dài prompt, đầu ra và số người dùng đồng thời. Tự kiểm tra: báo token mỗi giây cao nhất đã đủ chọn hệ phục vụ chưa? Không; phải nêu đó là tổng hay từng yêu cầu, đo thời gian tới token đầu và độ trễ nhóm chậm, đồng thời kiểm tra lỗi và chất lượng đầu ra.
+Tự kiểm tra: hệ có token/s cao hơn có chắc tương tác tốt hơn không? Không; TTFT hoặc p95 latency có thể tăng. Lab A trong Colab dành cho embedding nhỏ; không thay cho benchmark vLLM hay chứng minh mọi GPU/CPU hỗ trợ một model. Kiểm tra yêu cầu chính thức theo phiên bản trước một thí nghiệm serving riêng.
 
-## Thực hành
+## English
 
-Đo thông lượng cùng độ trễ dưới các mức đồng thời khác nhau.
+Serving accepts requests and runs inference; vLLM is one serving option, not a quality metric. TTFT measures request receipt to the first token, end-to-end latency runs through the final token, and system output throughput divides total completed tokens by one shared observation interval. Do not add concurrent per-request rates to infer system throughput.
 
-Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Chạy mô hình nhỏ, đo thời gian trước và sau khi nạp, token/giây, VRAM; so sánh bản lượng tử hóa với bản đầy đủ.
+Compare configurations using fixed model ID/revision, tokenizer, quantization, input/output lengths, batch, concurrency and warmup. Record CPU/GPU, RAM/VRAM, software versions and OOM failures. Count tokens with the model tokenizer rather than word counts. This example computes arithmetic from synthetic logs; it calls no vLLM, downloads no model and benchmarks no hardware.
+
+Self-check: does higher tokens/s guarantee better interaction? No; TTFT or p95 latency can worsen. Colab Lab A uses a small embedding model, not a vLLM benchmark or proof of arbitrary CPU/GPU support. Check version-specific official requirements before a separate serving experiment.
+
+## Thực hành / Practice
+
+Tính ba metric từ log giả lập rồi đổi thời điểm token đầu mà giữ token cuối; giải thích TTFT đổi nhưng throughput không đổi.
+
+Compute the three metrics from synthetic logs, then change first-token time while holding final-token time fixed; explain why TTFT changes but throughput does not.

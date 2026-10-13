@@ -4,17 +4,16 @@ phase_id: phase-18-genai-observability
 module_id: genai-observability
 title_vi: Nhật ký có cấu trúc và truy vết
 title_en: Structured logging and tracing
-summary_vi: Nhật ký ghi sự kiện; truy vết nối các bước xử lý của một yêu cầu.
-summary_en: Learn Structured logging and tracing through an input → transformation → output model, then verify it
-  with an edge-case exercise.
+summary_vi: Nối các bước bằng trace_id và span_id, ghi độ trễ mà không lưu dữ liệu nhạy cảm.
+summary_en: Correlate steps with trace_id and span_id and record latency without retaining sensitive payloads.
 learning_objectives:
-- Theo dõi một yêu cầu qua các bước bằng cùng mã truy vết.
-- Lần theo các bước và xác định nơi độ trễ hoặc chi phí tăng.
-- Giải thích kết quả và nêu một giới hạn của bài làm.
+- Nối các bước bằng trace_id và span_id, ghi độ trễ mà không lưu dữ liệu nhạy cảm.
+- Thêm một trường bí mật lồng nhau vào raw event; kiểm tra đầu ra chỉ còn trường cho phép và hai bước vẫn cùng trace_id.
+- Thêm prompt hoặc authorization vào raw event không được làm chúng xuất hiện trong log đã lọc.
 learning_objectives_en:
-- Explain structured logging and tracing with a concrete example.
-- Write or adapt a small code example applying structured logging and tracing.
-- Recognize its assumptions, limits and one common failure mode.
+- Correlate steps with trace_id and span_id and record latency without retaining sensitive payloads.
+- Add a nested secret field to a raw event; verify only allowed fields remain and both steps still share a trace_id.
+- Adding prompt or authorization to a raw event must not expose them in the filtered log.
 prerequisites:
 - phase-17-genai-evaluation-genai-evaluation-4
 - phase-17-genai-evaluation-genai-evaluation-1
@@ -27,59 +26,65 @@ key_terms:
 - reproducibility
 - deployment
 - genai-observability
-concept_notes_vi: |-
-  Nhật ký ghi sự kiện; truy vết nối các bước xử lý của một yêu cầu. Mã truy vết giúp tìm bước chậm hoặc lỗi trong chuỗi truy xuất, gọi mô hình và công cụ.
+concept_notes_vi: 'Log ghi một sự kiện; trace nối các bước của cùng yêu cầu, chẳng hạn retrieval và kiểm tra quyền.
+  trace_id dùng chung, span_id nhận diện bước và parent_span_id thể hiện quan hệ. Thời gian đo cần cùng đơn vị;
+  token và chi phí chỉ ghi khi có số đo hoặc nguồn tính rõ ràng.
 
-  Log mô tả sự kiện, metric tổng hợp phép đo, còn trace nối các bước của một yêu cầu. Span là một đoạn công việc trong trace, có thời gian và quan hệ với bước cha, giúp xem lỗi nằm ở đâu trong chuỗi.
 
-  Ví dụ, cùng trace ID nối bước tìm tài liệu với bước gọi mô hình để biết thời gian chờ phát sinh ở phần nào. Tự kiểm tra: ghi toàn bộ prompt có phải điều kiện bắt buộc để quan sát tốt không? Không; có thể ghi mã phiên bản, kích thước, trạng thái và thời gian. Chỉ lưu nội dung cần thiết với chính sách che, giữ và truy cập phù hợp.
-concept_notes_en: |-
-  Logs record events; traces connect processing steps for a request. Trace IDs help locate slow or failing retrieval, model and tool operations.
+  Ví dụ dùng sự kiện tự tạo với độ trễ giả lập để kiểm tra cấu trúc, không benchmark runtime. Thay vì ghi toàn bộ
+  prompt và kết quả công cụ, bộ lọc chỉ giữ danh sách trường cho phép. Không lưu token đăng nhập, nội dung tài liệu
+  hay suy nghĩ nội bộ của mô hình. trace_id là ID mờ, không dùng email hoặc tên người làm ID.
 
-  Metrics aggregate measurements, while a span describes timed work inside a trace with parent relationships. These signals answer different diagnostic questions.
 
-  A shared trace ID connects document retrieval to a model call, locating where waiting occurs. Self-check: must full prompts be logged for useful observability? No: versions, sizes, status and timing can be sufficient. Store necessary content only under suitable redaction, retention and access policies.
-why_it_matters_vi: Thu thập dữ liệu đủ để phân biệt lỗi mô hình, truy xuất, nhà cung cấp và hạ tầng.
-why_it_matters_en: Without telemetry you cannot tell whether a failure is in the model, retrieval, provider, or
-  infrastructure.
+  Tự kiểm tra: bỏ trường password có đảm bảo log an toàn không? Không; bí mật có thể nằm trong prompt hoặc trường
+  lồng nhau. Allowlist hạn chế bề mặt dữ liệu nhưng vẫn cần chính sách lưu giữ, kiểm soát truy cập và kiểm tra giá
+  trị. Lab C dùng dữ liệu mô phỏng để thử redaction và quyền.'
+concept_notes_en: 'A log records an event; a trace links steps belonging to one request, such as retrieval and authorization.
+  A shared trace_id identifies the request, span_id identifies a step and parent_span_id expresses its relationship.
+  Timing needs consistent units; record tokens and cost only when measurements or explicit accounting sources exist.
+
+
+  This example uses synthetic events and illustrative latency, not a runtime benchmark. Instead of saving full prompts
+  and tool responses, a filter retains only allowlisted fields. Do not log credentials, document bodies or model-internal
+  reasoning. Use opaque trace IDs rather than emails or personal names.
+
+
+  Self-check: does deleting password make a log safe? No; secrets may occur in prompts or nested fields. An allowlist
+  reduces the data surface but still needs retention policy, access control and value inspection. Lab C tests redaction
+  and permissions with fixtures.'
+why_it_matters_vi: Nối các bước bằng trace_id và span_id, ghi độ trễ mà không lưu dữ liệu nhạy cảm.
+why_it_matters_en: Correlate steps with trace_id and span_id and record latency without retaining sensitive payloads.
 study_steps_vi:
-- Đọc phần giải thích, xác định khái niệm và điều kiện cần dùng cho nhiệm vụ bên dưới.
-- Tìm mục tương ứng với “Structured logging and tracing” trong tài liệu tham khảo; đối chiếu với phần giải thích
-  của bài.
-- Theo dõi một yêu cầu qua các bước bằng cùng mã truy vết.
-- Lần theo các bước và xác định nơi độ trễ hoặc chi phí tăng. Ghi kết quả đối chiếu và điều bạn đã sửa nếu lần đầu
-  chưa đúng.
-- Tự trả lời thẻ ôn tập, rồi kiểm tra các tiêu chí hoàn thành trước khi chuyển bài.
+- Đọc phần giải thích và dự đoán đầu ra của ví dụ trước khi chạy.
+- Chạy mã Python trong một ô Google Colab; ví dụ chỉ dùng thư viện chuẩn, không cần cài thêm.
+- Thêm một trường bí mật lồng nhau vào raw event; kiểm tra đầu ra chỉ còn trường cho phép và hai bước vẫn cùng trace_id.
+- Thêm prompt hoặc authorization vào raw event không được làm chúng xuất hiện trong log đã lọc.
+- Lưu đầu ra, đối chiếu với kết quả mong đợi và ghi rõ giới hạn của dữ liệu mô phỏng.
 study_steps_en:
-- 'Read the concept notes and answer: Without telemetry you cannot tell whether a failure is in the model, retrieval,
-  provider, or infrastructure.'
-- Open OpenTelemetry Python, read the section marked Read this lesson, and record one verified example or definition.
-- Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the
-  test.
-- 'Complete the practice task: Instrument an end-to-end request with a trace ID, token/cost fields, p50/p95 latency,
-  and a budget alert.'
-- Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact.
+- Read the explanation and predict the example output before running it.
+- Run the Python code in a Google Colab cell; this example uses only the standard library.
+- Add a nested secret field to a raw event; verify only allowed fields remain and both steps still share a trace_id.
+- Adding prompt or authorization to a raw event must not expose them in the filtered log.
+- Save the output, compare it with the expected result and state the limits of the synthetic data.
 practice_plan:
   vi:
-    task: 'Theo dõi một yêu cầu qua các bước bằng cùng mã truy vết.
-
-
-      Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Theo dõi một yêu cầu từ đầu tới cuối
-      với mã truy vết, token, chi phí, độ trễ p50/p95 và cảnh báo ngân sách.'
+    task: Thêm một trường bí mật lồng nhau vào raw event; kiểm tra đầu ra chỉ còn trường cho phép và hai bước vẫn
+      cùng trace_id.
     deliverables:
-    - Bản ghi yêu cầu có mã truy vết, thời gian và lượng tài nguyên
-    - Kết quả đối chiếu kèm dữ liệu hoặc điều kiện thực hiện
-    - Một giới hạn và cách kiểm tra thêm
-    checkpoint: Lần theo các bước và xác định nơi độ trễ hoặc chi phí tăng.
-    stretch: Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào.
+    - Hai sự kiện JSON có quan hệ trace/span, status và latency_ms, không có payload nhạy cảm
+    - Đầu ra gốc và kết quả sau khi đổi một điều kiện
+    - Giải thích một lỗi và giới hạn của phép đo
+    checkpoint: Thêm prompt hoặc authorization vào raw event không được làm chúng xuất hiện trong log đã lọc.
+    stretch: Mở notebook liên kết, chạy trong Colab và ghi cấu hình thực tế.
   en:
-    task: Instrument an end-to-end request with a trace ID, token/cost fields, p50/p95 latency, and a budget alert.
+    task: Add a nested secret field to a raw event; verify only allowed fields remain and both steps still share
+      a trace_id.
     deliverables:
-    - One working implementation
-    - One test or benchmark
-    - One note on failure modes and trade-offs
-    checkpoint: From one trace you can identify a latency or cost spike without logging sensitive prompts.
-    stretch: Add a failure test for structured logging and tracing and explain the result.
+    - Two related JSON events with trace/span IDs, status and latency_ms, without sensitive payloads
+    - Original output and output after changing one condition
+    - An explanation of one failure and the measurement limits
+    checkpoint: Adding prompt or authorization to a raw event must not expose them in the filtered log.
+    stretch: Open the linked notebook, run in Colab and record the actual configuration.
 interview_questions:
   vi:
   - Bạn sẽ giải thích nội dung “Nhật ký có cấu trúc và truy vết” bằng ví dụ nào?
@@ -92,20 +97,26 @@ interview_questions:
 formulas: []
 code_examples:
 - language: python
-  title: 'Structured logging and tracing: inspect one complete path'
-  code: "# Topic: Structured logging and tracing (phase-18-genai-observability-genai-observability-1)\nimport time\n\
-    \ndef timed_response(value: float) -> dict[str, float]:\n    started = time.perf_counter()\n    result = value\
-    \ * 2\n    return {'result': result, 'latency_ms': (time.perf_counter() - started) * 1000}\n\nprint(timed_response(3.0))"
+  title: Correlate redacted structured events
+  code: "import json\nSAFE_FIELDS = {\"trace_id\", \"span_id\", \"parent_span_id\", \"operation\", \"status\", \"\
+    latency_ms\"}\ndef redact(event):\n    return {key: value for key, value in event.items() if key in SAFE_FIELDS}\n\
+    raw = [\n    dict(trace_id=\"t1\", span_id=\"s1\", parent_span_id=None, operation=\"search\",\n         status=\"\
+    ok\", latency_ms=12, prompt=\"PRIVATE\", authorization=\"SECRET\"),\n    dict(trace_id=\"t1\", span_id=\"s2\"\
+    , parent_span_id=\"s1\", operation=\"read_document\",\n         status=\"denied\", latency_ms=3, payload={\"\
+    token\": \"SECRET\"}),\n]\nevents = [redact(e) for e in raw]\nserialized = json.dumps(events)\nprint(json.dumps({\"\
+    trace_ids\": sorted({e[\"trace_id\"] for e in events}),\n                  \"parent\": events[1][\"parent_span_id\"\
+    ],\n                  \"latency_fixture_ms\": sum(e[\"latency_ms\"] for e in events),\n                  \"\
+    secret_present\": \"SECRET\" in serialized or \"PRIVATE\" in serialized}))\n"
   status: runnable
-  purpose_vi: Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.
-  purpose_en: Illustrate the input-to-output path for structured logging and tracing.
-  setup: Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.
-  expected_output: Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.
-  edge_case_vi: Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.
-  edge_case_en: Try an empty input, a wrong shape or missing data and record the failure.
-  explanation_vi: Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần
-    nội dung; cần hoàn thành riêng nhiệm vụ thực hành.
-  explanation_en: Keep the boundary executable and inspectable; change one input and verify the expected output.
+  purpose_vi: Nối các bước bằng trace_id và span_id, ghi độ trễ mà không lưu dữ liệu nhạy cảm.
+  purpose_en: Correlate steps with trace_id and span_id and record latency without retaining sensitive payloads.
+  setup: 'Python 3.11+; standard library only. Google Colab: paste into one code cell and Run.'
+  expected_output: '{"trace_ids": ["t1"], "parent": "s1", "latency_fixture_ms": 15, "secret_present": false}'
+  edge_case_vi: Thêm prompt hoặc authorization vào raw event không được làm chúng xuất hiện trong log đã lọc.
+  edge_case_en: Adding prompt or authorization to a raw event must not expose them in the filtered log.
+  explanation_vi: Allowlist loại nguyên payload; các con số độ trễ là dữ liệu mô phỏng, không phải phép đo dịch
+    vụ thật.
+  explanation_en: The allowlist discards whole payloads; latency values are fixtures, not real service measurements.
 resources:
 - language: en
   title: OpenTelemetry Python
@@ -142,7 +153,7 @@ resources:
   purpose_en: Add structured context for debugging and production.
   read_en: Read levels, loggers, and handlers; never log secrets or PII.
   kind: official
-  required: true
+  required: false
 - title: Giải thích và hướng dẫn thực hành trong bài
   url: ''
   language: vi
@@ -152,6 +163,17 @@ resources:
   read_vi: Đọc giải thích → xem ví dụ → thực hành → tự kiểm tra.
   read_en: Follow Study plan → Concept notes → Code example → Practice plan.
   required: true
+- title: Google Colab — Lab C
+  language: vi/en
+  url: https://colab.research.google.com/github/Hzyl/JourneyAIEngineer/blob/main/notebooks/lab-c-security-regression.ipynb
+  kind: external
+  required: false
+  purpose_vi: Chạy trong Colab để mở rộng ví dụ bằng dữ liệu và báo cáo của lab.
+  purpose_en: Run in Colab to extend this example with the lab dataset and reports.
+  read_vi: Chọn môi trường CPU do Google lưu trữ, chạy từng ô và đối chiếu báo cáo. Lab dùng công cụ giả lập chỉ
+    đọc, không tải model; tải báo cáo để lưu kết quả.
+  read_en: Run in Colab on a Google-hosted CPU runtime and inspect each report. This lab uses read-only fake tools
+    and downloads no model; download the report to retain results.
 exercise_ids:
 - exercise-18-genai-observability
 review_item_ids:
@@ -161,13 +183,13 @@ review_item_ids:
 - phase-18-genai-observability-genai-observability-1-interview
 estimated_minutes: 60
 completion_checklist:
-- Theo dõi một yêu cầu qua các bước bằng cùng mã truy vết.
-- Lần theo các bước và xác định nơi độ trễ hoặc chi phí tăng.
-- Lưu kết quả và giải thích được một giới hạn mà không nhìn lời giải.
+- Thêm một trường bí mật lồng nhau vào raw event; kiểm tra đầu ra chỉ còn trường cho phép và hai bước vẫn cùng trace_id.
+- Thêm prompt hoặc authorization vào raw event không được làm chúng xuất hiện trong log đã lọc.
+- Lưu đầu ra và ghi đúng giới hạn của ví dụ.
 completion_criteria:
-- 'Bài làm đáp ứng nhiệm vụ: Theo dõi một yêu cầu qua các bước bằng cùng mã truy vết.'
-- Có kết quả đối chiếu với tiêu chí hoặc dự đoán đã ghi trước.
-- Lần theo các bước và xác định nơi độ trễ hoặc chi phí tăng.
+- Hai sự kiện JSON có quan hệ trace/span, status và latency_ms, không có payload nhạy cảm
+- Thêm prompt hoặc authorization vào raw event không được làm chúng xuất hiện trong log đã lọc.
+- Không suy kết quả model thật từ dữ liệu mô phỏng.
 common_mistakes:
 - Ghi prompt nhạy cảm chỉ để tiện tìm lỗi.
 - Kết luận từ một kết quả thuận lợi mà chưa kiểm tra trường hợp khác.
@@ -229,14 +251,22 @@ review_cards:
 ---
 # Nhật ký có cấu trúc và truy vết / Structured logging and tracing
 
-Nhật ký ghi sự kiện; truy vết nối các bước xử lý của một yêu cầu. Mã truy vết giúp tìm bước chậm hoặc lỗi trong chuỗi truy xuất, gọi mô hình và công cụ.
+Log ghi một sự kiện; trace nối các bước của cùng yêu cầu, chẳng hạn retrieval và kiểm tra quyền. trace_id dùng chung, span_id nhận diện bước và parent_span_id thể hiện quan hệ. Thời gian đo cần cùng đơn vị; token và chi phí chỉ ghi khi có số đo hoặc nguồn tính rõ ràng.
 
-Log mô tả sự kiện, metric tổng hợp phép đo, còn trace nối các bước của một yêu cầu. Span là một đoạn công việc trong trace, có thời gian và quan hệ với bước cha, giúp xem lỗi nằm ở đâu trong chuỗi.
+Ví dụ dùng sự kiện tự tạo với độ trễ giả lập để kiểm tra cấu trúc, không benchmark runtime. Thay vì ghi toàn bộ prompt và kết quả công cụ, bộ lọc chỉ giữ danh sách trường cho phép. Không lưu token đăng nhập, nội dung tài liệu hay suy nghĩ nội bộ của mô hình. trace_id là ID mờ, không dùng email hoặc tên người làm ID.
 
-Ví dụ, cùng trace ID nối bước tìm tài liệu với bước gọi mô hình để biết thời gian chờ phát sinh ở phần nào. Tự kiểm tra: ghi toàn bộ prompt có phải điều kiện bắt buộc để quan sát tốt không? Không; có thể ghi mã phiên bản, kích thước, trạng thái và thời gian. Chỉ lưu nội dung cần thiết với chính sách che, giữ và truy cập phù hợp.
+Tự kiểm tra: bỏ trường password có đảm bảo log an toàn không? Không; bí mật có thể nằm trong prompt hoặc trường lồng nhau. Allowlist hạn chế bề mặt dữ liệu nhưng vẫn cần chính sách lưu giữ, kiểm soát truy cập và kiểm tra giá trị. Lab C dùng dữ liệu mô phỏng để thử redaction và quyền.
 
-## Thực hành
+## English
 
-Theo dõi một yêu cầu qua các bước bằng cùng mã truy vết.
+A log records an event; a trace links steps belonging to one request, such as retrieval and authorization. A shared trace_id identifies the request, span_id identifies a step and parent_span_id expresses its relationship. Timing needs consistent units; record tokens and cost only when measurements or explicit accounting sources exist.
 
-Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Theo dõi một yêu cầu từ đầu tới cuối với mã truy vết, token, chi phí, độ trễ p50/p95 và cảnh báo ngân sách.
+This example uses synthetic events and illustrative latency, not a runtime benchmark. Instead of saving full prompts and tool responses, a filter retains only allowlisted fields. Do not log credentials, document bodies or model-internal reasoning. Use opaque trace IDs rather than emails or personal names.
+
+Self-check: does deleting password make a log safe? No; secrets may occur in prompts or nested fields. An allowlist reduces the data surface but still needs retention policy, access control and value inspection. Lab C tests redaction and permissions with fixtures.
+
+## Thực hành / Practice
+
+Thêm một trường bí mật lồng nhau vào raw event; kiểm tra đầu ra chỉ còn trường cho phép và hai bước vẫn cùng trace_id.
+
+Add a nested secret field to a raw event; verify only allowed fields remain and both steps still share a trace_id.

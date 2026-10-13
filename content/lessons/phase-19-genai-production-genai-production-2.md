@@ -4,17 +4,16 @@ phase_id: phase-19-genai-production
 module_id: genai-production
 title_vi: Thử lại, phương án dự phòng và giới hạn tần suất
 title_en: Retries, fallbacks, and rate limits
-summary_vi: Khi nhà cung cấp chậm hoặc lỗi, thử lại cần giới hạn và khoảng chờ phù hợp.
-summary_en: Learn Retries, fallbacks, and rate limits through an input → transformation → output model, then verify
-  it with an edge-case exercise.
+summary_vi: Chỉ thử lại lỗi tạm thời trong số lần và ngân sách thời gian cho phép.
+summary_en: Retry only transient failures within explicit attempt and time budgets.
 learning_objectives:
-- Mô phỏng nhà cung cấp lỗi và xác nhận số lần thử cùng điều kiện chuyển dự phòng.
-- Kiểm tra giới hạn thử lại, cách chuyển dự phòng và ảnh hưởng tới người dùng.
-- Giải thích kết quả và nêu một giới hạn của bài làm.
+- Chỉ thử lại lỗi tạm thời trong số lần và ngân sách thời gian cho phép.
+- Chạy ba chuỗi kết quả; giảm deadline và kiểm tra số lần gọi giảm. Đánh dấu forbidden là lỗi không được retry.
+- Forbidden phải dừng sau một lần; không được thực hiện lần gọi mới vượt deadline.
 learning_objectives_en:
-- Explain retries, fallbacks, and rate limits with a concrete example.
-- Write or adapt a small code example applying retries, fallbacks, and rate limits.
-- Recognize its assumptions, limits and one common failure mode.
+- Retry only transient failures within explicit attempt and time budgets.
+- Run the three outcome sequences; reduce the deadline and check that calls decrease. Treat forbidden as non-retryable.
+- Forbidden must stop after one attempt; no new attempt may exceed the deadline.
 prerequisites:
 - phase-19-genai-production-genai-production-1
 - phase-18-genai-observability-genai-observability-1
@@ -28,60 +27,66 @@ key_terms:
 - reproducibility
 - deployment
 - genai-production
-concept_notes_vi: |-
-  Khi nhà cung cấp chậm hoặc lỗi, thử lại cần giới hạn và khoảng chờ phù hợp. Phương án dự phòng phải giữ yêu cầu tối thiểu về chất lượng, cấu trúc và quyền dữ liệu.
+concept_notes_vi: 'Retry phù hợp khi lỗi có thể hết, như timeout hoặc giới hạn tần suất; lỗi quyền hay tham số cần
+  sửa nguyên nhân, không lặp vô hạn. Backoff tăng khoảng chờ, jitter giảm việc nhiều client gọi lại cùng lúc. Hệ
+  thật cần timeout cho mỗi lần gọi và deadline toàn yêu cầu; nếu server có Retry-After thì phải cân nhắc hướng dẫn
+  đó trong deadline.
 
-  Retry lặp lại trên đường xử lý cũ; fallback chuyển sang phương án khác. Cả hai đều tiêu tốn tài nguyên và có thể làm lỗi lan rộng nếu mọi yêu cầu đồng loạt thử lại khi dịch vụ quá tải.
 
-  Ví dụ, dùng khoảng chờ tăng dần với độ lệch ngẫu nhiên và giới hạn tổng thời gian trước khi báo lỗi rõ. Tự kiểm tra: khi nhà cung cấp chính lỗi có thể chuyển dữ liệu tới bất kỳ nhà cung cấp khác không? Không; phương án dự phòng phải đã đáp ứng quyền xử lý dữ liệu, hợp đồng đầu ra và mức chất lượng tối thiểu của nhiệm vụ.
-concept_notes_en: |-
-  Provider failures require bounded retries with suitable waiting. Fallbacks must preserve minimum quality, structure and data-permission requirements.
+  Ví dụ dùng đồng hồ logic và kết quả giả lập, không sleep hay gọi mạng. Ngân sách tính cả thời gian chạy và chờ;
+  kiểm tra trước lần gọi tiếp theo. Fallback chỉ đọc cache đã kiểm tra quyền/phiên bản hoặc báo thiếu dữ liệu, không
+  lặng lẽ bịa đáp án. Khi có tác động ghi, dùng idempotency để tránh lặp tác động do retry.
 
-  A retry repeats the same route; a fallback changes routes. Both consume resources and can amplify overload if all requests retry together.
 
-  Use increasing delays with random jitter and an overall deadline before returning a clear failure. Self-check: may data be sent to any alternative provider when the primary fails? No: the fallback must already meet data-handling permissions, output contracts and the task's minimum quality requirements.
-why_it_matters_vi: Thiết kế hành vi khi nhà cung cấp chậm, lỗi hoặc tải tăng để duy trì mức phục vụ đã đặt ra.
-why_it_matters_en: Production quality is behavior when providers are slow, failing, expensive, or traffic grows—not
-  just the happy path.
+  Tự kiểm tra: tăng max_attempts luôn tăng độ tin cậy không? Không; có thể tăng tải và độ trễ. So tỷ lệ phục hồi,
+  lỗi cuối cùng và ngân sách; mô phỏng ở đây kiểm tra chính sách, không đo độ tin cậy mạng thực.'
+concept_notes_en: 'Retries fit failures that may resolve, such as timeouts or rate limiting; permission and argument
+  failures need correction rather than endless repetition. Backoff increases waiting intervals and jitter spreads
+  retries across clients. Real systems need per-call timeouts and a request deadline; account for Retry-After guidance
+  within that deadline when provided.
+
+
+  The example uses a logical clock and simulated outcomes, with no sleeping or networking. The budget includes execution
+  and waiting, checked before another attempt. A fallback should read an authorized, version-checked cache or report
+  missing evidence rather than silently invent an answer. For writes, idempotency prevents retries from duplicating
+  effects.
+
+
+  Self-check: do more attempts always increase reliability? No; they can amplify load and latency. Compare recovery
+  rates, terminal errors and budgets; this simulation tests policy, not actual network reliability.'
+why_it_matters_vi: Chỉ thử lại lỗi tạm thời trong số lần và ngân sách thời gian cho phép.
+why_it_matters_en: Retry only transient failures within explicit attempt and time budgets.
 study_steps_vi:
-- Đọc phần giải thích, xác định khái niệm và điều kiện cần dùng cho nhiệm vụ bên dưới.
-- Tìm mục tương ứng với “Retries, fallbacks, and rate limits” trong tài liệu tham khảo; đối chiếu với phần giải
-  thích của bài.
-- Mô phỏng nhà cung cấp lỗi và xác nhận số lần thử cùng điều kiện chuyển dự phòng.
-- Kiểm tra giới hạn thử lại, cách chuyển dự phòng và ảnh hưởng tới người dùng. Ghi kết quả đối chiếu và điều bạn
-  đã sửa nếu lần đầu chưa đúng.
-- Tự trả lời thẻ ôn tập, rồi kiểm tra các tiêu chí hoàn thành trước khi chuyển bài.
+- Đọc phần giải thích và dự đoán đầu ra của ví dụ trước khi chạy.
+- Chạy mã Python trong một ô Google Colab; ví dụ chỉ dùng thư viện chuẩn, không cần cài thêm.
+- Chạy ba chuỗi kết quả; giảm deadline và kiểm tra số lần gọi giảm. Đánh dấu forbidden là lỗi không được retry.
+- Forbidden phải dừng sau một lần; không được thực hiện lần gọi mới vượt deadline.
+- Lưu đầu ra, đối chiếu với kết quả mong đợi và ghi rõ giới hạn của dữ liệu mô phỏng.
 study_steps_en:
-- 'Read the concept notes and answer: Production quality is behavior when providers are slow, failing, expensive,
-  or traffic grows—not just the happy path.'
-- Open Redis Documentation, read the section marked Read this lesson, and record one verified example or definition.
-- Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the
-  test.
-- 'Complete the practice task: Design a service with a cache policy, provider fallback, queue worker, and a small
-  load test with explicit SLOs.'
-- Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact.
+- Read the explanation and predict the example output before running it.
+- Run the Python code in a Google Colab cell; this example uses only the standard library.
+- Run the three outcome sequences; reduce the deadline and check that calls decrease. Treat forbidden as non-retryable.
+- Forbidden must stop after one attempt; no new attempt may exceed the deadline.
+- Save the output, compare it with the expected result and state the limits of the synthetic data.
 practice_plan:
   vi:
-    task: 'Mô phỏng nhà cung cấp lỗi và xác nhận số lần thử cùng điều kiện chuyển dự phòng.
-
-
-      Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Thiết kế bộ nhớ đệm, phương án dự phòng,
-      hàng đợi và tiến trình xử lý; chạy phép thử tải với SLO rõ.'
+    task: Chạy ba chuỗi kết quả; giảm deadline và kiểm tra số lần gọi giảm. Đánh dấu forbidden là lỗi không được
+      retry.
     deliverables:
-    - Cấu hình dịch vụ và kết quả thử tình huống chậm, lỗi hoặc quá tải
-    - Kết quả đối chiếu kèm dữ liệu hoặc điều kiện thực hiện
-    - Một giới hạn và cách kiểm tra thêm
-    checkpoint: Kiểm tra giới hạn thử lại, cách chuyển dự phòng và ảnh hưởng tới người dùng.
-    stretch: Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào.
+    - Bảng attempts, elapsed giả lập và lý do dừng cho từng chuỗi lỗi
+    - Đầu ra gốc và kết quả sau khi đổi một điều kiện
+    - Giải thích một lỗi và giới hạn của phép đo
+    checkpoint: Forbidden phải dừng sau một lần; không được thực hiện lần gọi mới vượt deadline.
+    stretch: Mở notebook liên kết, chạy trong Colab và ghi cấu hình thực tế.
   en:
-    task: Design a service with a cache policy, provider fallback, queue worker, and a small load test with explicit
-      SLOs.
+    task: Run the three outcome sequences; reduce the deadline and check that calls decrease. Treat forbidden as
+      non-retryable.
     deliverables:
-    - One working implementation
-    - One test or benchmark
-    - One note on failure modes and trade-offs
-    checkpoint: You can explain consistency, latency, cost, and availability trade-offs with measured evidence.
-    stretch: Add a failure test for retries, fallbacks, and rate limits and explain the result.
+    - A table of attempts, simulated elapsed time and stop reasons for each outcome sequence
+    - Original output and output after changing one condition
+    - An explanation of one failure and the measurement limits
+    checkpoint: Forbidden must stop after one attempt; no new attempt may exceed the deadline.
+    stretch: Open the linked notebook, run in Colab and record the actual configuration.
 interview_questions:
   vi:
   - Bạn sẽ giải thích nội dung “Thử lại, phương án dự phòng và giới hạn tần suất” bằng ví dụ nào?
@@ -94,20 +99,27 @@ interview_questions:
 formulas: []
 code_examples:
 - language: python
-  title: 'Retries, fallbacks, and rate limits: inspect one complete path'
-  code: "# Topic: Retries, fallbacks, and rate limits (phase-19-genai-production-genai-production-2)\nfrom dataclasses\
-    \ import dataclass\n\n@dataclass(frozen=True)\nclass Result:\n    value: str\n    valid: bool\n\nresult = Result(value='ready',\
-    \ valid=True)\nprint(result)"
+  title: Bound retries using a deterministic clock
+  code: "import json\ndef bounded_retry(outcomes, max_attempts=3, deadline_ms=100):\n    elapsed, calls = 0, 0\n\
+    \    for outcome in outcomes:\n        if calls >= max_attempts or elapsed + 10 > deadline_ms:\n           \
+    \ return {\"status\": \"budget_exhausted\", \"calls\": calls, \"elapsed_ms\": elapsed}\n        elapsed += 10\n\
+    \        calls += 1\n        if outcome == \"ok\":\n            return {\"status\": \"ok\", \"calls\": calls,\
+    \ \"elapsed_ms\": elapsed}\n        if outcome not in {\"timeout\", \"rate_limited\"}:\n            return {\"\
+    status\": outcome, \"calls\": calls, \"elapsed_ms\": elapsed}\n        wait = 10 * 2 ** (calls - 1)\n      \
+    \  if calls == max_attempts or elapsed + wait + 10 > deadline_ms:\n            return {\"status\": \"budget_exhausted\"\
+    , \"calls\": calls, \"elapsed_ms\": elapsed}\n        elapsed += wait\n    return {\"status\": \"no_more_fixture_outcomes\"\
+    , \"calls\": calls, \"elapsed_ms\": elapsed}\nprint(json.dumps([bounded_retry([\"timeout\", \"ok\"]), bounded_retry([\"\
+    forbidden\", \"ok\"]),\n                  bounded_retry([\"timeout\"] * 5, deadline_ms=25)]))\n"
   status: runnable
-  purpose_vi: Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.
-  purpose_en: Illustrate the input-to-output path for retries, fallbacks, and rate limits.
-  setup: Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.
-  expected_output: Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.
-  edge_case_vi: Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.
-  edge_case_en: Try an empty input, a wrong shape or missing data and record the failure.
-  explanation_vi: Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần
-    nội dung; cần hoàn thành riêng nhiệm vụ thực hành.
-  explanation_en: Keep the boundary executable and inspectable; change one input and verify the expected output.
+  purpose_vi: Chỉ thử lại lỗi tạm thời trong số lần và ngân sách thời gian cho phép.
+  purpose_en: Retry only transient failures within explicit attempt and time budgets.
+  setup: 'Python 3.11+; standard library only. Google Colab: paste into one code cell and Run.'
+  expected_output: '[{"status": "ok", "calls": 2, "elapsed_ms": 30}, {"status": "forbidden", "calls": 1, "elapsed_ms":
+    10}, {"status": "budget_exhausted", "calls": 1, "elapsed_ms": 10}]'
+  edge_case_vi: Forbidden phải dừng sau một lần; không được thực hiện lần gọi mới vượt deadline.
+  edge_case_en: Forbidden must stop after one attempt; no new attempt may exceed the deadline.
+  explanation_vi: elapsed_ms là đồng hồ logic; cần đo đồng hồ monotonic và timeout thật khi triển khai dịch vụ.
+  explanation_en: elapsed_ms is a logical clock; real services require monotonic timing and enforced timeouts.
 resources:
 - language: en
   title: Redis Documentation
@@ -145,6 +157,17 @@ resources:
   read_vi: Đọc giải thích → xem ví dụ → thực hành → tự kiểm tra.
   read_en: Follow Study plan → Concept notes → Code example → Practice plan.
   required: true
+- title: Google Colab — Lab B
+  language: vi/en
+  url: https://colab.research.google.com/github/Hzyl/JourneyAIEngineer/blob/main/notebooks/lab-b-workflow-agent.ipynb
+  kind: external
+  required: false
+  purpose_vi: Chạy trong Colab để mở rộng ví dụ bằng dữ liệu và báo cáo của lab.
+  purpose_en: Run in Colab to extend this example with the lab dataset and reports.
+  read_vi: Chọn môi trường CPU do Google lưu trữ, chạy từng ô và đối chiếu báo cáo. Lab dùng công cụ giả lập chỉ
+    đọc, không tải model; tải báo cáo để lưu kết quả.
+  read_en: Run in Colab on a Google-hosted CPU runtime and inspect each report. This lab uses read-only fake tools
+    and downloads no model; download the report to retain results.
 exercise_ids:
 - exercise-19-genai-production
 review_item_ids:
@@ -154,13 +177,13 @@ review_item_ids:
 - phase-19-genai-production-genai-production-2-interview
 estimated_minutes: 60
 completion_checklist:
-- Mô phỏng nhà cung cấp lỗi và xác nhận số lần thử cùng điều kiện chuyển dự phòng.
-- Kiểm tra giới hạn thử lại, cách chuyển dự phòng và ảnh hưởng tới người dùng.
-- Lưu kết quả và giải thích được một giới hạn mà không nhìn lời giải.
+- Chạy ba chuỗi kết quả; giảm deadline và kiểm tra số lần gọi giảm. Đánh dấu forbidden là lỗi không được retry.
+- Forbidden phải dừng sau một lần; không được thực hiện lần gọi mới vượt deadline.
+- Lưu đầu ra và ghi đúng giới hạn của ví dụ.
 completion_criteria:
-- 'Bài làm đáp ứng nhiệm vụ: Mô phỏng nhà cung cấp lỗi và xác nhận số lần thử cùng điều kiện chuyển dự phòng.'
-- Có kết quả đối chiếu với tiêu chí hoặc dự đoán đã ghi trước.
-- Kiểm tra giới hạn thử lại, cách chuyển dự phòng và ảnh hưởng tới người dùng.
+- Bảng attempts, elapsed giả lập và lý do dừng cho từng chuỗi lỗi
+- Forbidden phải dừng sau một lần; không được thực hiện lần gọi mới vượt deadline.
+- Không suy kết quả model thật từ dữ liệu mô phỏng.
 common_mistakes:
 - Dùng bộ nhớ đệm chung mà không xét quyền và ngữ cảnh của người dùng.
 - Kết luận từ một kết quả thuận lợi mà chưa kiểm tra trường hợp khác.
@@ -228,14 +251,22 @@ review_cards:
 ---
 # Thử lại, phương án dự phòng và giới hạn tần suất / Retries, fallbacks, and rate limits
 
-Khi nhà cung cấp chậm hoặc lỗi, thử lại cần giới hạn và khoảng chờ phù hợp. Phương án dự phòng phải giữ yêu cầu tối thiểu về chất lượng, cấu trúc và quyền dữ liệu.
+Retry phù hợp khi lỗi có thể hết, như timeout hoặc giới hạn tần suất; lỗi quyền hay tham số cần sửa nguyên nhân, không lặp vô hạn. Backoff tăng khoảng chờ, jitter giảm việc nhiều client gọi lại cùng lúc. Hệ thật cần timeout cho mỗi lần gọi và deadline toàn yêu cầu; nếu server có Retry-After thì phải cân nhắc hướng dẫn đó trong deadline.
 
-Retry lặp lại trên đường xử lý cũ; fallback chuyển sang phương án khác. Cả hai đều tiêu tốn tài nguyên và có thể làm lỗi lan rộng nếu mọi yêu cầu đồng loạt thử lại khi dịch vụ quá tải.
+Ví dụ dùng đồng hồ logic và kết quả giả lập, không sleep hay gọi mạng. Ngân sách tính cả thời gian chạy và chờ; kiểm tra trước lần gọi tiếp theo. Fallback chỉ đọc cache đã kiểm tra quyền/phiên bản hoặc báo thiếu dữ liệu, không lặng lẽ bịa đáp án. Khi có tác động ghi, dùng idempotency để tránh lặp tác động do retry.
 
-Ví dụ, dùng khoảng chờ tăng dần với độ lệch ngẫu nhiên và giới hạn tổng thời gian trước khi báo lỗi rõ. Tự kiểm tra: khi nhà cung cấp chính lỗi có thể chuyển dữ liệu tới bất kỳ nhà cung cấp khác không? Không; phương án dự phòng phải đã đáp ứng quyền xử lý dữ liệu, hợp đồng đầu ra và mức chất lượng tối thiểu của nhiệm vụ.
+Tự kiểm tra: tăng max_attempts luôn tăng độ tin cậy không? Không; có thể tăng tải và độ trễ. So tỷ lệ phục hồi, lỗi cuối cùng và ngân sách; mô phỏng ở đây kiểm tra chính sách, không đo độ tin cậy mạng thực.
 
-## Thực hành
+## English
 
-Mô phỏng nhà cung cấp lỗi và xác nhận số lần thử cùng điều kiện chuyển dự phòng.
+Retries fit failures that may resolve, such as timeouts or rate limiting; permission and argument failures need correction rather than endless repetition. Backoff increases waiting intervals and jitter spreads retries across clients. Real systems need per-call timeouts and a request deadline; account for Retry-After guidance within that deadline when provided.
 
-Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Thiết kế bộ nhớ đệm, phương án dự phòng, hàng đợi và tiến trình xử lý; chạy phép thử tải với SLO rõ.
+The example uses a logical clock and simulated outcomes, with no sleeping or networking. The budget includes execution and waiting, checked before another attempt. A fallback should read an authorized, version-checked cache or report missing evidence rather than silently invent an answer. For writes, idempotency prevents retries from duplicating effects.
+
+Self-check: do more attempts always increase reliability? No; they can amplify load and latency. Compare recovery rates, terminal errors and budgets; this simulation tests policy, not actual network reliability.
+
+## Thực hành / Practice
+
+Chạy ba chuỗi kết quả; giảm deadline và kiểm tra số lần gọi giảm. Đánh dấu forbidden là lỗi không được retry.
+
+Run the three outcome sequences; reduce the deadline and check that calls decrease. Treat forbidden as non-retryable.
