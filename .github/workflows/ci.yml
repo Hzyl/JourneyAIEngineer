@@ -100,9 +100,9 @@ jobs:
         run: VITE_APP_MODE=hosted npm run build
       - name: Install Chromium for hosted smoke test
         run: npx playwright install --with-deps chromium
-      - name: Run hosted browser boundary smoke
+      - name: Run hosted production browser boundary smoke
         shell: bash
-        run: VITE_APP_MODE=hosted npm run test:e2e:hosted
+        run: VITE_APP_MODE=hosted npm run test:e2e:production
       - name: Stop local Supabase
         if: always()
         run: npx supabase stop --no-backup
