@@ -29,11 +29,18 @@ key_terms:
 - debugging
 - maintainability
 - genai-software-foundations
-concept_notes_vi: Dịch vụ AI cần ranh giới rõ giữa nhận yêu cầu, kiểm tra dữ liệu và gọi mô hình. Chú thích kiểu
-  hỗ trợ đọc mã; việc kiểm tra đầu vào khi chạy vẫn cần được cài đặt.
-concept_notes_en: Python cho AI service và typed contract is a Software Engineering skill for turning an idea into
-  code that can be read, tested, and maintained. Define the inputs, outputs, invariants, and failure modes before
-  implementing. In Python, small boundaries make tests fast and tracebacks actionable.
+concept_notes_vi: |-
+  Dịch vụ AI cần ranh giới rõ giữa nhận yêu cầu, kiểm tra dữ liệu và gọi mô hình. Chú thích kiểu hỗ trợ đọc mã; việc kiểm tra đầu vào khi chạy vẫn cần được cài đặt.
+
+  Hợp đồng kiểu mô tả giá trị mong đợi ở ranh giới hàm; bộ kiểm tra lúc chạy quyết định dữ liệu thật có được chấp nhận hay không. Một chú thích như question: str không tự ngăn người gọi truyền None.
+
+  Ví dụ, dịch vụ hỏi đáp cần từ chối câu hỏi rỗng trước khi gọi mô hình, đồng thời trả lỗi rõ cho phía gọi. Tự kiểm tra: thêm chú thích kiểu đã bảo đảm câu hỏi có nội dung chưa? Chưa; kiểm tra kiểu chỉ là một phần, còn độ dài và nội dung hợp lệ phải được quy định, kiểm tra riêng.
+concept_notes_en: |-
+  An AI service needs clear boundaries between receiving requests, validating data and calling a model. Type annotations aid comprehension; runtime validation must be implemented.
+
+  A type contract describes expected values at function boundaries. A runtime validator decides whether actual input is acceptable. Annotating question as str does not itself prevent a caller from passing None.
+
+  A question-answering service should reject empty questions before model invocation and return an actionable error. Self-check: do annotations ensure meaningful input? No: type checking is only one part; content and length constraints need explicit validation.
 why_it_matters_vi: Kiểm soát cấu trúc dịch vụ, phụ thuộc và phát hành trước khi tối ưu mô hình.
 why_it_matters_en: An AI Engineer must control service boundaries, dependencies, and releases before optimizing
   a model.
@@ -231,6 +238,10 @@ review_cards:
 # Python cho dịch vụ AI và quy định kiểu dữ liệu / Python for AI services and typed contracts
 
 Dịch vụ AI cần ranh giới rõ giữa nhận yêu cầu, kiểm tra dữ liệu và gọi mô hình. Chú thích kiểu hỗ trợ đọc mã; việc kiểm tra đầu vào khi chạy vẫn cần được cài đặt.
+
+Hợp đồng kiểu mô tả giá trị mong đợi ở ranh giới hàm; bộ kiểm tra lúc chạy quyết định dữ liệu thật có được chấp nhận hay không. Một chú thích như question: str không tự ngăn người gọi truyền None.
+
+Ví dụ, dịch vụ hỏi đáp cần từ chối câu hỏi rỗng trước khi gọi mô hình, đồng thời trả lỗi rõ cho phía gọi. Tự kiểm tra: thêm chú thích kiểu đã bảo đảm câu hỏi có nội dung chưa? Chưa; kiểm tra kiểu chỉ là một phần, còn độ dài và nội dung hợp lệ phải được quy định, kiểm tra riêng.
 
 ## Thực hành
 

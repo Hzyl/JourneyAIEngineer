@@ -24,11 +24,22 @@ key_terms:
 - NumPy
 - vector
 - optimization
-concept_notes_vi: Hạ gradient cập nhật tham số theo hướng ngược gradient của hàm mục tiêu. Tốc độ học quá lớn có
-  thể khiến cập nhật dao động; quá nhỏ có thể làm quá trình tối ưu tiến triển chậm.
-concept_notes_en: Gradient descent describes how an output changes when a parameter changes. Use finite differences
-  on a small input to check a gradient, then trace the chain rule through each transformation; gradient sign and
-  scale determine whether updates are stable.
+concept_notes_vi: |-
+  Hạ gradient cập nhật tham số theo hướng ngược gradient, tức vector các đạo hàm riêng của hàm mục tiêu. Gradient mô tả thay đổi cục bộ; bước cập nhật còn phụ thuộc tốc độ học.
+
+  Hướng giảm cục bộ không bảo đảm một bước hữu hạn sẽ giảm mất mát. Tốc độ học quá lớn có thể vượt qua vùng tốt; gradient bằng không cũng có thể xuất hiện ở điểm yên ngựa, không chỉ cực tiểu.
+
+  Hãy hình dung tối ưu hàm bình phương sai số của một tham số: sau mỗi cập nhật, tính lại mất mát và quan sát đường đi. Nếu các bước dao động ngày càng lớn, kiểm tra tốc độ học, gradient và thang đo dữ liệu.
+
+  Tự kiểm tra: giảm tốc độ học luôn giải quyết tối ưu chậm không? Không; bước quá nhỏ còn chậm hơn, và lỗi dữ liệu hoặc đạo hàm cần được sửa riêng.
+concept_notes_en: |-
+  Gradient descent updates parameters opposite the gradient, the vector of partial derivatives of the objective. The gradient describes local change; the learning rate determines the step size.
+
+  A local descent direction does not guarantee that a finite step decreases loss. A large learning rate can overshoot, and zero gradient can occur at a saddle point as well as a minimum.
+
+  For a squared-error objective with one parameter, recompute loss after each update and inspect the trajectory. Increasing oscillations are a reason to check the learning rate, gradients, and data scale.
+
+  Self-check: does lowering the learning rate always fix slow optimization? No; excessively small steps slow progress further, and incorrect data or derivatives need separate fixes.
 why_it_matters_vi: Xác định hàm mục tiêu và cách cập nhật để hiểu mô hình đang học điều gì.
 why_it_matters_en: Understand objectives, loss landscapes, regularization, and optimizers so you know what a model
   is optimizing.
@@ -209,7 +220,13 @@ review_cards:
 ---
 # Hạ gradient / Gradient descent
 
-Hạ gradient cập nhật tham số theo hướng ngược gradient của hàm mục tiêu. Tốc độ học quá lớn có thể khiến cập nhật dao động; quá nhỏ có thể làm quá trình tối ưu tiến triển chậm.
+Hạ gradient cập nhật tham số theo hướng ngược gradient, tức vector các đạo hàm riêng của hàm mục tiêu. Gradient mô tả thay đổi cục bộ; bước cập nhật còn phụ thuộc tốc độ học.
+
+Hướng giảm cục bộ không bảo đảm một bước hữu hạn sẽ giảm mất mát. Tốc độ học quá lớn có thể vượt qua vùng tốt; gradient bằng không cũng có thể xuất hiện ở điểm yên ngựa, không chỉ cực tiểu.
+
+Hãy hình dung tối ưu hàm bình phương sai số của một tham số: sau mỗi cập nhật, tính lại mất mát và quan sát đường đi. Nếu các bước dao động ngày càng lớn, kiểm tra tốc độ học, gradient và thang đo dữ liệu.
+
+Tự kiểm tra: giảm tốc độ học luôn giải quyết tối ưu chậm không? Không; bước quá nhỏ còn chậm hơn, và lỗi dữ liệu hoặc đạo hàm cần được sửa riêng.
 
 ## Thực hành
 

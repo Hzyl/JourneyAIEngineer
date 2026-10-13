@@ -26,11 +26,22 @@ key_terms:
 - reproducibility
 - deployment
 - reliable-code
-concept_notes_vi: Ngoại lệ báo một thao tác không hoàn thành bình thường. Chỉ bắt lỗi ở nơi có thể xử lý hoặc bổ
-  sung ngữ cảnh; nhật ký cần đủ thông tin chẩn đoán mà không lộ dữ liệu nhạy cảm.
-concept_notes_en: Exception và logging is a Software Engineering skill for turning an idea into code that can be
-  read, tested, and maintained. Define the inputs, outputs, invariants, and failure modes before implementing. In
-  Python, small boundaries make tests fast and tracebacks actionable.
+concept_notes_vi: |-
+  Ngoại lệ báo thao tác không hoàn thành bình thường và có thể truyền qua các lời gọi hàm. Bắt lỗi ở nơi có thể phục hồi, chuyển thành thông báo phù hợp hoặc bổ sung ngữ cảnh.
+
+  Logging ghi sự kiện để chẩn đoán; nó không tự xử lý lỗi. Phân biệt báo lỗi với bỏ qua lỗi: bắt mọi Exception rồi trả kết quả rỗng có thể biến thất bại thành dữ liệu có vẻ hợp lệ.
+
+  Khi đọc tệp cấu hình không tồn tại, thông báo nên nêu đường dẫn cần kiểm tra nhưng không in mật khẩu trong cấu hình. Khi cần truy nguyên, giữ thông tin ngoại lệ và ngữ cảnh thao tác.
+
+  Tự kiểm tra: ghi 'failed' rồi tiếp tục như thành công có đủ không? Không; bên gọi phải nhận trạng thái thất bại hoặc một kết quả phục hồi được quy định rõ.
+concept_notes_en: |-
+  An exception signals abnormal completion and can propagate through function calls. Catch it where recovery, suitable translation or useful context is possible.
+
+  Logging records diagnostic events; it does not itself handle a failure. Catching every Exception and returning an empty result can disguise a failure as valid data.
+
+  For a missing configuration file, identify the relevant path without logging passwords from the configuration. Preserve exception details and operation context when diagnosis requires them.
+
+  Self-check: is logging 'failed' and proceeding as if successful sufficient? No; callers need a failure signal or a clearly defined recovery result.
 why_it_matters_vi: Chia trách nhiệm rõ, xử lý ngoại lệ và ghi nhật ký để mã dễ kiểm tra, bảo trì.
 why_it_matters_en: Turn working code into reliable code with module boundaries, logging, exceptions, and explicit
   test boundaries.
@@ -227,7 +238,13 @@ review_cards:
 ---
 # Xử lý ngoại lệ và ghi nhật ký / Exceptions and logging
 
-Ngoại lệ báo một thao tác không hoàn thành bình thường. Chỉ bắt lỗi ở nơi có thể xử lý hoặc bổ sung ngữ cảnh; nhật ký cần đủ thông tin chẩn đoán mà không lộ dữ liệu nhạy cảm.
+Ngoại lệ báo thao tác không hoàn thành bình thường và có thể truyền qua các lời gọi hàm. Bắt lỗi ở nơi có thể phục hồi, chuyển thành thông báo phù hợp hoặc bổ sung ngữ cảnh.
+
+Logging ghi sự kiện để chẩn đoán; nó không tự xử lý lỗi. Phân biệt báo lỗi với bỏ qua lỗi: bắt mọi Exception rồi trả kết quả rỗng có thể biến thất bại thành dữ liệu có vẻ hợp lệ.
+
+Khi đọc tệp cấu hình không tồn tại, thông báo nên nêu đường dẫn cần kiểm tra nhưng không in mật khẩu trong cấu hình. Khi cần truy nguyên, giữ thông tin ngoại lệ và ngữ cảnh thao tác.
+
+Tự kiểm tra: ghi 'failed' rồi tiếp tục như thành công có đủ không? Không; bên gọi phải nhận trạng thái thất bại hoặc một kết quả phục hồi được quy định rõ.
 
 ## Thực hành
 

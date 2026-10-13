@@ -28,10 +28,22 @@ key_terms:
 - debugging
 - maintainability
 - data-files
-concept_notes_vi: 'Kiểm tra cấu trúc dữ liệu xác nhận tên trường, kiểu và các ràng buộc cần thiết. Giá trị thiếu
-  cần chính sách rõ: giữ lại, loại bỏ hay điền giá trị, kèm lý do và số bản ghi bị ảnh hưởng.'
-concept_notes_en: Validate schema và dữ liệu thiếu is a concept in the data-files module. Identify the inputs, outputs,
-  assumptions, failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Lược đồ dữ liệu mô tả tên trường, kiểu và ràng buộc để bên gửi và bên nhận hiểu giống nhau. Kiểm tra lược đồ phát hiện dữ liệu không đáp ứng hợp đồng trước khi dùng trong tính toán.
+
+  Phân biệt giá trị thiếu, sai kiểu và giá trị hợp lệ nhưng bất thường. Tuổi null, tuổi là chuỗi 'abc' và tuổi quá lớn là ba tình huống cần chính sách khác nhau.
+
+  Với cột doanh thu, đừng tự đổi mọi ô trống thành 0: chưa thu thập khác với doanh thu thực bằng 0. Ghi số dòng bị giữ lại, loại bỏ hoặc điền để có thể xem ảnh hưởng.
+
+  Tự kiểm tra: đủ tên cột có chứng minh dữ liệu dùng được không? Không; còn phải kiểm tra giá trị, tính nhất quán và ý nghĩa tại thời điểm sử dụng.
+concept_notes_en: |-
+  A data schema defines field names, types and constraints so producers and consumers share a contract. Validation detects violations before calculations rely on them.
+
+  Distinguish missing values, wrong types and unusual but representable values. A null age, the string 'abc' and an implausibly high age need different policies.
+
+  Do not automatically replace missing revenue with zero: uncollected revenue differs from actual zero revenue. Record how many rows were retained, removed or imputed to assess the impact.
+
+  Self-check: do correct column names establish usable data? No; values, consistency and meaning at usage time also need checking.
 why_it_matters_vi: Đọc, ghi dữ liệu theo cấu trúc rõ và xử lý giá trị thiếu bằng chính sách có thể giải thích.
 why_it_matters_en: Read and write data with schemas, handle missing values, and create CLIs with inspectable inputs
   and outputs.
@@ -225,7 +237,13 @@ review_cards:
 ---
 # Kiểm tra cấu trúc và dữ liệu thiếu / Validate schemas and missing data
 
-Kiểm tra cấu trúc dữ liệu xác nhận tên trường, kiểu và các ràng buộc cần thiết. Giá trị thiếu cần chính sách rõ: giữ lại, loại bỏ hay điền giá trị, kèm lý do và số bản ghi bị ảnh hưởng.
+Lược đồ dữ liệu mô tả tên trường, kiểu và ràng buộc để bên gửi và bên nhận hiểu giống nhau. Kiểm tra lược đồ phát hiện dữ liệu không đáp ứng hợp đồng trước khi dùng trong tính toán.
+
+Phân biệt giá trị thiếu, sai kiểu và giá trị hợp lệ nhưng bất thường. Tuổi null, tuổi là chuỗi 'abc' và tuổi quá lớn là ba tình huống cần chính sách khác nhau.
+
+Với cột doanh thu, đừng tự đổi mọi ô trống thành 0: chưa thu thập khác với doanh thu thực bằng 0. Ghi số dòng bị giữ lại, loại bỏ hoặc điền để có thể xem ảnh hưởng.
+
+Tự kiểm tra: đủ tên cột có chứng minh dữ liệu dùng được không? Không; còn phải kiểm tra giá trị, tính nhất quán và ý nghĩa tại thời điểm sử dụng.
 
 ## Thực hành
 

@@ -26,10 +26,18 @@ key_terms:
 - debugging
 - maintainability
 - portfolio
-concept_notes_vi: README giúp người đọc hiểu vấn đề, cách chạy, kết quả và giới hạn. Dẫn tới báo cáo, kiểm thử hoặc
-  demo để các tuyên bố có thể kiểm tra.
-concept_notes_en: Project README is a concept in the portfolio module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  README giúp người đọc hiểu vấn đề, cách chạy, kết quả và giới hạn. Dẫn tới báo cáo, kiểm thử hoặc demo để các tuyên bố có thể kiểm tra.
+
+  README là cửa vào dự án; tài liệu thiết kế và báo cáo đánh giá giải thích sâu hơn. Người đọc mới cần biết yêu cầu môi trường trước lệnh chạy, tránh phải suy ra cấu hình từ mã.
+
+  Ví dụ, ghi phiên bản Python, tệp dữ liệu mẫu, lệnh khởi động trên PowerShell và đầu ra mong đợi. Tự kiểm tra: ảnh chụp giao diện có thay thế hướng dẫn tái chạy không? Không; thử làm theo README từ môi trường sạch, ghi bước thiếu và liên kết báo cáo thay vì khẳng định kết quả không có bằng chứng.
+concept_notes_en: |-
+  A README explains the problem, setup, results and limits, linking to tests, reports or demos for verification.
+
+  It is the project's entry point; design documents and evaluation reports supply depth. New readers need environment requirements before commands.
+
+  State the Python version, sample data, PowerShell startup command and expected output. Self-check: can a screenshot replace reproduction instructions? No: follow the README in a clean environment, repair missing steps and link evidence instead of making unsupported performance claims.
 why_it_matters_vi: Trình bày năng lực bằng dự án có bằng chứng kỹ thuật và đóng góp rõ.
 why_it_matters_en: Tell the technical story through a README, architecture diagram, video, and a curated GitHub
   profile.
@@ -208,6 +216,10 @@ review_cards:
 # Viết README cho dự án / Project READMEs
 
 README giúp người đọc hiểu vấn đề, cách chạy, kết quả và giới hạn. Dẫn tới báo cáo, kiểm thử hoặc demo để các tuyên bố có thể kiểm tra.
+
+README là cửa vào dự án; tài liệu thiết kế và báo cáo đánh giá giải thích sâu hơn. Người đọc mới cần biết yêu cầu môi trường trước lệnh chạy, tránh phải suy ra cấu hình từ mã.
+
+Ví dụ, ghi phiên bản Python, tệp dữ liệu mẫu, lệnh khởi động trên PowerShell và đầu ra mong đợi. Tự kiểm tra: ảnh chụp giao diện có thay thế hướng dẫn tái chạy không? Không; thử làm theo README từ môi trường sạch, ghi bước thiếu và liên kết báo cáo thay vì khẳng định kết quả không có bằng chứng.
 
 ## Thực hành
 

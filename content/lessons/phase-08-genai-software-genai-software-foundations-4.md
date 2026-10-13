@@ -27,10 +27,18 @@ key_terms:
 - reproducibility
 - deployment
 - genai-software-foundations
-concept_notes_vi: CI/CD tự động hóa kiểm tra và các bước đưa phiên bản tới môi trường sử dụng. Cần tách cấu hình,
-  quyền và tiêu chí triển khai theo từng môi trường.
-concept_notes_en: CI/CD và cloud căn bản connects code to a real runtime. Document the artifact, dependencies, configuration,
-  health check, and rollback path; a successful build is not enough without a smoke test in a production-like environment.
+concept_notes_vi: |-
+  CI/CD tự động hóa kiểm tra và các bước đưa phiên bản tới môi trường sử dụng. Cần tách cấu hình, quyền và tiêu chí triển khai theo từng môi trường.
+
+  CI kiểm tra các thay đổi tích hợp; quy trình phát hành đưa artifact đã tạo tới môi trường đích. Trong continuous delivery, bản phát hành có thể chờ duyệt; continuous deployment thường tự triển khai khi vượt các cổng đã đặt.
+
+  Ví dụ, một bản dịch vụ vượt unit test vẫn cần kiểm tra cấu hình và gọi thử API trong môi trường thử nghiệm. Tự kiểm tra: pipeline xanh có đủ chứng minh dịch vụ thật đang khỏe không? Không; nó chỉ chứng minh các bước đã chạy thành công. Cần tín hiệu sức khỏe, kiểm tra luồng sử dụng và phương án quay lại phiên bản trước.
+concept_notes_en: |-
+  CI/CD automates checks and release steps. Environments need separate configuration, permissions and deployment criteria.
+
+  Continuous integration checks combined changes. A release pipeline moves a built artifact to a target environment. Continuous delivery may retain a release approval; continuous deployment usually deploys automatically after its gates pass.
+
+  A service passing unit tests still needs configuration checks and an API smoke test in staging. Self-check: does a green pipeline prove the live service is healthy? No: it proves its executed steps succeeded. Check runtime health and a real workflow, and prepare a rollback path.
 why_it_matters_vi: Kiểm soát cấu trúc dịch vụ, phụ thuộc và phát hành trước khi tối ưu mô hình.
 why_it_matters_en: An AI Engineer must control service boundaries, dependencies, and releases before optimizing
   a model.
@@ -215,6 +223,10 @@ review_cards:
 # CI/CD và nền tảng đám mây / CI/CD and cloud fundamentals
 
 CI/CD tự động hóa kiểm tra và các bước đưa phiên bản tới môi trường sử dụng. Cần tách cấu hình, quyền và tiêu chí triển khai theo từng môi trường.
+
+CI kiểm tra các thay đổi tích hợp; quy trình phát hành đưa artifact đã tạo tới môi trường đích. Trong continuous delivery, bản phát hành có thể chờ duyệt; continuous deployment thường tự triển khai khi vượt các cổng đã đặt.
+
+Ví dụ, một bản dịch vụ vượt unit test vẫn cần kiểm tra cấu hình và gọi thử API trong môi trường thử nghiệm. Tự kiểm tra: pipeline xanh có đủ chứng minh dịch vụ thật đang khỏe không? Không; nó chỉ chứng minh các bước đã chạy thành công. Cần tín hiệu sức khỏe, kiểm tra luồng sử dụng và phương án quay lại phiên bản trước.
 
 ## Thực hành
 

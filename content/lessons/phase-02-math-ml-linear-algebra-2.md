@@ -26,11 +26,22 @@ key_terms:
 - gradient
 - optimization
 - linear-algebra
-concept_notes_vi: Nhân ma trận kết hợp hàng của ma trận thứ nhất với cột của ma trận thứ hai. Hai kích thước ở giữa
-  phải bằng nhau; thứ tự nhân thường làm thay đổi cả kích thước lẫn kết quả.
-concept_notes_en: Matrix multiplication is a foundation for numerical representations. Track tensor shapes, units,
-  and axes; verify multiplication on a small example before using a large batch. For similarity, normalize the measure
-  so scale differences do not change the conclusion.
+concept_notes_vi: |-
+  Nhân ma trận kết hợp mỗi hàng của ma trận trái với mỗi cột của ma trận phải bằng tổng các tích tương ứng. Kích thước bên trong phải khớp; kết quả giữ hai kích thước bên ngoài.
+
+  Phân biệt nhân ma trận với nhân từng phần tử. Trong NumPy, @ thể hiện nhân ma trận, còn * thường nhân từng phần tử theo quy tắc broadcasting. Hai phép toán có mục đích khác nhau dù đôi khi cùng chạy được.
+
+  Lô dữ liệu X có kích thước (3,2), trọng số W có kích thước (2,4) thì X @ W có kích thước (3,4): ba mẫu, bốn đầu ra. Đảo thứ tự W @ X không hợp lệ ở đây.
+
+  Tự kiểm tra: chỉ kiểm tra số phần tử có đủ không? Không; phải kiểm tra từng trục, thứ tự nhân và ý nghĩa đặc trưng.
+concept_notes_en: |-
+  Matrix multiplication pairs each row of the left matrix with each column of the right using sums of corresponding products. Inner dimensions must match; outer dimensions determine the result.
+
+  It differs from elementwise multiplication. In NumPy, @ denotes matrix multiplication while * generally applies elementwise multiplication with broadcasting. Both may execute while expressing different operations.
+
+  For X shaped (3,2) and W shaped (2,4), X @ W has shape (3,4): three samples and four outputs. W @ X is incompatible here.
+
+  Self-check: is checking total element counts sufficient? No; check axes, multiplication order and feature meaning.
 why_it_matters_vi: Liên hệ vector, ma trận, khoảng cách và PCA với biểu diễn dữ liệu trong mô hình.
 why_it_matters_en: Connect vectors, matrices, distances, and PCA to tensor shapes and model representations.
 study_steps_vi:
@@ -217,7 +228,13 @@ review_cards:
 ---
 # Nhân ma trận / Matrix multiplication
 
-Nhân ma trận kết hợp hàng của ma trận thứ nhất với cột của ma trận thứ hai. Hai kích thước ở giữa phải bằng nhau; thứ tự nhân thường làm thay đổi cả kích thước lẫn kết quả.
+Nhân ma trận kết hợp mỗi hàng của ma trận trái với mỗi cột của ma trận phải bằng tổng các tích tương ứng. Kích thước bên trong phải khớp; kết quả giữ hai kích thước bên ngoài.
+
+Phân biệt nhân ma trận với nhân từng phần tử. Trong NumPy, @ thể hiện nhân ma trận, còn * thường nhân từng phần tử theo quy tắc broadcasting. Hai phép toán có mục đích khác nhau dù đôi khi cùng chạy được.
+
+Lô dữ liệu X có kích thước (3,2), trọng số W có kích thước (2,4) thì X @ W có kích thước (3,4): ba mẫu, bốn đầu ra. Đảo thứ tự W @ X không hợp lệ ở đây.
+
+Tự kiểm tra: chỉ kiểm tra số phần tử có đủ không? Không; phải kiểm tra từng trục, thứ tự nhân và ý nghĩa đặc trưng.
 
 ## Thực hành
 

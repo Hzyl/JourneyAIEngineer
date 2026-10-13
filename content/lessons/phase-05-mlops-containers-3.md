@@ -28,10 +28,22 @@ key_terms:
 - reproducibility
 - deployment
 - containers
-concept_notes_vi: Kiểm thử đơn vị kiểm tra hành vi trong phạm vi nhỏ; kiểm thử tích hợp kiểm tra sự phối hợp giữa
-  các thành phần. Hai loại bổ sung cho nhau và cần kết quả mong đợi rõ.
-concept_notes_en: Unit và integration test is a concept in the containers module. Identify the inputs, outputs,
-  assumptions, failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Kiểm thử đơn vị kiểm tra hành vi trong phạm vi nhỏ; kiểm thử tích hợp kiểm tra sự phối hợp giữa các thành phần. Hai loại bổ sung cho nhau và cần kết quả mong đợi rõ.
+
+  Một mock là đối tượng thay thế phụ thuộc để kiểm soát điều kiện thử; nó không chứng minh phụ thuộc thật tuân theo giả định. Kiểm thử đơn vị nên phát hiện lỗi logic, còn tích hợp phát hiện sai hợp đồng giữa các phần.
+
+  Ví dụ, kiểm thử đơn vị xác nhận hàm chuẩn hóa xử lý danh sách rỗng. Kiểm thử tích hợp gửi yêu cầu qua API thật với cơ sở dữ liệu tạm để phát hiện tên cột sai hoặc phản hồi không đúng schema.
+
+  Tự kiểm tra: mọi mock đều trả thành công thì hệ thống đã sẵn sàng chưa? Chưa; phải thử lỗi kết nối và một luồng tích hợp thực. Không dùng cơ sở dữ liệu người dùng làm nơi thử tác vụ ghi.
+concept_notes_en: |-
+  Unit tests check behavior within a small boundary; integration tests check collaboration between components. Both require explicit expected outcomes.
+
+  A mock replaces a dependency to control test conditions. It does not prove that the real dependency matches those assumptions. Unit tests expose logic errors; integration tests expose contract mismatches.
+
+  For example, unit-test empty-list handling in normalization. An integration test can send an actual API request against a temporary database to reveal a wrong column name or response schema.
+
+  Self-check: do universally successful mocks prove readiness? No: test connection failures and a real integration path. Keep test writes away from the user's database.
 why_it_matters_vi: Đóng gói môi trường để người khác chạy được cùng dịch vụ và kiểm tra tự động.
 why_it_matters_en: Package the environment with Docker and CI so another engineer can run the same service from
   a clone.
@@ -213,6 +225,12 @@ review_cards:
 # Kiểm thử đơn vị và tích hợp / Unit and integration tests
 
 Kiểm thử đơn vị kiểm tra hành vi trong phạm vi nhỏ; kiểm thử tích hợp kiểm tra sự phối hợp giữa các thành phần. Hai loại bổ sung cho nhau và cần kết quả mong đợi rõ.
+
+Một mock là đối tượng thay thế phụ thuộc để kiểm soát điều kiện thử; nó không chứng minh phụ thuộc thật tuân theo giả định. Kiểm thử đơn vị nên phát hiện lỗi logic, còn tích hợp phát hiện sai hợp đồng giữa các phần.
+
+Ví dụ, kiểm thử đơn vị xác nhận hàm chuẩn hóa xử lý danh sách rỗng. Kiểm thử tích hợp gửi yêu cầu qua API thật với cơ sở dữ liệu tạm để phát hiện tên cột sai hoặc phản hồi không đúng schema.
+
+Tự kiểm tra: mọi mock đều trả thành công thì hệ thống đã sẵn sàng chưa? Chưa; phải thử lỗi kết nối và một luồng tích hợp thực. Không dùng cơ sở dữ liệu người dùng làm nơi thử tác vụ ghi.
 
 ## Thực hành
 

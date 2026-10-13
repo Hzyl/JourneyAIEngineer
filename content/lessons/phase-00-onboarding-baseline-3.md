@@ -29,11 +29,22 @@ key_terms:
 - debugging
 - maintainability
 - baseline
-concept_notes_vi: Bài kiểm tra tập trung vào khả năng xác định thư mục hiện tại, đọc trạng thái Git và giải thích
-  thay đổi của tệp. Thực hành trong kho thử nghiệm giúp bạn quan sát từng lệnh mà không ảnh hưởng dự án đang dùng.
-concept_notes_en: 'Bài kiểm tra Git và terminal makes AI engineering work traceable: every change needs a diff,
-  a reason, and a verification step. Practise in a small repository, introduce an intentional failure, read the
-  terminal output, and fix it with a focused commit.'
+concept_notes_vi: |-
+  Bài đánh giá Git và terminal kiểm tra khả năng biết mình đang ở thư mục nào, đọc trạng thái tệp và giải thích thay đổi. Dùng kho thử nghiệm để quan sát tác dụng từng lệnh.
+
+  Terminal là giao diện chạy shell; Git là chương trình quản lý lịch sử được gọi từ shell. Chạy đúng cú pháp trong sai thư mục vẫn có thể tác động sai dự án. Trạng thái Git cũng khác nội dung diff.
+
+  Sau khi sửa một dòng trong tệp thử, dùng git status để biết tệp đã thay đổi và git diff để xem dòng cụ thể. Chưa đưa vào vùng chuẩn bị thì thay đổi chưa thuộc nội dung commit kế tiếp.
+
+  Tự kiểm tra: status có đủ để biết sửa đúng công thức không? Không; cần đọc diff và chạy phép kiểm tra của chương trình.
+concept_notes_en: |-
+  This assessment checks working-directory awareness, file status and explaining changes. Use a practice repository to observe each command safely.
+
+  A terminal hosts a shell; Git is a history-management program invoked through it. Correct syntax in the wrong directory can affect the wrong project. Git status and a diff answer different questions.
+
+  After editing one line, use git status to identify the changed file and git diff to inspect the line. An unstaged edit is not yet part of the next commit's staged content.
+
+  Self-check: can status prove a formula was fixed? No; inspect the diff and run a behavioral check.
 why_it_matters_vi: Xác định kiến thức đã vững và phần cần ôn để chọn nhịp học phù hợp.
 why_it_matters_en: Measure your current baseline honestly so the learning pace follows evidence rather than confidence.
 study_steps_vi:
@@ -229,7 +240,13 @@ review_cards:
 ---
 # Bài kiểm tra Git và terminal / Git and terminal baseline assessment
 
-Bài kiểm tra tập trung vào khả năng xác định thư mục hiện tại, đọc trạng thái Git và giải thích thay đổi của tệp. Thực hành trong kho thử nghiệm giúp bạn quan sát từng lệnh mà không ảnh hưởng dự án đang dùng.
+Bài đánh giá Git và terminal kiểm tra khả năng biết mình đang ở thư mục nào, đọc trạng thái tệp và giải thích thay đổi. Dùng kho thử nghiệm để quan sát tác dụng từng lệnh.
+
+Terminal là giao diện chạy shell; Git là chương trình quản lý lịch sử được gọi từ shell. Chạy đúng cú pháp trong sai thư mục vẫn có thể tác động sai dự án. Trạng thái Git cũng khác nội dung diff.
+
+Sau khi sửa một dòng trong tệp thử, dùng git status để biết tệp đã thay đổi và git diff để xem dòng cụ thể. Chưa đưa vào vùng chuẩn bị thì thay đổi chưa thuộc nội dung commit kế tiếp.
+
+Tự kiểm tra: status có đủ để biết sửa đúng công thức không? Không; cần đọc diff và chạy phép kiểm tra của chương trình.
 
 ## Thực hành
 

@@ -26,10 +26,18 @@ key_terms:
 - loss
 - training
 - generalization
-concept_notes_vi: Tăng cường dữ liệu tạo biến thể bằng phép biến đổi phù hợp với ý nghĩa nhãn. Phép biến đổi cần
-  giữ đúng mục tiêu dự đoán và không tạo dữ liệu phi thực tế.
-concept_notes_en: Data augmentation is a concept in the generalization module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Tăng cường dữ liệu tạo các biến thể nhằm giúp mô hình học những thay đổi mà mục tiêu dự đoán cần chịu được. Phép biến đổi phải phù hợp nhãn: đổi độ sáng vừa phải có thể giữ nhãn loài vật, nhưng xoay chữ số có thể đổi nghĩa.
+
+  Tăng số ảnh bằng biến đổi không tạo thêm từng ấy quan sát độc lập. Chia tập theo ảnh gốc, người hoặc nguồn phù hợp trước khi tạo biến thể, tránh để bản gần giống nhau nằm ở cả train và validation.
+
+  Tự kiểm tra: lật ảnh luôn là phép tăng cường an toàn không? Không; lật ngang biển báo có chữ hoặc ảnh cần phân biệt trái–phải có thể làm sai nhiệm vụ. Xem mẫu sau biến đổi và kiểm tra tác động theo từng nhóm dữ liệu, thay vì bật hàng loạt phép biến đổi.
+concept_notes_en: |-
+  Data augmentation creates variants that help a model tolerate changes relevant to its prediction task. Transformations must preserve the target: modest brightness changes may preserve an animal label, while rotating a digit can change its meaning.
+
+  More transformed images do not create the same number of independent observations. Split by original image, person or other appropriate source before augmentation, so near-duplicates do not cross training and validation.
+
+  Self-check: is flipping always safe? No; horizontally flipping a sign with text or an image requiring left–right distinctions can invalidate the task. Inspect transformed samples and evaluate effects across data groups rather than enabling many transformations blindly.
 why_it_matters_vi: Nhận diện quá khớp và đánh giá tác dụng của điều chuẩn, tăng cường dữ liệu, dừng sớm.
 why_it_matters_en: Diagnose overfitting and improve generalization with regularization, augmentation, and early
   stopping.
@@ -209,7 +217,11 @@ review_cards:
 ---
 # Tăng cường dữ liệu / Data augmentation
 
-Tăng cường dữ liệu tạo biến thể bằng phép biến đổi phù hợp với ý nghĩa nhãn. Phép biến đổi cần giữ đúng mục tiêu dự đoán và không tạo dữ liệu phi thực tế.
+Tăng cường dữ liệu tạo các biến thể nhằm giúp mô hình học những thay đổi mà mục tiêu dự đoán cần chịu được. Phép biến đổi phải phù hợp nhãn: đổi độ sáng vừa phải có thể giữ nhãn loài vật, nhưng xoay chữ số có thể đổi nghĩa.
+
+Tăng số ảnh bằng biến đổi không tạo thêm từng ấy quan sát độc lập. Chia tập theo ảnh gốc, người hoặc nguồn phù hợp trước khi tạo biến thể, tránh để bản gần giống nhau nằm ở cả train và validation.
+
+Tự kiểm tra: lật ảnh luôn là phép tăng cường an toàn không? Không; lật ngang biển báo có chữ hoặc ảnh cần phân biệt trái–phải có thể làm sai nhiệm vụ. Xem mẫu sau biến đổi và kiểm tra tác động theo từng nhóm dữ liệu, thay vì bật hàng loạt phép biến đổi.
 
 ## Thực hành
 

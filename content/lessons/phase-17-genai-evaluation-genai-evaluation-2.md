@@ -26,11 +26,18 @@ key_terms:
 - token
 - embedding
 - genai-evaluation
-concept_notes_vi: Chất lượng truy xuất và chất lượng câu trả lời là hai phần riêng. Nếu nguồn cần thiết không có
-  trong ứng viên, cần sửa truy xuất; nếu nguồn đủ mà trả lời sai, xem bước dùng ngữ cảnh.
-concept_notes_en: 'RAG evaluation: retrieval và answer is one link in a RAG system. Separate parsing, chunking,
-  indexing, retrieval, reranking, and generation so failures are attributable. Chunks need enough context; evaluation
-  should measure retrieval recall, groundedness, and abstention when evidence is missing.'
+concept_notes_vi: |-
+  Chất lượng truy xuất và chất lượng câu trả lời là hai phần riêng. Nếu nguồn cần thiết không có trong ứng viên, cần sửa truy xuất; nếu nguồn đủ mà trả lời sai, xem bước dùng ngữ cảnh.
+
+  Độ bao phủ truy xuất xét bằng chứng cần thiết có được tìm thấy không; đánh giá câu trả lời xét hệ thống sử dụng bằng chứng thế nào. Trả lời đúng từ kiến thức sẵn có không chứng minh truy xuất đã tốt hoặc nguồn đã hỗ trợ kết luận.
+
+  Ví dụ, bộ kiểm tra biết đoạn chứa ngoại lệ và xem đoạn đó có vào ngữ cảnh cuối không, rồi chấm câu trả lời có nêu ngoại lệ. Tự kiểm tra: mô hình trả lời sai thì đổi embedding ngay có hợp lý không? Chưa; kiểm tra chuỗi ứng viên, đoạn được gửi và cách sinh để xác định bước thật sự mất thông tin.
+concept_notes_en: |-
+  Retrieval quality and answer quality are separate. Missing evidence suggests retrieval problems; sufficient evidence with a wrong answer suggests context-use problems.
+
+  Retrieval coverage asks whether necessary evidence was found. Answer evaluation asks how it was used. A correct answer from prior model knowledge does not prove successful retrieval or grounding.
+
+  Track whether a known exception passage reaches final context, then whether the answer includes it. Self-check: should every wrong answer trigger an embedding change? No: inspect candidates, submitted passages and generation to locate where information was lost.
 why_it_matters_vi: Dùng tiêu chí và dữ liệu đại diện để biết hệ thống tốt ở đâu, còn lỗi ở đâu.
 why_it_matters_en: Evaluation distinguishes a fluent demo from a trustworthy system that can improve.
 study_steps_vi:
@@ -227,6 +234,10 @@ review_cards:
 # Đánh giá RAG: truy xuất và câu trả lời / RAG evaluation: retrieval and answers
 
 Chất lượng truy xuất và chất lượng câu trả lời là hai phần riêng. Nếu nguồn cần thiết không có trong ứng viên, cần sửa truy xuất; nếu nguồn đủ mà trả lời sai, xem bước dùng ngữ cảnh.
+
+Độ bao phủ truy xuất xét bằng chứng cần thiết có được tìm thấy không; đánh giá câu trả lời xét hệ thống sử dụng bằng chứng thế nào. Trả lời đúng từ kiến thức sẵn có không chứng minh truy xuất đã tốt hoặc nguồn đã hỗ trợ kết luận.
+
+Ví dụ, bộ kiểm tra biết đoạn chứa ngoại lệ và xem đoạn đó có vào ngữ cảnh cuối không, rồi chấm câu trả lời có nêu ngoại lệ. Tự kiểm tra: mô hình trả lời sai thì đổi embedding ngay có hợp lý không? Chưa; kiểm tra chuỗi ứng viên, đoạn được gửi và cách sinh để xác định bước thật sự mất thông tin.
 
 ## Thực hành
 

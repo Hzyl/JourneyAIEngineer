@@ -26,11 +26,22 @@ key_terms:
 - vector
 - gradient
 - optimization
-concept_notes_vi: Xác suất có điều kiện thay đổi khi biết thêm một sự kiện. Định lý Bayes liên hệ xác suất của giả
-  thuyết sau khi quan sát dữ liệu với xác suất ban đầu và khả năng xuất hiện dữ liệu dưới giả thuyết đó.
-concept_notes_en: Conditional probability và Bayes quantifies uncertainty instead of returning only a prediction.
-  Distinguish conditional from marginal probability, population from sample, and state distribution or confidence-interval
-  assumptions before interpreting a result.
+concept_notes_vi: |-
+  Xác suất có điều kiện mô tả khả năng một sự kiện xảy ra khi đã biết sự kiện khác xảy ra. Việc điều kiện hóa thay đổi tập tình huống đang xét; thứ tự hai sự kiện vì vậy rất quan trọng.
+
+  Định lý Bayes liên hệ xác suất của giả thuyết sau quan sát với xác suất ban đầu và khả năng có quan sát dưới giả thuyết đó. Xác suất cảnh báo khi có lỗi khác xác suất có lỗi khi nhận cảnh báo.
+
+  Một hệ thống giám sát có thể phát hiện tốt lỗi nhưng vẫn tạo nhiều cảnh báo sai nếu lỗi thực tế rất hiếm. Muốn diễn giải cảnh báo, cần biết cả tần suất lỗi nền và khả năng cảnh báo khi không có lỗi.
+
+  Tự kiểm tra: chỉ biết độ nhạy có đủ suy ra xác suất lỗi sau cảnh báo không? Không; còn thiếu tần suất nền và thông tin cảnh báo sai.
+concept_notes_en: |-
+  Conditional probability describes an event's likelihood given another event. Conditioning changes the situations being considered, so the order of events matters.
+
+  Bayes' theorem connects a hypothesis's probability after an observation with its prior probability and the likelihood of that observation under the hypothesis. The probability of an alert given a fault differs from the probability of a fault given an alert.
+
+  A monitoring system can detect faults well yet produce many false alerts when faults are rare. Interpreting alerts requires the base fault rate and the alert rate when no fault exists.
+
+  Self-check: is sensitivity alone enough to determine fault probability after an alert? No; the base rate and false-alert information are also needed.
 why_it_matters_vi: Dùng xác suất để mô tả bất định và đánh giá mức tin cậy của kết luận từ mẫu.
 why_it_matters_en: Use probability and statistics to quantify uncertainty, sampling, and the reliability of conclusions.
 study_steps_vi:
@@ -235,7 +246,13 @@ review_cards:
 ---
 # Xác suất có điều kiện và định lý Bayes / Conditional probability and Bayes
 
-Xác suất có điều kiện thay đổi khi biết thêm một sự kiện. Định lý Bayes liên hệ xác suất của giả thuyết sau khi quan sát dữ liệu với xác suất ban đầu và khả năng xuất hiện dữ liệu dưới giả thuyết đó.
+Xác suất có điều kiện mô tả khả năng một sự kiện xảy ra khi đã biết sự kiện khác xảy ra. Việc điều kiện hóa thay đổi tập tình huống đang xét; thứ tự hai sự kiện vì vậy rất quan trọng.
+
+Định lý Bayes liên hệ xác suất của giả thuyết sau quan sát với xác suất ban đầu và khả năng có quan sát dưới giả thuyết đó. Xác suất cảnh báo khi có lỗi khác xác suất có lỗi khi nhận cảnh báo.
+
+Một hệ thống giám sát có thể phát hiện tốt lỗi nhưng vẫn tạo nhiều cảnh báo sai nếu lỗi thực tế rất hiếm. Muốn diễn giải cảnh báo, cần biết cả tần suất lỗi nền và khả năng cảnh báo khi không có lỗi.
+
+Tự kiểm tra: chỉ biết độ nhạy có đủ suy ra xác suất lỗi sau cảnh báo không? Không; còn thiếu tần suất nền và thông tin cảnh báo sai.
 
 ## Thực hành
 

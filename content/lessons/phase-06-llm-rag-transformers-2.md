@@ -26,11 +26,18 @@ key_terms:
 - retrieval
 - evaluation
 - transformers
-concept_notes_vi: Encoder tạo biểu diễn từ đầu vào; decoder tạo đầu ra theo cấu trúc mô hình. Với mô hình tự hồi
-  quy, mặt nạ nhân quả ngăn sử dụng token tương lai trong chuỗi.
-concept_notes_en: Encoder và decoder explains how a Transformer weights relevant tokens. Track the shapes of Q,
-  K, V, masks, and context length; during inference, KV cache avoids recomputing keys and values at the cost of
-  memory.
+concept_notes_vi: |-
+  Encoder tạo biểu diễn từ đầu vào; decoder tạo đầu ra theo cấu trúc mô hình. Với mô hình tự hồi quy, mặt nạ nhân quả ngăn sử dụng token tương lai trong chuỗi.
+
+  Encoder thường phù hợp tạo biểu diễn để phân loại hoặc truy xuất; decoder nhân quả thuận cho sinh tiếp chuỗi. Mô hình encoder-decoder còn dùng thông tin từ encoder qua cross-attention để tạo đầu ra theo đầu vào.
+
+  Ví dụ, hệ dịch đọc câu nguồn rồi sinh bản dịch; hệ hoàn thành văn bản sinh tiếp từ tiền tố. Tự kiểm tra: mọi mô hình có chữ Transformer đều cùng cách nhìn token không? Không; kiểm tra kiến trúc và mặt nạ, vì chúng quyết định thông tin được dùng tại mỗi vị trí.
+concept_notes_en: |-
+  Encoders form input representations; decoders produce outputs according to the architecture. Autoregressive models use causal masks to avoid future tokens.
+
+  Encoders often support classification or retrieval; causal decoders support continuation. Encoder-decoder models additionally condition generation on encoder outputs through cross-attention.
+
+  Translation can encode a source sentence and generate its translation, while completion extends a prefix. Self-check: do all Transformers see the same token positions? No: architecture and masking determine what information each position may use.
 why_it_matters_vi: Liên hệ attention với cách cung cấp ngữ cảnh và kiểm tra đầu ra của ứng dụng LLM.
 why_it_matters_en: Move from attention to prompts and structured outputs while validating schemas instead of trusting
   raw text.
@@ -210,6 +217,10 @@ review_cards:
 # Encoder và decoder / Encoders and decoders
 
 Encoder tạo biểu diễn từ đầu vào; decoder tạo đầu ra theo cấu trúc mô hình. Với mô hình tự hồi quy, mặt nạ nhân quả ngăn sử dụng token tương lai trong chuỗi.
+
+Encoder thường phù hợp tạo biểu diễn để phân loại hoặc truy xuất; decoder nhân quả thuận cho sinh tiếp chuỗi. Mô hình encoder-decoder còn dùng thông tin từ encoder qua cross-attention để tạo đầu ra theo đầu vào.
+
+Ví dụ, hệ dịch đọc câu nguồn rồi sinh bản dịch; hệ hoàn thành văn bản sinh tiếp từ tiền tố. Tự kiểm tra: mọi mô hình có chữ Transformer đều cùng cách nhìn token không? Không; kiểm tra kiến trúc và mặt nạ, vì chúng quyết định thông tin được dùng tại mỗi vị trí.
 
 ## Thực hành
 

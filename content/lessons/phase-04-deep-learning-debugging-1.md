@@ -26,10 +26,18 @@ key_terms:
 - loss
 - training
 - debugging
-concept_notes_vi: Lỗi kích thước thường xuất hiện khi đổi thứ tự chiều, gộp dữ liệu hoặc kết nối các lớp. Ghi kích
-  thước mong đợi và thực tế để tìm phép biến đổi làm mất tương thích.
-concept_notes_en: Shape error is a concept in the debugging module. Identify the inputs, outputs, assumptions, failure
-  modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Lỗi kích thước tensor thường xuất hiện khi đổi trục, gộp dữ liệu hoặc nối các lớp. Ghi shape mong đợi và thực tế ở ranh giới từng bước để tìm phép biến đổi đầu tiên làm mất tương thích.
+
+  Reshape đổi cách nhóm phần tử nhưng không thay thế việc hoán vị trục bằng permute hoặc transpose. Ví dụ, đổi ảnh từ (N, H, W, C) sang (N, C, H, W) cần chuyển trục; reshape có thể cho đúng con số kích thước nhưng trộn sai dữ liệu ảnh.
+
+  Tự kiểm tra: dùng squeeze không truyền chiều có an toàn với lô một mẫu không? Không hẳn; nó có thể xóa cả chiều batch có kích thước 1. Chỉ rõ trục muốn bỏ và chạy thử cả batch lớn lẫn batch một mẫu để phát hiện lỗi bị che ở lô thông thường.
+concept_notes_en: |-
+  Shape errors often arise when axes are reordered, data is flattened or layers are connected. Record expected and actual shapes at each boundary to locate the first incompatible transformation.
+
+  Reshape changes how elements are grouped; it is not a replacement for permute or transpose. Converting images from (N, H, W, C) to (N, C, H, W) requires an axis permutation; reshape can produce the desired shape numbers while scrambling image meaning.
+
+  Self-check: is squeeze without an axis safe for a one-example batch? Not always; it may also remove the size-1 batch dimension. Specify the intended axis and test both larger and single-example batches to expose errors hidden by normal batch sizes.
 why_it_matters_vi: Dùng bằng chứng để tìm lỗi kích thước, NaN, bộ nhớ GPU và so sánh thí nghiệm.
 why_it_matters_en: Debug shape errors, NaNs, GPU memory, and experiment tracking with contextual logs.
 study_steps_vi:
@@ -206,7 +214,11 @@ review_cards:
 ---
 # Tìm lỗi kích thước tensor / Shape errors
 
-Lỗi kích thước thường xuất hiện khi đổi thứ tự chiều, gộp dữ liệu hoặc kết nối các lớp. Ghi kích thước mong đợi và thực tế để tìm phép biến đổi làm mất tương thích.
+Lỗi kích thước tensor thường xuất hiện khi đổi trục, gộp dữ liệu hoặc nối các lớp. Ghi shape mong đợi và thực tế ở ranh giới từng bước để tìm phép biến đổi đầu tiên làm mất tương thích.
+
+Reshape đổi cách nhóm phần tử nhưng không thay thế việc hoán vị trục bằng permute hoặc transpose. Ví dụ, đổi ảnh từ (N, H, W, C) sang (N, C, H, W) cần chuyển trục; reshape có thể cho đúng con số kích thước nhưng trộn sai dữ liệu ảnh.
+
+Tự kiểm tra: dùng squeeze không truyền chiều có an toàn với lô một mẫu không? Không hẳn; nó có thể xóa cả chiều batch có kích thước 1. Chỉ rõ trục muốn bỏ và chạy thử cả batch lớn lẫn batch một mẫu để phát hiện lỗi bị che ở lô thông thường.
 
 ## Thực hành
 

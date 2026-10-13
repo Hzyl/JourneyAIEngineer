@@ -26,10 +26,18 @@ key_terms:
 - debugging
 - maintainability
 - ship
-concept_notes_vi: Demo cho thấy luồng sử dụng thực tế; README giúp thiết lập và chạy lại. Dùng dữ liệu mẫu an toàn,
-  ghi điều kiện chạy và nói rõ phần mô phỏng.
-concept_notes_en: Demo và README is a concept in the ship module. Identify the inputs, outputs, assumptions, failure
-  modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Demo cho thấy luồng sử dụng thực tế; README giúp thiết lập và chạy lại. Dùng dữ liệu mẫu an toàn, ghi điều kiện chạy và nói rõ phần mô phỏng.
+
+  Demo chứng minh một luồng hoạt động trong điều kiện cụ thể; README hướng dẫn người khác tái lập điều kiện đó. Video đẹp không thay thế thông tin phiên bản, dữ liệu mẫu và cách xử lý khi thiếu cấu hình.
+
+  Ví dụ, README chỉ rõ lệnh chạy trên PowerShell, biến cấu hình cần đặt và kết quả mong đợi khi hỏi tài liệu mẫu. Tự kiểm tra: demo dùng câu trả lời lưu sẵn có được trình bày như gọi mô hình trực tiếp không? Không; ghi rõ phần mô phỏng và cung cấp cách kiểm tra luồng thật khi đủ điều kiện.
+concept_notes_en: |-
+  A demo shows a real user workflow; a README helps someone set up and repeat it. Use safe sample data, state requirements and identify simulated parts.
+
+  A demo establishes behavior under specific conditions. A README makes those conditions reproducible through versions, sample data and missing-configuration guidance; a polished video cannot replace this information.
+
+  Document PowerShell launch commands, configuration variables and expected results for a sample question. Self-check: can prerecorded answers be presented as live model calls? No: label the simulation and explain how to verify the real workflow when prerequisites are available.
 why_it_matters_vi: Hoàn thiện đồ án có thể chạy, đánh giá và trình bày rõ giới hạn.
 why_it_matters_en: Turn the capstone into a product with a baseline, evaluation, demo, README, and explicit limitations.
 study_steps_vi:
@@ -207,6 +215,10 @@ review_cards:
 # Chuẩn bị demo và README / Demos and READMEs
 
 Demo cho thấy luồng sử dụng thực tế; README giúp thiết lập và chạy lại. Dùng dữ liệu mẫu an toàn, ghi điều kiện chạy và nói rõ phần mô phỏng.
+
+Demo chứng minh một luồng hoạt động trong điều kiện cụ thể; README hướng dẫn người khác tái lập điều kiện đó. Video đẹp không thay thế thông tin phiên bản, dữ liệu mẫu và cách xử lý khi thiếu cấu hình.
+
+Ví dụ, README chỉ rõ lệnh chạy trên PowerShell, biến cấu hình cần đặt và kết quả mong đợi khi hỏi tài liệu mẫu. Tự kiểm tra: demo dùng câu trả lời lưu sẵn có được trình bày như gọi mô hình trực tiếp không? Không; ghi rõ phần mô phỏng và cung cấp cách kiểm tra luồng thật khi đủ điều kiện.
 
 ## Thực hành
 

@@ -28,11 +28,18 @@ key_terms:
 - reproducibility
 - deployment
 - genai-system-design
-concept_notes_vi: Thiết kế toàn hệ thống nối nhu cầu người dùng với dữ liệu, mô hình, API và vận hành. Mỗi thành
-  phần cần trách nhiệm rõ và cách kiểm tra khi gặp lỗi.
-concept_notes_en: Architecture end-to-end cho AI product is a concept in the genai-system-design module. Identify
-  the inputs, outputs, assumptions, failure modes, and verification method with a small example before scaling to
-  a project.
+concept_notes_vi: |-
+  Thiết kế toàn hệ thống nối nhu cầu người dùng với dữ liệu, mô hình, API và vận hành. Mỗi thành phần cần trách nhiệm rõ và cách kiểm tra khi gặp lỗi.
+
+  Kiến trúc mô tả trách nhiệm và quan hệ giữa các phần; lựa chọn thư viện chỉ là cách hiện thực chúng. Một sơ đồ hữu ích thể hiện dữ liệu đi đâu, ai được đọc và điều gì xảy ra khi một phụ thuộc lỗi.
+
+  Ví dụ, hệ hỏi đáp tách nhập tài liệu, kiểm tra quyền, truy xuất và sinh câu trả lời để theo dõi nguồn lỗi. Tự kiểm tra: thêm nhiều dịch vụ có tự làm hệ thống tốt hơn không? Không; mỗi ranh giới tăng chi phí giao tiếp và vận hành. Bắt đầu từ yêu cầu rồi chỉ tách thành phần khi có lợi ích cụ thể có thể kiểm tra.
+concept_notes_en: |-
+  End-to-end design connects user needs with data, models, APIs and operations. Give each component a clear responsibility and failure check.
+
+  Architecture describes responsibilities and relationships; libraries implement them. A useful diagram shows data flow, access and dependency failure behavior.
+
+  A question-answering system can separate ingestion, authorization, retrieval and generation to locate failures. Self-check: do more services automatically improve the system? No: boundaries add communication and operational costs. Start from requirements and split components only for a concrete, verifiable benefit.
 why_it_matters_vi: Giải thích lựa chọn kiến trúc bằng nhu cầu người dùng, độ tin cậy, bảo mật và chi phí.
 why_it_matters_en: A senior AI Engineer explains system decisions through user value, reliability, security, and
   cost.
@@ -221,6 +228,10 @@ review_cards:
 # Kiến trúc toàn hệ thống cho sản phẩm AI / End-to-end architecture for an AI product
 
 Thiết kế toàn hệ thống nối nhu cầu người dùng với dữ liệu, mô hình, API và vận hành. Mỗi thành phần cần trách nhiệm rõ và cách kiểm tra khi gặp lỗi.
+
+Kiến trúc mô tả trách nhiệm và quan hệ giữa các phần; lựa chọn thư viện chỉ là cách hiện thực chúng. Một sơ đồ hữu ích thể hiện dữ liệu đi đâu, ai được đọc và điều gì xảy ra khi một phụ thuộc lỗi.
+
+Ví dụ, hệ hỏi đáp tách nhập tài liệu, kiểm tra quyền, truy xuất và sinh câu trả lời để theo dõi nguồn lỗi. Tự kiểm tra: thêm nhiều dịch vụ có tự làm hệ thống tốt hơn không? Không; mỗi ranh giới tăng chi phí giao tiếp và vận hành. Bắt đầu từ yêu cầu rồi chỉ tách thành phần khi có lợi ích cụ thể có thể kiểm tra.
 
 ## Thực hành
 

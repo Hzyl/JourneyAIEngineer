@@ -27,11 +27,18 @@ key_terms:
 - retrieval
 - evaluation
 - rag-foundations
-concept_notes_vi: Embedding cung cấp biểu diễn để tìm kiếm; cơ sở dữ liệu vector lưu và truy vấn các biểu diễn cùng
-  siêu dữ liệu. Khi đổi mô hình embedding, cần kiểm tra tương thích của chỉ mục.
-concept_notes_en: Embedding và vector database describes a boundary between data and a service. A sound request
-  has a schema, validation, status code, timeout, and actionable errors; a sound query uses parameter binding, appropriate
-  indexes, and tests empty or malformed data.
+concept_notes_vi: |-
+  Embedding cung cấp biểu diễn để tìm kiếm; cơ sở dữ liệu vector lưu và truy vấn các biểu diễn cùng siêu dữ liệu. Khi đổi mô hình embedding, cần kiểm tra tương thích của chỉ mục.
+
+  Mô hình embedding quyết định ý nghĩa tọa độ; cơ sở dữ liệu vector tổ chức lưu trữ và tìm hàng xóm theo phép đo đã chọn. Hai mô hình trả vector cùng số chiều vẫn có thể tạo hai không gian không tương thích.
+
+  Ví dụ, đổi mô hình mã hóa câu hỏi mà giữ nguyên vector tài liệu cũ có thể làm thứ hạng mất ý nghĩa. Tự kiểm tra: chỉ sửa tên mô hình trong cấu hình đã đủ nâng cấp chỉ mục chưa? Chưa; cần đánh giá lại cách mã hóa, tạo lại vector khi cần và ghi phiên bản để truy vấn, chỉ mục khớp nhau.
+concept_notes_en: |-
+  Embeddings supply searchable representations; a vector database stores and queries them with metadata. Changing embedding models requires index compatibility checks.
+
+  The embedding model determines coordinate meaning; the database organizes storage and neighbor search under a chosen measure. Equal vector dimensions do not make different embedding spaces compatible.
+
+  Encoding queries with a new model against old document vectors can invalidate rankings. Self-check: is changing a configuration model name enough to upgrade the index? No: reassess encoding, regenerate vectors when needed and record versions so queries match the index.
 why_it_matters_vi: Tách truy xuất khỏi sinh câu trả lời để truy nguồn và xử lý thiếu bằng chứng.
 why_it_matters_en: RAG separates retrieval from generation so answers can be sourced and can abstain without evidence.
 study_steps_vi:
@@ -227,6 +234,10 @@ review_cards:
 # Embedding và cơ sở dữ liệu vector / Embeddings and vector databases
 
 Embedding cung cấp biểu diễn để tìm kiếm; cơ sở dữ liệu vector lưu và truy vấn các biểu diễn cùng siêu dữ liệu. Khi đổi mô hình embedding, cần kiểm tra tương thích của chỉ mục.
+
+Mô hình embedding quyết định ý nghĩa tọa độ; cơ sở dữ liệu vector tổ chức lưu trữ và tìm hàng xóm theo phép đo đã chọn. Hai mô hình trả vector cùng số chiều vẫn có thể tạo hai không gian không tương thích.
+
+Ví dụ, đổi mô hình mã hóa câu hỏi mà giữ nguyên vector tài liệu cũ có thể làm thứ hạng mất ý nghĩa. Tự kiểm tra: chỉ sửa tên mô hình trong cấu hình đã đủ nâng cấp chỉ mục chưa? Chưa; cần đánh giá lại cách mã hóa, tạo lại vector khi cần và ghi phiên bản để truy vấn, chỉ mục khớp nhau.
 
 ## Thực hành
 

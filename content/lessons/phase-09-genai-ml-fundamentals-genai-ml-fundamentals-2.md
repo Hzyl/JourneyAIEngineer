@@ -27,11 +27,18 @@ key_terms:
 - baseline
 - evaluation
 - genai-ml-fundamentals
-concept_notes_vi: Embedding đưa dữ liệu vào không gian vector để so sánh. Độ tương đồng phụ thuộc mô hình và cách
-  chuẩn hóa; kết quả gần nhất cần đối chiếu với nhu cầu thực tế.
-concept_notes_en: Embedding và similarity search is one link in a RAG system. Separate parsing, chunking, indexing,
-  retrieval, reranking, and generation so failures are attributable. Chunks need enough context; evaluation should
-  measure retrieval recall, groundedness, and abstention when evidence is missing.
+concept_notes_vi: |-
+  Embedding đưa dữ liệu vào không gian vector để so sánh. Độ tương đồng phụ thuộc mô hình và cách chuẩn hóa; kết quả gần nhất cần đối chiếu với nhu cầu thực tế.
+
+  Embedding là biểu diễn số học được học; phép đo tương đồng là quy tắc so sánh các biểu diễn đó. Cosine so hướng vector, còn tích vô hướng còn chịu ảnh hưởng độ dài nếu vector chưa được chuẩn hóa.
+
+  Ví dụ, câu hỏi về hoàn tiền có thể gần đoạn nói về trả hàng, nhưng chưa chắc đoạn đó chứa điều kiện hoàn tiền cần tìm. Tự kiểm tra: kết quả gần nhất có chắc là bằng chứng đúng không? Không; gần nhất chỉ là thứ hạng trong tập đang tìm. Kiểm tra nội dung, nguồn và phạm vi áp dụng trước khi trả lời.
+concept_notes_en: |-
+  Embeddings represent data as vectors for comparison. Similarity depends on the model and normalization, so nearest results need task-based checking.
+
+  An embedding is a learned representation; a similarity measure is the comparison rule. Cosine compares direction, while a dot product also depends on magnitude when vectors are not normalized.
+
+  A refund question may retrieve a returns paragraph that lacks the required refund conditions. Self-check: is the nearest result necessarily valid evidence? No: nearest only ranks the searched collection. Inspect content, source and applicability before using it in an answer.
 why_it_matters_vi: Liên hệ embedding và thước đo với truy xuất, phân nhóm và chất lượng mô hình.
 why_it_matters_en: Embeddings and metrics connect user data to retrieval, clustering, and model quality.
 study_steps_vi:
@@ -218,6 +225,10 @@ review_cards:
 # Embedding và tìm kiếm tương đồng / Embeddings and similarity search
 
 Embedding đưa dữ liệu vào không gian vector để so sánh. Độ tương đồng phụ thuộc mô hình và cách chuẩn hóa; kết quả gần nhất cần đối chiếu với nhu cầu thực tế.
+
+Embedding là biểu diễn số học được học; phép đo tương đồng là quy tắc so sánh các biểu diễn đó. Cosine so hướng vector, còn tích vô hướng còn chịu ảnh hưởng độ dài nếu vector chưa được chuẩn hóa.
+
+Ví dụ, câu hỏi về hoàn tiền có thể gần đoạn nói về trả hàng, nhưng chưa chắc đoạn đó chứa điều kiện hoàn tiền cần tìm. Tự kiểm tra: kết quả gần nhất có chắc là bằng chứng đúng không? Không; gần nhất chỉ là thứ hạng trong tập đang tìm. Kiểm tra nội dung, nguồn và phạm vi áp dụng trước khi trả lời.
 
 ## Thực hành
 

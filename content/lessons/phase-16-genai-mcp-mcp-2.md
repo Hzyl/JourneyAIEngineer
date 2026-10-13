@@ -26,11 +26,18 @@ key_terms:
 - embedding
 - retrieval
 - evaluation
-concept_notes_vi: Client duy trì kết nối tới server; server công bố các khả năng mà nó cung cấp. Cấu hình kết nối
-  không tự cấp quyền cho mọi thao tác, nên vẫn cần kiểm tra phạm vi truy cập.
-concept_notes_en: MCP client và server extends a model with controlled actions. Tool schemas must validate inputs,
-  limit permissions, and define timeout and retry; an agent loop needs stopping conditions, step logs, and human
-  approval for side effects.
+concept_notes_vi: |-
+  Client duy trì kết nối tới server; server công bố các khả năng mà nó cung cấp. Cấu hình kết nối không tự cấp quyền cho mọi thao tác, nên vẫn cần kiểm tra phạm vi truy cập.
+
+  Client và server là vai trò giao tiếp, không nhất thiết là hai máy khác nhau. Một server có thể chạy cục bộ hoặc từ xa; lựa chọn này thay đổi cách khởi động, truyền dữ liệu và quản lý quyền.
+
+  Ví dụ, server đọc tệp cục bộ cần phạm vi thư mục rõ, còn dịch vụ từ xa cần xác thực và chính sách dữ liệu tương ứng. Tự kiểm tra: server chạy trên máy mình có mặc nhiên đáng tin không? Không; mã server vẫn có quyền của tiến trình được cấp. Kiểm tra nguồn phần mềm, cấu hình và quyền tối thiểu trước khi cho truy cập dữ liệu.
+concept_notes_en: |-
+  A client communicates with a server that advertises supported capabilities. Configuring communication does not grant permission for every operation.
+
+  Client and server are communication roles, not necessarily separate machines. Local and remote servers differ in startup, transport and permission management.
+
+  A local file server needs an explicit directory scope; a remote service needs suitable authentication and data policy. Self-check: is a server trustworthy merely because it runs locally? No: its code has the permissions granted to its process. Review provenance, configuration and minimum access before exposing data.
 why_it_matters_vi: Hiểu cách kết nối công cụ, ngữ cảnh và giữ ranh giới quyền truy cập.
 why_it_matters_en: MCP standardizes how models discover context and capabilities without removing access-control
   responsibility.
@@ -220,6 +227,10 @@ review_cards:
 # Client và server MCP / MCP clients and servers
 
 Client duy trì kết nối tới server; server công bố các khả năng mà nó cung cấp. Cấu hình kết nối không tự cấp quyền cho mọi thao tác, nên vẫn cần kiểm tra phạm vi truy cập.
+
+Client và server là vai trò giao tiếp, không nhất thiết là hai máy khác nhau. Một server có thể chạy cục bộ hoặc từ xa; lựa chọn này thay đổi cách khởi động, truyền dữ liệu và quản lý quyền.
+
+Ví dụ, server đọc tệp cục bộ cần phạm vi thư mục rõ, còn dịch vụ từ xa cần xác thực và chính sách dữ liệu tương ứng. Tự kiểm tra: server chạy trên máy mình có mặc nhiên đáng tin không? Không; mã server vẫn có quyền của tiến trình được cấp. Kiểm tra nguồn phần mềm, cấu hình và quyền tối thiểu trước khi cho truy cập dữ liệu.
 
 ## Thực hành
 

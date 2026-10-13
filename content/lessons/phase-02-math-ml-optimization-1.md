@@ -27,11 +27,22 @@ key_terms:
 - vector
 - gradient
 - optimization
-concept_notes_vi: Mô hình quá đơn giản có thể bỏ sót quy luật, còn mô hình quá linh hoạt dễ học cả nhiễu của mẫu
-  huấn luyện. So sánh kết quả huấn luyện và kiểm định giúp nhận ra dấu hiệu thiếu khớp hoặc quá khớp.
-concept_notes_en: Bias, variance và overfitting quantifies uncertainty instead of returning only a prediction. Distinguish
-  conditional from marginal probability, population from sample, and state distribution or confidence-interval assumptions
-  before interpreting a result.
+concept_notes_vi: |-
+  Bias mô tả sai lệch có hệ thống của phương pháp học; variance mô tả mức dự đoán thay đổi khi tập huấn luyện thay đổi. Mô hình quá đơn giản có thể bỏ sót quy luật, còn mô hình quá linh hoạt dễ học nhiễu.
+
+  Phân biệt khái niệm này với việc chỉ nhìn một điểm số. Khoảng cách giữa lỗi huấn luyện và kiểm định là dấu hiệu hữu ích, nhưng còn có thể do lệch phân phối hoặc rò rỉ dữ liệu.
+
+  Một cây sâu có thể nhớ các mẫu huấn luyện mà thay đổi mạnh khi bỏ vài mẫu. Giới hạn độ sâu có thể giảm biến động, nhưng giới hạn quá mạnh lại bỏ sót cấu trúc thật.
+
+  Tự kiểm tra: lỗi huấn luyện giảm có chắc lỗi dữ liệu mới giảm không? Không; phải kiểm định trên dữ liệu độc lập phù hợp bài toán.
+concept_notes_en: |-
+  Bias describes systematic error of a learning procedure; variance describes how predictions change across training samples. An overly simple model can miss structure, while a flexible one can fit noise.
+
+  These concepts are not established by one score. A training-validation gap is useful evidence, but distribution mismatch or leakage can also affect the comparison.
+
+  A deep tree may memorize training examples and change substantially when a few samples are removed. Limiting depth can reduce variability, but excessive restriction can miss real structure.
+
+  Self-check: does lower training error guarantee lower new-data error? No; evaluate on independent data appropriate to the task.
 why_it_matters_vi: Xác định hàm mục tiêu và cách cập nhật để hiểu mô hình đang học điều gì.
 why_it_matters_en: Understand objectives, loss landscapes, regularization, and optimizers so you know what a model
   is optimizing.
@@ -237,7 +248,13 @@ review_cards:
 ---
 # Độ chệch, phương sai và quá khớp / Bias, variance and overfitting
 
-Mô hình quá đơn giản có thể bỏ sót quy luật, còn mô hình quá linh hoạt dễ học cả nhiễu của mẫu huấn luyện. So sánh kết quả huấn luyện và kiểm định giúp nhận ra dấu hiệu thiếu khớp hoặc quá khớp.
+Bias mô tả sai lệch có hệ thống của phương pháp học; variance mô tả mức dự đoán thay đổi khi tập huấn luyện thay đổi. Mô hình quá đơn giản có thể bỏ sót quy luật, còn mô hình quá linh hoạt dễ học nhiễu.
+
+Phân biệt khái niệm này với việc chỉ nhìn một điểm số. Khoảng cách giữa lỗi huấn luyện và kiểm định là dấu hiệu hữu ích, nhưng còn có thể do lệch phân phối hoặc rò rỉ dữ liệu.
+
+Một cây sâu có thể nhớ các mẫu huấn luyện mà thay đổi mạnh khi bỏ vài mẫu. Giới hạn độ sâu có thể giảm biến động, nhưng giới hạn quá mạnh lại bỏ sót cấu trúc thật.
+
+Tự kiểm tra: lỗi huấn luyện giảm có chắc lỗi dữ liệu mới giảm không? Không; phải kiểm định trên dữ liệu độc lập phù hợp bài toán.
 
 ## Thực hành
 

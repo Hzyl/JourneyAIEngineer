@@ -27,11 +27,22 @@ key_terms:
 - debugging
 - maintainability
 - sql-structures
-concept_notes_vi: Truy vấn con tách một bước xử lý thành kết quả trung gian. Hàm cửa sổ tính trên nhóm dòng liên
-  quan mà vẫn giữ từng dòng kết quả, hữu ích khi xếp hạng hoặc tính tổng tích lũy.
-concept_notes_en: Subquery và window function is a Software Engineering skill for turning an idea into code that
-  can be read, tested, and maintained. Define the inputs, outputs, invariants, and failure modes before implementing.
-  In Python, small boundaries make tests fast and tracebacks actionable.
+concept_notes_vi: |-
+  Truy vấn con tạo một bước xử lý bên trong truy vấn lớn. Hàm cửa sổ tính trên các dòng liên quan đến dòng hiện tại, thích hợp cho xếp hạng hoặc tổng tích lũy.
+
+  Khác GROUP BY làm gộp các dòng theo nhóm, hàm cửa sổ giữ danh tính từng dòng. PARTITION BY xác định nhóm tính; ORDER BY trong cửa sổ xác định thứ tự tính, không tự bảo đảm thứ tự hiển thị cuối.
+
+  Có thể đặt lương mỗi nhân viên cạnh lương trung bình của phòng bằng AVG ... OVER (PARTITION BY phòng). Khi xếp hạng có đồng điểm, cần chọn cách xử lý hòa hoặc thêm khóa phụ nếu muốn thứ tự xác định.
+
+  Tự kiểm tra: dùng hàm cửa sổ có tự giảm còn một dòng mỗi phòng không? Không; mỗi nhân viên vẫn giữ dòng riêng.
+concept_notes_en: |-
+  A subquery expresses an intermediate operation inside a larger query. A window function computes over rows related to the current row, supporting ranking and running totals.
+
+  Unlike GROUP BY aggregation, window functions retain individual rows. PARTITION BY defines groups; window ORDER BY defines calculation order, not necessarily final display order.
+
+  AVG ... OVER (PARTITION BY department) can show each employee beside the department mean. For tied ranks, choose tie semantics or add a secondary key when deterministic ordering is needed.
+
+  Self-check: does a window function automatically reduce each department to one row? No; each employee retains a separate row.
 why_it_matters_vi: Hiểu quan hệ dữ liệu và chi phí xử lý để chọn truy vấn, cấu trúc dữ liệu phù hợp.
 why_it_matters_en: 'Develop structured-data thinking: write correct queries, understand relations, and reason about
   algorithmic cost.'
@@ -224,7 +235,13 @@ review_cards:
 ---
 # Truy vấn con và hàm cửa sổ / Subqueries and window functions
 
-Truy vấn con tách một bước xử lý thành kết quả trung gian. Hàm cửa sổ tính trên nhóm dòng liên quan mà vẫn giữ từng dòng kết quả, hữu ích khi xếp hạng hoặc tính tổng tích lũy.
+Truy vấn con tạo một bước xử lý bên trong truy vấn lớn. Hàm cửa sổ tính trên các dòng liên quan đến dòng hiện tại, thích hợp cho xếp hạng hoặc tổng tích lũy.
+
+Khác GROUP BY làm gộp các dòng theo nhóm, hàm cửa sổ giữ danh tính từng dòng. PARTITION BY xác định nhóm tính; ORDER BY trong cửa sổ xác định thứ tự tính, không tự bảo đảm thứ tự hiển thị cuối.
+
+Có thể đặt lương mỗi nhân viên cạnh lương trung bình của phòng bằng AVG ... OVER (PARTITION BY phòng). Khi xếp hạng có đồng điểm, cần chọn cách xử lý hòa hoặc thêm khóa phụ nếu muốn thứ tự xác định.
+
+Tự kiểm tra: dùng hàm cửa sổ có tự giảm còn một dòng mỗi phòng không? Không; mỗi nhân viên vẫn giữ dòng riêng.
 
 ## Thực hành
 

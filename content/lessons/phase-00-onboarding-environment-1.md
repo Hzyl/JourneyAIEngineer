@@ -27,11 +27,22 @@ key_terms:
 - testing
 - debugging
 - maintainability
-concept_notes_vi: Trình thông dịch Python thực thi mã nguồn của bạn. Máy có thể có nhiều bản Python, nên cần kiểm
-  tra cả phiên bản lẫn đường dẫn chương trình đang được gọi trước khi cài thư viện.
-concept_notes_en: Cài Python và kiểm tra phiên bản is a Software Engineering skill for turning an idea into code
-  that can be read, tested, and maintained. Define the inputs, outputs, invariants, and failure modes before implementing.
-  In Python, small boundaries make tests fast and tracebacks actionable.
+concept_notes_vi: |-
+  Python là ngôn ngữ; chương trình như CPython là một cách triển khai ngôn ngữ ấy. Khi cài đặt, kiểm tra cả phiên bản và đường dẫn bằng python --version và sys.executable để biết chương trình thực sự đang chạy.
+
+  Trình biên dịch chuyển mã sang dạng khác; trình thông dịch thực thi chỉ thị. Hai cơ chế có thể cùng xuất hiện: CPython thường biên dịch mã thành bytecode rồi thực thi bytecode. Vì vậy không nên hiểu Python là đọc nguyên văn từng dòng hoặc mọi trình biên dịch đều tạo mã máy.
+
+  Máy có nhiều bản Python có thể chạy chương trình bằng bản này nhưng cài thư viện vào bản khác. Dùng python -m pip gắn pip với Python đang gọi.
+
+  Tự kiểm tra: VS Code mở tệp .py có nghĩa đã chọn đúng Python chưa? Chưa; đối chiếu trình thông dịch được chọn với sys.executable.
+concept_notes_en: |-
+  Python is a language; CPython is an implementation of that language. After installation, check both the version and executable path using python --version and sys.executable.
+
+  A compiler translates code into another representation; an interpreter executes instructions. Both can participate: CPython normally compiles source into bytecode and executes that bytecode. Python is not simply reading source line by line, and compilers need not produce machine code.
+
+  Multiple installations can cause code to run in one environment while packages are installed in another. python -m pip uses the Python being invoked.
+
+  Self-check: does opening a .py file in VS Code select the right Python? Not necessarily; compare the selected interpreter with sys.executable.
 why_it_matters_vi: Thiết lập môi trường Python có thể tạo lại và biết kiểm tra nguyên nhân khi lệnh chạy khác dự
   kiến.
 why_it_matters_en: Turn Windows into a reproducible Python environment and learn to verify tools from the terminal.
@@ -226,7 +237,13 @@ review_cards:
 ---
 # Cài Python và kiểm tra phiên bản / Install Python and verify the version
 
-Trình thông dịch Python thực thi mã nguồn của bạn. Máy có thể có nhiều bản Python, nên cần kiểm tra cả phiên bản lẫn đường dẫn chương trình đang được gọi trước khi cài thư viện.
+Python là ngôn ngữ; chương trình như CPython là một cách triển khai ngôn ngữ ấy. Khi cài đặt, kiểm tra cả phiên bản và đường dẫn bằng python --version và sys.executable để biết chương trình thực sự đang chạy.
+
+Trình biên dịch chuyển mã sang dạng khác; trình thông dịch thực thi chỉ thị. Hai cơ chế có thể cùng xuất hiện: CPython thường biên dịch mã thành bytecode rồi thực thi bytecode. Vì vậy không nên hiểu Python là đọc nguyên văn từng dòng hoặc mọi trình biên dịch đều tạo mã máy.
+
+Máy có nhiều bản Python có thể chạy chương trình bằng bản này nhưng cài thư viện vào bản khác. Dùng python -m pip gắn pip với Python đang gọi.
+
+Tự kiểm tra: VS Code mở tệp .py có nghĩa đã chọn đúng Python chưa? Chưa; đối chiếu trình thông dịch được chọn với sys.executable.
 
 ## Thực hành
 

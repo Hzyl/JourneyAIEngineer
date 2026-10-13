@@ -28,11 +28,18 @@ key_terms:
 - baseline
 - evaluation
 - problem
-concept_notes_vi: Thước đo cần phản ánh kết quả hữu ích và yêu cầu kỹ thuật. Nêu cách thu thập, ngưỡng chấp nhận
-  và giới hạn đo để tránh tối ưu con số không gắn với nhu cầu.
-concept_notes_en: 'Xác định user và metric is a classical Machine Learning decision: define the label, baseline,
-  split, and metric before choosing a model. Fit preprocessing on train only; error analysis should identify the
-  groups where the model fails and how to retest the hypothesis.'
+concept_notes_vi: |-
+  Thước đo cần phản ánh kết quả hữu ích và yêu cầu kỹ thuật. Nêu cách thu thập, ngưỡng chấp nhận và giới hạn đo để tránh tối ưu con số không gắn với nhu cầu.
+
+  Thước đo sản phẩm phản ánh lợi ích người dùng; thước đo kỹ thuật phản ánh hoạt động hệ thống. Tốc độ nhanh hơn nhưng trả lời sai nhiều hơn có thể làm kết quả sử dụng xấu đi.
+
+  Ví dụ, đo tỉ lệ tìm đúng điều khoản cùng thời gian hoàn thành và tỉ lệ phát biểu thiếu nguồn. Tự kiểm tra: chỉ tăng số cuộc chat có chứng minh hữu ích không? Không; người dùng có thể phải hỏi lại vì câu đầu sai. Xác định đơn vị đo là một nhiệm vụ hoàn tất và thêm giới hạn chất lượng.
+concept_notes_en: |-
+  Metrics should reflect useful outcomes and technical requirements. Specify collection, acceptance criteria and measurement limits.
+
+  Product metrics describe user benefit; technical metrics describe system behavior. Faster answers can still harm outcomes if accuracy worsens.
+
+  Measure correct-clause retrieval, task completion time and unsupported claims together. Self-check: do more chat turns prove usefulness? No: users may repeat questions because earlier answers failed. Define a completed task as the unit and include quality constraints.
 why_it_matters_vi: Chọn vấn đề có người dùng, tiêu chí đánh giá và kiến trúc giải thích được.
 why_it_matters_en: Choose a real user problem with measurable metrics and an architecture you can defend in an interview.
 study_steps_vi:
@@ -221,6 +228,10 @@ review_cards:
 # Xác định người dùng và thước đo / Define users and metrics
 
 Thước đo cần phản ánh kết quả hữu ích và yêu cầu kỹ thuật. Nêu cách thu thập, ngưỡng chấp nhận và giới hạn đo để tránh tối ưu con số không gắn với nhu cầu.
+
+Thước đo sản phẩm phản ánh lợi ích người dùng; thước đo kỹ thuật phản ánh hoạt động hệ thống. Tốc độ nhanh hơn nhưng trả lời sai nhiều hơn có thể làm kết quả sử dụng xấu đi.
+
+Ví dụ, đo tỉ lệ tìm đúng điều khoản cùng thời gian hoàn thành và tỉ lệ phát biểu thiếu nguồn. Tự kiểm tra: chỉ tăng số cuộc chat có chứng minh hữu ích không? Không; người dùng có thể phải hỏi lại vì câu đầu sai. Xác định đơn vị đo là một nhiệm vụ hoàn tất và thêm giới hạn chất lượng.
 
 ## Thực hành
 

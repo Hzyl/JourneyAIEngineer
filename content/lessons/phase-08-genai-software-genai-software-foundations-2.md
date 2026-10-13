@@ -29,11 +29,18 @@ key_terms:
 - testing
 - debugging
 - maintainability
-concept_notes_vi: Môi trường tái lập cần phiên bản phụ thuộc, biến cấu hình và lệnh khởi động rõ. Shell giúp chạy
-  các bước đó, nhưng đường dẫn và quyền truy cập cần kiểm tra trên máy đích.
-concept_notes_en: 'Linux shell và môi trường tái lập makes AI engineering work traceable: every change needs a diff,
-  a reason, and a verification step. Practise in a small repository, introduce an intentional failure, read the
-  terminal output, and fix it with a focused commit.'
+concept_notes_vi: |-
+  Môi trường tái lập cần phiên bản phụ thuộc, biến cấu hình và lệnh khởi động rõ. Shell giúp chạy các bước đó, nhưng đường dẫn và quyền truy cập cần kiểm tra trên máy đích.
+
+  Shell là chương trình diễn giải lệnh; môi trường Python là nơi chọn trình thông dịch và thư viện. Chép lệnh Bash vào PowerShell có thể thất bại vì cú pháp biến và đường dẫn khác, dù mã Python giống nhau.
+
+  Ví dụ, ghi phiên bản Python, tệp phụ thuộc và thư mục chạy, rồi thử thiết lập trong môi trường sạch. Tự kiểm tra: lưu mã trong Git đã đủ tái lập kết quả chưa? Chưa; còn phụ thuộc, cấu hình, dữ liệu và đôi khi phần cứng. Không đưa khóa truy cập vào tệp cấu hình mẫu.
+concept_notes_en: |-
+  A reproducible environment records dependency versions, configuration and startup commands. Check paths and permissions on the target machine.
+
+  A shell interprets commands; a Python environment selects the interpreter and libraries. Bash commands can fail in PowerShell because variable and path syntax differ even when Python code is unchanged.
+
+  Record the Python version, dependency file and working directory, then test setup in a clean environment. Self-check: is storing code in Git sufficient for reproducibility? No: dependencies, configuration, data and sometimes hardware matter too. Keep credentials out of configuration examples.
 why_it_matters_vi: Kiểm soát cấu trúc dịch vụ, phụ thuộc và phát hành trước khi tối ưu mô hình.
 why_it_matters_en: An AI Engineer must control service boundaries, dependencies, and releases before optimizing
   a model.
@@ -222,6 +229,10 @@ review_cards:
 # Linux shell và môi trường tái lập / Linux shell and reproducible environments
 
 Môi trường tái lập cần phiên bản phụ thuộc, biến cấu hình và lệnh khởi động rõ. Shell giúp chạy các bước đó, nhưng đường dẫn và quyền truy cập cần kiểm tra trên máy đích.
+
+Shell là chương trình diễn giải lệnh; môi trường Python là nơi chọn trình thông dịch và thư viện. Chép lệnh Bash vào PowerShell có thể thất bại vì cú pháp biến và đường dẫn khác, dù mã Python giống nhau.
+
+Ví dụ, ghi phiên bản Python, tệp phụ thuộc và thư mục chạy, rồi thử thiết lập trong môi trường sạch. Tự kiểm tra: lưu mã trong Git đã đủ tái lập kết quả chưa? Chưa; còn phụ thuộc, cấu hình, dữ liệu và đôi khi phần cứng. Không đưa khóa truy cập vào tệp cấu hình mẫu.
 
 ## Thực hành
 

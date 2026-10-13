@@ -26,11 +26,18 @@ key_terms:
 - vector
 - optimization
 - debugging
-concept_notes_vi: NaN báo phép tính không tạo giá trị số hợp lệ; gradient quá lớn có thể làm cập nhật mất ổn định.
-  Kiểm tra dữ liệu, phép tính và gradient để tìm điểm đầu tiên xuất hiện bất thường.
-concept_notes_en: NaN và exploding gradient describes how an output changes when a parameter changes. Use finite
-  differences on a small input to check a gradient, then trace the chain rule through each transformation; gradient
-  sign and scale determine whether updates are stable.
+concept_notes_vi: |-
+  NaN là giá trị báo một phép tính không cho kết quả số hợp lệ; Inf biểu diễn vô cực trong tính toán dấu phẩy động. Gradient bùng nổ là tình trạng độ lớn gradient tăng quá mức, có thể dẫn đến cập nhật mất ổn định, nhưng không phải nguyên nhân duy nhất gây NaN.
+
+  Ví dụ, log của số âm tạo NaN trong tensor thực; tăng tốc độ học không sửa được đầu vào sai miền này. Dùng kiểm tra giá trị hữu hạn ở dữ liệu, đầu ra, loss và gradient để tìm điểm bất thường đầu tiên.
+
+  Tự kiểm tra: gradient clipping có chữa mọi NaN không? Không; clipping giới hạn độ lớn gradient hữu hạn, không sửa dữ liệu hỏng hay phép toán không hợp lệ. Sau khi tìm nguyên nhân, thử lại một lô nhỏ và theo dõi trước/sau bước optimizer.
+concept_notes_en: |-
+  NaN indicates an invalid numeric result; Inf represents infinity in floating-point arithmetic. Exploding gradients grow excessively large and can destabilize updates, but they are not the only cause of NaN.
+
+  For example, taking the logarithm of a negative real tensor value produces NaN; changing learning rate does not repair that domain error. Check finiteness in data, outputs, loss and gradients to locate the first abnormal value.
+
+  Self-check: does gradient clipping cure every NaN? No; clipping bounds finite gradient magnitude, not corrupt data or invalid operations. After identifying the cause, retry a small batch and inspect values before and after the optimizer step.
 why_it_matters_vi: Dùng bằng chứng để tìm lỗi kích thước, NaN, bộ nhớ GPU và so sánh thí nghiệm.
 why_it_matters_en: Debug shape errors, NaNs, GPU memory, and experiment tracking with contextual logs.
 study_steps_vi:
@@ -215,7 +222,11 @@ review_cards:
 ---
 # NaN và gradient bùng nổ / NaN values and exploding gradients
 
-NaN báo phép tính không tạo giá trị số hợp lệ; gradient quá lớn có thể làm cập nhật mất ổn định. Kiểm tra dữ liệu, phép tính và gradient để tìm điểm đầu tiên xuất hiện bất thường.
+NaN là giá trị báo một phép tính không cho kết quả số hợp lệ; Inf biểu diễn vô cực trong tính toán dấu phẩy động. Gradient bùng nổ là tình trạng độ lớn gradient tăng quá mức, có thể dẫn đến cập nhật mất ổn định, nhưng không phải nguyên nhân duy nhất gây NaN.
+
+Ví dụ, log của số âm tạo NaN trong tensor thực; tăng tốc độ học không sửa được đầu vào sai miền này. Dùng kiểm tra giá trị hữu hạn ở dữ liệu, đầu ra, loss và gradient để tìm điểm bất thường đầu tiên.
+
+Tự kiểm tra: gradient clipping có chữa mọi NaN không? Không; clipping giới hạn độ lớn gradient hữu hạn, không sửa dữ liệu hỏng hay phép toán không hợp lệ. Sau khi tìm nguyên nhân, thử lại một lô nhỏ và theo dõi trước/sau bước optimizer.
 
 ## Thực hành
 

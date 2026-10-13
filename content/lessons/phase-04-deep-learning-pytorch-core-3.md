@@ -26,10 +26,18 @@ key_terms:
 - loss
 - training
 - pytorch-core
-concept_notes_vi: Dataset định nghĩa cách lấy một mẫu; DataLoader tổ chức mẫu thành lô và điều khiển cách duyệt
-  dữ liệu. Kiểm tra một lô trước khi huấn luyện giúp phát hiện sai kiểu, nhãn hoặc kích thước.
-concept_notes_en: Dataset và DataLoader is a concept in the pytorch-core module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Dataset mô tả cách lấy dữ liệu; với dạng truy cập bằng chỉ số, mỗi lần lấy thường trả về một mẫu và nhãn. DataLoader tổ chức việc lấy mẫu, ghép lô và có thể dùng nhiều tiến trình để chuẩn bị dữ liệu.
+
+  Batch là một lô, còn epoch thường là một lượt đi qua tập huấn luyện. Với 10 mẫu, batch_size=4 và không bỏ lô cuối, một lượt gồm các lô 4, 4, 2. Nếu bật drop_last, hai mẫu cuối của lượt đó bị bỏ.
+
+  Tự kiểm tra: shuffle có thay thế việc chia train/validation không? Không; nó chỉ đổi thứ tự lấy mẫu trong tập đã chọn. Cần chia dữ liệu đúng trước, rồi kiểm tra một lô có nhãn, kích thước và kiểu dữ liệu phù hợp. Với dữ liệu thời gian, cách lấy mẫu còn phải giữ đúng ngữ cảnh của nhiệm vụ.
+concept_notes_en: |-
+  A Dataset describes how to access data; with index-based access, an item commonly contains one example and its target. A DataLoader handles sampling and batching, and can use worker processes to prepare data.
+
+  A batch is a group of examples, while an epoch typically covers one pass through the training set. With 10 examples, batch_size=4 and no dropped final batch, a pass has batches of 4, 4 and 2. Enabling drop_last discards the last two examples for that pass.
+
+  Self-check: does shuffle replace a train/validation split? No; it only changes sampling order within the selected set. Split the data appropriately first, then inspect a batch for correct targets, shapes and dtypes. For temporal data, sampling must also respect the task context.
 why_it_matters_vi: Hiểu kích thước tensor, cách lấy dữ liệu và gradient để tự viết vòng lặp huấn luyện.
 why_it_matters_en: Read tensor shapes, datasets, and autograd well enough to write a small PyTorch training loop.
 study_steps_vi:
@@ -218,7 +226,11 @@ review_cards:
 ---
 # Dataset và DataLoader / Datasets and DataLoaders
 
-Dataset định nghĩa cách lấy một mẫu; DataLoader tổ chức mẫu thành lô và điều khiển cách duyệt dữ liệu. Kiểm tra một lô trước khi huấn luyện giúp phát hiện sai kiểu, nhãn hoặc kích thước.
+Dataset mô tả cách lấy dữ liệu; với dạng truy cập bằng chỉ số, mỗi lần lấy thường trả về một mẫu và nhãn. DataLoader tổ chức việc lấy mẫu, ghép lô và có thể dùng nhiều tiến trình để chuẩn bị dữ liệu.
+
+Batch là một lô, còn epoch thường là một lượt đi qua tập huấn luyện. Với 10 mẫu, batch_size=4 và không bỏ lô cuối, một lượt gồm các lô 4, 4, 2. Nếu bật drop_last, hai mẫu cuối của lượt đó bị bỏ.
+
+Tự kiểm tra: shuffle có thay thế việc chia train/validation không? Không; nó chỉ đổi thứ tự lấy mẫu trong tập đã chọn. Cần chia dữ liệu đúng trước, rồi kiểm tra một lô có nhãn, kích thước và kiểu dữ liệu phù hợp. Với dữ liệu thời gian, cách lấy mẫu còn phải giữ đúng ngữ cảnh của nhiệm vụ.
 
 ## Thực hành
 

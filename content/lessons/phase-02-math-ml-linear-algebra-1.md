@@ -26,11 +26,22 @@ key_terms:
 - gradient
 - optimization
 - linear-algebra
-concept_notes_vi: Vector biểu diễn tọa độ hoặc các đặc trưng của một mẫu dữ liệu. Ý nghĩa của từng chiều và đơn
-  vị đo quyết định cách diễn giải phép cộng, nhân vô hướng và khoảng cách.
-concept_notes_en: Vector và không gian is a foundation for numerical representations. Track tensor shapes, units,
-  and axes; verify multiplication on a small example before using a large batch. For similarity, normalize the measure
-  so scale differences do not change the conclusion.
+concept_notes_vi: |-
+  Vector có thể biểu diễn tọa độ hoặc tập đặc trưng của một mẫu. Mỗi chiều cần tên và đơn vị; các phép cộng và nhân vô hướng chỉ có ý nghĩa khi các thành phần tương ứng được hiểu nhất quán.
+
+  Phân biệt vector toán học với list chứa dữ liệu tùy ý. Một list trộn tên người với tuổi không tự trở thành không gian số có khoảng cách hữu ích. Cơ sở quy định cách biểu diễn tọa độ, còn tập sinh mô tả những vector tạo được bằng tổ hợp tuyến tính.
+
+  Hai vector (1,0) và (0,1) sinh được mọi vector hai chiều; riêng (1,0) chỉ sinh được các điểm trên một trục. Đổi đơn vị một đặc trưng cũng đổi khoảng cách số.
+
+  Tự kiểm tra: hai mẫu gần nhau về số đã chắc giống nhau về ý nghĩa chưa? Chưa; cần xét cách mã hóa và thang đo.
+concept_notes_en: |-
+  A vector can represent coordinates or a sample's features. Name each dimension and unit; addition and scalar multiplication require consistent interpretation of corresponding components.
+
+  A mathematical vector differs from an arbitrary list. Mixing a name and an age does not automatically create a useful numeric distance space. A basis specifies coordinates; a span describes vectors obtainable by linear combinations.
+
+  The vectors (1,0) and (0,1) span two-dimensional space; (1,0) alone spans one axis. Changing a feature's unit changes numeric distances.
+
+  Self-check: does numeric closeness establish semantic similarity? Not by itself; examine encoding and scale.
 why_it_matters_vi: Liên hệ vector, ma trận, khoảng cách và PCA với biểu diễn dữ liệu trong mô hình.
 why_it_matters_en: Connect vectors, matrices, distances, and PCA to tensor shapes and model representations.
 study_steps_vi:
@@ -218,7 +229,13 @@ review_cards:
 ---
 # Vector và không gian vector / Vectors and spaces
 
-Vector biểu diễn tọa độ hoặc các đặc trưng của một mẫu dữ liệu. Ý nghĩa của từng chiều và đơn vị đo quyết định cách diễn giải phép cộng, nhân vô hướng và khoảng cách.
+Vector có thể biểu diễn tọa độ hoặc tập đặc trưng của một mẫu. Mỗi chiều cần tên và đơn vị; các phép cộng và nhân vô hướng chỉ có ý nghĩa khi các thành phần tương ứng được hiểu nhất quán.
+
+Phân biệt vector toán học với list chứa dữ liệu tùy ý. Một list trộn tên người với tuổi không tự trở thành không gian số có khoảng cách hữu ích. Cơ sở quy định cách biểu diễn tọa độ, còn tập sinh mô tả những vector tạo được bằng tổ hợp tuyến tính.
+
+Hai vector (1,0) và (0,1) sinh được mọi vector hai chiều; riêng (1,0) chỉ sinh được các điểm trên một trục. Đổi đơn vị một đặc trưng cũng đổi khoảng cách số.
+
+Tự kiểm tra: hai mẫu gần nhau về số đã chắc giống nhau về ý nghĩa chưa? Chưa; cần xét cách mã hóa và thang đo.
 
 ## Thực hành
 

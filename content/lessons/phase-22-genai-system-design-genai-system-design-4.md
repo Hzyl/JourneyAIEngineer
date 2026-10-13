@@ -28,11 +28,18 @@ key_terms:
 - reproducibility
 - deployment
 - genai-system-design
-concept_notes_vi: Rà soát thiết kế kiểm tra yêu cầu, giả định, luồng dữ liệu và phương án khi lỗi. Đề xuất đồ án
-  cần phạm vi đủ nhỏ để triển khai, đánh giá và trình bày bằng chứng rõ.
-concept_notes_en: Design review và capstone proposal is a concept in the genai-system-design module. Identify the
-  inputs, outputs, assumptions, failure modes, and verification method with a small example before scaling to a
-  project.
+concept_notes_vi: |-
+  Rà soát thiết kế kiểm tra yêu cầu, giả định, luồng dữ liệu và phương án khi lỗi. Đề xuất đồ án cần phạm vi đủ nhỏ để triển khai, đánh giá và trình bày bằng chứng rõ.
+
+  Bản đề xuất mô tả điều muốn xây; bằng chứng thử nghiệm cho biết điều gì đã hoạt động trong phạm vi nào. Tách yêu cầu bắt buộc, giả định cần kiểm tra và tính năng có thể làm sau để đồ án có điểm kết thúc rõ.
+
+  Ví dụ, trợ lý hỏi đáp chỉ dùng một bộ tài liệu công khai, có nguồn trích dẫn và biết báo thiếu bằng chứng là phạm vi có thể đo. Tự kiểm tra: sơ đồ đầy đủ mọi công nghệ đã đủ để duyệt thiết kế chưa? Chưa; cần đường đi của dữ liệu, quyền truy cập, tình huống lỗi, baseline và tiêu chí nghiệm thu. Ghi cả phương án đã cân nhắc và lý do lựa chọn.
+concept_notes_en: |-
+  A design review checks requirements, assumptions, data flows and failure handling. A capstone proposal needs a scope small enough to implement, evaluate and explain with clear evidence.
+
+  A proposal describes intended behavior; experimental evidence shows what worked and under which conditions. Separate mandatory requirements, assumptions to test and optional later features so the project has a clear finish.
+
+  For example, document question answering over one public corpus, with citations and explicit missing-evidence responses, has measurable scope. Self-check: is a diagram full of technologies enough to approve a design? No; show data paths, access rights, failures, a baseline and acceptance criteria. Record alternatives and reasons for the choice.
 why_it_matters_vi: Giải thích lựa chọn kiến trúc bằng nhu cầu người dùng, độ tin cậy, bảo mật và chi phí.
 why_it_matters_en: A senior AI Engineer explains system decisions through user value, reliability, security, and
   cost.
@@ -218,6 +225,10 @@ review_cards:
 # Rà soát thiết kế và đề xuất đồ án / Design review and capstone proposal
 
 Rà soát thiết kế kiểm tra yêu cầu, giả định, luồng dữ liệu và phương án khi lỗi. Đề xuất đồ án cần phạm vi đủ nhỏ để triển khai, đánh giá và trình bày bằng chứng rõ.
+
+Bản đề xuất mô tả điều muốn xây; bằng chứng thử nghiệm cho biết điều gì đã hoạt động trong phạm vi nào. Tách yêu cầu bắt buộc, giả định cần kiểm tra và tính năng có thể làm sau để đồ án có điểm kết thúc rõ.
+
+Ví dụ, trợ lý hỏi đáp chỉ dùng một bộ tài liệu công khai, có nguồn trích dẫn và biết báo thiếu bằng chứng là phạm vi có thể đo. Tự kiểm tra: sơ đồ đầy đủ mọi công nghệ đã đủ để duyệt thiết kế chưa? Chưa; cần đường đi của dữ liệu, quyền truy cập, tình huống lỗi, baseline và tiêu chí nghiệm thu. Ghi cả phương án đã cân nhắc và lý do lựa chọn.
 
 ## Thực hành
 

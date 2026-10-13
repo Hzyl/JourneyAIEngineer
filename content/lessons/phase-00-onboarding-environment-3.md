@@ -27,11 +27,22 @@ key_terms:
 - observability
 - reproducibility
 - deployment
-concept_notes_vi: Môi trường ảo tách thư viện của từng dự án. Thư mục .venv có thể tạo lại từ danh sách phụ thuộc;
-  điều cần lưu cùng dự án là cách tạo môi trường và các phiên bản cần dùng.
-concept_notes_en: Tạo virtual environment đầu tiên is a Software Engineering skill for turning an idea into code
-  that can be read, tested, and maintained. Define the inputs, outputs, invariants, and failure modes before implementing.
-  In Python, small boundaries make tests fast and tracebacks actionable.
+concept_notes_vi: |-
+  Môi trường ảo tạo bộ thư viện Python riêng cho dự án, tránh để thay đổi phụ thuộc của dự án này ảnh hưởng dự án khác. Ghi cách tạo môi trường và các phiên bản cần dùng; thư mục .venv có thể tạo lại.
+
+  Phân biệt môi trường ảo với máy ảo hay container: venv không tạo hệ điều hành riêng và không phải ranh giới bảo mật. Kích hoạt chủ yếu giúp shell ưu tiên chương trình trong môi trường khi tìm lệnh.
+
+  Trên Windows có thể gọi trực tiếp .venv\Scripts\python.exe ngay cả khi chưa kích hoạt. Kiểm tra sys.executable trước khi cài bằng -m pip để tránh cài nhầm nơi.
+
+  Tự kiểm tra: có nên chép .venv sang mọi máy như bản sao lưu dự án không? Không nên; tái tạo từ cấu hình phụ thuộc và kiểm tra lại tương thích.
+concept_notes_en: |-
+  A virtual environment gives a project its own Python packages, reducing interference between projects. Record how to create it and which dependency versions are needed; the .venv directory is replaceable.
+
+  Unlike a virtual machine or container, venv does not create a separate operating system or security boundary. Activation mainly changes how the shell finds executables.
+
+  On Windows, calling .venv\Scripts\python.exe directly works without activation. Check sys.executable before using -m pip to avoid installing elsewhere.
+
+  Self-check: should .venv be copied to every machine as the project backup? Prefer recreating it from dependency configuration and checking compatibility.
 why_it_matters_vi: Thiết lập môi trường Python có thể tạo lại và biết kiểm tra nguyên nhân khi lệnh chạy khác dự
   kiến.
 why_it_matters_en: Turn Windows into a reproducible Python environment and learn to verify tools from the terminal.
@@ -225,7 +236,13 @@ review_cards:
 ---
 # Tạo môi trường ảo Python đầu tiên / Create your first virtual environment
 
-Môi trường ảo tách thư viện của từng dự án. Thư mục .venv có thể tạo lại từ danh sách phụ thuộc; điều cần lưu cùng dự án là cách tạo môi trường và các phiên bản cần dùng.
+Môi trường ảo tạo bộ thư viện Python riêng cho dự án, tránh để thay đổi phụ thuộc của dự án này ảnh hưởng dự án khác. Ghi cách tạo môi trường và các phiên bản cần dùng; thư mục .venv có thể tạo lại.
+
+Phân biệt môi trường ảo với máy ảo hay container: venv không tạo hệ điều hành riêng và không phải ranh giới bảo mật. Kích hoạt chủ yếu giúp shell ưu tiên chương trình trong môi trường khi tìm lệnh.
+
+Trên Windows có thể gọi trực tiếp .venv\Scripts\python.exe ngay cả khi chưa kích hoạt. Kiểm tra sys.executable trước khi cài bằng -m pip để tránh cài nhầm nơi.
+
+Tự kiểm tra: có nên chép .venv sang mọi máy như bản sao lưu dự án không? Không nên; tái tạo từ cấu hình phụ thuộc và kiểm tra lại tương thích.
 
 ## Thực hành
 

@@ -26,11 +26,18 @@ key_terms:
 - embedding
 - retrieval
 - evaluation
-concept_notes_vi: Lỗi có thể đến từ đọc tài liệu, chia đoạn, truy xuất hoặc sinh câu trả lời. Ghi câu hỏi, ứng viên
-  và đầu ra để phân loại rồi chọn đúng bước cần cải thiện.
-concept_notes_en: RAG failure analysis is one link in a RAG system. Separate parsing, chunking, indexing, retrieval,
-  reranking, and generation so failures are attributable. Chunks need enough context; evaluation should measure
-  retrieval recall, groundedness, and abstention when evidence is missing.
+concept_notes_vi: |-
+  Lỗi có thể đến từ đọc tài liệu, chia đoạn, truy xuất hoặc sinh câu trả lời. Ghi câu hỏi, ứng viên và đầu ra để phân loại rồi chọn đúng bước cần cải thiện.
+
+  Phân tích lỗi cần tìm bước đầu tiên mất thông tin. Lỗi truy xuất là không đưa được bằng chứng vào tập ứng viên; lỗi sinh là có bằng chứng đủ nhưng kết luận sai hoặc bỏ điều kiện.
+
+  Ví dụ, PDF có bảng phí nhưng trình đọc ghép nhầm hàng và cột. Đổi prompt không khôi phục cấu trúc đã mất. Tự kiểm tra: nên xem đầu ra nào trước? Đối chiếu tài liệu gốc với văn bản đã trích, rồi đoạn, ứng viên và câu trả lời; dùng cùng câu hỏi để so từng bước.
+concept_notes_en: |-
+  RAG errors may originate in parsing, chunking, retrieval or generation. Save questions, candidates and outputs to classify failures before changing the system.
+
+  Find the first stage that loses information. Retrieval failure omits needed evidence; generation failure mishandles sufficient evidence.
+
+  A PDF parser may mix fee-table rows and columns. Changing the prompt cannot restore lost structure. Self-check: what should be inspected first? Compare the original document with extracted text, then chunks, candidates and the answer using the same question.
 why_it_matters_vi: Xây câu trả lời có nguồn và xử lý đúng trường hợp thiếu bằng chứng.
 why_it_matters_en: Build RAG with citations, evidence-based refusal, and error analysis instead of only a polished
   demo.
@@ -209,6 +216,10 @@ review_cards:
 # Phân tích lỗi RAG / RAG failure analysis
 
 Lỗi có thể đến từ đọc tài liệu, chia đoạn, truy xuất hoặc sinh câu trả lời. Ghi câu hỏi, ứng viên và đầu ra để phân loại rồi chọn đúng bước cần cải thiện.
+
+Phân tích lỗi cần tìm bước đầu tiên mất thông tin. Lỗi truy xuất là không đưa được bằng chứng vào tập ứng viên; lỗi sinh là có bằng chứng đủ nhưng kết luận sai hoặc bỏ điều kiện.
+
+Ví dụ, PDF có bảng phí nhưng trình đọc ghép nhầm hàng và cột. Đổi prompt không khôi phục cấu trúc đã mất. Tự kiểm tra: nên xem đầu ra nào trước? Đối chiếu tài liệu gốc với văn bản đã trích, rồi đoạn, ứng viên và câu trả lời; dùng cùng câu hỏi để so từng bước.
 
 ## Thực hành
 

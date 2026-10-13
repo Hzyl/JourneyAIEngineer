@@ -28,10 +28,22 @@ key_terms:
 - debugging
 - maintainability
 - python-core
-concept_notes_vi: Câu lệnh điều kiện chọn nhánh xử lý, vòng lặp lặp lại công việc, còn comprehension tạo tập hợp
-  dữ liệu ngắn gọn. Ưu tiên cách viết dễ đọc khi điều kiện hoặc phép biến đổi trở nên phức tạp.
-concept_notes_en: Control flow và comprehension is a concept in the python-core module. Identify the inputs, outputs,
-  assumptions, failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Điều kiện chọn nhánh, vòng lặp lặp lại xử lý, còn comprehension tạo một tập hợp từ phép biến đổi và bộ lọc. Chọn cách diễn đạt khiến luồng dữ liệu dễ theo dõi.
+
+  Phân biệt list comprehension với generator expression: dạng list tạo danh sách ngay, còn generator tạo giá trị khi được duyệt. Tính trì hoãn có thể giảm bộ nhớ nhưng cũng khiến lỗi chỉ xuất hiện lúc lấy phần tử.
+
+  [x * 2 for x in [1, 2, 3] if x > 1] cho [4, 6]: điều kiện lọc đầu vào rồi biểu thức tạo đầu ra. Khi có nhiều nhánh hoặc tác dụng phụ, vòng lặp tường minh thường rõ hơn.
+
+  Tự kiểm tra: comprehension với đầu vào rỗng có tạo một phần tử mặc định không? Không; list comprehension trả danh sách rỗng.
+concept_notes_en: |-
+  Conditionals choose branches, loops repeat work, and comprehensions construct collections using transformations and filters. Choose a form that makes data flow understandable.
+
+  A list comprehension builds a list immediately; a generator expression produces values as iteration requests them. Laziness can reduce memory use but may defer errors until consumption.
+
+  [x * 2 for x in [1, 2, 3] if x > 1] yields [4, 6]: the condition filters inputs before the expression creates outputs. Explicit loops are often clearer for many branches or side effects.
+
+  Self-check: does an empty input produce a default element? No; its list comprehension produces an empty list.
 why_it_matters_vi: Nắm Python đủ để đọc mã AI, viết hàm nhỏ và tự kiểm tra hành vi của chương trình.
 why_it_matters_en: Build enough Python fluency to read AI code, write small tested functions, and work beyond notebooks.
 study_steps_vi:
@@ -225,7 +237,13 @@ review_cards:
 ---
 # Rẽ nhánh, vòng lặp và comprehension / Control flow and comprehensions
 
-Câu lệnh điều kiện chọn nhánh xử lý, vòng lặp lặp lại công việc, còn comprehension tạo tập hợp dữ liệu ngắn gọn. Ưu tiên cách viết dễ đọc khi điều kiện hoặc phép biến đổi trở nên phức tạp.
+Điều kiện chọn nhánh, vòng lặp lặp lại xử lý, còn comprehension tạo một tập hợp từ phép biến đổi và bộ lọc. Chọn cách diễn đạt khiến luồng dữ liệu dễ theo dõi.
+
+Phân biệt list comprehension với generator expression: dạng list tạo danh sách ngay, còn generator tạo giá trị khi được duyệt. Tính trì hoãn có thể giảm bộ nhớ nhưng cũng khiến lỗi chỉ xuất hiện lúc lấy phần tử.
+
+[x * 2 for x in [1, 2, 3] if x > 1] cho [4, 6]: điều kiện lọc đầu vào rồi biểu thức tạo đầu ra. Khi có nhiều nhánh hoặc tác dụng phụ, vòng lặp tường minh thường rõ hơn.
+
+Tự kiểm tra: comprehension với đầu vào rỗng có tạo một phần tử mặc định không? Không; list comprehension trả danh sách rỗng.
 
 ## Thực hành
 

@@ -27,10 +27,18 @@ key_terms:
 - retrieval
 - evaluation
 - rag
-concept_notes_vi: Khi tài liệu không đủ, hệ thống cần nói rõ phần chưa biết thay vì suy đoán như sự thật. Có thể
-  đề nghị thông tin bổ sung, nhưng không gán nguồn cho kết luận thiếu căn cứ.
-concept_notes_en: Không đủ bằng chứng is a concept in the rag module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Khi tài liệu không đủ, hệ thống cần nói rõ phần chưa biết thay vì suy đoán như sự thật. Có thể đề nghị thông tin bổ sung, nhưng không gán nguồn cho kết luận thiếu căn cứ.
+
+  Không tìm thấy bằng chứng khác bằng chứng khẳng định điều đó không tồn tại. Truy xuất có thể bỏ sót tài liệu; điểm tương đồng thấp cũng không tự cho biết toàn bộ kho không có đáp án.
+
+  Ví dụ, kho chỉ có chính sách năm cũ nên không đủ kết luận mức phí năm nay. Tự kiểm tra: có nên trả mức cũ như hiện tại không? Không; nêu thời điểm nguồn, phần có thể xác nhận và thông tin cần bổ sung. Nếu được phép, tìm nguồn mới trước khi trả lời tiếp.
+concept_notes_en: |-
+  When documents are insufficient, state what is unknown rather than presenting guesses as facts. Request useful information without attaching unsupported conclusions to sources.
+
+  Missing retrieved evidence differs from evidence of absence. Retrieval can miss documents, and low similarity does not prove the entire collection lacks an answer.
+
+  A previous year's policy cannot establish this year's fee. Self-check: should the old fee be presented as current? No: state the source date, supported portion and missing information; retrieve a newer source when permitted.
 why_it_matters_vi: Xây câu trả lời có nguồn và xử lý đúng trường hợp thiếu bằng chứng.
 why_it_matters_en: Build RAG with citations, evidence-based refusal, and error analysis instead of only a polished
   demo.
@@ -208,6 +216,10 @@ review_cards:
 # Xử lý khi không đủ bằng chứng / Insufficient evidence
 
 Khi tài liệu không đủ, hệ thống cần nói rõ phần chưa biết thay vì suy đoán như sự thật. Có thể đề nghị thông tin bổ sung, nhưng không gán nguồn cho kết luận thiếu căn cứ.
+
+Không tìm thấy bằng chứng khác bằng chứng khẳng định điều đó không tồn tại. Truy xuất có thể bỏ sót tài liệu; điểm tương đồng thấp cũng không tự cho biết toàn bộ kho không có đáp án.
+
+Ví dụ, kho chỉ có chính sách năm cũ nên không đủ kết luận mức phí năm nay. Tự kiểm tra: có nên trả mức cũ như hiện tại không? Không; nêu thời điểm nguồn, phần có thể xác nhận và thông tin cần bổ sung. Nếu được phép, tìm nguồn mới trước khi trả lời tiếp.
 
 ## Thực hành
 

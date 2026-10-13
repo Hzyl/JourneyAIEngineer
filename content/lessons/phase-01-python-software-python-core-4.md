@@ -28,11 +28,22 @@ key_terms:
 - debugging
 - maintainability
 - python-core
-concept_notes_vi: Lớp mô tả dữ liệu cùng hành vi của một nhóm đối tượng. Chỉ gom vào một lớp những phần có trách
-  nhiệm liên quan; không cần tạo lớp khi một hàm đơn giản đã diễn đạt rõ nhiệm vụ.
-concept_notes_en: Class và object-oriented design is a Software Engineering skill for turning an idea into code
-  that can be read, tested, and maintained. Define the inputs, outputs, invariants, and failure modes before implementing.
-  In Python, small boundaries make tests fast and tracebacks actionable.
+concept_notes_vi: |-
+  Lớp gom trạng thái và hành vi có cùng trách nhiệm; đối tượng là một trường hợp cụ thể của lớp. Thiết kế tốt giúp giữ các điều kiện luôn đúng, thay vì chỉ gom nhiều hàm vào một chỗ.
+
+  Phân biệt kế thừa với kết hợp: kế thừa mô tả quan hệ có thể thay thế theo hợp đồng; kết hợp dùng một đối tượng bên trong đối tượng khác. Không phải mọi phần dùng chung đều cần cây kế thừa.
+
+  Một bộ đọc dữ liệu có thể nhận đối tượng lưu trữ qua tham số, giúp thử với dữ liệu trong bộ nhớ. Với phép tính thuần như đổi đơn vị, một hàm đơn giản thường đủ rõ.
+
+  Tự kiểm tra: hai đối tượng có nên dùng chung list chứa lịch sử riêng không? Không; trạng thái riêng nên được tạo cho từng đối tượng, tránh đặt nhầm thành biến lớp.
+concept_notes_en: |-
+  A class groups state and behavior with one responsibility; an object is a particular instance. Good design maintains invariants rather than merely collecting functions.
+
+  Inheritance expresses substitutability under a contract; composition uses another object as a component. Shared code does not always require an inheritance hierarchy.
+
+  A data reader can receive a storage object, making in-memory tests possible. A pure operation such as unit conversion may be clearer as a simple function.
+
+  Self-check: should two objects share a list intended as their private history? No; create instance-specific state instead of accidentally placing it in a class variable.
 why_it_matters_vi: Nắm Python đủ để đọc mã AI, viết hàm nhỏ và tự kiểm tra hành vi của chương trình.
 why_it_matters_en: Build enough Python fluency to read AI code, write small tested functions, and work beyond notebooks.
 study_steps_vi:
@@ -227,7 +238,13 @@ review_cards:
 ---
 # Lớp và thiết kế hướng đối tượng / Classes and object-oriented design
 
-Lớp mô tả dữ liệu cùng hành vi của một nhóm đối tượng. Chỉ gom vào một lớp những phần có trách nhiệm liên quan; không cần tạo lớp khi một hàm đơn giản đã diễn đạt rõ nhiệm vụ.
+Lớp gom trạng thái và hành vi có cùng trách nhiệm; đối tượng là một trường hợp cụ thể của lớp. Thiết kế tốt giúp giữ các điều kiện luôn đúng, thay vì chỉ gom nhiều hàm vào một chỗ.
+
+Phân biệt kế thừa với kết hợp: kế thừa mô tả quan hệ có thể thay thế theo hợp đồng; kết hợp dùng một đối tượng bên trong đối tượng khác. Không phải mọi phần dùng chung đều cần cây kế thừa.
+
+Một bộ đọc dữ liệu có thể nhận đối tượng lưu trữ qua tham số, giúp thử với dữ liệu trong bộ nhớ. Với phép tính thuần như đổi đơn vị, một hàm đơn giản thường đủ rõ.
+
+Tự kiểm tra: hai đối tượng có nên dùng chung list chứa lịch sử riêng không? Không; trạng thái riêng nên được tạo cho từng đối tượng, tránh đặt nhầm thành biến lớp.
 
 ## Thực hành
 

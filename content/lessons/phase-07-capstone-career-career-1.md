@@ -25,10 +25,18 @@ key_terms:
 - debugging
 - maintainability
 - career
-concept_notes_vi: CV nên mô tả đóng góp và kết quả kiểm chứng được, kèm bối cảnh đo. Không biến thước đo trên một
-  bộ dữ liệu thành cam kết hiệu quả trong mọi môi trường.
-concept_notes_en: CV AI Engineer is a concept in the career module. Identify the inputs, outputs, assumptions, failure
-  modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  CV nên mô tả đóng góp và kết quả kiểm chứng được, kèm bối cảnh đo. Không biến thước đo trên một bộ dữ liệu thành cam kết hiệu quả trong mọi môi trường.
+
+  Kỹ năng tự khai khác bằng chứng về đóng góp. CV cần nối việc mình làm với kết quả và điều kiện đo; liệt kê thư viện chưa cho biết bạn đã giải quyết lỗi hay đánh giá mô hình thế nào.
+
+  Ví dụ, viết 'xây bộ kiểm tra RAG, phân loại lỗi truy xuất và dẫn báo cáo' cụ thể hơn 'thành thạo AI'. Tự kiểm tra: số accuracy đứng riêng đã thuyết phục chưa? Chưa; nêu dữ liệu, cách chia và vai trò cá nhân, đồng thời liên kết tới bài làm có thể kiểm tra.
+concept_notes_en: |-
+  A CV should describe contributions and verifiable outcomes with measurement context. Dataset scores are not guarantees for every environment.
+
+  Claimed skills differ from evidence. Connect personal work to a result and its conditions; listing libraries does not explain debugging or evaluation ability.
+
+  'Built a RAG evaluation set and classified retrieval failures' is more concrete than 'expert in AI'. Self-check: is accuracy alone persuasive? No: state data, split method and personal role, with a link to inspectable work.
 why_it_matters_vi: Chuyển kinh nghiệm thực hành thành CV và câu chuyện phỏng vấn có căn cứ.
 why_it_matters_en: Turn your skills into a focused CV, interview stories, and structured AI system design answers.
 study_steps_vi:
@@ -205,6 +213,10 @@ review_cards:
 # Viết CV cho vị trí AI Engineer / AI Engineer CVs
 
 CV nên mô tả đóng góp và kết quả kiểm chứng được, kèm bối cảnh đo. Không biến thước đo trên một bộ dữ liệu thành cam kết hiệu quả trong mọi môi trường.
+
+Kỹ năng tự khai khác bằng chứng về đóng góp. CV cần nối việc mình làm với kết quả và điều kiện đo; liệt kê thư viện chưa cho biết bạn đã giải quyết lỗi hay đánh giá mô hình thế nào.
+
+Ví dụ, viết 'xây bộ kiểm tra RAG, phân loại lỗi truy xuất và dẫn báo cáo' cụ thể hơn 'thành thạo AI'. Tự kiểm tra: số accuracy đứng riêng đã thuyết phục chưa? Chưa; nêu dữ liệu, cách chia và vai trò cá nhân, đồng thời liên kết tới bài làm có thể kiểm tra.
 
 ## Thực hành
 

@@ -26,11 +26,18 @@ key_terms:
 - embedding
 - retrieval
 - advanced-rag
-concept_notes_vi: Câu trả lời bám sát nguồn chỉ đưa ra kết luận được tài liệu hỗ trợ. Đánh giá cần xem từng phát
-  biểu và trích dẫn, không chỉ xem có danh sách nguồn hay không.
-concept_notes_en: Citation, faithfulness và evaluation is one link in a RAG system. Separate parsing, chunking,
-  indexing, retrieval, reranking, and generation so failures are attributable. Chunks need enough context; evaluation
-  should measure retrieval recall, groundedness, and abstention when evidence is missing.
+concept_notes_vi: |-
+  Câu trả lời bám sát nguồn chỉ đưa ra kết luận được tài liệu hỗ trợ. Đánh giá cần xem từng phát biểu và trích dẫn, không chỉ xem có danh sách nguồn hay không.
+
+  Trích dẫn là liên kết tới nguồn; faithfulness là mức phát biểu được nguồn đó hỗ trợ. Một câu đúng ngoài đời vẫn có thể không được tài liệu đang dẫn chứng minh, còn nguồn cũ có thể hỗ trợ phát biểu đã lỗi thời.
+
+  Ví dụ, câu trả lời nêu thời hạn đổi hàng nhưng liên kết chỉ tới trang giới thiệu cửa hàng thì chưa đủ căn cứ. Tự kiểm tra: có URL thật đã đủ điểm bám sát nguồn chưa? Chưa; đọc đoạn được dẫn, kiểm tra điều kiện, thời điểm áp dụng và mọi phát biểu quan trọng, đồng thời nêu rõ khi nguồn chưa trả lời được câu hỏi.
+concept_notes_en: |-
+  A grounded answer limits conclusions to what its evidence supports. Evaluate individual claims and citations, not merely the presence of a source list.
+
+  A citation points to a source; faithfulness concerns whether that source supports the claim. A true statement may lack support in the cited document, while an old source may support an outdated claim.
+
+  A return deadline is not justified by linking only to a store introduction. Self-check: does a real URL establish faithfulness? No: inspect the cited passage, conditions, dates and important claims, and acknowledge missing evidence.
 why_it_matters_vi: Đánh giá cải tiến truy xuất bằng số liệu để biết thành phần nào đáng giữ.
 why_it_matters_en: Advanced RAG should improve retrieval with measurements rather than simply adding components.
 study_steps_vi:
@@ -227,6 +234,10 @@ review_cards:
 # Trích nguồn, bám sát bằng chứng và đánh giá / Citations, faithfulness, and evaluation
 
 Câu trả lời bám sát nguồn chỉ đưa ra kết luận được tài liệu hỗ trợ. Đánh giá cần xem từng phát biểu và trích dẫn, không chỉ xem có danh sách nguồn hay không.
+
+Trích dẫn là liên kết tới nguồn; faithfulness là mức phát biểu được nguồn đó hỗ trợ. Một câu đúng ngoài đời vẫn có thể không được tài liệu đang dẫn chứng minh, còn nguồn cũ có thể hỗ trợ phát biểu đã lỗi thời.
+
+Ví dụ, câu trả lời nêu thời hạn đổi hàng nhưng liên kết chỉ tới trang giới thiệu cửa hàng thì chưa đủ căn cứ. Tự kiểm tra: có URL thật đã đủ điểm bám sát nguồn chưa? Chưa; đọc đoạn được dẫn, kiểm tra điều kiện, thời điểm áp dụng và mọi phát biểu quan trọng, đồng thời nêu rõ khi nguồn chưa trả lời được câu hỏi.
 
 ## Thực hành
 

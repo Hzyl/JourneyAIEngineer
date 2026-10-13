@@ -26,11 +26,22 @@ key_terms:
 - debugging
 - maintainability
 - data-files
-concept_notes_vi: CSV phù hợp với dữ liệu dạng bảng; JSON biểu diễn được đối tượng và cấu trúc lồng nhau. Khi đọc
-  ghi, cần thống nhất mã hóa, kiểu dữ liệu và cách biểu diễn giá trị thiếu để không âm thầm đổi ý nghĩa.
-concept_notes_en: CSV và JSON describes a boundary between data and a service. A sound request has a schema, validation,
-  status code, timeout, and actionable errors; a sound query uses parameter binding, appropriate indexes, and tests
-  empty or malformed data.
+concept_notes_vi: |-
+  CSV biểu diễn bảng bằng các hàng và trường văn bản; JSON biểu diễn đối tượng, danh sách và cấu trúc lồng nhau. Khi đọc ghi phải thống nhất mã hóa, kiểu dữ liệu và giá trị thiếu.
+
+  Phân biệt định dạng với lược đồ: tệp JSON hợp lệ chưa bảo đảm có trường cần dùng; CSV không tự xác định một cột là số hay mã định danh. Dấu phẩy trong nội dung cần quy tắc trích dẫn của CSV.
+
+  Mã khách hàng 0012 phải giữ dạng chuỗi nếu hai số 0 có ý nghĩa. Chuyển thành số rồi ghi lại sẽ thành 12, làm mất thông tin dù tệp vẫn đọc được.
+
+  Tự kiểm tra: ô trống CSV có luôn tương đương null của JSON không? Không; quy ước của bộ đọc và hợp đồng dữ liệu quyết định ý nghĩa.
+concept_notes_en: |-
+  CSV represents tables as rows of text fields; JSON supports objects, arrays and nested structures. Agree on encoding, types and missing-value conventions when reading and writing.
+
+  A format is not a schema: valid JSON may lack required fields, and CSV does not inherently identify numeric versus identifier columns. Commas inside CSV fields require quoting rules.
+
+  Customer code 0012 must remain a string if its leading zeros matter. Converting it to a number and writing it back as 12 loses information despite producing a readable file.
+
+  Self-check: is a blank CSV cell always JSON null? No; reader conventions and the data contract determine meaning.
 why_it_matters_vi: Đọc, ghi dữ liệu theo cấu trúc rõ và xử lý giá trị thiếu bằng chính sách có thể giải thích.
 why_it_matters_en: Read and write data with schemas, handle missing values, and create CLIs with inspectable inputs
   and outputs.
@@ -225,7 +236,13 @@ review_cards:
 ---
 # Đọc và ghi CSV, JSON / CSV and JSON
 
-CSV phù hợp với dữ liệu dạng bảng; JSON biểu diễn được đối tượng và cấu trúc lồng nhau. Khi đọc ghi, cần thống nhất mã hóa, kiểu dữ liệu và cách biểu diễn giá trị thiếu để không âm thầm đổi ý nghĩa.
+CSV biểu diễn bảng bằng các hàng và trường văn bản; JSON biểu diễn đối tượng, danh sách và cấu trúc lồng nhau. Khi đọc ghi phải thống nhất mã hóa, kiểu dữ liệu và giá trị thiếu.
+
+Phân biệt định dạng với lược đồ: tệp JSON hợp lệ chưa bảo đảm có trường cần dùng; CSV không tự xác định một cột là số hay mã định danh. Dấu phẩy trong nội dung cần quy tắc trích dẫn của CSV.
+
+Mã khách hàng 0012 phải giữ dạng chuỗi nếu hai số 0 có ý nghĩa. Chuyển thành số rồi ghi lại sẽ thành 12, làm mất thông tin dù tệp vẫn đọc được.
+
+Tự kiểm tra: ô trống CSV có luôn tương đương null của JSON không? Không; quy ước của bộ đọc và hợp đồng dữ liệu quyết định ý nghĩa.
 
 ## Thực hành
 

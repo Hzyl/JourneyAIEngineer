@@ -27,11 +27,18 @@ key_terms:
 - retrieval
 - evaluation
 - rag-foundations
-concept_notes_vi: Đoạn tài liệu cần đủ ý để dùng làm bằng chứng; siêu dữ liệu giữ liên hệ tới nguồn và phạm vi truy
-  cập. Kích thước đoạn phải cân bằng với ngân sách ngữ cảnh.
-concept_notes_en: Chunking, metadata và context is one link in a RAG system. Separate parsing, chunking, indexing,
-  retrieval, reranking, and generation so failures are attributable. Chunks need enough context; evaluation should
-  measure retrieval recall, groundedness, and abstention when evidence is missing.
+concept_notes_vi: |-
+  Đoạn tài liệu cần đủ ý để dùng làm bằng chứng; siêu dữ liệu giữ liên hệ tới nguồn và phạm vi truy cập. Kích thước đoạn phải cân bằng với ngân sách ngữ cảnh.
+
+  Chunk là đơn vị nội dung được truy xuất; cửa sổ ngữ cảnh là giới hạn dữ liệu của một lần mô hình xử lý. Hai kích thước này không đồng nhất: nhiều chunk cùng chỉ dẫn và câu hỏi phải chia sẻ một ngân sách.
+
+  Ví dụ, tách điều kiện hoàn tiền khỏi ngoại lệ của nó có thể tạo câu trả lời thiếu chính xác dù truy xuất đúng từ khóa. Tự kiểm tra: tăng phần chồng lặp giữa đoạn có luôn tốt không? Không; nó có thể giữ mạch ý nhưng cũng tạo bản sao và tốn ngữ cảnh. Đo khả năng tìm đủ bằng chứng cùng mức trùng lặp.
+concept_notes_en: |-
+  Chunks need enough meaning to serve as evidence. Metadata preserves source and access scope, while chunk size must fit the context budget.
+
+  A chunk is a retrieval unit; a context window limits one model input. They are not interchangeable sizes: multiple chunks, instructions and the question share a budget.
+
+  Separating refund conditions from their exceptions can yield an incorrect answer despite keyword matches. Self-check: is more chunk overlap always better? No: it can preserve continuity but also duplicate content and consume context. Measure evidence coverage and redundancy together.
 why_it_matters_vi: Tách truy xuất khỏi sinh câu trả lời để truy nguồn và xử lý thiếu bằng chứng.
 why_it_matters_en: RAG separates retrieval from generation so answers can be sourced and can abstain without evidence.
 study_steps_vi:
@@ -217,6 +224,10 @@ review_cards:
 # Chia đoạn, siêu dữ liệu và ngữ cảnh / Chunking, metadata, and context
 
 Đoạn tài liệu cần đủ ý để dùng làm bằng chứng; siêu dữ liệu giữ liên hệ tới nguồn và phạm vi truy cập. Kích thước đoạn phải cân bằng với ngân sách ngữ cảnh.
+
+Chunk là đơn vị nội dung được truy xuất; cửa sổ ngữ cảnh là giới hạn dữ liệu của một lần mô hình xử lý. Hai kích thước này không đồng nhất: nhiều chunk cùng chỉ dẫn và câu hỏi phải chia sẻ một ngân sách.
+
+Ví dụ, tách điều kiện hoàn tiền khỏi ngoại lệ của nó có thể tạo câu trả lời thiếu chính xác dù truy xuất đúng từ khóa. Tự kiểm tra: tăng phần chồng lặp giữa đoạn có luôn tốt không? Không; nó có thể giữ mạch ý nhưng cũng tạo bản sao và tốn ngữ cảnh. Đo khả năng tìm đủ bằng chứng cùng mức trùng lặp.
 
 ## Thực hành
 

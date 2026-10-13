@@ -28,11 +28,18 @@ key_terms:
 - retrieval
 - evaluation
 - llm-application
-concept_notes_vi: Ứng dụng chat cần quản lý vai trò, thứ tự tin nhắn và phần lịch sử đưa vào mỗi yêu cầu. Lịch sử
-  hiển thị cho người dùng có thể dài hơn phần mô hình thật sự nhận.
-concept_notes_en: 'Chat completion và message lifecycle belongs to LLM Application Engineering: design the contract
-  between the application and the model. Define instructions, inputs, output schema, timeout, retry, and token limits;
-  parse model output as untrusted data and return actionable errors.'
+concept_notes_vi: |-
+  Ứng dụng chat cần quản lý vai trò, thứ tự tin nhắn và phần lịch sử đưa vào mỗi yêu cầu. Lịch sử hiển thị cho người dùng có thể dài hơn phần mô hình thật sự nhận.
+
+  Lịch sử giao diện là bản ghi hội thoại; ngữ cảnh suy luận là dữ liệu ứng dụng thực sự gửi trong một lần gọi. Cắt bớt lịch sử hoặc tóm tắt sẽ thay đổi thông tin mô hình nhận, nên có thể làm mất điều kiện quan trọng.
+
+  Ví dụ, người dùng sửa ngày hẹn ở lượt sau; nếu bản tóm tắt chỉ giữ ngày cũ, mô hình có thể tiếp tục dùng thông tin lỗi thời. Tự kiểm tra: nhìn thấy tin nhắn trên màn hình có nghĩa mô hình đã nhận nó không? Không; kiểm tra payload đã gửi và quy tắc chọn lịch sử, có che thông tin nhạy cảm khi ghi log.
+concept_notes_en: |-
+  A chat application manages roles, message order and history selected for each request. Visible history may exceed what the model actually receives.
+
+  UI history records the conversation; inference context is the data sent for one model call. Truncation or summarization can discard important conditions.
+
+  A user may correct an appointment date while an outdated summary retains the old date. Self-check: does a message visible on screen necessarily reach the model? No: inspect the submitted payload and history-selection policy, redacting sensitive information from logs.
 why_it_matters_vi: Xác định cấu trúc trao đổi và cách xử lý lỗi quanh mô hình để ứng dụng dùng được kết quả.
 why_it_matters_en: LLM application engineering designs contracts and failure boundaries around a model, not just
   a long prompt.
@@ -131,6 +138,15 @@ resources:
   purpose_en: Official reference to verify the lesson concept.
   read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
   read_en: Read the relevant section, run a small example, and record one verified insight.
+- language: en
+  title: "Full Stack Deep Learning: LLM Bootcamp (April 2023)"
+  url: https://fullstackdeeplearning.com/llm-bootcamp/
+  kind: official
+  required: false
+  purpose_vi: "Tài liệu lịch sử tùy chọn về vòng đời ứng dụng LLM, từ prompt và UX tới đưa sản phẩm vào sử dụng."
+  purpose_en: "Optional historical material on the LLM application lifecycle, from prompting and UX to putting a product into use."
+  read_vi: "Đọc trang bootcamp và chọn bài phù hợp; nội dung từ tháng 4/2023, nên đối chiếu API/công cụ hiện hành và không coi là hướng dẫn mới."
+  read_en: "Review the bootcamp page and select relevant lectures; it dates to April 2023, so verify current APIs/tools and do not treat it as current implementation guidance."
 - title: Giải thích và hướng dẫn thực hành trong bài
   url: ''
   language: vi
@@ -222,6 +238,10 @@ review_cards:
 # Chat completion và vòng đời tin nhắn / Chat completion and message lifecycle
 
 Ứng dụng chat cần quản lý vai trò, thứ tự tin nhắn và phần lịch sử đưa vào mỗi yêu cầu. Lịch sử hiển thị cho người dùng có thể dài hơn phần mô hình thật sự nhận.
+
+Lịch sử giao diện là bản ghi hội thoại; ngữ cảnh suy luận là dữ liệu ứng dụng thực sự gửi trong một lần gọi. Cắt bớt lịch sử hoặc tóm tắt sẽ thay đổi thông tin mô hình nhận, nên có thể làm mất điều kiện quan trọng.
+
+Ví dụ, người dùng sửa ngày hẹn ở lượt sau; nếu bản tóm tắt chỉ giữ ngày cũ, mô hình có thể tiếp tục dùng thông tin lỗi thời. Tự kiểm tra: nhìn thấy tin nhắn trên màn hình có nghĩa mô hình đã nhận nó không? Không; kiểm tra payload đã gửi và quy tắc chọn lịch sử, có che thông tin nhạy cảm khi ghi log.
 
 ## Thực hành
 

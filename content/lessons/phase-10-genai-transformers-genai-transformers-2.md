@@ -29,11 +29,18 @@ key_terms:
 - loss
 - training
 - genai-transformers
-concept_notes_vi: Self-attention tạo Q, K, V từ cùng chuỗi đầu vào. Tích vô hướng giữa Q và K được chia tỷ lệ trước
-  softmax để tạo trọng số tổng hợp V.
-concept_notes_en: Self-attention và scaled dot product is a foundation for numerical representations. Track tensor
-  shapes, units, and axes; verify multiplication on a small example before using a large batch. For similarity,
-  normalize the measure so scale differences do not change the conclusion.
+concept_notes_vi: |-
+  Self-attention tạo Q, K, V từ cùng chuỗi đầu vào. Tích vô hướng giữa Q và K được chia tỷ lệ trước softmax để tạo trọng số tổng hợp V.
+
+  Q biểu diễn truy vấn, K biểu diễn khóa để so khớp, V là giá trị được tổng hợp. Self-attention lấy chúng từ cùng chuỗi; cross-attention có truy vấn và bộ khóa, giá trị đến từ các nguồn khác nhau.
+
+  Ví dụ, khi xử lý một đại từ, cơ chế attention có thể kết hợp thông tin từ các token trước đó. Chia điểm QK theo căn bậc hai chiều khóa giúp kiểm soát độ lớn trước softmax. Tự kiểm tra: trọng số attention lớn có chứng minh quan hệ nhân quả hay lời giải thích đầy đủ không? Không; đó là hệ số tổng hợp nội bộ, còn hành vi phụ thuộc nhiều phép biến đổi khác.
+concept_notes_en: |-
+  Self-attention derives queries, keys and values from the same sequence, scales query-key dot products, then uses softmax weights to combine values.
+
+  Queries select information, keys support matching and values supply the combined content. Cross-attention differs because queries and key-value pairs come from different sources.
+
+  A pronoun representation may incorporate earlier tokens. Dividing scores by the square root of key dimension controls their scale before softmax. Self-check: does a large attention weight prove causation or fully explain a prediction? No: it is an internal mixing coefficient within a larger computation.
 why_it_matters_vi: Hiểu Transformer qua kích thước tensor, trọng số attention và chi phí suy luận.
 why_it_matters_en: Transformers become understandable when you trace tensor shapes, attention weights, and inference
   cost.
@@ -223,6 +230,10 @@ review_cards:
 # Self-attention và tích vô hướng có chia tỷ lệ / Self-attention and scaled dot product
 
 Self-attention tạo Q, K, V từ cùng chuỗi đầu vào. Tích vô hướng giữa Q và K được chia tỷ lệ trước softmax để tạo trọng số tổng hợp V.
+
+Q biểu diễn truy vấn, K biểu diễn khóa để so khớp, V là giá trị được tổng hợp. Self-attention lấy chúng từ cùng chuỗi; cross-attention có truy vấn và bộ khóa, giá trị đến từ các nguồn khác nhau.
+
+Ví dụ, khi xử lý một đại từ, cơ chế attention có thể kết hợp thông tin từ các token trước đó. Chia điểm QK theo căn bậc hai chiều khóa giúp kiểm soát độ lớn trước softmax. Tự kiểm tra: trọng số attention lớn có chứng minh quan hệ nhân quả hay lời giải thích đầy đủ không? Không; đó là hệ số tổng hợp nội bộ, còn hành vi phụ thuộc nhiều phép biến đổi khác.
 
 ## Thực hành
 

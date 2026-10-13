@@ -26,11 +26,22 @@ key_terms:
 - observability
 - reproducibility
 - deployment
-concept_notes_vi: p50 là trung vị độ trễ; p95 là ngưỡng mà 95% quan sát không vượt quá. Ghi khoảng đo, cỡ mẫu và
-  tải thử để so sánh có ý nghĩa.
-concept_notes_en: Latency p50/p95 turns an AI demo into a system that can be trusted. Define metrics and an evaluation
-  set first, record prompt/model/version/tokens/latency, and attribute failures to retrieval, generation, data,
-  or infrastructure instead of relying on one score.
+concept_notes_vi: |-
+  p50 là trung vị độ trễ; p95 là ngưỡng mà 95% quan sát không vượt quá. Ghi khoảng đo, cỡ mẫu và tải thử để so sánh có ý nghĩa.
+
+  Trung bình cộng nhạy với vài yêu cầu rất chậm; phân vị cho biết vị trí trong tập độ trễ đã sắp xếp. Các cách nội suy phân vị có thể khác nhau, nhất là khi ít mẫu, nên ghi phương pháp tính.
+
+  Ví dụ, với 100 yêu cầu có 95 lần mất 10 ms và 5 lần mất 1000 ms, trung bình là 59,5 ms. Theo cách lấy hạng gần nhất, p95 là 10 ms nhưng vẫn có năm yêu cầu chờ rất lâu.
+
+  Tự kiểm tra: p95 thấp có bảo đảm mọi người dùng đều nhanh không? Không; nó không mô tả hết phần đuôi. Xem thêm lỗi, timeout và p99, đồng thời giữ cùng tải khi so sánh.
+concept_notes_en: |-
+  p50 is median latency; p95 describes the 95th percentile. Record the measurement window, sample size and workload for meaningful comparisons.
+
+  The mean is sensitive to very slow requests; a percentile describes rank in sorted observations. Interpolation conventions can differ, especially for small samples, so document the method.
+
+  Suppose 95 of 100 requests take 10 ms and five take 1000 ms. Their mean is 59.5 ms. With nearest-rank percentiles, p95 is 10 ms even though five requests are very slow.
+
+  Self-check: does a low p95 guarantee fast responses for everyone? No: inspect the remaining tail, failures, timeouts and p99 under comparable load.
 why_it_matters_vi: Đo độ trễ, thay đổi dữ liệu và lỗi để phát hiện vấn đề trong dịch vụ.
 why_it_matters_en: Measure latency, drift, and production errors so you find failures before users report them.
 study_steps_vi:
@@ -210,6 +221,12 @@ review_cards:
 # Độ trễ p50 và p95 / p50/p95 latency
 
 p50 là trung vị độ trễ; p95 là ngưỡng mà 95% quan sát không vượt quá. Ghi khoảng đo, cỡ mẫu và tải thử để so sánh có ý nghĩa.
+
+Trung bình cộng nhạy với vài yêu cầu rất chậm; phân vị cho biết vị trí trong tập độ trễ đã sắp xếp. Các cách nội suy phân vị có thể khác nhau, nhất là khi ít mẫu, nên ghi phương pháp tính.
+
+Ví dụ, với 100 yêu cầu có 95 lần mất 10 ms và 5 lần mất 1000 ms, trung bình là 59,5 ms. Theo cách lấy hạng gần nhất, p95 là 10 ms nhưng vẫn có năm yêu cầu chờ rất lâu.
+
+Tự kiểm tra: p95 thấp có bảo đảm mọi người dùng đều nhanh không? Không; nó không mô tả hết phần đuôi. Xem thêm lỗi, timeout và p99, đồng thời giữ cùng tải khi so sánh.
 
 ## Thực hành
 

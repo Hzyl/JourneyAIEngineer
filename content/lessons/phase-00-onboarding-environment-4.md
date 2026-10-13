@@ -28,10 +28,22 @@ key_terms:
 - testing
 - debugging
 - maintainability
-concept_notes_vi: Notebook cho phép xen kẽ mã, kết quả và giải thích, phù hợp khi khám phá dữ liệu. Các ô chia sẻ
-  trạng thái trong phiên làm việc, nên chạy sai thứ tự có thể tạo kết quả khó tái lập.
-concept_notes_en: Jupyter, Colab và khi nào dùng chúng is a concept in the environment module. Identify the inputs,
-  outputs, assumptions, failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Notebook đặt mã, kết quả và diễn giải trong các ô, phù hợp khám phá dữ liệu. Jupyter là hệ công cụ notebook; Colab cung cấp môi trường notebook được lưu và chạy qua dịch vụ.
+
+  Phân biệt nội dung tệp với trạng thái kernel, tức tiến trình đang giữ biến trong bộ nhớ. Một ô hiển thị kết quả cũ không chứng minh mã hiện tại tạo được kết quả đó. Script thường thể hiện thứ tự chạy rõ hơn.
+
+  Nếu chạy ô gán x trước rồi xóa ô ấy, ô dùng x vẫn có thể chạy trong phiên hiện tại. Khởi động lại kernel và chạy toàn bộ từ đầu sẽ bộc lộ phụ thuộc bị thiếu.
+
+  Tự kiểm tra: tải notebook về đã giữ mọi tệp dữ liệu của phiên chưa? Chưa chắc; ghi riêng nguồn dữ liệu, phụ thuộc và cách tái tạo môi trường.
+concept_notes_en: |-
+  A notebook combines code, outputs and explanations in cells, which suits data exploration. Jupyter is a notebook ecosystem; Colab provides a service-hosted notebook environment.
+
+  Distinguish the saved document from kernel state, the process holding variables in memory. An old displayed output does not prove the current code reproduces it. A script usually makes execution order more explicit.
+
+  After running a cell defining x and deleting it, another cell may still use x in that session. Restarting the kernel and running all cells exposes the missing dependency.
+
+  Self-check: does downloading a notebook preserve all session data files? Not necessarily; record data sources, dependencies and environment setup separately.
 why_it_matters_vi: Thiết lập môi trường Python có thể tạo lại và biết kiểm tra nguyên nhân khi lệnh chạy khác dự
   kiến.
 why_it_matters_en: Turn Windows into a reproducible Python environment and learn to verify tools from the terminal.
@@ -226,7 +238,13 @@ review_cards:
 ---
 # Khi nào nên dùng Jupyter hoặc Colab / Jupyter, Colab and when to use them
 
-Notebook cho phép xen kẽ mã, kết quả và giải thích, phù hợp khi khám phá dữ liệu. Các ô chia sẻ trạng thái trong phiên làm việc, nên chạy sai thứ tự có thể tạo kết quả khó tái lập.
+Notebook đặt mã, kết quả và diễn giải trong các ô, phù hợp khám phá dữ liệu. Jupyter là hệ công cụ notebook; Colab cung cấp môi trường notebook được lưu và chạy qua dịch vụ.
+
+Phân biệt nội dung tệp với trạng thái kernel, tức tiến trình đang giữ biến trong bộ nhớ. Một ô hiển thị kết quả cũ không chứng minh mã hiện tại tạo được kết quả đó. Script thường thể hiện thứ tự chạy rõ hơn.
+
+Nếu chạy ô gán x trước rồi xóa ô ấy, ô dùng x vẫn có thể chạy trong phiên hiện tại. Khởi động lại kernel và chạy toàn bộ từ đầu sẽ bộc lộ phụ thuộc bị thiếu.
+
+Tự kiểm tra: tải notebook về đã giữ mọi tệp dữ liệu của phiên chưa? Chưa chắc; ghi riêng nguồn dữ liệu, phụ thuộc và cách tái tạo môi trường.
 
 ## Thực hành
 

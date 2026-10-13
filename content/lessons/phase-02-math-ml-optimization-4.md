@@ -27,10 +27,22 @@ key_terms:
 - vector
 - gradient
 - optimization
-concept_notes_vi: SGD ước lượng gradient từ một phần dữ liệu; momentum sử dụng lịch sử cập nhật; Adam điều chỉnh
-  bước theo các thống kê gradient. Cần so sánh trên cùng dữ liệu và ngân sách huấn luyện.
-concept_notes_en: SGD, momentum và Adam is a concept in the optimization module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  SGD dùng gradient ước lượng từ một mẫu hoặc lô nhỏ để cập nhật tham số. Gradient giữa các lô thường khác nhau, nên đường học có nhiễu ngay cả khi xu hướng mất mát đang giảm.
+
+  Momentum tích lũy thông tin gradient qua các bước để điều chỉnh hướng cập nhật. Adam dùng các trung bình trượt của gradient và bình phương gradient để điều chỉnh bước theo từng tham số; nó vẫn cần chọn tốc độ học.
+
+  Khi so sánh SGD với Adam trên cùng mạng, giữ cách chia dữ liệu và ngân sách tính toán nhất quán, đồng thời cho mỗi phương pháp phạm vi điều chỉnh hợp lý. Một lần chạy nhanh hơn chưa chứng minh khả năng khái quát hóa tốt hơn.
+
+  Tự kiểm tra: đổi bộ tối ưu có sửa được nhãn sai không? Không; bộ tối ưu chỉ tìm tham số theo mục tiêu được cung cấp.
+concept_notes_en: |-
+  SGD estimates gradients from one example or a small batch. Gradients vary across batches, so the learning trajectory can be noisy even while loss trends downward.
+
+  Momentum carries gradient information across steps to influence the update direction. Adam uses moving averages of gradients and squared gradients to adjust updates per parameter; a learning rate still has to be chosen.
+
+  When comparing SGD and Adam on the same network, keep the split and compute budget consistent and give each a reasonable tuning range. One faster run does not establish better generalization.
+
+  Self-check: can changing the optimizer repair incorrect labels? No; the optimizer searches for parameters according to the supplied objective.
 why_it_matters_vi: Xác định hàm mục tiêu và cách cập nhật để hiểu mô hình đang học điều gì.
 why_it_matters_en: Understand objectives, loss landscapes, regularization, and optimizers so you know what a model
   is optimizing.
@@ -227,7 +239,13 @@ review_cards:
 ---
 # SGD, momentum và Adam / SGD, momentum and Adam
 
-SGD ước lượng gradient từ một phần dữ liệu; momentum sử dụng lịch sử cập nhật; Adam điều chỉnh bước theo các thống kê gradient. Cần so sánh trên cùng dữ liệu và ngân sách huấn luyện.
+SGD dùng gradient ước lượng từ một mẫu hoặc lô nhỏ để cập nhật tham số. Gradient giữa các lô thường khác nhau, nên đường học có nhiễu ngay cả khi xu hướng mất mát đang giảm.
+
+Momentum tích lũy thông tin gradient qua các bước để điều chỉnh hướng cập nhật. Adam dùng các trung bình trượt của gradient và bình phương gradient để điều chỉnh bước theo từng tham số; nó vẫn cần chọn tốc độ học.
+
+Khi so sánh SGD với Adam trên cùng mạng, giữ cách chia dữ liệu và ngân sách tính toán nhất quán, đồng thời cho mỗi phương pháp phạm vi điều chỉnh hợp lý. Một lần chạy nhanh hơn chưa chứng minh khả năng khái quát hóa tốt hơn.
+
+Tự kiểm tra: đổi bộ tối ưu có sửa được nhãn sai không? Không; bộ tối ưu chỉ tìm tham số theo mục tiêu được cung cấp.
 
 ## Thực hành
 

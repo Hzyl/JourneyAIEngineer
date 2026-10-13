@@ -27,10 +27,22 @@ key_terms:
 - reproducibility
 - deployment
 - security
-concept_notes_vi: Nhật ký hoặc thông báo lỗi có thể chứa dữ liệu cá nhân, khóa API hay thông tin đăng nhập. Che
-  dữ liệu trước khi ghi và kiểm tra bằng giá trị giả lập.
-concept_notes_en: PII và secret redaction is a concept in the security module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Nhật ký hoặc thông báo lỗi có thể chứa dữ liệu cá nhân, khóa API hay thông tin đăng nhập. Che dữ liệu trước khi ghi và kiểm tra bằng giá trị giả lập.
+
+  Che một phần dữ liệu để hiển thị khác loại bỏ dữ liệu khỏi lưu trữ. Nếu ghi nguyên bản rồi mới che khi xem, bản log gốc vẫn chứa bí mật; băm dữ liệu cũng không tự khiến dữ liệu cá nhân mất khả năng liên kết.
+
+  Ví dụ, chỉ ghi request_id và loại lỗi thay vì toàn bộ Authorization header. Với email mẫu, có thể hiển thị a***@example.com khi thực sự cần nhận diện, nhưng nên bỏ cả trường nếu không có mục đích điều tra.
+
+  Tự kiểm tra: thông báo lỗi của thư viện có cần lọc không? Có; nó có thể chứa URL kèm token hoặc dữ liệu đầu vào. Kiểm tra cả đường thành công và lỗi với giá trị giả.
+concept_notes_en: |-
+  Logs and errors may contain personal data, API keys or credentials. Redact before writing and verify behavior using synthetic values.
+
+  Display masking differs from removing data from storage. Masking only the viewer leaves raw secrets in the original log. Hashing personal data does not automatically prevent linkage.
+
+  Record request_id and error type rather than the Authorization header. A masked sample email such as a***@example.com may aid identification, but omit the field entirely when it has no investigation purpose.
+
+  Self-check: should library error messages be filtered too? Yes: they can include token-bearing URLs or input data. Test both success and error paths using fake values.
 why_it_matters_vi: Kiểm soát đầu vào, phụ thuộc và nhật ký để giảm rò rỉ bí mật hoặc dữ liệu cá nhân.
 why_it_matters_en: Protect the inference service from secret leaks, oversized input, risky dependencies, and PII
   exposure.
@@ -209,6 +221,12 @@ review_cards:
 # Che dữ liệu cá nhân và bí mật / PII and secret redaction
 
 Nhật ký hoặc thông báo lỗi có thể chứa dữ liệu cá nhân, khóa API hay thông tin đăng nhập. Che dữ liệu trước khi ghi và kiểm tra bằng giá trị giả lập.
+
+Che một phần dữ liệu để hiển thị khác loại bỏ dữ liệu khỏi lưu trữ. Nếu ghi nguyên bản rồi mới che khi xem, bản log gốc vẫn chứa bí mật; băm dữ liệu cũng không tự khiến dữ liệu cá nhân mất khả năng liên kết.
+
+Ví dụ, chỉ ghi request_id và loại lỗi thay vì toàn bộ Authorization header. Với email mẫu, có thể hiển thị a***@example.com khi thực sự cần nhận diện, nhưng nên bỏ cả trường nếu không có mục đích điều tra.
+
+Tự kiểm tra: thông báo lỗi của thư viện có cần lọc không? Có; nó có thể chứa URL kèm token hoặc dữ liệu đầu vào. Kiểm tra cả đường thành công và lỗi với giá trị giả.
 
 ## Thực hành
 

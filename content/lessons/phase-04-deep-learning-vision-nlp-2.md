@@ -26,11 +26,18 @@ key_terms:
 - loss
 - training
 - vision-nlp
-concept_notes_vi: Học chuyển giao sử dụng biểu diễn từ mô hình đã huấn luyện cho bài toán mới. Đóng băng hay cập
-  nhật từng phần phụ thuộc dữ liệu, độ khác biệt của nhiệm vụ và ngân sách tính toán.
-concept_notes_en: 'Transfer learning is one part of a Deep Learning pipeline: tensors flow through a forward pass,
-  loss creates a signal, backprop computes gradients, and the optimizer updates parameters. Separate train/eval
-  modes, save checkpoints, and track validation to distinguish overfitting from data errors.'
+concept_notes_vi: |-
+  Học chuyển giao tái sử dụng biểu diễn của một mô hình đã học từ dữ liệu trước đó. Trích xuất đặc trưng giữ phần nền cố định và học bộ phân loại mới; fine-tuning cập nhật thêm một phần hoặc toàn bộ tham số nền.
+
+  Đóng băng trọng số khác chuyển sang eval: requires_grad quyết định tham số có nhận gradient, còn eval thay đổi hành vi một số lớp. Với BatchNorm, cần chủ động chọn cách xử lý thống kê khi đóng băng phần nền.
+
+  Ví dụ, dữ liệu mới ít và gần ảnh tự nhiên có thể bắt đầu bằng bộ phân loại nhỏ trên đặc trưng sẵn có. Tự kiểm tra: pretrained có chắc tốt hơn học từ đầu không? Không; độ lệch miền và tiền xử lý có thể làm chuyển giao kém. So hai phương án bằng cùng tập đánh giá trước khi kết luận.
+concept_notes_en: |-
+  Transfer learning reuses representations learned from earlier data. Feature extraction keeps the backbone fixed while training a new classifier; fine-tuning also updates some or all backbone parameters.
+
+  Freezing weights differs from eval mode: requires_grad controls gradient computation for parameters, while eval changes certain layers' behavior. With BatchNorm, deliberately choose how running statistics behave when the backbone is frozen.
+
+  For a small dataset resembling natural images, a small classifier on pretrained features can be a starting baseline. Self-check: is pretraining guaranteed to beat training from scratch? No; domain mismatch or preprocessing differences can hurt transfer. Compare both approaches using the same evaluation set.
 why_it_matters_vi: Hiểu CNN, học chuyển giao, embedding và attention để chọn cách biểu diễn phù hợp.
 why_it_matters_en: Understand CNNs, transfer learning, embeddings, and attention well enough to choose a CV or NLP
   path.
@@ -220,7 +227,11 @@ review_cards:
 ---
 # Học chuyển giao / Transfer learning
 
-Học chuyển giao sử dụng biểu diễn từ mô hình đã huấn luyện cho bài toán mới. Đóng băng hay cập nhật từng phần phụ thuộc dữ liệu, độ khác biệt của nhiệm vụ và ngân sách tính toán.
+Học chuyển giao tái sử dụng biểu diễn của một mô hình đã học từ dữ liệu trước đó. Trích xuất đặc trưng giữ phần nền cố định và học bộ phân loại mới; fine-tuning cập nhật thêm một phần hoặc toàn bộ tham số nền.
+
+Đóng băng trọng số khác chuyển sang eval: requires_grad quyết định tham số có nhận gradient, còn eval thay đổi hành vi một số lớp. Với BatchNorm, cần chủ động chọn cách xử lý thống kê khi đóng băng phần nền.
+
+Ví dụ, dữ liệu mới ít và gần ảnh tự nhiên có thể bắt đầu bằng bộ phân loại nhỏ trên đặc trưng sẵn có. Tự kiểm tra: pretrained có chắc tốt hơn học từ đầu không? Không; độ lệch miền và tiền xử lý có thể làm chuyển giao kém. So hai phương án bằng cùng tập đánh giá trước khi kết luận.
 
 ## Thực hành
 

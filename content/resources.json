@@ -250,10 +250,10 @@
     },
     {
       "slug": "hugging-face-nlp-course",
-      "title_vi": "Natural Language Processing Course",
-      "title_en": "Natural Language Processing Course",
+      "title_vi": "Hugging Face LLM Course",
+      "title_en": "Hugging Face LLM Course",
       "provider": "Hugging Face",
-      "url": "https://huggingface.co/learn/nlp-course/chapter1/1",
+      "url": "https://huggingface.co/learn/llm-course/chapter1/1",
       "type": "Course",
       "language": "en",
       "level": "intermediate",
@@ -377,8 +377,8 @@
       ],
       "description_vi": "Khóa học về toàn bộ vòng đời dự án: xác định bài toán, chuẩn bị dữ liệu, huấn luyện, triển khai, theo dõi và xây dựng sản phẩm.",
       "description_en": "A course covering the lifecycle from problem definition and data through training, deployment, monitoring, and product.",
-      "how_to_use_vi": "Dùng làm danh sách kiểm tra cho đồ án cuối khóa. Mỗi tuần, hoàn thành một bài làm hoặc báo cáo để người khác có thể nhận xét.",
-      "how_to_use_en": "Use it as a capstone checklist and produce one reviewable artifact each week."
+      "how_to_use_vi": "Dùng phần học phù hợp với lộ trình; LLM Bootcamp (tháng 4/2023) là tài liệu lịch sử tùy chọn, cần đối chiếu vì công cụ đã thay đổi.",
+      "how_to_use_en": "Use the relevant course material; the April 2023 LLM Bootcamp is optional historical reading because tools have since changed."
     },
     {
       "slug": "made-with-ml",
@@ -591,7 +591,7 @@
       "title_vi": "Building effective agents",
       "title_en": "Building effective agents",
       "provider": "Anthropic",
-      "url": "https://www.anthropic.com/research/building-effective-agents",
+      "url": "https://www.anthropic.com/engineering/building-effective-agents",
       "type": "Engineering guide",
       "language": "en",
       "level": "intermediate",
@@ -955,6 +955,176 @@
       "description_en": "Reference for inverted indexes, BM25, and text retrieval.",
       "how_to_use_vi": "Dùng để giải thích cách tìm kiếm kết hợp bổ sung tín hiệu từ khóa cho kết quả tìm kiếm vector.",
       "how_to_use_en": "Use it to explain why hybrid search adds lexical signals to vectors."
+    },
+    {
+      "slug": "anthropic-context-engineering",
+      "title_vi": "Anthropic: Kỹ thuật thiết kế ngữ cảnh cho tác nhân AI",
+      "title_en": "Anthropic: Effective Context Engineering for AI Agents",
+      "provider": "Anthropic",
+      "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+      "type": "Engineering guide",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-15",
+        "phase-18"
+      ],
+      "description_vi": "Hướng dẫn tuyển chọn ngữ cảnh hữu hạn cho tác nhân: chỉ dẫn, công cụ, lịch sử và dữ liệu truy xuất; gồm truy xuất đúng lúc và quản lý ngữ cảnh dài hạn.",
+      "description_en": "Guidance on curating finite agent context across instructions, tools, history, and retrieved data, including just-in-time retrieval and long-horizon context management.",
+      "how_to_use_vi": "Đọc các phần về tuyển chọn ngữ cảnh, truy xuất đúng lúc và tác nhân chạy dài; so sánh với baseline chỉ dùng prompt.",
+      "how_to_use_en": "Read the context curation, just-in-time retrieval, and long-horizon agent sections; compare with a prompt-only baseline."
+    },
+    {
+      "slug": "berkeley-llm-agents-f24",
+      "title_vi": "UC Berkeley: LLM Agents (Fall 2024)",
+      "title_en": "UC Berkeley: LLM Agents (Fall 2024)",
+      "provider": "UC Berkeley RDI",
+      "url": "https://rdi.berkeley.edu/llm-agents/f24",
+      "type": "Course",
+      "language": "en",
+      "level": "advanced",
+      "official": true,
+      "phase_ids": [
+        "phase-15",
+        "phase-17"
+      ],
+      "description_vi": "Trang môn học lưu trữ về nền tảng tác nhân LLM, suy luận, lập kế hoạch, dùng công cụ, RAG, đánh giá và an toàn; yêu cầu nền tảng ML/DL.",
+      "description_en": "Archived course covering LLM-agent foundations, reasoning, planning, tool use, RAG, evaluation, and safety; assumes ML/DL background.",
+      "how_to_use_vi": "Chọn tuần và tài liệu phù hợp để tự học; đây là môn Fall 2024 đã lưu trữ, không phải cam kết còn tuyển sinh.",
+      "how_to_use_en": "Select relevant weeks and readings for self-study; this is an archived Fall 2024 course, not an enrollment promise."
+    },
+    {
+      "slug": "langgraph-thinking-in-langgraph-js",
+      "title_vi": "LangGraph: Tư duy theo đồ thị",
+      "title_en": "LangGraph: Thinking in LangGraph",
+      "provider": "LangChain",
+      "url": "https://docs.langchain.com/oss/javascript/langgraph/thinking-in-langgraph",
+      "type": "Official docs",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-15",
+        "phase-19"
+      ],
+      "description_vi": "Tài liệu thiết kế workflow dạng đồ thị với state, node, luồng điều khiển và xử lý lỗi; ví dụ dành cho JavaScript/TypeScript.",
+      "description_en": "Documentation for designing graph workflows with state, nodes, control flow, and error handling; examples target JavaScript/TypeScript.",
+      "how_to_use_vi": "Đọc thiết kế graph, state và xử lý lỗi; lưu ý ví dụ là JavaScript/TypeScript.",
+      "how_to_use_en": "Read graph design, state design, and error handling; note the examples are JavaScript/TypeScript."
+    },
+    {
+      "slug": "inspect-ai-tasks",
+      "title_vi": "UK AISI Inspect: Định nghĩa tác vụ đánh giá",
+      "title_en": "UK AISI Inspect: Tasks",
+      "provider": "UK AI Safety Institute",
+      "url": "https://inspect.aisi.org.uk/tasks.html",
+      "type": "Official docs",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-17"
+      ],
+      "description_vi": "Tài liệu về cấu phần tác vụ đánh giá: dataset, solver, scorer và cấu hình tùy chọn.",
+      "description_en": "Documentation for evaluation task components: dataset, solver, scorer, and optional configuration.",
+      "how_to_use_vi": "Đọc Task Basics và Task Options; phác thảo cấu hình dataset/solver/scorer và nêu rõ ý nghĩa điểm số.",
+      "how_to_use_en": "Read Task Basics and Task Options; sketch a dataset/solver/scorer configuration and define what its score means."
+    },
+    {
+      "slug": "stanford-cs336-spring-2026",
+      "title_vi": "Stanford CS336: Ngôn ngữ lớn từ đầu (Spring 2026)",
+      "title_en": "Stanford CS336: Language Modeling from Scratch (Spring 2026)",
+      "provider": "Stanford University",
+      "url": "https://cs336.stanford.edu/",
+      "type": "Course",
+      "language": "en",
+      "level": "advanced",
+      "official": true,
+      "phase_ids": [
+        "phase-04",
+        "phase-10"
+      ],
+      "description_vi": "Môn học chuyên sâu về vòng đời mô hình ngôn ngữ: dữ liệu, Transformer, huấn luyện, đánh giá và triển khai; đòi hỏi Python, DL/PyTorch, hệ thống và toán nền tảng.",
+      "description_en": "Advanced course spanning language-model data, Transformers, training, evaluation, and deployment; expects Python, DL/PyTorch, systems, and math preparation.",
+      "how_to_use_vi": "Tự học tùy chọn nâng cao; kiểm tra tính đúng trên CPU trước. Lịch Spring 2026 đã qua và môn có bài tập triển khai nặng.",
+      "how_to_use_en": "Optional advanced self-study; establish CPU correctness first. The Spring 2026 schedule has passed and assignments are implementation-heavy."
+    },
+    {
+      "slug": "sentence-transformers-retrieve-rerank",
+      "title_vi": "Sentence Transformers: Truy xuất và xếp hạng lại",
+      "title_en": "Sentence Transformers: Retrieve & Re-Rank",
+      "provider": "Sentence Transformers",
+      "url": "https://sbert.net/examples/sentence_transformer/applications/retrieve_rerank/README.html",
+      "type": "Official docs",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-13"
+      ],
+      "description_vi": "Pipeline lấy ứng viên bằng tìm kiếm từ khóa hoặc bi-encoder, sau đó tùy chọn xếp hạng lại bằng CrossEncoder; điểm số không mặc nhiên là xác suất.",
+      "description_en": "A pipeline retrieves candidates with lexical search or a bi-encoder, then optionally reranks with a CrossEncoder; scores are not inherently probabilities.",
+      "how_to_use_vi": "Đọc pipeline và phần bi-encoder/CrossEncoder; benchmark trên tập truy vấn cố định và đánh giá riêng truy xuất tiếng Việt.",
+      "how_to_use_en": "Read the pipeline and bi-encoder/CrossEncoder sections; benchmark a fixed query set and assess Vietnamese retrieval separately."
+    },
+    {
+      "slug": "rag-paper-lewis-2020",
+      "title_vi": "Bài báo nền tảng RAG (2020)",
+      "title_en": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (2020)",
+      "provider": "arXiv",
+      "url": "https://arxiv.org/abs/2005.11401",
+      "type": "Research paper",
+      "language": "en",
+      "level": "advanced",
+      "official": true,
+      "phase_ids": [
+        "phase-12",
+        "phase-13"
+      ],
+      "description_vi": "Nghiên cứu nền tảng kết hợp bộ nhớ tham số của mô hình seq2seq với chỉ mục Wikipedia dày đặc có thể truy xuất; không đại diện đầy đủ cho stack RAG hiện đại.",
+      "description_en": "Foundational work combining a seq2seq model’s parametric memory with a retrievable dense Wikipedia index; it does not represent every modern RAG stack.",
+      "how_to_use_vi": "Đọc tóm tắt, mô hình và thí nghiệm; ghi lại khác biệt với stack hiện nay, không suy ra RAG luôn cải thiện.",
+      "how_to_use_en": "Read the abstract, formulation, and experiments; note differences from current stacks and do not infer RAG always improves results."
+    },
+    {
+      "slug": "hugging-face-agents-course",
+      "title_vi": "Hugging Face Agents Course",
+      "title_en": "Hugging Face Agents Course",
+      "provider": "Hugging Face",
+      "url": "https://huggingface.co/learn/agents-course/unit0/introduction",
+      "type": "Course",
+      "language": "en",
+      "level": "beginner-intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-15",
+        "phase-17"
+      ],
+      "description_vi": "Lộ trình học nền tảng tác nhân, công cụ và vòng lặp hành động/quan sát; có nội dung framework, Agentic RAG, dự án và phần bổ sung về quan sát/đánh giá.",
+      "description_en": "Learning path on agent fundamentals, tools, and action/observation loops, with framework material, Agentic RAG, a project, and optional observability/evaluation.",
+      "how_to_use_vi": "Đọc Unit 1 về nền tảng, Unit 3 về Agentic RAG và phần Observability/Evaluation khi cần.",
+      "how_to_use_en": "Read Unit 1 fundamentals, Unit 3 Agentic RAG, and the Observability/Evaluation bonus when relevant."
+    },
+    {
+      "slug": "owasp-llm-top-10-2025",
+      "title_vi": "OWASP Top 10 rủi ro ứng dụng GenAI/LLM 2025",
+      "title_en": "OWASP Top 10 for LLM Applications 2025",
+      "provider": "OWASP GenAI Security Project",
+      "url": "https://genai.owasp.org/llm-top-10/",
+      "type": "Security guidance",
+      "language": "en",
+      "level": "intermediate",
+      "official": true,
+      "phase_ids": [
+        "phase-15",
+        "phase-16",
+        "phase-19"
+      ],
+      "description_vi": "Danh mục rủi ro 2025 gồm prompt injection, rò rỉ thông tin, chuỗi cung ứng, đầu ra không an toàn, quyền tự chủ quá mức, điểm yếu vector/embedding và tiêu thụ tài nguyên không giới hạn.",
+      "description_en": "The 2025 risk list includes prompt injection, information disclosure, supply chain, improper output handling, excessive agency, vector/embedding weaknesses, and unbounded consumption.",
+      "how_to_use_vi": "Đọc nhóm rủi ro liên quan mô hình đe dọa; chuyển từng rủi ro thành một ca kiểm thử cụ thể.",
+      "how_to_use_en": "Read categories relevant to the threat model and turn each selected risk into a concrete test case."
     }
   ]
 }

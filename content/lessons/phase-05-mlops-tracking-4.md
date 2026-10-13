@@ -24,10 +24,22 @@ key_terms:
 - observability
 - deployment
 - tracking
-concept_notes_vi: Tái lập đòi hỏi ghi dữ liệu, thư viện, cấu hình và nguồn ngẫu nhiên. Cố định seed giúp kiểm soát
-  một phần biến động nhưng không bảo đảm mọi phép tính trên mọi thiết bị giống hệt nhau.
-concept_notes_en: Reproducibility is a concept in the tracking module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Tái lập đòi hỏi ghi dữ liệu, thư viện, cấu hình và nguồn ngẫu nhiên. Cố định seed giúp kiểm soát một phần biến động nhưng không bảo đảm mọi phép tính trên mọi thiết bị giống hệt nhau.
+
+  Tái tạo đúng từng bit là yêu cầu chặt hơn tái lập kết luận thực nghiệm. Một thay đổi thiết bị hoặc thuật toán song song có thể tạo sai khác số học nhỏ; vì vậy cần xác định mức sai số chấp nhận được.
+
+  Ví dụ, lưu seed nhưng không lưu cách chia tập khiến lần chạy mới dùng tập đánh giá khác. Ngay cả khi số đo gần nhau, chưa thể biết khác biệt do mô hình hay dữ liệu. Ghi cả môi trường và đầu vào thực tế.
+
+  Tự kiểm tra: một seed tốt có đủ để báo chất lượng không? Không; dùng nhiều lần chạy khi cần đánh giá độ biến động, báo cách tổng hợp và không chỉ chọn lần tốt nhất.
+concept_notes_en: |-
+  Reproducibility requires data, libraries, configuration and random sources to be recorded. Fixing a seed controls some variation but does not guarantee identical calculations across devices.
+
+  Bitwise reproduction is stricter than reproducing an experimental conclusion. Device or parallel algorithm changes can introduce numerical differences, so specify an acceptable tolerance.
+
+  Recording a seed without the dataset split may leave the next run using different evaluation data. Similar scores then do not isolate model effects. Record the actual inputs and environment.
+
+  Self-check: is one favorable seed enough to report quality? No: use multiple runs when variability matters, describe aggregation and avoid selecting only the best run.
 why_it_matters_vi: Gắn mô hình với dữ liệu, cấu hình và mã nguồn để kết quả có thể tái lập.
 why_it_matters_en: Track models, data, experiments, and seeds so results are reproducible and comparable.
 study_steps_vi:
@@ -212,6 +224,12 @@ review_cards:
 # Tái lập kết quả / Reproducibility
 
 Tái lập đòi hỏi ghi dữ liệu, thư viện, cấu hình và nguồn ngẫu nhiên. Cố định seed giúp kiểm soát một phần biến động nhưng không bảo đảm mọi phép tính trên mọi thiết bị giống hệt nhau.
+
+Tái tạo đúng từng bit là yêu cầu chặt hơn tái lập kết luận thực nghiệm. Một thay đổi thiết bị hoặc thuật toán song song có thể tạo sai khác số học nhỏ; vì vậy cần xác định mức sai số chấp nhận được.
+
+Ví dụ, lưu seed nhưng không lưu cách chia tập khiến lần chạy mới dùng tập đánh giá khác. Ngay cả khi số đo gần nhau, chưa thể biết khác biệt do mô hình hay dữ liệu. Ghi cả môi trường và đầu vào thực tế.
+
+Tự kiểm tra: một seed tốt có đủ để báo chất lượng không? Không; dùng nhiều lần chạy khi cần đánh giá độ biến động, báo cách tổng hợp và không chỉ chọn lần tốt nhất.
 
 ## Thực hành
 

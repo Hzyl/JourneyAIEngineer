@@ -27,11 +27,18 @@ key_terms:
 - embedding
 - retrieval
 - genai-evaluation
-concept_notes_vi: Tập kiểm tra cần đại diện nhiệm vụ và tiêu chí chấm có thể áp dụng nhất quán. Tách dữ liệu điều
-  chỉnh khỏi đánh giá cuối, ghi phiên bản mô hình và cấu hình mỗi lần đo.
-concept_notes_en: LLM evaluation và test set turns an AI demo into a system that can be trusted. Define metrics
-  and an evaluation set first, record prompt/model/version/tokens/latency, and attribute failures to retrieval,
-  generation, data, or infrastructure instead of relying on one score.
+concept_notes_vi: |-
+  Tập kiểm tra cần đại diện nhiệm vụ và tiêu chí chấm có thể áp dụng nhất quán. Tách dữ liệu điều chỉnh khỏi đánh giá cuối, ghi phiên bản mô hình và cấu hình mỗi lần đo.
+
+  Tập phát triển giúp tìm lỗi và điều chỉnh; tập đánh giá cuối kiểm tra cấu hình đã chốt. Khi liên tục xem đáp án test rồi sửa prompt theo đó, kết quả không còn là phép kiểm tra độc lập ban đầu.
+
+  Ví dụ, trợ lý quy định cần câu hỏi phổ biến, ngoại lệ và câu không có đủ nguồn, với tiêu chí chấm rõ từng loại. Tự kiểm tra: điểm trung bình cao đã chứng minh mọi nhóm dùng tốt chưa? Chưa; xem kết quả theo nhóm, các lỗi nghiêm trọng và mức biến động qua lần chạy. Ghi cách chấm để người khác áp dụng nhất quán.
+concept_notes_en: |-
+  An LLM test set should represent its tasks and use consistently applicable scoring criteria. Separate tuning data from final evaluation and record model and configuration versions.
+
+  Development examples guide changes; a final test checks the fixed configuration. Repeatedly adjusting prompts to test answers weakens independence.
+
+  A policy assistant needs common, exceptional and insufficient-evidence questions with explicit criteria. Self-check: does a high average prove every group works well? No: inspect group results, serious failures and variation across runs. Document the rubric so another reviewer can apply it consistently.
 why_it_matters_vi: Dùng tiêu chí và dữ liệu đại diện để biết hệ thống tốt ở đâu, còn lỗi ở đâu.
 why_it_matters_en: Evaluation distinguishes a fluent demo from a trustworthy system that can improve.
 study_steps_vi:
@@ -127,6 +134,15 @@ resources:
   purpose_en: Official reference to verify the lesson concept.
   read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
   read_en: Read the relevant section, run a small example, and record one verified insight.
+- language: en
+  title: "UK AISI Inspect: Tasks"
+  url: https://inspect.aisi.org.uk/tasks.html
+  kind: official
+  required: false
+  purpose_vi: "Tài liệu về cấu phần tác vụ đánh giá: dataset, solver, scorer và cấu hình tùy chọn."
+  purpose_en: "Documentation on evaluation task components: dataset, solver, scorer, and optional configuration."
+  read_vi: "Đọc Task Basics và Task Options; phác thảo dataset/solver/scorer cho bộ kiểm thử và định nghĩa rõ điểm số đại diện cho điều gì."
+  read_en: "Read Task Basics and Task Options; sketch a dataset/solver/scorer for a test set and define what its score represents."
 - title: Giải thích và hướng dẫn thực hành trong bài
   url: ''
   language: vi
@@ -215,6 +231,10 @@ review_cards:
 # Đánh giá LLM và xây tập kiểm tra / LLM evaluation and test sets
 
 Tập kiểm tra cần đại diện nhiệm vụ và tiêu chí chấm có thể áp dụng nhất quán. Tách dữ liệu điều chỉnh khỏi đánh giá cuối, ghi phiên bản mô hình và cấu hình mỗi lần đo.
+
+Tập phát triển giúp tìm lỗi và điều chỉnh; tập đánh giá cuối kiểm tra cấu hình đã chốt. Khi liên tục xem đáp án test rồi sửa prompt theo đó, kết quả không còn là phép kiểm tra độc lập ban đầu.
+
+Ví dụ, trợ lý quy định cần câu hỏi phổ biến, ngoại lệ và câu không có đủ nguồn, với tiêu chí chấm rõ từng loại. Tự kiểm tra: điểm trung bình cao đã chứng minh mọi nhóm dùng tốt chưa? Chưa; xem kết quả theo nhóm, các lỗi nghiêm trọng và mức biến động qua lần chạy. Ghi cách chấm để người khác áp dụng nhất quán.
 
 ## Thực hành
 

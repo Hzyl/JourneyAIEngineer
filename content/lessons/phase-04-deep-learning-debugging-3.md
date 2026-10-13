@@ -26,11 +26,18 @@ key_terms:
 - loss
 - training
 - debugging
-concept_notes_vi: Bộ nhớ GPU lưu tham số, kích hoạt, gradient và trạng thái bộ tối ưu. Kích thước lô hoặc chuỗi
-  ảnh hưởng lượng bộ nhớ cần thiết; đo trước khi điều chỉnh.
-concept_notes_en: GPU memory extends a model with controlled actions. Tool schemas must validate inputs, limit permissions,
-  and define timeout and retry; an agent loop needs stopping conditions, step logs, and human approval for side
-  effects.
+concept_notes_vi: |-
+  Bộ nhớ GPU chứa tham số, kích hoạt, gradient và trạng thái optimizer. Huấn luyện thường cần nhiều bộ nhớ hơn chỉ dự đoán vì phải giữ thông tin phục vụ lan truyền ngược; kích thước lô và độ dài chuỗi cũng ảnh hưởng nhu cầu này.
+
+  Phân biệt bộ nhớ đang được tensor dùng với bộ nhớ allocator giữ lại để tái sử dụng. empty_cache không giải phóng tensor vẫn còn được tham chiếu. Lưu liên tục loss tensor vào danh sách mà không detach có thể giữ các liên kết đồ thị không cần thiết.
+
+  Tự kiểm tra: giảm batch rồi tích lũy gradient có luôn tương đương batch lớn không? Không hoàn toàn; cách chia loss, BatchNorm và tính ngẫu nhiên có thể làm kết quả khác. Đo bộ nhớ thực tế và ghi rõ thay đổi, thay vì coi hết lỗi thiếu bộ nhớ là phải mua GPU mới.
+concept_notes_en: |-
+  GPU memory holds parameters, activations, gradients and optimizer state. Training commonly needs more memory than prediction because backward computation requires additional information; batch size and sequence length also matter.
+
+  Distinguish memory used by live tensors from memory reserved by the allocator for reuse. empty_cache cannot free tensors that are still referenced. Appending loss tensors to a list without detaching can retain unnecessary graph connections.
+
+  Self-check: is reducing batch size and accumulating gradients always equivalent to a larger batch? Not exactly; loss scaling, BatchNorm and randomness can change results. Measure actual memory use and record adjustments rather than assuming every memory error requires a new GPU.
 why_it_matters_vi: Dùng bằng chứng để tìm lỗi kích thước, NaN, bộ nhớ GPU và so sánh thí nghiệm.
 why_it_matters_en: Debug shape errors, NaNs, GPU memory, and experiment tracking with contextual logs.
 study_steps_vi:
@@ -207,7 +214,11 @@ review_cards:
 ---
 # Quản lý bộ nhớ GPU / GPU memory
 
-Bộ nhớ GPU lưu tham số, kích hoạt, gradient và trạng thái bộ tối ưu. Kích thước lô hoặc chuỗi ảnh hưởng lượng bộ nhớ cần thiết; đo trước khi điều chỉnh.
+Bộ nhớ GPU chứa tham số, kích hoạt, gradient và trạng thái optimizer. Huấn luyện thường cần nhiều bộ nhớ hơn chỉ dự đoán vì phải giữ thông tin phục vụ lan truyền ngược; kích thước lô và độ dài chuỗi cũng ảnh hưởng nhu cầu này.
+
+Phân biệt bộ nhớ đang được tensor dùng với bộ nhớ allocator giữ lại để tái sử dụng. empty_cache không giải phóng tensor vẫn còn được tham chiếu. Lưu liên tục loss tensor vào danh sách mà không detach có thể giữ các liên kết đồ thị không cần thiết.
+
+Tự kiểm tra: giảm batch rồi tích lũy gradient có luôn tương đương batch lớn không? Không hoàn toàn; cách chia loss, BatchNorm và tính ngẫu nhiên có thể làm kết quả khác. Đo bộ nhớ thực tế và ghi rõ thay đổi, thay vì coi hết lỗi thiếu bộ nhớ là phải mua GPU mới.
 
 ## Thực hành
 

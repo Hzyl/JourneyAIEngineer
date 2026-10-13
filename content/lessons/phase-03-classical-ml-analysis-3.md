@@ -25,10 +25,22 @@ key_terms:
 - feature
 - baseline
 - evaluation
-concept_notes_vi: Phân tích lỗi chia dự đoán sai thành nhóm để tìm nguyên nhân và ưu tiên sửa. Xem mẫu cụ thể giúp
-  phân biệt vấn đề nhãn, đặc trưng, phân bố dữ liệu hoặc mô hình.
-concept_notes_en: Error analysis is a concept in the analysis module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Phân tích lỗi là đọc và phân nhóm các dự đoán sai để tìm hành động cải thiện cụ thể. Điểm số tổng hợp cho biết mức độ lỗi; các mẫu cụ thể giúp hiểu lỗi xảy ra ở đâu và trong điều kiện nào.
+
+  Cần phân biệt lỗi mô hình với lỗi dữ liệu. Nhãn sai, dữ liệu thiếu, khác biệt giữa nguồn thu thập và đầu vào ngoài phạm vi đều có thể tạo dự đoán không phù hợp dù thuật toán hoạt động đúng như thiết kế.
+
+  Một bộ phân loại văn bản có thể nhầm câu phủ định và văn bản quá ngắn. Đếm số lỗi trong từng nhóm, đọc cả mẫu đúng để tránh kết luận từ vài trường hợp dễ nhớ, rồi kiểm định thay đổi trên dữ liệu độc lập.
+
+  Tự kiểm tra: sửa hết lỗi đã xem có bảo đảm điểm thật tăng không? Không; có thể quá khớp tập phân tích, nên cần một lần đánh giá độc lập.
+concept_notes_en: |-
+  Error analysis groups and inspects incorrect predictions to identify concrete improvements. Aggregate scores show the extent of errors; individual examples reveal where and under what conditions they occur.
+
+  Distinguish model errors from data problems. Incorrect labels, missing inputs, collection differences, and out-of-scope examples can cause unsuitable predictions even when the algorithm works as designed.
+
+  A text classifier may struggle with negation and very short messages. Count errors in each group and inspect correct examples too, avoiding conclusions based on memorable failures. Evaluate changes on independent data.
+
+  Self-check: does fixing every inspected error guarantee better real performance? No; improvements can overfit the analysis set, so an independent evaluation is needed.
 why_it_matters_vi: Phân tích lỗi theo nhóm để hiểu giới hạn trước khi lưu và chia sẻ mô hình.
 why_it_matters_en: Move from one aggregate score to error analysis, calibration, a model card, and reloadable artifacts.
 study_steps_vi:
@@ -206,7 +218,13 @@ review_cards:
 ---
 # Phân tích lỗi mô hình / Error analysis
 
-Phân tích lỗi chia dự đoán sai thành nhóm để tìm nguyên nhân và ưu tiên sửa. Xem mẫu cụ thể giúp phân biệt vấn đề nhãn, đặc trưng, phân bố dữ liệu hoặc mô hình.
+Phân tích lỗi là đọc và phân nhóm các dự đoán sai để tìm hành động cải thiện cụ thể. Điểm số tổng hợp cho biết mức độ lỗi; các mẫu cụ thể giúp hiểu lỗi xảy ra ở đâu và trong điều kiện nào.
+
+Cần phân biệt lỗi mô hình với lỗi dữ liệu. Nhãn sai, dữ liệu thiếu, khác biệt giữa nguồn thu thập và đầu vào ngoài phạm vi đều có thể tạo dự đoán không phù hợp dù thuật toán hoạt động đúng như thiết kế.
+
+Một bộ phân loại văn bản có thể nhầm câu phủ định và văn bản quá ngắn. Đếm số lỗi trong từng nhóm, đọc cả mẫu đúng để tránh kết luận từ vài trường hợp dễ nhớ, rồi kiểm định thay đổi trên dữ liệu độc lập.
+
+Tự kiểm tra: sửa hết lỗi đã xem có bảo đảm điểm thật tăng không? Không; có thể quá khớp tập phân tích, nên cần một lần đánh giá độc lập.
 
 ## Thực hành
 

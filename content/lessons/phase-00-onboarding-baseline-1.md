@@ -28,11 +28,22 @@ key_terms:
 - debugging
 - maintainability
 - baseline
-concept_notes_vi: Bài đánh giá giúp bạn nhận ra phần Python đã nắm chắc và phần cần luyện thêm. Hãy tự làm trước
-  khi xem gợi ý, phân biệt lỗi cú pháp, lỗi khi chạy và kết quả sai; ghi rõ mức hỗ trợ đã sử dụng.
-concept_notes_en: Bài kiểm tra Python cơ bản is a Software Engineering skill for turning an idea into code that
-  can be read, tested, and maintained. Define the inputs, outputs, invariants, and failure modes before implementing.
-  In Python, small boundaries make tests fast and tracebacks actionable.
+concept_notes_vi: |-
+  Bài đánh giá Python giúp tìm phần đã nắm và phần cần luyện. Tự làm trước khi xem gợi ý, ghi đầu vào, kết quả dự đoán và mức hỗ trợ đã dùng; một lần chạy đúng chưa chứng minh hiểu cách giải.
+
+  Phân biệt lỗi cú pháp khiến mã không được phân tích hợp lệ, ngoại lệ phát sinh khi chạy và lỗi logic tạo kết quả sai dù chương trình kết thúc bình thường. Mỗi loại cần cách kiểm tra khác nhau.
+
+  Ví dụ, hàm lấy phần tử đầu có thể chạy đúng với danh sách có dữ liệu nhưng lỗi với danh sách rỗng. Hãy quyết định trước đầu vào rỗng phải trả gì hay báo lỗi nào.
+
+  Tự kiểm tra: chương trình không báo lỗi có chắc đúng không? Không; cần đối chiếu kết quả với yêu cầu và thử trường hợp biên.
+concept_notes_en: |-
+  A Python assessment identifies secure skills and gaps. Work before reading hints, record inputs and predicted outputs, and disclose assistance. One successful run does not establish understanding.
+
+  Distinguish invalid syntax, exceptions during execution, and logic errors that return an incorrect result without crashing. These require different checks.
+
+  A function returning the first list element may work on populated lists and fail on an empty list. Decide beforehand whether empty input should return a value or raise a specific error.
+
+  Self-check: does finishing without an error prove correctness? No; compare results against requirements and test boundaries.
 why_it_matters_vi: Xác định kiến thức đã vững và phần cần ôn để chọn nhịp học phù hợp.
 why_it_matters_en: Measure your current baseline honestly so the learning pace follows evidence rather than confidence.
 study_steps_vi:
@@ -224,7 +235,13 @@ review_cards:
 ---
 # Bài kiểm tra Python cơ bản / Python baseline assessment
 
-Bài đánh giá giúp bạn nhận ra phần Python đã nắm chắc và phần cần luyện thêm. Hãy tự làm trước khi xem gợi ý, phân biệt lỗi cú pháp, lỗi khi chạy và kết quả sai; ghi rõ mức hỗ trợ đã sử dụng.
+Bài đánh giá Python giúp tìm phần đã nắm và phần cần luyện. Tự làm trước khi xem gợi ý, ghi đầu vào, kết quả dự đoán và mức hỗ trợ đã dùng; một lần chạy đúng chưa chứng minh hiểu cách giải.
+
+Phân biệt lỗi cú pháp khiến mã không được phân tích hợp lệ, ngoại lệ phát sinh khi chạy và lỗi logic tạo kết quả sai dù chương trình kết thúc bình thường. Mỗi loại cần cách kiểm tra khác nhau.
+
+Ví dụ, hàm lấy phần tử đầu có thể chạy đúng với danh sách có dữ liệu nhưng lỗi với danh sách rỗng. Hãy quyết định trước đầu vào rỗng phải trả gì hay báo lỗi nào.
+
+Tự kiểm tra: chương trình không báo lỗi có chắc đúng không? Không; cần đối chiếu kết quả với yêu cầu và thử trường hợp biên.
 
 ## Thực hành
 

@@ -28,11 +28,22 @@ key_terms:
 - debugging
 - maintainability
 - developer-tools
-concept_notes_vi: Git phân biệt tệp đang sửa, phần đã đưa vào vùng chuẩn bị và lịch sử commit. Xem diff trước khi
-  ghi commit giúp bảo đảm nội dung lưu lại đúng với thông điệp mô tả.
-concept_notes_en: 'Git add, diff và commit makes AI engineering work traceable: every change needs a diff, a reason,
-  and a verification step. Practise in a small repository, introduce an intentional failure, read the terminal output,
-  and fix it with a focused commit.'
+concept_notes_vi: |-
+  Git phân biệt thư mục làm việc, vùng chuẩn bị và các commit đã lưu trong lịch sử. git add đưa phiên bản hiện tại của thay đổi vào vùng chuẩn bị; commit ghi lại nội dung đã chuẩn bị ấy.
+
+  Phân biệt git diff với git diff --staged: lệnh đầu xem phần chưa chuẩn bị so với vùng chuẩn bị, lệnh sau xem phần chuẩn bị so với commit hiện tại. Thông điệp commit phải mô tả đúng phần sẽ lưu.
+
+  Nếu add một tệp rồi sửa thêm, tệp có thể đồng thời có thay đổi đã chuẩn bị và chưa chuẩn bị. Commit lúc này không tự gồm lần sửa sau cùng.
+
+  Tự kiểm tra: git add có đưa mã lên GitHub không? Không; đó là thao tác cục bộ. Chuyển commit tới kho từ xa là bước push riêng.
+concept_notes_en: |-
+  Git separates the working tree, staging area and committed history. git add stages the current version of a change; a commit records the staged content.
+
+  Distinguish git diff from git diff --staged: the first compares unstaged changes with the index, while the second compares staged content with the current commit. The message should describe what will actually be recorded.
+
+  If you stage a file and edit it again, it can have both staged and unstaged changes. The later edit is not automatically committed.
+
+  Self-check: does git add upload code to GitHub? No; it is local. Sending commits to a remote is a separate push.
 why_it_matters_vi: Dùng Git, terminal và HTTP để tái hiện vấn đề, xem xét thay đổi và trao đổi với hệ thống.
 why_it_matters_en: Use Git, terminals, and HTTP as daily tools for reproduction, review, and system communication.
 study_steps_vi:
@@ -234,7 +245,13 @@ review_cards:
 ---
 # Đưa thay đổi vào Git: add, diff và commit / Git add, diff and commit
 
-Git phân biệt tệp đang sửa, phần đã đưa vào vùng chuẩn bị và lịch sử commit. Xem diff trước khi ghi commit giúp bảo đảm nội dung lưu lại đúng với thông điệp mô tả.
+Git phân biệt thư mục làm việc, vùng chuẩn bị và các commit đã lưu trong lịch sử. git add đưa phiên bản hiện tại của thay đổi vào vùng chuẩn bị; commit ghi lại nội dung đã chuẩn bị ấy.
+
+Phân biệt git diff với git diff --staged: lệnh đầu xem phần chưa chuẩn bị so với vùng chuẩn bị, lệnh sau xem phần chuẩn bị so với commit hiện tại. Thông điệp commit phải mô tả đúng phần sẽ lưu.
+
+Nếu add một tệp rồi sửa thêm, tệp có thể đồng thời có thay đổi đã chuẩn bị và chưa chuẩn bị. Commit lúc này không tự gồm lần sửa sau cùng.
+
+Tự kiểm tra: git add có đưa mã lên GitHub không? Không; đó là thao tác cục bộ. Chuyển commit tới kho từ xa là bước push riêng.
 
 ## Thực hành
 

@@ -28,11 +28,18 @@ key_terms:
 - embedding
 - evaluation
 - ai-agents
-concept_notes_vi: Trạng thái lưu thông tin đang cần cho công việc; lịch sử ghi các sự kiện; truy xuất tìm lại thông
-  tin liên quan. Chỉ giữ dữ liệu cần thiết và kiểm tra nguồn trước khi dùng làm căn cứ.
-concept_notes_en: 'Memory: state, history và retrieval is one link in a RAG system. Separate parsing, chunking,
-  indexing, retrieval, reranking, and generation so failures are attributable. Chunks need enough context; evaluation
-  should measure retrieval recall, groundedness, and abstention when evidence is missing.'
+concept_notes_vi: |-
+  Trạng thái lưu thông tin đang cần cho công việc; lịch sử ghi các sự kiện; truy xuất tìm lại thông tin liên quan. Chỉ giữ dữ liệu cần thiết và kiểm tra nguồn trước khi dùng làm căn cứ.
+
+  Bộ nhớ làm việc phục vụ nhiệm vụ hiện tại; bộ nhớ lâu dài có thể được dùng lại ở lần sau. Lưu một câu không biến nó thành sự thật: cần nguồn, thời điểm và cách sửa khi người dùng cập nhật thông tin.
+
+  Ví dụ, agent nhớ thư mục dự án cũ nhưng tệp đã được chuyển; trước khi ghi, cần kiểm tra vị trí hiện tại. Tự kiểm tra: đưa toàn bộ lịch sử vào prompt có luôn tốt hơn truy xuất chọn lọc không? Không; lịch sử có thể chứa dữ liệu lỗi thời, riêng tư hoặc không liên quan. Chọn thông tin cần dùng và giữ khả năng kiểm tra nguồn.
+concept_notes_en: |-
+  State holds current task information, history records events and retrieval finds relevant past material. Keep only needed data and check provenance.
+
+  Working memory serves the current task; long-term memory can be reused later. Storage does not make a statement true: record source, time and correction rules.
+
+  An agent may remember an old project folder after files have moved; verify the current location before writing. Self-check: is sending all history always better than selective retrieval? No: it may contain stale, private or irrelevant data. Select what is needed while preserving source verification.
 why_it_matters_vi: Agent cần trạng thái, giới hạn và dấu vết rõ để hành động có thể kiểm tra.
 why_it_matters_en: An agent is a control loop with state and side effects; reliability comes from limits and observability.
 study_steps_vi:
@@ -130,6 +137,15 @@ resources:
   purpose_en: Official reference to verify the lesson concept.
   read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
   read_en: Read the relevant section, run a small example, and record one verified insight.
+- language: en
+  title: "Anthropic: Effective Context Engineering for AI Agents"
+  url: https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents
+  kind: official
+  required: false
+  purpose_vi: "Bổ sung cách tuyển chọn ngữ cảnh hữu hạn gồm chỉ dẫn, công cụ, lịch sử và dữ liệu truy xuất cho agent."
+  purpose_en: "Adds guidance on curating finite agent context across instructions, tools, history, and retrieved data."
+  read_vi: "Đọc các phần về tuyển chọn ngữ cảnh, truy xuất đúng lúc và tác vụ dài; so sánh bằng chứng/kết quả thay vì giả định context ngắn hơn luôn tốt hơn."
+  read_en: "Read the context-curation, just-in-time retrieval, and long-horizon sections; compare evidence and outcomes rather than assuming shorter context is always better."
 - title: Giải thích và hướng dẫn thực hành trong bài
   url: ''
   language: vi
@@ -223,6 +239,10 @@ review_cards:
 # Bộ nhớ: trạng thái, lịch sử và truy xuất / Memory: state, history, and retrieval
 
 Trạng thái lưu thông tin đang cần cho công việc; lịch sử ghi các sự kiện; truy xuất tìm lại thông tin liên quan. Chỉ giữ dữ liệu cần thiết và kiểm tra nguồn trước khi dùng làm căn cứ.
+
+Bộ nhớ làm việc phục vụ nhiệm vụ hiện tại; bộ nhớ lâu dài có thể được dùng lại ở lần sau. Lưu một câu không biến nó thành sự thật: cần nguồn, thời điểm và cách sửa khi người dùng cập nhật thông tin.
+
+Ví dụ, agent nhớ thư mục dự án cũ nhưng tệp đã được chuyển; trước khi ghi, cần kiểm tra vị trí hiện tại. Tự kiểm tra: đưa toàn bộ lịch sử vào prompt có luôn tốt hơn truy xuất chọn lọc không? Không; lịch sử có thể chứa dữ liệu lỗi thời, riêng tư hoặc không liên quan. Chọn thông tin cần dùng và giữ khả năng kiểm tra nguồn.
 
 ## Thực hành
 

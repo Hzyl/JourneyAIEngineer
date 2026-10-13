@@ -31,6 +31,22 @@ Use ordinary Python snippets when Python is the teaching medium. Shell examples
 are marked conceptual: they require a known environment and manual review, and
 the content validator does not execute them. Static parsing is not runtime proof.
 
+## Explaining related concepts
+
+Concept notes should go beyond a short definition. Explain the current idea,
+distinguish a nearby concept that beginners might confuse with it, and give a
+concrete example or counterexample. Close with a self-check and a brief reasoned
+answer. Keep the Vietnamese and English explanations equivalent.
+
+Use short paragraphs and introduce terms before relying on them. For example,
+an interpreter lesson should distinguish compilation from execution and explain
+that CPython compiles source to bytecode before executing it. Avoid presenting
+implementation choices as universal properties of a language.
+
+Keep optional depth within the lesson's prerequisites. Updating concept notes
+does not by itself validate every existing code example or promote a draft to
+reviewed. Preserve IDs and learning progress when regenerating the catalog.
+
 ## Exercise claims
 
 An automated exercise checks behavior, not just nonempty answer fields. Include

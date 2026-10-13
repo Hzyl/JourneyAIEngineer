@@ -25,11 +25,18 @@ key_terms:
 - vector
 - optimization
 - models
-concept_notes_vi: Gradient boosting bổ sung mô hình yếu theo từng bước để giảm hàm mất mát hiện tại. Số bước, độ
-  phức tạp của mô hình thành phần và tốc độ học cần được chọn qua kiểm định.
-concept_notes_en: Gradient boosting describes how an output changes when a parameter changes. Use finite differences
-  on a small input to check a gradient, then trace the chain rule through each transformation; gradient sign and
-  scale determine whether updates are stable.
+concept_notes_vi: |-
+  Gradient boosting thêm các mô hình thành phần theo từng bước để giảm hàm mất mát của tổ hợp hiện tại. Mô hình mới được học theo hướng gradient của loss; với bình phương sai số, hướng này liên quan trực tiếp tới phần dư.
+
+  Khác rừng ngẫu nhiên chủ yếu kết hợp nhiều cây được xây riêng, boosting tạo chuỗi bước phụ thuộc vào kết quả trước. Tốc độ học điều chỉnh mức đóng góp của mỗi bước; tốc độ nhỏ thường cần nhiều bước hơn và không tự bảo đảm chất lượng tốt hơn.
+
+  Tự kiểm tra: thêm cây tới khi train loss rất thấp có luôn cải thiện dự đoán mới không? Không; vẫn có thể quá khớp. Theo dõi kiểm định, giới hạn độ phức tạp và ngân sách, rồi so với baseline trên cùng phép chia dữ liệu.
+concept_notes_en: |-
+  Gradient boosting adds component models sequentially to reduce the current ensemble's loss. New models fit a direction derived from loss gradients; for squared error, this direction is directly related to residuals.
+
+  Unlike a random forest that primarily combines separately built trees, boosting creates steps dependent on earlier results. Learning rate controls each step's contribution; smaller rates often require more steps and do not automatically improve quality.
+
+  Self-check: does adding trees until training loss is tiny always improve new predictions? No; overfitting remains possible. Monitor validation, bound complexity and budget, and compare against a baseline using the same data split.
 why_it_matters_vi: So sánh mô hình theo giả định, độ phức tạp và dạng lỗi trên cùng dữ liệu.
 why_it_matters_en: Compare models by assumptions, complexity, and error patterns instead of trying many models without
   a baseline.
@@ -208,7 +215,11 @@ review_cards:
 ---
 # Gradient boosting / Gradient boosting
 
-Gradient boosting bổ sung mô hình yếu theo từng bước để giảm hàm mất mát hiện tại. Số bước, độ phức tạp của mô hình thành phần và tốc độ học cần được chọn qua kiểm định.
+Gradient boosting thêm các mô hình thành phần theo từng bước để giảm hàm mất mát của tổ hợp hiện tại. Mô hình mới được học theo hướng gradient của loss; với bình phương sai số, hướng này liên quan trực tiếp tới phần dư.
+
+Khác rừng ngẫu nhiên chủ yếu kết hợp nhiều cây được xây riêng, boosting tạo chuỗi bước phụ thuộc vào kết quả trước. Tốc độ học điều chỉnh mức đóng góp của mỗi bước; tốc độ nhỏ thường cần nhiều bước hơn và không tự bảo đảm chất lượng tốt hơn.
+
+Tự kiểm tra: thêm cây tới khi train loss rất thấp có luôn cải thiện dự đoán mới không? Không; vẫn có thể quá khớp. Theo dõi kiểm định, giới hạn độ phức tạp và ngân sách, rồi so với baseline trên cùng phép chia dữ liệu.
 
 ## Thực hành
 

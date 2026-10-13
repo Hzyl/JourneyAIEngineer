@@ -25,11 +25,22 @@ key_terms:
 - observability
 - reproducibility
 - deployment
-concept_notes_vi: Nhật ký có cấu trúc lưu sự kiện thành các trường nhất quán để tìm kiếm, tổng hợp. Mã yêu cầu giúp
-  nối sự kiện cùng luồng; loại bỏ dữ liệu nhạy cảm trước khi ghi.
-concept_notes_en: Structured logging is a Software Engineering skill for turning an idea into code that can be read,
-  tested, and maintained. Define the inputs, outputs, invariants, and failure modes before implementing. In Python,
-  small boundaries make tests fast and tracebacks actionable.
+concept_notes_vi: |-
+  Nhật ký có cấu trúc lưu sự kiện thành các trường nhất quán để tìm kiếm, tổng hợp. Mã yêu cầu giúp nối sự kiện cùng luồng; loại bỏ dữ liệu nhạy cảm trước khi ghi.
+
+  Phân biệt log với metric: log giữ từng sự kiện để điều tra, metric tổng hợp số liệu theo thời gian. Trường latency_ms dạng số dễ tổng hợp hơn chuỗi như 'chạy khá lâu'; đặt tên và đơn vị nhất quán.
+
+  Ví dụ, ghi request_id, model_version, status và duration_ms cho yêu cầu dự đoán. Hai dòng cùng request_id giúp nối bước nhận dữ liệu và bước suy luận mà không cần lưu toàn bộ văn bản người dùng.
+
+  Tự kiểm tra: log JSON có tự an toàn không? Không; cấu trúc giúp tìm kiếm nhưng vẫn có thể chứa khóa API. Chọn các trường cần ghi và thử bằng bí mật giả để kiểm tra cơ chế che dữ liệu.
+concept_notes_en: |-
+  Structured logs store events in consistent fields for searching and aggregation. A request ID connects related events; remove sensitive data before writing.
+
+  Logs preserve individual events for investigation; metrics aggregate measurements over time. A numeric latency_ms field is more useful than 'rather slow'; keep names and units consistent.
+
+  For a prediction request, record request_id, model_version, status and duration_ms. Matching request IDs connect input handling with inference without storing all user text.
+
+  Self-check: is JSON logging automatically safe? No: structured data may still expose an API key. Select necessary fields and test redaction using fake secrets.
 why_it_matters_vi: Đo độ trễ, thay đổi dữ liệu và lỗi để phát hiện vấn đề trong dịch vụ.
 why_it_matters_en: Measure latency, drift, and production errors so you find failures before users report them.
 study_steps_vi:
@@ -218,6 +229,12 @@ review_cards:
 # Ghi nhật ký có cấu trúc / Structured logging
 
 Nhật ký có cấu trúc lưu sự kiện thành các trường nhất quán để tìm kiếm, tổng hợp. Mã yêu cầu giúp nối sự kiện cùng luồng; loại bỏ dữ liệu nhạy cảm trước khi ghi.
+
+Phân biệt log với metric: log giữ từng sự kiện để điều tra, metric tổng hợp số liệu theo thời gian. Trường latency_ms dạng số dễ tổng hợp hơn chuỗi như 'chạy khá lâu'; đặt tên và đơn vị nhất quán.
+
+Ví dụ, ghi request_id, model_version, status và duration_ms cho yêu cầu dự đoán. Hai dòng cùng request_id giúp nối bước nhận dữ liệu và bước suy luận mà không cần lưu toàn bộ văn bản người dùng.
+
+Tự kiểm tra: log JSON có tự an toàn không? Không; cấu trúc giúp tìm kiếm nhưng vẫn có thể chứa khóa API. Chọn các trường cần ghi và thử bằng bí mật giả để kiểm tra cơ chế che dữ liệu.
 
 ## Thực hành
 

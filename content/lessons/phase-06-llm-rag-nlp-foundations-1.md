@@ -25,11 +25,22 @@ key_terms:
 - retrieval
 - evaluation
 - nlp-foundations
-concept_notes_vi: Tokenizer chuyển văn bản thành đơn vị mô hình xử lý. Token không nhất thiết là từ; cùng một câu
-  tiếng Việt có thể được tách khác nhau giữa các tokenizer.
-concept_notes_en: 'Tokenization belongs to LLM Application Engineering: design the contract between the application
-  and the model. Define instructions, inputs, output schema, timeout, retry, and token limits; parse model output
-  as untrusted data and return actionable errors.'
+concept_notes_vi: |-
+  Tokenizer chuyển văn bản thành đơn vị mô hình xử lý. Token không nhất thiết là từ; cùng một câu tiếng Việt có thể được tách khác nhau giữa các tokenizer.
+
+  Phân biệt ký tự, từ và token: ký tự thuộc cách biểu diễn văn bản, từ thuộc ngôn ngữ, token thuộc bộ tách của mô hình. Một token có thể là mảnh từ, dấu câu hoặc chuỗi khoảng trắng.
+
+  Ví dụ, đếm từ bằng cách tách dấu cách không cho đúng chi phí token của một đoạn tiếng Việt. Dùng tokenizer tương ứng và tính cả chỉ dẫn, lịch sử, dữ liệu công cụ khi ước lượng đầu vào.
+
+  Tự kiểm tra: đổi mô hình có giữ nguyên số token không? Không nhất thiết; bộ từ vựng và quy tắc tách có thể đổi. Đếm lại bằng công cụ phù hợp thay vì dùng một tỉ lệ cố định cho mọi ngôn ngữ.
+concept_notes_en: |-
+  A tokenizer converts text into units a model processes. Tokens are not necessarily words; Vietnamese text can be segmented differently by different tokenizers.
+
+  Characters belong to text representation, words to language, and tokens to the model's tokenizer. A token may represent part of a word, punctuation or whitespace.
+
+  Splitting Vietnamese on spaces does not establish token cost. Use the matching tokenizer and count instructions, history and tool data too.
+
+  Self-check: does changing models preserve token count? Not necessarily: vocabularies and segmentation rules may differ. Recount with the appropriate tool instead of assuming one universal word-to-token ratio.
 why_it_matters_vi: Hiểu token, embedding, mô hình ngôn ngữ và giới hạn ngữ cảnh trước khi xây ứng dụng.
 why_it_matters_en: Understand tokens, embeddings, language models, and context windows before building LLM applications.
 study_steps_vi:
@@ -216,6 +227,12 @@ review_cards:
 # Tách token / Tokenization
 
 Tokenizer chuyển văn bản thành đơn vị mô hình xử lý. Token không nhất thiết là từ; cùng một câu tiếng Việt có thể được tách khác nhau giữa các tokenizer.
+
+Phân biệt ký tự, từ và token: ký tự thuộc cách biểu diễn văn bản, từ thuộc ngôn ngữ, token thuộc bộ tách của mô hình. Một token có thể là mảnh từ, dấu câu hoặc chuỗi khoảng trắng.
+
+Ví dụ, đếm từ bằng cách tách dấu cách không cho đúng chi phí token của một đoạn tiếng Việt. Dùng tokenizer tương ứng và tính cả chỉ dẫn, lịch sử, dữ liệu công cụ khi ước lượng đầu vào.
+
+Tự kiểm tra: đổi mô hình có giữ nguyên số token không? Không nhất thiết; bộ từ vựng và quy tắc tách có thể đổi. Đếm lại bằng công cụ phù hợp thay vì dùng một tỉ lệ cố định cho mọi ngôn ngữ.
 
 ## Thực hành
 

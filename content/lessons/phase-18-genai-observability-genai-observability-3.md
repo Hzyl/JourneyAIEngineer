@@ -27,11 +27,18 @@ key_terms:
 - reproducibility
 - deployment
 - genai-observability
-concept_notes_vi: Chi phí cần gắn với loại yêu cầu, mô hình và lượng sử dụng. Ngưỡng ngân sách phải đi cùng hành
-  động rõ như cảnh báo, từ chối yêu cầu mới hoặc chuyển phương án đã đánh giá.
-concept_notes_en: Cost monitoring và budget turns an AI demo into a system that can be trusted. Define metrics and
-  an evaluation set first, record prompt/model/version/tokens/latency, and attribute failures to retrieval, generation,
-  data, or infrastructure instead of relying on one score.
+concept_notes_vi: |-
+  Chi phí cần gắn với loại yêu cầu, mô hình và lượng sử dụng. Ngưỡng ngân sách phải đi cùng hành động rõ như cảnh báo, từ chối yêu cầu mới hoặc chuyển phương án đã đánh giá.
+
+  Cảnh báo ngân sách cho biết đã chạm ngưỡng; giới hạn cứng phải có cơ chế chặn hoặc hạ mức phục vụ. Đo chi phí trung bình theo yêu cầu còn cần xem loại tác vụ, vì một số ít yêu cầu dài có thể chiếm phần lớn tài nguyên.
+
+  Ví dụ, hệ thống ghi mức sử dụng theo lượt hỏi và cảnh báo khi lượng gọi công cụ tăng bất thường. Tự kiểm tra: dùng mô hình rẻ hơn có luôn giảm chi phí một nhiệm vụ thành công không? Không; nếu phải thử lại nhiều hoặc sửa thủ công, tổng chi phí có thể tăng. So theo nhiệm vụ đạt tiêu chí chất lượng.
+concept_notes_en: |-
+  Costs should be attributed to request type, model and usage. Budget thresholds need defined actions such as alerts, rejection or an evaluated alternative.
+
+  An alert reports a threshold; a hard limit needs enforcement. Average request cost can hide a small set of expensive long tasks.
+
+  Track usage per question and alert on unusual tool-call growth. Self-check: does a cheaper model always lower cost per successful task? No: additional retries or manual correction can increase total cost. Compare costs for tasks meeting the same quality requirements.
 why_it_matters_vi: Thu thập dữ liệu đủ để phân biệt lỗi mô hình, truy xuất, nhà cung cấp và hạ tầng.
 why_it_matters_en: Without telemetry you cannot tell whether a failure is in the model, retrieval, provider, or
   infrastructure.
@@ -216,6 +223,10 @@ review_cards:
 # Theo dõi chi phí và ngân sách / Cost monitoring and budgets
 
 Chi phí cần gắn với loại yêu cầu, mô hình và lượng sử dụng. Ngưỡng ngân sách phải đi cùng hành động rõ như cảnh báo, từ chối yêu cầu mới hoặc chuyển phương án đã đánh giá.
+
+Cảnh báo ngân sách cho biết đã chạm ngưỡng; giới hạn cứng phải có cơ chế chặn hoặc hạ mức phục vụ. Đo chi phí trung bình theo yêu cầu còn cần xem loại tác vụ, vì một số ít yêu cầu dài có thể chiếm phần lớn tài nguyên.
+
+Ví dụ, hệ thống ghi mức sử dụng theo lượt hỏi và cảnh báo khi lượng gọi công cụ tăng bất thường. Tự kiểm tra: dùng mô hình rẻ hơn có luôn giảm chi phí một nhiệm vụ thành công không? Không; nếu phải thử lại nhiều hoặc sửa thủ công, tổng chi phí có thể tăng. So theo nhiệm vụ đạt tiêu chí chất lượng.
 
 ## Thực hành
 

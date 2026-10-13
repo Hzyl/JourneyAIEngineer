@@ -26,10 +26,22 @@ key_terms:
 - retrieval
 - evaluation
 - nlp-foundations
-concept_notes_vi: Cửa sổ ngữ cảnh giới hạn lượng token mô hình xử lý trong một lượt theo cấu hình sử dụng. Cần tính
-  chỉ dẫn, lịch sử, tài liệu và đầu ra khi phân bổ ngân sách.
-concept_notes_en: Context window is a concept in the nlp-foundations module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Cửa sổ ngữ cảnh giới hạn lượng token mô hình xử lý trong một lượt theo cấu hình sử dụng. Cần tính chỉ dẫn, lịch sử, tài liệu và đầu ra khi phân bổ ngân sách.
+
+  Cửa sổ ngữ cảnh khác bộ nhớ lâu dài: dữ liệu lưu trong ứng dụng chỉ ảnh hưởng câu trả lời khi được đưa vào yêu cầu hoặc truy xuất phù hợp. Có chỗ chứa nhiều token cũng không bảo đảm mô hình dùng tốt mọi chi tiết.
+
+  Ví dụ, trong ngân sách giả định 8000 token tổng, dành 1000 cho đầu ra và 2000 cho chỉ dẫn cùng lịch sử thì còn 5000 cho tài liệu. Cần kiểm tra quy tắc giới hạn cụ thể của dịch vụ đang dùng.
+
+  Tự kiểm tra: chỉ cắt đầu tài liệu cho vừa có an toàn không? Không; có thể mất điều kiện hoặc ngoại lệ. Chọn đoạn theo câu hỏi và giữ nguồn để kiểm tra.
+concept_notes_en: |-
+  The context window limits tokens processed in a request under the model's configuration. Budget for instructions, history, documents and output.
+
+  Context differs from durable memory: stored application data affects an answer only when supplied or retrieved. A large capacity does not guarantee effective use of every detail.
+
+  In a hypothetical total budget of 8000 tokens, reserving 1000 for output and 2000 for instructions and history leaves 5000 for documents. Check the actual service's limit rules.
+
+  Self-check: is simply cutting off the beginning of documents safe? No: conditions or exceptions may disappear. Select passages for the question and retain their sources.
 why_it_matters_vi: Hiểu token, embedding, mô hình ngôn ngữ và giới hạn ngữ cảnh trước khi xây ứng dụng.
 why_it_matters_en: Understand tokens, embeddings, language models, and context windows before building LLM applications.
 study_steps_vi:
@@ -217,6 +229,12 @@ review_cards:
 # Cửa sổ ngữ cảnh / Context windows
 
 Cửa sổ ngữ cảnh giới hạn lượng token mô hình xử lý trong một lượt theo cấu hình sử dụng. Cần tính chỉ dẫn, lịch sử, tài liệu và đầu ra khi phân bổ ngân sách.
+
+Cửa sổ ngữ cảnh khác bộ nhớ lâu dài: dữ liệu lưu trong ứng dụng chỉ ảnh hưởng câu trả lời khi được đưa vào yêu cầu hoặc truy xuất phù hợp. Có chỗ chứa nhiều token cũng không bảo đảm mô hình dùng tốt mọi chi tiết.
+
+Ví dụ, trong ngân sách giả định 8000 token tổng, dành 1000 cho đầu ra và 2000 cho chỉ dẫn cùng lịch sử thì còn 5000 cho tài liệu. Cần kiểm tra quy tắc giới hạn cụ thể của dịch vụ đang dùng.
+
+Tự kiểm tra: chỉ cắt đầu tài liệu cho vừa có an toàn không? Không; có thể mất điều kiện hoặc ngoại lệ. Chọn đoạn theo câu hỏi và giữ nguồn để kiểm tra.
 
 ## Thực hành
 

@@ -27,10 +27,22 @@ key_terms:
 - debugging
 - maintainability
 - data-files
-concept_notes_vi: Parquet tổ chức dữ liệu theo cột và lưu thông tin kiểu. Khi chỉ cần một số cột, định dạng này
-  có thể giảm lượng dữ liệu phải đọc; lợi ích thực tế phụ thuộc cách truy vấn và kích thước dữ liệu.
-concept_notes_en: Parquet và columnar data is a concept in the data-files module. Identify the inputs, outputs,
-  assumptions, failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Parquet là định dạng lưu dữ liệu theo cột, có thông tin kiểu và hỗ trợ nén. Khi chỉ cần vài cột trong bảng rộng, bộ đọc có thể tránh đọc nhiều dữ liệu không liên quan.
+
+  Khác CSV dạng văn bản theo hàng, Parquet được thiết kế cho xử lý phân tích. Điều đó không có nghĩa mọi truy vấn đều nhanh hơn: kích thước tệp, cách chia nhóm hàng và khả năng bộ đọc vẫn ảnh hưởng.
+
+  Nếu bảng có mô tả văn bản dài nhưng báo cáo chỉ dùng ngày và doanh thu, chỉ chọn hai cột ấy. Đo lượng dữ liệu đọc và thời gian thay vì kết luận từ phần mở rộng tệp.
+
+  Tự kiểm tra: đổi đuôi .csv thành .parquet có chuyển định dạng không? Không; phải đọc dữ liệu rồi ghi bằng bộ ghi Parquet tương thích.
+concept_notes_en: |-
+  Parquet is a typed, column-oriented storage format supporting compression. When a query needs only a few columns from a wide table, readers can avoid much irrelevant data.
+
+  Unlike row-oriented text CSV, Parquet is designed for analytics. That does not make every query faster: file size, row-group layout and reader capabilities still matter.
+
+  For a table with long descriptions, a revenue report can select only date and revenue. Measure bytes read and elapsed time instead of inferring performance from the extension.
+
+  Self-check: does renaming .csv to .parquet convert it? No; load the data and use a compatible Parquet writer.
 why_it_matters_vi: Đọc, ghi dữ liệu theo cấu trúc rõ và xử lý giá trị thiếu bằng chính sách có thể giải thích.
 why_it_matters_en: Read and write data with schemas, handle missing values, and create CLIs with inspectable inputs
   and outputs.
@@ -220,7 +232,13 @@ review_cards:
 ---
 # Parquet và lưu trữ theo cột / Parquet and columnar data
 
-Parquet tổ chức dữ liệu theo cột và lưu thông tin kiểu. Khi chỉ cần một số cột, định dạng này có thể giảm lượng dữ liệu phải đọc; lợi ích thực tế phụ thuộc cách truy vấn và kích thước dữ liệu.
+Parquet là định dạng lưu dữ liệu theo cột, có thông tin kiểu và hỗ trợ nén. Khi chỉ cần vài cột trong bảng rộng, bộ đọc có thể tránh đọc nhiều dữ liệu không liên quan.
+
+Khác CSV dạng văn bản theo hàng, Parquet được thiết kế cho xử lý phân tích. Điều đó không có nghĩa mọi truy vấn đều nhanh hơn: kích thước tệp, cách chia nhóm hàng và khả năng bộ đọc vẫn ảnh hưởng.
+
+Nếu bảng có mô tả văn bản dài nhưng báo cáo chỉ dùng ngày và doanh thu, chỉ chọn hai cột ấy. Đo lượng dữ liệu đọc và thời gian thay vì kết luận từ phần mở rộng tệp.
+
+Tự kiểm tra: đổi đuôi .csv thành .parquet có chuyển định dạng không? Không; phải đọc dữ liệu rồi ghi bằng bộ ghi Parquet tương thích.
 
 ## Thực hành
 

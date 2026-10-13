@@ -27,11 +27,18 @@ key_terms:
 - baseline
 - evaluation
 - genai-ml-fundamentals
-concept_notes_vi: Nhiệm vụ phân loại có nhãn và nhiệm vụ tìm nhóm dữ liệu đòi hỏi cách đánh giá khác nhau. Xác định
-  mục tiêu trước khi chọn biểu diễn hoặc thuật toán.
-concept_notes_en: 'Supervised và unsupervised learning is a classical Machine Learning decision: define the label,
-  baseline, split, and metric before choosing a model. Fit preprocessing on train only; error analysis should identify
-  the groups where the model fails and how to retest the hypothesis.'
+concept_notes_vi: |-
+  Nhiệm vụ phân loại có nhãn và nhiệm vụ tìm nhóm dữ liệu đòi hỏi cách đánh giá khác nhau. Xác định mục tiêu trước khi chọn biểu diễn hoặc thuật toán.
+
+  Học có giám sát dùng đầu ra mẫu để học ánh xạ; học không giám sát tìm cấu trúc khi không có nhãn mục tiêu tương ứng. Cụm dữ liệu không tự mang ý nghĩa nghiệp vụ, nên cần kiểm tra nội dung và cách dùng.
+
+  Ví dụ, phân loại email cần nhãn như thư rác; gom các phản hồi tương tự có thể giúp khám phá chủ đề chưa đặt tên. Tự kiểm tra: mô hình chia phản hồi thành cụm đã chứng minh phân loại đúng chưa? Chưa; cụm có thể phản ánh độ dài hoặc cách viết thay vì chủ đề người dùng quan tâm.
+concept_notes_en: |-
+  Labeled classification and unlabeled grouping require different evaluation methods. Define the objective before choosing representations or algorithms.
+
+  Supervised learning uses example outputs to learn a mapping; unsupervised learning seeks structure without corresponding target labels. Clusters do not automatically acquire useful business meanings.
+
+  Email classification can use spam labels, while grouping similar feedback can help discover unnamed themes. Self-check: does producing feedback clusters prove correct classification? No: groups may reflect length or writing style rather than the topics users care about; inspect their contents and usefulness.
 why_it_matters_vi: Liên hệ embedding và thước đo với truy xuất, phân nhóm và chất lượng mô hình.
 why_it_matters_en: Embeddings and metrics connect user data to retrieval, clustering, and model quality.
 study_steps_vi:
@@ -220,6 +227,10 @@ review_cards:
 # Học có giám sát và không giám sát cho GenAI / Supervised and unsupervised learning
 
 Nhiệm vụ phân loại có nhãn và nhiệm vụ tìm nhóm dữ liệu đòi hỏi cách đánh giá khác nhau. Xác định mục tiêu trước khi chọn biểu diễn hoặc thuật toán.
+
+Học có giám sát dùng đầu ra mẫu để học ánh xạ; học không giám sát tìm cấu trúc khi không có nhãn mục tiêu tương ứng. Cụm dữ liệu không tự mang ý nghĩa nghiệp vụ, nên cần kiểm tra nội dung và cách dùng.
+
+Ví dụ, phân loại email cần nhãn như thư rác; gom các phản hồi tương tự có thể giúp khám phá chủ đề chưa đặt tên. Tự kiểm tra: mô hình chia phản hồi thành cụm đã chứng minh phân loại đúng chưa? Chưa; cụm có thể phản ánh độ dài hoặc cách viết thay vì chủ đề người dùng quan tâm.
 
 ## Thực hành
 

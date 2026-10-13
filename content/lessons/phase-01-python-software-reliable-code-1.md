@@ -26,11 +26,22 @@ key_terms:
 - debugging
 - maintainability
 - reliable-code
-concept_notes_vi: Module tổ chức mã trong tệp; package gom các module liên quan. Cách chia nên giúp từng phần có
-  trách nhiệm rõ và hạn chế phụ thuộc vòng để có thể kiểm thử riêng.
-concept_notes_en: Module và package is a Software Engineering skill for turning an idea into code that can be read,
-  tested, and maintained. Define the inputs, outputs, invariants, and failure modes before implementing. In Python,
-  small boundaries make tests fast and tracebacks actionable.
+concept_notes_vi: |-
+  Module tổ chức mã thành đơn vị có thể import, thường là một tệp Python; package nhóm các module liên quan. Chia theo trách nhiệm giúp kiểm thử từng phần và tránh phụ thuộc vòng.
+
+  Phân biệt import với sao chép văn bản: import có thể thực thi mã ở cấp module khi nạp lần đầu trong tiến trình. Vì vậy thao tác đọc tệp hoặc gọi mạng ngay khi import tạo tác dụng phụ khó kiểm soát.
+
+  Đặt hàm xử lý trong module riêng và phần chạy thử dưới điều kiện __name__ == '__main__'. Khi tệp được import để kiểm thử, phần chạy thử không tự khởi động.
+
+  Tự kiểm tra: đặt tên tệp json.py có vô hại không? Không chắc; nó có thể che module json chuẩn tùy đường tìm kiếm. Đọc đường dẫn module thực được nạp.
+concept_notes_en: |-
+  A module is an importable code unit, commonly a Python file; a package groups related modules. Responsibility-based boundaries support isolated testing and reduce circular dependencies.
+
+  Importing is not text copying: first loading a module in a process can execute its top-level code. File reads or network calls during import therefore introduce hard-to-control side effects.
+
+  Put processing functions in a module and demonstration code under __name__ == '__main__'. Importing it for tests then does not launch the demonstration.
+
+  Self-check: is naming a file json.py harmless? Not necessarily; it may shadow the standard module depending on the search path. Inspect the loaded module's path.
 why_it_matters_vi: Chia trách nhiệm rõ, xử lý ngoại lệ và ghi nhật ký để mã dễ kiểm tra, bảo trì.
 why_it_matters_en: Turn working code into reliable code with module boundaries, logging, exceptions, and explicit
   test boundaries.
@@ -218,7 +229,13 @@ review_cards:
 ---
 # Module và package trong Python / Modules and packages
 
-Module tổ chức mã trong tệp; package gom các module liên quan. Cách chia nên giúp từng phần có trách nhiệm rõ và hạn chế phụ thuộc vòng để có thể kiểm thử riêng.
+Module tổ chức mã thành đơn vị có thể import, thường là một tệp Python; package nhóm các module liên quan. Chia theo trách nhiệm giúp kiểm thử từng phần và tránh phụ thuộc vòng.
+
+Phân biệt import với sao chép văn bản: import có thể thực thi mã ở cấp module khi nạp lần đầu trong tiến trình. Vì vậy thao tác đọc tệp hoặc gọi mạng ngay khi import tạo tác dụng phụ khó kiểm soát.
+
+Đặt hàm xử lý trong module riêng và phần chạy thử dưới điều kiện __name__ == '__main__'. Khi tệp được import để kiểm thử, phần chạy thử không tự khởi động.
+
+Tự kiểm tra: đặt tên tệp json.py có vô hại không? Không chắc; nó có thể che module json chuẩn tùy đường tìm kiếm. Đọc đường dẫn module thực được nạp.
 
 ## Thực hành
 

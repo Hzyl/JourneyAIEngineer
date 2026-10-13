@@ -29,11 +29,22 @@ key_terms:
 - gradient
 - optimization
 - calculus
-concept_notes_vi: Quy tắc dây chuyền tính đạo hàm của hàm hợp qua các bước trung gian. Lan truyền ngược dùng quy
-  tắc này để truyền ảnh hưởng của hàm mất mát về từng tham số trong mạng.
-concept_notes_en: Chain rule trong neural network describes how an output changes when a parameter changes. Use
-  finite differences on a small input to check a gradient, then trace the chain rule through each transformation;
-  gradient sign and scale determine whether updates are stable.
+concept_notes_vi: |-
+  Quy tắc dây chuyền tính đạo hàm của hàm hợp bằng cách kết nối đạo hàm qua các bước trung gian. Lan truyền ngược áp dụng quy tắc này trên đồ thị tính toán để tìm ảnh hưởng của từng tham số tới mất mát.
+
+  Phân biệt lan truyền ngược với phép cập nhật: bước đầu tính gradient, bộ tối ưu mới dùng gradient để đổi tham số. Khi một biến đi tới kết quả qua nhiều nhánh, đóng góp từ các nhánh phải được cộng.
+
+  Nếu u=2x và L=u² thì dL/dx=2u × 2. Tại x=3, u=6 nên gradient bằng 24. Bỏ đạo hàm của bước u=2x sẽ cho kết quả sai.
+
+  Tự kiểm tra: đạo hàm của hàm ngoài đã đủ chưa? Chưa; phải nhân với đạo hàm đường bên trong và cộng mọi đường phụ thuộc liên quan.
+concept_notes_en: |-
+  The chain rule differentiates a composition by connecting derivatives through intermediate steps. Backpropagation applies it to a computation graph to obtain each parameter's influence on the loss.
+
+  Backpropagation computes gradients; an optimizer subsequently updates parameters. When a variable reaches the result through multiple branches, those contributions must be added.
+
+  If u=2x and L=u², then dL/dx=2u × 2. At x=3, u=6 and the gradient is 24. Omitting the derivative of u=2x gives the wrong answer.
+
+  Self-check: is the outer derivative sufficient? No; multiply through the inner path and sum all relevant dependency paths.
 why_it_matters_vi: Hiểu đạo hàm và quy tắc dây chuyền để giải thích cách cập nhật tham số.
 why_it_matters_en: Understand derivatives, gradients, and the chain rule as parameter-update mechanisms rather than
   isolated formulas.
@@ -229,7 +240,13 @@ review_cards:
 ---
 # Quy tắc dây chuyền trong mạng nơ-ron / The chain rule in neural networks
 
-Quy tắc dây chuyền tính đạo hàm của hàm hợp qua các bước trung gian. Lan truyền ngược dùng quy tắc này để truyền ảnh hưởng của hàm mất mát về từng tham số trong mạng.
+Quy tắc dây chuyền tính đạo hàm của hàm hợp bằng cách kết nối đạo hàm qua các bước trung gian. Lan truyền ngược áp dụng quy tắc này trên đồ thị tính toán để tìm ảnh hưởng của từng tham số tới mất mát.
+
+Phân biệt lan truyền ngược với phép cập nhật: bước đầu tính gradient, bộ tối ưu mới dùng gradient để đổi tham số. Khi một biến đi tới kết quả qua nhiều nhánh, đóng góp từ các nhánh phải được cộng.
+
+Nếu u=2x và L=u² thì dL/dx=2u × 2. Tại x=3, u=6 nên gradient bằng 24. Bỏ đạo hàm của bước u=2x sẽ cho kết quả sai.
+
+Tự kiểm tra: đạo hàm của hàm ngoài đã đủ chưa? Chưa; phải nhân với đạo hàm đường bên trong và cộng mọi đường phụ thuộc liên quan.
 
 ## Thực hành
 

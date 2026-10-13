@@ -26,11 +26,22 @@ key_terms:
 - observability
 - reproducibility
 - deployment
-concept_notes_vi: Concept drift là thay đổi quan hệ giữa đầu vào và mục tiêu. Khi chất lượng giảm, cần bằng chứng
-  đánh giá và kế hoạch khôi phục, đồng thời kiểm tra tương thích giữa dữ liệu và dịch vụ.
-concept_notes_en: Concept drift và rollback turns an AI demo into a system that can be trusted. Define metrics and
-  an evaluation set first, record prompt/model/version/tokens/latency, and attribute failures to retrieval, generation,
-  data, or infrastructure instead of relying on one score.
+concept_notes_vi: |-
+  Concept drift là thay đổi quan hệ giữa đầu vào và mục tiêu. Khi chất lượng giảm, cần bằng chứng đánh giá và kế hoạch khôi phục, đồng thời kiểm tra tương thích giữa dữ liệu và dịch vụ.
+
+  Khôi phục phiên bản xử lý một thay đổi triển khai gây lỗi; nó không tự giải quyết môi trường thực tế đã đổi. Nếu nhu cầu khách hàng thay đổi, cả mô hình mới và cũ đều có thể dự đoán kém.
+
+  Ví dụ, sau cập nhật bộ tiền xử lý, mô hình nhận sai thứ tự cột. Quay lại gói mô hình kèm bộ tiền xử lý tương thích có thể khôi phục. Chỉ đổi tệp trọng số nhưng giữ pipeline sai sẽ không đủ.
+
+  Tự kiểm tra: độ chính xác giảm có chứng minh concept drift không? Không; kiểm tra lỗi dữ liệu, nhãn đến chậm và thay đổi mã trước. Dùng dữ liệu có nhãn theo thời gian để xem quan hệ dự đoán thật sự thay đổi.
+concept_notes_en: |-
+  Concept drift changes the relationship between inputs and targets. Quality degradation requires evaluation evidence and a recovery plan that accounts for data and service compatibility.
+
+  Rollback can address a faulty deployment, but cannot automatically undo a changed real-world environment. When customer behavior changes, both old and new models may perform poorly.
+
+  For example, a preprocessing update may reorder columns incorrectly. Restore a compatible model and preprocessing bundle; replacing weights alone while keeping the faulty pipeline is insufficient.
+
+  Self-check: does falling accuracy prove concept drift? No: first check data bugs, delayed labels and code changes. Use labeled data over time to examine whether the predictive relationship changed.
 why_it_matters_vi: Đo độ trễ, thay đổi dữ liệu và lỗi để phát hiện vấn đề trong dịch vụ.
 why_it_matters_en: Measure latency, drift, and production errors so you find failures before users report them.
 study_steps_vi:
@@ -214,6 +225,12 @@ review_cards:
 # Thay đổi quan hệ dự đoán và khôi phục phiên bản / Concept drift and rollback
 
 Concept drift là thay đổi quan hệ giữa đầu vào và mục tiêu. Khi chất lượng giảm, cần bằng chứng đánh giá và kế hoạch khôi phục, đồng thời kiểm tra tương thích giữa dữ liệu và dịch vụ.
+
+Khôi phục phiên bản xử lý một thay đổi triển khai gây lỗi; nó không tự giải quyết môi trường thực tế đã đổi. Nếu nhu cầu khách hàng thay đổi, cả mô hình mới và cũ đều có thể dự đoán kém.
+
+Ví dụ, sau cập nhật bộ tiền xử lý, mô hình nhận sai thứ tự cột. Quay lại gói mô hình kèm bộ tiền xử lý tương thích có thể khôi phục. Chỉ đổi tệp trọng số nhưng giữ pipeline sai sẽ không đủ.
+
+Tự kiểm tra: độ chính xác giảm có chứng minh concept drift không? Không; kiểm tra lỗi dữ liệu, nhãn đến chậm và thay đổi mã trước. Dùng dữ liệu có nhãn theo thời gian để xem quan hệ dự đoán thật sự thay đổi.
 
 ## Thực hành
 

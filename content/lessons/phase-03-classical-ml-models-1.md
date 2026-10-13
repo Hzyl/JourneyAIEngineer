@@ -26,11 +26,18 @@ key_terms:
 - baseline
 - evaluation
 - models
-concept_notes_vi: Hồi quy tuyến tính mô tả đầu ra bằng tổ hợp tuyến tính của các đặc trưng. Hệ số giúp diễn giải
-  quan hệ trong mô hình, nhưng không tự chứng minh quan hệ nhân quả.
-concept_notes_en: 'Linear regression is a classical Machine Learning decision: define the label, baseline, split,
-  and metric before choosing a model. Fit preprocessing on train only; error analysis should identify the groups
-  where the model fails and how to retest the hypothesis.'
+concept_notes_vi: |-
+  Hồi quy tuyến tính biểu diễn dự đoán bằng tổng có trọng số của các đặc trưng cộng một hệ số chặn. Tuyến tính ở đây nói về hệ số; bạn vẫn có thể đưa x² vào như một đặc trưng đã biến đổi.
+
+  Với dự đoán y=2x+1, tăng x một đơn vị làm dự đoán tăng 2 khi các đặc trưng khác giữ nguyên. Đây là quan hệ trong mô hình, không chứng minh việc can thiệp tăng x sẽ gây ra thay đổi tương ứng ngoài đời. Các đặc trưng tương quan cũng làm hệ số khó diễn giải riêng lẻ.
+
+  Tự kiểm tra: đường khớp tốt trong khoảng x từ 1 đến 10 có đáng tin khi x=100 không? Chưa có cơ sở; đó là ngoại suy. Xem sai số và phạm vi dữ liệu trước khi sử dụng dự đoán ngoài miền đã quan sát.
+concept_notes_en: |-
+  Linear regression expresses predictions as a weighted sum of features plus an intercept. Linear refers to the coefficients; x² can still be supplied as a transformed feature.
+
+  For y=2x+1, increasing x by one raises the prediction by 2 while other features remain fixed. This is a model relationship, not proof that intervening on x causes the same real-world change. Correlated features can also make individual coefficients hard to interpret.
+
+  Self-check: is a good fit over x from 1 to 10 trustworthy at x=100? Not without evidence; that is extrapolation. Inspect errors and data coverage before using predictions beyond the observed range.
 why_it_matters_vi: So sánh mô hình theo giả định, độ phức tạp và dạng lỗi trên cùng dữ liệu.
 why_it_matters_en: Compare models by assumptions, complexity, and error patterns instead of trying many models without
   a baseline.
@@ -210,7 +217,11 @@ review_cards:
 ---
 # Hồi quy tuyến tính / Linear regression
 
-Hồi quy tuyến tính mô tả đầu ra bằng tổ hợp tuyến tính của các đặc trưng. Hệ số giúp diễn giải quan hệ trong mô hình, nhưng không tự chứng minh quan hệ nhân quả.
+Hồi quy tuyến tính biểu diễn dự đoán bằng tổng có trọng số của các đặc trưng cộng một hệ số chặn. Tuyến tính ở đây nói về hệ số; bạn vẫn có thể đưa x² vào như một đặc trưng đã biến đổi.
+
+Với dự đoán y=2x+1, tăng x một đơn vị làm dự đoán tăng 2 khi các đặc trưng khác giữ nguyên. Đây là quan hệ trong mô hình, không chứng minh việc can thiệp tăng x sẽ gây ra thay đổi tương ứng ngoài đời. Các đặc trưng tương quan cũng làm hệ số khó diễn giải riêng lẻ.
+
+Tự kiểm tra: đường khớp tốt trong khoảng x từ 1 đến 10 có đáng tin khi x=100 không? Chưa có cơ sở; đó là ngoại suy. Xem sai số và phạm vi dữ liệu trước khi sử dụng dự đoán ngoài miền đã quan sát.
 
 ## Thực hành
 

@@ -26,11 +26,18 @@ key_terms:
 - debugging
 - maintainability
 - ship
-concept_notes_vi: Báo cáo cần dữ liệu, cách chia, thước đo, mô hình cơ sở và kết quả theo nhóm. Nêu cả thất bại
-  để người đọc hiểu giới hạn thay vì chỉ thấy kết quả tốt nhất.
-concept_notes_en: Evaluation report turns an AI demo into a system that can be trusted. Define metrics and an evaluation
-  set first, record prompt/model/version/tokens/latency, and attribute failures to retrieval, generation, data,
-  or infrastructure instead of relying on one score.
+concept_notes_vi: |-
+  Báo cáo cần dữ liệu, cách chia, thước đo, mô hình cơ sở và kết quả theo nhóm. Nêu cả thất bại để người đọc hiểu giới hạn thay vì chỉ thấy kết quả tốt nhất.
+
+  Báo cáo đánh giá khác bảng điểm: nó giải thích điểm được tạo ra từ dữ liệu và quy trình nào. Kết quả trên tập dễ hoặc đã dùng để chỉnh prompt không đại diện độc lập cho tình huống sử dụng mới.
+
+  Ví dụ, báo cáo trợ lý tài liệu nên tách câu hỏi có nguồn, thiếu nguồn và nguồn mâu thuẫn, kèm câu trả lời sai điển hình. Tự kiểm tra: có nên chỉ báo cáo lần chạy tốt nhất? Không; nêu cách chọn cấu hình, độ biến động đã đo và phiên bản dữ liệu để người đọc đánh giá công bằng.
+concept_notes_en: |-
+  An evaluation report records data, splits, metrics, baselines and results by group. Include failures so readers can judge limitations.
+
+  A report differs from a score table: it explains how data and procedure produced the scores. Easy examples or prompt-tuning data do not independently represent new usage.
+
+  For a document assistant, separate answerable, missing-evidence and conflicting-source questions, with representative failures. Self-check: should only the best run be reported? No: disclose configuration selection, measured variation and data versions so readers can assess the comparison fairly.
 why_it_matters_vi: Hoàn thiện đồ án có thể chạy, đánh giá và trình bày rõ giới hạn.
 why_it_matters_en: Turn the capstone into a product with a baseline, evaluation, demo, README, and explicit limitations.
 study_steps_vi:
@@ -208,6 +215,10 @@ review_cards:
 # Viết báo cáo đánh giá / Evaluation reports
 
 Báo cáo cần dữ liệu, cách chia, thước đo, mô hình cơ sở và kết quả theo nhóm. Nêu cả thất bại để người đọc hiểu giới hạn thay vì chỉ thấy kết quả tốt nhất.
+
+Báo cáo đánh giá khác bảng điểm: nó giải thích điểm được tạo ra từ dữ liệu và quy trình nào. Kết quả trên tập dễ hoặc đã dùng để chỉnh prompt không đại diện độc lập cho tình huống sử dụng mới.
+
+Ví dụ, báo cáo trợ lý tài liệu nên tách câu hỏi có nguồn, thiếu nguồn và nguồn mâu thuẫn, kèm câu trả lời sai điển hình. Tự kiểm tra: có nên chỉ báo cáo lần chạy tốt nhất? Không; nêu cách chọn cấu hình, độ biến động đã đo và phiên bản dữ liệu để người đọc đánh giá công bằng.
 
 ## Thực hành
 

@@ -26,10 +26,22 @@ key_terms:
 - baseline
 - evaluation
 - tracking
-concept_notes_vi: Một phiên bản mô hình cần gắn với dữ liệu, mã nguồn, cấu hình và kết quả đánh giá đã tạo ra nó.
-  Mã phiên bản giúp chọn đúng mô hình để phục vụ hoặc khôi phục khi có lỗi.
-concept_notes_en: Model versioning is a concept in the tracking module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Một phiên bản mô hình cần gắn với dữ liệu, mã nguồn, cấu hình và kết quả đánh giá đã tạo ra nó. Mã phiên bản giúp chọn đúng mô hình để phục vụ hoặc khôi phục khi có lỗi.
+
+  Phân biệt phiên bản tệp với phiên bản hành vi. Tệp trọng số chưa đủ để suy luận đúng nếu thiếu bộ tiền xử lý, thứ tự đặc trưng hoặc ngưỡng quyết định đã dùng khi đánh giá.
+
+  Ví dụ, model-v2 nhận cột tuổi trước thu nhập, nhưng dịch vụ vẫn truyền thứ tự cũ. Tệp tải thành công vẫn cho dự đoán sai. Lưu gói triển khai cùng chữ ký đầu vào và mẫu kiểm tra giúp phát hiện sai lệch này.
+
+  Tự kiểm tra: tên latest có đủ để khôi phục chính xác không? Không; tên đó có thể đổi đích. Ghi mã phiên bản bất biến và bằng chứng đánh giá của gói tương thích.
+concept_notes_en: |-
+  A model version should identify the data, code, configuration and evaluation that produced it. Version identifiers support serving and rollback.
+
+  Weight-file versioning differs from behavioral versioning. Correct inference also depends on preprocessing, feature ordering and the decision threshold used in evaluation.
+
+  For example, model-v2 expects age before income while a service sends the old order. Loading succeeds but predictions are wrong. Bundle the input signature and a smoke-test sample with the deployable model.
+
+  Self-check: is the name latest enough for exact rollback? No: its target may change. Record an immutable version and evaluation evidence for the compatible bundle.
 why_it_matters_vi: Gắn mô hình với dữ liệu, cấu hình và mã nguồn để kết quả có thể tái lập.
 why_it_matters_en: Track models, data, experiments, and seeds so results are reproducible and comparable.
 study_steps_vi:
@@ -205,6 +217,12 @@ review_cards:
 # Quản lý phiên bản mô hình / Model versioning
 
 Một phiên bản mô hình cần gắn với dữ liệu, mã nguồn, cấu hình và kết quả đánh giá đã tạo ra nó. Mã phiên bản giúp chọn đúng mô hình để phục vụ hoặc khôi phục khi có lỗi.
+
+Phân biệt phiên bản tệp với phiên bản hành vi. Tệp trọng số chưa đủ để suy luận đúng nếu thiếu bộ tiền xử lý, thứ tự đặc trưng hoặc ngưỡng quyết định đã dùng khi đánh giá.
+
+Ví dụ, model-v2 nhận cột tuổi trước thu nhập, nhưng dịch vụ vẫn truyền thứ tự cũ. Tệp tải thành công vẫn cho dự đoán sai. Lưu gói triển khai cùng chữ ký đầu vào và mẫu kiểm tra giúp phát hiện sai lệch này.
+
+Tự kiểm tra: tên latest có đủ để khôi phục chính xác không? Không; tên đó có thể đổi đích. Ghi mã phiên bản bất biến và bằng chứng đánh giá của gói tương thích.
 
 ## Thực hành
 

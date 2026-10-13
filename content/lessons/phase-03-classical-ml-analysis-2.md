@@ -25,11 +25,22 @@ key_terms:
 - baseline
 - evaluation
 - analysis
-concept_notes_vi: Mô hình được hiệu chỉnh tốt có xác suất dự đoán phù hợp tần suất đúng quan sát được. Xếp hạng
-  mẫu tốt không bảo đảm xác suất chính xác.
-concept_notes_en: 'Calibration is a classical Machine Learning decision: define the label, baseline, split, and
-  metric before choosing a model. Fit preprocessing on train only; error analysis should identify the groups where
-  the model fails and how to retest the hypothesis.'
+concept_notes_vi: |-
+  Hiệu chỉnh xác suất làm cho xác suất dự đoán phù hợp với tần suất kết quả quan sát trong các nhóm mẫu tương tự. Một mô hình dự đoán lớp đúng thường xuyên chưa chắc đưa ra xác suất đáng tin.
+
+  Khả năng phân biệt là khả năng xếp mẫu dương cao hơn mẫu âm. Hiệu chỉnh quan tâm ý nghĩa của giá trị xác suất; một phép biến đổi điểm có thể giữ thứ hạng nhưng thay đổi mức phù hợp này.
+
+  Với các giao dịch được dự đoán rủi ro tương tự, so sánh xác suất dự đoán với tần suất gian lận quan sát trên dữ liệu độc lập. Nhóm ít mẫu cho ước lượng thiếu ổn định; không học bộ hiệu chỉnh từ tập kiểm tra cuối.
+
+  Tự kiểm tra: AUC cao có bảo đảm xác suất chính xác không? Không; cần đánh giá hiệu chỉnh riêng và kiểm tra khi phân bố dữ liệu thay đổi.
+concept_notes_en: |-
+  Probability calibration aligns predicted probabilities with observed outcome frequencies among comparable examples. A model that often predicts the correct class may still produce unreliable probabilities.
+
+  Discrimination concerns ranking positive examples above negative ones. Calibration concerns the meaning of probability values; transforming scores can preserve ranking while changing calibration.
+
+  For transactions assigned similar risks, compare predicted probabilities with observed fraud frequencies on independent data. Small groups yield unstable estimates. Do not fit the calibrator using the final test set.
+
+  Self-check: does high AUC guarantee accurate probabilities? No; assess calibration separately and check it again when the data distribution changes.
 why_it_matters_vi: Phân tích lỗi theo nhóm để hiểu giới hạn trước khi lưu và chia sẻ mô hình.
 why_it_matters_en: Move from one aggregate score to error analysis, calibration, a model card, and reloadable artifacts.
 study_steps_vi:
@@ -208,7 +219,13 @@ review_cards:
 ---
 # Hiệu chỉnh xác suất dự đoán / Calibration
 
-Mô hình được hiệu chỉnh tốt có xác suất dự đoán phù hợp tần suất đúng quan sát được. Xếp hạng mẫu tốt không bảo đảm xác suất chính xác.
+Hiệu chỉnh xác suất làm cho xác suất dự đoán phù hợp với tần suất kết quả quan sát trong các nhóm mẫu tương tự. Một mô hình dự đoán lớp đúng thường xuyên chưa chắc đưa ra xác suất đáng tin.
+
+Khả năng phân biệt là khả năng xếp mẫu dương cao hơn mẫu âm. Hiệu chỉnh quan tâm ý nghĩa của giá trị xác suất; một phép biến đổi điểm có thể giữ thứ hạng nhưng thay đổi mức phù hợp này.
+
+Với các giao dịch được dự đoán rủi ro tương tự, so sánh xác suất dự đoán với tần suất gian lận quan sát trên dữ liệu độc lập. Nhóm ít mẫu cho ước lượng thiếu ổn định; không học bộ hiệu chỉnh từ tập kiểm tra cuối.
+
+Tự kiểm tra: AUC cao có bảo đảm xác suất chính xác không? Không; cần đánh giá hiệu chỉnh riêng và kiểm tra khi phân bố dữ liệu thay đổi.
 
 ## Thực hành
 

@@ -27,10 +27,22 @@ key_terms:
 - reproducibility
 - deployment
 - api
-concept_notes_vi: Cấu trúc yêu cầu và phản hồi quy định dữ liệu hai phía trao đổi. Kiểm tra kiểu, giới hạn và trường
-  bắt buộc giúp phát hiện lỗi trước khi chuyển dữ liệu tới mô hình.
-concept_notes_en: Request response validation is a concept in the api module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Cấu trúc yêu cầu và phản hồi quy định dữ liệu hai phía trao đổi. Kiểm tra kiểu, giới hạn và trường bắt buộc giúp phát hiện lỗi trước khi chuyển dữ liệu tới mô hình.
+
+  Kiểm tra schema xác nhận hình dạng dữ liệu; kiểm tra nghiệp vụ xác nhận ý nghĩa. Trường age có kiểu số nguyên vẫn cần miền giá trị, còn mã khách hàng hợp lệ về định dạng chưa chứng minh người gọi được phép đọc hồ sơ.
+
+  Ví dụ, yêu cầu thiếu danh sách features phải bị từ chối trước suy luận. Phản hồi cũng cần giới hạn trường được gửi: đối tượng nội bộ có thể chứa thông tin chẩn đoán không dành cho phía gọi.
+
+  Tự kiểm tra: JSON đọc được có đồng nghĩa đầu vào hợp lệ không? Không; còn trường bắt buộc, kiểu, giới hạn và quyền. Kiểm thử cả yêu cầu sai lẫn phản hồi sai để giữ hợp đồng hai chiều.
+concept_notes_en: |-
+  Request and response schemas define exchanged data. Validate types, bounds and required fields before passing input to a model.
+
+  Schema validation checks structure; business validation checks meaning. An integer age still needs a valid range, and a correctly formatted customer ID does not authorize access to that customer.
+
+  For example, reject a missing features list before inference. Restrict response fields as well: an internal object may contain diagnostic information that clients should not receive.
+
+  Self-check: is parseable JSON valid input? Not necessarily; required fields, types, bounds and permissions still matter. Test invalid responses as well as invalid requests to preserve the contract in both directions.
 why_it_matters_vi: Đóng gói mô hình thành dịch vụ có cấu hình và cấu trúc yêu cầu, phản hồi rõ ràng.
 why_it_matters_en: Package a model as an inference service with configuration, request/response schemas, and a clear
   batch path.
@@ -225,6 +237,12 @@ review_cards:
 # Kiểm tra dữ liệu yêu cầu và phản hồi / Request and response validation
 
 Cấu trúc yêu cầu và phản hồi quy định dữ liệu hai phía trao đổi. Kiểm tra kiểu, giới hạn và trường bắt buộc giúp phát hiện lỗi trước khi chuyển dữ liệu tới mô hình.
+
+Kiểm tra schema xác nhận hình dạng dữ liệu; kiểm tra nghiệp vụ xác nhận ý nghĩa. Trường age có kiểu số nguyên vẫn cần miền giá trị, còn mã khách hàng hợp lệ về định dạng chưa chứng minh người gọi được phép đọc hồ sơ.
+
+Ví dụ, yêu cầu thiếu danh sách features phải bị từ chối trước suy luận. Phản hồi cũng cần giới hạn trường được gửi: đối tượng nội bộ có thể chứa thông tin chẩn đoán không dành cho phía gọi.
+
+Tự kiểm tra: JSON đọc được có đồng nghĩa đầu vào hợp lệ không? Không; còn trường bắt buộc, kiểu, giới hạn và quyền. Kiểm thử cả yêu cầu sai lẫn phản hồi sai để giữ hợp đồng hai chiều.
 
 ## Thực hành
 

@@ -27,10 +27,22 @@ key_terms:
 - debugging
 - maintainability
 - data-files
-concept_notes_vi: Giao diện dòng lệnh nhận tham số thay vì buộc người dùng sửa mã nguồn. argparse giúp khai báo
-  tham số, kiểu và phần trợ giúp; chương trình vẫn cần kiểm tra các ràng buộc của bài toán.
-concept_notes_en: CLI với argparse is a concept in the data-files module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Giao diện dòng lệnh cho phép thay đầu vào qua tham số thay vì sửa mã. argparse khai báo đối số bắt buộc, tùy chọn, kiểu và nội dung trợ giúp để cách dùng được rõ ràng.
+
+  Phân biệt phân tích cú pháp với kiểm tra nghiệp vụ. Chuyển được chuỗi thành int không bảo đảm số đó là kích thước lô hợp lệ; chương trình còn phải kiểm tra miền giá trị và tệp có tồn tại.
+
+  Tùy chọn --limit nhận 0 có thể có nghĩa không lấy dòng nào, hoặc không hợp lệ tùy hợp đồng. Ghi quy ước trong trợ giúp và báo lỗi trước khi bắt đầu tác vụ tốn thời gian.
+
+  Tự kiểm tra: chỉ đặt type=int đã loại được --limit -3 chưa? Chưa; cần kiểm tra số âm theo yêu cầu của chương trình.
+concept_notes_en: |-
+  A command-line interface changes inputs through arguments rather than source edits. argparse defines positional arguments, options, types and help text.
+
+  Parsing and domain validation are different. Successfully converting a string to int does not establish a valid batch size; ranges and file existence still need checks.
+
+  A --limit value of 0 might mean no rows or be invalid, depending on the contract. Document the convention and reject invalid inputs before expensive work begins.
+
+  Self-check: does type=int alone reject --limit -3? No; validate negative values according to the program's requirements.
 why_it_matters_vi: Đọc, ghi dữ liệu theo cấu trúc rõ và xử lý giá trị thiếu bằng chính sách có thể giải thích.
 why_it_matters_en: Read and write data with schemas, handle missing values, and create CLIs with inspectable inputs
   and outputs.
@@ -230,7 +242,13 @@ review_cards:
 ---
 # Tạo giao diện dòng lệnh với argparse / CLI tools with argparse
 
-Giao diện dòng lệnh nhận tham số thay vì buộc người dùng sửa mã nguồn. argparse giúp khai báo tham số, kiểu và phần trợ giúp; chương trình vẫn cần kiểm tra các ràng buộc của bài toán.
+Giao diện dòng lệnh cho phép thay đầu vào qua tham số thay vì sửa mã. argparse khai báo đối số bắt buộc, tùy chọn, kiểu và nội dung trợ giúp để cách dùng được rõ ràng.
+
+Phân biệt phân tích cú pháp với kiểm tra nghiệp vụ. Chuyển được chuỗi thành int không bảo đảm số đó là kích thước lô hợp lệ; chương trình còn phải kiểm tra miền giá trị và tệp có tồn tại.
+
+Tùy chọn --limit nhận 0 có thể có nghĩa không lấy dòng nào, hoặc không hợp lệ tùy hợp đồng. Ghi quy ước trong trợ giúp và báo lỗi trước khi bắt đầu tác vụ tốn thời gian.
+
+Tự kiểm tra: chỉ đặt type=int đã loại được --limit -3 chưa? Chưa; cần kiểm tra số âm theo yêu cầu của chương trình.
 
 ## Thực hành
 

@@ -28,11 +28,18 @@ key_terms:
 - baseline
 - evaluation
 - genai-ml-fundamentals
-concept_notes_vi: Hàm mất mát quy định mục tiêu học; bộ tối ưu cập nhật tham số để giảm mục tiêu đó. Mất mát huấn
-  luyện giảm chưa đủ chứng minh chất lượng trên dữ liệu mới.
-concept_notes_en: Loss function, optimizer và overfitting is a Software Engineering skill for turning an idea into
-  code that can be read, tested, and maintained. Define the inputs, outputs, invariants, and failure modes before
-  implementing. In Python, small boundaries make tests fast and tracebacks actionable.
+concept_notes_vi: |-
+  Hàm mất mát quy định mục tiêu học; bộ tối ưu cập nhật tham số để giảm mục tiêu đó. Mất mát huấn luyện giảm chưa đủ chứng minh chất lượng trên dữ liệu mới.
+
+  Hàm mất mát cho biết dự đoán lệch mục tiêu thế nào; gradient cho biết hướng biến thiên cục bộ; optimizer quyết định bước cập nhật. Quá khớp là học chi tiết của train mà không chuyển tốt sang dữ liệu mới, khác với việc optimizer chưa giảm được loss.
+
+  Ví dụ, loss train tiếp tục giảm nhưng loss validation tăng là tín hiệu cần xem lại mức phức tạp, dữ liệu hoặc thời điểm dừng. Tự kiểm tra: cứ huấn luyện thêm có luôn khắc phục lỗi validation không? Không; so các đường học và chọn cấu hình trên validation, giữ test cho đánh giá cuối.
+concept_notes_en: |-
+  A loss function defines the learning objective; an optimizer updates parameters to reduce it. Lower training loss alone does not establish quality on new data.
+
+  Loss measures disagreement with targets, gradients describe local change and the optimizer chooses updates. Overfitting means learning training details that do not transfer, which differs from failing to optimize training loss.
+
+  Falling training loss with rising validation loss suggests reviewing complexity, data or stopping time. Self-check: will more training always fix validation errors? No: inspect learning curves, select using validation and reserve the test set for final evaluation.
 why_it_matters_vi: Liên hệ embedding và thước đo với truy xuất, phân nhóm và chất lượng mô hình.
 why_it_matters_en: Embeddings and metrics connect user data to retrieval, clustering, and model quality.
 study_steps_vi:
@@ -223,6 +230,10 @@ review_cards:
 # Hàm mất mát, bộ tối ưu và quá khớp / Loss functions, optimizers, and overfitting
 
 Hàm mất mát quy định mục tiêu học; bộ tối ưu cập nhật tham số để giảm mục tiêu đó. Mất mát huấn luyện giảm chưa đủ chứng minh chất lượng trên dữ liệu mới.
+
+Hàm mất mát cho biết dự đoán lệch mục tiêu thế nào; gradient cho biết hướng biến thiên cục bộ; optimizer quyết định bước cập nhật. Quá khớp là học chi tiết của train mà không chuyển tốt sang dữ liệu mới, khác với việc optimizer chưa giảm được loss.
+
+Ví dụ, loss train tiếp tục giảm nhưng loss validation tăng là tín hiệu cần xem lại mức phức tạp, dữ liệu hoặc thời điểm dừng. Tự kiểm tra: cứ huấn luyện thêm có luôn khắc phục lỗi validation không? Không; so các đường học và chọn cấu hình trên validation, giữ test cho đánh giá cuối.
 
 ## Thực hành
 

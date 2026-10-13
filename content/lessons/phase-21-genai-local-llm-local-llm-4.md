@@ -28,11 +28,18 @@ key_terms:
 - retrieval
 - evaluation
 - local-llm
-concept_notes_vi: Đo hiệu năng cần phân biệt lần khởi động đầu với lần đã nạp mô hình. Ghi phần cứng, độ dài đầu
-  vào, đầu ra và mức đồng thời để so sánh công bằng.
-concept_notes_en: GPU optimization và inference benchmark is model optimization after establishing an evaluation
-  baseline. Prepare clean data, split train/eval, track memory and quality regressions, and choose fine-tuning,
-  quantization, or local serving based on quality, latency, cost, and privacy.
+concept_notes_vi: |-
+  Đo hiệu năng cần phân biệt lần khởi động đầu với lần đã nạp mô hình. Ghi phần cứng, độ dài đầu vào, đầu ra và mức đồng thời để so sánh công bằng.
+
+  Cold start gồm tải mô hình và khởi tạo; warm run đo khi tài nguyên đã sẵn. GPU có thể thực thi bất đồng bộ với CPU, nên đo đồng hồ quanh lời gọi chưa chắc đã đo toàn bộ công việc trên thiết bị.
+
+  Ví dụ, dùng phép đo có đồng bộ phù hợp, chạy khởi động rồi lặp cùng tải và ghi bộ nhớ đỉnh cùng thời gian. Tự kiểm tra: một lần chạy nhanh nhất có đại diện trải nghiệm người dùng không? Không; báo phân bố hoặc nhiều lần đo, tách thời gian nạp, xử lý prompt và sinh đầu ra để hiểu phần nào được tối ưu.
+concept_notes_en: |-
+  Benchmarking should separate initial loading from already-loaded execution. Record hardware, input and output lengths and concurrency for fair comparisons.
+
+  Cold starts include loading and initialization; warm runs use prepared resources. GPU work can execute asynchronously relative to the CPU, so timing a call alone may miss device work.
+
+  Use appropriate synchronization, warm up and repeat comparable loads while recording peak memory and elapsed time. Self-check: does the fastest single run represent user experience? No: report repeated measurements or distributions and separate loading, prompt processing and generation to identify the optimized stage.
 why_it_matters_vi: Đo tài nguyên và chất lượng để chọn mô hình cục bộ phù hợp phần cứng, nhu cầu riêng tư.
 why_it_matters_en: Local LLMs expose the trade-offs among memory, throughput, model size, quality, and privacy.
 study_steps_vi:
@@ -229,6 +236,10 @@ review_cards:
 # Tối ưu GPU và đo hiệu năng suy luận / GPU optimization and inference benchmarks
 
 Đo hiệu năng cần phân biệt lần khởi động đầu với lần đã nạp mô hình. Ghi phần cứng, độ dài đầu vào, đầu ra và mức đồng thời để so sánh công bằng.
+
+Cold start gồm tải mô hình và khởi tạo; warm run đo khi tài nguyên đã sẵn. GPU có thể thực thi bất đồng bộ với CPU, nên đo đồng hồ quanh lời gọi chưa chắc đã đo toàn bộ công việc trên thiết bị.
+
+Ví dụ, dùng phép đo có đồng bộ phù hợp, chạy khởi động rồi lặp cùng tải và ghi bộ nhớ đỉnh cùng thời gian. Tự kiểm tra: một lần chạy nhanh nhất có đại diện trải nghiệm người dùng không? Không; báo phân bố hoặc nhiều lần đo, tách thời gian nạp, xử lý prompt và sinh đầu ra để hiểu phần nào được tối ưu.
 
 ## Thực hành
 

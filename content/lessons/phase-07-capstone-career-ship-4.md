@@ -26,10 +26,18 @@ key_terms:
 - debugging
 - maintainability
 - ship
-concept_notes_vi: Giới hạn mô tả điều chưa đáp ứng hoặc chưa được kiểm chứng. Hướng phát triển nên gắn với mức ảnh
-  hưởng và bằng chứng cần thu thập, thay vì chỉ liệt kê công nghệ.
-concept_notes_en: Limitations và roadmap is a concept in the ship module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Giới hạn mô tả điều chưa đáp ứng hoặc chưa được kiểm chứng. Hướng phát triển nên gắn với mức ảnh hưởng và bằng chứng cần thu thập, thay vì chỉ liệt kê công nghệ.
+
+  Giới hạn đã quan sát khác giả định chưa kiểm chứng. Lỗi trên tài liệu quét là bằng chứng cụ thể; dự đoán hệ thống sẽ chạy tốt với nhiều người đồng thời vẫn là giả định nếu chưa đo tải.
+
+  Ví dụ, ưu tiên cải thiện đọc bảng khi đánh giá cho thấy đây là nguồn lỗi chính, rồi định nghĩa phép kiểm tra sau sửa. Tự kiểm tra: thêm một mô hình mới có tự tạo thành hướng phát triển thuyết phục không? Không; phải nối thay đổi với vấn đề, lợi ích dự kiến và bằng chứng dùng để quyết định giữ hay bỏ.
+concept_notes_en: |-
+  Limitations describe unmet needs or unverified behavior. A roadmap should connect impact to evidence rather than merely list technologies.
+
+  An observed limitation differs from an untested assumption. Failures on scanned documents are evidence; good behavior under concurrent load remains an assumption until measured.
+
+  Prioritize table parsing when evaluation identifies it as a major failure source, then define a retest. Self-check: is adding a new model a convincing roadmap item by itself? No: connect the change to a problem, expected benefit and evidence that will determine whether to keep it.
 why_it_matters_vi: Hoàn thiện đồ án có thể chạy, đánh giá và trình bày rõ giới hạn.
 why_it_matters_en: Turn the capstone into a product with a baseline, evaluation, demo, README, and explicit limitations.
 study_steps_vi:
@@ -208,6 +216,10 @@ review_cards:
 # Nêu giới hạn và hướng phát triển / Limitations and roadmap
 
 Giới hạn mô tả điều chưa đáp ứng hoặc chưa được kiểm chứng. Hướng phát triển nên gắn với mức ảnh hưởng và bằng chứng cần thu thập, thay vì chỉ liệt kê công nghệ.
+
+Giới hạn đã quan sát khác giả định chưa kiểm chứng. Lỗi trên tài liệu quét là bằng chứng cụ thể; dự đoán hệ thống sẽ chạy tốt với nhiều người đồng thời vẫn là giả định nếu chưa đo tải.
+
+Ví dụ, ưu tiên cải thiện đọc bảng khi đánh giá cho thấy đây là nguồn lỗi chính, rồi định nghĩa phép kiểm tra sau sửa. Tự kiểm tra: thêm một mô hình mới có tự tạo thành hướng phát triển thuyết phục không? Không; phải nối thay đổi với vấn đề, lợi ích dự kiến và bằng chứng dùng để quyết định giữ hay bỏ.
 
 ## Thực hành
 

@@ -29,11 +29,18 @@ key_terms:
 - baseline
 - evaluation
 - models
-concept_notes_vi: Cây quyết định chia dữ liệu qua các điều kiện; rừng ngẫu nhiên kết hợp nhiều cây để giảm biến
-  động của dự đoán. Độ sâu và số mẫu ở lá ảnh hưởng khả năng khái quát hóa.
-concept_notes_en: Decision tree và random forest describes a boundary between data and a service. A sound request
-  has a schema, validation, status code, timeout, and actionable errors; a sound query uses parameter binding, appropriate
-  indexes, and tests empty or malformed data.
+concept_notes_vi: |-
+  Cây quyết định chia dữ liệu bằng các điều kiện nối tiếp, rồi dự đoán từ lá tương ứng. Cây sâu có thể ghi nhớ những chi tiết nhỏ của tập train; độ sâu và số mẫu tối thiểu ở lá giúp kiểm soát mức phức tạp.
+
+  Rừng ngẫu nhiên kết hợp nhiều cây có sự ngẫu nhiên trong dữ liệu và tập đặc trưng được xét. Lấy trung bình hoặc bỏ phiếu giúp giảm biến động khi các cây không mắc lỗi hoàn toàn giống nhau. Khác một cây, cả rừng thường khó diễn giải bằng một chuỗi điều kiện ngắn.
+
+  Tự kiểm tra: tăng số cây có sửa được dữ liệu bị rò rỉ không? Không; nó chỉ thay đổi cách kết hợp mô hình. Giữ cách chia hợp lệ và so chất lượng, thời gian cùng kích thước mô hình khi tăng số cây.
+concept_notes_en: |-
+  A decision tree splits data through successive conditions and predicts from the resulting leaf. Deep trees can memorize small training-set details; depth and minimum leaf size help control complexity.
+
+  A random forest combines trees randomized through data sampling and feature selection. Averaging or voting reduces variability when trees do not make identical errors. Unlike a single tree, a forest is usually hard to summarize as one short chain of conditions.
+
+  Self-check: does adding trees repair data leakage? No; it only changes the model ensemble. Keep splits valid and compare quality, runtime and model size when increasing tree count.
 why_it_matters_vi: So sánh mô hình theo giả định, độ phức tạp và dạng lỗi trên cùng dữ liệu.
 why_it_matters_en: Compare models by assumptions, complexity, and error patterns instead of trying many models without
   a baseline.
@@ -236,7 +243,11 @@ review_cards:
 ---
 # Cây quyết định và rừng ngẫu nhiên / Decision trees and random forests
 
-Cây quyết định chia dữ liệu qua các điều kiện; rừng ngẫu nhiên kết hợp nhiều cây để giảm biến động của dự đoán. Độ sâu và số mẫu ở lá ảnh hưởng khả năng khái quát hóa.
+Cây quyết định chia dữ liệu bằng các điều kiện nối tiếp, rồi dự đoán từ lá tương ứng. Cây sâu có thể ghi nhớ những chi tiết nhỏ của tập train; độ sâu và số mẫu tối thiểu ở lá giúp kiểm soát mức phức tạp.
+
+Rừng ngẫu nhiên kết hợp nhiều cây có sự ngẫu nhiên trong dữ liệu và tập đặc trưng được xét. Lấy trung bình hoặc bỏ phiếu giúp giảm biến động khi các cây không mắc lỗi hoàn toàn giống nhau. Khác một cây, cả rừng thường khó diễn giải bằng một chuỗi điều kiện ngắn.
+
+Tự kiểm tra: tăng số cây có sửa được dữ liệu bị rò rỉ không? Không; nó chỉ thay đổi cách kết hợp mô hình. Giữ cách chia hợp lệ và so chất lượng, thời gian cùng kích thước mô hình khi tăng số cây.
 
 ## Thực hành
 

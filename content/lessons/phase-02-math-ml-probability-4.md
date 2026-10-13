@@ -27,11 +27,22 @@ key_terms:
 - gradient
 - optimization
 - probability
-concept_notes_vi: Lấy mẫu giúp ước lượng đặc điểm quần thể từ một phần dữ liệu. Luật số lớn giải thích sự ổn định
-  của trung bình mẫu dưới các điều kiện thích hợp; tăng số mẫu không tự sửa sai lệch do cách chọn mẫu.
-concept_notes_en: Sampling và luật số lớn quantifies uncertainty instead of returning only a prediction. Distinguish
-  conditional from marginal probability, population from sample, and state distribution or confidence-interval assumptions
-  before interpreting a result.
+concept_notes_vi: |-
+  Lấy mẫu dùng một phần quan sát để tìm hiểu quần thể, tức tập đối tượng ta muốn kết luận. Cách chọn mẫu quyết định đối tượng nào có cơ hội xuất hiện và ảnh hưởng độ tin cậy của kết luận.
+
+  Luật số lớn nói trung bình mẫu tiến gần kỳ vọng dưới các điều kiện thích hợp, chẳng hạn các mẫu độc lập cùng phân phối có kỳ vọng hữu hạn. Nó không nói mọi mẫu mới đều làm trung bình gần hơn.
+
+  Khảo sát chỉ người học đã hoàn thành khóa học có thể đánh giá trải nghiệm quá tích cực. Thu thêm rất nhiều câu trả lời từ cùng nhóm vẫn không đại diện cho những người đã bỏ học.
+
+  Tự kiểm tra: tăng kích thước mẫu có tự loại bỏ thiên lệch chọn mẫu không? Không; phải sửa cách lấy mẫu hoặc giới hạn rõ quần thể mà kết luận áp dụng.
+concept_notes_en: |-
+  Sampling uses a subset of observations to learn about a population, the objects the conclusion concerns. The selection process determines who can appear and affects the validity of conclusions.
+
+  The law of large numbers says that sample averages approach expectation under suitable conditions, such as independent identically distributed observations with finite expectation. It does not say each additional observation improves the estimate.
+
+  Surveying only learners who completed a course may yield overly positive feedback. Many more responses from that group still do not represent learners who dropped out.
+
+  Self-check: does a larger sample automatically remove selection bias? No; revise the sampling process or clearly restrict the population to which conclusions apply.
 why_it_matters_vi: Dùng xác suất để mô tả bất định và đánh giá mức tin cậy của kết luận từ mẫu.
 why_it_matters_en: Use probability and statistics to quantify uncertainty, sampling, and the reliability of conclusions.
 study_steps_vi:
@@ -236,7 +247,13 @@ review_cards:
 ---
 # Lấy mẫu và luật số lớn / Sampling and the law of large numbers
 
-Lấy mẫu giúp ước lượng đặc điểm quần thể từ một phần dữ liệu. Luật số lớn giải thích sự ổn định của trung bình mẫu dưới các điều kiện thích hợp; tăng số mẫu không tự sửa sai lệch do cách chọn mẫu.
+Lấy mẫu dùng một phần quan sát để tìm hiểu quần thể, tức tập đối tượng ta muốn kết luận. Cách chọn mẫu quyết định đối tượng nào có cơ hội xuất hiện và ảnh hưởng độ tin cậy của kết luận.
+
+Luật số lớn nói trung bình mẫu tiến gần kỳ vọng dưới các điều kiện thích hợp, chẳng hạn các mẫu độc lập cùng phân phối có kỳ vọng hữu hạn. Nó không nói mọi mẫu mới đều làm trung bình gần hơn.
+
+Khảo sát chỉ người học đã hoàn thành khóa học có thể đánh giá trải nghiệm quá tích cực. Thu thêm rất nhiều câu trả lời từ cùng nhóm vẫn không đại diện cho những người đã bỏ học.
+
+Tự kiểm tra: tăng kích thước mẫu có tự loại bỏ thiên lệch chọn mẫu không? Không; phải sửa cách lấy mẫu hoặc giới hạn rõ quần thể mà kết luận áp dụng.
 
 ## Thực hành
 

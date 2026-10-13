@@ -27,10 +27,22 @@ key_terms:
 - baseline
 - evaluation
 - nlp-foundations
-concept_notes_vi: Mô hình ngôn ngữ học phân bố chuỗi token; mô hình tự hồi quy dự đoán token tiếp theo dựa trên
-  ngữ cảnh trước đó. Văn bản trôi chảy vẫn có thể sai hoặc không có nguồn.
-concept_notes_en: Language model is a concept in the nlp-foundations module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Mô hình ngôn ngữ học phân bố chuỗi token; mô hình tự hồi quy dự đoán token tiếp theo dựa trên ngữ cảnh trước đó. Văn bản trôi chảy vẫn có thể sai hoặc không có nguồn.
+
+  Xác suất token là mức mô hình ưu tiên phần tiếp theo của chuỗi, không phải xác suất phát biểu đúng ngoài đời. Cách giải mã chọn đầu ra từ phân bố này; thay nhiệt độ không bổ sung tri thức hay nguồn.
+
+  Ví dụ, mô hình có thể hoàn thành một mẫu trích dẫn bằng tên bài nghe hợp lý nhưng không tồn tại. Câu có cấu trúc chuẩn vẫn cần đối chiếu nguồn, nhất là tên riêng và số liệu.
+
+  Tự kiểm tra: đặt nhiệt độ thấp có loại bỏ bịa đặt không? Không; nó có thể làm một lựa chọn sai lặp lại ổn định hơn. Muốn kiểm tra sự thật cần bằng chứng và bộ đánh giá phù hợp.
+concept_notes_en: |-
+  Language models learn distributions over token sequences; autoregressive models predict the next token from preceding context. Fluent text can still be false or unsupported.
+
+  A token probability measures preference for a continuation, not the real-world truth of a claim. Decoding selects from this distribution; temperature does not add knowledge or sources.
+
+  A model may complete a citation pattern with a plausible but nonexistent paper. Good formatting still requires checking names and numbers against evidence.
+
+  Self-check: does low temperature eliminate hallucinations? No: it can make the same wrong choice more repeatable. Factual verification requires evidence and suitable evaluation.
 why_it_matters_vi: Hiểu token, embedding, mô hình ngôn ngữ và giới hạn ngữ cảnh trước khi xây ứng dụng.
 why_it_matters_en: Understand tokens, embeddings, language models, and context windows before building LLM applications.
 study_steps_vi:
@@ -207,6 +219,12 @@ review_cards:
 # Mô hình ngôn ngữ / Language models
 
 Mô hình ngôn ngữ học phân bố chuỗi token; mô hình tự hồi quy dự đoán token tiếp theo dựa trên ngữ cảnh trước đó. Văn bản trôi chảy vẫn có thể sai hoặc không có nguồn.
+
+Xác suất token là mức mô hình ưu tiên phần tiếp theo của chuỗi, không phải xác suất phát biểu đúng ngoài đời. Cách giải mã chọn đầu ra từ phân bố này; thay nhiệt độ không bổ sung tri thức hay nguồn.
+
+Ví dụ, mô hình có thể hoàn thành một mẫu trích dẫn bằng tên bài nghe hợp lý nhưng không tồn tại. Câu có cấu trúc chuẩn vẫn cần đối chiếu nguồn, nhất là tên riêng và số liệu.
+
+Tự kiểm tra: đặt nhiệt độ thấp có loại bỏ bịa đặt không? Không; nó có thể làm một lựa chọn sai lặp lại ổn định hơn. Muốn kiểm tra sự thật cần bằng chứng và bộ đánh giá phù hợp.
 
 ## Thực hành
 

@@ -26,11 +26,18 @@ key_terms:
 - baseline
 - evaluation
 - models
-concept_notes_vi: Hồi quy logistic chuyển tổ hợp tuyến tính thành xác suất cho bài toán phân loại. Ngưỡng quyết
-  định biến xác suất thành nhãn; thay ngưỡng làm thay đổi các loại lỗi.
-concept_notes_en: 'Logistic regression is a classical Machine Learning decision: define the label, baseline, split,
-  and metric before choosing a model. Fit preprocessing on train only; error analysis should identify the groups
-  where the model fails and how to retest the hypothesis.'
+concept_notes_vi: |-
+  Dù có chữ hồi quy trong tên, hồi quy logistic thường dùng cho phân loại. Trong bài toán nhị phân, nó biến điểm tuyến tính qua sigmoid thành giá trị giữa 0 và 1 để ước lượng xác suất của lớp dương.
+
+  Ngưỡng quyết định biến điểm xác suất thành nhãn. Điểm 0,4 được gán âm với ngưỡng 0,5 nhưng dương với ngưỡng 0,3; đổi ngưỡng không cần huấn luyện lại mô hình. Hạ ngưỡng thường tăng số trường hợp bị báo dương, gồm cả đúng và sai.
+
+  Tự kiểm tra: dự đoán 0,8 có nghĩa đúng chính xác 80% ở mọi nhóm không? Không; cần kiểm tra hiệu chỉnh xác suất trên dữ liệu phù hợp. Chọn ngưỡng theo tác hại của từng loại lỗi và dùng tập kiểm định, không chọn bằng điểm tập kiểm tra.
+concept_notes_en: |-
+  Despite its name, logistic regression commonly performs classification. In the binary case, it applies a sigmoid to a linear score to estimate positive-class probability between 0 and 1.
+
+  A decision threshold converts probability scores into labels. A score of 0.4 is negative at threshold 0.5 but positive at 0.3; changing the threshold does not require retraining. Lower thresholds generally flag more positives, both correct and incorrect.
+
+  Self-check: does a prediction of 0.8 mean exactly 80% accuracy in every group? No; check probability calibration on appropriate data. Choose thresholds using error costs and validation data, not test-set scores.
 why_it_matters_vi: So sánh mô hình theo giả định, độ phức tạp và dạng lỗi trên cùng dữ liệu.
 why_it_matters_en: Compare models by assumptions, complexity, and error patterns instead of trying many models without
   a baseline.
@@ -211,7 +218,11 @@ review_cards:
 ---
 # Hồi quy logistic / Logistic regression
 
-Hồi quy logistic chuyển tổ hợp tuyến tính thành xác suất cho bài toán phân loại. Ngưỡng quyết định biến xác suất thành nhãn; thay ngưỡng làm thay đổi các loại lỗi.
+Dù có chữ hồi quy trong tên, hồi quy logistic thường dùng cho phân loại. Trong bài toán nhị phân, nó biến điểm tuyến tính qua sigmoid thành giá trị giữa 0 và 1 để ước lượng xác suất của lớp dương.
+
+Ngưỡng quyết định biến điểm xác suất thành nhãn. Điểm 0,4 được gán âm với ngưỡng 0,5 nhưng dương với ngưỡng 0,3; đổi ngưỡng không cần huấn luyện lại mô hình. Hạ ngưỡng thường tăng số trường hợp bị báo dương, gồm cả đúng và sai.
+
+Tự kiểm tra: dự đoán 0,8 có nghĩa đúng chính xác 80% ở mọi nhóm không? Không; cần kiểm tra hiệu chỉnh xác suất trên dữ liệu phù hợp. Chọn ngưỡng theo tác hại của từng loại lỗi và dùng tập kiểm định, không chọn bằng điểm tập kiểm tra.
 
 ## Thực hành
 

@@ -29,11 +29,18 @@ key_terms:
 - retrieval
 - evaluation
 - ai-agents
-concept_notes_vi: Vòng lặp nhận quan sát, chọn hành động rồi kiểm tra kết quả. Giới hạn số bước, thời gian, chi
-  phí và lỗi liên tiếp cần được thực thi bên ngoài quyết định của mô hình.
-concept_notes_en: Agent loop và điều kiện dừng extends a model with controlled actions. Tool schemas must validate
-  inputs, limit permissions, and define timeout and retry; an agent loop needs stopping conditions, step logs, and
-  human approval for side effects.
+concept_notes_vi: |-
+  Vòng lặp nhận quan sát, chọn hành động rồi kiểm tra kết quả. Giới hạn số bước, thời gian, chi phí và lỗi liên tiếp cần được thực thi bên ngoài quyết định của mô hình.
+
+  Điều kiện thành công mô tả kết quả cần đạt; giới hạn dừng bảo vệ thời gian và tài nguyên khi chưa đạt kết quả. Hai điều này phải được ghi riêng để không báo 'hoàn tất' chỉ vì hết lượt chạy.
+
+  Ví dụ, agent tra cứu gặp cùng lỗi quyền nhiều lần cần dừng và nêu trở ngại, thay vì đổi cách diễn đạt lời gọi vô hạn. Tự kiểm tra: để mô hình tự nhớ giới hạn số bước đã đủ chưa? Chưa; bộ điều khiển phải đếm, thực thi hạn mức và lưu trạng thái. Khi dừng do giới hạn, báo phần đã xác minh cùng việc còn thiếu.
+concept_notes_en: |-
+  An agent loop observes, acts and checks results. Step, time, cost and repeated-error limits must be enforced outside the model's decisions.
+
+  Success conditions describe the desired outcome; stop limits bound resource use before success. Record them separately so exhaustion is not reported as completion.
+
+  Repeated authorization failures should stop a lookup agent with a clear obstacle, not endless reformulations. Self-check: is asking the model to remember its step limit sufficient? No: the controller must count, enforce limits and preserve state. On limit-based stopping, report verified progress and remaining work.
 why_it_matters_vi: Agent cần trạng thái, giới hạn và dấu vết rõ để hành động có thể kiểm tra.
 why_it_matters_en: An agent is a control loop with state and side effects; reliability comes from limits and observability.
 study_steps_vi:
@@ -130,6 +137,15 @@ resources:
   purpose_en: Official reference to verify the lesson concept.
   read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
   read_en: Read the relevant section, run a small example, and record one verified insight.
+- language: en
+  title: "LangGraph: Thinking in LangGraph"
+  url: https://docs.langchain.com/oss/javascript/langgraph/thinking-in-langgraph
+  kind: official
+  required: false
+  purpose_vi: "Ví dụ chính thức về chia luồng thành node, thiết kế state và phân loại lỗi trong workflow đồ thị."
+  purpose_en: "Official examples of decomposing flows into nodes, designing state, and handling errors in graph workflows."
+  read_vi: "Đọc graph design, state design và error handling; ghi chú ví dụ là JavaScript/TypeScript, không phải Python."
+  read_en: "Read graph design, state design, and error handling; note that the examples use JavaScript/TypeScript, not Python."
 - title: Giải thích và hướng dẫn thực hành trong bài
   url: ''
   language: vi
@@ -219,6 +235,10 @@ review_cards:
 # Vòng lặp agent và điều kiện dừng / Agent loops and stop conditions
 
 Vòng lặp nhận quan sát, chọn hành động rồi kiểm tra kết quả. Giới hạn số bước, thời gian, chi phí và lỗi liên tiếp cần được thực thi bên ngoài quyết định của mô hình.
+
+Điều kiện thành công mô tả kết quả cần đạt; giới hạn dừng bảo vệ thời gian và tài nguyên khi chưa đạt kết quả. Hai điều này phải được ghi riêng để không báo 'hoàn tất' chỉ vì hết lượt chạy.
+
+Ví dụ, agent tra cứu gặp cùng lỗi quyền nhiều lần cần dừng và nêu trở ngại, thay vì đổi cách diễn đạt lời gọi vô hạn. Tự kiểm tra: để mô hình tự nhớ giới hạn số bước đã đủ chưa? Chưa; bộ điều khiển phải đếm, thực thi hạn mức và lưu trạng thái. Khi dừng do giới hạn, báo phần đã xác minh cùng việc còn thiếu.
 
 ## Thực hành
 

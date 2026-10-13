@@ -27,11 +27,18 @@ key_terms:
 - retrieval
 - evaluation
 - local-llm
-concept_notes_vi: Suy luận cục bộ cần mô hình, tokenizer và thiết bị phù hợp. Chế độ đánh giá cùng cách quản lý
-  gradient ảnh hưởng bộ nhớ và hành vi của lần chạy.
-concept_notes_en: 'Transformers và PyTorch inference is one part of a Deep Learning pipeline: tensors flow through
-  a forward pass, loss creates a signal, backprop computes gradients, and the optimizer updates parameters. Separate
-  train/eval modes, save checkpoints, and track validation to distinguish overfitting from data errors.'
+concept_notes_vi: |-
+  Suy luận cục bộ cần mô hình, tokenizer và thiết bị phù hợp. Chế độ đánh giá cùng cách quản lý gradient ảnh hưởng bộ nhớ và hành vi của lần chạy.
+
+  model.eval() chuyển hành vi của lớp như dropout sang chế độ đánh giá; no_grad hoặc inference_mode kiểm soát việc theo dõi gradient. Hai việc khác nhau: chỉ tắt gradient không tự chuyển mọi lớp sang hành vi suy luận.
+
+  Ví dụ, nạp đúng tokenizer và mẫu hội thoại của mô hình, đặt chế độ đánh giá rồi chạy đầu vào nhỏ trước khi đo hiệu năng. Tự kiểm tra: mô hình tạo được văn bản đã chứng minh cấu hình đúng chưa? Chưa; kiểm tra token đặc biệt, thiết bị, giới hạn đầu ra và nội dung mong đợi. Cấu hình sai có thể vẫn tạo chữ nhưng làm chất lượng giảm.
+concept_notes_en: |-
+  Local inference needs a compatible model, tokenizer and device. Evaluation mode and gradient management affect memory and behavior.
+
+  model.eval() changes layers such as dropout to evaluation behavior; no_grad or inference_mode controls gradient recording. Disabling gradients does not automatically change every layer to inference behavior.
+
+  Load the model's tokenizer and chat template, set evaluation mode and run a small input before benchmarking. Self-check: does producing text prove correct setup? No: check special tokens, device placement, output limits and expected content. A wrong configuration can still generate text with degraded quality.
 why_it_matters_vi: Đo tài nguyên và chất lượng để chọn mô hình cục bộ phù hợp phần cứng, nhu cầu riêng tư.
 why_it_matters_en: Local LLMs expose the trade-offs among memory, throughput, model size, quality, and privacy.
 study_steps_vi:
@@ -228,6 +235,10 @@ review_cards:
 # Suy luận với Transformers và PyTorch / Transformers and PyTorch inference
 
 Suy luận cục bộ cần mô hình, tokenizer và thiết bị phù hợp. Chế độ đánh giá cùng cách quản lý gradient ảnh hưởng bộ nhớ và hành vi của lần chạy.
+
+model.eval() chuyển hành vi của lớp như dropout sang chế độ đánh giá; no_grad hoặc inference_mode kiểm soát việc theo dõi gradient. Hai việc khác nhau: chỉ tắt gradient không tự chuyển mọi lớp sang hành vi suy luận.
+
+Ví dụ, nạp đúng tokenizer và mẫu hội thoại của mô hình, đặt chế độ đánh giá rồi chạy đầu vào nhỏ trước khi đo hiệu năng. Tự kiểm tra: mô hình tạo được văn bản đã chứng minh cấu hình đúng chưa? Chưa; kiểm tra token đặc biệt, thiết bị, giới hạn đầu ra và nội dung mong đợi. Cấu hình sai có thể vẫn tạo chữ nhưng làm chất lượng giảm.
 
 ## Thực hành
 

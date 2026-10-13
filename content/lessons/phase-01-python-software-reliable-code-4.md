@@ -27,11 +27,22 @@ key_terms:
 - debugging
 - maintainability
 - reliable-code
-concept_notes_vi: Một kiểm thử nên kiểm tra hành vi quan sát được của hàm hoặc thành phần. Kết quả mong đợi cần
-  độc lập với cách cài đặt; thêm trường hợp biên giúp phát hiện lỗi mà dữ liệu thông thường bỏ sót.
-concept_notes_en: pytest và test boundary is a Software Engineering skill for turning an idea into code that can
-  be read, tested, and maintained. Define the inputs, outputs, invariants, and failure modes before implementing.
-  In Python, small boundaries make tests fast and tracebacks actionable.
+concept_notes_vi: |-
+  Kiểm thử xác nhận hành vi quan sát được khi đưa đầu vào cụ thể cho hàm hoặc thành phần. Kết quả mong đợi phải xuất phát từ yêu cầu, không tính lại bằng chính thuật toán đang kiểm tra.
+
+  Phân biệt kiểm thử đơn vị với kiểm thử tích hợp: một bên cô lập phần nhỏ, bên kia kiểm tra các phần kết nối đúng. Mock thay thế phụ thuộc trong phép thử nhưng không chứng minh dịch vụ thật hoạt động.
+
+  Với hàm tính trung bình, thử nhiều giá trị và danh sách rỗng theo hợp đồng đã chọn. pytest.raises kiểm tra ngoại lệ mong đợi; đừng sửa kỳ vọng chỉ để dòng kiểm tra chuyển xanh.
+
+  Tự kiểm tra: kiểm thử luôn trả assert True có giá trị không? Không; thử một cài đặt sai hợp lý, kiểm thử hữu ích phải phát hiện được lỗi ấy.
+concept_notes_en: |-
+  A test checks observable behavior for a specified input. Expected results should come from requirements, not a duplicate of the implementation's algorithm.
+
+  Unit tests isolate small components; integration tests check their connections. A mock substitutes for a dependency during a test, but does not establish that the real service works.
+
+  For a mean function, test several values and an empty list under the chosen contract. pytest.raises checks an expected exception; do not alter expectations merely to make tests green.
+
+  Self-check: is assert True a useful behavioral test? No; try a plausible incorrect implementation and ensure the test detects it.
 why_it_matters_vi: Chia trách nhiệm rõ, xử lý ngoại lệ và ghi nhật ký để mã dễ kiểm tra, bảo trì.
 why_it_matters_en: Turn working code into reliable code with module boundaries, logging, exceptions, and explicit
   test boundaries.
@@ -235,7 +246,13 @@ review_cards:
 ---
 # Kiểm thử bằng pytest và xác định phạm vi kiểm thử / pytest and test boundaries
 
-Một kiểm thử nên kiểm tra hành vi quan sát được của hàm hoặc thành phần. Kết quả mong đợi cần độc lập với cách cài đặt; thêm trường hợp biên giúp phát hiện lỗi mà dữ liệu thông thường bỏ sót.
+Kiểm thử xác nhận hành vi quan sát được khi đưa đầu vào cụ thể cho hàm hoặc thành phần. Kết quả mong đợi phải xuất phát từ yêu cầu, không tính lại bằng chính thuật toán đang kiểm tra.
+
+Phân biệt kiểm thử đơn vị với kiểm thử tích hợp: một bên cô lập phần nhỏ, bên kia kiểm tra các phần kết nối đúng. Mock thay thế phụ thuộc trong phép thử nhưng không chứng minh dịch vụ thật hoạt động.
+
+Với hàm tính trung bình, thử nhiều giá trị và danh sách rỗng theo hợp đồng đã chọn. pytest.raises kiểm tra ngoại lệ mong đợi; đừng sửa kỳ vọng chỉ để dòng kiểm tra chuyển xanh.
+
+Tự kiểm tra: kiểm thử luôn trả assert True có giá trị không? Không; thử một cài đặt sai hợp lý, kiểm thử hữu ích phải phát hiện được lỗi ấy.
 
 ## Thực hành
 

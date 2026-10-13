@@ -27,11 +27,18 @@ key_terms:
 - loss
 - training
 - vision-nlp
-concept_notes_vi: CNN học bộ lọc để nhận ra cấu trúc cục bộ trong ảnh và kết hợp chúng qua nhiều lớp. Cần thống
-  nhất thứ tự chiều, chuẩn hóa đầu vào và cách chia dữ liệu.
-concept_notes_en: CNN và image classifier is a Software Engineering skill for turning an idea into code that can
-  be read, tested, and maintained. Define the inputs, outputs, invariants, and failure modes before implementing.
-  In Python, small boundaries make tests fast and tracebacks actionable.
+concept_notes_vi: |-
+  CNN học các bộ lọc dùng chung trên nhiều vị trí ảnh. Mỗi lớp kết hợp vùng lân cận; qua nhiều lớp, vùng ảnh ảnh hưởng tới một đầu ra có thể lớn hơn. Chia sẻ bộ lọc giúp xử lý cùng kiểu đặc trưng ở nhiều vị trí, không có nghĩa mô hình tự bất biến với mọi phép biến đổi.
+
+  Khác lớp fully connected nối mọi đầu vào, convolution khai thác cấu trúc không gian. Với đầu vào PyTorch thông thường (N, C, H, W), cần thống nhất kênh màu, giá trị pixel và chuẩn hóa theo mô hình.
+
+  Tự kiểm tra: ảnh đúng shape đã đủ để đưa vào mô hình pretrained chưa? Chưa; RGB/BGR hoặc thang 0–255 thay vì 0–1 có thể khác điều kiện huấn luyện. Kiểm tra tiền xử lý và thử một ảnh đã biết trước khi đánh giá cả tập.
+concept_notes_en: |-
+  A CNN learns filters shared across image positions. Each layer combines local neighborhoods; across layers, the region influencing an output can grow. Shared filters detect similar features at multiple positions, but do not imply invariance to every transformation.
+
+  Unlike a fully connected layer connecting all inputs, convolution exploits spatial structure. With typical PyTorch input (N, C, H, W), color channels, pixel values and normalization must match the model.
+
+  Self-check: is the correct shape enough for a pretrained model? No; RGB versus BGR or a 0–255 rather than 0–1 scale can differ from training conditions. Check preprocessing and a known image before evaluating the whole dataset.
 why_it_matters_vi: Hiểu CNN, học chuyển giao, embedding và attention để chọn cách biểu diễn phù hợp.
 why_it_matters_en: Understand CNNs, transfer learning, embeddings, and attention well enough to choose a CV or NLP
   path.
@@ -225,7 +232,11 @@ review_cards:
 ---
 # CNN và phân loại ảnh / CNNs and image classifiers
 
-CNN học bộ lọc để nhận ra cấu trúc cục bộ trong ảnh và kết hợp chúng qua nhiều lớp. Cần thống nhất thứ tự chiều, chuẩn hóa đầu vào và cách chia dữ liệu.
+CNN học các bộ lọc dùng chung trên nhiều vị trí ảnh. Mỗi lớp kết hợp vùng lân cận; qua nhiều lớp, vùng ảnh ảnh hưởng tới một đầu ra có thể lớn hơn. Chia sẻ bộ lọc giúp xử lý cùng kiểu đặc trưng ở nhiều vị trí, không có nghĩa mô hình tự bất biến với mọi phép biến đổi.
+
+Khác lớp fully connected nối mọi đầu vào, convolution khai thác cấu trúc không gian. Với đầu vào PyTorch thông thường (N, C, H, W), cần thống nhất kênh màu, giá trị pixel và chuẩn hóa theo mô hình.
+
+Tự kiểm tra: ảnh đúng shape đã đủ để đưa vào mô hình pretrained chưa? Chưa; RGB/BGR hoặc thang 0–255 thay vì 0–1 có thể khác điều kiện huấn luyện. Kiểm tra tiền xử lý và thử một ảnh đã biết trước khi đánh giá cả tập.
 
 ## Thực hành
 

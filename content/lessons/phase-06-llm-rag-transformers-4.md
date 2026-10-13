@@ -29,11 +29,18 @@ key_terms:
 - retrieval
 - evaluation
 - transformers
-concept_notes_vi: Đầu ra có cấu trúc giúp đọc kết quả theo schema; gọi hàm để mô hình đề xuất thao tác có tên và
-  tham số. Ứng dụng vẫn phải kiểm tra dữ liệu và quyền trước khi thực thi.
-concept_notes_en: Structured output và function calling is a Software Engineering skill for turning an idea into
-  code that can be read, tested, and maintained. Define the inputs, outputs, invariants, and failure modes before
-  implementing. In Python, small boundaries make tests fast and tracebacks actionable.
+concept_notes_vi: |-
+  Đầu ra có cấu trúc giúp đọc kết quả theo schema; gọi hàm để mô hình đề xuất thao tác có tên và tham số. Ứng dụng vẫn phải kiểm tra dữ liệu và quyền trước khi thực thi.
+
+  JSON hợp lệ chỉ bảo đảm cú pháp; schema kiểm tra hình dạng, còn nghiệp vụ và quyền phải kiểm tra riêng. Lời gọi hàm do mô hình đề xuất là dữ liệu mô tả hành động, không phải bằng chứng hành động đã chạy.
+
+  Ví dụ, hàm đặt lịch nhận ngày và phòng; ngày đúng kiểu chuỗi vẫn có thể đã qua hoặc phòng không thuộc quyền đặt. Tự kiểm tra: schema qua thì thực thi ngay được không? Chưa; kiểm tra lịch trống, quyền và sự chấp thuận cần thiết, sau đó đọc kết quả công cụ.
+concept_notes_en: |-
+  Structured output makes results machine-readable through a schema; function calling proposes a named action and arguments. Applications still validate data and authorization before execution.
+
+  Valid JSON guarantees syntax only. Schemas check shape, while business rules and permissions are separate. A proposed call is not proof of execution.
+
+  A booking tool may receive a date and room, yet a string date can be in the past or the room unauthorized. Self-check: execute immediately after schema validation? No: check availability, permissions and required consent, then inspect the tool result.
 why_it_matters_vi: Liên hệ attention với cách cung cấp ngữ cảnh và kiểm tra đầu ra của ứng dụng LLM.
 why_it_matters_en: Move from attention to prompts and structured outputs while validating schemas instead of trusting
   raw text.
@@ -219,6 +226,10 @@ review_cards:
 # Đầu ra có cấu trúc và gọi hàm / Structured output and function calling
 
 Đầu ra có cấu trúc giúp đọc kết quả theo schema; gọi hàm để mô hình đề xuất thao tác có tên và tham số. Ứng dụng vẫn phải kiểm tra dữ liệu và quyền trước khi thực thi.
+
+JSON hợp lệ chỉ bảo đảm cú pháp; schema kiểm tra hình dạng, còn nghiệp vụ và quyền phải kiểm tra riêng. Lời gọi hàm do mô hình đề xuất là dữ liệu mô tả hành động, không phải bằng chứng hành động đã chạy.
+
+Ví dụ, hàm đặt lịch nhận ngày và phòng; ngày đúng kiểu chuỗi vẫn có thể đã qua hoặc phòng không thuộc quyền đặt. Tự kiểm tra: schema qua thì thực thi ngay được không? Chưa; kiểm tra lịch trống, quyền và sự chấp thuận cần thiết, sau đó đọc kết quả công cụ.
 
 ## Thực hành
 

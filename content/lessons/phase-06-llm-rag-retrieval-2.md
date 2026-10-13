@@ -23,11 +23,18 @@ key_terms:
 - embedding
 - retrieval
 - evaluation
-concept_notes_vi: Chia đoạn quyết định đơn vị được lập chỉ mục và đưa vào ngữ cảnh. Đoạn ngắn có thể mất ý; đoạn
-  dài tốn ngân sách và làm loãng thông tin, nên cần đánh giá bằng câu hỏi thực tế.
-concept_notes_en: Chunking is one link in a RAG system. Separate parsing, chunking, indexing, retrieval, reranking,
-  and generation so failures are attributable. Chunks need enough context; evaluation should measure retrieval recall,
-  groundedness, and abstention when evidence is missing.
+concept_notes_vi: |-
+  Chia đoạn quyết định đơn vị được lập chỉ mục và đưa vào ngữ cảnh. Đoạn ngắn có thể mất ý; đoạn dài tốn ngân sách và làm loãng thông tin, nên cần đánh giá bằng câu hỏi thực tế.
+
+  Chia theo số token giữ kích thước đều hơn; chia theo cấu trúc giữ tiêu đề, đoạn văn và bảng đi cùng ý. Phần chồng lấn giữ ngữ cảnh biên nhưng cũng tạo dữ liệu lặp và tốn chỗ.
+
+  Ví dụ, tách câu 'trừ sản phẩm giảm giá' khỏi quy định đổi hàng làm đoạn đầu trở nên dễ hiểu sai. Tự kiểm tra: tăng chồng lấn có sửa mọi lỗi không? Không; kiểm tra ranh giới ý, gắn tiêu đề và thử câu hỏi cần ngoại lệ trước khi chọn kích thước.
+concept_notes_en: |-
+  Chunking defines the units indexed and supplied as context. Short chunks can lose meaning; long chunks consume budget and dilute relevance.
+
+  Token-based splitting controls size, while structural splitting preserves headings, paragraphs and tables. Overlap helps boundaries but adds duplication.
+
+  Separating 'except discounted products' from a returns policy can mislead readers. Self-check: does more overlap fix everything? No: inspect semantic boundaries, retain headings and test questions involving exceptions before choosing a size.
 why_it_matters_vi: Thiết kế cách chia đoạn, lưu siêu dữ liệu và tìm kiếm để đo chất lượng truy xuất trước khi sinh
   câu trả lời.
 why_it_matters_en: Design retrieval with chunks, metadata, vector search, and reranking so recall is measured before
@@ -204,6 +211,10 @@ review_cards:
 # Chia tài liệu thành đoạn / Chunking
 
 Chia đoạn quyết định đơn vị được lập chỉ mục và đưa vào ngữ cảnh. Đoạn ngắn có thể mất ý; đoạn dài tốn ngân sách và làm loãng thông tin, nên cần đánh giá bằng câu hỏi thực tế.
+
+Chia theo số token giữ kích thước đều hơn; chia theo cấu trúc giữ tiêu đề, đoạn văn và bảng đi cùng ý. Phần chồng lấn giữ ngữ cảnh biên nhưng cũng tạo dữ liệu lặp và tốn chỗ.
+
+Ví dụ, tách câu 'trừ sản phẩm giảm giá' khỏi quy định đổi hàng làm đoạn đầu trở nên dễ hiểu sai. Tự kiểm tra: tăng chồng lấn có sửa mọi lỗi không? Không; kiểm tra ranh giới ý, gắn tiêu đề và thử câu hỏi cần ngoại lệ trước khi chọn kích thước.
 
 ## Thực hành
 

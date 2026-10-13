@@ -25,11 +25,22 @@ key_terms:
 - feature
 - baseline
 - evaluation
-concept_notes_vi: Accuracy, precision, recall và F1 nhấn mạnh các khía cạnh khác nhau của lỗi phân loại. Chọn thước
-  đo theo chi phí từng loại sai lầm và phân bố lớp.
-concept_notes_en: Classification metrics is a Software Engineering skill for turning an idea into code that can
-  be read, tested, and maintained. Define the inputs, outputs, invariants, and failure modes before implementing.
-  In Python, small boundaries make tests fast and tracebacks actionable.
+concept_notes_vi: |-
+  Accuracy là tỷ lệ dự đoán đúng. Precision đo tỷ lệ đúng trong các dự đoán dương; recall đo tỷ lệ mẫu dương được phát hiện. F1 kết hợp precision và recall bằng trung bình điều hòa.
+
+  Các thước đo trả lời những câu hỏi khác nhau, không có một chỉ số tốt nhất cho mọi bài toán. Với nhiều lớp, cách lấy trung bình cũng quyết định lớp hiếm được coi trọng đến đâu.
+
+  Bộ lọc thư rác cần cân nhắc cả thư rác lọt qua và thư hợp lệ bị chặn. Thay ngưỡng quyết định sẽ đổi hai loại lỗi; hãy xem ma trận nhầm lẫn và chi phí thực tế.
+
+  Tự kiểm tra: accuracy cao có bảo đảm recall lớp hiếm cao không? Không; dự đoán toàn lớp phổ biến vẫn có thể đạt accuracy cao.
+concept_notes_en: |-
+  Accuracy is the fraction of correct predictions. Precision measures correctness among predicted positives; recall measures the fraction of actual positives found. F1 combines precision and recall through their harmonic mean.
+
+  These metrics answer different questions. No single metric is best for every task, and multiclass averaging determines how much rare classes matter.
+
+  A spam filter must balance missed spam against blocked legitimate mail. Changing its threshold changes these errors; inspect the confusion matrix and practical costs.
+
+  Self-check: does high accuracy guarantee high rare-class recall? No; predicting only the common class can still produce high accuracy.
 why_it_matters_vi: Chọn thước đo theo chi phí sai lầm và giữ tập kiểm tra ngoài quá trình lựa chọn mô hình.
 why_it_matters_en: Choose metrics by error cost, use cross-validation, and tune without peeking at the test set.
 study_steps_vi:
@@ -209,7 +220,13 @@ review_cards:
 ---
 # Thước đo cho phân loại / Classification metrics
 
-Accuracy, precision, recall và F1 nhấn mạnh các khía cạnh khác nhau của lỗi phân loại. Chọn thước đo theo chi phí từng loại sai lầm và phân bố lớp.
+Accuracy là tỷ lệ dự đoán đúng. Precision đo tỷ lệ đúng trong các dự đoán dương; recall đo tỷ lệ mẫu dương được phát hiện. F1 kết hợp precision và recall bằng trung bình điều hòa.
+
+Các thước đo trả lời những câu hỏi khác nhau, không có một chỉ số tốt nhất cho mọi bài toán. Với nhiều lớp, cách lấy trung bình cũng quyết định lớp hiếm được coi trọng đến đâu.
+
+Bộ lọc thư rác cần cân nhắc cả thư rác lọt qua và thư hợp lệ bị chặn. Thay ngưỡng quyết định sẽ đổi hai loại lỗi; hãy xem ma trận nhầm lẫn và chi phí thực tế.
+
+Tự kiểm tra: accuracy cao có bảo đảm recall lớp hiếm cao không? Không; dự đoán toàn lớp phổ biến vẫn có thể đạt accuracy cao.
 
 ## Thực hành
 

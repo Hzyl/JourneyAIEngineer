@@ -27,11 +27,18 @@ key_terms:
 - reproducibility
 - deployment
 - genai-observability
-concept_notes_vi: Nhật ký ghi sự kiện; truy vết nối các bước xử lý của một yêu cầu. Mã truy vết giúp tìm bước chậm
-  hoặc lỗi trong chuỗi truy xuất, gọi mô hình và công cụ.
-concept_notes_en: Structured logging và tracing is a Software Engineering skill for turning an idea into code that
-  can be read, tested, and maintained. Define the inputs, outputs, invariants, and failure modes before implementing.
-  In Python, small boundaries make tests fast and tracebacks actionable.
+concept_notes_vi: |-
+  Nhật ký ghi sự kiện; truy vết nối các bước xử lý của một yêu cầu. Mã truy vết giúp tìm bước chậm hoặc lỗi trong chuỗi truy xuất, gọi mô hình và công cụ.
+
+  Log mô tả sự kiện, metric tổng hợp phép đo, còn trace nối các bước của một yêu cầu. Span là một đoạn công việc trong trace, có thời gian và quan hệ với bước cha, giúp xem lỗi nằm ở đâu trong chuỗi.
+
+  Ví dụ, cùng trace ID nối bước tìm tài liệu với bước gọi mô hình để biết thời gian chờ phát sinh ở phần nào. Tự kiểm tra: ghi toàn bộ prompt có phải điều kiện bắt buộc để quan sát tốt không? Không; có thể ghi mã phiên bản, kích thước, trạng thái và thời gian. Chỉ lưu nội dung cần thiết với chính sách che, giữ và truy cập phù hợp.
+concept_notes_en: |-
+  Logs record events; traces connect processing steps for a request. Trace IDs help locate slow or failing retrieval, model and tool operations.
+
+  Metrics aggregate measurements, while a span describes timed work inside a trace with parent relationships. These signals answer different diagnostic questions.
+
+  A shared trace ID connects document retrieval to a model call, locating where waiting occurs. Self-check: must full prompts be logged for useful observability? No: versions, sizes, status and timing can be sufficient. Store necessary content only under suitable redaction, retention and access policies.
 why_it_matters_vi: Thu thập dữ liệu đủ để phân biệt lỗi mô hình, truy xuất, nhà cung cấp và hạ tầng.
 why_it_matters_en: Without telemetry you cannot tell whether a failure is in the model, retrieval, provider, or
   infrastructure.
@@ -223,6 +230,10 @@ review_cards:
 # Nhật ký có cấu trúc và truy vết / Structured logging and tracing
 
 Nhật ký ghi sự kiện; truy vết nối các bước xử lý của một yêu cầu. Mã truy vết giúp tìm bước chậm hoặc lỗi trong chuỗi truy xuất, gọi mô hình và công cụ.
+
+Log mô tả sự kiện, metric tổng hợp phép đo, còn trace nối các bước của một yêu cầu. Span là một đoạn công việc trong trace, có thời gian và quan hệ với bước cha, giúp xem lỗi nằm ở đâu trong chuỗi.
+
+Ví dụ, cùng trace ID nối bước tìm tài liệu với bước gọi mô hình để biết thời gian chờ phát sinh ở phần nào. Tự kiểm tra: ghi toàn bộ prompt có phải điều kiện bắt buộc để quan sát tốt không? Không; có thể ghi mã phiên bản, kích thước, trạng thái và thời gian. Chỉ lưu nội dung cần thiết với chính sách che, giữ và truy cập phù hợp.
 
 ## Thực hành
 

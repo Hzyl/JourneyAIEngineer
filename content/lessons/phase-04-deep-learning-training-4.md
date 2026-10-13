@@ -25,10 +25,18 @@ key_terms:
 - tensor
 - loss
 - training
-concept_notes_vi: 'Kiểm định đo chất lượng trên dữ liệu không dùng để cập nhật tham số. Bản lưu cần đủ thông tin
-  cho mục đích sử dụng: chỉ dự đoán hay tiếp tục huấn luyện cùng trạng thái bộ tối ưu.'
-concept_notes_en: Validation và checkpoint is a concept in the training module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Kiểm định đo kết quả trên dữ liệu không dùng để cập nhật trọng số, nhưng có thể được dùng để chọn cấu hình. Nó khác tập kiểm tra dành cho đánh giá cuối sau khi đã chốt lựa chọn.
+
+  Trong PyTorch, model.eval() đổi hành vi của các lớp như Dropout và BatchNorm; nó không tự tắt autograd. Dùng no_grad hoặc inference_mode khi chỉ cần dự đoán, rồi chuyển về model.train() trước khi tiếp tục học.
+
+  Một checkpoint để tiếp tục huấn luyện thường cần cả trạng thái mô hình, bộ tối ưu, bộ điều chỉnh tốc độ học và vị trí đang chạy. Tự kiểm tra: chỉ lưu trọng số có đủ để khôi phục chính xác lượt chạy bị ngắt không? Không; còn phụ thuộc trạng thái ngẫu nhiên, thứ tự dữ liệu và môi trường. Ghi rõ bạn chỉ khôi phục dự đoán hay muốn tiếp tục cùng quá trình học.
+concept_notes_en: |-
+  Validation evaluates data unused for weight updates, but it can guide configuration selection. It differs from a test set reserved for final evaluation after choices are settled.
+
+  In PyTorch, model.eval() changes layers such as Dropout and BatchNorm; it does not disable autograd. Use no_grad or inference_mode when only predictions are needed, and return to model.train() before resuming training.
+
+  A resumable checkpoint commonly needs model, optimizer and learning-rate scheduler states, plus the current training position. Self-check: are weights alone enough to reproduce an interrupted run exactly? No; random state, data order and environment also matter. State whether you are restoring predictions or continuing the same learning process.
 why_it_matters_vi: Tách các bước dự đoán, tính mất mát, tính gradient, cập nhật và kiểm định để dễ tìm lỗi.
 why_it_matters_en: Separate forward, loss, backward, optimizer, validation, and checkpoint into a debuggable loop.
 study_steps_vi:
@@ -211,7 +219,11 @@ review_cards:
 ---
 # Kiểm định và lưu trạng thái huấn luyện / Validation and checkpoints
 
-Kiểm định đo chất lượng trên dữ liệu không dùng để cập nhật tham số. Bản lưu cần đủ thông tin cho mục đích sử dụng: chỉ dự đoán hay tiếp tục huấn luyện cùng trạng thái bộ tối ưu.
+Kiểm định đo kết quả trên dữ liệu không dùng để cập nhật trọng số, nhưng có thể được dùng để chọn cấu hình. Nó khác tập kiểm tra dành cho đánh giá cuối sau khi đã chốt lựa chọn.
+
+Trong PyTorch, model.eval() đổi hành vi của các lớp như Dropout và BatchNorm; nó không tự tắt autograd. Dùng no_grad hoặc inference_mode khi chỉ cần dự đoán, rồi chuyển về model.train() trước khi tiếp tục học.
+
+Một checkpoint để tiếp tục huấn luyện thường cần cả trạng thái mô hình, bộ tối ưu, bộ điều chỉnh tốc độ học và vị trí đang chạy. Tự kiểm tra: chỉ lưu trọng số có đủ để khôi phục chính xác lượt chạy bị ngắt không? Không; còn phụ thuộc trạng thái ngẫu nhiên, thứ tự dữ liệu và môi trường. Ghi rõ bạn chỉ khôi phục dự đoán hay muốn tiếp tục cùng quá trình học.
 
 ## Thực hành
 

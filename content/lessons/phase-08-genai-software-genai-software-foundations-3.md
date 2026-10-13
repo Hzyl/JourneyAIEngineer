@@ -29,11 +29,18 @@ key_terms:
 - reproducibility
 - deployment
 - genai-software-foundations
-concept_notes_vi: API nhận yêu cầu, SQL quản lý dữ liệu có cấu trúc, Docker đóng gói môi trường. Xác định trách
-  nhiệm từng phần để lỗi lưu trữ hoặc đầu vào không bị nhầm thành lỗi mô hình.
-concept_notes_en: REST API, SQL và Docker cho AI describes a boundary between data and a service. A sound request
-  has a schema, validation, status code, timeout, and actionable errors; a sound query uses parameter binding, appropriate
-  indexes, and tests empty or malformed data.
+concept_notes_vi: |-
+  API nhận yêu cầu, SQL quản lý dữ liệu có cấu trúc, Docker đóng gói môi trường. Xác định trách nhiệm từng phần để lỗi lưu trữ hoặc đầu vào không bị nhầm thành lỗi mô hình.
+
+  API là giao diện trao đổi yêu cầu; cơ sở dữ liệu quản lý trạng thái; container cung cấp môi trường tiến trình. Đóng gói bằng Docker không tự tạo cơ chế lưu dữ liệu bền vững hay kiểm tra quyền truy cập API.
+
+  Ví dụ, API nhận câu hỏi, SQL lưu mã yêu cầu và container chạy dịch vụ; dữ liệu cần vị trí lưu riêng phù hợp. Tự kiểm tra: container khởi động thành công có chứng minh truy vấn SQL an toàn không? Không; cần truyền tham số truy vấn đúng cách, kiểm tra quyền và thử dữ liệu không hợp lệ ở ranh giới API.
+concept_notes_en: |-
+  An API receives requests, SQL manages structured data and Docker packages the execution environment. Separate their responsibilities when diagnosing failures.
+
+  An API is a request interface, a database manages state and a container runs a packaged process. Docker packaging does not automatically provide durable storage or API authorization.
+
+  An API might accept questions while SQL stores request IDs and a container runs the service; persistent data needs an appropriate storage location. Self-check: does a successful container startup prove SQL safety? No: use parameterized queries, enforce permissions and test invalid API inputs.
 why_it_matters_vi: Kiểm soát cấu trúc dịch vụ, phụ thuộc và phát hành trước khi tối ưu mô hình.
 why_it_matters_en: An AI Engineer must control service boundaries, dependencies, and releases before optimizing
   a model.
@@ -229,6 +236,10 @@ review_cards:
 # REST API, SQL và Docker cho AI / REST APIs, SQL and Docker for AI
 
 API nhận yêu cầu, SQL quản lý dữ liệu có cấu trúc, Docker đóng gói môi trường. Xác định trách nhiệm từng phần để lỗi lưu trữ hoặc đầu vào không bị nhầm thành lỗi mô hình.
+
+API là giao diện trao đổi yêu cầu; cơ sở dữ liệu quản lý trạng thái; container cung cấp môi trường tiến trình. Đóng gói bằng Docker không tự tạo cơ chế lưu dữ liệu bền vững hay kiểm tra quyền truy cập API.
+
+Ví dụ, API nhận câu hỏi, SQL lưu mã yêu cầu và container chạy dịch vụ; dữ liệu cần vị trí lưu riêng phù hợp. Tự kiểm tra: container khởi động thành công có chứng minh truy vấn SQL an toàn không? Không; cần truyền tham số truy vấn đúng cách, kiểm tra quyền và thử dữ liệu không hợp lệ ở ranh giới API.
 
 ## Thực hành
 

@@ -27,10 +27,22 @@ key_terms:
 - debugging
 - maintainability
 - learning-system
-concept_notes_vi: Lộ trình cho biết thứ tự kiến thức, còn mốc tự đánh giá cho biết bạn đã vận dụng được đến đâu.
-  Khi chưa đạt một tiêu chí, quay lại đúng bài liên quan và làm lại với ví dụ khác.
-concept_notes_en: Cách dùng roadmap và checkpoint is a concept in the learning-system module. Identify the inputs,
-  outputs, assumptions, failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Lộ trình sắp xếp kiến thức theo quan hệ cần học trước; mốc tự kiểm tra xác nhận bạn đã vận dụng được gì. Đánh dấu đã đọc chỉ phản ánh hoạt động, không thay thế việc làm bài.
+
+  Phân biệt thứ tự đề xuất với điều kiện bắt buộc. Bạn có thể ôn lại phần quen nhanh hơn, nhưng cần chứng minh kỹ năng nền trước khi dựa vào nó trong bài sau.
+
+  Trước bài huấn luyện mô hình, thử đọc dữ liệu và tách đặc trưng với nhãn. Nếu chưa giải thích được cột nào có sẵn lúc dự đoán, quay lại bài dữ liệu thay vì chỉ đọc thêm thuật toán.
+
+  Tự kiểm tra: chưa đạt mốc thì phải học lại toàn bộ lộ trình không? Không; xác định lỗ hổng cụ thể, ôn bài liên quan và thử ví dụ khác.
+concept_notes_en: |-
+  A roadmap orders knowledge by prerequisites; checkpoints establish what you can apply. Marking a lesson as read records an activity, not demonstrated performance.
+
+  Distinguish a suggested sequence from a required prerequisite. Familiar material may take less review, but demonstrate foundational skills before relying on them later.
+
+  Before model training, try loading data and separating features from labels. If you cannot explain which columns exist at prediction time, revisit data framing rather than simply reading more algorithms.
+
+  Self-check: does missing a checkpoint require restarting the entire roadmap? No; identify the specific gap, review the relevant lesson and try a different example.
 why_it_matters_vi: Gắn việc học với kết quả tự làm để biết điều đã hiểu và điều cần luyện tiếp.
 why_it_matters_en: Build an evidence-based learning system with sessions, journals, reviews, and checkpoints instead
   of passive reading.
@@ -216,7 +228,13 @@ review_cards:
 ---
 # Sử dụng lộ trình và mốc tự đánh giá / Use the roadmap and checkpoints
 
-Lộ trình cho biết thứ tự kiến thức, còn mốc tự đánh giá cho biết bạn đã vận dụng được đến đâu. Khi chưa đạt một tiêu chí, quay lại đúng bài liên quan và làm lại với ví dụ khác.
+Lộ trình sắp xếp kiến thức theo quan hệ cần học trước; mốc tự kiểm tra xác nhận bạn đã vận dụng được gì. Đánh dấu đã đọc chỉ phản ánh hoạt động, không thay thế việc làm bài.
+
+Phân biệt thứ tự đề xuất với điều kiện bắt buộc. Bạn có thể ôn lại phần quen nhanh hơn, nhưng cần chứng minh kỹ năng nền trước khi dựa vào nó trong bài sau.
+
+Trước bài huấn luyện mô hình, thử đọc dữ liệu và tách đặc trưng với nhãn. Nếu chưa giải thích được cột nào có sẵn lúc dự đoán, quay lại bài dữ liệu thay vì chỉ đọc thêm thuật toán.
+
+Tự kiểm tra: chưa đạt mốc thì phải học lại toàn bộ lộ trình không? Không; xác định lỗ hổng cụ thể, ôn bài liên quan và thử ví dụ khác.
 
 ## Thực hành
 

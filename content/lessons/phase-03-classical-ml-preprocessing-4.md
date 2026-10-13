@@ -25,11 +25,18 @@ key_terms:
 - baseline
 - evaluation
 - preprocessing
-concept_notes_vi: Xây dựng đặc trưng chuyển dữ liệu thô thành thông tin hữu ích cho bài toán. Đặc trưng cần có sẵn
-  khi dự đoán và được đánh giá bằng cùng quy trình chia dữ liệu với mô hình cơ sở.
-concept_notes_en: 'Feature engineering is a classical Machine Learning decision: define the label, baseline, split,
-  and metric before choosing a model. Fit preprocessing on train only; error analysis should identify the groups
-  where the model fails and how to retest the hypothesis.'
+concept_notes_vi: |-
+  Xây dựng đặc trưng chuyển dữ liệu thô thành thông tin phù hợp mục tiêu. Chọn đặc trưng là giữ lại một phần các đầu vào đang có; xây dựng đặc trưng có thể tạo đại lượng mới như số lần mua trong 30 ngày trước thời điểm dự đoán.
+
+  Đặc trưng tốt phải có sẵn khi vận hành, được tính nhất quán giữa train và phục vụ dự đoán. Tổng chi tiêu của cả tháng sẽ rò rỉ tương lai nếu bạn dự đoán ở giữa tháng; chỉ lấy các sự kiện đã xảy ra tới mốc đó.
+
+  Tự kiểm tra: thêm đặc trưng làm điểm train tăng đã đủ để giữ lại chưa? Chưa; cần so trên cùng tập kiểm định và xét chi phí tính toán, dữ liệu thiếu, độ ổn định. Loại thử từng nhóm đặc trưng để xem phần nào thực sự giúp ích.
+concept_notes_en: |-
+  Feature engineering turns raw data into task-relevant inputs. Feature selection retains a subset of existing inputs; feature engineering can create new quantities, such as purchases in the 30 days before prediction time.
+
+  Useful features must be available in operation and computed consistently in training and serving. Whole-month spending leaks future information if prediction happens mid-month; use only events available by that point.
+
+  Self-check: is improved training performance enough to retain a new feature? No; compare on the same validation set and consider computation cost, missingness and stability. Remove feature groups in controlled comparisons to see which actually help.
 why_it_matters_vi: Giữ cách xử lý dữ liệu nhất quán giữa huấn luyện và dự đoán để tránh rò rỉ hoặc sai lệch.
 why_it_matters_en: Build consistent, leakage-safe preprocessing that turns messy data into reproducible features.
 study_steps_vi:
@@ -216,7 +223,11 @@ review_cards:
 ---
 # Xây dựng đặc trưng / Feature engineering
 
-Xây dựng đặc trưng chuyển dữ liệu thô thành thông tin hữu ích cho bài toán. Đặc trưng cần có sẵn khi dự đoán và được đánh giá bằng cùng quy trình chia dữ liệu với mô hình cơ sở.
+Xây dựng đặc trưng chuyển dữ liệu thô thành thông tin phù hợp mục tiêu. Chọn đặc trưng là giữ lại một phần các đầu vào đang có; xây dựng đặc trưng có thể tạo đại lượng mới như số lần mua trong 30 ngày trước thời điểm dự đoán.
+
+Đặc trưng tốt phải có sẵn khi vận hành, được tính nhất quán giữa train và phục vụ dự đoán. Tổng chi tiêu của cả tháng sẽ rò rỉ tương lai nếu bạn dự đoán ở giữa tháng; chỉ lấy các sự kiện đã xảy ra tới mốc đó.
+
+Tự kiểm tra: thêm đặc trưng làm điểm train tăng đã đủ để giữ lại chưa? Chưa; cần so trên cùng tập kiểm định và xét chi phí tính toán, dữ liệu thiếu, độ ổn định. Loại thử từng nhóm đặc trưng để xem phần nào thực sự giúp ích.
 
 ## Thực hành
 

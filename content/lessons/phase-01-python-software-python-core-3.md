@@ -27,12 +27,22 @@ key_terms:
 - debugging
 - maintainability
 - python-core
-concept_notes_vi: Hàm gom một nhiệm vụ có đầu vào và giá trị trả về rõ ràng. Phạm vi biến quyết định nơi tên có
-  hiệu lực; chú thích kiểu giúp người đọc và công cụ kiểm tra, nhưng không tự kiểm tra mọi giá trị khi chương trình
-  chạy.
-concept_notes_en: Function, scope và typing is a Software Engineering skill for turning an idea into code that can
-  be read, tested, and maintained. Define the inputs, outputs, invariants, and failure modes before implementing.
-  In Python, small boundaries make tests fast and tracebacks actionable.
+concept_notes_vi: |-
+  Hàm đóng gói một nhiệm vụ với đầu vào và giá trị trả về rõ ràng. Phạm vi biến xác định nơi tên được tìm thấy; hạn chế phụ thuộc vào biến toàn cục giúp kiểm thử riêng.
+
+  Chú thích kiểu mô tả hợp đồng cho người đọc và công cụ, không tự buộc Python kiểm tra mọi đầu vào lúc chạy. Giá trị mặc định cũng khác biến cục bộ mới: mặc định được đánh giá khi định nghĩa hàm.
+
+  Hàm dùng items=[] rồi append có thể giữ dữ liệu giữa các lần gọi. Dùng mặc định None và tạo list bên trong khi cần sẽ tránh vô tình chia sẻ list ấy.
+
+  Tự kiểm tra: ghi x: int có ngăn người gọi truyền chuỗi không? Không tự động; kiểm tra tĩnh hoặc kiểm tra lúc chạy phải được thực hiện riêng.
+concept_notes_en: |-
+  A function encapsulates a task with clear inputs and a return value. Scope controls name lookup; reducing global dependencies makes isolated testing easier.
+
+  Type annotations describe contracts for people and tools, but do not automatically enforce every runtime input. Defaults also differ from fresh local values: they are evaluated when the function is defined.
+
+  A function that appends to items=[] can retain data between calls. Using None as the default and creating a list inside when needed avoids accidental sharing.
+
+  Self-check: does annotating x: int prevent callers from passing a string? Not automatically; static or runtime checks must be performed separately.
 why_it_matters_vi: Nắm Python đủ để đọc mã AI, viết hàm nhỏ và tự kiểm tra hành vi của chương trình.
 why_it_matters_en: Build enough Python fluency to read AI code, write small tested functions, and work beyond notebooks.
 study_steps_vi:
@@ -226,7 +236,13 @@ review_cards:
 ---
 # Hàm, phạm vi biến và chú thích kiểu / Functions, scope and typing
 
-Hàm gom một nhiệm vụ có đầu vào và giá trị trả về rõ ràng. Phạm vi biến quyết định nơi tên có hiệu lực; chú thích kiểu giúp người đọc và công cụ kiểm tra, nhưng không tự kiểm tra mọi giá trị khi chương trình chạy.
+Hàm đóng gói một nhiệm vụ với đầu vào và giá trị trả về rõ ràng. Phạm vi biến xác định nơi tên được tìm thấy; hạn chế phụ thuộc vào biến toàn cục giúp kiểm thử riêng.
+
+Chú thích kiểu mô tả hợp đồng cho người đọc và công cụ, không tự buộc Python kiểm tra mọi đầu vào lúc chạy. Giá trị mặc định cũng khác biến cục bộ mới: mặc định được đánh giá khi định nghĩa hàm.
+
+Hàm dùng items=[] rồi append có thể giữ dữ liệu giữa các lần gọi. Dùng mặc định None và tạo list bên trong khi cần sẽ tránh vô tình chia sẻ list ấy.
+
+Tự kiểm tra: ghi x: int có ngăn người gọi truyền chuỗi không? Không tự động; kiểm tra tĩnh hoặc kiểm tra lúc chạy phải được thực hiện riêng.
 
 ## Thực hành
 

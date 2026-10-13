@@ -27,11 +27,22 @@ key_terms:
 - debugging
 - maintainability
 - developer-tools
-concept_notes_vi: Terminal thực thi lệnh trong một thư mục và tập biến môi trường cụ thể. PowerShell và shell trên
-  Linux có khác biệt về cú pháp, nên cần hiểu lệnh đang dùng trước khi chuyển giữa hai môi trường.
-concept_notes_en: 'Terminal PowerShell/Linux makes AI engineering work traceable: every change needs a diff, a reason,
-  and a verification step. Practise in a small repository, introduce an intentional failure, read the terminal output,
-  and fix it with a focused commit.'
+concept_notes_vi: |-
+  Terminal cung cấp giao diện tương tác; shell phân tích lệnh và gọi chương trình trong thư mục hiện tại cùng môi trường đang có. Biết thư mục và chương trình nào được gọi giúp tránh thao tác nhầm.
+
+  PowerShell thường truyền đối tượng giữa các lệnh, trong khi nhiều shell Unix dùng luồng văn bản. Cú pháp biến, dấu nháy và đường dẫn khác nhau, nên không chép nguyên lệnh giữa hai hệ mà bỏ qua ý nghĩa.
+
+  Trên Windows, đường dẫn chứa khoảng trắng cần được trích dẫn phù hợp. Trước thao tác với tệp, xem Get-Location và đường dẫn đích; khi lệnh thất bại, đọc thông báo cùng mã thoát.
+
+  Tự kiểm tra: chương trình in chữ 'done' đã chắc thành công chưa? Chưa; kiểm tra mã thoát và kết quả thực tế mà lệnh phải tạo.
+concept_notes_en: |-
+  A terminal provides interaction; a shell parses commands and invokes programs using the current directory and environment. Knowing both prevents operations in unintended locations.
+
+  PowerShell commonly passes objects through pipelines, whereas many Unix shells use text streams. Variables, quoting and paths differ, so translate meaning rather than copying syntax blindly.
+
+  Windows paths containing spaces need appropriate quoting. Inspect Get-Location and the destination before file operations; on failure, read the message and exit status.
+
+  Self-check: does printing 'done' establish success? Not alone; inspect the exit status and the result the command was supposed to produce.
 why_it_matters_vi: Dùng Git, terminal và HTTP để tái hiện vấn đề, xem xét thay đổi và trao đổi với hệ thống.
 why_it_matters_en: Use Git, terminals, and HTTP as daily tools for reproduction, review, and system communication.
 study_steps_vi:
@@ -233,7 +244,13 @@ review_cards:
 ---
 # Sử dụng terminal PowerShell/Linux / PowerShell and Linux terminals
 
-Terminal thực thi lệnh trong một thư mục và tập biến môi trường cụ thể. PowerShell và shell trên Linux có khác biệt về cú pháp, nên cần hiểu lệnh đang dùng trước khi chuyển giữa hai môi trường.
+Terminal cung cấp giao diện tương tác; shell phân tích lệnh và gọi chương trình trong thư mục hiện tại cùng môi trường đang có. Biết thư mục và chương trình nào được gọi giúp tránh thao tác nhầm.
+
+PowerShell thường truyền đối tượng giữa các lệnh, trong khi nhiều shell Unix dùng luồng văn bản. Cú pháp biến, dấu nháy và đường dẫn khác nhau, nên không chép nguyên lệnh giữa hai hệ mà bỏ qua ý nghĩa.
+
+Trên Windows, đường dẫn chứa khoảng trắng cần được trích dẫn phù hợp. Trước thao tác với tệp, xem Get-Location và đường dẫn đích; khi lệnh thất bại, đọc thông báo cùng mã thoát.
+
+Tự kiểm tra: chương trình in chữ 'done' đã chắc thành công chưa? Chưa; kiểm tra mã thoát và kết quả thực tế mà lệnh phải tạo.
 
 ## Thực hành
 

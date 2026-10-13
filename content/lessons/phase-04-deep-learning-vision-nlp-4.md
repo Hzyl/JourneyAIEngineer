@@ -27,11 +27,18 @@ key_terms:
 - loss
 - training
 - vision-nlp
-concept_notes_vi: Attention kết hợp thông tin từ các vị trí theo trọng số phụ thuộc đầu vào. Transformer tổ chức
-  attention cùng các lớp biến đổi; mặt nạ quy định vị trí nào được phép nhìn thấy.
-concept_notes_en: Attention và Transformer overview explains how a Transformer weights relevant tokens. Track the
-  shapes of Q, K, V, masks, and context length; during inference, KV cache avoids recomputing keys and values at
-  the cost of memory.
+concept_notes_vi: |-
+  Attention tạo trọng số để kết hợp thông tin từ các vị trí. Trong scaled dot-product attention, query được so với key, rồi các trọng số chuẩn hóa được dùng để tổng hợp value. Query, key và value là các biểu diễn được tính từ dữ liệu, không phải ba kho văn bản riêng.
+
+  Self-attention lấy các biểu diễn từ cùng chuỗi; cross-attention cho một chuỗi truy vấn thông tin của chuỗi khác. Transformer kết hợp attention với các lớp biến đổi, kết nối residual và thông tin vị trí; attention không phải toàn bộ kiến trúc.
+
+  Tự kiểm tra: mô hình dự đoán token tiếp theo có được nhìn token tương lai khi huấn luyện không? Không trong cơ chế causal chuẩn; mặt nạ phải chặn thông tin tương lai. Trọng số attention cao cũng không tự chứng minh quan hệ nhân quả hay giải thích đầy đủ quyết định của mô hình.
+concept_notes_en: |-
+  Attention assigns weights for combining information across positions. In scaled dot-product attention, queries are compared with keys, and normalized weights combine values. Queries, keys and values are representations computed from data, not three separate text repositories.
+
+  Self-attention draws representations from the same sequence; cross-attention lets one sequence query another. Transformers combine attention with transformations, residual connections and positional information; attention alone is not the entire architecture.
+
+  Self-check: may a next-token model see future tokens during training? Not under standard causal attention; a mask must block future information. A high attention weight also does not establish causality or fully explain a model decision.
 why_it_matters_vi: Hiểu CNN, học chuyển giao, embedding và attention để chọn cách biểu diễn phù hợp.
 why_it_matters_en: Understand CNNs, transfer learning, embeddings, and attention well enough to choose a CV or NLP
   path.
@@ -218,7 +225,11 @@ review_cards:
 ---
 # Tổng quan attention và Transformer / Attention and a Transformer overview
 
-Attention kết hợp thông tin từ các vị trí theo trọng số phụ thuộc đầu vào. Transformer tổ chức attention cùng các lớp biến đổi; mặt nạ quy định vị trí nào được phép nhìn thấy.
+Attention tạo trọng số để kết hợp thông tin từ các vị trí. Trong scaled dot-product attention, query được so với key, rồi các trọng số chuẩn hóa được dùng để tổng hợp value. Query, key và value là các biểu diễn được tính từ dữ liệu, không phải ba kho văn bản riêng.
+
+Self-attention lấy các biểu diễn từ cùng chuỗi; cross-attention cho một chuỗi truy vấn thông tin của chuỗi khác. Transformer kết hợp attention với các lớp biến đổi, kết nối residual và thông tin vị trí; attention không phải toàn bộ kiến trúc.
+
+Tự kiểm tra: mô hình dự đoán token tiếp theo có được nhìn token tương lai khi huấn luyện không? Không trong cơ chế causal chuẩn; mặt nạ phải chặn thông tin tương lai. Trọng số attention cao cũng không tự chứng minh quan hệ nhân quả hay giải thích đầy đủ quyết định của mô hình.
 
 ## Thực hành
 

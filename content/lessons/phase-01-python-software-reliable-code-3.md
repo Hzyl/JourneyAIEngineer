@@ -26,11 +26,22 @@ key_terms:
 - testing
 - maintainability
 - reliable-code
-concept_notes_vi: Gỡ lỗi bắt đầu từ hiện tượng có thể tái hiện. Nêu một giả thuyết, chọn phép kiểm tra nhỏ để xác
-  nhận hoặc bác bỏ, rồi sửa nguyên nhân và giữ lại kiểm thử ngăn lỗi tái diễn.
-concept_notes_en: Debugging có giả thuyết is a Software Engineering skill for turning an idea into code that can
-  be read, tested, and maintained. Define the inputs, outputs, invariants, and failure modes before implementing.
-  In Python, small boundaries make tests fast and tracebacks actionable.
+concept_notes_vi: |-
+  Gỡ lỗi bắt đầu bằng hiện tượng có thể tái hiện: đầu vào nào, kết quả mong đợi nào và kết quả thực tế nào. Thu nhỏ ví dụ giúp loại những yếu tố không liên quan.
+
+  Phân biệt triệu chứng với nguyên nhân và giả thuyết với kết luận. Thông báo lỗi ở một dòng không chứng minh dòng ấy tạo ra dữ liệu sai; lỗi có thể đến từ bước xử lý trước.
+
+  Nếu tổng tiền sai, kiểm tra từng giá trị trước phép cộng. Một giá trị đang là chuỗi có thể cho thấy lỗi chuyển kiểu ở bước đọc dữ liệu. Chỉ đổi một yếu tố trong mỗi phép thử để biết điều gì gây khác biệt.
+
+  Tự kiểm tra: sửa xong một đầu vào đã đủ chưa? Chưa; giữ kiểm thử hồi quy cho lỗi đó và thử trường hợp lân cận để tránh sửa lệch yêu cầu.
+concept_notes_en: |-
+  Debugging starts with a reproducible input, expected result and actual result. Shrinking the example removes unrelated factors.
+
+  Distinguish symptoms from causes and hypotheses from conclusions. An exception location does not establish where invalid data originated; an earlier transformation may be responsible.
+
+  For an incorrect total, inspect values before addition. A string where a number is expected may expose a conversion error during loading. Change one factor per experiment so the evidence is interpretable.
+
+  Self-check: does fixing one input finish the job? Not yet; retain a regression test and check neighboring cases to ensure the correction respects the contract.
 why_it_matters_vi: Chia trách nhiệm rõ, xử lý ngoại lệ và ghi nhật ký để mã dễ kiểm tra, bảo trì.
 why_it_matters_en: Turn working code into reliable code with module boundaries, logging, exceptions, and explicit
   test boundaries.
@@ -223,7 +234,13 @@ review_cards:
 ---
 # Gỡ lỗi bằng giả thuyết / Hypothesis-driven debugging
 
-Gỡ lỗi bắt đầu từ hiện tượng có thể tái hiện. Nêu một giả thuyết, chọn phép kiểm tra nhỏ để xác nhận hoặc bác bỏ, rồi sửa nguyên nhân và giữ lại kiểm thử ngăn lỗi tái diễn.
+Gỡ lỗi bắt đầu bằng hiện tượng có thể tái hiện: đầu vào nào, kết quả mong đợi nào và kết quả thực tế nào. Thu nhỏ ví dụ giúp loại những yếu tố không liên quan.
+
+Phân biệt triệu chứng với nguyên nhân và giả thuyết với kết luận. Thông báo lỗi ở một dòng không chứng minh dòng ấy tạo ra dữ liệu sai; lỗi có thể đến từ bước xử lý trước.
+
+Nếu tổng tiền sai, kiểm tra từng giá trị trước phép cộng. Một giá trị đang là chuỗi có thể cho thấy lỗi chuyển kiểu ở bước đọc dữ liệu. Chỉ đổi một yếu tố trong mỗi phép thử để biết điều gì gây khác biệt.
+
+Tự kiểm tra: sửa xong một đầu vào đã đủ chưa? Chưa; giữ kiểm thử hồi quy cho lỗi đó và thử trường hợp lân cận để tránh sửa lệch yêu cầu.
 
 ## Thực hành
 

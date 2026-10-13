@@ -26,10 +26,18 @@ key_terms:
 - debugging
 - maintainability
 - portfolio
-concept_notes_vi: Sơ đồ làm rõ thành phần và luồng dữ liệu ở mức phù hợp với người đọc. Chú thích mũi tên, ranh
-  giới hệ thống để hình dễ hiểu và hỗ trợ thảo luận.
-concept_notes_en: Architecture diagram is a concept in the portfolio module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Sơ đồ làm rõ thành phần và luồng dữ liệu ở mức phù hợp với người đọc. Chú thích mũi tên, ranh giới hệ thống để hình dễ hiểu và hỗ trợ thảo luận.
+
+  Sơ đồ thành phần cho biết phần nào chịu trách nhiệm; sơ đồ trình tự cho biết các bước xảy ra theo thời gian. Trộn cả hai mà không chú thích làm người đọc nhầm quan hệ phụ thuộc với thứ tự gọi.
+
+  Ví dụ, mũi tên từ API tới kho vector ghi 'truy xuất đoạn được phép', không chỉ một đường nối. Tự kiểm tra: sơ đồ chỉ có đường thành công đã đủ chưa? Chưa; thể hiện nơi xác thực, nơi lưu dữ liệu và đường báo thiếu nguồn để người đọc hiểu ranh giới hệ thống.
+concept_notes_en: |-
+  Diagrams clarify components and data flow at an appropriate level. Label arrows and system boundaries to support discussion.
+
+  A component diagram assigns responsibility; a sequence diagram shows interaction order. Unlabeled mixing can confuse dependencies with execution sequence.
+
+  Label an API-to-vector-store arrow 'retrieve authorized passages' rather than drawing an unexplained line. Self-check: is the success path enough? No: show authentication, data storage and missing-evidence handling so the system's boundaries are understandable.
 why_it_matters_vi: Trình bày năng lực bằng dự án có bằng chứng kỹ thuật và đóng góp rõ.
 why_it_matters_en: Tell the technical story through a README, architecture diagram, video, and a curated GitHub
   profile.
@@ -209,6 +217,10 @@ review_cards:
 # Vẽ sơ đồ kiến trúc / Architecture diagrams
 
 Sơ đồ làm rõ thành phần và luồng dữ liệu ở mức phù hợp với người đọc. Chú thích mũi tên, ranh giới hệ thống để hình dễ hiểu và hỗ trợ thảo luận.
+
+Sơ đồ thành phần cho biết phần nào chịu trách nhiệm; sơ đồ trình tự cho biết các bước xảy ra theo thời gian. Trộn cả hai mà không chú thích làm người đọc nhầm quan hệ phụ thuộc với thứ tự gọi.
+
+Ví dụ, mũi tên từ API tới kho vector ghi 'truy xuất đoạn được phép', không chỉ một đường nối. Tự kiểm tra: sơ đồ chỉ có đường thành công đã đủ chưa? Chưa; thể hiện nơi xác thực, nơi lưu dữ liệu và đường báo thiếu nguồn để người đọc hiểu ranh giới hệ thống.
 
 ## Thực hành
 

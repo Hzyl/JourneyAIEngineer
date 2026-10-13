@@ -25,10 +25,22 @@ key_terms:
 - observability
 - reproducibility
 - deployment
-concept_notes_vi: MLflow ghi tham số, thước đo và tệp kết quả theo từng lần chạy. Chọn quy ước tên và lưu thông
-  tin dữ liệu, mã nguồn để có thể so sánh và truy nguyên.
-concept_notes_en: MLflow tracking is a concept in the tracking module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  MLflow ghi tham số, thước đo và tệp kết quả theo từng lần chạy. Chọn quy ước tên và lưu thông tin dữ liệu, mã nguồn để có thể so sánh và truy nguyên.
+
+  Parameter là lựa chọn của lần chạy như learning rate; metric là số đo như validation loss; artifact là tệp như biểu đồ hoặc mô hình. Phân biệt ba loại giúp so sánh nguyên nhân thay đổi với kết quả quan sát.
+
+  Ví dụ, hai run có cùng accuracy nhưng khác tập kiểm tra không phải so sánh công bằng. Ghi data_version và quy tắc chia tập cùng tham số, rồi gắn báo cáo lỗi theo nhóm vào artifact.
+
+  Tự kiểm tra: MLflow đã lưu run thì có tự bảo đảm thí nghiệm đúng không? Không; công cụ ghi những gì bạn cung cấp. Cần kiểm tra rò rỉ, định nghĩa metric và cách chọn checkpoint trước khi diễn giải bảng so sánh.
+concept_notes_en: |-
+  MLflow records parameters, metrics and artifacts for each run. Consistent naming and data/code identifiers make comparisons traceable.
+
+  A parameter is a run choice such as learning rate; a metric is a measurement such as validation loss; an artifact is a file such as a plot or model. Distinguish choices from observed outcomes.
+
+  Two runs with the same accuracy but different test sets are not a fair comparison. Record data_version and split rules, and attach a subgroup error report.
+
+  Self-check: does a logged MLflow run guarantee a sound experiment? No: it records supplied information. Check leakage, metric definitions and checkpoint selection before interpreting the comparison.
 why_it_matters_vi: Gắn mô hình với dữ liệu, cấu hình và mã nguồn để kết quả có thể tái lập.
 why_it_matters_en: Track models, data, experiments, and seeds so results are reproducible and comparable.
 study_steps_vi:
@@ -203,6 +215,12 @@ review_cards:
 # Theo dõi thí nghiệm với MLflow / MLflow tracking
 
 MLflow ghi tham số, thước đo và tệp kết quả theo từng lần chạy. Chọn quy ước tên và lưu thông tin dữ liệu, mã nguồn để có thể so sánh và truy nguyên.
+
+Parameter là lựa chọn của lần chạy như learning rate; metric là số đo như validation loss; artifact là tệp như biểu đồ hoặc mô hình. Phân biệt ba loại giúp so sánh nguyên nhân thay đổi với kết quả quan sát.
+
+Ví dụ, hai run có cùng accuracy nhưng khác tập kiểm tra không phải so sánh công bằng. Ghi data_version và quy tắc chia tập cùng tham số, rồi gắn báo cáo lỗi theo nhóm vào artifact.
+
+Tự kiểm tra: MLflow đã lưu run thì có tự bảo đảm thí nghiệm đúng không? Không; công cụ ghi những gì bạn cung cấp. Cần kiểm tra rò rỉ, định nghĩa metric và cách chọn checkpoint trước khi diễn giải bảng so sánh.
 
 ## Thực hành
 

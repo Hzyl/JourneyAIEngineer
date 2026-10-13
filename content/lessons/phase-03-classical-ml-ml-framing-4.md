@@ -26,11 +26,18 @@ key_terms:
 - feature
 - evaluation
 - ml-framing
-concept_notes_vi: Rò rỉ xảy ra khi việc học dùng thông tin không hợp lệ ở thời điểm dự đoán hoặc từ tập đánh giá.
-  Mô hình cơ sở tạo mốc để đánh giá lợi ích của giải pháp phức tạp hơn.
-concept_notes_en: 'Data leakage và baseline is a classical Machine Learning decision: define the label, baseline,
-  split, and metric before choosing a model. Fit preprocessing on train only; error analysis should identify the
-  groups where the model fails and how to retest the hypothesis.'
+concept_notes_vi: |-
+  Rò rỉ dữ liệu xảy ra khi quá trình học nhận thông tin không được phép có tại thời điểm dự đoán hoặc thông tin từ phần đánh giá. Nó làm phép đo dễ hơn nhiệm vụ thực tế và có thể che giấu mô hình kém.
+
+  Mô hình cơ sở là phương án đơn giản để so sánh, như dự đoán lớp phổ biến hoặc dùng mô hình tuyến tính. Mốc này cũng phải tuân thủ cách chia hợp lệ. Ví dụ, điền dữ liệu thiếu bằng trung bình toàn bảng trước khi chia đã cho thông tin phần đánh giá ảnh hưởng huấn luyện; hãy học giá trị điền chỉ từ tập train.
+
+  Tự kiểm tra: mô hình phức tạp thắng mốc có chứng minh không rò rỉ không? Không; cả hai có thể dùng quy trình sai. Kiểm tra nguồn, thời điểm và cách tạo từng đặc trưng.
+concept_notes_en: |-
+  Data leakage occurs when learning receives information unavailable at prediction time or information from evaluation data. It makes the measured task easier than the real task and can hide weak models.
+
+  A baseline is a simple comparison method, such as predicting the common class or using a linear model. It must follow valid splitting rules too. For example, imputing with the entire table's mean before splitting lets evaluation information affect training; learn imputation values only from training data.
+
+  Self-check: does beating a baseline prove a complex model is free of leakage? No; both can share a flawed process. Check each feature's source, availability time and construction.
 why_it_matters_vi: Làm rõ người dùng, nhãn, cách chia dữ liệu và mốc so sánh trước khi chọn mô hình.
 why_it_matters_en: 'Frame the problem before choosing a model: user, label, split, baseline, and leakage risks.'
 study_steps_vi:
@@ -213,7 +220,11 @@ review_cards:
 ---
 # Rò rỉ dữ liệu và mô hình cơ sở / Data leakage and baselines
 
-Rò rỉ xảy ra khi việc học dùng thông tin không hợp lệ ở thời điểm dự đoán hoặc từ tập đánh giá. Mô hình cơ sở tạo mốc để đánh giá lợi ích của giải pháp phức tạp hơn.
+Rò rỉ dữ liệu xảy ra khi quá trình học nhận thông tin không được phép có tại thời điểm dự đoán hoặc thông tin từ phần đánh giá. Nó làm phép đo dễ hơn nhiệm vụ thực tế và có thể che giấu mô hình kém.
+
+Mô hình cơ sở là phương án đơn giản để so sánh, như dự đoán lớp phổ biến hoặc dùng mô hình tuyến tính. Mốc này cũng phải tuân thủ cách chia hợp lệ. Ví dụ, điền dữ liệu thiếu bằng trung bình toàn bảng trước khi chia đã cho thông tin phần đánh giá ảnh hưởng huấn luyện; hãy học giá trị điền chỉ từ tập train.
+
+Tự kiểm tra: mô hình phức tạp thắng mốc có chứng minh không rò rỉ không? Không; cả hai có thể dùng quy trình sai. Kiểm tra nguồn, thời điểm và cách tạo từng đặc trưng.
 
 ## Thực hành
 

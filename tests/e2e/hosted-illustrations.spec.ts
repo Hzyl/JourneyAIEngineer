@@ -40,7 +40,10 @@ for (const theme of ['light', 'dark'] as const) {
       await expect(page.locator('html')).toHaveAttribute('lang', 'vi')
       const lesson = page.locator('.public-lesson')
       await expect(lesson.locator('.public-prose')).toContainText('Trình thông dịch')
-      await expect(lesson.locator('.public-prose > p')).toHaveCount(2)
+      await expect.poll(async () => lesson.locator('.public-prose > p').count())
+        .toBeGreaterThanOrEqual(2)
+      await expect(lesson.locator('.public-prose')).toContainText('Trình biên dịch')
+      await expect(lesson.locator('.public-prose')).toContainText('CPython')
       await expect(lesson.locator('.public-example')).not.toContainText(
         'Trình thông dịch là chương trình thực thi tệp Python.',
       )

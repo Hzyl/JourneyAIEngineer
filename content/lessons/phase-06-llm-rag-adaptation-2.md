@@ -26,11 +26,22 @@ key_terms:
 - retrieval
 - evaluation
 - adaptation
-concept_notes_vi: PEFT tinh chỉnh ít tham số hơn toàn bộ mô hình; LoRA học các ma trận cập nhật hạng thấp. Dù giảm
-  tham số huấn luyện, vẫn cần dữ liệu và đánh giá phù hợp.
-concept_notes_en: LoRA và PEFT is model optimization after establishing an evaluation baseline. Prepare clean data,
-  split train/eval, track memory and quality regressions, and choose fine-tuning, quantization, or local serving
-  based on quality, latency, cost, and privacy.
+concept_notes_vi: |-
+  PEFT tinh chỉnh ít tham số hơn toàn bộ mô hình; LoRA học các ma trận cập nhật hạng thấp. Dù giảm tham số huấn luyện, vẫn cần dữ liệu và đánh giá phù hợp.
+
+  Tinh chỉnh toàn bộ cập nhật nhiều trọng số nền; LoRA giữ trọng số nền cố định và học phần cập nhật qua hai ma trận nhỏ. Hạng là kích thước trung gian của phép phân tích này, không phải số nhãn đầu ra.
+
+  Ví dụ, với ma trận 100 × 100, hai ma trận 100 × 4 và 4 × 100 có 800 tham số thay vì 10.000 của ma trận đầy đủ. Đây chỉ là đếm phần cập nhật, chưa tính bộ nhớ mô hình nền và trạng thái huấn luyện.
+
+  Tự kiểm tra: hạng nhỏ hơn có luôn giữ chất lượng không? Không; cần đánh giá theo nhiệm vụ. Adapter phải đi cùng đúng mô hình nền để có ý nghĩa.
+concept_notes_en: |-
+  PEFT trains fewer parameters than full fine-tuning; LoRA learns low-rank updates. Suitable data and evaluation remain necessary.
+
+  Full fine-tuning updates base weights; LoRA freezes them and learns an update through two smaller matrices. Rank is their intermediate dimension, not the number of output labels.
+
+  For a 100 × 100 matrix, factors shaped 100 × 4 and 4 × 100 contain 800 parameters instead of 10,000. This counts only the update, excluding the base model and training state.
+
+  Self-check: does a lower rank always preserve quality? No: evaluate the task. An adapter also needs its matching base model.
 why_it_matters_vi: Chọn prompt, RAG, tinh chỉnh hoặc lượng tử hóa theo vấn đề cần giải quyết; giới hạn agent bằng
   điều kiện dừng.
 why_it_matters_en: Know when RAG is enough, when fine-tuning/LoRA/quantization is justified, and why agents need
@@ -210,6 +221,12 @@ review_cards:
 # LoRA và PEFT / LoRA and PEFT
 
 PEFT tinh chỉnh ít tham số hơn toàn bộ mô hình; LoRA học các ma trận cập nhật hạng thấp. Dù giảm tham số huấn luyện, vẫn cần dữ liệu và đánh giá phù hợp.
+
+Tinh chỉnh toàn bộ cập nhật nhiều trọng số nền; LoRA giữ trọng số nền cố định và học phần cập nhật qua hai ma trận nhỏ. Hạng là kích thước trung gian của phép phân tích này, không phải số nhãn đầu ra.
+
+Ví dụ, với ma trận 100 × 100, hai ma trận 100 × 4 và 4 × 100 có 800 tham số thay vì 10.000 của ma trận đầy đủ. Đây chỉ là đếm phần cập nhật, chưa tính bộ nhớ mô hình nền và trạng thái huấn luyện.
+
+Tự kiểm tra: hạng nhỏ hơn có luôn giữ chất lượng không? Không; cần đánh giá theo nhiệm vụ. Adapter phải đi cùng đúng mô hình nền để có ý nghĩa.
 
 ## Thực hành
 

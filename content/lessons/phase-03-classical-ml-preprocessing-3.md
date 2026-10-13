@@ -26,10 +26,18 @@ key_terms:
 - baseline
 - evaluation
 - preprocessing
-concept_notes_vi: Chuẩn hóa thay đổi thang đo để đặc trưng phù hợp hơn với thuật toán. Tham số biến đổi phải được
-  học từ tập huấn luyện rồi dùng lại khi kiểm định và dự đoán.
-concept_notes_en: Scaling và transformation is a concept in the preprocessing module. Identify the inputs, outputs,
-  assumptions, failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Đổi thang đo giúp đặc trưng phù hợp hơn với thuật toán. Standardization thường trừ trung bình rồi chia độ lệch chuẩn; min–max scaling ánh xạ khoảng quan sát về khoảng đã chọn. Cả hai đều phải học tham số từ tập train.
+
+  Đổi thang đo không tự biến phân bố lệch thành phân bố chuẩn. Phép biến đổi như log có mục tiêu khác và phải kiểm tra miền hợp lệ. Thuật toán dựa trên khoảng cách thường nhạy với thang đo hơn cây quyết định chia theo từng đặc trưng.
+
+  Tự kiểm tra: min–max fit trên train có bảo đảm mọi giá trị test nằm trong [0,1] không? Không; test có thể vượt cực trị train. Với train từ 10 đến 20, giá trị mới 25 thành 1,5. Đây là tín hiệu cần xem xét, không phải lý do fit lại trên test.
+concept_notes_en: |-
+  Rescaling helps features suit an algorithm. Standardization usually subtracts the mean and divides by standard deviation; min–max scaling maps the observed range to a chosen interval. Fit both transformations on training data.
+
+  Rescaling does not automatically turn a skewed distribution into a normal one. Transformations such as logarithms serve a different purpose and require valid inputs. Distance-based algorithms are often more scale-sensitive than trees splitting individual features.
+
+  Self-check: does min–max scaling fitted on training data guarantee all test values lie in [0,1]? No; test values can exceed training extremes. With training range 10 to 20, a new value of 25 becomes 1.5. Investigate this signal rather than refitting on test data.
 why_it_matters_vi: Giữ cách xử lý dữ liệu nhất quán giữa huấn luyện và dự đoán để tránh rò rỉ hoặc sai lệch.
 why_it_matters_en: Build consistent, leakage-safe preprocessing that turns messy data into reproducible features.
 study_steps_vi:
@@ -209,7 +217,11 @@ review_cards:
 ---
 # Chuẩn hóa và biến đổi dữ liệu / Scaling and transformations
 
-Chuẩn hóa thay đổi thang đo để đặc trưng phù hợp hơn với thuật toán. Tham số biến đổi phải được học từ tập huấn luyện rồi dùng lại khi kiểm định và dự đoán.
+Đổi thang đo giúp đặc trưng phù hợp hơn với thuật toán. Standardization thường trừ trung bình rồi chia độ lệch chuẩn; min–max scaling ánh xạ khoảng quan sát về khoảng đã chọn. Cả hai đều phải học tham số từ tập train.
+
+Đổi thang đo không tự biến phân bố lệch thành phân bố chuẩn. Phép biến đổi như log có mục tiêu khác và phải kiểm tra miền hợp lệ. Thuật toán dựa trên khoảng cách thường nhạy với thang đo hơn cây quyết định chia theo từng đặc trưng.
+
+Tự kiểm tra: min–max fit trên train có bảo đảm mọi giá trị test nằm trong [0,1] không? Không; test có thể vượt cực trị train. Với train từ 10 đến 20, giá trị mới 25 thành 1,5. Đây là tín hiệu cần xem xét, không phải lý do fit lại trên test.
 
 ## Thực hành
 

@@ -27,11 +27,18 @@ key_terms:
 - retrieval
 - evaluation
 - advanced-rag
-concept_notes_vi: Xếp hạng lại sắp lại tập ứng viên theo mức liên quan. Chọn số kết quả cần cân bằng độ bao phủ,
-  nhiễu trong ngữ cảnh và chi phí xử lý.
-concept_notes_en: Reranking và top-k selection is one link in a RAG system. Separate parsing, chunking, indexing,
-  retrieval, reranking, and generation so failures are attributable. Chunks need enough context; evaluation should
-  measure retrieval recall, groundedness, and abstention when evidence is missing.
+concept_notes_vi: |-
+  Xếp hạng lại sắp lại tập ứng viên theo mức liên quan. Chọn số kết quả cần cân bằng độ bao phủ, nhiễu trong ngữ cảnh và chi phí xử lý.
+
+  Retriever lấy một tập ứng viên rộng; reranker đánh giá lại các ứng viên đó theo câu hỏi. Reranker thông thường chỉ đổi thứ tự trong tập nhận được, nên không thể cứu tài liệu đã bị bỏ qua hoàn toàn ở truy xuất.
+
+  Ví dụ, lấy nhiều ứng viên rồi chọn vài đoạn có đủ quy định và ngoại lệ để dựng ngữ cảnh. Tự kiểm tra: tăng top-k gửi cho LLM có luôn làm câu trả lời tốt hơn không? Không; thêm đoạn có thể tăng bao phủ nhưng cũng tăng nhiễu và chi phí. Theo dõi câu hỏi thiếu bằng chứng và câu hỏi bị nội dung không liên quan làm lệch.
+concept_notes_en: |-
+  Reranking reorders candidates by relevance. Selecting top-k balances coverage, distracting context and processing cost.
+
+  A retriever gathers candidates; a reranker reassesses those candidates for the query. A conventional reranker cannot recover a document absent from its input set.
+
+  Retrieve a broader pool, then choose passages containing both a policy and its exceptions. Self-check: does increasing the number sent to the LLM always help? No: extra passages can improve coverage but also add noise and cost. Track missing-evidence failures separately from distraction by irrelevant content.
 why_it_matters_vi: Đánh giá cải tiến truy xuất bằng số liệu để biết thành phần nào đáng giữ.
 why_it_matters_en: Advanced RAG should improve retrieval with measurements rather than simply adding components.
 study_steps_vi:
@@ -138,6 +145,15 @@ resources:
   read_en: Read indexes, distance metrics, and hit@k evaluation.
   kind: official
   required: true
+- language: en
+  title: "Sentence Transformers: Retrieve & Re-Rank"
+  url: https://sbert.net/examples/sentence_transformer/applications/retrieve_rerank/README.html
+  kind: official
+  required: false
+  purpose_vi: "Tài liệu tham khảo về lấy ứng viên bằng tìm kiếm từ khóa hoặc bi-encoder rồi tùy chọn xếp hạng lại bằng CrossEncoder."
+  purpose_en: "Reference for retrieving candidates with lexical search or a bi-encoder, then optionally reranking with a CrossEncoder."
+  read_vi: "Đọc pipeline retrieve/rerank; xem điểm CrossEncoder là điểm liên quan chứ không mặc nhiên là xác suất, rồi đánh giá trên truy vấn tiếng Việt riêng."
+  read_en: "Read the retrieve/rerank pipeline; treat CrossEncoder outputs as relevance scores, not inherent probabilities, and evaluate Vietnamese queries separately."
 - title: Giải thích và hướng dẫn thực hành trong bài
   url: ''
   language: vi
@@ -225,6 +241,10 @@ review_cards:
 # Xếp hạng lại và chọn top-k / Reranking and top-k selection
 
 Xếp hạng lại sắp lại tập ứng viên theo mức liên quan. Chọn số kết quả cần cân bằng độ bao phủ, nhiễu trong ngữ cảnh và chi phí xử lý.
+
+Retriever lấy một tập ứng viên rộng; reranker đánh giá lại các ứng viên đó theo câu hỏi. Reranker thông thường chỉ đổi thứ tự trong tập nhận được, nên không thể cứu tài liệu đã bị bỏ qua hoàn toàn ở truy xuất.
+
+Ví dụ, lấy nhiều ứng viên rồi chọn vài đoạn có đủ quy định và ngoại lệ để dựng ngữ cảnh. Tự kiểm tra: tăng top-k gửi cho LLM có luôn làm câu trả lời tốt hơn không? Không; thêm đoạn có thể tăng bao phủ nhưng cũng tăng nhiễu và chi phí. Theo dõi câu hỏi thiếu bằng chứng và câu hỏi bị nội dung không liên quan làm lệch.
 
 ## Thực hành
 

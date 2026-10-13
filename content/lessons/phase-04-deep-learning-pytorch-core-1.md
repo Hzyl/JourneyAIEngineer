@@ -25,11 +25,18 @@ key_terms:
 - loss
 - training
 - pytorch-core
-concept_notes_vi: Tensor biểu diễn dữ liệu nhiều chiều. Kích thước, kiểu dữ liệu và thiết bị lưu trữ phải phù hợp
-  phép toán; gắn ý nghĩa cho từng chiều như số mẫu hoặc số đặc trưng.
-concept_notes_en: 'Tensor và shape is one part of a Deep Learning pipeline: tensors flow through a forward pass,
-  loss creates a signal, backprop computes gradients, and the optimizer updates parameters. Separate train/eval
-  modes, save checkpoints, and track validation to distinguish overfitting from data errors.'
+concept_notes_vi: |-
+  Tensor biểu diễn dữ liệu nhiều chiều. Hãy ghi ý nghĩa của từng chiều cùng kích thước, kiểu dữ liệu và thiết bị: một lô 8 ảnh RGB cao 32, rộng 32 thường có shape (8, 3, 32, 32) trong PyTorch.
+
+  Số chiều khác số phần tử: tensor trên có 4 chiều nhưng chứa 24.576 giá trị. Một tensor có shape đúng vẫn có thể sai ý nghĩa nếu tráo kênh màu với chiều rộng; việc đổi cách nhìn bằng reshape không tự hoán vị các trục.
+
+  Tự kiểm tra: có thể nhân ma trận (8, 3) với (4, 2) không? Không, vì hai chiều trong 3 và 4 không bằng nhau. Trước khi sửa kích thước cho phép toán chạy được, hãy xác định mỗi trục đang đại diện cho điều gì.
+concept_notes_en: |-
+  A tensor represents multidimensional data. Record each axis meaning alongside shape, dtype and device: a batch of 8 RGB images, each 32 pixels high and wide, commonly has shape (8, 3, 32, 32) in PyTorch.
+
+  The number of axes differs from the number of elements: this tensor has 4 axes but contains 24,576 values. A plausible shape can still have the wrong meaning if color channels and width are mixed up; reshaping does not automatically permute axes.
+
+  Self-check: can matrices shaped (8, 3) and (4, 2) be multiplied? No, because the inner dimensions 3 and 4 differ. Before changing shapes merely to make an operation run, identify what every axis represents.
 why_it_matters_vi: Hiểu kích thước tensor, cách lấy dữ liệu và gradient để tự viết vòng lặp huấn luyện.
 why_it_matters_en: Read tensor shapes, datasets, and autograd well enough to write a small PyTorch training loop.
 study_steps_vi:
@@ -220,7 +227,11 @@ review_cards:
 ---
 # Tensor và kích thước các chiều / Tensors and shapes
 
-Tensor biểu diễn dữ liệu nhiều chiều. Kích thước, kiểu dữ liệu và thiết bị lưu trữ phải phù hợp phép toán; gắn ý nghĩa cho từng chiều như số mẫu hoặc số đặc trưng.
+Tensor biểu diễn dữ liệu nhiều chiều. Hãy ghi ý nghĩa của từng chiều cùng kích thước, kiểu dữ liệu và thiết bị: một lô 8 ảnh RGB cao 32, rộng 32 thường có shape (8, 3, 32, 32) trong PyTorch.
+
+Số chiều khác số phần tử: tensor trên có 4 chiều nhưng chứa 24.576 giá trị. Một tensor có shape đúng vẫn có thể sai ý nghĩa nếu tráo kênh màu với chiều rộng; việc đổi cách nhìn bằng reshape không tự hoán vị các trục.
+
+Tự kiểm tra: có thể nhân ma trận (8, 3) với (4, 2) không? Không, vì hai chiều trong 3 và 4 không bằng nhau. Trước khi sửa kích thước cho phép toán chạy được, hãy xác định mỗi trục đang đại diện cho điều gì.
 
 ## Thực hành
 

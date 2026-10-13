@@ -29,10 +29,18 @@ key_terms:
 - baseline
 - evaluation
 - ml-framing
-concept_notes_vi: Tập huấn luyện dùng để học tham số, tập kiểm định giúp chọn mô hình, tập kiểm tra dùng cho đánh
-  giá cuối. Cách chia cần tôn trọng thời gian và các nhóm mẫu liên quan.
-concept_notes_en: Train validation test split is a concept in the ml-framing module. Identify the inputs, outputs,
-  assumptions, failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Tập huấn luyện dùng để học tham số, tập kiểm định hỗ trợ lựa chọn mô hình và tập kiểm tra dành cho đánh giá cuối. Ba vai trò này tách quá trình tìm phương án khỏi phép đo trên dữ liệu chưa dùng để lựa chọn.
+
+  Tỷ lệ chia không quan trọng bằng sự phù hợp với bài toán. Chia ngẫu nhiên có thể sai khi mẫu liên quan theo người, thiết bị hoặc thời gian. Dự báo nhu cầu tuần tới nên học từ giai đoạn trước và đánh giá trên giai đoạn sau; trộn ngày tương lai vào huấn luyện làm phép đo dễ hơn vận hành thật.
+
+  Tự kiểm tra: sau khi xem lỗi tập kiểm tra rồi sửa mô hình, điểm trên tập đó còn độc lập không? Không; cần thừa nhận việc tái sử dụng và có đánh giá mới phù hợp với đơn vị muốn khái quát hóa.
+concept_notes_en: |-
+  Training data fits parameters, validation data supports model selection, and test data supports final evaluation. These roles separate finding a solution from measuring performance on data unused for selection.
+
+  The split ratio matters less than suitability. Random splitting can be inappropriate for related people, devices or time points. Forecasting next week's demand should train on earlier periods and evaluate later periods; mixing future days into training makes the setting easier than real operation.
+
+  Self-check: after inspecting test errors and revising the model, is its score on that set still independent? No; acknowledge reuse and obtain a new evaluation appropriate to the unit of generalization.
 why_it_matters_vi: Làm rõ người dùng, nhãn, cách chia dữ liệu và mốc so sánh trước khi chọn mô hình.
 why_it_matters_en: 'Frame the problem before choosing a model: user, label, split, baseline, and leakage risks.'
 study_steps_vi:
@@ -219,7 +227,11 @@ review_cards:
 ---
 # Chia tập huấn luyện, kiểm định và kiểm tra / Train, validation and test splits
 
-Tập huấn luyện dùng để học tham số, tập kiểm định giúp chọn mô hình, tập kiểm tra dùng cho đánh giá cuối. Cách chia cần tôn trọng thời gian và các nhóm mẫu liên quan.
+Tập huấn luyện dùng để học tham số, tập kiểm định hỗ trợ lựa chọn mô hình và tập kiểm tra dành cho đánh giá cuối. Ba vai trò này tách quá trình tìm phương án khỏi phép đo trên dữ liệu chưa dùng để lựa chọn.
+
+Tỷ lệ chia không quan trọng bằng sự phù hợp với bài toán. Chia ngẫu nhiên có thể sai khi mẫu liên quan theo người, thiết bị hoặc thời gian. Dự báo nhu cầu tuần tới nên học từ giai đoạn trước và đánh giá trên giai đoạn sau; trộn ngày tương lai vào huấn luyện làm phép đo dễ hơn vận hành thật.
+
+Tự kiểm tra: sau khi xem lỗi tập kiểm tra rồi sửa mô hình, điểm trên tập đó còn độc lập không? Không; cần thừa nhận việc tái sử dụng và có đánh giá mới phù hợp với đơn vị muốn khái quát hóa.
 
 ## Thực hành
 

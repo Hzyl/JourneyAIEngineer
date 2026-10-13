@@ -27,10 +27,22 @@ key_terms:
 - gradient
 - optimization
 - probability
-concept_notes_vi: Kỳ vọng mô tả giá trị trung bình theo phân phối; phương sai đo mức phân tán quanh kỳ vọng. Trung
-  bình và phương sai tính từ mẫu là các ước lượng, có thể thay đổi khi lấy mẫu khác.
-concept_notes_en: Kỳ vọng và phương sai is a concept in the probability module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Kỳ vọng là trung bình có trọng số theo xác suất của các giá trị. Phương sai là kỳ vọng của bình phương độ lệch so với kỳ vọng, diễn tả mức phân tán khi các đại lượng này tồn tại.
+
+  Trung bình mẫu ước lượng kỳ vọng từ dữ liệu hữu hạn. Độ lệch chuẩn là căn bậc hai của phương sai và có cùng đơn vị với dữ liệu; phương sai mang đơn vị bình phương.
+
+  Hai dịch vụ có thể cùng thời gian đáp ứng trung bình nhưng một dịch vụ thường xuyên có yêu cầu rất chậm. Khi đó trung bình che giấu khác biệt; cần xem độ phân tán, các phân vị và cả những mẫu bất thường.
+
+  Tự kiểm tra: trung bình của một mẫu có nhất thiết là giá trị xuất hiện trong mẫu không? Không; nó là kết quả tổng hợp, không phải phép chọn một phần tử.
+concept_notes_en: |-
+  Expectation is a probability-weighted average of values. Variance is the expected squared deviation from the expectation and describes dispersion when these quantities exist.
+
+  A sample mean estimates expectation from finite observations. Standard deviation is the square root of variance and has the original units; variance has squared units.
+
+  Two services can share the same average response time while one frequently produces very slow responses. The mean hides this difference, so examine dispersion, quantiles, and unusual observations.
+
+  Self-check: must a sample mean equal an observed value? No; it is an aggregate, not a selection of one element.
 why_it_matters_vi: Dùng xác suất để mô tả bất định và đánh giá mức tin cậy của kết luận từ mẫu.
 why_it_matters_en: Use probability and statistics to quantify uncertainty, sampling, and the reliability of conclusions.
 study_steps_vi:
@@ -211,7 +223,13 @@ review_cards:
 ---
 # Kỳ vọng và phương sai / Expectation and variance
 
-Kỳ vọng mô tả giá trị trung bình theo phân phối; phương sai đo mức phân tán quanh kỳ vọng. Trung bình và phương sai tính từ mẫu là các ước lượng, có thể thay đổi khi lấy mẫu khác.
+Kỳ vọng là trung bình có trọng số theo xác suất của các giá trị. Phương sai là kỳ vọng của bình phương độ lệch so với kỳ vọng, diễn tả mức phân tán khi các đại lượng này tồn tại.
+
+Trung bình mẫu ước lượng kỳ vọng từ dữ liệu hữu hạn. Độ lệch chuẩn là căn bậc hai của phương sai và có cùng đơn vị với dữ liệu; phương sai mang đơn vị bình phương.
+
+Hai dịch vụ có thể cùng thời gian đáp ứng trung bình nhưng một dịch vụ thường xuyên có yêu cầu rất chậm. Khi đó trung bình che giấu khác biệt; cần xem độ phân tán, các phân vị và cả những mẫu bất thường.
+
+Tự kiểm tra: trung bình của một mẫu có nhất thiết là giá trị xuất hiện trong mẫu không? Không; nó là kết quả tổng hợp, không phải phép chọn một phần tử.
 
 ## Thực hành
 

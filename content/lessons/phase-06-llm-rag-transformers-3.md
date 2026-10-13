@@ -26,11 +26,18 @@ key_terms:
 - retrieval
 - evaluation
 - transformers
-concept_notes_vi: Prompt cần nêu nhiệm vụ, dữ liệu và yêu cầu đầu ra rõ. Tách chỉ dẫn khỏi dữ liệu không đáng tin,
-  rồi thử trường hợp thiếu thông tin để kiểm tra cách xử lý.
-concept_notes_en: 'Prompt design belongs to LLM Application Engineering: design the contract between the application
-  and the model. Define instructions, inputs, output schema, timeout, retry, and token limits; parse model output
-  as untrusted data and return actionable errors.'
+concept_notes_vi: |-
+  Prompt cần nêu nhiệm vụ, dữ liệu và yêu cầu đầu ra rõ. Tách chỉ dẫn khỏi dữ liệu không đáng tin, rồi thử trường hợp thiếu thông tin để kiểm tra cách xử lý.
+
+  Zero-shot nêu nhiệm vụ mà không cho ví dụ; few-shot thêm vài mẫu đầu vào và đầu ra. Ví dụ phải đại diện cả ngoại lệ, nếu không mô hình có thể bắt chước mẫu bề mặt thay vì hiểu tiêu chí.
+
+  Ví dụ, yêu cầu phân loại phản hồi thành tích cực, tiêu cực hoặc chưa rõ và chỉ ra cách xử lý câu mỉa mai. Tự kiểm tra: thêm nhiều lời nhấn mạnh có tốt hơn một tiêu chí rõ không? Chưa chắc; thử prompt trên cùng tập câu và chấm theo định nghĩa nhãn, không chỉ đọc một câu đẹp.
+concept_notes_en: |-
+  A prompt should state the task, data and expected output clearly. Separate untrusted data from instructions and test missing-information cases.
+
+  Zero-shot prompting supplies no examples; few-shot prompting adds input/output demonstrations. Include exceptions or the model may copy surface patterns.
+
+  For sentiment classification, define positive, negative and unclear, including how sarcasm is treated. Self-check: is repeated emphasis better than a clear criterion? Not necessarily: compare prompts on the same cases using explicit label definitions rather than one attractive answer.
 why_it_matters_vi: Liên hệ attention với cách cung cấp ngữ cảnh và kiểm tra đầu ra của ứng dụng LLM.
 why_it_matters_en: Move from attention to prompts and structured outputs while validating schemas instead of trusting
   raw text.
@@ -209,6 +216,10 @@ review_cards:
 # Thiết kế prompt / Prompt design
 
 Prompt cần nêu nhiệm vụ, dữ liệu và yêu cầu đầu ra rõ. Tách chỉ dẫn khỏi dữ liệu không đáng tin, rồi thử trường hợp thiếu thông tin để kiểm tra cách xử lý.
+
+Zero-shot nêu nhiệm vụ mà không cho ví dụ; few-shot thêm vài mẫu đầu vào và đầu ra. Ví dụ phải đại diện cả ngoại lệ, nếu không mô hình có thể bắt chước mẫu bề mặt thay vì hiểu tiêu chí.
+
+Ví dụ, yêu cầu phân loại phản hồi thành tích cực, tiêu cực hoặc chưa rõ và chỉ ra cách xử lý câu mỉa mai. Tự kiểm tra: thêm nhiều lời nhấn mạnh có tốt hơn một tiêu chí rõ không? Chưa chắc; thử prompt trên cùng tập câu và chấm theo định nghĩa nhãn, không chỉ đọc một câu đẹp.
 
 ## Thực hành
 

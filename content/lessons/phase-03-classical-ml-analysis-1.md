@@ -26,10 +26,22 @@ key_terms:
 - baseline
 - evaluation
 - analysis
-concept_notes_vi: Khi số mẫu giữa các lớp chênh lệch lớn, accuracy có thể che giấu khả năng nhận diện lớp hiếm.
-  Cân nhắc thước đo, ngưỡng và cách lấy mẫu trong phạm vi tập huấn luyện.
-concept_notes_en: Imbalanced data is a concept in the analysis module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Mất cân bằng lớp nghĩa là các nhãn xuất hiện với tần suất chênh lệch. Mô hình có thể đạt accuracy cao nhờ đoán lớp phổ biến mà gần như bỏ qua lớp hiếm; cần xem ma trận nhầm lẫn và kết quả từng lớp.
+
+  Thay ngưỡng quyết định, đặt trọng số lớp và lấy mẫu lại là các cách khác nhau. Thay ngưỡng đổi quyết định từ điểm số sẵn có; hai cách còn lại tác động quá trình học và không bảo đảm cải thiện mọi thước đo.
+
+  Trong phát hiện lỗi máy, bỏ sót lỗi và báo động nhầm có chi phí khác nhau. Hãy chọn thước đo theo mục tiêu vận hành, chỉ lấy mẫu lại trong phần huấn luyện của mỗi lần chia.
+
+  Tự kiểm tra: cân bằng cả tập kiểm tra có phản ánh môi trường lỗi hiếm không? Không; đánh giá cần giữ phân bố phù hợp môi trường sử dụng.
+concept_notes_en: |-
+  Class imbalance means labels occur at substantially different frequencies. A model can achieve high accuracy by predicting the common class while missing rare cases, so inspect the confusion matrix and per-class results.
+
+  Changing the decision threshold, class weighting, and resampling are different interventions. Threshold changes alter decisions from existing scores; the others affect learning and do not guarantee improvements in every metric.
+
+  In machine fault detection, missed faults and false alarms have different costs. Choose metrics for the operational goal and resample only within each training split.
+
+  Self-check: does balancing the test set represent a rare-fault environment? No; evaluation should preserve a distribution appropriate to deployment.
 why_it_matters_vi: Phân tích lỗi theo nhóm để hiểu giới hạn trước khi lưu và chia sẻ mô hình.
 why_it_matters_en: Move from one aggregate score to error analysis, calibration, a model card, and reloadable artifacts.
 study_steps_vi:
@@ -207,7 +219,13 @@ review_cards:
 ---
 # Dữ liệu mất cân bằng lớp / Imbalanced data
 
-Khi số mẫu giữa các lớp chênh lệch lớn, accuracy có thể che giấu khả năng nhận diện lớp hiếm. Cân nhắc thước đo, ngưỡng và cách lấy mẫu trong phạm vi tập huấn luyện.
+Mất cân bằng lớp nghĩa là các nhãn xuất hiện với tần suất chênh lệch. Mô hình có thể đạt accuracy cao nhờ đoán lớp phổ biến mà gần như bỏ qua lớp hiếm; cần xem ma trận nhầm lẫn và kết quả từng lớp.
+
+Thay ngưỡng quyết định, đặt trọng số lớp và lấy mẫu lại là các cách khác nhau. Thay ngưỡng đổi quyết định từ điểm số sẵn có; hai cách còn lại tác động quá trình học và không bảo đảm cải thiện mọi thước đo.
+
+Trong phát hiện lỗi máy, bỏ sót lỗi và báo động nhầm có chi phí khác nhau. Hãy chọn thước đo theo mục tiêu vận hành, chỉ lấy mẫu lại trong phần huấn luyện của mỗi lần chia.
+
+Tự kiểm tra: cân bằng cả tập kiểm tra có phản ánh môi trường lỗi hiếm không? Không; đánh giá cần giữ phân bố phù hợp môi trường sử dụng.
 
 ## Thực hành
 

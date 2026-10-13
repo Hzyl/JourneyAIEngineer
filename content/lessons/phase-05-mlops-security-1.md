@@ -26,10 +26,22 @@ key_terms:
 - reproducibility
 - deployment
 - security
-concept_notes_vi: Biến môi trường truyền cấu hình cho tiến trình mà không cần sửa mã. Với thông tin nhạy cảm, cần
-  kiểm soát nơi lưu, quyền đọc và nội dung nhật ký.
-concept_notes_en: Environment variables is a concept in the security module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Biến môi trường truyền cấu hình cho tiến trình mà không cần sửa mã. Với thông tin nhạy cảm, cần kiểm soát nơi lưu, quyền đọc và nội dung nhật ký.
+
+  Biến môi trường là kênh truyền cấu hình, không phải kho bí mật có mã hóa mặc định. Tệp .env chỉ là một cách nạp giá trị; đưa tệp này vào Git hoặc in toàn bộ môi trường vẫn làm lộ thông tin.
+
+  Ví dụ, đặt MODEL_PATH riêng cho máy Windows và máy chạy Linux, còn API_KEY lấy từ cơ chế cấp bí mật của môi trường triển khai. Khi đọc TIMEOUT_SECONDS, chuyển sang số và kiểm tra giá trị dương.
+
+  Tự kiểm tra: biến tồn tại nhưng rỗng có đủ hợp lệ không? Không; phải kiểm tra nội dung và kiểu. Báo tên cấu hình thiếu, không đưa giá trị bí mật vào thông báo lỗi.
+concept_notes_en: |-
+  Environment variables pass configuration to processes without source edits. Sensitive settings still need controlled storage, read access and logging.
+
+  An environment variable is a configuration channel, not automatically an encrypted secret vault. A .env file is one loading method; committing it or printing the whole environment can expose secrets.
+
+  Set MODEL_PATH separately for Windows and Linux, and obtain API_KEY through the deployment's secret mechanism. Parse TIMEOUT_SECONDS as a number and require a positive value.
+
+  Self-check: is an existing but empty variable valid? Not necessarily: validate content and type. Report the missing setting's name without including its secret value in errors.
 why_it_matters_vi: Kiểm soát đầu vào, phụ thuộc và nhật ký để giảm rò rỉ bí mật hoặc dữ liệu cá nhân.
 why_it_matters_en: Protect the inference service from secret leaks, oversized input, risky dependencies, and PII
   exposure.
@@ -208,6 +220,12 @@ review_cards:
 # Biến môi trường / Environment variables
 
 Biến môi trường truyền cấu hình cho tiến trình mà không cần sửa mã. Với thông tin nhạy cảm, cần kiểm soát nơi lưu, quyền đọc và nội dung nhật ký.
+
+Biến môi trường là kênh truyền cấu hình, không phải kho bí mật có mã hóa mặc định. Tệp .env chỉ là một cách nạp giá trị; đưa tệp này vào Git hoặc in toàn bộ môi trường vẫn làm lộ thông tin.
+
+Ví dụ, đặt MODEL_PATH riêng cho máy Windows và máy chạy Linux, còn API_KEY lấy từ cơ chế cấp bí mật của môi trường triển khai. Khi đọc TIMEOUT_SECONDS, chuyển sang số và kiểm tra giá trị dương.
+
+Tự kiểm tra: biến tồn tại nhưng rỗng có đủ hợp lệ không? Không; phải kiểm tra nội dung và kiểu. Báo tên cấu hình thiếu, không đưa giá trị bí mật vào thông báo lỗi.
 
 ## Thực hành
 

@@ -27,10 +27,18 @@ key_terms:
 - loss
 - training
 - pytorch-core
-concept_notes_vi: Autograd theo dõi phép toán để tính gradient cho tensor cần đạo hàm. Gradient có thể tích lũy
-  qua nhiều lần lan truyền ngược, nên cần quản lý thời điểm xóa gradient.
-concept_notes_en: Autograd và computational graph is a concept in the pytorch-core module. Identify the inputs,
-  outputs, assumptions, failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Autograd ghi lại các phép toán cần thiết để tính đạo hàm. Trong cách chạy eager thông thường của PyTorch, đồ thị được xây theo những phép toán thực sự diễn ra; gradient cho biết đầu ra nhạy thế nào với một thay đổi nhỏ ở đầu vào hoặc tham số.
+
+  Ví dụ, y=x² tại x=3 có đạo hàm bằng 6. Gọi backward tính gradient, không làm x tự đổi thành giá trị khác. Gradient ở tensor lá có thể cộng dồn; chạy hai lượt tính y và backward mà không xóa gradient sẽ cho x.grad bằng 12.
+
+  Tự kiểm tra: gọi detach rồi dùng kết quả đó có còn truyền gradient về x qua nhánh này không? Không; detach tách kết quả khỏi lịch sử đạo hàm. Chỉ dùng nó khi bạn chủ động muốn ngắt đường truyền gradient, chẳng hạn để lưu một giá trị phục vụ theo dõi.
+concept_notes_en: |-
+  Autograd records operations needed for differentiation. In ordinary PyTorch eager execution, the graph follows operations that actually run; a gradient describes how sensitive an output is to a small input or parameter change.
+
+  For example, y=x² has derivative 6 at x=3. Calling backward computes gradients; it does not automatically change x. Leaf gradients can accumulate: computing y and calling backward twice without clearing gradients gives x.grad equal to 12.
+
+  Self-check: if you call detach and use its result, does that branch still carry gradients back to x? No; detach removes the result from its differentiation history. Use it when you deliberately want to cut the gradient path, such as when saving a value for monitoring.
 why_it_matters_vi: Hiểu kích thước tensor, cách lấy dữ liệu và gradient để tự viết vòng lặp huấn luyện.
 why_it_matters_en: Read tensor shapes, datasets, and autograd well enough to write a small PyTorch training loop.
 study_steps_vi:
@@ -225,7 +233,11 @@ review_cards:
 ---
 # Autograd và đồ thị tính toán / Autograd and computational graphs
 
-Autograd theo dõi phép toán để tính gradient cho tensor cần đạo hàm. Gradient có thể tích lũy qua nhiều lần lan truyền ngược, nên cần quản lý thời điểm xóa gradient.
+Autograd ghi lại các phép toán cần thiết để tính đạo hàm. Trong cách chạy eager thông thường của PyTorch, đồ thị được xây theo những phép toán thực sự diễn ra; gradient cho biết đầu ra nhạy thế nào với một thay đổi nhỏ ở đầu vào hoặc tham số.
+
+Ví dụ, y=x² tại x=3 có đạo hàm bằng 6. Gọi backward tính gradient, không làm x tự đổi thành giá trị khác. Gradient ở tensor lá có thể cộng dồn; chạy hai lượt tính y và backward mà không xóa gradient sẽ cho x.grad bằng 12.
+
+Tự kiểm tra: gọi detach rồi dùng kết quả đó có còn truyền gradient về x qua nhánh này không? Không; detach tách kết quả khỏi lịch sử đạo hàm. Chỉ dùng nó khi bạn chủ động muốn ngắt đường truyền gradient, chẳng hạn để lưu một giá trị phục vụ theo dõi.
 
 ## Thực hành
 

@@ -27,11 +27,22 @@ key_terms:
 - loss
 - training
 - nlp-foundations
-concept_notes_vi: Embedding ánh xạ từ hoặc câu sang vector để biểu diễn quan hệ đã học. Độ gần phụ thuộc mô hình
-  và dữ liệu huấn luyện, không chứng minh hai phát biểu đều đúng.
-concept_notes_en: Word và sentence embedding is one link in a RAG system. Separate parsing, chunking, indexing,
-  retrieval, reranking, and generation so failures are attributable. Chunks need enough context; evaluation should
-  measure retrieval recall, groundedness, and abstention when evidence is missing.
+concept_notes_vi: |-
+  Embedding ánh xạ từ hoặc câu sang vector để biểu diễn quan hệ đã học. Độ gần phụ thuộc mô hình và dữ liệu huấn luyện, không chứng minh hai phát biểu đều đúng.
+
+  Embedding tĩnh gán cùng vector cho một từ; biểu diễn theo ngữ cảnh có thể đổi theo câu. Embedding câu còn cần gom thông tin nhiều token, vì vậy chọn cách biểu diễn phù hợp đơn vị muốn tìm.
+
+  Ví dụ, 'ngân hàng cho vay' và 'bờ sông' liên quan tới hai nghĩa khác nhau của từ bank trong tiếng Anh. Biểu diễn có ngữ cảnh giúp phân biệt, nhưng câu phủ định vẫn có thể gần câu khẳng định về cùng chủ đề.
+
+  Tự kiểm tra: hai câu gần nhau có đồng nghĩa cùng kết luận không? Không; kiểm tra phủ định, con số và chủ thể. Độ gần là tín hiệu truy xuất, không thay thế đọc bằng chứng.
+concept_notes_en: |-
+  Embeddings map words or sentences to vectors representing learned relationships. Closeness depends on the model and training data, and does not establish truth.
+
+  Static word embeddings assign one vector per word; contextual representations can change with the sentence. Sentence embeddings also aggregate multiple tokens, so match representation to the retrieval unit.
+
+  The English word bank can mean a lender or a river edge. Context can distinguish these, yet a negative claim may remain close to its positive counterpart because both discuss the same subject.
+
+  Self-check: do nearby sentences reach the same conclusion? No: inspect negation, quantities and subjects. Similarity helps retrieve evidence, not verify it.
 why_it_matters_vi: Hiểu token, embedding, mô hình ngôn ngữ và giới hạn ngữ cảnh trước khi xây ứng dụng.
 why_it_matters_en: Understand tokens, embeddings, language models, and context windows before building LLM applications.
 study_steps_vi:
@@ -224,6 +235,12 @@ review_cards:
 # Embedding cho từ và câu / Word and sentence embeddings
 
 Embedding ánh xạ từ hoặc câu sang vector để biểu diễn quan hệ đã học. Độ gần phụ thuộc mô hình và dữ liệu huấn luyện, không chứng minh hai phát biểu đều đúng.
+
+Embedding tĩnh gán cùng vector cho một từ; biểu diễn theo ngữ cảnh có thể đổi theo câu. Embedding câu còn cần gom thông tin nhiều token, vì vậy chọn cách biểu diễn phù hợp đơn vị muốn tìm.
+
+Ví dụ, 'ngân hàng cho vay' và 'bờ sông' liên quan tới hai nghĩa khác nhau của từ bank trong tiếng Anh. Biểu diễn có ngữ cảnh giúp phân biệt, nhưng câu phủ định vẫn có thể gần câu khẳng định về cùng chủ đề.
+
+Tự kiểm tra: hai câu gần nhau có đồng nghĩa cùng kết luận không? Không; kiểm tra phủ định, con số và chủ thể. Độ gần là tín hiệu truy xuất, không thay thế đọc bằng chứng.
 
 ## Thực hành
 

@@ -25,11 +25,22 @@ key_terms:
 - observability
 - reproducibility
 - deployment
-concept_notes_vi: Dịch chuyển dữ liệu xảy ra khi phân bố đầu vào khác dữ liệu tham chiếu. Đây là tín hiệu cần điều
-  tra, chưa đủ để kết luận chất lượng dự đoán đã giảm.
-concept_notes_en: Data drift turns an AI demo into a system that can be trusted. Define metrics and an evaluation
-  set first, record prompt/model/version/tokens/latency, and attribute failures to retrieval, generation, data,
-  or infrastructure instead of relying on one score.
+concept_notes_vi: |-
+  Dịch chuyển dữ liệu xảy ra khi phân bố đầu vào khác dữ liệu tham chiếu. Đây là tín hiệu cần điều tra, chưa đủ để kết luận chất lượng dự đoán đã giảm.
+
+  Data drift nói về phân bố đầu vào; concept drift nói về quan hệ đầu vào với nhãn. Một tín hiệu đầu vào thay đổi có thể do mùa vụ, lỗi thu thập hoặc người dùng mới; mỗi nguyên nhân cần cách xử lý khác.
+
+  Ví dụ, cửa hàng có thêm khách sinh viên nên phân bố tuổi đổi. Nếu quan hệ giữa hành vi mua và sản phẩm cần gợi ý vẫn phù hợp, chất lượng chưa chắc giảm. Ngược lại, cột giá đổi đơn vị có thể là lỗi pipeline.
+
+  Tự kiểm tra: có cảnh báo drift thì huấn luyện lại ngay không? Chưa; kiểm tra dữ liệu, nhóm bị ảnh hưởng và nhãn khi có. So với tập tham chiếu phù hợp mùa vụ trước khi kết luận.
+concept_notes_en: |-
+  Data drift occurs when input distributions differ from reference data. It warrants investigation but does not itself establish a drop in predictive quality.
+
+  Data drift concerns inputs; concept drift concerns the input-to-label relationship. Seasonality, collection bugs and new users can all change inputs, with different remedies.
+
+  A store gaining student customers may see a younger age distribution without its recommendation relationships becoming invalid. A price column switching units, however, may indicate a pipeline bug.
+
+  Self-check: should every drift alarm trigger retraining? Not immediately: inspect data quality, affected groups and labels when available. Use a seasonally appropriate reference before drawing conclusions.
 why_it_matters_vi: Đo độ trễ, thay đổi dữ liệu và lỗi để phát hiện vấn đề trong dịch vụ.
 why_it_matters_en: Measure latency, drift, and production errors so you find failures before users report them.
 study_steps_vi:
@@ -208,6 +219,12 @@ review_cards:
 # Dịch chuyển phân bố dữ liệu / Data drift
 
 Dịch chuyển dữ liệu xảy ra khi phân bố đầu vào khác dữ liệu tham chiếu. Đây là tín hiệu cần điều tra, chưa đủ để kết luận chất lượng dự đoán đã giảm.
+
+Data drift nói về phân bố đầu vào; concept drift nói về quan hệ đầu vào với nhãn. Một tín hiệu đầu vào thay đổi có thể do mùa vụ, lỗi thu thập hoặc người dùng mới; mỗi nguyên nhân cần cách xử lý khác.
+
+Ví dụ, cửa hàng có thêm khách sinh viên nên phân bố tuổi đổi. Nếu quan hệ giữa hành vi mua và sản phẩm cần gợi ý vẫn phù hợp, chất lượng chưa chắc giảm. Ngược lại, cột giá đổi đơn vị có thể là lỗi pipeline.
+
+Tự kiểm tra: có cảnh báo drift thì huấn luyện lại ngay không? Chưa; kiểm tra dữ liệu, nhóm bị ảnh hưởng và nhãn khi có. So với tập tham chiếu phù hợp mùa vụ trước khi kết luận.
 
 ## Thực hành
 

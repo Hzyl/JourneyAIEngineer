@@ -26,10 +26,18 @@ key_terms:
 - baseline
 - evaluation
 - preprocessing
-concept_notes_vi: Giá trị phân loại biểu diễn nhóm, không nhất thiết có thứ tự. Cách mã hóa phải phù hợp mô hình
-  và xử lý được nhóm mới khi dự đoán.
-concept_notes_en: Categorical data is a concept in the preprocessing module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Dữ liệu phân loại mô tả nhóm. Một số nhóm có thứ tự như thấp, vừa, cao; nhóm khác như Hà Nội và Đà Nẵng không có quan hệ lớn hơn hoặc nhỏ hơn tự nhiên. Gán số không tự biến nhóm thành đại lượng đo được.
+
+  One-hot tạo cột chỉ báo cho từng nhóm, tránh áp đặt thứ tự tùy ý nhưng tăng số chiều. Mã hóa thứ tự gọn hơn khi thứ tự có ý nghĩa. Cả hai cần quy tắc cho nhóm chưa xuất hiện trong tập train; không học lại bộ mã hóa riêng trên tập test.
+
+  Tự kiểm tra: mã tỉnh A=1, B=2, C=3 có khiến C gấp ba A không? Không, nhưng một mô hình có thể đọc con số như quan hệ định lượng. Chọn mã hóa phù hợp thuật toán và thử trường hợp nhóm mới.
+concept_notes_en: |-
+  Categorical data represents groups. Some categories are ordered, such as low, medium and high; others, such as cities, have no natural greater-than relation. Assigning numbers does not make categories measured quantities.
+
+  One-hot encoding creates category indicators, avoiding arbitrary order but increasing dimensionality. Ordinal encoding is compact when order is meaningful. Both need a rule for unseen categories; do not fit a separate encoder on test data.
+
+  Self-check: if province A=1, B=2 and C=3, is C three times A? No, yet a model may read those numbers quantitatively. Match encoding to the algorithm and test unseen categories.
 why_it_matters_vi: Giữ cách xử lý dữ liệu nhất quán giữa huấn luyện và dự đoán để tránh rò rỉ hoặc sai lệch.
 why_it_matters_en: Build consistent, leakage-safe preprocessing that turns messy data into reproducible features.
 study_steps_vi:
@@ -214,7 +222,11 @@ review_cards:
 ---
 # Mã hóa dữ liệu phân loại / Categorical data
 
-Giá trị phân loại biểu diễn nhóm, không nhất thiết có thứ tự. Cách mã hóa phải phù hợp mô hình và xử lý được nhóm mới khi dự đoán.
+Dữ liệu phân loại mô tả nhóm. Một số nhóm có thứ tự như thấp, vừa, cao; nhóm khác như Hà Nội và Đà Nẵng không có quan hệ lớn hơn hoặc nhỏ hơn tự nhiên. Gán số không tự biến nhóm thành đại lượng đo được.
+
+One-hot tạo cột chỉ báo cho từng nhóm, tránh áp đặt thứ tự tùy ý nhưng tăng số chiều. Mã hóa thứ tự gọn hơn khi thứ tự có ý nghĩa. Cả hai cần quy tắc cho nhóm chưa xuất hiện trong tập train; không học lại bộ mã hóa riêng trên tập test.
+
+Tự kiểm tra: mã tỉnh A=1, B=2, C=3 có khiến C gấp ba A không? Không, nhưng một mô hình có thể đọc con số như quan hệ định lượng. Chọn mã hóa phù hợp thuật toán và thử trường hợp nhóm mới.
 
 ## Thực hành
 

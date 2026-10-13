@@ -26,10 +26,18 @@ key_terms:
 - debugging
 - maintainability
 - career
-concept_notes_vi: Bài thiết kế bắt đầu từ yêu cầu, dữ liệu và ràng buộc. So sánh lựa chọn theo chất lượng, độ trễ,
-  chi phí, độ tin cậy rồi đi sâu vào rủi ro chính.
-concept_notes_en: AI system design is a concept in the career module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Bài thiết kế bắt đầu từ yêu cầu, dữ liệu và ràng buộc. So sánh lựa chọn theo chất lượng, độ trễ, chi phí, độ tin cậy rồi đi sâu vào rủi ro chính.
+
+  Yêu cầu chức năng nói hệ thống làm gì; yêu cầu chất lượng nói mức chậm, chi phí hoặc lỗi chấp nhận được. Kiến trúc chỉ có ý nghĩa khi giải quyết đồng thời hai nhóm này.
+
+  Ví dụ, trợ lý nội bộ cần tìm đúng quy định và không đưa tài liệu phòng ban khác vào câu trả lời. Tự kiểm tra: nên bắt đầu bằng chọn vector database không? Chưa; hỏi phạm vi tài liệu, quyền, tải và tiêu chí trả lời, rồi vẽ đường đi của một yêu cầu cùng một tình huống lỗi.
+concept_notes_en: |-
+  System design starts with requirements, data and constraints. Compare quality, latency, cost and reliability, then investigate the main risk.
+
+  Functional requirements state what the system does; quality requirements bound delay, cost and acceptable failure. Architecture must address both.
+
+  An internal assistant must retrieve policies while respecting department access. Self-check: should choosing a vector database come first? No: establish document scope, permissions, workload and answer criteria, then trace one request and one failure path.
 why_it_matters_vi: Chuyển kinh nghiệm thực hành thành CV và câu chuyện phỏng vấn có căn cứ.
 why_it_matters_en: Turn your skills into a focused CV, interview stories, and structured AI system design answers.
 study_steps_vi:
@@ -207,6 +215,10 @@ review_cards:
 # Thiết kế hệ thống AI trong phỏng vấn / AI system design
 
 Bài thiết kế bắt đầu từ yêu cầu, dữ liệu và ràng buộc. So sánh lựa chọn theo chất lượng, độ trễ, chi phí, độ tin cậy rồi đi sâu vào rủi ro chính.
+
+Yêu cầu chức năng nói hệ thống làm gì; yêu cầu chất lượng nói mức chậm, chi phí hoặc lỗi chấp nhận được. Kiến trúc chỉ có ý nghĩa khi giải quyết đồng thời hai nhóm này.
+
+Ví dụ, trợ lý nội bộ cần tìm đúng quy định và không đưa tài liệu phòng ban khác vào câu trả lời. Tự kiểm tra: nên bắt đầu bằng chọn vector database không? Chưa; hỏi phạm vi tài liệu, quyền, tải và tiêu chí trả lời, rồi vẽ đường đi của một yêu cầu cùng một tình huống lỗi.
 
 ## Thực hành
 

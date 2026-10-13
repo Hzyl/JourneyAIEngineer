@@ -25,11 +25,22 @@ key_terms:
 - reproducibility
 - deployment
 - quality-safety
-concept_notes_vi: Hallucination là nội dung được tạo ra nhưng sai hoặc không được nguồn hỗ trợ trong bối cảnh đánh
-  giá. Tách mức đúng thực tế, mức bám sát nguồn và độ đầy đủ khi nhận xét.
-concept_notes_en: Hallucination turns an AI demo into a system that can be trusted. Define metrics and an evaluation
-  set first, record prompt/model/version/tokens/latency, and attribute failures to retrieval, generation, data,
-  or infrastructure instead of relying on one score.
+concept_notes_vi: |-
+  Hallucination là nội dung được tạo ra nhưng sai hoặc không được nguồn hỗ trợ trong bối cảnh đánh giá. Tách mức đúng thực tế, mức bám sát nguồn và độ đầy đủ khi nhận xét.
+
+  Đúng thực tế và bám sát nguồn là hai tiêu chí khác nhau. Một câu có thể đúng ngoài đời nhưng không được tài liệu cung cấp hỗ trợ; một câu chép đúng tài liệu cũ vẫn có thể sai ở hiện tại.
+
+  Ví dụ, nguồn nói cửa hàng mở thứ Hai, nhưng câu trả lời thêm 'mở cả Chủ nhật' mà không có bằng chứng. Liên kết tới nguồn không làm phần bổ sung ấy đáng tin hơn.
+
+  Tự kiểm tra: chỉ cần câu trả lời nghe tự tin là đủ không? Không; tách từng phát biểu để đối chiếu nguồn, kiểm tra thời điểm và cho phép nói chưa biết khi bằng chứng thiếu.
+concept_notes_en: |-
+  Hallucination refers to generated content that is false or unsupported in the evaluation context. Separate factual accuracy, source support and completeness.
+
+  A true fact can be absent from supplied evidence; faithfully quoting an outdated source can still be wrong today. These dimensions are related but distinct.
+
+  If a source says a store opens on Monday, adding 'also Sunday' without evidence is unsupported. Linking that source does not validate the addition.
+
+  Self-check: does confident wording establish reliability? No: check individual claims, source dates and support, and allow explicit uncertainty when evidence is missing.
 why_it_matters_vi: Đánh giá đồng thời chất lượng, độ trễ, chi phí và khả năng giữ đúng phạm vi yêu cầu.
 why_it_matters_en: Measure quality, latency, cost, and safety together; treat hallucinations and injection as test
   cases.
@@ -217,6 +228,12 @@ review_cards:
 # Thông tin bịa đặt của mô hình / Hallucinations
 
 Hallucination là nội dung được tạo ra nhưng sai hoặc không được nguồn hỗ trợ trong bối cảnh đánh giá. Tách mức đúng thực tế, mức bám sát nguồn và độ đầy đủ khi nhận xét.
+
+Đúng thực tế và bám sát nguồn là hai tiêu chí khác nhau. Một câu có thể đúng ngoài đời nhưng không được tài liệu cung cấp hỗ trợ; một câu chép đúng tài liệu cũ vẫn có thể sai ở hiện tại.
+
+Ví dụ, nguồn nói cửa hàng mở thứ Hai, nhưng câu trả lời thêm 'mở cả Chủ nhật' mà không có bằng chứng. Liên kết tới nguồn không làm phần bổ sung ấy đáng tin hơn.
+
+Tự kiểm tra: chỉ cần câu trả lời nghe tự tin là đủ không? Không; tách từng phát biểu để đối chiếu nguồn, kiểm tra thời điểm và cho phép nói chưa biết khi bằng chứng thiếu.
 
 ## Thực hành
 

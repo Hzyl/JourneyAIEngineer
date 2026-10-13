@@ -26,10 +26,18 @@ key_terms:
 - debugging
 - maintainability
 - career
-concept_notes_vi: Câu trả lời tốt có giả định, ví dụ và cách kiểm chứng. Khi không nhớ chi tiết, nêu phần biết chắc
-  và cách kiểm tra phần còn thiếu.
-concept_notes_en: ML interview questions is a concept in the career module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Câu trả lời tốt có giả định, ví dụ và cách kiểm chứng. Khi không nhớ chi tiết, nêu phần biết chắc và cách kiểm tra phần còn thiếu.
+
+  Học thuộc định nghĩa khác áp dụng vào tình huống. Với mỗi khái niệm, nối điều kiện sử dụng, ví dụ phản chứng và cách đo; nhờ đó câu trả lời vẫn vững khi người phỏng vấn đổi giả định.
+
+  Ví dụ, khi hỏi accuracy có phù hợp không, xét dữ liệu mất cân bằng và chi phí bỏ sót trước khi đề xuất thêm precision, recall. Tự kiểm tra: không nhớ công thức thì nên đoán không? Không; giải thích phần hiểu, dựng ví dụ nhỏ và nói rõ cách kiểm tra phần chưa chắc.
+concept_notes_en: |-
+  Strong interview answers state assumptions, examples and verification methods. When details are uncertain, distinguish known facts from what needs checking.
+
+  Memorizing a definition differs from applying it. Connect each concept to conditions, counterexamples and measurement so the answer survives changed assumptions.
+
+  When asked about accuracy, consider class imbalance and missed-case costs before discussing precision and recall. Self-check: should you guess a forgotten formula? No: explain what you understand, construct a small example and describe how to verify uncertain details.
 why_it_matters_vi: Chuyển kinh nghiệm thực hành thành CV và câu chuyện phỏng vấn có căn cứ.
 why_it_matters_en: Turn your skills into a focused CV, interview stories, and structured AI system design answers.
 study_steps_vi:
@@ -208,6 +216,10 @@ review_cards:
 # Luyện câu hỏi phỏng vấn học máy / ML interview questions
 
 Câu trả lời tốt có giả định, ví dụ và cách kiểm chứng. Khi không nhớ chi tiết, nêu phần biết chắc và cách kiểm tra phần còn thiếu.
+
+Học thuộc định nghĩa khác áp dụng vào tình huống. Với mỗi khái niệm, nối điều kiện sử dụng, ví dụ phản chứng và cách đo; nhờ đó câu trả lời vẫn vững khi người phỏng vấn đổi giả định.
+
+Ví dụ, khi hỏi accuracy có phù hợp không, xét dữ liệu mất cân bằng và chi phí bỏ sót trước khi đề xuất thêm precision, recall. Tự kiểm tra: không nhớ công thức thì nên đoán không? Không; giải thích phần hiểu, dựng ví dụ nhỏ và nói rõ cách kiểm tra phần chưa chắc.
 
 ## Thực hành
 

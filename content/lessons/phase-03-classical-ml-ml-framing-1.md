@@ -26,11 +26,18 @@ key_terms:
 - baseline
 - evaluation
 - ml-framing
-concept_notes_vi: Học có giám sát dùng nhãn mục tiêu để học quan hệ dự đoán. Học không giám sát tìm cấu trúc trong
-  dữ liệu khi không có nhãn tương ứng.
-concept_notes_en: 'Supervised và unsupervised is a classical Machine Learning decision: define the label, baseline,
-  split, and metric before choosing a model. Fit preprocessing on train only; error analysis should identify the
-  groups where the model fails and how to retest the hypothesis.'
+concept_notes_vi: |-
+  Học có giám sát dùng các cặp đầu vào và nhãn để học dự đoán một mục tiêu. Học không giám sát tìm cấu trúc trong dữ liệu khi không có nhãn mục tiêu tương ứng, chẳng hạn các nhóm quan sát gần nhau.
+
+  Không có nhãn không có nghĩa là không cần đánh giá. Phân cụm cần được xem xét theo mục đích sử dụng; các nhóm tìm được không tự trở thành những loại đối tượng có ý nghĩa thực tế. Dự đoán khách rời dịch vụ từ lịch sử và nhãn là có giám sát; gom khách theo hành vi để khám phá nhóm là không giám sát.
+
+  Tự kiểm tra: gọi các cụm là khách tốt và khách xấu có đủ cơ sở không? Không; tên gọi đó cần tiêu chí và bằng chứng ngoài việc thuật toán tạo cụm. Hãy kiểm tra nhóm có ổn định và hữu ích với nhiệm vụ không.
+concept_notes_en: |-
+  Supervised learning uses input-label pairs to predict a target. Unsupervised learning seeks structure without corresponding target labels, such as groups of similar observations.
+
+  The absence of labels does not remove the need for evaluation. Clustering must be assessed against its purpose; discovered groups do not automatically become meaningful real-world categories. Predicting churn from history and churn labels is supervised; grouping customers by behavior for exploration is unsupervised.
+
+  Self-check: is calling clusters good and bad customers justified by clustering alone? No; those names require criteria and evidence beyond the algorithm's grouping. Check whether groups are stable and useful for the task.
 why_it_matters_vi: Làm rõ người dùng, nhãn, cách chia dữ liệu và mốc so sánh trước khi chọn mô hình.
 why_it_matters_en: 'Frame the problem before choosing a model: user, label, split, baseline, and leakage risks.'
 study_steps_vi:
@@ -213,7 +220,11 @@ review_cards:
 ---
 # Học có giám sát và không giám sát / Supervised and unsupervised learning
 
-Học có giám sát dùng nhãn mục tiêu để học quan hệ dự đoán. Học không giám sát tìm cấu trúc trong dữ liệu khi không có nhãn tương ứng.
+Học có giám sát dùng các cặp đầu vào và nhãn để học dự đoán một mục tiêu. Học không giám sát tìm cấu trúc trong dữ liệu khi không có nhãn mục tiêu tương ứng, chẳng hạn các nhóm quan sát gần nhau.
+
+Không có nhãn không có nghĩa là không cần đánh giá. Phân cụm cần được xem xét theo mục đích sử dụng; các nhóm tìm được không tự trở thành những loại đối tượng có ý nghĩa thực tế. Dự đoán khách rời dịch vụ từ lịch sử và nhãn là có giám sát; gom khách theo hành vi để khám phá nhóm là không giám sát.
+
+Tự kiểm tra: gọi các cụm là khách tốt và khách xấu có đủ cơ sở không? Không; tên gọi đó cần tiêu chí và bằng chứng ngoài việc thuật toán tạo cụm. Hãy kiểm tra nhóm có ổn định và hữu ích với nhiệm vụ không.
 
 ## Thực hành
 

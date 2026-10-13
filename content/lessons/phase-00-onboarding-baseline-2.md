@@ -28,10 +28,22 @@ key_terms:
 - debugging
 - maintainability
 - baseline
-concept_notes_vi: Ở bước này, cách lập luận quan trọng không kém đáp số. Viết rõ giả định, từng bước tính và cách
-  kiểm tra để biết mình đang vướng kiến thức toán hay cách diễn đạt bài toán.
-concept_notes_en: Bài kiểm tra toán và logic is a concept in the baseline module. Identify the inputs, outputs,
-  assumptions, failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Bài đánh giá toán và logic kiểm tra cách chuyển một câu hỏi thành giả định, phép tính và kết luận. Viết các bước giúp xác định chỗ vướng ở kiến thức hay ở cách hiểu đề.
+
+  Phân biệt ví dụ phù hợp với chứng minh: vài trường hợp đúng chỉ hỗ trợ phỏng đoán, còn một phản ví dụ đủ bác bỏ phát biểu nói mọi trường hợp đều đúng. Kiểm tra cả miền giá trị được phép.
+
+  Chẳng hạn, câu 'bình phương luôn lớn hơn số ban đầu' đúng với 2 nhưng sai với 0,5: bình phương bằng 0,25. Không được suy rộng từ các số nguyên dương lớn hơn 1.
+
+  Tự kiểm tra: muốn bác bỏ phát biểu trên cần bao nhiêu phản ví dụ? Một, vì phát biểu đã khẳng định với mọi số.
+concept_notes_en: |-
+  The mathematics and logic assessment checks how a question becomes assumptions, calculations and a conclusion. Writing the steps exposes whether the difficulty lies in mathematics or interpreting the question.
+
+  A supporting example is not a proof. Several successes may suggest a conjecture; one counterexample disproves a universal claim. Check the allowed domain too.
+
+  'Squaring always makes a number larger' holds for 2 but fails for 0.5, whose square is 0.25. Larger positive integers do not represent every number.
+
+  Self-check: how many counterexamples disprove that claim? One, because the claim covered every number.
 why_it_matters_vi: Xác định kiến thức đã vững và phần cần ôn để chọn nhịp học phù hợp.
 why_it_matters_en: Measure your current baseline honestly so the learning pace follows evidence rather than confidence.
 study_steps_vi:
@@ -214,7 +226,13 @@ review_cards:
 ---
 # Bài kiểm tra toán và logic / Math and logic baseline assessment
 
-Ở bước này, cách lập luận quan trọng không kém đáp số. Viết rõ giả định, từng bước tính và cách kiểm tra để biết mình đang vướng kiến thức toán hay cách diễn đạt bài toán.
+Bài đánh giá toán và logic kiểm tra cách chuyển một câu hỏi thành giả định, phép tính và kết luận. Viết các bước giúp xác định chỗ vướng ở kiến thức hay ở cách hiểu đề.
+
+Phân biệt ví dụ phù hợp với chứng minh: vài trường hợp đúng chỉ hỗ trợ phỏng đoán, còn một phản ví dụ đủ bác bỏ phát biểu nói mọi trường hợp đều đúng. Kiểm tra cả miền giá trị được phép.
+
+Chẳng hạn, câu 'bình phương luôn lớn hơn số ban đầu' đúng với 2 nhưng sai với 0,5: bình phương bằng 0,25. Không được suy rộng từ các số nguyên dương lớn hơn 1.
+
+Tự kiểm tra: muốn bác bỏ phát biểu trên cần bao nhiêu phản ví dụ? Một, vì phát biểu đã khẳng định với mọi số.
 
 ## Thực hành
 

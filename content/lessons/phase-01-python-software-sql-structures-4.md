@@ -27,10 +27,22 @@ key_terms:
 - debugging
 - maintainability
 - sql-structures
-concept_notes_vi: Big-O mô tả tốc độ tăng chi phí khi kích thước dữ liệu lớn lên. Nó không thay thế phép đo thực
-  tế; hằng số, bộ nhớ và đặc điểm dữ liệu vẫn ảnh hưởng thời gian chạy.
-concept_notes_en: Big-O và trade-off is a concept in the sql-structures module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Big-O mô tả cận tăng trưởng của chi phí theo kích thước đầu vào, chẳng hạn thời gian hoặc bộ nhớ. Khi dùng, nói rõ thao tác và trường hợp đang xét thay vì coi nó là số giây chạy.
+
+  Phân biệt chi phí trung bình với trường hợp xấu nhất. Tra cứu bảng băm thường nhanh trung bình, nhưng không phải cam kết thời gian cố định trong mọi điều kiện. Hằng số và cách tổ chức bộ nhớ vẫn ảnh hưởng thực tế.
+
+  Quét list tìm phần tử có thể xem lần lượt mọi mục; tạo set trước giúp nhiều lần kiểm tra thành viên nhưng tốn công xây dựng và bộ nhớ. Một lần tìm trên dữ liệu nhỏ chưa chắc hưởng lợi.
+
+  Tự kiểm tra: thuật toán O(n) luôn nhanh hơn O(n log n) với mọi n không? Không; Big-O mô tả tăng trưởng, cần đo trên khối lượng thực.
+concept_notes_en: |-
+  Big-O describes an asymptotic upper bound on cost as input size grows, for time or memory. State the operation and case being analyzed; it is not a duration in seconds.
+
+  Average cost differs from worst-case cost. Hash-table lookup is typically fast on average, not a constant-time guarantee under every condition. Constants and memory layout still affect runtime.
+
+  A list scan may examine every item. Building a set helps repeated membership checks but costs construction time and memory; one small lookup may not benefit.
+
+  Self-check: is O(n) always faster than O(n log n) for every n? No; growth rates do not replace measurement on realistic workloads.
 why_it_matters_vi: Hiểu quan hệ dữ liệu và chi phí xử lý để chọn truy vấn, cấu trúc dữ liệu phù hợp.
 why_it_matters_en: 'Develop structured-data thinking: write correct queries, understand relations, and reason about
   algorithmic cost.'
@@ -220,7 +232,13 @@ review_cards:
 ---
 # Độ phức tạp Big-O và lựa chọn thuật toán / Big-O and trade-offs
 
-Big-O mô tả tốc độ tăng chi phí khi kích thước dữ liệu lớn lên. Nó không thay thế phép đo thực tế; hằng số, bộ nhớ và đặc điểm dữ liệu vẫn ảnh hưởng thời gian chạy.
+Big-O mô tả cận tăng trưởng của chi phí theo kích thước đầu vào, chẳng hạn thời gian hoặc bộ nhớ. Khi dùng, nói rõ thao tác và trường hợp đang xét thay vì coi nó là số giây chạy.
+
+Phân biệt chi phí trung bình với trường hợp xấu nhất. Tra cứu bảng băm thường nhanh trung bình, nhưng không phải cam kết thời gian cố định trong mọi điều kiện. Hằng số và cách tổ chức bộ nhớ vẫn ảnh hưởng thực tế.
+
+Quét list tìm phần tử có thể xem lần lượt mọi mục; tạo set trước giúp nhiều lần kiểm tra thành viên nhưng tốn công xây dựng và bộ nhớ. Một lần tìm trên dữ liệu nhỏ chưa chắc hưởng lợi.
+
+Tự kiểm tra: thuật toán O(n) luôn nhanh hơn O(n log n) với mọi n không? Không; Big-O mô tả tăng trưởng, cần đo trên khối lượng thực.
 
 ## Thực hành
 

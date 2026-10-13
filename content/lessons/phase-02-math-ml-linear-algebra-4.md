@@ -28,11 +28,22 @@ key_terms:
 - gradient
 - optimization
 - linear-algebra
-concept_notes_vi: Vector riêng giữ nguyên phương khi áp dụng một phép biến đổi tuyến tính, còn trị riêng cho biết
-  hệ số thay đổi. PCA tìm các phương có phương sai lớn để biểu diễn dữ liệu với ít chiều hơn.
-concept_notes_en: Eigenvalue, eigenvector và PCA is a foundation for numerical representations. Track tensor shapes,
-  units, and axes; verify multiplication on a small example before using a large batch. For similarity, normalize
-  the measure so scale differences do not change the conclusion.
+concept_notes_vi: |-
+  Vector riêng khác không của ma trận A thỏa Av=λv; trị riêng λ cho biết hệ số biến đổi dọc đường đó. Hệ số âm có thể đảo chiều, nên 'giữ phương' không nhất thiết giữ hướng.
+
+  PCA tìm các trục trực giao có phương sai lớn trong dữ liệu đã trừ trung bình, giúp giảm chiều. Khác chọn cột gốc, thành phần chính thường là tổ hợp nhiều đặc trưng. Thang đo ảnh hưởng mạnh tới phương sai và trục được chọn.
+
+  Với ma trận chéo có hai hệ số 2 và 1, vector (1,0) thành (2,0), nên trị riêng tương ứng là 2. Trong dữ liệu, phương sai lớn không tự đồng nghĩa thông tin dự đoán tốt.
+
+  Tự kiểm tra: giữ thành phần giải thích nhiều phương sai nhất có chắc giữ nhãn tốt nhất không? Không; PCA không sử dụng nhãn mục tiêu.
+concept_notes_en: |-
+  A nonzero eigenvector satisfies Av=λv; its eigenvalue scales that direction. A negative eigenvalue reverses orientation, so preserving the line need not preserve the arrow's direction.
+
+  PCA finds orthogonal directions of high variance in centered data. Unlike selecting original columns, principal components usually combine features. Feature scales affect variances and the selected directions.
+
+  A diagonal matrix with entries 2 and 1 maps (1,0) to (2,0), giving eigenvalue 2 for that vector. High variance in data does not automatically mean predictive value.
+
+  Self-check: does retaining maximum variance necessarily best preserve target information? No; PCA does not use target labels.
 why_it_matters_vi: Liên hệ vector, ma trận, khoảng cách và PCA với biểu diễn dữ liệu trong mô hình.
 why_it_matters_en: Connect vectors, matrices, distances, and PCA to tensor shapes and model representations.
 study_steps_vi:
@@ -235,7 +246,13 @@ review_cards:
 ---
 # Trị riêng, vector riêng và PCA / Eigenvalues, eigenvectors and PCA
 
-Vector riêng giữ nguyên phương khi áp dụng một phép biến đổi tuyến tính, còn trị riêng cho biết hệ số thay đổi. PCA tìm các phương có phương sai lớn để biểu diễn dữ liệu với ít chiều hơn.
+Vector riêng khác không của ma trận A thỏa Av=λv; trị riêng λ cho biết hệ số biến đổi dọc đường đó. Hệ số âm có thể đảo chiều, nên 'giữ phương' không nhất thiết giữ hướng.
+
+PCA tìm các trục trực giao có phương sai lớn trong dữ liệu đã trừ trung bình, giúp giảm chiều. Khác chọn cột gốc, thành phần chính thường là tổ hợp nhiều đặc trưng. Thang đo ảnh hưởng mạnh tới phương sai và trục được chọn.
+
+Với ma trận chéo có hai hệ số 2 và 1, vector (1,0) thành (2,0), nên trị riêng tương ứng là 2. Trong dữ liệu, phương sai lớn không tự đồng nghĩa thông tin dự đoán tốt.
+
+Tự kiểm tra: giữ thành phần giải thích nhiều phương sai nhất có chắc giữ nhãn tốt nhất không? Không; PCA không sử dụng nhãn mục tiêu.
 
 ## Thực hành
 

@@ -29,11 +29,22 @@ key_terms:
 - debugging
 - maintainability
 - sql-structures
-concept_notes_vi: 'Mỗi cấu trúc dữ liệu phù hợp với thao tác khác nhau: list giữ thứ tự, dict tra theo khóa, set
-  lưu các phần tử không trùng nhau, còn hàng đợi thường xử lý theo thứ tự vào trước ra trước. Chọn cấu trúc theo
-  thao tác thường dùng.'
-concept_notes_en: List, dict, set và queue is a concept in the sql-structures module. Identify the inputs, outputs,
-  assumptions, failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  List giữ chuỗi phần tử có thứ tự; dict ánh xạ khóa tới giá trị; set biểu diễn phần tử không trùng; hàng đợi thường xử lý vào trước ra trước. Chọn theo thao tác cần thực hiện thường xuyên.
+
+  Phân biệt yêu cầu giữ thứ tự với yêu cầu kiểm tra tồn tại. Set tiện cho kiểm tra thành viên nhưng không thay list khi thứ tự hay số lần lặp là thông tin cần giữ. Khóa dict và phần tử set phải băm được.
+
+  Với hàng đợi tác vụ, deque hỗ trợ lấy ở đầu và thêm cuối mà không phải dời các phần tử như list.pop(0). Với tên người dùng, dict có thể ánh xạ tên tới hồ sơ.
+
+  Tự kiểm tra: chuyển [a, a, b] thành set có giữ số lần xuất hiện không? Không; muốn đếm, dùng ánh xạ phần tử tới số lần.
+concept_notes_en: |-
+  A list stores an ordered sequence, a dict maps keys to values, a set stores distinct elements, and a queue commonly processes first-in-first-out. Choose by frequent operations.
+
+  Preserving order differs from membership testing. Sets are useful for membership but cannot replace lists when order or multiplicity matters. Dict keys and set elements must be hashable.
+
+  For a task queue, deque supports front removal and back insertion without shifting elements as list.pop(0) does. A dict can map usernames to profiles.
+
+  Self-check: does converting [a, a, b] to a set preserve frequencies? No; use a mapping from each element to its count.
 why_it_matters_vi: Hiểu quan hệ dữ liệu và chi phí xử lý để chọn truy vấn, cấu trúc dữ liệu phù hợp.
 why_it_matters_en: 'Develop structured-data thinking: write correct queries, understand relations, and reason about
   algorithmic cost.'
@@ -227,7 +238,13 @@ review_cards:
 ---
 # List, dict, set và hàng đợi / Lists, dicts, sets and queues
 
-Mỗi cấu trúc dữ liệu phù hợp với thao tác khác nhau: list giữ thứ tự, dict tra theo khóa, set lưu các phần tử không trùng nhau, còn hàng đợi thường xử lý theo thứ tự vào trước ra trước. Chọn cấu trúc theo thao tác thường dùng.
+List giữ chuỗi phần tử có thứ tự; dict ánh xạ khóa tới giá trị; set biểu diễn phần tử không trùng; hàng đợi thường xử lý vào trước ra trước. Chọn theo thao tác cần thực hiện thường xuyên.
+
+Phân biệt yêu cầu giữ thứ tự với yêu cầu kiểm tra tồn tại. Set tiện cho kiểm tra thành viên nhưng không thay list khi thứ tự hay số lần lặp là thông tin cần giữ. Khóa dict và phần tử set phải băm được.
+
+Với hàng đợi tác vụ, deque hỗ trợ lấy ở đầu và thêm cuối mà không phải dời các phần tử như list.pop(0). Với tên người dùng, dict có thể ánh xạ tên tới hồ sơ.
+
+Tự kiểm tra: chuyển [a, a, b] thành set có giữ số lần xuất hiện không? Không; muốn đếm, dùng ánh xạ phần tử tới số lần.
 
 ## Thực hành
 

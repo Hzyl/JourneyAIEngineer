@@ -27,11 +27,18 @@ key_terms:
 - reproducibility
 - deployment
 - genai-observability
-concept_notes_vi: Đếm token cho biết mức sử dụng, còn thời gian từng bước giúp tìm phần chậm. Phân biệt thời gian
-  tới phần trả lời đầu tiên với thời gian hoàn tất.
-concept_notes_en: 'Token usage và latency belongs to LLM Application Engineering: design the contract between the
-  application and the model. Define instructions, inputs, output schema, timeout, retry, and token limits; parse
-  model output as untrusted data and return actionable errors.'
+concept_notes_vi: |-
+  Đếm token cho biết mức sử dụng, còn thời gian từng bước giúp tìm phần chậm. Phân biệt thời gian tới phần trả lời đầu tiên với thời gian hoàn tất.
+
+  Token là đơn vị tokenizer xử lý, không đồng nhất với từ hay ký tự. Độ trễ đầu tiên phản ánh lúc người dùng thấy phản hồi; độ trễ toàn bộ phản ánh lúc công việc thật sự kết thúc.
+
+  Ví dụ, hai câu trả lời cùng số từ có thể dùng số token khác nhau do ngôn ngữ và cách mã hóa. Tự kiểm tra: giảm số token đầu vào có chắc giảm thời gian toàn hệ thống tương ứng không? Không; còn thời gian hàng đợi, truy xuất và tốc độ sinh. Đo từng bước cùng độ dài đầu vào, đầu ra trên cùng loại yêu cầu.
+concept_notes_en: |-
+  Token counts measure usage, while stage timing locates delays. Distinguish time to first output from time to completion.
+
+  A token is a tokenizer unit, not necessarily a word or character. First-output latency describes visible responsiveness; total latency describes when work finishes.
+
+  Equal word counts may produce different token counts across languages and encodings. Self-check: does reducing input tokens guarantee an equivalent reduction in total latency? No: queueing, retrieval and generation also contribute. Measure stages with input and output lengths on comparable requests.
 why_it_matters_vi: Thu thập dữ liệu đủ để phân biệt lỗi mô hình, truy xuất, nhà cung cấp và hạ tầng.
 why_it_matters_en: Without telemetry you cannot tell whether a failure is in the model, retrieval, provider, or
   infrastructure.
@@ -221,6 +228,10 @@ review_cards:
 # Lượng token và độ trễ / Token usage and latency
 
 Đếm token cho biết mức sử dụng, còn thời gian từng bước giúp tìm phần chậm. Phân biệt thời gian tới phần trả lời đầu tiên với thời gian hoàn tất.
+
+Token là đơn vị tokenizer xử lý, không đồng nhất với từ hay ký tự. Độ trễ đầu tiên phản ánh lúc người dùng thấy phản hồi; độ trễ toàn bộ phản ánh lúc công việc thật sự kết thúc.
+
+Ví dụ, hai câu trả lời cùng số từ có thể dùng số token khác nhau do ngôn ngữ và cách mã hóa. Tự kiểm tra: giảm số token đầu vào có chắc giảm thời gian toàn hệ thống tương ứng không? Không; còn thời gian hàng đợi, truy xuất và tốc độ sinh. Đo từng bước cùng độ dài đầu vào, đầu ra trên cùng loại yêu cầu.
 
 ## Thực hành
 

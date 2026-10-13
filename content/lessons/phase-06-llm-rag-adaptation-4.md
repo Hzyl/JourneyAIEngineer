@@ -29,11 +29,22 @@ key_terms:
 - embedding
 - retrieval
 - evaluation
-concept_notes_vi: Agent dùng công cụ trong vòng lặp quan sát, quyết định, thực hiện. Giới hạn bước, thời gian, chi
-  phí và quyền giúp dừng có kiểm soát khi đạt mục tiêu hoặc gặp lỗi.
-concept_notes_en: Tool-using agent có điều kiện dừng extends a model with controlled actions. Tool schemas must
-  validate inputs, limit permissions, and define timeout and retry; an agent loop needs stopping conditions, step
-  logs, and human approval for side effects.
+concept_notes_vi: |-
+  Agent dùng công cụ trong vòng lặp quan sát, quyết định, thực hiện. Giới hạn bước, thời gian, chi phí và quyền giúp dừng có kiểm soát khi đạt mục tiêu hoặc gặp lỗi.
+
+  Một workflow có các bước được định trước; agent lựa chọn bước tiếp theo theo quan sát. Quyền tự chọn không đồng nghĩa quyền thực thi mọi công cụ: ứng dụng phải xác nhận tham số và phạm vi.
+
+  Ví dụ, agent tìm tài liệu, đọc nguồn rồi trả lời. Nếu truy xuất lặp lại cùng kết quả không đủ, nó nên dừng và nói thiếu bằng chứng, không tiếp tục gọi công cụ đến hết ngân sách.
+
+  Tự kiểm tra: mô hình viết 'đã lưu tệp' có đủ chứng minh nhiệm vụ xong không? Không; cần kết quả công cụ và kiểm tra tệp. Điều kiện dừng phải dựa vào trạng thái quan sát được hoặc giới hạn cưỡng chế.
+concept_notes_en: |-
+  An agent uses tools in an observe–decide–act loop. Step, time, cost and permission limits support controlled stopping on completion or failure.
+
+  A workflow has predefined steps; an agent chooses subsequent actions from observations. Choosing an action does not grant permission: the application validates arguments and scope.
+
+  An agent may search documents, inspect evidence and answer. If repeated searches return the same insufficient evidence, it should stop and report the gap instead of consuming the whole budget.
+
+  Self-check: does saying 'file saved' prove completion? No: inspect the tool result and file. Stop conditions need observable state or enforced limits.
 why_it_matters_vi: Chọn prompt, RAG, tinh chỉnh hoặc lượng tử hóa theo vấn đề cần giải quyết; giới hạn agent bằng
   điều kiện dừng.
 why_it_matters_en: Know when RAG is enough, when fine-tuning/LoRA/quantization is justified, and why agents need
@@ -221,6 +232,12 @@ review_cards:
 # Agent dùng công cụ và điều kiện dừng / Tool-using agents with stop conditions
 
 Agent dùng công cụ trong vòng lặp quan sát, quyết định, thực hiện. Giới hạn bước, thời gian, chi phí và quyền giúp dừng có kiểm soát khi đạt mục tiêu hoặc gặp lỗi.
+
+Một workflow có các bước được định trước; agent lựa chọn bước tiếp theo theo quan sát. Quyền tự chọn không đồng nghĩa quyền thực thi mọi công cụ: ứng dụng phải xác nhận tham số và phạm vi.
+
+Ví dụ, agent tìm tài liệu, đọc nguồn rồi trả lời. Nếu truy xuất lặp lại cùng kết quả không đủ, nó nên dừng và nói thiếu bằng chứng, không tiếp tục gọi công cụ đến hết ngân sách.
+
+Tự kiểm tra: mô hình viết 'đã lưu tệp' có đủ chứng minh nhiệm vụ xong không? Không; cần kết quả công cụ và kiểm tra tệp. Điều kiện dừng phải dựa vào trạng thái quan sát được hoặc giới hạn cưỡng chế.
 
 ## Thực hành
 

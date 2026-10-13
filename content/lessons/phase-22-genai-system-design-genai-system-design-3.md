@@ -29,11 +29,18 @@ key_terms:
 - reproducibility
 - deployment
 - genai-system-design
-concept_notes_vi: Lựa chọn mô hình cần xét chất lượng cùng yêu cầu dữ liệu, chi phí và độ trễ. Phương án rẻ hơn
-  chỉ phù hợp khi vẫn đáp ứng tiêu chí tối thiểu đã thống nhất.
-concept_notes_en: Security, cost optimization và model selection turns an AI demo into a system that can be trusted.
-  Define metrics and an evaluation set first, record prompt/model/version/tokens/latency, and attribute failures
-  to retrieval, generation, data, or infrastructure instead of relying on one score.
+concept_notes_vi: |-
+  Lựa chọn mô hình cần xét chất lượng cùng yêu cầu dữ liệu, chi phí và độ trễ. Phương án rẻ hơn chỉ phù hợp khi vẫn đáp ứng tiêu chí tối thiểu đã thống nhất.
+
+  Bảo mật là ràng buộc thiết kế, không chỉ một điểm để bù bằng giá rẻ hoặc tốc độ. Chọn mô hình cần biết dữ liệu nào được gửi đi và ai có thể đọc kết quả.
+
+  Ví dụ, bộ định tuyến dùng mô hình nhỏ cho yêu cầu đơn giản và chuyển ca khó sang mô hình khác, nhưng cả hai phải giữ cùng quyền dữ liệu. Tự kiểm tra: giá mỗi token thấp nhất có chắc tối ưu sản phẩm không? Không; tính cả lượt thử lại, hạ tầng và công sửa lỗi, rồi so chi phí trên nhiệm vụ đạt chuẩn.
+concept_notes_en: |-
+  Model selection must weigh quality alongside data requirements, cost and latency. A cheaper option is suitable only when it meets agreed minimum criteria.
+
+  Security is a design constraint, not a score to trade away for low prices or speed. Know which data may leave the system and who can read the result.
+
+  For example, a router may use a smaller model for simple requests and another for difficult cases, while preserving data permissions on both paths. Self-check: does the lowest token price optimize the product? No; include retries, infrastructure and correction effort, then compare cost per successfully completed task.
 why_it_matters_vi: Giải thích lựa chọn kiến trúc bằng nhu cầu người dùng, độ tin cậy, bảo mật và chi phí.
 why_it_matters_en: A senior AI Engineer explains system decisions through user value, reliability, security, and
   cost.
@@ -232,6 +239,10 @@ review_cards:
 # Bảo mật, chi phí và lựa chọn mô hình / Security, cost optimization, and model selection
 
 Lựa chọn mô hình cần xét chất lượng cùng yêu cầu dữ liệu, chi phí và độ trễ. Phương án rẻ hơn chỉ phù hợp khi vẫn đáp ứng tiêu chí tối thiểu đã thống nhất.
+
+Bảo mật là ràng buộc thiết kế, không chỉ một điểm để bù bằng giá rẻ hoặc tốc độ. Chọn mô hình cần biết dữ liệu nào được gửi đi và ai có thể đọc kết quả.
+
+Ví dụ, bộ định tuyến dùng mô hình nhỏ cho yêu cầu đơn giản và chuyển ca khó sang mô hình khác, nhưng cả hai phải giữ cùng quyền dữ liệu. Tự kiểm tra: giá mỗi token thấp nhất có chắc tối ưu sản phẩm không? Không; tính cả lượt thử lại, hạ tầng và công sửa lỗi, rồi so chi phí trên nhiệm vụ đạt chuẩn.
 
 ## Thực hành
 

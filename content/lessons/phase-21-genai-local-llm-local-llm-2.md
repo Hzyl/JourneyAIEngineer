@@ -27,11 +27,18 @@ key_terms:
 - retrieval
 - evaluation
 - local-llm
-concept_notes_vi: Thông lượng đo lượng công việc hoàn tất theo thời gian. Khi đánh giá hệ phục vụ, cần ghi số yêu
-  cầu đồng thời, độ dài chuỗi và độ trễ để biết thông lượng tăng có làm chờ lâu hơn.
-concept_notes_en: vLLM và serving throughput is model optimization after establishing an evaluation baseline. Prepare
-  clean data, split train/eval, track memory and quality regressions, and choose fine-tuning, quantization, or local
-  serving based on quality, latency, cost, and privacy.
+concept_notes_vi: |-
+  Thông lượng đo lượng công việc hoàn tất theo thời gian. Khi đánh giá hệ phục vụ, cần ghi số yêu cầu đồng thời, độ dài chuỗi và độ trễ để biết thông lượng tăng có làm chờ lâu hơn.
+
+  Thông lượng toàn hệ thống khác tốc độ của một người dùng. Gom nhiều yêu cầu có thể sử dụng thiết bị hiệu quả hơn, nhưng thời gian chờ và bộ nhớ dành cho các chuỗi cùng chạy cũng tăng theo tải và cách lập lịch.
+
+  Ví dụ, so cấu hình phục vụ bằng cùng phân bố độ dài prompt, đầu ra và số người dùng đồng thời. Tự kiểm tra: báo token mỗi giây cao nhất đã đủ chọn hệ phục vụ chưa? Không; phải nêu đó là tổng hay từng yêu cầu, đo thời gian tới token đầu và độ trễ nhóm chậm, đồng thời kiểm tra lỗi và chất lượng đầu ra.
+concept_notes_en: |-
+  Throughput measures completed work over time. Serving comparisons need concurrency, sequence lengths and latency to reveal waiting costs.
+
+  System throughput differs from one user's generation speed. Batching may use hardware more efficiently, while waiting and memory depend on load and scheduling.
+
+  Compare serving configurations using the same prompt-length, output-length and concurrency distributions. Self-check: is the highest tokens-per-second figure sufficient to choose a server? No: specify aggregate versus per-request measurement, check time to first token and slow-tail latency, and examine errors and output quality.
 why_it_matters_vi: Đo tài nguyên và chất lượng để chọn mô hình cục bộ phù hợp phần cứng, nhu cầu riêng tư.
 why_it_matters_en: Local LLMs expose the trade-offs among memory, throughput, model size, quality, and privacy.
 study_steps_vi:
@@ -214,6 +221,10 @@ review_cards:
 # vLLM và thông lượng phục vụ / vLLM and serving throughput
 
 Thông lượng đo lượng công việc hoàn tất theo thời gian. Khi đánh giá hệ phục vụ, cần ghi số yêu cầu đồng thời, độ dài chuỗi và độ trễ để biết thông lượng tăng có làm chờ lâu hơn.
+
+Thông lượng toàn hệ thống khác tốc độ của một người dùng. Gom nhiều yêu cầu có thể sử dụng thiết bị hiệu quả hơn, nhưng thời gian chờ và bộ nhớ dành cho các chuỗi cùng chạy cũng tăng theo tải và cách lập lịch.
+
+Ví dụ, so cấu hình phục vụ bằng cùng phân bố độ dài prompt, đầu ra và số người dùng đồng thời. Tự kiểm tra: báo token mỗi giây cao nhất đã đủ chọn hệ phục vụ chưa? Không; phải nêu đó là tổng hay từng yêu cầu, đo thời gian tới token đầu và độ trễ nhóm chậm, đồng thời kiểm tra lỗi và chất lượng đầu ra.
 
 ## Thực hành
 

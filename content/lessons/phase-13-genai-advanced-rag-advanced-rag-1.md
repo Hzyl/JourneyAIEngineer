@@ -28,11 +28,18 @@ key_terms:
 - retrieval
 - evaluation
 - advanced-rag
-concept_notes_vi: BM25 phù hợp với tín hiệu từ khóa; tìm kiếm vector bổ sung quan hệ ngữ nghĩa. Cách kết hợp cần
-  được đánh giá vì điểm số hai hệ thống không nhất thiết cùng thang đo.
-concept_notes_en: 'Hybrid search: BM25 và vector search is a foundation for numerical representations. Track tensor
-  shapes, units, and axes; verify multiplication on a small example before using a large batch. For similarity,
-  normalize the measure so scale differences do not change the conclusion.'
+concept_notes_vi: |-
+  BM25 phù hợp với tín hiệu từ khóa; tìm kiếm vector bổ sung quan hệ ngữ nghĩa. Cách kết hợp cần được đánh giá vì điểm số hai hệ thống không nhất thiết cùng thang đo.
+
+  Tìm kiếm từ khóa dựa vào sự xuất hiện từ; tìm kiếm ngữ nghĩa dùng biểu diễn học được để tìm cách diễn đạt gần nhau. Kết hợp có thể dùng thứ hạng thay vì cộng trực tiếp điểm không cùng thang đo.
+
+  Ví dụ, mã sản phẩm cần khớp chính xác, còn câu hỏi 'không dùng được' có thể liên quan tài liệu 'khắc phục sự cố'. Tự kiểm tra: hybrid search có luôn thắng từng bộ tìm kiếm riêng không? Không; dữ liệu và cách kết hợp quyết định kết quả. So trên cùng câu hỏi, gồm mã hiếm, từ đồng nghĩa và truy vấn không có đáp án.
+concept_notes_en: |-
+  BM25 uses lexical signals, while vector search adds learned semantic similarity. Their scores may use different scales, so fusion requires evaluation.
+
+  Keyword search relies on term occurrence; semantic search can match related phrasing. Combining ranks is one option instead of directly adding incompatible scores.
+
+  A product code needs exact matching, while 'does not work' may relate to troubleshooting documents. Self-check: does hybrid search always beat each component? No: results depend on data and fusion. Compare on the same questions, including rare codes, paraphrases and unanswerable queries.
 why_it_matters_vi: Đánh giá cải tiến truy xuất bằng số liệu để biết thành phần nào đáng giữ.
 why_it_matters_en: Advanced RAG should improve retrieval with measurements rather than simply adding components.
 study_steps_vi:
@@ -230,6 +237,10 @@ review_cards:
 # Tìm kiếm kết hợp BM25 và vector / Hybrid search: BM25 and vector search
 
 BM25 phù hợp với tín hiệu từ khóa; tìm kiếm vector bổ sung quan hệ ngữ nghĩa. Cách kết hợp cần được đánh giá vì điểm số hai hệ thống không nhất thiết cùng thang đo.
+
+Tìm kiếm từ khóa dựa vào sự xuất hiện từ; tìm kiếm ngữ nghĩa dùng biểu diễn học được để tìm cách diễn đạt gần nhau. Kết hợp có thể dùng thứ hạng thay vì cộng trực tiếp điểm không cùng thang đo.
+
+Ví dụ, mã sản phẩm cần khớp chính xác, còn câu hỏi 'không dùng được' có thể liên quan tài liệu 'khắc phục sự cố'. Tự kiểm tra: hybrid search có luôn thắng từng bộ tìm kiếm riêng không? Không; dữ liệu và cách kết hợp quyết định kết quả. So trên cùng câu hỏi, gồm mã hiếm, từ đồng nghĩa và truy vấn không có đáp án.
 
 ## Thực hành
 

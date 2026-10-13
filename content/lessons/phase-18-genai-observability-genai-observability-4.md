@@ -27,10 +27,18 @@ key_terms:
 - reproducibility
 - deployment
 - genai-observability
-concept_notes_vi: Bảng theo dõi giúp quan sát xu hướng; cảnh báo cần gắn với ảnh hưởng và việc có thể làm. Khi có
-  sự cố, ghi thời điểm, phạm vi và các bước khôi phục để tránh đoán nguyên nhân.
-concept_notes_en: Dashboard, alert và incident is a concept in the genai-observability module. Identify the inputs,
-  outputs, assumptions, failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Bảng theo dõi giúp quan sát xu hướng; cảnh báo cần gắn với ảnh hưởng và việc có thể làm. Khi có sự cố, ghi thời điểm, phạm vi và các bước khôi phục để tránh đoán nguyên nhân.
+
+  Dashboard giúp điều tra; alert chủ động gọi sự chú ý tới điều cần xử lý. Ngưỡng chỉ dựa vào hoạt động nội bộ có thể gây báo động nhiều mà không phản ánh người dùng đang gặp lỗi.
+
+  Ví dụ, tỉ lệ câu trả lời thất bại tăng sau phát hành cần liên kết tới phiên bản và nhóm yêu cầu bị ảnh hưởng, cùng người chịu trách nhiệm xử lý. Tự kiểm tra: thấy độ trễ tăng cùng thời điểm đổi mô hình đã chứng minh mô hình gây lỗi chưa? Chưa; kiểm tra tải, hàng đợi, mạng và dấu vết từng bước trước khi kết luận nguyên nhân.
+concept_notes_en: |-
+  Dashboards reveal trends; alerts should connect impact to an actionable response. During incidents, record timing, scope and recovery steps.
+
+  A dashboard supports investigation; an alert proactively draws attention to work that needs handling. Internal activity thresholds can be noisy without reflecting user harm.
+
+  If answer failures rise after a release, connect them to versions, affected request groups and a response owner. Self-check: does latency rising when a model changes prove the model caused it? No: inspect load, queues, network and stage traces before concluding causation.
 why_it_matters_vi: Thu thập dữ liệu đủ để phân biệt lỗi mô hình, truy xuất, nhà cung cấp và hạ tầng.
 why_it_matters_en: Without telemetry you cannot tell whether a failure is in the model, retrieval, provider, or
   infrastructure.
@@ -223,6 +231,10 @@ review_cards:
 # Bảng theo dõi, cảnh báo và sự cố / Dashboards, alerts, and incidents
 
 Bảng theo dõi giúp quan sát xu hướng; cảnh báo cần gắn với ảnh hưởng và việc có thể làm. Khi có sự cố, ghi thời điểm, phạm vi và các bước khôi phục để tránh đoán nguyên nhân.
+
+Dashboard giúp điều tra; alert chủ động gọi sự chú ý tới điều cần xử lý. Ngưỡng chỉ dựa vào hoạt động nội bộ có thể gây báo động nhiều mà không phản ánh người dùng đang gặp lỗi.
+
+Ví dụ, tỉ lệ câu trả lời thất bại tăng sau phát hành cần liên kết tới phiên bản và nhóm yêu cầu bị ảnh hưởng, cùng người chịu trách nhiệm xử lý. Tự kiểm tra: thấy độ trễ tăng cùng thời điểm đổi mô hình đã chứng minh mô hình gây lỗi chưa? Chưa; kiểm tra tải, hàng đợi, mạng và dấu vết từng bước trước khi kết luận nguyên nhân.
 
 ## Thực hành
 

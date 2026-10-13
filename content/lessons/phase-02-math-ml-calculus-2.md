@@ -26,11 +26,22 @@ key_terms:
 - gradient
 - optimization
 - calculus
-concept_notes_vi: Đạo hàm riêng đo ảnh hưởng của một biến khi giữ các biến còn lại cố định. Với hàm mất mát nhiều
-  tham số, mỗi đạo hàm riêng cho biết độ nhạy theo một tham số.
-concept_notes_en: Partial derivative describes how an output changes when a parameter changes. Use finite differences
-  on a small input to check a gradient, then trace the chain rule through each transformation; gradient sign and
-  scale determine whether updates are stable.
+concept_notes_vi: |-
+  Đạo hàm riêng đo độ nhạy theo một biến trong hàm nhiều biến, giữ các biến còn lại cố định. Mỗi tham số của hàm mất mát có thể có một đạo hàm riêng khác nhau.
+
+  Phân biệt đạo hàm riêng với biến đổi tổng khi nhiều đầu vào cùng thay đổi. Nếu hai biến liên hệ với nhau, chỉ dùng một đạo hàm riêng có thể bỏ mất đường ảnh hưởng qua biến kia.
+
+  Với f(x,y)=x²+3y tại (2,1), đạo hàm riêng theo x là 4, theo y là 3. Tăng riêng x một chút khác với tăng cả x và y; cần nêu rõ phép can thiệp đang xét.
+
+  Tự kiểm tra: đạo hàm riêng theo x bằng 0 có chứng minh hàm đạt cực tiểu không? Không; còn các hướng khác và dạng cong quanh điểm cần xét.
+concept_notes_en: |-
+  A partial derivative measures sensitivity to one variable while holding the others fixed. Different parameters of a loss can have different partial derivatives.
+
+  A partial derivative differs from total change when several inputs vary together. If variables depend on one another, using only one partial derivative can omit an indirect path.
+
+  For f(x,y)=x²+3y at (2,1), the x partial is 4 and the y partial is 3. Increasing only x differs from increasing both variables; state which change is considered.
+
+  Self-check: does a zero x partial establish a minimum? No; other directions and local curvature still matter.
 why_it_matters_vi: Hiểu đạo hàm và quy tắc dây chuyền để giải thích cách cập nhật tham số.
 why_it_matters_en: Understand derivatives, gradients, and the chain rule as parameter-update mechanisms rather than
   isolated formulas.
@@ -210,7 +221,13 @@ review_cards:
 ---
 # Đạo hàm riêng / Partial derivatives
 
-Đạo hàm riêng đo ảnh hưởng của một biến khi giữ các biến còn lại cố định. Với hàm mất mát nhiều tham số, mỗi đạo hàm riêng cho biết độ nhạy theo một tham số.
+Đạo hàm riêng đo độ nhạy theo một biến trong hàm nhiều biến, giữ các biến còn lại cố định. Mỗi tham số của hàm mất mát có thể có một đạo hàm riêng khác nhau.
+
+Phân biệt đạo hàm riêng với biến đổi tổng khi nhiều đầu vào cùng thay đổi. Nếu hai biến liên hệ với nhau, chỉ dùng một đạo hàm riêng có thể bỏ mất đường ảnh hưởng qua biến kia.
+
+Với f(x,y)=x²+3y tại (2,1), đạo hàm riêng theo x là 4, theo y là 3. Tăng riêng x một chút khác với tăng cả x và y; cần nêu rõ phép can thiệp đang xét.
+
+Tự kiểm tra: đạo hàm riêng theo x bằng 0 có chứng minh hàm đạt cực tiểu không? Không; còn các hướng khác và dạng cong quanh điểm cần xét.
 
 ## Thực hành
 

@@ -25,10 +25,18 @@ key_terms:
 - feature
 - baseline
 - evaluation
-concept_notes_vi: Siêu tham số quy định cấu trúc hoặc cách học của mô hình. Dùng dữ liệu kiểm định để lựa chọn,
-  ghi ngân sách tìm kiếm và giữ tập kiểm tra ngoài quá trình điều chỉnh.
-concept_notes_en: Hyperparameter tuning is a concept in the evaluation module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Siêu tham số quy định cấu trúc hoặc cách học của mô hình, chẳng hạn độ sâu cây và tốc độ học. Chúng khác tham số như trọng số, vốn được ước lượng trong quá trình huấn luyện.
+
+  Dữ liệu kiểm định giúp chọn siêu tham số; tập kiểm tra dành cho đánh giá cuối. Thử nhiều cấu hình rồi chỉ báo cấu hình tốt nhất có thể làm kết quả kiểm định quá lạc quan, nên cần đánh giá độc lập. Ghi cả ngân sách tìm kiếm và thời gian chạy để cân nhắc mức cải thiện.
+
+  Tự kiểm tra: được dùng điểm tập kiểm tra để chọn thêm cấu hình không? Không; khi đó tập này đã tham gia lựa chọn và không còn là đánh giá cuối độc lập. Giữ cùng cách chia và thước đo khi so các cấu hình.
+concept_notes_en: |-
+  Hyperparameters control a model's structure or learning process, such as tree depth and learning rate. They differ from parameters such as weights, which are estimated during training.
+
+  Validation data supports hyperparameter selection; the test set is for final evaluation. Trying many configurations and reporting only the best can make validation results optimistic, so independent evaluation is needed. Record search budget and runtime to judge whether an improvement is worthwhile.
+
+  Self-check: can test scores guide additional configuration choices? No; that makes the test set part of selection rather than independent final evaluation. Keep splits and metrics consistent when comparing configurations.
 why_it_matters_vi: Chọn thước đo theo chi phí sai lầm và giữ tập kiểm tra ngoài quá trình lựa chọn mô hình.
 why_it_matters_en: Choose metrics by error cost, use cross-validation, and tune without peeking at the test set.
 study_steps_vi:
@@ -205,7 +213,11 @@ review_cards:
 ---
 # Điều chỉnh siêu tham số / Hyperparameter tuning
 
-Siêu tham số quy định cấu trúc hoặc cách học của mô hình. Dùng dữ liệu kiểm định để lựa chọn, ghi ngân sách tìm kiếm và giữ tập kiểm tra ngoài quá trình điều chỉnh.
+Siêu tham số quy định cấu trúc hoặc cách học của mô hình, chẳng hạn độ sâu cây và tốc độ học. Chúng khác tham số như trọng số, vốn được ước lượng trong quá trình huấn luyện.
+
+Dữ liệu kiểm định giúp chọn siêu tham số; tập kiểm tra dành cho đánh giá cuối. Thử nhiều cấu hình rồi chỉ báo cấu hình tốt nhất có thể làm kết quả kiểm định quá lạc quan, nên cần đánh giá độc lập. Ghi cả ngân sách tìm kiếm và thời gian chạy để cân nhắc mức cải thiện.
+
+Tự kiểm tra: được dùng điểm tập kiểm tra để chọn thêm cấu hình không? Không; khi đó tập này đã tham gia lựa chọn và không còn là đánh giá cuối độc lập. Giữ cùng cách chia và thước đo khi so các cấu hình.
 
 ## Thực hành
 

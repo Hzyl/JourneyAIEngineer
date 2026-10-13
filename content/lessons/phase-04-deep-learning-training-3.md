@@ -26,11 +26,18 @@ key_terms:
 - tensor
 - loss
 - training
-concept_notes_vi: Bộ tối ưu dùng gradient để cập nhật tham số; tốc độ học điều khiển độ lớn bước cập nhật. Theo
-  dõi mất mát và gradient để nhận biết cập nhật quá mạnh hoặc quá chậm.
-concept_notes_en: 'Optimizer và learning rate is one part of a Deep Learning pipeline: tensors flow through a forward
-  pass, loss creates a signal, backprop computes gradients, and the optimizer updates parameters. Separate train/eval
-  modes, save checkpoints, and track validation to distinguish overfitting from data errors.'
+concept_notes_vi: |-
+  Bộ tối ưu dùng gradient để cập nhật tham số. Với SGD cơ bản, trọng số mới bằng trọng số cũ trừ tốc độ học nhân gradient. Tốc độ học là siêu tham số, không phải đại lượng mô hình tự học như trọng số.
+
+  Momentum kết hợp thông tin từ các bước trước; Adam theo dõi các thống kê của gradient để điều chỉnh cập nhật. Vì vậy, đổi bộ tối ưu không đơn thuần là đổi một con số tốc độ học; trạng thái tích lũy cũng ảnh hưởng bước tiếp theo.
+
+  Ví dụ, trọng số 2, gradient 3 và tốc độ học 0,1 cho trọng số mới 1,7 với SGD không momentum. Tự kiểm tra: tăng tốc độ học mười lần có học nhanh hơn mười lần không? Không; bước quá lớn có thể vượt vùng tốt và làm loss dao động hoặc tăng.
+concept_notes_en: |-
+  An optimizer updates parameters using gradients. Basic SGD subtracts learning rate times gradient from each weight. Learning rate is a hyperparameter, unlike weights learned from data.
+
+  Momentum incorporates information from earlier steps; Adam tracks gradient statistics to adapt updates. Switching optimizers therefore involves more than changing a learning-rate number: accumulated state also influences the next step.
+
+  For example, weight 2, gradient 3 and learning rate 0.1 produce weight 1.7 with momentum-free SGD. Self-check: does multiplying learning rate by ten make learning ten times faster? No; a larger step can overshoot useful regions and make loss oscillate or rise.
 why_it_matters_vi: Tách các bước dự đoán, tính mất mát, tính gradient, cập nhật và kiểm định để dễ tìm lỗi.
 why_it_matters_en: Separate forward, loss, backward, optimizer, validation, and checkpoint into a debuggable loop.
 study_steps_vi:
@@ -214,7 +221,11 @@ review_cards:
 ---
 # Bộ tối ưu và tốc độ học / Optimizers and learning rates
 
-Bộ tối ưu dùng gradient để cập nhật tham số; tốc độ học điều khiển độ lớn bước cập nhật. Theo dõi mất mát và gradient để nhận biết cập nhật quá mạnh hoặc quá chậm.
+Bộ tối ưu dùng gradient để cập nhật tham số. Với SGD cơ bản, trọng số mới bằng trọng số cũ trừ tốc độ học nhân gradient. Tốc độ học là siêu tham số, không phải đại lượng mô hình tự học như trọng số.
+
+Momentum kết hợp thông tin từ các bước trước; Adam theo dõi các thống kê của gradient để điều chỉnh cập nhật. Vì vậy, đổi bộ tối ưu không đơn thuần là đổi một con số tốc độ học; trạng thái tích lũy cũng ảnh hưởng bước tiếp theo.
+
+Ví dụ, trọng số 2, gradient 3 và tốc độ học 0,1 cho trọng số mới 1,7 với SGD không momentum. Tự kiểm tra: tăng tốc độ học mười lần có học nhanh hơn mười lần không? Không; bước quá lớn có thể vượt vùng tốt và làm loss dao động hoặc tăng.
 
 ## Thực hành
 

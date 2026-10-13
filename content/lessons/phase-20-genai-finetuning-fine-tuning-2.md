@@ -27,11 +27,18 @@ key_terms:
 - retrieval
 - evaluation
 - fine-tuning
-concept_notes_vi: LoRA học cập nhật hạng thấp; QLoRA kết hợp cách tinh chỉnh này với mô hình nền được lượng tử hóa.
-  So sánh cần ghi bộ nhớ, cấu hình và chất lượng trên cùng nhiệm vụ.
-concept_notes_en: LoRA, QLoRA và PEFT is model optimization after establishing an evaluation baseline. Prepare clean
-  data, split train/eval, track memory and quality regressions, and choose fine-tuning, quantization, or local serving
-  based on quality, latency, cost, and privacy.
+concept_notes_vi: |-
+  LoRA học cập nhật hạng thấp; QLoRA kết hợp cách tinh chỉnh này với mô hình nền được lượng tử hóa. So sánh cần ghi bộ nhớ, cấu hình và chất lượng trên cùng nhiệm vụ.
+
+  PEFT là nhóm phương pháp tinh chỉnh ít tham số; LoRA là một cách trong nhóm đó, giữ trọng số nền cố định và học ma trận cập nhật hạng thấp. QLoRA kết hợp adapter được học với mô hình nền lượng tử hóa để giảm nhu cầu bộ nhớ.
+
+  Ví dụ, có thể lưu adapter riêng cho một nhiệm vụ thay vì lưu toàn bộ bản sao trọng số đã chỉnh. Tự kiểm tra: adapter nhỏ có nghĩa mọi tác vụ sẽ tốt ngang tinh chỉnh toàn bộ không? Không; chất lượng phụ thuộc dữ liệu, cấu hình và nhiệm vụ. So với mô hình nền trên cùng phép đánh giá, đồng thời kiểm tra phiên bản và khả năng tương thích khi nạp.
+concept_notes_en: |-
+  LoRA learns low-rank updates; QLoRA combines this approach with a quantized base model. Comparisons should record memory, configuration and quality on the same task.
+
+  PEFT is a family of parameter-efficient methods; LoRA is one member that freezes base weights and learns low-rank update matrices. QLoRA trains adapters with a quantized base to reduce memory needs.
+
+  A task adapter can be stored separately instead of saving a full modified model. Self-check: does a small adapter guarantee full-fine-tuning quality on every task? No: evaluate data, settings and task performance against the base model, and verify loading compatibility and versions.
 why_it_matters_vi: Chỉ chọn tinh chỉnh khi dữ liệu và đánh giá cho thấy giải pháp hiện tại chưa đáp ứng nhiệm vụ.
 why_it_matters_en: Fine-tuning is justified only when data and evaluation show prompting/RAG are insufficient.
 study_steps_vi:
@@ -210,6 +217,10 @@ review_cards:
 # LoRA, QLoRA và PEFT / LoRA, QLoRA, and PEFT
 
 LoRA học cập nhật hạng thấp; QLoRA kết hợp cách tinh chỉnh này với mô hình nền được lượng tử hóa. So sánh cần ghi bộ nhớ, cấu hình và chất lượng trên cùng nhiệm vụ.
+
+PEFT là nhóm phương pháp tinh chỉnh ít tham số; LoRA là một cách trong nhóm đó, giữ trọng số nền cố định và học ma trận cập nhật hạng thấp. QLoRA kết hợp adapter được học với mô hình nền lượng tử hóa để giảm nhu cầu bộ nhớ.
+
+Ví dụ, có thể lưu adapter riêng cho một nhiệm vụ thay vì lưu toàn bộ bản sao trọng số đã chỉnh. Tự kiểm tra: adapter nhỏ có nghĩa mọi tác vụ sẽ tốt ngang tinh chỉnh toàn bộ không? Không; chất lượng phụ thuộc dữ liệu, cấu hình và nhiệm vụ. So với mô hình nền trên cùng phép đánh giá, đồng thời kiểm tra phiên bản và khả năng tương thích khi nạp.
 
 ## Thực hành
 

@@ -26,11 +26,18 @@ key_terms:
 - debugging
 - maintainability
 - portfolio
-concept_notes_vi: Hồ sơ giúp người xem tìm các dự án thể hiện năng lực. Mỗi dự án nổi bật cần đóng góp cụ thể, hướng
-  dẫn chạy và bằng chứng đánh giá đọc được.
-concept_notes_en: 'GitHub profile makes AI engineering work traceable: every change needs a diff, a reason, and
-  a verification step. Practise in a small repository, introduce an intentional failure, read the terminal output,
-  and fix it with a focused commit.'
+concept_notes_vi: |-
+  Hồ sơ giúp người xem tìm các dự án thể hiện năng lực. Mỗi dự án nổi bật cần đóng góp cụ thể, hướng dẫn chạy và bằng chứng đánh giá đọc được.
+
+  Hồ sơ là bản đồ tới bằng chứng năng lực; số kho mã hay số commit không tự thể hiện chất lượng. Chọn dự án có thể đọc và tái chạy giúp người xem đánh giá cách làm.
+
+  Ví dụ, ghim một dự án dữ liệu bảng, một RAG và một dịch vụ triển khai, mỗi dự án ghi rõ đóng góp và trạng thái. Tự kiểm tra: dùng kho fork có cần phân biệt phần tự sửa không? Có; chỉ ra thay đổi và tôn trọng giấy phép, tránh trình bày toàn bộ mã gốc như công sức của mình.
+concept_notes_en: |-
+  A portfolio should make evidence of ability easy to find. Featured projects need concrete contributions, runnable instructions and readable evaluation.
+
+  A profile maps to evidence; repository or commit counts do not establish quality. Favor projects readers can inspect and reproduce.
+
+  Feature a tabular project, a RAG system and a deployed-service example with clear roles and status. Self-check: must a fork distinguish your changes? Yes: identify your modifications and respect the license rather than implying authorship of all upstream code.
 why_it_matters_vi: Trình bày năng lực bằng dự án có bằng chứng kỹ thuật và đóng góp rõ.
 why_it_matters_en: Tell the technical story through a README, architecture diagram, video, and a curated GitHub
   profile.
@@ -208,6 +215,10 @@ review_cards:
 # Sắp xếp hồ sơ GitHub / GitHub profiles
 
 Hồ sơ giúp người xem tìm các dự án thể hiện năng lực. Mỗi dự án nổi bật cần đóng góp cụ thể, hướng dẫn chạy và bằng chứng đánh giá đọc được.
+
+Hồ sơ là bản đồ tới bằng chứng năng lực; số kho mã hay số commit không tự thể hiện chất lượng. Chọn dự án có thể đọc và tái chạy giúp người xem đánh giá cách làm.
+
+Ví dụ, ghim một dự án dữ liệu bảng, một RAG và một dịch vụ triển khai, mỗi dự án ghi rõ đóng góp và trạng thái. Tự kiểm tra: dùng kho fork có cần phân biệt phần tự sửa không? Có; chỉ ra thay đổi và tôn trọng giấy phép, tránh trình bày toàn bộ mã gốc như công sức của mình.
 
 ## Thực hành
 

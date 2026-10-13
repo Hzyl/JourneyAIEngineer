@@ -27,11 +27,18 @@ key_terms:
 - loss
 - training
 - genai-transformers
-concept_notes_vi: Mạng nơ-ron kết hợp các phép biến đổi có tham số. Lan truyền ngược tính gradient theo quy tắc
-  dây chuyền; bộ tối ưu dùng gradient để cập nhật trọng số.
-concept_notes_en: Neural network và backpropagation describes how an output changes when a parameter changes. Use
-  finite differences on a small input to check a gradient, then trace the chain rule through each transformation;
-  gradient sign and scale determine whether updates are stable.
+concept_notes_vi: |-
+  Mạng nơ-ron kết hợp các phép biến đổi có tham số. Lan truyền ngược tính gradient theo quy tắc dây chuyền; bộ tối ưu dùng gradient để cập nhật trọng số.
+
+  Lan truyền thuận tính dự đoán từ đầu vào; lan truyền ngược tính đạo hàm của loss theo tham số. Bước cập nhật là thao tác khác: tính được gradient không đồng nghĩa trọng số đã thay đổi.
+
+  Ví dụ, với y = w × x, ảnh hưởng của w lên y bằng x; khi đi qua nhiều lớp, quy tắc dây chuyền kết hợp các đạo hàm cục bộ. Tự kiểm tra: gọi backward rồi bỏ qua optimizer.step có làm mô hình học không? Trong vòng lặp PyTorch thông thường, không; gradient được tính nhưng bước cập nhật tham số chưa diễn ra.
+concept_notes_en: |-
+  A neural network combines parameterized transformations. Backpropagation uses the chain rule to compute gradients; an optimizer uses them to update weights.
+
+  The forward pass computes predictions, while the backward pass computes loss derivatives. Updating parameters is a separate operation: obtaining gradients does not itself change weights.
+
+  For y = w × x, the derivative of y with respect to w is x. Across layers, the chain rule combines local derivatives. Self-check: does backward without optimizer.step train the model? In a conventional PyTorch loop, no: gradients are computed but the parameter update is missing.
 why_it_matters_vi: Hiểu Transformer qua kích thước tensor, trọng số attention và chi phí suy luận.
 why_it_matters_en: Transformers become understandable when you trace tensor shapes, attention weights, and inference
   cost.
@@ -220,6 +227,10 @@ review_cards:
 # Mạng nơ-ron và lan truyền ngược / Neural networks and backpropagation
 
 Mạng nơ-ron kết hợp các phép biến đổi có tham số. Lan truyền ngược tính gradient theo quy tắc dây chuyền; bộ tối ưu dùng gradient để cập nhật trọng số.
+
+Lan truyền thuận tính dự đoán từ đầu vào; lan truyền ngược tính đạo hàm của loss theo tham số. Bước cập nhật là thao tác khác: tính được gradient không đồng nghĩa trọng số đã thay đổi.
+
+Ví dụ, với y = w × x, ảnh hưởng của w lên y bằng x; khi đi qua nhiều lớp, quy tắc dây chuyền kết hợp các đạo hàm cục bộ. Tự kiểm tra: gọi backward rồi bỏ qua optimizer.step có làm mô hình học không? Trong vòng lặp PyTorch thông thường, không; gradient được tính nhưng bước cập nhật tham số chưa diễn ra.
 
 ## Thực hành
 

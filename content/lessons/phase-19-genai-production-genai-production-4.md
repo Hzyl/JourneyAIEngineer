@@ -27,10 +27,18 @@ key_terms:
 - reproducibility
 - deployment
 - genai-production
-concept_notes_vi: Tính sẵn sàng cần xét các điểm phụ thuộc và cách suy giảm khi lỗi. Năng lực phục vụ phải được
-  đo với tải phù hợp, gồm cả yêu cầu chậm và giới hạn nhà cung cấp.
-concept_notes_en: High availability và capacity is a concept in the genai-production module. Identify the inputs,
-  outputs, assumptions, failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Tính sẵn sàng cần xét các điểm phụ thuộc và cách suy giảm khi lỗi. Năng lực phục vụ phải được đo với tải phù hợp, gồm cả yêu cầu chậm và giới hạn nhà cung cấp.
+
+  Capacity là lượng tải hệ thống xử lý được trong các ràng buộc; availability là khả năng cung cấp dịch vụ theo tiêu chí đã định. Thêm bản sao ứng dụng chưa giải quyết điểm lỗi chung như một cơ sở dữ liệu hoặc hạn mức nhà cung cấp.
+
+  Ví dụ, khi mô hình quá tải, hệ thống có thể trả kết quả tìm kiếm nguồn với thông báo rõ thay vì treo mọi yêu cầu. Tự kiểm tra: thử một yêu cầu nhanh có chứng minh phục vụ tốt nhiều người không? Không; cần tải đại diện, quan sát hàng đợi, lỗi và độ trễ ở nhóm chậm, đồng thời thử tình huống phụ thuộc bị ngắt.
+concept_notes_en: |-
+  Availability depends on shared dependencies and graceful behavior during faults. Capacity must be measured under representative load, including slow requests and provider limits.
+
+  Capacity describes supported load within constraints; availability describes service delivery under defined criteria. More application replicas do not remove a shared database failure or provider quota.
+
+  An overloaded model might degrade to clearly labeled source search instead of hanging all requests. Self-check: does one fast request prove multi-user readiness? No: test representative load, queues, errors and slow-tail latency, plus dependency outages.
 why_it_matters_vi: Thiết kế hành vi khi nhà cung cấp chậm, lỗi hoặc tải tăng để duy trì mức phục vụ đã đặt ra.
 why_it_matters_en: Production quality is behavior when providers are slow, failing, expensive, or traffic grows—not
   just the happy path.
@@ -224,6 +232,10 @@ review_cards:
 # Tính sẵn sàng và năng lực phục vụ / High availability and capacity
 
 Tính sẵn sàng cần xét các điểm phụ thuộc và cách suy giảm khi lỗi. Năng lực phục vụ phải được đo với tải phù hợp, gồm cả yêu cầu chậm và giới hạn nhà cung cấp.
+
+Capacity là lượng tải hệ thống xử lý được trong các ràng buộc; availability là khả năng cung cấp dịch vụ theo tiêu chí đã định. Thêm bản sao ứng dụng chưa giải quyết điểm lỗi chung như một cơ sở dữ liệu hoặc hạn mức nhà cung cấp.
+
+Ví dụ, khi mô hình quá tải, hệ thống có thể trả kết quả tìm kiếm nguồn với thông báo rõ thay vì treo mọi yêu cầu. Tự kiểm tra: thử một yêu cầu nhanh có chứng minh phục vụ tốt nhiều người không? Không; cần tải đại diện, quan sát hàng đợi, lỗi và độ trễ ở nhóm chậm, đồng thời thử tình huống phụ thuộc bị ngắt.
 
 ## Thực hành
 

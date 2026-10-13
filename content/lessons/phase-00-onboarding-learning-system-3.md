@@ -27,10 +27,22 @@ key_terms:
 - debugging
 - maintainability
 - learning-system
-concept_notes_vi: Nhật ký tuần tổng hợp điều đã hiểu, lỗi lặp lại và thay đổi trong cách học. Dẫn tới tệp bài làm
-  hoặc kết quả kiểm tra để nhận xét có căn cứ, thay vì chỉ liệt kê bài đã đọc.
-concept_notes_en: Cách viết journal tuần is a concept in the learning-system module. Identify the inputs, outputs,
-  assumptions, failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Tổng kết tuần nối các buổi học thành nhận xét về tiến bộ, lỗi lặp lại và cách học cần đổi. Dẫn tới bài làm hoặc kết quả kiểm tra để mỗi nhận xét có căn cứ.
+
+  Phân biệt mô tả sự kiện với giải thích nguyên nhân. 'Ba bài bị lỗi import' là quan sát; 'luôn chọn sai môi trường' là giả thuyết cần kiểm tra bằng đường dẫn Python của từng lần.
+
+  Nếu nhiều buổi mắc cùng lỗi, đặt một thay đổi nhỏ cho tuần sau: kiểm tra sys.executable trước khi cài thư viện. Sau đó xem lỗi còn xuất hiện không, thay vì chỉ tăng số giờ học.
+
+  Tự kiểm tra: đọc thêm nhiều bài có chắc đã sửa lỗ hổng cũ? Không; làm lại một nhiệm vụ trước đây bị lỗi và so sánh kết quả.
+concept_notes_en: |-
+  A weekly reflection connects sessions into evidence about progress, recurring errors and study adjustments. Link artifacts or checks to support each observation.
+
+  Separate events from causal explanations. 'Three exercises failed to import' is an observation; 'the wrong environment was selected every time' is a hypothesis requiring executable-path evidence.
+
+  For a recurring problem, try one concrete change next week: inspect sys.executable before installing packages. Then check whether the error recurs, rather than merely increasing study hours.
+
+  Self-check: does reading more lessons establish that an old gap is fixed? No; retry a previously failed task and compare the result.
 why_it_matters_vi: Gắn việc học với kết quả tự làm để biết điều đã hiểu và điều cần luyện tiếp.
 why_it_matters_en: Build an evidence-based learning system with sessions, journals, reviews, and checkpoints instead
   of passive reading.
@@ -210,7 +222,13 @@ review_cards:
 ---
 # Viết nhật ký học tập hằng tuần / Write a weekly journal
 
-Nhật ký tuần tổng hợp điều đã hiểu, lỗi lặp lại và thay đổi trong cách học. Dẫn tới tệp bài làm hoặc kết quả kiểm tra để nhận xét có căn cứ, thay vì chỉ liệt kê bài đã đọc.
+Tổng kết tuần nối các buổi học thành nhận xét về tiến bộ, lỗi lặp lại và cách học cần đổi. Dẫn tới bài làm hoặc kết quả kiểm tra để mỗi nhận xét có căn cứ.
+
+Phân biệt mô tả sự kiện với giải thích nguyên nhân. 'Ba bài bị lỗi import' là quan sát; 'luôn chọn sai môi trường' là giả thuyết cần kiểm tra bằng đường dẫn Python của từng lần.
+
+Nếu nhiều buổi mắc cùng lỗi, đặt một thay đổi nhỏ cho tuần sau: kiểm tra sys.executable trước khi cài thư viện. Sau đó xem lỗi còn xuất hiện không, thay vì chỉ tăng số giờ học.
+
+Tự kiểm tra: đọc thêm nhiều bài có chắc đã sửa lỗ hổng cũ? Không; làm lại một nhiệm vụ trước đây bị lỗi và so sánh kết quả.
 
 ## Thực hành
 

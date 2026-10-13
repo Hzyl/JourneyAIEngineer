@@ -27,10 +27,18 @@ key_terms:
 - retrieval
 - evaluation
 - rag-foundations
-concept_notes_vi: Bộ truy xuất chọn ứng viên; bước dựng ngữ cảnh sắp xếp bằng chứng; LLM dùng ngữ cảnh để trả lời.
-  Theo dõi riêng từng bước giúp xác định nguyên nhân khi kết quả sai.
-concept_notes_en: Retriever, context và LLM is a concept in the rag-foundations module. Identify the inputs, outputs,
-  assumptions, failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Bộ truy xuất chọn ứng viên; bước dựng ngữ cảnh sắp xếp bằng chứng; LLM dùng ngữ cảnh để trả lời. Theo dõi riêng từng bước giúp xác định nguyên nhân khi kết quả sai.
+
+  Truy xuất quyết định bằng chứng nào có cơ hội xuất hiện; dựng ngữ cảnh quyết định phần nào được gửi; sinh câu trả lời quyết định diễn đạt. Một lỗi cuối chuỗi có thể bắt nguồn từ tài liệu bị loại ở bước giữa.
+
+  Ví dụ, bộ truy xuất tìm đúng ngoại lệ nhưng bước cắt ngữ cảnh bỏ đoạn đó, khiến LLM chỉ thấy quy định chung. Tự kiểm tra: chỉ lưu câu trả lời cuối có đủ chẩn đoán không? Không; lưu dấu vết có kiểm soát về ứng viên, đoạn đã gửi và phiên bản prompt để phân biệt thiếu bằng chứng với sử dụng sai bằng chứng.
+concept_notes_en: |-
+  Retrieval selects candidates, context assembly arranges evidence and the LLM generates an answer. Track these stages independently to locate failures.
+
+  Retrieval determines which evidence is available; assembly determines what is sent; generation determines how it is expressed. A final failure may originate in a middle-stage omission.
+
+  The retriever may find an exception that context trimming removes, leaving only the general rule. Self-check: is storing the final answer sufficient diagnosis? No: retain controlled traces of candidates, submitted passages and prompt versions to distinguish missing evidence from misuse of evidence.
 why_it_matters_vi: Tách truy xuất khỏi sinh câu trả lời để truy nguồn và xử lý thiếu bằng chứng.
 why_it_matters_en: RAG separates retrieval from generation so answers can be sourced and can abstain without evidence.
 study_steps_vi:
@@ -127,6 +135,15 @@ resources:
   purpose_en: Official reference to verify the lesson concept.
   read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
   read_en: Read the relevant section, run a small example, and record one verified insight.
+- language: en
+  title: "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (2020)"
+  url: https://arxiv.org/abs/2005.11401
+  kind: paper
+  required: false
+  purpose_vi: "Bài báo nền tảng mô tả kết hợp bộ nhớ tham số seq2seq với chỉ mục Wikipedia dày đặc có thể truy xuất."
+  purpose_en: "Foundational paper combining seq2seq parametric memory with a retrievable dense Wikipedia index."
+  read_vi: "Đọc tóm tắt, công thức mô hình và thí nghiệm; đối chiếu với RAG hiện đại và không suy ra rằng RAG luôn cải thiện kết quả."
+  read_en: "Read the abstract, model formulation, and experiments; compare with modern RAG and do not infer that retrieval always improves results."
 - title: Giải thích và hướng dẫn thực hành trong bài
   url: ''
   language: vi
@@ -216,6 +233,10 @@ review_cards:
 # Kết nối truy xuất, ngữ cảnh và LLM / Retrievers, context, and the LLM
 
 Bộ truy xuất chọn ứng viên; bước dựng ngữ cảnh sắp xếp bằng chứng; LLM dùng ngữ cảnh để trả lời. Theo dõi riêng từng bước giúp xác định nguyên nhân khi kết quả sai.
+
+Truy xuất quyết định bằng chứng nào có cơ hội xuất hiện; dựng ngữ cảnh quyết định phần nào được gửi; sinh câu trả lời quyết định diễn đạt. Một lỗi cuối chuỗi có thể bắt nguồn từ tài liệu bị loại ở bước giữa.
+
+Ví dụ, bộ truy xuất tìm đúng ngoại lệ nhưng bước cắt ngữ cảnh bỏ đoạn đó, khiến LLM chỉ thấy quy định chung. Tự kiểm tra: chỉ lưu câu trả lời cuối có đủ chẩn đoán không? Không; lưu dấu vết có kiểm soát về ứng viên, đoạn đã gửi và phiên bản prompt để phân biệt thiếu bằng chứng với sử dụng sai bằng chứng.
 
 ## Thực hành
 

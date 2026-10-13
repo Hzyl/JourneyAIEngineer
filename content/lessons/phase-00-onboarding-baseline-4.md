@@ -28,10 +28,22 @@ key_terms:
 - testing
 - debugging
 - maintainability
-concept_notes_vi: Kết quả đầu vào là căn cứ điều chỉnh thời gian học, không phải kết luận cố định về năng lực. Hãy
-  xét cả độ chính xác, thời gian tự làm và phần cần trợ giúp trước khi chọn nhịp học.
-concept_notes_en: Đọc kết quả và chọn nhịp học is a concept in the baseline module. Identify the inputs, outputs,
-  assumptions, failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Kết quả đầu vào giúp chọn thời gian và nội dung cần học, không phải nhãn năng lực cố định. Xét đồng thời độ chính xác, thời gian tự làm và phần cần trợ giúp.
+
+  Phân biệt cảm giác quen thuộc khi đọc lời giải với khả năng tự giải một bài mới. Nhịp học là kế hoạch có thể điều chỉnh; mốc tự kiểm tra là bằng chứng để quyết định điều chỉnh ấy.
+
+  Nếu giải được bài biến và vòng lặp nhưng chưa xử lý danh sách rỗng, hãy bổ sung bài biên trước khi tăng tốc. Nếu vướng terminal dù hiểu Python, luyện riêng thao tác môi trường.
+
+  Tự kiểm tra: làm nhanh một bài đã thuộc có đủ để bỏ cả học phần không? Chưa; thử bài tương đương với dữ liệu khác và giải thích cách làm không nhìn đáp án.
+concept_notes_en: |-
+  Baseline results guide time allocation and topic choice; they are not permanent ability labels. Consider accuracy, unaided time and assistance together.
+
+  Recognizing a solution differs from producing one for a new problem. Pace is an adjustable plan, while checkpoints provide evidence for adjusting it.
+
+  If variables and loops are comfortable but empty lists cause trouble, practice boundaries before accelerating. If the terminal is the obstacle despite sound Python knowledge, practice environment operations separately.
+
+  Self-check: does quickly solving a memorized exercise justify skipping a module? Not yet; solve a comparable problem with different data and explain it without the answer.
 why_it_matters_vi: Xác định kiến thức đã vững và phần cần ôn để chọn nhịp học phù hợp.
 why_it_matters_en: Measure your current baseline honestly so the learning pace follows evidence rather than confidence.
 study_steps_vi:
@@ -217,7 +229,13 @@ review_cards:
 ---
 # Đọc kết quả và chọn nhịp học / Read results and choose a learning pace
 
-Kết quả đầu vào là căn cứ điều chỉnh thời gian học, không phải kết luận cố định về năng lực. Hãy xét cả độ chính xác, thời gian tự làm và phần cần trợ giúp trước khi chọn nhịp học.
+Kết quả đầu vào giúp chọn thời gian và nội dung cần học, không phải nhãn năng lực cố định. Xét đồng thời độ chính xác, thời gian tự làm và phần cần trợ giúp.
+
+Phân biệt cảm giác quen thuộc khi đọc lời giải với khả năng tự giải một bài mới. Nhịp học là kế hoạch có thể điều chỉnh; mốc tự kiểm tra là bằng chứng để quyết định điều chỉnh ấy.
+
+Nếu giải được bài biến và vòng lặp nhưng chưa xử lý danh sách rỗng, hãy bổ sung bài biên trước khi tăng tốc. Nếu vướng terminal dù hiểu Python, luyện riêng thao tác môi trường.
+
+Tự kiểm tra: làm nhanh một bài đã thuộc có đủ để bỏ cả học phần không? Chưa; thử bài tương đương với dữ liệu khác và giải thích cách làm không nhìn đáp án.
 
 ## Thực hành
 

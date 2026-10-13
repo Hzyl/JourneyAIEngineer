@@ -26,11 +26,18 @@ key_terms:
 - reproducibility
 - deployment
 - genai-production
-concept_notes_vi: Streaming gửi kết quả từng phần; bộ nhớ đệm tái sử dụng kết quả phù hợp. Khóa bộ nhớ đệm phải
-  phản ánh ngữ cảnh và quyền truy cập để không trả nhầm dữ liệu giữa người dùng.
-concept_notes_en: 'Streaming và caching belongs to LLM Application Engineering: design the contract between the
-  application and the model. Define instructions, inputs, output schema, timeout, retry, and token limits; parse
-  model output as untrusted data and return actionable errors.'
+concept_notes_vi: |-
+  Streaming gửi kết quả từng phần; bộ nhớ đệm tái sử dụng kết quả phù hợp. Khóa bộ nhớ đệm phải phản ánh ngữ cảnh và quyền truy cập để không trả nhầm dữ liệu giữa người dùng.
+
+  Streaming thay cách chuyển kết quả, còn caching thay việc có phải tính lại hay không. Cache hit chỉ hữu ích nếu nội dung còn hợp lệ với phiên bản tài liệu, cấu hình và người đang truy cập.
+
+  Ví dụ, câu hỏi giống nhau nhưng hai người có quyền đọc khác nhau không được nhận chung câu trả lời chứa dữ liệu riêng. Tự kiểm tra: dùng câu hỏi làm khóa duy nhất có đủ không? Không; xét phạm vi quyền, lịch sử cần thiết, phiên bản nguồn và chính sách hết hạn. Khi quyền thay đổi, dữ liệu đã lưu cần được vô hiệu hóa hoặc kiểm tra lại trước khi trả.
+concept_notes_en: |-
+  Streaming delivers incremental output; caching reuses suitable results. Cache keys must reflect context and authorization to avoid cross-user data exposure.
+
+  Streaming changes delivery, while caching changes whether computation repeats. A cache hit is useful only when content remains valid for the data version, configuration and caller.
+
+  Identical questions from users with different access must not share private answers. Self-check: is the question alone a sufficient cache key? No: account for access scope, relevant history, source versions and expiration. Permission changes require invalidation or renewed authorization before serving cached data.
 why_it_matters_vi: Thiết kế hành vi khi nhà cung cấp chậm, lỗi hoặc tải tăng để duy trì mức phục vụ đã đặt ra.
 why_it_matters_en: Production quality is behavior when providers are slow, failing, expensive, or traffic grows—not
   just the happy path.
@@ -211,6 +218,10 @@ review_cards:
 # Streaming và bộ nhớ đệm / Streaming and caching
 
 Streaming gửi kết quả từng phần; bộ nhớ đệm tái sử dụng kết quả phù hợp. Khóa bộ nhớ đệm phải phản ánh ngữ cảnh và quyền truy cập để không trả nhầm dữ liệu giữa người dùng.
+
+Streaming thay cách chuyển kết quả, còn caching thay việc có phải tính lại hay không. Cache hit chỉ hữu ích nếu nội dung còn hợp lệ với phiên bản tài liệu, cấu hình và người đang truy cập.
+
+Ví dụ, câu hỏi giống nhau nhưng hai người có quyền đọc khác nhau không được nhận chung câu trả lời chứa dữ liệu riêng. Tự kiểm tra: dùng câu hỏi làm khóa duy nhất có đủ không? Không; xét phạm vi quyền, lịch sử cần thiết, phiên bản nguồn và chính sách hết hạn. Khi quyền thay đổi, dữ liệu đã lưu cần được vô hiệu hóa hoặc kiểm tra lại trước khi trả.
 
 ## Thực hành
 

@@ -25,11 +25,22 @@ key_terms:
 - feature
 - baseline
 - evaluation
-concept_notes_vi: Kiểm định chéo lặp việc huấn luyện và đánh giá trên các phần dữ liệu khác nhau. Cách chia phải
-  tôn trọng nhóm hoặc thứ tự thời gian; mọi bước học từ dữ liệu cần nằm trong mỗi lần huấn luyện.
-concept_notes_en: 'Cross-validation is a classical Machine Learning decision: define the label, baseline, split,
-  and metric before choosing a model. Fit preprocessing on train only; error analysis should identify the groups
-  where the model fails and how to retest the hypothesis.'
+concept_notes_vi: |-
+  Kiểm định chéo chia dữ liệu thành các phần rồi luân phiên huấn luyện và đánh giá. Kết quả nhiều lần chia cho thấy mô hình nhạy với tập mẫu thế nào, nhưng các điểm số không phải các phép thử hoàn toàn độc lập.
+
+  Chia ngẫu nhiên phù hợp một số bài toán, còn dữ liệu thời gian hoặc nhiều dòng từ cùng đối tượng cần cách chia riêng. Bộ chuẩn hóa và chọn đặc trưng phải được học lại trong mỗi phần huấn luyện.
+
+  Nếu hồ sơ của cùng khách hàng xuất hiện ở cả hai phía, mô hình có thể nhận diện khách quen thay vì khái quát sang khách mới. Hãy chia theo khách hàng khi mục tiêu là dự đoán người chưa gặp.
+
+  Tự kiểm tra: chuẩn hóa toàn bộ dữ liệu trước kiểm định chéo có an toàn không? Không; thống kê của phần đánh giá đã lọt vào quá trình học.
+concept_notes_en: |-
+  Cross-validation rotates training and evaluation across data partitions. Scores reveal sensitivity to the split, but are not fully independent experiments.
+
+  Random splits suit some tasks; time-ordered records or repeated subjects require appropriate splitting. Fit scaling and feature selection again within each training partition.
+
+  If one customer's records appear on both sides, a model may recognize familiar customers rather than generalize to new ones. Split by customer when unseen customers are the target.
+
+  Self-check: is scaling all data before cross-validation safe? No; evaluation statistics have entered the learning process.
 why_it_matters_vi: Chọn thước đo theo chi phí sai lầm và giữ tập kiểm tra ngoài quá trình lựa chọn mô hình.
 why_it_matters_en: Choose metrics by error cost, use cross-validation, and tune without peeking at the test set.
 study_steps_vi:
@@ -203,7 +214,13 @@ review_cards:
 ---
 # Kiểm định chéo / Cross-validation
 
-Kiểm định chéo lặp việc huấn luyện và đánh giá trên các phần dữ liệu khác nhau. Cách chia phải tôn trọng nhóm hoặc thứ tự thời gian; mọi bước học từ dữ liệu cần nằm trong mỗi lần huấn luyện.
+Kiểm định chéo chia dữ liệu thành các phần rồi luân phiên huấn luyện và đánh giá. Kết quả nhiều lần chia cho thấy mô hình nhạy với tập mẫu thế nào, nhưng các điểm số không phải các phép thử hoàn toàn độc lập.
+
+Chia ngẫu nhiên phù hợp một số bài toán, còn dữ liệu thời gian hoặc nhiều dòng từ cùng đối tượng cần cách chia riêng. Bộ chuẩn hóa và chọn đặc trưng phải được học lại trong mỗi phần huấn luyện.
+
+Nếu hồ sơ của cùng khách hàng xuất hiện ở cả hai phía, mô hình có thể nhận diện khách quen thay vì khái quát sang khách mới. Hãy chia theo khách hàng khi mục tiêu là dự đoán người chưa gặp.
+
+Tự kiểm tra: chuẩn hóa toàn bộ dữ liệu trước kiểm định chéo có an toàn không? Không; thống kê của phần đánh giá đã lọt vào quá trình học.
 
 ## Thực hành
 

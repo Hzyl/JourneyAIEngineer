@@ -26,10 +26,18 @@ key_terms:
 - loss
 - training
 - generalization
-concept_notes_vi: Quá khớp xảy ra khi mô hình học tốt dữ liệu huấn luyện nhưng kém trên dữ liệu mới. Điều chuẩn
-  hạn chế độ linh hoạt hoặc thay đổi cách học; đánh giá tác dụng qua tập kiểm định.
-concept_notes_en: Overfitting và regularization is a concept in the generalization module. Identify the inputs,
-  outputs, assumptions, failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Quá khớp là khi mô hình bám tốt dữ liệu huấn luyện nhưng dự đoán kém trên dữ liệu mới có liên quan. Thiếu khớp là khi mô hình hoặc cách học chưa nắm được cấu trúc cần thiết, nên cả kết quả huấn luyện và kiểm định đều kém.
+
+  Điều chuẩn đưa thêm ràng buộc vào cách học, chẳng hạn phạt trọng số lớn hoặc dùng dropout. Nó có thể làm loss huấn luyện cao hơn nhưng cải thiện khả năng khái quát hóa; cần kiểm tra trên tập kiểm định thay vì chỉ nhìn mức khớp tập train.
+
+  Tự kiểm tra: khoảng cách train–validation lớn luôn do mô hình quá phức tạp không? Không; cách chia sai, phân bố dữ liệu khác nhau hoặc lỗi tiền xử lý cũng tạo khoảng cách. Kiểm tra quy trình dữ liệu trước khi tăng điều chuẩn hay giảm kích thước mô hình.
+concept_notes_en: |-
+  Overfitting means fitting training data well while predicting poorly on relevant new data. Underfitting means the model or learning process has not captured the needed structure, so both training and validation performance are weak.
+
+  Regularization constrains learning, for example by penalizing large weights or using dropout. It can increase training loss while improving generalization; evaluate it on validation data rather than training fit alone.
+
+  Self-check: does a large train–validation gap always mean the model is too complex? No; inappropriate splits, distribution differences or preprocessing bugs can also cause it. Check the data process before strengthening regularization or reducing model size.
 why_it_matters_vi: Nhận diện quá khớp và đánh giá tác dụng của điều chuẩn, tăng cường dữ liệu, dừng sớm.
 why_it_matters_en: Diagnose overfitting and improve generalization with regularization, augmentation, and early
   stopping.
@@ -213,7 +221,11 @@ review_cards:
 ---
 # Quá khớp và điều chuẩn / Overfitting and regularization
 
-Quá khớp xảy ra khi mô hình học tốt dữ liệu huấn luyện nhưng kém trên dữ liệu mới. Điều chuẩn hạn chế độ linh hoạt hoặc thay đổi cách học; đánh giá tác dụng qua tập kiểm định.
+Quá khớp là khi mô hình bám tốt dữ liệu huấn luyện nhưng dự đoán kém trên dữ liệu mới có liên quan. Thiếu khớp là khi mô hình hoặc cách học chưa nắm được cấu trúc cần thiết, nên cả kết quả huấn luyện và kiểm định đều kém.
+
+Điều chuẩn đưa thêm ràng buộc vào cách học, chẳng hạn phạt trọng số lớn hoặc dùng dropout. Nó có thể làm loss huấn luyện cao hơn nhưng cải thiện khả năng khái quát hóa; cần kiểm tra trên tập kiểm định thay vì chỉ nhìn mức khớp tập train.
+
+Tự kiểm tra: khoảng cách train–validation lớn luôn do mô hình quá phức tạp không? Không; cách chia sai, phân bố dữ liệu khác nhau hoặc lỗi tiền xử lý cũng tạo khoảng cách. Kiểm tra quy trình dữ liệu trước khi tăng điều chuẩn hay giảm kích thước mô hình.
 
 ## Thực hành
 

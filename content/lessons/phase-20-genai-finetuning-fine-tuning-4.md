@@ -29,11 +29,18 @@ key_terms:
 - retrieval
 - evaluation
 - fine-tuning
-concept_notes_vi: Lượng tử hóa giảm độ chính xác biểu diễn để tiết kiệm tài nguyên, nhưng tác động chất lượng và
-  tốc độ phụ thuộc phần cứng, cách cài đặt. Đo thực tế trước khi chọn.
-concept_notes_en: Quantization và model trade-offs is model optimization after establishing an evaluation baseline.
-  Prepare clean data, split train/eval, track memory and quality regressions, and choose fine-tuning, quantization,
-  or local serving based on quality, latency, cost, and privacy.
+concept_notes_vi: |-
+  Lượng tử hóa giảm độ chính xác biểu diễn để tiết kiệm tài nguyên, nhưng tác động chất lượng và tốc độ phụ thuộc phần cứng, cách cài đặt. Đo thực tế trước khi chọn.
+
+  Lượng tử hóa dùng cách biểu diễn với ít mức hoặc ít bit hơn; cắt tỉa loại bớt thành phần; chưng cất huấn luyện mô hình khác học từ mô hình hướng dẫn. Đây là các cơ chế khác nhau, không thể suy chất lượng từ kích thước tệp đơn thuần.
+
+  Ví dụ, bản trọng số nhỏ hơn có thể vừa bộ nhớ nhưng cần phép tính chuyển đổi hoặc kernel phù hợp để chạy nhanh. Tự kiểm tra: số bit giảm một nửa có chắc tổng bộ nhớ và thời gian cũng giảm một nửa không? Không; còn cache, activation, metadata và cách thực thi. Đo cả chất lượng, bộ nhớ đỉnh và độ trễ trên tải thật.
+concept_notes_en: |-
+  Quantization reduces representation precision to save resources. Quality and speed effects depend on hardware and implementation, so measure before choosing.
+
+  Quantization uses fewer representable levels or bits; pruning removes components; distillation trains another model using a teacher. File size alone cannot establish quality across these different mechanisms.
+
+  Smaller weights may fit memory yet require conversion work or suitable kernels for speed. Self-check: does halving bit width halve total memory and time? No: caches, activations, metadata and execution also matter. Measure quality, peak memory and latency under representative load.
 why_it_matters_vi: Chỉ chọn tinh chỉnh khi dữ liệu và đánh giá cho thấy giải pháp hiện tại chưa đáp ứng nhiệm vụ.
 why_it_matters_en: Fine-tuning is justified only when data and evaluation show prompting/RAG are insufficient.
 study_steps_vi:
@@ -218,6 +225,10 @@ review_cards:
 # Lượng tử hóa và lựa chọn mô hình / Quantization and model trade-offs
 
 Lượng tử hóa giảm độ chính xác biểu diễn để tiết kiệm tài nguyên, nhưng tác động chất lượng và tốc độ phụ thuộc phần cứng, cách cài đặt. Đo thực tế trước khi chọn.
+
+Lượng tử hóa dùng cách biểu diễn với ít mức hoặc ít bit hơn; cắt tỉa loại bớt thành phần; chưng cất huấn luyện mô hình khác học từ mô hình hướng dẫn. Đây là các cơ chế khác nhau, không thể suy chất lượng từ kích thước tệp đơn thuần.
+
+Ví dụ, bản trọng số nhỏ hơn có thể vừa bộ nhớ nhưng cần phép tính chuyển đổi hoặc kernel phù hợp để chạy nhanh. Tự kiểm tra: số bit giảm một nửa có chắc tổng bộ nhớ và thời gian cũng giảm một nửa không? Không; còn cache, activation, metadata và cách thực thi. Đo cả chất lượng, bộ nhớ đỉnh và độ trễ trên tải thật.
 
 ## Thực hành
 

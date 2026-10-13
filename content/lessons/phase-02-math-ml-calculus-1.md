@@ -26,11 +26,22 @@ key_terms:
 - gradient
 - optimization
 - calculus
-concept_notes_vi: Đạo hàm mô tả mức thay đổi cục bộ của giá trị hàm khi đầu vào thay đổi nhỏ. Trong tối ưu, dấu
-  và độ lớn của đạo hàm gợi ý hướng điều chỉnh tham số; bước đi còn phụ thuộc tốc độ học.
-concept_notes_en: Hàm số và đạo hàm describes how an output changes when a parameter changes. Use finite differences
-  on a small input to check a gradient, then trace the chain rule through each transformation; gradient sign and
-  scale determine whether updates are stable.
+concept_notes_vi: |-
+  Hàm số gắn đầu vào với đầu ra theo một quy tắc. Đạo hàm đo tốc độ thay đổi cục bộ khi đầu vào thay đổi rất nhỏ, giúp hiểu độ nhạy thay vì chỉ biết giá trị hàm.
+
+  Phân biệt đạo hàm tại điểm với độ dốc trung bình trên một khoảng. Sai phân hữu hạn dùng hai giá trị hàm để xấp xỉ đạo hàm, nhưng bước quá lớn gây sai số xấp xỉ, quá nhỏ có thể gặp sai số số học.
+
+  Với f(x)=x² tại x=3, đạo hàm là 6. Dịch x thêm 0,01 làm f tăng 0,0601, gần dự đoán tuyến tính 6 × 0,01 = 0,06.
+
+  Tự kiểm tra: đạo hàm dương có nghĩa hàm luôn dương không? Không; nó mô tả hướng thay đổi cục bộ, không phải dấu giá trị hàm.
+concept_notes_en: |-
+  A function maps inputs to outputs by a rule. Its derivative measures local change for a very small input change, describing sensitivity rather than just the function value.
+
+  A derivative at a point differs from average slope over an interval. Finite differences approximate derivatives from function values; overly large steps introduce approximation error, while extremely small steps can suffer numerical error.
+
+  For f(x)=x² at x=3, the derivative is 6. Increasing x by 0.01 increases f by 0.0601, close to the linear prediction 6 × 0.01 = 0.06.
+
+  Self-check: does a positive derivative imply positive function values? No; it describes local direction of change.
 why_it_matters_vi: Hiểu đạo hàm và quy tắc dây chuyền để giải thích cách cập nhật tham số.
 why_it_matters_en: Understand derivatives, gradients, and the chain rule as parameter-update mechanisms rather than
   isolated formulas.
@@ -213,7 +224,13 @@ review_cards:
 ---
 # Hàm số và đạo hàm / Functions and derivatives
 
-Đạo hàm mô tả mức thay đổi cục bộ của giá trị hàm khi đầu vào thay đổi nhỏ. Trong tối ưu, dấu và độ lớn của đạo hàm gợi ý hướng điều chỉnh tham số; bước đi còn phụ thuộc tốc độ học.
+Hàm số gắn đầu vào với đầu ra theo một quy tắc. Đạo hàm đo tốc độ thay đổi cục bộ khi đầu vào thay đổi rất nhỏ, giúp hiểu độ nhạy thay vì chỉ biết giá trị hàm.
+
+Phân biệt đạo hàm tại điểm với độ dốc trung bình trên một khoảng. Sai phân hữu hạn dùng hai giá trị hàm để xấp xỉ đạo hàm, nhưng bước quá lớn gây sai số xấp xỉ, quá nhỏ có thể gặp sai số số học.
+
+Với f(x)=x² tại x=3, đạo hàm là 6. Dịch x thêm 0,01 làm f tăng 0,0601, gần dự đoán tuyến tính 6 × 0,01 = 0,06.
+
+Tự kiểm tra: đạo hàm dương có nghĩa hàm luôn dương không? Không; nó mô tả hướng thay đổi cục bộ, không phải dấu giá trị hàm.
 
 ## Thực hành
 

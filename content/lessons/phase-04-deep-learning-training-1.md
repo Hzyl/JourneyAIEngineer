@@ -25,10 +25,18 @@ key_terms:
 - PyTorch
 - tensor
 - training
-concept_notes_vi: Lan truyền xuôi tạo dự đoán từ đầu vào. Hàm mất mát so sánh dự đoán với mục tiêu; kiểu nhãn, kích
-  thước và biểu diễn đầu ra phải phù hợp hàm đã chọn.
-concept_notes_en: Forward pass và loss is a concept in the training module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Lan truyền xuôi biến đầu vào thành dự đoán qua các lớp của mô hình. Hàm mất mát đo mức không phù hợp giữa dự đoán và mục tiêu, tạo một đại lượng để tối ưu. Hàm mất mát không nhất thiết trùng thước đo mà người dùng quan tâm.
+
+  Trong phân loại một nhãn với CrossEntropyLoss, đầu vào thường là logits, tức điểm số chưa qua softmax, và nhãn là chỉ số lớp. Với 4 mẫu và 3 lớp, logits có shape (4, 3), nhãn có shape (4,). Không thêm softmax theo thói quen vì hàm này đã xử lý phép chuẩn hóa cần thiết.
+
+  Tự kiểm tra: loss giảm có bảo đảm accuracy tăng sau mỗi bước không? Không; độ tự tin có thể thay đổi trong khi lớp có điểm cao nhất vẫn giữ nguyên. Theo dõi cả loss và thước đo phù hợp trên dữ liệu kiểm định.
+concept_notes_en: |-
+  A forward pass transforms inputs into predictions through the model's layers. A loss function measures how predictions differ from targets and supplies an optimization objective. The loss need not be the same metric that matters to users.
+
+  For single-label classification with CrossEntropyLoss, inputs are commonly logits, meaning scores before softmax, and targets are class indices. With 4 examples and 3 classes, logits have shape (4, 3) and targets (4,). Do not add softmax by habit; this loss already handles the required normalization.
+
+  Self-check: does decreasing loss guarantee accuracy improves at every step? No; confidence can change while the highest-scoring class remains the same. Track both loss and an appropriate metric on validation data.
 why_it_matters_vi: Tách các bước dự đoán, tính mất mát, tính gradient, cập nhật và kiểm định để dễ tìm lỗi.
 why_it_matters_en: Separate forward, loss, backward, optimizer, validation, and checkpoint into a debuggable loop.
 study_steps_vi:
@@ -208,7 +216,11 @@ review_cards:
 ---
 # Lan truyền xuôi và hàm mất mát / Forward passes and loss
 
-Lan truyền xuôi tạo dự đoán từ đầu vào. Hàm mất mát so sánh dự đoán với mục tiêu; kiểu nhãn, kích thước và biểu diễn đầu ra phải phù hợp hàm đã chọn.
+Lan truyền xuôi biến đầu vào thành dự đoán qua các lớp của mô hình. Hàm mất mát đo mức không phù hợp giữa dự đoán và mục tiêu, tạo một đại lượng để tối ưu. Hàm mất mát không nhất thiết trùng thước đo mà người dùng quan tâm.
+
+Trong phân loại một nhãn với CrossEntropyLoss, đầu vào thường là logits, tức điểm số chưa qua softmax, và nhãn là chỉ số lớp. Với 4 mẫu và 3 lớp, logits có shape (4, 3), nhãn có shape (4,). Không thêm softmax theo thói quen vì hàm này đã xử lý phép chuẩn hóa cần thiết.
+
+Tự kiểm tra: loss giảm có bảo đảm accuracy tăng sau mỗi bước không? Không; độ tự tin có thể thay đổi trong khi lớp có điểm cao nhất vẫn giữ nguyên. Theo dõi cả loss và thước đo phù hợp trên dữ liệu kiểm định.
 
 ## Thực hành
 

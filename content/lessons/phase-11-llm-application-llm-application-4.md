@@ -28,11 +28,18 @@ key_terms:
 - retrieval
 - evaluation
 - llm-application
-concept_notes_vi: Streaming gửi từng phần kết quả để giảm thời gian chờ cảm nhận. Giới hạn tần suất và thử lại cần
-  phối hợp với thời gian chờ, ngân sách và xử lý khi luồng bị ngắt.
-concept_notes_en: 'Streaming, rate limit và retry belongs to LLM Application Engineering: design the contract between
-  the application and the model. Define instructions, inputs, output schema, timeout, retry, and token limits; parse
-  model output as untrusted data and return actionable errors.'
+concept_notes_vi: |-
+  Streaming gửi từng phần kết quả để giảm thời gian chờ cảm nhận. Giới hạn tần suất và thử lại cần phối hợp với thời gian chờ, ngân sách và xử lý khi luồng bị ngắt.
+
+  Thời gian tới token đầu tiên khác thời gian hoàn tất: streaming có thể cho thấy chữ sớm mà tổng thời gian không giảm. Retry tạo một lần thử mới, vì vậy cần phân biệt phần kết quả đã hiển thị với một phản hồi hoàn chỉnh đã xác nhận.
+
+  Ví dụ, luồng bị ngắt sau nửa câu thì giao diện phải báo chưa hoàn tất; nối mù kết quả lần thử lại có thể tạo câu trùng hoặc mâu thuẫn. Tự kiểm tra: cứ gặp lỗi là thử lại ngay có tốt không? Không; xem loại lỗi, chỉ dẫn chờ, giới hạn số lần và ngân sách để tránh làm tải tăng thêm.
+concept_notes_en: |-
+  Streaming delivers partial output to reduce perceived waiting. Rate limits and retries must work with timeouts, budgets and interrupted-stream handling.
+
+  Time to first token differs from completion time: earlier visible text need not reduce total duration. A retry is a new attempt, so partial output must remain distinguishable from confirmed completion.
+
+  If a stream stops mid-sentence, mark it incomplete; blindly appending a retried response can duplicate or contradict text. Self-check: should every error trigger an immediate retry? No: consider error type, waiting guidance, attempt limits and budget to avoid amplifying load.
 why_it_matters_vi: Xác định cấu trúc trao đổi và cách xử lý lỗi quanh mô hình để ứng dụng dùng được kết quả.
 why_it_matters_en: LLM application engineering designs contracts and failure boundaries around a model, not just
   a long prompt.
@@ -222,6 +229,10 @@ review_cards:
 # Trả lời từng phần, giới hạn tần suất và thử lại / Streaming, rate limits, and retries
 
 Streaming gửi từng phần kết quả để giảm thời gian chờ cảm nhận. Giới hạn tần suất và thử lại cần phối hợp với thời gian chờ, ngân sách và xử lý khi luồng bị ngắt.
+
+Thời gian tới token đầu tiên khác thời gian hoàn tất: streaming có thể cho thấy chữ sớm mà tổng thời gian không giảm. Retry tạo một lần thử mới, vì vậy cần phân biệt phần kết quả đã hiển thị với một phản hồi hoàn chỉnh đã xác nhận.
+
+Ví dụ, luồng bị ngắt sau nửa câu thì giao diện phải báo chưa hoàn tất; nối mù kết quả lần thử lại có thể tạo câu trùng hoặc mâu thuẫn. Tự kiểm tra: cứ gặp lỗi là thử lại ngay có tốt không? Không; xem loại lỗi, chỉ dẫn chờ, giới hạn số lần và ngân sách để tránh làm tải tăng thêm.
 
 ## Thực hành
 

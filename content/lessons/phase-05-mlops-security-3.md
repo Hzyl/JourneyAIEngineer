@@ -26,10 +26,22 @@ key_terms:
 - reproducibility
 - deployment
 - security
-concept_notes_vi: Phụ thuộc cần nguồn rõ, phiên bản được kiểm soát và quy trình cập nhật. Quét lỗ hổng hỗ trợ nhận
-  diện rủi ro; vẫn cần xem nơi sử dụng và kiểm thử sau thay đổi.
-concept_notes_en: Dependency hygiene is a concept in the security module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Phụ thuộc cần nguồn rõ, phiên bản được kiểm soát và quy trình cập nhật. Quét lỗ hổng hỗ trợ nhận diện rủi ro; vẫn cần xem nơi sử dụng và kiểm thử sau thay đổi.
+
+  Khóa phiên bản giúp tái lập môi trường; cập nhật bảo mật xử lý rủi ro mới phát hiện. Hai mục tiêu cần phối hợp: giữ bản hiện tại có thể dựng lại, rồi nâng phiên bản có kiểm thử thay vì để cài bản bất kỳ.
+
+  Ví dụ, một thư viện đọc tệp kéo theo phụ thuộc gián tiếp. Dù không import phụ thuộc đó trực tiếp, ứng dụng vẫn có thể dùng mã của nó. Kiểm tra nguồn gói, bản đã cài và đường đi sử dụng khi đọc cảnh báo.
+
+  Tự kiểm tra: không có cảnh báo từ máy quét nghĩa là an toàn tuyệt đối không? Không; công cụ phụ thuộc cơ sở dữ liệu đã biết. Vẫn hạn chế quyền của tiến trình và kiểm tra gói trước khi cập nhật.
+concept_notes_en: |-
+  Dependencies need clear origins, controlled versions and an update process. Vulnerability scans inform risk assessment; inspect actual usage and test changes.
+
+  Version locking supports reproducibility, while security updates address newly discovered risks. Preserve a rebuildable current environment, then test deliberate upgrades rather than installing arbitrary versions.
+
+  A file-reading library may bring transitive dependencies. Even without importing one directly, the application can execute its code. Check package origin, installed version and reachable use when reviewing an alert.
+
+  Self-check: does a clean scanner result prove complete safety? No: scanners depend on known vulnerability data. Also restrict process permissions and review dependencies before upgrading.
 why_it_matters_vi: Kiểm soát đầu vào, phụ thuộc và nhật ký để giảm rò rỉ bí mật hoặc dữ liệu cá nhân.
 why_it_matters_en: Protect the inference service from secret leaks, oversized input, risky dependencies, and PII
   exposure.
@@ -208,6 +220,12 @@ review_cards:
 # Quản lý phụ thuộc an toàn / Dependency hygiene
 
 Phụ thuộc cần nguồn rõ, phiên bản được kiểm soát và quy trình cập nhật. Quét lỗ hổng hỗ trợ nhận diện rủi ro; vẫn cần xem nơi sử dụng và kiểm thử sau thay đổi.
+
+Khóa phiên bản giúp tái lập môi trường; cập nhật bảo mật xử lý rủi ro mới phát hiện. Hai mục tiêu cần phối hợp: giữ bản hiện tại có thể dựng lại, rồi nâng phiên bản có kiểm thử thay vì để cài bản bất kỳ.
+
+Ví dụ, một thư viện đọc tệp kéo theo phụ thuộc gián tiếp. Dù không import phụ thuộc đó trực tiếp, ứng dụng vẫn có thể dùng mã của nó. Kiểm tra nguồn gói, bản đã cài và đường đi sử dụng khi đọc cảnh báo.
+
+Tự kiểm tra: không có cảnh báo từ máy quét nghĩa là an toàn tuyệt đối không? Không; công cụ phụ thuộc cơ sở dữ liệu đã biết. Vẫn hạn chế quyền của tiến trình và kiểm tra gói trước khi cập nhật.
 
 ## Thực hành
 

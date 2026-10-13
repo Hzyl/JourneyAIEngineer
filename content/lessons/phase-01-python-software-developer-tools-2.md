@@ -27,11 +27,22 @@ key_terms:
 - debugging
 - maintainability
 - developer-tools
-concept_notes_vi: Nhánh cho phép phát triển một thay đổi độc lập trong lịch sử Git. Pull request tập hợp thay đổi
-  để người khác xem xét; mô tả nên nêu vấn đề, cách sửa và bằng chứng kiểm tra.
-concept_notes_en: 'Branch và pull request makes AI engineering work traceable: every change needs a diff, a reason,
-  and a verification step. Practise in a small repository, introduce an intentional failure, read the terminal output,
-  and fix it with a focused commit.'
+concept_notes_vi: |-
+  Nhánh Git là tên tham chiếu tới một dòng phát triển trong lịch sử, giúp gom các commit cho một thay đổi. Pull request trình bày khác biệt để thảo luận, kiểm tra và quyết định tích hợp.
+
+  Phân biệt nhánh với bản sao thư mục và pull request với merge. Tạo nhánh chưa tạo bản sao độc lập của mọi tệp trên đĩa; mở pull request cũng chưa tự đưa thay đổi vào nhánh đích.
+
+  Một sửa lỗi nhỏ nên kèm trường hợp trước đây thất bại, cách sửa và kết quả kiểm tra. Nếu nhánh đích đổi cùng đoạn mã, xung đột cần giải quyết theo ý nghĩa, không chỉ xóa dấu đánh dấu.
+
+  Tự kiểm tra: merge không xung đột có chứng minh chương trình đúng không? Không; mã ghép được vẫn có thể sai hành vi, nên cần kiểm thử.
+concept_notes_en: |-
+  A Git branch names a line of development and groups commits for a change. A pull request presents differences for discussion, verification and an integration decision.
+
+  A branch is not a separate folder copy, and a pull request is not a merge. Creating either does not automatically integrate changes into the target branch.
+
+  A small bug fix should include the previously failing case, the correction and test evidence. When both branches edit the same area, resolve meaning rather than merely removing conflict markers.
+
+  Self-check: does a conflict-free merge prove correctness? No; mechanically compatible code can still behave incorrectly, so test it.
 why_it_matters_vi: Dùng Git, terminal và HTTP để tái hiện vấn đề, xem xét thay đổi và trao đổi với hệ thống.
 why_it_matters_en: Use Git, terminals, and HTTP as daily tools for reproduction, review, and system communication.
 study_steps_vi:
@@ -233,7 +244,13 @@ review_cards:
 ---
 # Nhánh Git và pull request / Branches and pull requests
 
-Nhánh cho phép phát triển một thay đổi độc lập trong lịch sử Git. Pull request tập hợp thay đổi để người khác xem xét; mô tả nên nêu vấn đề, cách sửa và bằng chứng kiểm tra.
+Nhánh Git là tên tham chiếu tới một dòng phát triển trong lịch sử, giúp gom các commit cho một thay đổi. Pull request trình bày khác biệt để thảo luận, kiểm tra và quyết định tích hợp.
+
+Phân biệt nhánh với bản sao thư mục và pull request với merge. Tạo nhánh chưa tạo bản sao độc lập của mọi tệp trên đĩa; mở pull request cũng chưa tự đưa thay đổi vào nhánh đích.
+
+Một sửa lỗi nhỏ nên kèm trường hợp trước đây thất bại, cách sửa và kết quả kiểm tra. Nếu nhánh đích đổi cùng đoạn mã, xung đột cần giải quyết theo ý nghĩa, không chỉ xóa dấu đánh dấu.
+
+Tự kiểm tra: merge không xung đột có chứng minh chương trình đúng không? Không; mã ghép được vẫn có thể sai hành vi, nên cần kiểm thử.
 
 ## Thực hành
 

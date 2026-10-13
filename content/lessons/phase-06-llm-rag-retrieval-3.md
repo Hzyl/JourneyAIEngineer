@@ -25,10 +25,18 @@ key_terms:
 - embedding
 - retrieval
 - evaluation
-concept_notes_vi: Siêu dữ liệu như nguồn, ngày hoặc phạm vi truy cập giúp giới hạn tài liệu phù hợp. Bộ lọc cần
-  nhất quán với dữ liệu lưu và quyền người dùng.
-concept_notes_en: Metadata filter is a concept in the retrieval module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Siêu dữ liệu như nguồn, ngày hoặc phạm vi truy cập giúp giới hạn tài liệu phù hợp. Bộ lọc cần nhất quán với dữ liệu lưu và quyền người dùng.
+
+  Lọc phạm vi xác định tài liệu được xét; xếp hạng xác định thứ tự trong phạm vi đó. Điều kiện quyền phải lấy từ danh tính đã xác thực, không chỉ từ tên nhóm do người dùng nhập trong câu hỏi.
+
+  Ví dụ, lọc tenant_id và thời gian hiệu lực trước khi chọn chính sách phù hợp. Tự kiểm tra: lọc quá chặt trả về rỗng có nên bỏ mọi bộ lọc không? Không; có thể nới điều kiện nội dung khi phù hợp, nhưng giữ ranh giới quyền và báo thiếu dữ liệu.
+concept_notes_en: |-
+  Metadata such as source, date and access scope narrows eligible documents. Filters must agree with stored values and user permissions.
+
+  Filtering determines eligibility; ranking orders eligible results. Access conditions should derive from authenticated identity, not a group name supplied in a question.
+
+  Filter by tenant_id and effective date before selecting a policy. Self-check: should an empty result remove all filters? No: relax content constraints only where appropriate, retain authorization boundaries and report missing evidence.
 why_it_matters_vi: Thiết kế cách chia đoạn, lưu siêu dữ liệu và tìm kiếm để đo chất lượng truy xuất trước khi sinh
   câu trả lời.
 why_it_matters_en: Design retrieval with chunks, metadata, vector search, and reranking so recall is measured before
@@ -206,6 +214,10 @@ review_cards:
 # Lọc theo siêu dữ liệu / Metadata filters
 
 Siêu dữ liệu như nguồn, ngày hoặc phạm vi truy cập giúp giới hạn tài liệu phù hợp. Bộ lọc cần nhất quán với dữ liệu lưu và quyền người dùng.
+
+Lọc phạm vi xác định tài liệu được xét; xếp hạng xác định thứ tự trong phạm vi đó. Điều kiện quyền phải lấy từ danh tính đã xác thực, không chỉ từ tên nhóm do người dùng nhập trong câu hỏi.
+
+Ví dụ, lọc tenant_id và thời gian hiệu lực trước khi chọn chính sách phù hợp. Tự kiểm tra: lọc quá chặt trả về rỗng có nên bỏ mọi bộ lọc không? Không; có thể nới điều kiện nội dung khi phù hợp, nhưng giữ ranh giới quyền và báo thiếu dữ liệu.
 
 ## Thực hành
 

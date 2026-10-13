@@ -28,11 +28,18 @@ key_terms:
 - retrieval
 - evaluation
 - local-llm
-concept_notes_vi: GGUF là định dạng lưu mô hình; lượng tử hóa thay đổi cách biểu diễn trọng số; Ollama hỗ trợ chạy
-  mô hình cục bộ. Cần kiểm tra tương thích của tệp, mô hình và môi trường.
-concept_notes_en: GGUF, quantization và Ollama is model optimization after establishing an evaluation baseline.
-  Prepare clean data, split train/eval, track memory and quality regressions, and choose fine-tuning, quantization,
-  or local serving based on quality, latency, cost, and privacy.
+concept_notes_vi: |-
+  GGUF là định dạng lưu mô hình; lượng tử hóa thay đổi cách biểu diễn trọng số; Ollama hỗ trợ chạy mô hình cục bộ. Cần kiểm tra tương thích của tệp, mô hình và môi trường.
+
+  Định dạng tệp, kiến trúc mô hình và cách lượng tử hóa là ba yếu tố riêng. Có đuôi GGUF không bảo đảm mọi bộ chạy đều hỗ trợ kiến trúc, loại dữ liệu hoặc mẫu hội thoại chứa trong tệp đó.
+
+  Ví dụ, khi nhập mô hình vào Ollama, cần chọn tệp hoặc adapter tương thích và kiểm tra prompt mẫu của mô hình. Tự kiểm tra: chạy cục bộ có nghĩa mọi dữ liệu chắc chắn không rời máy không? Không thể kết luận chỉ từ tên công cụ; kiểm tra cấu hình, điểm cuối, chức năng gọi ra ngoài và quyền truy cập của ứng dụng sử dụng nó.
+concept_notes_en: |-
+  GGUF is a model file format, quantization changes weight representation and Ollama supports local execution. Check compatibility among files, models and runtime.
+
+  File format, model architecture and quantization method are separate factors. A GGUF extension does not guarantee support for every architecture, data type or chat template.
+
+  When importing into Ollama, select compatible model or adapter files and verify the model's prompt format. Self-check: does local execution guarantee that no data ever leaves the machine? Not from the tool name alone: inspect configuration, endpoints, outbound features and the calling application's permissions.
 why_it_matters_vi: Đo tài nguyên và chất lượng để chọn mô hình cục bộ phù hợp phần cứng, nhu cầu riêng tư.
 why_it_matters_en: Local LLMs expose the trade-offs among memory, throughput, model size, quality, and privacy.
 study_steps_vi:
@@ -216,6 +223,10 @@ review_cards:
 # GGUF, lượng tử hóa và Ollama / GGUF, quantization, and Ollama
 
 GGUF là định dạng lưu mô hình; lượng tử hóa thay đổi cách biểu diễn trọng số; Ollama hỗ trợ chạy mô hình cục bộ. Cần kiểm tra tương thích của tệp, mô hình và môi trường.
+
+Định dạng tệp, kiến trúc mô hình và cách lượng tử hóa là ba yếu tố riêng. Có đuôi GGUF không bảo đảm mọi bộ chạy đều hỗ trợ kiến trúc, loại dữ liệu hoặc mẫu hội thoại chứa trong tệp đó.
+
+Ví dụ, khi nhập mô hình vào Ollama, cần chọn tệp hoặc adapter tương thích và kiểm tra prompt mẫu của mô hình. Tự kiểm tra: chạy cục bộ có nghĩa mọi dữ liệu chắc chắn không rời máy không? Không thể kết luận chỉ từ tên công cụ; kiểm tra cấu hình, điểm cuối, chức năng gọi ra ngoài và quyền truy cập của ứng dụng sử dụng nó.
 
 ## Thực hành
 

@@ -28,11 +28,22 @@ key_terms:
 - testing
 - debugging
 - maintainability
-concept_notes_vi: Trợ lý AI có thể gợi ý cách tiếp cận và giải thích lỗi, nhưng câu trả lời vẫn cần kiểm tra. Tự
-  thử trước, hỏi gợi ý vừa đủ rồi giải thích lại bằng lời của bạn để tránh phụ thuộc vào lời giải có sẵn.
-concept_notes_en: Dùng ChatGPT/Codex để học có kiểm soát is a concept in the learning-system module. Identify the
-  inputs, outputs, assumptions, failure modes, and verification method with a small example before scaling to a
-  project.
+concept_notes_vi: |-
+  Trợ lý AI có thể đề xuất cách giải và diễn giải lỗi, nhưng câu trả lời vẫn cần kiểm chứng. Tự thử trước, hỏi gợi ý vừa đủ rồi diễn đạt lại cách làm bằng lời của bạn.
+
+  Phân biệt câu trả lời nghe hợp lý với bằng chứng chạy được và phù hợp yêu cầu. Một đoạn mã có thể chạy mà xử lý sai dữ liệu biên; lời giải thích tự tin cũng có thể mô tả API không tồn tại.
+
+  Khi gặp lỗi, gửi đoạn mã tối thiểu, đầu vào và thông báo đã bỏ thông tin nhạy cảm. Yêu cầu AI nêu giả thuyết cùng phép thử, rồi tự đối chiếu với tài liệu và kết quả chạy.
+
+  Tự kiểm tra: chép lời giải rồi đọc hiểu đã đủ chưa? Chưa; thử thay đầu vào, dự đoán kết quả và tự sửa một trường hợp thất bại.
+concept_notes_en: |-
+  An AI assistant can propose approaches and explain errors, but its answers still need verification. Try first, request limited hints and explain the solution in your own words.
+
+  Plausibility differs from executable evidence and requirements compliance. Running code may mishandle boundaries; confident prose may describe a nonexistent API.
+
+  For an error, provide a minimal example, input and sanitized message. Ask for a hypothesis and test, then compare the proposal with documentation and observed behavior.
+
+  Self-check: is copying and recognizing a solution enough? Not yet; change an input, predict the result and repair a failing case yourself.
 why_it_matters_vi: Gắn việc học với kết quả tự làm để biết điều đã hiểu và điều cần luyện tiếp.
 why_it_matters_en: Build an evidence-based learning system with sessions, journals, reviews, and checkpoints instead
   of passive reading.
@@ -219,7 +230,13 @@ review_cards:
 ---
 # Dùng ChatGPT/Codex để học có kiểm soát / Use ChatGPT/Codex with learning controls
 
-Trợ lý AI có thể gợi ý cách tiếp cận và giải thích lỗi, nhưng câu trả lời vẫn cần kiểm tra. Tự thử trước, hỏi gợi ý vừa đủ rồi giải thích lại bằng lời của bạn để tránh phụ thuộc vào lời giải có sẵn.
+Trợ lý AI có thể đề xuất cách giải và diễn giải lỗi, nhưng câu trả lời vẫn cần kiểm chứng. Tự thử trước, hỏi gợi ý vừa đủ rồi diễn đạt lại cách làm bằng lời của bạn.
+
+Phân biệt câu trả lời nghe hợp lý với bằng chứng chạy được và phù hợp yêu cầu. Một đoạn mã có thể chạy mà xử lý sai dữ liệu biên; lời giải thích tự tin cũng có thể mô tả API không tồn tại.
+
+Khi gặp lỗi, gửi đoạn mã tối thiểu, đầu vào và thông báo đã bỏ thông tin nhạy cảm. Yêu cầu AI nêu giả thuyết cùng phép thử, rồi tự đối chiếu với tài liệu và kết quả chạy.
+
+Tự kiểm tra: chép lời giải rồi đọc hiểu đã đủ chưa? Chưa; thử thay đầu vào, dự đoán kết quả và tự sửa một trường hợp thất bại.
 
 ## Thực hành
 

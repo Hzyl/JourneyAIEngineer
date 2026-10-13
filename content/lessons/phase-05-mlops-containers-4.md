@@ -25,10 +25,22 @@ key_terms:
 - reproducibility
 - deployment
 - containers
-concept_notes_vi: Tích hợp liên tục chạy các bước kiểm tra khi mã nguồn thay đổi. Khai báo rõ môi trường, phụ thuộc
-  và lệnh chạy giúp người khác tái hiện kết quả.
-concept_notes_en: CI pipeline is a concept in the containers module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Tích hợp liên tục chạy các bước kiểm tra khi mã nguồn thay đổi. Khai báo rõ môi trường, phụ thuộc và lệnh chạy giúp người khác tái hiện kết quả.
+
+  CI kiểm tra thay đổi thường xuyên; triển khai là đưa phiên bản vào môi trường sử dụng và có thêm rủi ro vận hành. Một dấu xanh chỉ chứng minh các bước đã khai báo chạy thành công trong môi trường đó.
+
+  Ví dụ, pipeline tạo môi trường sạch, cài phụ thuộc đã khóa, chạy kiểm thử và tạo gói. Nếu bỏ kiểm thử nạp mô hình, gói vẫn có thể thiếu tệp trọng số dù bước kiểm tra cú pháp đã qua.
+
+  Tự kiểm tra: máy cá nhân chạy được nhưng CI lỗi import thì nên bỏ bước kiểm thử không? Không; đối chiếu phiên bản Python, đường dẫn và phụ thuộc. Lưu log cùng mã phiên bản để người khác tái hiện lỗi.
+concept_notes_en: |-
+  Continuous integration runs checks when source code changes. Declare the environment, dependencies and commands so other people can reproduce the result.
+
+  CI checks changes; deployment introduces a version into a running environment with additional operational risks. A green result proves only that the declared checks passed in that environment.
+
+  For example, create a clean environment, install locked dependencies, run tests and build a package. Without a model-loading test, that package may still lack weights even when syntax checks pass.
+
+  Self-check: should an import test be removed when it passes locally but fails in CI? No: compare Python versions, paths and dependencies, and retain logs with the source revision.
 why_it_matters_vi: Đóng gói môi trường để người khác chạy được cùng dịch vụ và kiểm tra tự động.
 why_it_matters_en: Package the environment with Docker and CI so another engineer can run the same service from
   a clone.
@@ -215,6 +227,12 @@ review_cards:
 # Quy trình tích hợp liên tục / CI pipelines
 
 Tích hợp liên tục chạy các bước kiểm tra khi mã nguồn thay đổi. Khai báo rõ môi trường, phụ thuộc và lệnh chạy giúp người khác tái hiện kết quả.
+
+CI kiểm tra thay đổi thường xuyên; triển khai là đưa phiên bản vào môi trường sử dụng và có thêm rủi ro vận hành. Một dấu xanh chỉ chứng minh các bước đã khai báo chạy thành công trong môi trường đó.
+
+Ví dụ, pipeline tạo môi trường sạch, cài phụ thuộc đã khóa, chạy kiểm thử và tạo gói. Nếu bỏ kiểm thử nạp mô hình, gói vẫn có thể thiếu tệp trọng số dù bước kiểm tra cú pháp đã qua.
+
+Tự kiểm tra: máy cá nhân chạy được nhưng CI lỗi import thì nên bỏ bước kiểm thử không? Không; đối chiếu phiên bản Python, đường dẫn và phụ thuộc. Lưu log cùng mã phiên bản để người khác tái hiện lỗi.
 
 ## Thực hành
 

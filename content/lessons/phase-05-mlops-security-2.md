@@ -26,10 +26,22 @@ key_terms:
 - reproducibility
 - deployment
 - security
-concept_notes_vi: Giới hạn kích thước, số lượng và thời gian xử lý giúp kiểm soát tài nguyên. Kiểm tra trước thao
-  tác tốn kém và trả thông báo rõ để phía gọi biết cách sửa.
-concept_notes_en: Input limits is a concept in the security module. Identify the inputs, outputs, assumptions, failure
-  modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Giới hạn kích thước, số lượng và thời gian xử lý giúp kiểm soát tài nguyên. Kiểm tra trước thao tác tốn kém và trả thông báo rõ để phía gọi biết cách sửa.
+
+  Giới hạn từng yêu cầu khác giới hạn tần suất nhiều yêu cầu. Một văn bản quá dài có thể chiếm hết bộ nhớ dù người dùng chỉ gửi một lần; nhiều văn bản ngắn có thể gây quá tải qua tổng lưu lượng.
+
+  Ví dụ, chặn tệp quá lớn trước khi đọc toàn bộ, giới hạn số phần tử trong lô và đặt thời hạn suy luận. Thông báo cần nêu giới hạn người gọi có thể sửa, nhưng không tiết lộ chi tiết nội bộ.
+
+  Tự kiểm tra: đã giới hạn số ký tự thì có bảo đảm không vượt token không? Không; tokenizer có cách tách riêng. Kiểm tra ngân sách theo tokenizer của mô hình và chừa phần cho đầu ra.
+concept_notes_en: |-
+  Limits on input size, item count and processing time control resource use. Check before expensive work and return errors callers can act on.
+
+  Per-request limits differ from rate limits across requests. One huge text can exhaust memory, while many short requests can overload aggregate capacity.
+
+  Reject an oversized file before reading it fully, bound batch length and set an inference deadline. Explain the relevant limit without leaking internal implementation details.
+
+  Self-check: does a character limit guarantee the token budget is respected? No: tokenization varies. Check the model's tokenizer and reserve capacity for the output.
 why_it_matters_vi: Kiểm soát đầu vào, phụ thuộc và nhật ký để giảm rò rỉ bí mật hoặc dữ liệu cá nhân.
 why_it_matters_en: Protect the inference service from secret leaks, oversized input, risky dependencies, and PII
   exposure.
@@ -207,6 +219,12 @@ review_cards:
 # Giới hạn đầu vào / Input limits
 
 Giới hạn kích thước, số lượng và thời gian xử lý giúp kiểm soát tài nguyên. Kiểm tra trước thao tác tốn kém và trả thông báo rõ để phía gọi biết cách sửa.
+
+Giới hạn từng yêu cầu khác giới hạn tần suất nhiều yêu cầu. Một văn bản quá dài có thể chiếm hết bộ nhớ dù người dùng chỉ gửi một lần; nhiều văn bản ngắn có thể gây quá tải qua tổng lưu lượng.
+
+Ví dụ, chặn tệp quá lớn trước khi đọc toàn bộ, giới hạn số phần tử trong lô và đặt thời hạn suy luận. Thông báo cần nêu giới hạn người gọi có thể sửa, nhưng không tiết lộ chi tiết nội bộ.
+
+Tự kiểm tra: đã giới hạn số ký tự thì có bảo đảm không vượt token không? Không; tokenizer có cách tách riêng. Kiểm tra ngân sách theo tokenizer của mô hình và chừa phần cho đầu ra.
 
 ## Thực hành
 

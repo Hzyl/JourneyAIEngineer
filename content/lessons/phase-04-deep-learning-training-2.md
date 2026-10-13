@@ -25,10 +25,18 @@ key_terms:
 - tensor
 - loss
 - training
-concept_notes_vi: Lan truyền ngược tính gradient của hàm mất mát theo tham số tham gia tính toán. Nó không tự cập
-  nhật trọng số; việc cập nhật thuộc bước của bộ tối ưu.
-concept_notes_en: Backward pass is a concept in the training module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Lan truyền ngược áp dụng quy tắc dây chuyền để tính gradient của loss theo các tham số tham gia phép tính. Nó trả lời hướng thay đổi cục bộ của loss, còn bộ tối ưu quyết định cập nhật tham số bằng gradient đó.
+
+  Ví dụ, y=w*x, loss=(y-4)² với x=2 và w=1 cho y=2, loss=4, gradient theo w bằng -8. backward tính ra -8 nhưng w vẫn bằng 1; một bước SGD với tốc độ học 0,1 mới đưa w lên 1,8.
+
+  Tự kiểm tra: gradient bằng 0 có chứng minh đã tìm được nghiệm tốt nhất không? Không; có thể gặp điểm dừng khác, nhánh bị ngắt gradient hoặc vùng hàm phẳng. Cần kiểm tra đồ thị, dữ liệu và diễn biến loss trước khi kết luận.
+concept_notes_en: |-
+  Backpropagation applies the chain rule to compute loss gradients with respect to parameters involved in the calculation. It describes local loss changes; an optimizer determines how to update parameters using those gradients.
+
+  For y=w*x and loss=(y-4)², x=2 and w=1 give y=2, loss=4 and a weight gradient of -8. backward computes -8 but leaves w at 1; an SGD step with learning rate 0.1 then moves w to 1.8.
+
+  Self-check: does a zero gradient prove the best solution has been found? No; it may reflect another stationary point, a disconnected gradient path or a flat region. Check the graph, data and loss trajectory before concluding.
 why_it_matters_vi: Tách các bước dự đoán, tính mất mát, tính gradient, cập nhật và kiểm định để dễ tìm lỗi.
 why_it_matters_en: Separate forward, loss, backward, optimizer, validation, and checkpoint into a debuggable loop.
 study_steps_vi:
@@ -218,7 +226,11 @@ review_cards:
 ---
 # Lan truyền ngược / Backward passes
 
-Lan truyền ngược tính gradient của hàm mất mát theo tham số tham gia tính toán. Nó không tự cập nhật trọng số; việc cập nhật thuộc bước của bộ tối ưu.
+Lan truyền ngược áp dụng quy tắc dây chuyền để tính gradient của loss theo các tham số tham gia phép tính. Nó trả lời hướng thay đổi cục bộ của loss, còn bộ tối ưu quyết định cập nhật tham số bằng gradient đó.
+
+Ví dụ, y=w*x, loss=(y-4)² với x=2 và w=1 cho y=2, loss=4, gradient theo w bằng -8. backward tính ra -8 nhưng w vẫn bằng 1; một bước SGD với tốc độ học 0,1 mới đưa w lên 1,8.
+
+Tự kiểm tra: gradient bằng 0 có chứng minh đã tìm được nghiệm tốt nhất không? Không; có thể gặp điểm dừng khác, nhánh bị ngắt gradient hoặc vùng hàm phẳng. Cần kiểm tra đồ thị, dữ liệu và diễn biến loss trước khi kết luận.
 
 ## Thực hành
 

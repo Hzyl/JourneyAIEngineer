@@ -26,11 +26,18 @@ key_terms:
 - embedding
 - retrieval
 - fine-tuning
-concept_notes_vi: So sánh mô hình tinh chỉnh với mô hình cơ sở bằng cùng tập kiểm tra và cách sinh. Cần xem cả nhiệm
-  vụ mục tiêu và khả năng suy giảm ở các tình huống liên quan.
-concept_notes_en: Fine-tuning evaluation turns an AI demo into a system that can be trusted. Define metrics and
-  an evaluation set first, record prompt/model/version/tokens/latency, and attribute failures to retrieval, generation,
-  data, or infrastructure instead of relying on one score.
+concept_notes_vi: |-
+  So sánh mô hình tinh chỉnh với mô hình cơ sở bằng cùng tập kiểm tra và cách sinh. Cần xem cả nhiệm vụ mục tiêu và khả năng suy giảm ở các tình huống liên quan.
+
+  Cải thiện nhiệm vụ mục tiêu khác bảo toàn năng lực chung. Mô hình học tốt định dạng hỗ trợ khách hàng có thể trả lời kém hơn khi gặp câu hỏi ngoài phạm vi, nên đánh giá cần chứa cả ví dụ mục tiêu và kiểm tra hồi quy.
+
+  Ví dụ, so câu trả lời đúng, trường bị thiếu và cách từ chối câu không đủ dữ liệu ở cả hai phiên bản. Tự kiểm tra: dùng một prompt thuận lợi riêng cho bản tinh chỉnh có tạo so sánh công bằng không? Chưa; công bố rõ cấu hình từng bên và giữ điều kiện, tiêu chí tương đương. Đừng chọn bản tốt chỉ từ loss train.
+concept_notes_en: |-
+  Compare a fine-tuned model with its baseline using the same test set and generation procedure. Check both target gains and regressions in related situations.
+
+  Improving the target task differs from preserving general capabilities. A customer-support model may improve formatting but worsen outside its narrow domain, so include target examples and regression checks.
+
+  Compare correctness, missing fields and abstention when evidence is absent. Self-check: is a specially favorable prompt for only the tuned model a fair comparison? Not without disclosure and equivalent conditions and criteria. Training loss alone cannot select the better deployed model.
 why_it_matters_vi: Chỉ chọn tinh chỉnh khi dữ liệu và đánh giá cho thấy giải pháp hiện tại chưa đáp ứng nhiệm vụ.
 why_it_matters_en: Fine-tuning is justified only when data and evaluation show prompting/RAG are insufficient.
 study_steps_vi:
@@ -210,6 +217,10 @@ review_cards:
 # Đánh giá sau tinh chỉnh / Fine-tuning evaluation
 
 So sánh mô hình tinh chỉnh với mô hình cơ sở bằng cùng tập kiểm tra và cách sinh. Cần xem cả nhiệm vụ mục tiêu và khả năng suy giảm ở các tình huống liên quan.
+
+Cải thiện nhiệm vụ mục tiêu khác bảo toàn năng lực chung. Mô hình học tốt định dạng hỗ trợ khách hàng có thể trả lời kém hơn khi gặp câu hỏi ngoài phạm vi, nên đánh giá cần chứa cả ví dụ mục tiêu và kiểm tra hồi quy.
+
+Ví dụ, so câu trả lời đúng, trường bị thiếu và cách từ chối câu không đủ dữ liệu ở cả hai phiên bản. Tự kiểm tra: dùng một prompt thuận lợi riêng cho bản tinh chỉnh có tạo so sánh công bằng không? Chưa; công bố rõ cấu hình từng bên và giữ điều kiện, tiêu chí tương đương. Đừng chọn bản tốt chỉ từ loss train.
 
 ## Thực hành
 

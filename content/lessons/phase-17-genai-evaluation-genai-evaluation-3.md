@@ -27,11 +27,18 @@ key_terms:
 - embedding
 - retrieval
 - genai-evaluation
-concept_notes_vi: 'Agent cần được đánh giá cả kết quả lẫn đường đi: công cụ đã gọi, quyền sử dụng, lỗi, số bước
-  và chi phí. Hoàn thành nhiệm vụ không bù được thao tác ngoài phạm vi cho phép.'
-concept_notes_en: Agent evaluation và trajectory extends a model with controlled actions. Tool schemas must validate
-  inputs, limit permissions, and define timeout and retry; an agent loop needs stopping conditions, step logs, and
-  human approval for side effects.
+concept_notes_vi: |-
+  Agent cần được đánh giá cả kết quả lẫn đường đi: công cụ đã gọi, quyền sử dụng, lỗi, số bước và chi phí. Hoàn thành nhiệm vụ không bù được thao tác ngoài phạm vi cho phép.
+
+  Đánh giá kết quả hỏi nhiệm vụ đã đạt chưa; đánh giá trajectory, tức chuỗi hành động, hỏi hệ thống đã làm gì để đạt nó. Hai agent tạo cùng tệp cuối có thể khác nhau về quyền, độ bền và lượng công việc thừa.
+
+  Ví dụ, agent sửa tài liệu đúng nhưng đọc thêm thư mục ngoài phạm vi vẫn thất bại tiêu chí quyền. Tự kiểm tra: có nên buộc mọi agent theo một chuỗi công cụ duy nhất không? Không nhất thiết; cho phép đường đi hợp lệ khác nếu đáp ứng kết quả, ràng buộc và ngân sách. Chấm vi phạm cụ thể thay vì chỉ so khớp tên công cụ.
+concept_notes_en: |-
+  Agent evaluation covers both outcome and trajectory: tool calls, permissions, errors, steps and cost. Completing a task does not excuse out-of-scope actions.
+
+  Outcome scoring asks what was achieved; trajectory scoring asks how. Agents producing the same file can differ in authorization, robustness and wasted work.
+
+  An agent that correctly edits a document but reads forbidden folders fails the access criterion. Self-check: must all agents follow one fixed tool sequence? Not necessarily: alternative paths can be valid within outcome, policy and budget constraints. Score actual violations instead of merely matching tool names.
 why_it_matters_vi: Dùng tiêu chí và dữ liệu đại diện để biết hệ thống tốt ở đâu, còn lỗi ở đâu.
 why_it_matters_en: Evaluation distinguishes a fluent demo from a trustworthy system that can improve.
 study_steps_vi:
@@ -216,6 +223,10 @@ review_cards:
 # Đánh giá agent và chuỗi hành động / Agent evaluation and trajectories
 
 Agent cần được đánh giá cả kết quả lẫn đường đi: công cụ đã gọi, quyền sử dụng, lỗi, số bước và chi phí. Hoàn thành nhiệm vụ không bù được thao tác ngoài phạm vi cho phép.
+
+Đánh giá kết quả hỏi nhiệm vụ đã đạt chưa; đánh giá trajectory, tức chuỗi hành động, hỏi hệ thống đã làm gì để đạt nó. Hai agent tạo cùng tệp cuối có thể khác nhau về quyền, độ bền và lượng công việc thừa.
+
+Ví dụ, agent sửa tài liệu đúng nhưng đọc thêm thư mục ngoài phạm vi vẫn thất bại tiêu chí quyền. Tự kiểm tra: có nên buộc mọi agent theo một chuỗi công cụ duy nhất không? Không nhất thiết; cho phép đường đi hợp lệ khác nếu đáp ứng kết quả, ràng buộc và ngân sách. Chấm vi phạm cụ thể thay vì chỉ so khớp tên công cụ.
 
 ## Thực hành
 

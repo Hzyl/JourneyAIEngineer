@@ -24,10 +24,18 @@ key_terms:
 - loss
 - training
 - transformers
-concept_notes_vi: Attention tạo trọng số để kết hợp thông tin từ các vị trí. Query được so với key để tính trọng
-  số, rồi dùng trọng số tổng hợp value; kích thước và mặt nạ cần đúng.
-concept_notes_en: Attention explains how a Transformer weights relevant tokens. Track the shapes of Q, K, V, masks,
-  and context length; during inference, KV cache avoids recomputing keys and values at the cost of memory.
+concept_notes_vi: |-
+  Attention tạo trọng số để kết hợp thông tin từ các vị trí. Query được so với key để tính trọng số, rồi dùng trọng số tổng hợp value; kích thước và mặt nạ cần đúng.
+
+  Self-attention lấy query, key và value từ cùng chuỗi; cross-attention lấy query từ chuỗi đang xử lý và key/value từ nguồn khác. Trọng số attention dùng để tính biểu diễn, không tự là lời giải thích nhân quả cho dự đoán.
+
+  Ví dụ đơn giản, hai value là 2 và 6 với trọng số 0,25 và 0,75 tạo tổng 5. Tự kiểm tra: mặt nạ chỉ đổi cách hiển thị không? Không; nó loại vị trí không được phép tham gia, như token tương lai khi dự đoán tự hồi quy.
+concept_notes_en: |-
+  Attention compares queries with keys to form weights and combines values using those weights. Shapes and masks must match the task.
+
+  Self-attention obtains all three from one sequence; cross-attention uses queries from one sequence and keys/values from another. Weights are computation, not automatic causal explanations.
+
+  Values 2 and 6 weighted by 0.25 and 0.75 yield 5. Self-check: is masking merely cosmetic? No: it prevents forbidden positions, such as future tokens in autoregressive prediction, from contributing.
 why_it_matters_vi: Liên hệ attention với cách cung cấp ngữ cảnh và kiểm tra đầu ra của ứng dụng LLM.
 why_it_matters_en: Move from attention to prompts and structured outputs while validating schemas instead of trusting
   raw text.
@@ -207,6 +215,10 @@ review_cards:
 # Cơ chế attention / Attention
 
 Attention tạo trọng số để kết hợp thông tin từ các vị trí. Query được so với key để tính trọng số, rồi dùng trọng số tổng hợp value; kích thước và mặt nạ cần đúng.
+
+Self-attention lấy query, key và value từ cùng chuỗi; cross-attention lấy query từ chuỗi đang xử lý và key/value từ nguồn khác. Trọng số attention dùng để tính biểu diễn, không tự là lời giải thích nhân quả cho dự đoán.
+
+Ví dụ đơn giản, hai value là 2 và 6 với trọng số 0,25 và 0,75 tạo tổng 5. Tự kiểm tra: mặt nạ chỉ đổi cách hiển thị không? Không; nó loại vị trí không được phép tham gia, như token tương lai khi dự đoán tự hồi quy.
 
 ## Thực hành
 

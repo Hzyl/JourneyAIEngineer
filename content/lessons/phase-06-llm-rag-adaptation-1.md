@@ -28,11 +28,22 @@ key_terms:
 - retrieval
 - evaluation
 - adaptation
-concept_notes_vi: Tinh chỉnh giúp mô hình học cách thực hiện nhiệm vụ hoặc phong cách đầu ra từ ví dụ. Xác định
-  lỗi hiện tại rồi so sánh với cải thiện prompt hoặc truy xuất trên cùng bộ đánh giá.
-concept_notes_en: Fine-tuning khi nào is model optimization after establishing an evaluation baseline. Prepare clean
-  data, split train/eval, track memory and quality regressions, and choose fine-tuning, quantization, or local serving
-  based on quality, latency, cost, and privacy.
+concept_notes_vi: |-
+  Tinh chỉnh giúp mô hình học cách thực hiện nhiệm vụ hoặc phong cách đầu ra từ ví dụ. Xác định lỗi hiện tại rồi so sánh với cải thiện prompt hoặc truy xuất trên cùng bộ đánh giá.
+
+  Prompt thay đổi chỉ dẫn ở lần suy luận; RAG bổ sung bằng chứng được truy xuất; tinh chỉnh cập nhật tham số qua huấn luyện. Chúng giải quyết những lỗi khác nhau và có thể kết hợp.
+
+  Ví dụ, cần trả lời chính sách mới mỗi tuần thì cập nhật nguồn truy xuất thường dễ kiểm soát hơn huấn luyện lại để nhớ nội dung. Nếu mô hình liên tục sai định dạng chuyên ngành dù chỉ dẫn rõ, dữ liệu mẫu tốt có thể giúp tinh chỉnh.
+
+  Tự kiểm tra: cần thêm kiến thức mới thì luôn tinh chỉnh không? Không; phân loại lỗi trước và so các phương án trên cùng tập kiểm tra, kể cả trường hợp thiếu nguồn.
+concept_notes_en: |-
+  Fine-tuning learns task behavior or output style from examples. Identify current failures and compare it with prompting and retrieval on the same evaluation set.
+
+  Prompting changes inference instructions; RAG supplies retrieved evidence; fine-tuning updates parameters through training. They address different failures and can be combined.
+
+  For policies updated weekly, refreshing retrieval sources is often easier to control than retraining to memorize them. Persistent specialized-format errors despite clear instructions may justify fine-tuning on good examples.
+
+  Self-check: does new knowledge always require fine-tuning? No: classify the failure first and compare alternatives, including cases with insufficient evidence.
 why_it_matters_vi: Chọn prompt, RAG, tinh chỉnh hoặc lượng tử hóa theo vấn đề cần giải quyết; giới hạn agent bằng
   điều kiện dừng.
 why_it_matters_en: Know when RAG is enough, when fine-tuning/LoRA/quantization is justified, and why agents need
@@ -214,6 +225,12 @@ review_cards:
 # Khi nào nên tinh chỉnh mô hình / When to fine-tune
 
 Tinh chỉnh giúp mô hình học cách thực hiện nhiệm vụ hoặc phong cách đầu ra từ ví dụ. Xác định lỗi hiện tại rồi so sánh với cải thiện prompt hoặc truy xuất trên cùng bộ đánh giá.
+
+Prompt thay đổi chỉ dẫn ở lần suy luận; RAG bổ sung bằng chứng được truy xuất; tinh chỉnh cập nhật tham số qua huấn luyện. Chúng giải quyết những lỗi khác nhau và có thể kết hợp.
+
+Ví dụ, cần trả lời chính sách mới mỗi tuần thì cập nhật nguồn truy xuất thường dễ kiểm soát hơn huấn luyện lại để nhớ nội dung. Nếu mô hình liên tục sai định dạng chuyên ngành dù chỉ dẫn rõ, dữ liệu mẫu tốt có thể giúp tinh chỉnh.
+
+Tự kiểm tra: cần thêm kiến thức mới thì luôn tinh chỉnh không? Không; phân loại lỗi trước và so các phương án trên cùng tập kiểm tra, kể cả trường hợp thiếu nguồn.
 
 ## Thực hành
 

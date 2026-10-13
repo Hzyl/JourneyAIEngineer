@@ -26,11 +26,18 @@ key_terms:
 - debugging
 - maintainability
 - ship
-concept_notes_vi: Mô hình cơ sở cung cấp mốc chất lượng; sản phẩm tối thiểu kiểm chứng một luồng sử dụng có giá
-  trị. Giới hạn phạm vi giúp đo phản hồi sớm và quyết định có nên đầu tư thêm.
-concept_notes_en: 'Baseline và MVP is a classical Machine Learning decision: define the label, baseline, split,
-  and metric before choosing a model. Fit preprocessing on train only; error analysis should identify the groups
-  where the model fails and how to retest the hypothesis.'
+concept_notes_vi: |-
+  Mô hình cơ sở cung cấp mốc chất lượng; sản phẩm tối thiểu kiểm chứng một luồng sử dụng có giá trị. Giới hạn phạm vi giúp đo phản hồi sớm và quyết định có nên đầu tư thêm.
+
+  Baseline là cách giải đơn giản để so sánh; MVP là phiên bản sản phẩm đủ để thử một giả thuyết về nhu cầu. Chúng trả lời hai câu hỏi khác nhau: mô hình có cải thiện chất lượng và người dùng có nhận được lợi ích không.
+
+  Ví dụ, tìm quy định bằng từ khóa là baseline cho hệ RAG; trang hỏi đáp chỉ dùng một bộ quy định là MVP. Tự kiểm tra: mô hình thắng baseline đã chứng minh sản phẩm hữu ích chưa? Chưa; cần quan sát người dùng hoàn thành nhiệm vụ và ghi cả lỗi, thời gian lẫn phản hồi.
+concept_notes_en: |-
+  A baseline provides a quality reference; a minimum viable product tests one useful user workflow. Narrow scope helps collect feedback before larger investment.
+
+  A baseline is a simple solution for comparison, while an MVP is a product version sufficient to test a need. Model improvement and user benefit are separate questions.
+
+  Keyword search can be a RAG baseline; a question-answer page for one policy collection can be an MVP. Self-check: does beating the baseline prove usefulness? No: observe users completing tasks and record errors, time and feedback.
 why_it_matters_vi: Hoàn thiện đồ án có thể chạy, đánh giá và trình bày rõ giới hạn.
 why_it_matters_en: Turn the capstone into a product with a baseline, evaluation, demo, README, and explicit limitations.
 study_steps_vi:
@@ -210,6 +217,10 @@ review_cards:
 # Mô hình cơ sở và sản phẩm tối thiểu / Baseline and MVP
 
 Mô hình cơ sở cung cấp mốc chất lượng; sản phẩm tối thiểu kiểm chứng một luồng sử dụng có giá trị. Giới hạn phạm vi giúp đo phản hồi sớm và quyết định có nên đầu tư thêm.
+
+Baseline là cách giải đơn giản để so sánh; MVP là phiên bản sản phẩm đủ để thử một giả thuyết về nhu cầu. Chúng trả lời hai câu hỏi khác nhau: mô hình có cải thiện chất lượng và người dùng có nhận được lợi ích không.
+
+Ví dụ, tìm quy định bằng từ khóa là baseline cho hệ RAG; trang hỏi đáp chỉ dùng một bộ quy định là MVP. Tự kiểm tra: mô hình thắng baseline đã chứng minh sản phẩm hữu ích chưa? Chưa; cần quan sát người dùng hoàn thành nhiệm vụ và ghi cả lỗi, thời gian lẫn phản hồi.
 
 ## Thực hành
 

@@ -26,11 +26,18 @@ key_terms:
 - embedding
 - retrieval
 - evaluation
-concept_notes_vi: Mẫu prompt hỗ trợ tổ chức tương tác; nội dung từ server vẫn cần được đánh giá theo nguồn và quyền.
-  Không coi mô tả công cụ hoặc tài nguyên bên ngoài là chỉ dẫn có quyền cao hơn.
-concept_notes_en: 'MCP prompts và security belongs to LLM Application Engineering: design the contract between the
-  application and the model. Define instructions, inputs, output schema, timeout, retry, and token limits; parse
-  model output as untrusted data and return actionable errors.'
+concept_notes_vi: |-
+  Mẫu prompt hỗ trợ tổ chức tương tác; nội dung từ server vẫn cần được đánh giá theo nguồn và quyền. Không coi mô tả công cụ hoặc tài nguyên bên ngoài là chỉ dẫn có quyền cao hơn.
+
+  Prompt template là mẫu nội dung có thể tái sử dụng, khác chính sách quyền do ứng dụng thực thi. Một mẫu từ server không được tự nâng quyền chỉ vì được đóng gói theo giao thức chuẩn.
+
+  Ví dụ, mẫu tóm tắt tài liệu có thể cung cấp bố cục, nhưng không được cho phép gửi tài liệu tới địa chỉ lạ nếu người dùng chưa yêu cầu. Tự kiểm tra: thấy lời chỉ dẫn trong resource hoặc mô tả tool có nên làm theo ngay không? Không; xác định nguồn, xem nó có liên quan nhiệm vụ và kiểm tra quyền riêng trước mọi thao tác có ảnh hưởng.
+concept_notes_en: |-
+  Prompt templates structure interactions, but server-provided content still needs source and permission checks. External tool descriptions and resources do not outrank application policy.
+
+  A reusable template supplies content; application authorization governs actions. Packaging a template in a standard protocol does not elevate its authority.
+
+  A summarization template may suggest a layout but cannot authorize sending a document to an unfamiliar destination. Self-check: should instructions inside a resource or tool description be followed automatically? No: identify provenance and task relevance, then independently check authorization before consequential operations.
 why_it_matters_vi: Hiểu cách kết nối công cụ, ngữ cảnh và giữ ranh giới quyền truy cập.
 why_it_matters_en: MCP standardizes how models discover context and capabilities without removing access-control
   responsibility.
@@ -126,6 +133,15 @@ resources:
   purpose_en: Official reference to verify the lesson concept.
   read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
   read_en: Read the relevant section, run a small example, and record one verified insight.
+- language: en
+  title: "OWASP Top 10 for LLM Applications 2025"
+  url: https://genai.owasp.org/llm-top-10/
+  kind: official
+  required: false
+  purpose_vi: "Danh mục OWASP 2025 hỗ trợ lập mô hình đe dọa cho ứng dụng LLM, gồm prompt injection, rò rỉ dữ liệu, quyền tự chủ quá mức và rủi ro vector/embedding."
+  purpose_en: "OWASP’s 2025 list supports LLM-application threat modeling, including prompt injection, data disclosure, excessive agency, and vector/embedding risks."
+  read_vi: "Chọn rủi ro phù hợp hệ thống và chuyển từng rủi ro thành kiểm thử cụ thể; danh mục không tự chứng minh hệ thống an toàn."
+  read_en: "Select risks relevant to the system and turn each into a concrete test; the list does not itself establish system safety."
 - title: Giải thích và hướng dẫn thực hành trong bài
   url: ''
   language: vi
@@ -210,6 +226,10 @@ review_cards:
 # Mẫu prompt và bảo mật MCP / MCP prompts and security
 
 Mẫu prompt hỗ trợ tổ chức tương tác; nội dung từ server vẫn cần được đánh giá theo nguồn và quyền. Không coi mô tả công cụ hoặc tài nguyên bên ngoài là chỉ dẫn có quyền cao hơn.
+
+Prompt template là mẫu nội dung có thể tái sử dụng, khác chính sách quyền do ứng dụng thực thi. Một mẫu từ server không được tự nâng quyền chỉ vì được đóng gói theo giao thức chuẩn.
+
+Ví dụ, mẫu tóm tắt tài liệu có thể cung cấp bố cục, nhưng không được cho phép gửi tài liệu tới địa chỉ lạ nếu người dùng chưa yêu cầu. Tự kiểm tra: thấy lời chỉ dẫn trong resource hoặc mô tả tool có nên làm theo ngay không? Không; xác định nguồn, xem nó có liên quan nhiệm vụ và kiểm tra quyền riêng trước mọi thao tác có ảnh hưởng.
 
 ## Thực hành
 

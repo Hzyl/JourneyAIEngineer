@@ -25,11 +25,18 @@ key_terms:
 - token
 - embedding
 - evaluation
-concept_notes_vi: Truy xuất kết hợp tận dụng tìm theo từ khóa và vector; xếp hạng lại đánh giá tập ứng viên kỹ hơn.
-  Đo chất lượng cùng chi phí và độ trễ tăng thêm.
-concept_notes_en: Reranking và hybrid retrieval is one link in a RAG system. Separate parsing, chunking, indexing,
-  retrieval, reranking, and generation so failures are attributable. Chunks need enough context; evaluation should
-  measure retrieval recall, groundedness, and abstention when evidence is missing.
+concept_notes_vi: |-
+  Truy xuất kết hợp tận dụng tìm theo từ khóa và vector; xếp hạng lại đánh giá tập ứng viên kỹ hơn. Đo chất lượng cùng chi phí và độ trễ tăng thêm.
+
+  Tìm theo từ khóa hữu ích với mã sản phẩm và tên riêng; vector bổ sung cách diễn đạt cùng ý. Reranker đọc kỹ các ứng viên đã tìm, nhưng không tự tìm lại tài liệu bị bỏ sót ở bước trước.
+
+  Ví dụ, truy vấn có mã XJ-42 và mô tả triệu chứng cần cả tín hiệu chính xác lẫn ngữ nghĩa. Tự kiểm tra: cộng trực tiếp điểm BM25 và cosine có luôn hợp lý không? Không; thang điểm khác nhau. Dùng cách kết hợp được đánh giá, rồi kiểm tra chất lượng trước và sau xếp hạng lại.
+concept_notes_en: |-
+  Hybrid retrieval combines keyword and vector signals; reranking evaluates candidates more carefully. Measure its extra latency and cost alongside quality.
+
+  Keywords help exact identifiers; vectors help paraphrases. A reranker cannot recover a document absent from its candidate set.
+
+  A query containing XJ-42 and a symptom description needs exact and semantic signals. Self-check: should BM25 and cosine scores simply be added? Not automatically: their scales differ. Evaluate the fusion method and compare quality before and after reranking.
 why_it_matters_vi: Thiết kế cách chia đoạn, lưu siêu dữ liệu và tìm kiếm để đo chất lượng truy xuất trước khi sinh
   câu trả lời.
 why_it_matters_en: Design retrieval with chunks, metadata, vector search, and reranking so recall is measured before
@@ -214,6 +221,10 @@ review_cards:
 # Xếp hạng lại và truy xuất kết hợp / Reranking and hybrid retrieval
 
 Truy xuất kết hợp tận dụng tìm theo từ khóa và vector; xếp hạng lại đánh giá tập ứng viên kỹ hơn. Đo chất lượng cùng chi phí và độ trễ tăng thêm.
+
+Tìm theo từ khóa hữu ích với mã sản phẩm và tên riêng; vector bổ sung cách diễn đạt cùng ý. Reranker đọc kỹ các ứng viên đã tìm, nhưng không tự tìm lại tài liệu bị bỏ sót ở bước trước.
+
+Ví dụ, truy vấn có mã XJ-42 và mô tả triệu chứng cần cả tín hiệu chính xác lẫn ngữ nghĩa. Tự kiểm tra: cộng trực tiếp điểm BM25 và cosine có luôn hợp lý không? Không; thang điểm khác nhau. Dùng cách kết hợp được đánh giá, rồi kiểm tra chất lượng trước và sau xếp hạng lại.
 
 ## Thực hành
 

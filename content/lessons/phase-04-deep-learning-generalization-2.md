@@ -28,11 +28,18 @@ key_terms:
 - loss
 - training
 - generalization
-concept_notes_vi: Dropout bỏ ngẫu nhiên một phần tín hiệu khi huấn luyện; chuẩn hóa theo lô dùng thống kê để biến
-  đổi kích hoạt. Hai cơ chế có hành vi phụ thuộc chế độ huấn luyện hoặc đánh giá.
-concept_notes_en: Dropout và batch normalization is a foundation for numerical representations. Track tensor shapes,
-  units, and axes; verify multiplication on a small example before using a large batch. For similarity, normalize
-  the measure so scale differences do not change the conclusion.
+concept_notes_vi: |-
+  Dropout đặt ngẫu nhiên một phần kích hoạt về 0 khi huấn luyện để giảm việc phụ thuộc vào một đường tín hiệu cố định. BatchNorm chuẩn hóa kích hoạt theo thống kê của lô và học thêm phép biến đổi; hai cơ chế giải quyết những vấn đề khác nhau.
+
+  Với Dropout chuẩn của PyTorch ở chế độ eval, đầu vào được giữ nguyên. BatchNorm mặc định dùng thống kê tích lũy từ huấn luyện khi đánh giá; nếu tắt track_running_stats thì hành vi này thay đổi. Lô rất nhỏ có thể khiến thống kê huấn luyện kém ổn định.
+
+  Tự kiểm tra: chạy validation trong no_grad đã đủ để tắt Dropout chưa? Chưa; no_grad quản lý việc ghi đồ thị đạo hàm, còn model.eval() quản lý chế độ lớp. Cần hiểu cả hai để kết quả kiểm định phản ánh đúng cách mô hình sẽ được dùng.
+concept_notes_en: |-
+  Dropout randomly zeroes some activations during training to reduce dependence on fixed signal paths. BatchNorm normalizes activations using batch statistics and learns an additional transformation; the mechanisms address different issues.
+
+  Standard PyTorch Dropout preserves its input in eval mode. BatchNorm normally uses running statistics collected during training for evaluation; disabling track_running_stats changes that behavior. Very small batches can make training statistics less stable.
+
+  Self-check: does running validation inside no_grad turn off Dropout? No. no_grad controls differentiation recording, while model.eval() controls layer modes. Understand both so validation reflects how the model will be used.
 why_it_matters_vi: Nhận diện quá khớp và đánh giá tác dụng của điều chuẩn, tăng cường dữ liệu, dừng sớm.
 why_it_matters_en: Diagnose overfitting and improve generalization with regularization, augmentation, and early
   stopping.
@@ -218,7 +225,11 @@ review_cards:
 ---
 # Dropout và chuẩn hóa theo lô / Dropout and batch normalization
 
-Dropout bỏ ngẫu nhiên một phần tín hiệu khi huấn luyện; chuẩn hóa theo lô dùng thống kê để biến đổi kích hoạt. Hai cơ chế có hành vi phụ thuộc chế độ huấn luyện hoặc đánh giá.
+Dropout đặt ngẫu nhiên một phần kích hoạt về 0 khi huấn luyện để giảm việc phụ thuộc vào một đường tín hiệu cố định. BatchNorm chuẩn hóa kích hoạt theo thống kê của lô và học thêm phép biến đổi; hai cơ chế giải quyết những vấn đề khác nhau.
+
+Với Dropout chuẩn của PyTorch ở chế độ eval, đầu vào được giữ nguyên. BatchNorm mặc định dùng thống kê tích lũy từ huấn luyện khi đánh giá; nếu tắt track_running_stats thì hành vi này thay đổi. Lô rất nhỏ có thể khiến thống kê huấn luyện kém ổn định.
+
+Tự kiểm tra: chạy validation trong no_grad đã đủ để tắt Dropout chưa? Chưa; no_grad quản lý việc ghi đồ thị đạo hàm, còn model.eval() quản lý chế độ lớp. Cần hiểu cả hai để kết quả kiểm định phản ánh đúng cách mô hình sẽ được dùng.
 
 ## Thực hành
 

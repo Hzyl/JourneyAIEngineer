@@ -26,10 +26,22 @@ key_terms:
 - reproducibility
 - deployment
 - tracking
-concept_notes_vi: Dữ liệu thay đổi có thể làm kết quả mô hình thay đổi dù mã nguồn giữ nguyên. Ghi nguồn, phiên
-  bản và các bước biến đổi để tái tạo tập dữ liệu.
-concept_notes_en: Data versioning is a concept in the tracking module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Dữ liệu thay đổi có thể làm kết quả mô hình thay đổi dù mã nguồn giữ nguyên. Ghi nguồn, phiên bản và các bước biến đổi để tái tạo tập dữ liệu.
+
+  Lưu bản dữ liệu là giữ nội dung; lưu nguồn gốc là ghi nội dung ấy đến từ đâu và đã biến đổi thế nào. Chỉ có câu truy vấn SQL không bảo đảm tái tạo cùng dữ liệu nếu bảng nguồn đã thay đổi.
+
+  Ví dụ, lần chạy thứ hai loại dòng trùng và sửa nhãn nhưng vẫn dùng tên train.csv. Ghi checksum, thời điểm trích xuất, quy tắc làm sạch và cách chia tập giúp giải thích khác biệt giữa hai kết quả.
+
+  Tự kiểm tra: checksum giống nhau có chứng minh nhãn đúng không? Không; nó giúp kiểm tra cùng nội dung, không đánh giá chất lượng. Kiểm tra nhãn và quyền sử dụng dữ liệu là bước riêng.
+concept_notes_en: |-
+  Data changes can alter model results even when code stays fixed. Record source, version and transformations to reconstruct the dataset.
+
+  A snapshot preserves content; lineage records its origin and transformations. An SQL query alone cannot reproduce the same rows after source tables change.
+
+  Suppose a second run removes duplicates and fixes labels but still calls its input train.csv. A checksum, extraction time, cleaning rules and split definition explain the difference.
+
+  Self-check: do identical checksums prove labels are correct? No: they identify identical content, not quality. Label review and permission to use the data remain separate checks.
 why_it_matters_vi: Gắn mô hình với dữ liệu, cấu hình và mã nguồn để kết quả có thể tái lập.
 why_it_matters_en: Track models, data, experiments, and seeds so results are reproducible and comparable.
 study_steps_vi:
@@ -205,6 +217,12 @@ review_cards:
 # Quản lý phiên bản dữ liệu / Data versioning
 
 Dữ liệu thay đổi có thể làm kết quả mô hình thay đổi dù mã nguồn giữ nguyên. Ghi nguồn, phiên bản và các bước biến đổi để tái tạo tập dữ liệu.
+
+Lưu bản dữ liệu là giữ nội dung; lưu nguồn gốc là ghi nội dung ấy đến từ đâu và đã biến đổi thế nào. Chỉ có câu truy vấn SQL không bảo đảm tái tạo cùng dữ liệu nếu bảng nguồn đã thay đổi.
+
+Ví dụ, lần chạy thứ hai loại dòng trùng và sửa nhãn nhưng vẫn dùng tên train.csv. Ghi checksum, thời điểm trích xuất, quy tắc làm sạch và cách chia tập giúp giải thích khác biệt giữa hai kết quả.
+
+Tự kiểm tra: checksum giống nhau có chứng minh nhãn đúng không? Không; nó giúp kiểm tra cùng nội dung, không đánh giá chất lượng. Kiểm tra nhãn và quyền sử dụng dữ liệu là bước riêng.
 
 ## Thực hành
 

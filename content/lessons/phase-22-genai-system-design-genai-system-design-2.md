@@ -29,11 +29,18 @@ key_terms:
 - reproducibility
 - deployment
 - genai-system-design
-concept_notes_vi: Mở rộng cần xác định tài nguyên bị giới hạn; độ tin cậy cần cách xử lý khi thành phần chậm hoặc
-  không sẵn sàng. Phân tích từng tình huống lỗi trước khi thêm thành phần.
-concept_notes_en: Scalability, reliability và failure modes is a concept in the genai-system-design module. Identify
-  the inputs, outputs, assumptions, failure modes, and verification method with a small example before scaling to
-  a project.
+concept_notes_vi: |-
+  Mở rộng cần xác định tài nguyên bị giới hạn; độ tin cậy cần cách xử lý khi thành phần chậm hoặc không sẵn sàng. Phân tích từng tình huống lỗi trước khi thêm thành phần.
+
+  Mở rộng theo chiều dọc tăng tài nguyên một máy; mở rộng ngang thêm máy hoặc tiến trình. Cách nào phù hợp phụ thuộc điểm nghẽn và trạng thái cần chia sẻ, không chỉ số người dùng.
+
+  Ví dụ, thêm worker không giúp nếu mọi việc đều chờ cùng một API đã hết hạn mức. Tự kiểm tra: nhân đôi số máy có chắc nhân đôi năng lực phục vụ không? Không; đo tài nguyên bị giới hạn, chi phí phối hợp và hành vi khi một nút lỗi. Chỉ thêm thành phần sau khi xác định phần cần cải thiện.
+concept_notes_en: |-
+  Scaling requires locating the limiting resource; reliability requires handling slow or unavailable components. Analyze failure cases before adding components.
+
+  Vertical scaling enlarges one machine; horizontal scaling adds instances. Shared state and bottlenecks determine suitability.
+
+  Adding workers cannot remove a shared API quota. Self-check: does doubling machines double capacity? No: measure bottlenecks, coordination overhead and behavior when a node fails before choosing an expansion.
 why_it_matters_vi: Giải thích lựa chọn kiến trúc bằng nhu cầu người dùng, độ tin cậy, bảo mật và chi phí.
 why_it_matters_en: A senior AI Engineer explains system decisions through user value, reliability, security, and
   cost.
@@ -223,6 +230,10 @@ review_cards:
 # Mở rộng, độ tin cậy và các tình huống lỗi / Scalability, reliability, and failure modes
 
 Mở rộng cần xác định tài nguyên bị giới hạn; độ tin cậy cần cách xử lý khi thành phần chậm hoặc không sẵn sàng. Phân tích từng tình huống lỗi trước khi thêm thành phần.
+
+Mở rộng theo chiều dọc tăng tài nguyên một máy; mở rộng ngang thêm máy hoặc tiến trình. Cách nào phù hợp phụ thuộc điểm nghẽn và trạng thái cần chia sẻ, không chỉ số người dùng.
+
+Ví dụ, thêm worker không giúp nếu mọi việc đều chờ cùng một API đã hết hạn mức. Tự kiểm tra: nhân đôi số máy có chắc nhân đôi năng lực phục vụ không? Không; đo tài nguyên bị giới hạn, chi phí phối hợp và hành vi khi một nút lỗi. Chỉ thêm thành phần sau khi xác định phần cần cải thiện.
 
 ## Thực hành
 

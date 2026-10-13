@@ -25,11 +25,18 @@ key_terms:
 - embedding
 - retrieval
 - evaluation
-concept_notes_vi: RAG truy xuất tài liệu liên quan rồi đưa vào ngữ cảnh để tạo câu trả lời. Tách từng bước giúp
-  kiểm tra lỗi do không tìm được bằng chứng hay do sử dụng bằng chứng sai.
-concept_notes_en: RAG pipeline is one link in a RAG system. Separate parsing, chunking, indexing, retrieval, reranking,
-  and generation so failures are attributable. Chunks need enough context; evaluation should measure retrieval recall,
-  groundedness, and abstention when evidence is missing.
+concept_notes_vi: |-
+  RAG truy xuất tài liệu liên quan rồi đưa vào ngữ cảnh để tạo câu trả lời. Tách từng bước giúp kiểm tra lỗi do không tìm được bằng chứng hay do sử dụng bằng chứng sai.
+
+  RAG bổ sung ngữ cảnh lúc suy luận, còn tinh chỉnh thay đổi tham số qua học. Kho tài liệu có thể cập nhật riêng, nhưng tài liệu mới chỉ hữu ích khi được đọc, lập chỉ mục và truy xuất đúng.
+
+  Ví dụ, hỏi hạn đổi hàng mà truy xuất chỉ ra giờ mở cửa thì mô hình chưa có bằng chứng cần thiết. Tự kiểm tra: thêm nhiều tài liệu vào prompt có chắc sửa lỗi không? Không; chọn đoạn chứa quy định đổi hàng, giữ ngày áp dụng và kiểm tra câu trả lời có dùng đúng điều kiện ấy.
+concept_notes_en: |-
+  RAG retrieves relevant documents and provides them as context for generation. Separate stages to distinguish missing evidence from misuse of evidence.
+
+  RAG changes inference context; fine-tuning changes learned parameters. A document update helps only after correct parsing, indexing and retrieval.
+
+  If a returns-policy question retrieves opening hours, the needed evidence is missing. Self-check: does adding more documents necessarily fix this? No: retrieve the actual policy, retain its effective date and verify that the answer respects its conditions.
 why_it_matters_vi: Xây câu trả lời có nguồn và xử lý đúng trường hợp thiếu bằng chứng.
 why_it_matters_en: Build RAG with citations, evidence-based refusal, and error analysis instead of only a polished
   demo.
@@ -216,6 +223,10 @@ review_cards:
 # Quy trình RAG / RAG pipelines
 
 RAG truy xuất tài liệu liên quan rồi đưa vào ngữ cảnh để tạo câu trả lời. Tách từng bước giúp kiểm tra lỗi do không tìm được bằng chứng hay do sử dụng bằng chứng sai.
+
+RAG bổ sung ngữ cảnh lúc suy luận, còn tinh chỉnh thay đổi tham số qua học. Kho tài liệu có thể cập nhật riêng, nhưng tài liệu mới chỉ hữu ích khi được đọc, lập chỉ mục và truy xuất đúng.
+
+Ví dụ, hỏi hạn đổi hàng mà truy xuất chỉ ra giờ mở cửa thì mô hình chưa có bằng chứng cần thiết. Tự kiểm tra: thêm nhiều tài liệu vào prompt có chắc sửa lỗi không? Không; chọn đoạn chứa quy định đổi hàng, giữ ngày áp dụng và kiểm tra câu trả lời có dùng đúng điều kiện ấy.
 
 ## Thực hành
 

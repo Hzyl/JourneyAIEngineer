@@ -27,11 +27,22 @@ key_terms:
 - reproducibility
 - deployment
 - api
-concept_notes_vi: Đóng gói tách logic xử lý khỏi điểm khởi động và cấu hình môi trường. Cấu hình cần giá trị mặc
-  định rõ, kiểm tra khi nạp và cách cung cấp bí mật riêng với mã nguồn.
-concept_notes_en: Package code và configuration is a Software Engineering skill for turning an idea into code that
-  can be read, tested, and maintained. Define the inputs, outputs, invariants, and failure modes before implementing.
-  In Python, small boundaries make tests fast and tracebacks actionable.
+concept_notes_vi: |-
+  Đóng gói tách logic xử lý khỏi điểm khởi động và cấu hình môi trường. Cấu hình cần giá trị mặc định rõ, kiểm tra khi nạp và cách cung cấp bí mật riêng với mã nguồn.
+
+  Phân biệt package, tức nhóm mô-đun có thể nhập, với điểm khởi động chạy dịch vụ. Việc nhập hàm dự đoán để kiểm thử không nên đồng thời mở máy chủ hay tải khóa bí mật.
+
+  Ví dụ, hàm predict nhận dữ liệu và mô hình; app đọc MODEL_PATH rồi nạp mô hình một lần khi khởi động. Đường dẫn Windows có dấu cách phải được truyền nguyên vẹn, không ghép thành lệnh shell.
+
+  Tự kiểm tra: đổi nơi lưu mô hình có cần sửa hàm dự đoán không? Không; đổi cấu hình và kiểm tra tệp tồn tại. Thiếu cấu hình bắt buộc nên báo lỗi sớm thay vì âm thầm dùng mô hình khác.
+concept_notes_en: |-
+  Packaging separates processing logic from startup and environment configuration. Define defaults, validate settings on loading, and supply secrets separately from source code.
+
+  A package is a group of importable modules; an entry point starts the service. Importing a prediction function for testing should not also start a server or fetch secrets.
+
+  For example, predict accepts data and a model, while the application reads MODEL_PATH and loads the model at startup. Preserve Windows paths containing spaces rather than concatenating shell commands.
+
+  Self-check: must moving the model file change prediction logic? No: update configuration and check that the file exists. Missing mandatory configuration should fail early instead of silently selecting another model.
 why_it_matters_vi: Đóng gói mô hình thành dịch vụ có cấu hình và cấu trúc yêu cầu, phản hồi rõ ràng.
 why_it_matters_en: Package a model as an inference service with configuration, request/response schemas, and a clear
   batch path.
@@ -216,6 +227,12 @@ review_cards:
 # Đóng gói mã nguồn và cấu hình / Package code and configuration
 
 Đóng gói tách logic xử lý khỏi điểm khởi động và cấu hình môi trường. Cấu hình cần giá trị mặc định rõ, kiểm tra khi nạp và cách cung cấp bí mật riêng với mã nguồn.
+
+Phân biệt package, tức nhóm mô-đun có thể nhập, với điểm khởi động chạy dịch vụ. Việc nhập hàm dự đoán để kiểm thử không nên đồng thời mở máy chủ hay tải khóa bí mật.
+
+Ví dụ, hàm predict nhận dữ liệu và mô hình; app đọc MODEL_PATH rồi nạp mô hình một lần khi khởi động. Đường dẫn Windows có dấu cách phải được truyền nguyên vẹn, không ghép thành lệnh shell.
+
+Tự kiểm tra: đổi nơi lưu mô hình có cần sửa hàm dự đoán không? Không; đổi cấu hình và kiểm tra tệp tồn tại. Thiếu cấu hình bắt buộc nên báo lỗi sớm thay vì âm thầm dùng mô hình khác.
 
 ## Thực hành
 

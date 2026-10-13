@@ -26,11 +26,22 @@ key_terms:
 - reproducibility
 - deployment
 - api
-concept_notes_vi: Route ánh xạ đường dẫn và phương thức HTTP tới hàm xử lý. Giữ lớp giao tiếp gọn giúp kiểm thử
-  nghiệp vụ riêng và trả lỗi rõ khi yêu cầu không hợp lệ.
-concept_notes_en: FastAPI route describes a boundary between data and a service. A sound request has a schema, validation,
-  status code, timeout, and actionable errors; a sound query uses parameter binding, appropriate indexes, and tests
-  empty or malformed data.
+concept_notes_vi: |-
+  Route ánh xạ đường dẫn và phương thức HTTP tới hàm xử lý. Giữ lớp giao tiếp gọn giúp kiểm thử nghiệp vụ riêng và trả lỗi rõ khi yêu cầu không hợp lệ.
+
+  Phân biệt route với hàm nghiệp vụ: route giải mã yêu cầu HTTP và đóng gói phản hồi; hàm nghiệp vụ nhận dữ liệu Python để xử lý. HTTP method cũng là một phần của giao diện, không chỉ đường dẫn.
+
+  Ví dụ, POST /predict nhận dữ liệu cần suy luận, còn GET /health trả tình trạng dịch vụ. Hai route có thể dùng chung bộ nạp mô hình nhưng không nên cùng kích hoạt một tác vụ huấn luyện dài.
+
+  Tự kiểm tra: hàm dự đoán chạy đúng trong notebook đã chứng minh route đúng chưa? Chưa; còn phải thử phương thức, dữ liệu gửi vào, mã phản hồi và trường hợp dịch vụ chưa sẵn sàng.
+concept_notes_en: |-
+  A route maps an HTTP path and method to a handler. Keep this interface small so business logic can be tested separately and invalid requests receive clear errors.
+
+  The route decodes HTTP input and builds a response; a business function processes Python values. The HTTP method is part of the interface, not just the path.
+
+  For example, POST /predict accepts inference input while GET /health reports service health. They may share a model loader, but neither should unexpectedly start a long training job.
+
+  Self-check: does a successful notebook prediction prove the route works? No: also test the method, request payload, response status and unavailable-service case.
 why_it_matters_vi: Đóng gói mô hình thành dịch vụ có cấu hình và cấu trúc yêu cầu, phản hồi rõ ràng.
 why_it_matters_en: Package a model as an inference service with configuration, request/response schemas, and a clear
   batch path.
@@ -218,6 +229,12 @@ review_cards:
 # Định nghĩa route trong FastAPI / FastAPI routes
 
 Route ánh xạ đường dẫn và phương thức HTTP tới hàm xử lý. Giữ lớp giao tiếp gọn giúp kiểm thử nghiệp vụ riêng và trả lỗi rõ khi yêu cầu không hợp lệ.
+
+Phân biệt route với hàm nghiệp vụ: route giải mã yêu cầu HTTP và đóng gói phản hồi; hàm nghiệp vụ nhận dữ liệu Python để xử lý. HTTP method cũng là một phần của giao diện, không chỉ đường dẫn.
+
+Ví dụ, POST /predict nhận dữ liệu cần suy luận, còn GET /health trả tình trạng dịch vụ. Hai route có thể dùng chung bộ nạp mô hình nhưng không nên cùng kích hoạt một tác vụ huấn luyện dài.
+
+Tự kiểm tra: hàm dự đoán chạy đúng trong notebook đã chứng minh route đúng chưa? Chưa; còn phải thử phương thức, dữ liệu gửi vào, mã phản hồi và trường hợp dịch vụ chưa sẵn sàng.
 
 ## Thực hành
 

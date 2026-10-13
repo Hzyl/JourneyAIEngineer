@@ -25,11 +25,22 @@ key_terms:
 - embedding
 - retrieval
 - quality-safety
-concept_notes_vi: Bộ đánh giá cần câu hỏi đại diện, tiêu chí chấm rõ và trường hợp khó hoặc thiếu dữ liệu. Giữ riêng
-  phần so sánh cuối để tránh điều chỉnh hệ thống theo từng câu đã biết.
-concept_notes_en: Evaluation set turns an AI demo into a system that can be trusted. Define metrics and an evaluation
-  set first, record prompt/model/version/tokens/latency, and attribute failures to retrieval, generation, data,
-  or infrastructure instead of relying on one score.
+concept_notes_vi: |-
+  Bộ đánh giá cần câu hỏi đại diện, tiêu chí chấm rõ và trường hợp khó hoặc thiếu dữ liệu. Giữ riêng phần so sánh cuối để tránh điều chỉnh hệ thống theo từng câu đã biết.
+
+  Phân biệt tập phát triển để sửa hệ thống với tập kiểm tra cuối để ước lượng chất lượng trên câu chưa dùng khi điều chỉnh. Nếu liên tục chọn prompt theo tập kiểm tra, tập đó không còn độc lập.
+
+  Ví dụ, bộ hỏi đáp chính sách cần câu có đáp án, câu thiếu nguồn và câu chứa giả định sai. Chấm riêng khả năng trả lời đúng và khả năng từ chối suy đoán; điểm trung bình có thể che một nhóm lỗi nghiêm trọng.
+
+  Tự kiểm tra: chỉ lấy câu dễ từ demo có đánh giá đủ không? Không; lấy mẫu từ nhu cầu thật, giữ nhóm khó và ghi tiêu chí chấm trước khi xem kết quả.
+concept_notes_en: |-
+  An evaluation set needs representative questions, clear scoring and difficult or unanswerable cases. Keep final comparison data separate from development.
+
+  A development set guides changes; a held-out test estimates performance on unused cases. Repeatedly selecting prompts using test results compromises that independence.
+
+  A policy assistant needs answerable questions, missing-evidence cases and false assumptions. Score correctness and appropriate abstention separately; an average may hide a serious failure group.
+
+  Self-check: are easy demo questions sufficient? No: sample real needs, retain hard cases and define scoring before inspecting results.
 why_it_matters_vi: Đánh giá đồng thời chất lượng, độ trễ, chi phí và khả năng giữ đúng phạm vi yêu cầu.
 why_it_matters_en: Measure quality, latency, cost, and safety together; treat hallucinations and injection as test
   cases.
@@ -207,6 +218,12 @@ review_cards:
 # Xây dựng bộ đánh giá / Evaluation sets
 
 Bộ đánh giá cần câu hỏi đại diện, tiêu chí chấm rõ và trường hợp khó hoặc thiếu dữ liệu. Giữ riêng phần so sánh cuối để tránh điều chỉnh hệ thống theo từng câu đã biết.
+
+Phân biệt tập phát triển để sửa hệ thống với tập kiểm tra cuối để ước lượng chất lượng trên câu chưa dùng khi điều chỉnh. Nếu liên tục chọn prompt theo tập kiểm tra, tập đó không còn độc lập.
+
+Ví dụ, bộ hỏi đáp chính sách cần câu có đáp án, câu thiếu nguồn và câu chứa giả định sai. Chấm riêng khả năng trả lời đúng và khả năng từ chối suy đoán; điểm trung bình có thể che một nhóm lỗi nghiêm trọng.
+
+Tự kiểm tra: chỉ lấy câu dễ từ demo có đánh giá đủ không? Không; lấy mẫu từ nhu cầu thật, giữ nhóm khó và ghi tiêu chí chấm trước khi xem kết quả.
 
 ## Thực hành
 

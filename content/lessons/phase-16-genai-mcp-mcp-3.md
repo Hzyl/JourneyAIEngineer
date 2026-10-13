@@ -26,11 +26,18 @@ key_terms:
 - embedding
 - retrieval
 - evaluation
-concept_notes_vi: Công cụ đại diện thao tác có thể gọi; tài nguyên cung cấp nội dung để ứng dụng đọc. Hai loại khác
-  nhau về cách sử dụng và ảnh hưởng, nên cần mô tả cùng quyền rõ ràng.
-concept_notes_en: MCP tools và resources extends a model with controlled actions. Tool schemas must validate inputs,
-  limit permissions, and define timeout and retry; an agent loop needs stopping conditions, step logs, and human
-  approval for side effects.
+concept_notes_vi: |-
+  Công cụ đại diện thao tác có thể gọi; tài nguyên cung cấp nội dung để ứng dụng đọc. Hai loại khác nhau về cách sử dụng và ảnh hưởng, nên cần mô tả cùng quyền rõ ràng.
+
+  Tool cung cấp một thao tác có đầu vào và kết quả; resource cung cấp nội dung nhận diện được để đọc làm ngữ cảnh. Tool có thể chỉ đọc hoặc có tác dụng ghi, nên tên loại không thay thế việc xem quyền và ảnh hưởng thực tế.
+
+  Ví dụ, một resource mô tả schema cơ sở dữ liệu, còn tool nhận điều kiện để chạy truy vấn. Tự kiểm tra: mọi tool đều cần quyền ghi không? Không; công cụ tra cứu có thể chỉ đọc. Mô tả phạm vi, kiểm tra ở phía thực thi và chỉ cấp quyền đúng với chức năng đã chọn.
+concept_notes_en: |-
+  Tools expose callable operations; resources provide content for application context. Their usage and effects need clear descriptions and permissions.
+
+  A tool accepts inputs and returns results; a resource exposes identifiable content to read. Tools may be read-only or mutating, so the category alone does not establish their actual effects.
+
+  A resource can describe a database schema while a tool accepts query conditions. Self-check: does every tool need write access? No: lookup tools can be read-only. State scope, enforce it at execution and grant only the permissions required by the chosen function.
 why_it_matters_vi: Hiểu cách kết nối công cụ, ngữ cảnh và giữ ranh giới quyền truy cập.
 why_it_matters_en: MCP standardizes how models discover context and capabilities without removing access-control
   responsibility.
@@ -210,6 +217,10 @@ review_cards:
 # Công cụ và tài nguyên MCP / MCP tools and resources
 
 Công cụ đại diện thao tác có thể gọi; tài nguyên cung cấp nội dung để ứng dụng đọc. Hai loại khác nhau về cách sử dụng và ảnh hưởng, nên cần mô tả cùng quyền rõ ràng.
+
+Tool cung cấp một thao tác có đầu vào và kết quả; resource cung cấp nội dung nhận diện được để đọc làm ngữ cảnh. Tool có thể chỉ đọc hoặc có tác dụng ghi, nên tên loại không thay thế việc xem quyền và ảnh hưởng thực tế.
+
+Ví dụ, một resource mô tả schema cơ sở dữ liệu, còn tool nhận điều kiện để chạy truy vấn. Tự kiểm tra: mọi tool đều cần quyền ghi không? Không; công cụ tra cứu có thể chỉ đọc. Mô tả phạm vi, kiểm tra ở phía thực thi và chỉ cấp quyền đúng với chức năng đã chọn.
 
 ## Thực hành
 

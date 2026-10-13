@@ -27,10 +27,22 @@ key_terms:
 - reproducibility
 - deployment
 - containers
-concept_notes_vi: Docker Compose mô tả nhiều dịch vụ, mạng và vùng lưu trữ trong cùng cấu hình. Thứ tự khởi động
-  không bảo đảm dịch vụ đã sẵn sàng; ứng dụng cần kiểm tra kết nối và xử lý chờ.
-concept_notes_en: Docker compose basics connects code to a real runtime. Document the artifact, dependencies, configuration,
-  health check, and rollback path; a successful build is not enough without a smoke test in a production-like environment.
+concept_notes_vi: |-
+  Docker Compose mô tả nhiều dịch vụ, mạng và vùng lưu trữ trong cùng cấu hình. Thứ tự khởi động không bảo đảm dịch vụ đã sẵn sàng; ứng dụng cần kiểm tra kết nối và xử lý chờ.
+
+  Phân biệt phụ thuộc khởi động với sẵn sàng phục vụ. Tiến trình cơ sở dữ liệu có thể đã chạy nhưng còn khôi phục dữ liệu; healthcheck mô tả điều kiện sẵn sàng cụ thể, còn ứng dụng cần xử lý mất kết nối sau đó.
+
+  Ví dụ, dịch vụ api kết nối tới tên dịch vụ db trên mạng Compose. localhost bên trong api chỉ chính container đó, không phải container cơ sở dữ liệu hay máy Windows chủ.
+
+  Tự kiểm tra: depends_on thông thường đã đủ tránh lỗi kết nối chưa? Chưa; dùng điều kiện service_healthy khi phù hợp và thử khởi động chậm. Volume giữ dữ liệu, còn mạng giúp các dịch vụ tìm nhau: hai vai trò này khác nhau.
+concept_notes_en: |-
+  Docker Compose describes services, networks and volumes together. Startup ordering alone does not guarantee readiness; applications must handle connection delays.
+
+  A database process may be running while still recovering data. A healthcheck states a readiness condition, while the application must also cope with connections lost later.
+
+  For example, the api service connects to the service name db on a Compose network. Inside api, localhost refers to that container, not the database container or Windows host.
+
+  Self-check: is plain depends_on enough to prevent connection failures? No: use service_healthy where appropriate and test slow startup. Volumes preserve data; networks connect services. These solve different problems.
 why_it_matters_vi: Đóng gói môi trường để người khác chạy được cùng dịch vụ và kiểm tra tự động.
 why_it_matters_en: Package the environment with Docker and CI so another engineer can run the same service from
   a clone.
@@ -209,6 +221,12 @@ review_cards:
 # Cơ bản về Docker Compose / Docker Compose basics
 
 Docker Compose mô tả nhiều dịch vụ, mạng và vùng lưu trữ trong cùng cấu hình. Thứ tự khởi động không bảo đảm dịch vụ đã sẵn sàng; ứng dụng cần kiểm tra kết nối và xử lý chờ.
+
+Phân biệt phụ thuộc khởi động với sẵn sàng phục vụ. Tiến trình cơ sở dữ liệu có thể đã chạy nhưng còn khôi phục dữ liệu; healthcheck mô tả điều kiện sẵn sàng cụ thể, còn ứng dụng cần xử lý mất kết nối sau đó.
+
+Ví dụ, dịch vụ api kết nối tới tên dịch vụ db trên mạng Compose. localhost bên trong api chỉ chính container đó, không phải container cơ sở dữ liệu hay máy Windows chủ.
+
+Tự kiểm tra: depends_on thông thường đã đủ tránh lỗi kết nối chưa? Chưa; dùng điều kiện service_healthy khi phù hợp và thử khởi động chậm. Volume giữ dữ liệu, còn mạng giúp các dịch vụ tìm nhau: hai vai trò này khác nhau.
 
 ## Thực hành
 

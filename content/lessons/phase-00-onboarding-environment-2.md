@@ -27,11 +27,22 @@ key_terms:
 - debugging
 - maintainability
 - environment
-concept_notes_vi: VS Code là nơi soạn mã; terminal là nơi chạy lệnh trong một thư mục và môi trường cụ thể. Chọn
-  đúng trình thông dịch giúp lệnh trong terminal và nút chạy dùng cùng môi trường.
-concept_notes_en: 'Thiết lập VS Code và terminal makes AI engineering work traceable: every change needs a diff,
-  a reason, and a verification step. Practise in a small repository, introduce an intentional failure, read the
-  terminal output, and fix it with a focused commit.'
+concept_notes_vi: |-
+  VS Code soạn và tổ chức mã; terminal cho bạn tương tác với shell để chạy lệnh. Mỗi lệnh dùng một thư mục hiện tại cùng biến môi trường, nên cùng tệp mã có thể chạy khác khi môi trường thay đổi.
+
+  Phân biệt trình soạn thảo, shell và trình thông dịch Python. PowerShell hiểu lệnh hệ thống; Python hiểu mã Python. Nút chạy của trình soạn thảo và terminal cần trỏ tới môi trường dự định dùng.
+
+  Nếu python main.py báo không tìm thấy tệp, kiểm tra thư mục bằng Get-Location rồi xem danh sách tệp. Nếu lỗi là không tìm thấy module, kiểm tra sys.executable và thư viện của môi trường ấy.
+
+  Tự kiểm tra: đổi màu giao diện có sửa lỗi thiếu thư viện không? Không; vấn đề thuộc môi trường chạy, không phải phần hiển thị mã.
+concept_notes_en: |-
+  VS Code edits and organizes code; a terminal lets you interact with a shell. Commands use a current directory and environment variables, so the same file can behave differently across environments.
+
+  Distinguish editor, shell and Python interpreter. PowerShell parses system commands; Python parses Python code. The editor's run action and terminal should target the intended environment.
+
+  For a missing main.py error, inspect Get-Location and the directory listing. For a missing module, inspect sys.executable and packages in that environment.
+
+  Self-check: can changing the editor theme fix a missing library? No; that is a runtime-environment problem, not an editor-display problem.
 why_it_matters_vi: Thiết lập môi trường Python có thể tạo lại và biết kiểm tra nguyên nhân khi lệnh chạy khác dự
   kiến.
 why_it_matters_en: Turn Windows into a reproducible Python environment and learn to verify tools from the terminal.
@@ -224,7 +235,13 @@ review_cards:
 ---
 # Thiết lập VS Code và terminal / Set up VS Code and the terminal
 
-VS Code là nơi soạn mã; terminal là nơi chạy lệnh trong một thư mục và môi trường cụ thể. Chọn đúng trình thông dịch giúp lệnh trong terminal và nút chạy dùng cùng môi trường.
+VS Code soạn và tổ chức mã; terminal cho bạn tương tác với shell để chạy lệnh. Mỗi lệnh dùng một thư mục hiện tại cùng biến môi trường, nên cùng tệp mã có thể chạy khác khi môi trường thay đổi.
+
+Phân biệt trình soạn thảo, shell và trình thông dịch Python. PowerShell hiểu lệnh hệ thống; Python hiểu mã Python. Nút chạy của trình soạn thảo và terminal cần trỏ tới môi trường dự định dùng.
+
+Nếu python main.py báo không tìm thấy tệp, kiểm tra thư mục bằng Get-Location rồi xem danh sách tệp. Nếu lỗi là không tìm thấy module, kiểm tra sys.executable và thư viện của môi trường ấy.
+
+Tự kiểm tra: đổi màu giao diện có sửa lỗi thiếu thư viện không? Không; vấn đề thuộc môi trường chạy, không phải phần hiển thị mã.
 
 ## Thực hành
 

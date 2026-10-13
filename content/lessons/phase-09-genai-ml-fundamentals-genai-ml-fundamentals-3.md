@@ -28,11 +28,18 @@ key_terms:
 - baseline
 - evaluation
 - genai-ml-fundamentals
-concept_notes_vi: Dữ liệu gần trùng hoặc cùng nguồn có thể làm kết quả đánh giá quá lạc quan nếu nằm ở nhiều tập.
-  Chia dữ liệu theo đơn vị phù hợp với cách hệ thống sẽ được sử dụng.
-concept_notes_en: 'Train, validation, test và leakage is a classical Machine Learning decision: define the label,
-  baseline, split, and metric before choosing a model. Fit preprocessing on train only; error analysis should identify
-  the groups where the model fails and how to retest the hypothesis.'
+concept_notes_vi: |-
+  Dữ liệu gần trùng hoặc cùng nguồn có thể làm kết quả đánh giá quá lạc quan nếu nằm ở nhiều tập. Chia dữ liệu theo đơn vị phù hợp với cách hệ thống sẽ được sử dụng.
+
+  Tập train dùng để học; validation hỗ trợ chọn cấu hình; test dành cho đánh giá cuối theo quy trình đã chốt. Rò rỉ xảy ra khi thông tin không sẵn có lúc dự đoán lại ảnh hưởng việc huấn luyện hoặc lựa chọn mô hình.
+
+  Ví dụ, nhiều câu hỏi cùng tài liệu nên được xem xét chia theo tài liệu nếu mục tiêu là dùng trên nguồn mới. Tự kiểm tra: chuẩn hóa toàn bộ dữ liệu rồi mới chia có an toàn không? Không; thống kê từ tập đánh giá đã đi vào bước tiền xử lý. Học phép biến đổi từ train và áp dụng nhất quán sang tập còn lại.
+concept_notes_en: |-
+  Near-duplicates or shared sources across splits can make evaluation overly optimistic. Split according to the unit and conditions of future use.
+
+  Training data fits the model, validation data guides configuration and test data supports the final fixed evaluation. Leakage lets information unavailable at prediction time influence training or selection.
+
+  Group questions by source document when testing generalization to new sources. Self-check: is fitting normalization before splitting safe? No: evaluation statistics enter preprocessing. Fit transformations on training data and apply them consistently to the other splits.
 why_it_matters_vi: Liên hệ embedding và thước đo với truy xuất, phân nhóm và chất lượng mô hình.
 why_it_matters_en: Embeddings and metrics connect user data to retrieval, clustering, and model quality.
 study_steps_vi:
@@ -219,6 +226,10 @@ review_cards:
 # Chia dữ liệu và ngăn rò rỉ / Train, validation, test, and leakage
 
 Dữ liệu gần trùng hoặc cùng nguồn có thể làm kết quả đánh giá quá lạc quan nếu nằm ở nhiều tập. Chia dữ liệu theo đơn vị phù hợp với cách hệ thống sẽ được sử dụng.
+
+Tập train dùng để học; validation hỗ trợ chọn cấu hình; test dành cho đánh giá cuối theo quy trình đã chốt. Rò rỉ xảy ra khi thông tin không sẵn có lúc dự đoán lại ảnh hưởng việc huấn luyện hoặc lựa chọn mô hình.
+
+Ví dụ, nhiều câu hỏi cùng tài liệu nên được xem xét chia theo tài liệu nếu mục tiêu là dùng trên nguồn mới. Tự kiểm tra: chuẩn hóa toàn bộ dữ liệu rồi mới chia có an toàn không? Không; thống kê từ tập đánh giá đã đi vào bước tiền xử lý. Học phép biến đổi từ train và áp dụng nhất quán sang tập còn lại.
 
 ## Thực hành
 

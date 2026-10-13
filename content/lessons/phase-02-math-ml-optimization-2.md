@@ -26,10 +26,22 @@ key_terms:
 - vector
 - gradient
 - optimization
-concept_notes_vi: Ước lượng hợp lý cực đại chọn tham số làm dữ liệu đã quan sát có khả năng xuất hiện cao nhất theo
-  mô hình. Để tính ổn định hơn, thường tối ưu log của hàm hợp lý hoặc giá trị âm của nó.
-concept_notes_en: Maximum likelihood is a concept in the optimization module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Ước lượng hợp lý cực đại chọn tham số khiến dữ liệu đã quan sát phù hợp nhất với mô hình xác suất đã giả định. Khi dữ liệu cố định, hàm hợp lý được xem là hàm của tham số, không phải xác suất của tham số.
+
+  Phân biệt với suy luận Bayes: Bayes còn kết hợp phân phối ban đầu của tham số. Lấy log hàm hợp lý giữ nguyên vị trí cực đại vì log tăng nghiêm ngặt; đổi dấu biến bài toán thành cực tiểu.
+
+  Với các lần tung đồng xu độc lập, tham số là xác suất mặt ngửa. Mô hình học từ số lần ngửa đã quan sát, nhưng đồng xu hoặc cách tung thay đổi có thể làm giả định không còn phù hợp.
+
+  Tự kiểm tra: hợp lý lớn có chứng minh mô hình đúng không? Không; nó chỉ so sánh mức phù hợp trong mô hình đang giả định, cần kiểm tra khả năng dự đoán dữ liệu mới.
+concept_notes_en: |-
+  Maximum likelihood estimation chooses parameters that make the observed data most compatible with an assumed probabilistic model. With the data fixed, likelihood is a function of parameters, not a probability distribution over parameters.
+
+  Bayesian inference additionally combines a prior distribution over parameters. Taking the log preserves the maximizer because logarithms are strictly increasing; negating it gives a minimization problem.
+
+  For independent coin tosses, the parameter is the probability of heads. The estimate uses observed heads, but a different coin or tossing process may invalidate the assumptions.
+
+  Self-check: does high likelihood prove a model is correct? No; it measures fit within the assumed model. Predictions on new data still need evaluation.
 why_it_matters_vi: Xác định hàm mục tiêu và cách cập nhật để hiểu mô hình đang học điều gì.
 why_it_matters_en: Understand objectives, loss landscapes, regularization, and optimizers so you know what a model
   is optimizing.
@@ -221,7 +233,13 @@ review_cards:
 ---
 # Ước lượng hợp lý cực đại / Maximum likelihood
 
-Ước lượng hợp lý cực đại chọn tham số làm dữ liệu đã quan sát có khả năng xuất hiện cao nhất theo mô hình. Để tính ổn định hơn, thường tối ưu log của hàm hợp lý hoặc giá trị âm của nó.
+Ước lượng hợp lý cực đại chọn tham số khiến dữ liệu đã quan sát phù hợp nhất với mô hình xác suất đã giả định. Khi dữ liệu cố định, hàm hợp lý được xem là hàm của tham số, không phải xác suất của tham số.
+
+Phân biệt với suy luận Bayes: Bayes còn kết hợp phân phối ban đầu của tham số. Lấy log hàm hợp lý giữ nguyên vị trí cực đại vì log tăng nghiêm ngặt; đổi dấu biến bài toán thành cực tiểu.
+
+Với các lần tung đồng xu độc lập, tham số là xác suất mặt ngửa. Mô hình học từ số lần ngửa đã quan sát, nhưng đồng xu hoặc cách tung thay đổi có thể làm giả định không còn phù hợp.
+
+Tự kiểm tra: hợp lý lớn có chứng minh mô hình đúng không? Không; nó chỉ so sánh mức phù hợp trong mô hình đang giả định, cần kiểm tra khả năng dự đoán dữ liệu mới.
 
 ## Thực hành
 

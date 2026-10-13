@@ -29,11 +29,18 @@ key_terms:
 - retrieval
 - evaluation
 - tool-calling
-concept_notes_vi: Lỗi công cụ cần có thông tin đủ để quyết định sửa yêu cầu, thử lại hoặc dừng. Chỉ cấp quyền cần
-  thiết và ghi dấu vết thao tác mà không lộ bí mật.
-concept_notes_en: Error handling và secure tool execution extends a model with controlled actions. Tool schemas
-  must validate inputs, limit permissions, and define timeout and retry; an agent loop needs stopping conditions,
-  step logs, and human approval for side effects.
+concept_notes_vi: |-
+  Lỗi công cụ cần có thông tin đủ để quyết định sửa yêu cầu, thử lại hoặc dừng. Chỉ cấp quyền cần thiết và ghi dấu vết thao tác mà không lộ bí mật.
+
+  Lỗi đầu vào cần sửa dữ liệu; lỗi quyền cần xử lý phạm vi truy cập; lỗi tạm thời có thể phù hợp để thử lại có giới hạn. Gộp mọi lỗi thành câu 'hãy thử lại' làm agent lặp vô ích hoặc cố thực hiện thao tác không được phép.
+
+  Ví dụ, khi công cụ trả thiếu quyền đọc, agent giải thích giới hạn hoặc dùng nguồn được phép thay vì đổi tài khoản. Tự kiểm tra: đưa toàn bộ thông báo lỗi và biến môi trường vào prompt có giúp sửa nhanh một cách an toàn không? Không; chỉ chuyển thông tin cần thiết, che bí mật và giữ log kỹ thuật theo quyền phù hợp.
+concept_notes_en: |-
+  Tool errors need enough information to choose correction, retry or stopping. Grant minimum permissions and record actions without exposing secrets.
+
+  Invalid input needs correction; authorization failure needs scope handling; transient failure may permit bounded retry. Treating every error as retryable causes pointless loops or attempts beyond permission.
+
+  When a tool lacks read access, explain the limit or use an authorized source rather than switching accounts. Self-check: is sending complete errors and environment variables to the model a safe shortcut? No: provide necessary details, redact secrets and protect technical logs with appropriate access.
 why_it_matters_vi: Kiểm tra lời gọi và quyền trước khi biến đề xuất của mô hình thành hành động.
 why_it_matters_en: Tool calling turns model output into actions, so its contracts must be stricter than ordinary
   chat.
@@ -223,6 +230,10 @@ review_cards:
 # Xử lý lỗi và thực thi công cụ an toàn / Error handling and secure tool execution
 
 Lỗi công cụ cần có thông tin đủ để quyết định sửa yêu cầu, thử lại hoặc dừng. Chỉ cấp quyền cần thiết và ghi dấu vết thao tác mà không lộ bí mật.
+
+Lỗi đầu vào cần sửa dữ liệu; lỗi quyền cần xử lý phạm vi truy cập; lỗi tạm thời có thể phù hợp để thử lại có giới hạn. Gộp mọi lỗi thành câu 'hãy thử lại' làm agent lặp vô ích hoặc cố thực hiện thao tác không được phép.
+
+Ví dụ, khi công cụ trả thiếu quyền đọc, agent giải thích giới hạn hoặc dùng nguồn được phép thay vì đổi tài khoản. Tự kiểm tra: đưa toàn bộ thông báo lỗi và biến môi trường vào prompt có giúp sửa nhanh một cách an toàn không? Không; chỉ chuyển thông tin cần thiết, che bí mật và giữ log kỹ thuật theo quyền phù hợp.
 
 ## Thực hành
 

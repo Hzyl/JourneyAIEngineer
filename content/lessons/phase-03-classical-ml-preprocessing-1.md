@@ -26,10 +26,18 @@ key_terms:
 - baseline
 - evaluation
 - preprocessing
-concept_notes_vi: Dữ liệu thiếu có thể phản ánh lỗi thu thập hoặc đặc điểm của quy trình thực tế. Trước khi điền
-  giá trị, kiểm tra nơi xuất hiện và nguyên nhân; chỉ học thống kê điền từ tập huấn luyện.
-concept_notes_en: Missing data is a concept in the preprocessing module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Dữ liệu thiếu có thể do lỗi thu thập, người dùng bỏ qua câu hỏi hoặc một phép đo không áp dụng. Giá trị thiếu khác giá trị 0: không biết thu nhập không đồng nghĩa thu nhập bằng 0. Tìm hiểu nơi và lý do xuất hiện thiếu trước khi chọn cách xử lý.
+
+  Điền trung bình hoặc trung vị là một baseline, không khôi phục được giá trị thật. Học thống kê điền chỉ từ tập train rồi dùng lại cho validation và test. Một cột đánh dấu thiếu có thể hữu ích nếu trạng thái thiếu mang thông tin và cũng có sẵn lúc dự đoán.
+
+  Tự kiểm tra: bỏ mọi dòng thiếu có luôn an toàn không? Không; có thể loại có hệ thống một nhóm người dùng và làm dữ liệu lệch. Ghi tỷ lệ thiếu theo nhóm và so kết quả các cách xử lý.
+concept_notes_en: |-
+  Missing data can reflect collection errors, skipped questions or measurements that do not apply. Missing differs from zero: unknown income is not zero income. Inspect where and why values are absent before choosing a treatment.
+
+  Mean or median imputation is a baseline, not recovery of true values. Learn imputation statistics only from training data and reuse them for validation and test. A missingness indicator may help when missingness carries information and is available at prediction time.
+
+  Self-check: is dropping every incomplete row always safe? No; it may systematically remove a user group and bias data. Record missingness by group and compare handling strategies.
 why_it_matters_vi: Giữ cách xử lý dữ liệu nhất quán giữa huấn luyện và dự đoán để tránh rò rỉ hoặc sai lệch.
 why_it_matters_en: Build consistent, leakage-safe preprocessing that turns messy data into reproducible features.
 study_steps_vi:
@@ -213,7 +221,11 @@ review_cards:
 ---
 # Xử lý dữ liệu thiếu / Missing data
 
-Dữ liệu thiếu có thể phản ánh lỗi thu thập hoặc đặc điểm của quy trình thực tế. Trước khi điền giá trị, kiểm tra nơi xuất hiện và nguyên nhân; chỉ học thống kê điền từ tập huấn luyện.
+Dữ liệu thiếu có thể do lỗi thu thập, người dùng bỏ qua câu hỏi hoặc một phép đo không áp dụng. Giá trị thiếu khác giá trị 0: không biết thu nhập không đồng nghĩa thu nhập bằng 0. Tìm hiểu nơi và lý do xuất hiện thiếu trước khi chọn cách xử lý.
+
+Điền trung bình hoặc trung vị là một baseline, không khôi phục được giá trị thật. Học thống kê điền chỉ từ tập train rồi dùng lại cho validation và test. Một cột đánh dấu thiếu có thể hữu ích nếu trạng thái thiếu mang thông tin và cũng có sẵn lúc dự đoán.
+
+Tự kiểm tra: bỏ mọi dòng thiếu có luôn an toàn không? Không; có thể loại có hệ thống một nhóm người dùng và làm dữ liệu lệch. Ghi tỷ lệ thiếu theo nhóm và so kết quả các cách xử lý.
 
 ## Thực hành
 

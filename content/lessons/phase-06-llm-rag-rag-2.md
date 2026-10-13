@@ -24,11 +24,18 @@ key_terms:
 - reproducibility
 - deployment
 - rag
-concept_notes_vi: Trích dẫn cần dẫn tới nguồn hỗ trợ phát biểu đi kèm. Có đường dẫn chưa chứng minh câu trả lời
-  có căn cứ; cần đối chiếu nội dung và phạm vi từng kết luận.
-concept_notes_en: Citation is one link in a RAG system. Separate parsing, chunking, indexing, retrieval, reranking,
-  and generation so failures are attributable. Chunks need enough context; evaluation should measure retrieval recall,
-  groundedness, and abstention when evidence is missing.
+concept_notes_vi: |-
+  Trích dẫn cần dẫn tới nguồn hỗ trợ phát biểu đi kèm. Có đường dẫn chưa chứng minh câu trả lời có căn cứ; cần đối chiếu nội dung và phạm vi từng kết luận.
+
+  Trích dẫn tồn tại khác trích dẫn hỗ trợ đúng phát biểu. Một nguồn có thể liên quan chủ đề nhưng không nói đến con số, điều kiện hoặc phạm vi mà câu trả lời khẳng định.
+
+  Ví dụ, nguồn chỉ nói gói cơ bản miễn phí, nhưng câu trả lời viết mọi gói đều miễn phí. Tự kiểm tra: liên kết mở được đã đủ chưa? Chưa; đối chiếu từng phát biểu với đoạn nguồn cụ thể, giữ ngoại lệ và ghi phiên bản tài liệu khi quy định thay đổi.
+concept_notes_en: |-
+  Citations should point to evidence supporting nearby claims. A working URL alone does not establish support.
+
+  A source may discuss the topic without supporting a particular number, condition or scope. Citation existence differs from citation correctness.
+
+  If a source says the basic plan is free, it does not support saying all plans are free. Self-check: is a reachable link sufficient? No: compare each claim with a specific passage, preserve exceptions and record document versions when policies change.
 why_it_matters_vi: Xây câu trả lời có nguồn và xử lý đúng trường hợp thiếu bằng chứng.
 why_it_matters_en: Build RAG with citations, evidence-based refusal, and error analysis instead of only a polished
   demo.
@@ -215,6 +222,10 @@ review_cards:
 # Trích dẫn nguồn / Citations
 
 Trích dẫn cần dẫn tới nguồn hỗ trợ phát biểu đi kèm. Có đường dẫn chưa chứng minh câu trả lời có căn cứ; cần đối chiếu nội dung và phạm vi từng kết luận.
+
+Trích dẫn tồn tại khác trích dẫn hỗ trợ đúng phát biểu. Một nguồn có thể liên quan chủ đề nhưng không nói đến con số, điều kiện hoặc phạm vi mà câu trả lời khẳng định.
+
+Ví dụ, nguồn chỉ nói gói cơ bản miễn phí, nhưng câu trả lời viết mọi gói đều miễn phí. Tự kiểm tra: liên kết mở được đã đủ chưa? Chưa; đối chiếu từng phát biểu với đoạn nguồn cụ thể, giữ ngoại lệ và ghi phiên bản tài liệu khi quy định thay đổi.
 
 ## Thực hành
 

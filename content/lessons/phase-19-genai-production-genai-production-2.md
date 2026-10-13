@@ -28,11 +28,18 @@ key_terms:
 - reproducibility
 - deployment
 - genai-production
-concept_notes_vi: Khi nhà cung cấp chậm hoặc lỗi, thử lại cần giới hạn và khoảng chờ phù hợp. Phương án dự phòng
-  phải giữ yêu cầu tối thiểu về chất lượng, cấu trúc và quyền dữ liệu.
-concept_notes_en: 'Retry, fallback và rate limit belongs to LLM Application Engineering: design the contract between
-  the application and the model. Define instructions, inputs, output schema, timeout, retry, and token limits; parse
-  model output as untrusted data and return actionable errors.'
+concept_notes_vi: |-
+  Khi nhà cung cấp chậm hoặc lỗi, thử lại cần giới hạn và khoảng chờ phù hợp. Phương án dự phòng phải giữ yêu cầu tối thiểu về chất lượng, cấu trúc và quyền dữ liệu.
+
+  Retry lặp lại trên đường xử lý cũ; fallback chuyển sang phương án khác. Cả hai đều tiêu tốn tài nguyên và có thể làm lỗi lan rộng nếu mọi yêu cầu đồng loạt thử lại khi dịch vụ quá tải.
+
+  Ví dụ, dùng khoảng chờ tăng dần với độ lệch ngẫu nhiên và giới hạn tổng thời gian trước khi báo lỗi rõ. Tự kiểm tra: khi nhà cung cấp chính lỗi có thể chuyển dữ liệu tới bất kỳ nhà cung cấp khác không? Không; phương án dự phòng phải đã đáp ứng quyền xử lý dữ liệu, hợp đồng đầu ra và mức chất lượng tối thiểu của nhiệm vụ.
+concept_notes_en: |-
+  Provider failures require bounded retries with suitable waiting. Fallbacks must preserve minimum quality, structure and data-permission requirements.
+
+  A retry repeats the same route; a fallback changes routes. Both consume resources and can amplify overload if all requests retry together.
+
+  Use increasing delays with random jitter and an overall deadline before returning a clear failure. Self-check: may data be sent to any alternative provider when the primary fails? No: the fallback must already meet data-handling permissions, output contracts and the task's minimum quality requirements.
 why_it_matters_vi: Thiết kế hành vi khi nhà cung cấp chậm, lỗi hoặc tải tăng để duy trì mức phục vụ đã đặt ra.
 why_it_matters_en: Production quality is behavior when providers are slow, failing, expensive, or traffic grows—not
   just the happy path.
@@ -222,6 +229,10 @@ review_cards:
 # Thử lại, phương án dự phòng và giới hạn tần suất / Retries, fallbacks, and rate limits
 
 Khi nhà cung cấp chậm hoặc lỗi, thử lại cần giới hạn và khoảng chờ phù hợp. Phương án dự phòng phải giữ yêu cầu tối thiểu về chất lượng, cấu trúc và quyền dữ liệu.
+
+Retry lặp lại trên đường xử lý cũ; fallback chuyển sang phương án khác. Cả hai đều tiêu tốn tài nguyên và có thể làm lỗi lan rộng nếu mọi yêu cầu đồng loạt thử lại khi dịch vụ quá tải.
+
+Ví dụ, dùng khoảng chờ tăng dần với độ lệch ngẫu nhiên và giới hạn tổng thời gian trước khi báo lỗi rõ. Tự kiểm tra: khi nhà cung cấp chính lỗi có thể chuyển dữ liệu tới bất kỳ nhà cung cấp khác không? Không; phương án dự phòng phải đã đáp ứng quyền xử lý dữ liệu, hợp đồng đầu ra và mức chất lượng tối thiểu của nhiệm vụ.
 
 ## Thực hành
 

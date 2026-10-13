@@ -29,11 +29,22 @@ key_terms:
 - gradient
 - optimization
 - linear-algebra
-concept_notes_vi: Tích vô hướng kết hợp các thành phần tương ứng; chuẩn đo độ lớn của vector; khoảng cách đo mức
-  chênh lệch giữa hai vector. Chọn phép đo phù hợp với đơn vị và ý nghĩa dữ liệu.
-concept_notes_en: Dot product, norm và distance is a foundation for numerical representations. Track tensor shapes,
-  units, and axes; verify multiplication on a small example before using a large batch. For similarity, normalize
-  the measure so scale differences do not change the conclusion.
+concept_notes_vi: |-
+  Tích vô hướng cộng các tích thành phần tương ứng; chuẩn đo độ lớn; khoảng cách đo chênh lệch giữa hai vector. Với chuẩn Euclid, khoảng cách là chuẩn của hiệu hai vector.
+
+  Cosine similarity so sánh hướng bằng cách chia tích vô hướng cho tích hai chuẩn, nên khác khoảng cách Euclid vốn chịu ảnh hưởng độ lớn. Chuẩn hóa chỉ phù hợp khi độ lớn không phải thông tin cần giữ; vector không có độ dài thì cosine cần xử lý riêng.
+
+  Hai vector (1,0) và (2,0) có cosine bằng 1 nhưng khoảng cách Euclid bằng 1. Chúng cùng hướng, không trùng tọa độ.
+
+  Tự kiểm tra: cosine cao có chứng minh hai văn bản cùng nghĩa không? Không; đó là kết quả của biểu diễn và phép đo, cần kiểm tra bằng nhiệm vụ cụ thể.
+concept_notes_en: |-
+  The dot product sums matching component products; a norm measures magnitude; a distance measures separation. Euclidean distance is the norm of the difference vector.
+
+  Cosine similarity divides the dot product by the product of norms to compare direction, unlike magnitude-sensitive Euclidean distance. Normalize only when magnitude is not information to preserve; zero vectors require special treatment for cosine.
+
+  Vectors (1,0) and (2,0) have cosine similarity 1 but Euclidean distance 1. They share a direction, not coordinates.
+
+  Self-check: does high cosine prove two texts mean the same thing? No; evaluate the representation and measure against the actual task.
 why_it_matters_vi: Liên hệ vector, ma trận, khoảng cách và PCA với biểu diễn dữ liệu trong mô hình.
 why_it_matters_en: Connect vectors, matrices, distances, and PCA to tensor shapes and model representations.
 study_steps_vi:
@@ -218,7 +229,13 @@ review_cards:
 ---
 # Tích vô hướng, chuẩn và khoảng cách / Dot products, norms and distances
 
-Tích vô hướng kết hợp các thành phần tương ứng; chuẩn đo độ lớn của vector; khoảng cách đo mức chênh lệch giữa hai vector. Chọn phép đo phù hợp với đơn vị và ý nghĩa dữ liệu.
+Tích vô hướng cộng các tích thành phần tương ứng; chuẩn đo độ lớn; khoảng cách đo chênh lệch giữa hai vector. Với chuẩn Euclid, khoảng cách là chuẩn của hiệu hai vector.
+
+Cosine similarity so sánh hướng bằng cách chia tích vô hướng cho tích hai chuẩn, nên khác khoảng cách Euclid vốn chịu ảnh hưởng độ lớn. Chuẩn hóa chỉ phù hợp khi độ lớn không phải thông tin cần giữ; vector không có độ dài thì cosine cần xử lý riêng.
+
+Hai vector (1,0) và (2,0) có cosine bằng 1 nhưng khoảng cách Euclid bằng 1. Chúng cùng hướng, không trùng tọa độ.
+
+Tự kiểm tra: cosine cao có chứng minh hai văn bản cùng nghĩa không? Không; đó là kết quả của biểu diễn và phép đo, cần kiểm tra bằng nhiệm vụ cụ thể.
 
 ## Thực hành
 

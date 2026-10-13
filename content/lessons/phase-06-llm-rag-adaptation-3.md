@@ -25,11 +25,22 @@ key_terms:
 - retrieval
 - evaluation
 - adaptation
-concept_notes_vi: Lượng tử hóa biểu diễn số bằng độ chính xác thấp hơn để giảm bộ nhớ hoặc chi phí tính toán. Mức
-  tiết kiệm và ảnh hưởng chất lượng phụ thuộc mô hình, định dạng, phần cứng.
-concept_notes_en: Quantization is model optimization after establishing an evaluation baseline. Prepare clean data,
-  split train/eval, track memory and quality regressions, and choose fine-tuning, quantization, or local serving
-  based on quality, latency, cost, and privacy.
+concept_notes_vi: |-
+  Lượng tử hóa biểu diễn số bằng độ chính xác thấp hơn để giảm bộ nhớ hoặc chi phí tính toán. Mức tiết kiệm và ảnh hưởng chất lượng phụ thuộc mô hình, định dạng, phần cứng.
+
+  Lượng tử hóa làm giảm số mức biểu diễn; nó khác nén tệp không mất mát, vốn khôi phục nguyên dữ liệu ban đầu. Với lượng tử hóa, sai số làm tròn có thể ảnh hưởng đầu ra, nên phải đo chất lượng sau chuyển đổi.
+
+  Ví dụ lý tưởng, một triệu trọng số ở 16 bit cần 2 MB, còn ở 4 bit cần 0,5 MB theo đơn vị thập phân. Tệp và bộ nhớ chạy thật còn có hệ số lượng tử, metadata và KV cache.
+
+  Tự kiểm tra: trọng số nhỏ hơn bốn lần có nghĩa suy luận nhanh hơn bốn lần không? Không; tốc độ còn phụ thuộc kernel, thiết bị và phần công việc không giảm.
+concept_notes_en: |-
+  Quantization uses lower-precision representations to reduce memory or computation. Savings and quality changes depend on the model, format and hardware.
+
+  Quantization reduces representable levels, unlike lossless file compression that restores original values. Rounding error can affect outputs, so evaluate after conversion.
+
+  Ideally, one million 16-bit weights occupy 2 MB, versus 0.5 MB at four bits, using decimal units. Real files and runtime memory also include quantization scales, metadata and KV cache.
+
+  Self-check: do four times smaller weights imply four times faster inference? No: kernels, hardware and unchanged computation also determine speed.
 why_it_matters_vi: Chọn prompt, RAG, tinh chỉnh hoặc lượng tử hóa theo vấn đề cần giải quyết; giới hạn agent bằng
   điều kiện dừng.
 why_it_matters_en: Know when RAG is enough, when fine-tuning/LoRA/quantization is justified, and why agents need
@@ -208,6 +219,12 @@ review_cards:
 # Lượng tử hóa / Quantization
 
 Lượng tử hóa biểu diễn số bằng độ chính xác thấp hơn để giảm bộ nhớ hoặc chi phí tính toán. Mức tiết kiệm và ảnh hưởng chất lượng phụ thuộc mô hình, định dạng, phần cứng.
+
+Lượng tử hóa làm giảm số mức biểu diễn; nó khác nén tệp không mất mát, vốn khôi phục nguyên dữ liệu ban đầu. Với lượng tử hóa, sai số làm tròn có thể ảnh hưởng đầu ra, nên phải đo chất lượng sau chuyển đổi.
+
+Ví dụ lý tưởng, một triệu trọng số ở 16 bit cần 2 MB, còn ở 4 bit cần 0,5 MB theo đơn vị thập phân. Tệp và bộ nhớ chạy thật còn có hệ số lượng tử, metadata và KV cache.
+
+Tự kiểm tra: trọng số nhỏ hơn bốn lần có nghĩa suy luận nhanh hơn bốn lần không? Không; tốc độ còn phụ thuộc kernel, thiết bị và phần công việc không giảm.
 
 ## Thực hành
 

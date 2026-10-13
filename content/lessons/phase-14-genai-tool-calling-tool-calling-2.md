@@ -28,11 +28,18 @@ key_terms:
 - retrieval
 - evaluation
 - tool-calling
-concept_notes_vi: Tham số đúng kiểu vẫn có thể vượt phạm vi được phép, chẳng hạn đường dẫn ngoài thư mục cho phép.
-  Cần kiểm tra cả cấu trúc lẫn ràng buộc nghiệp vụ trước thực thi.
-concept_notes_en: Tool validation và argument policy extends a model with controlled actions. Tool schemas must
-  validate inputs, limit permissions, and define timeout and retry; an agent loop needs stopping conditions, step
-  logs, and human approval for side effects.
+concept_notes_vi: |-
+  Tham số đúng kiểu vẫn có thể vượt phạm vi được phép, chẳng hạn đường dẫn ngoài thư mục cho phép. Cần kiểm tra cả cấu trúc lẫn ràng buộc nghiệp vụ trước thực thi.
+
+  Kiểm tra schema xét cấu trúc; kiểm tra chính sách xét thao tác có nằm trong phạm vi được phép không. Giá trị chuỗi hợp lệ vẫn có thể chứa đường dẫn thoát thư mục, địa chỉ không được phép hoặc mã tài nguyên của người khác.
+
+  Ví dụ, công cụ đọc tệp cần giải đường dẫn thật rồi kiểm tra nó nằm trong thư mục cho phép, kể cả khi có liên kết hoặc thành phần đi lên thư mục cha. Tự kiểm tra: chỉ kiểm tra tên bắt đầu bằng tiền tố có đủ không? Không; chuẩn hóa, kiểm tra ranh giới đường dẫn và áp dụng quyền ngay tại nơi đọc.
+concept_notes_en: |-
+  Well-typed arguments can still exceed allowed scope, such as a path outside an approved directory. Validate structure and business constraints before execution.
+
+  Schema checks assess shape; policy checks assess authorization. A valid string can name a forbidden address, an escaping path or someone else's resource.
+
+  A file-reading tool should resolve the actual path and verify it remains under the allowed root, including links and parent-directory components. Self-check: is checking a textual prefix enough? No: normalize, check path boundaries and enforce permissions at the point of access.
 why_it_matters_vi: Kiểm tra lời gọi và quyền trước khi biến đề xuất của mô hình thành hành động.
 why_it_matters_en: Tool calling turns model output into actions, so its contracts must be stricter than ordinary
   chat.
@@ -222,6 +229,10 @@ review_cards:
 # Kiểm tra công cụ và chính sách tham số / Tool validation and argument policies
 
 Tham số đúng kiểu vẫn có thể vượt phạm vi được phép, chẳng hạn đường dẫn ngoài thư mục cho phép. Cần kiểm tra cả cấu trúc lẫn ràng buộc nghiệp vụ trước thực thi.
+
+Kiểm tra schema xét cấu trúc; kiểm tra chính sách xét thao tác có nằm trong phạm vi được phép không. Giá trị chuỗi hợp lệ vẫn có thể chứa đường dẫn thoát thư mục, địa chỉ không được phép hoặc mã tài nguyên của người khác.
+
+Ví dụ, công cụ đọc tệp cần giải đường dẫn thật rồi kiểm tra nó nằm trong thư mục cho phép, kể cả khi có liên kết hoặc thành phần đi lên thư mục cha. Tự kiểm tra: chỉ kiểm tra tên bắt đầu bằng tiền tố có đủ không? Không; chuẩn hóa, kiểm tra ranh giới đường dẫn và áp dụng quyền ngay tại nơi đọc.
 
 ## Thực hành
 

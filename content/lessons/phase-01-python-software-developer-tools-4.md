@@ -27,11 +27,22 @@ key_terms:
 - debugging
 - maintainability
 - developer-tools
-concept_notes_vi: HTTP quy định cách gửi yêu cầu và nhận phản hồi qua mạng. REST là một cách thiết kế API quanh
-  tài nguyên; JSON thường biểu diễn dữ liệu, còn mã trạng thái và header mang thông tin xử lý.
-concept_notes_en: HTTP, REST và JSON describes a boundary between data and a service. A sound request has a schema,
-  validation, status code, timeout, and actionable errors; a sound query uses parameter binding, appropriate indexes,
-  and tests empty or malformed data.
+concept_notes_vi: |-
+  HTTP tổ chức trao đổi yêu cầu và phản hồi qua mạng, gồm phương thức, địa chỉ, header, mã trạng thái và có thể có phần thân. JSON là một định dạng biểu diễn dữ liệu trong phần thân ấy.
+
+  REST là phong cách thiết kế quanh tài nguyên và các ràng buộc kiến trúc; API gửi JSON chưa đủ để gọi là REST. Mã trạng thái mô tả kết quả HTTP nhưng ứng dụng vẫn cần kiểm tra dữ liệu theo hợp đồng.
+
+  GET /items yêu cầu đọc danh sách; POST /items thường gửi dữ liệu tạo mục mới theo thiết kế API. Khi hết thời gian chờ, chưa biết chắc máy chủ đã xử lý hay chưa, nên không lặp thao tác tạo một cách mù quáng.
+
+  Tự kiểm tra: JSON hợp lệ có bảo đảm yêu cầu thành công không? Không; xem trạng thái, lỗi và nội dung phản hồi.
+concept_notes_en: |-
+  HTTP structures network requests and responses using methods, addresses, headers, status codes and optional bodies. JSON is one possible body representation.
+
+  REST is an architectural style centered on resources and constraints; sending JSON alone does not make an API RESTful. HTTP status describes the exchange, while application data still needs contract validation.
+
+  GET /items requests a collection; POST /items often creates an item according to the API contract. A timeout leaves uncertainty about whether the server processed the request, so do not blindly retry creation.
+
+  Self-check: does valid JSON establish success? No; inspect the status, errors and response content.
 why_it_matters_vi: Dùng Git, terminal và HTTP để tái hiện vấn đề, xem xét thay đổi và trao đổi với hệ thống.
 why_it_matters_en: Use Git, terminals, and HTTP as daily tools for reproduction, review, and system communication.
 study_steps_vi:
@@ -231,7 +242,13 @@ review_cards:
 ---
 # HTTP, REST và JSON / HTTP, REST and JSON
 
-HTTP quy định cách gửi yêu cầu và nhận phản hồi qua mạng. REST là một cách thiết kế API quanh tài nguyên; JSON thường biểu diễn dữ liệu, còn mã trạng thái và header mang thông tin xử lý.
+HTTP tổ chức trao đổi yêu cầu và phản hồi qua mạng, gồm phương thức, địa chỉ, header, mã trạng thái và có thể có phần thân. JSON là một định dạng biểu diễn dữ liệu trong phần thân ấy.
+
+REST là phong cách thiết kế quanh tài nguyên và các ràng buộc kiến trúc; API gửi JSON chưa đủ để gọi là REST. Mã trạng thái mô tả kết quả HTTP nhưng ứng dụng vẫn cần kiểm tra dữ liệu theo hợp đồng.
+
+GET /items yêu cầu đọc danh sách; POST /items thường gửi dữ liệu tạo mục mới theo thiết kế API. Khi hết thời gian chờ, chưa biết chắc máy chủ đã xử lý hay chưa, nên không lặp thao tác tạo một cách mù quáng.
+
+Tự kiểm tra: JSON hợp lệ có bảo đảm yêu cầu thành công không? Không; xem trạng thái, lỗi và nội dung phản hồi.
 
 ## Thực hành
 

@@ -26,10 +26,18 @@ key_terms:
 - debugging
 - maintainability
 - problem
-concept_notes_vi: Kiến trúc mô tả thành phần, luồng dữ liệu và nơi đưa ra quyết định. Bắt đầu từ yêu cầu, ràng buộc
-  rồi giải thích cách chia thành phần và xử lý khi một phần gặp lỗi.
-concept_notes_en: Thiết kế architecture is a concept in the problem module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Kiến trúc mô tả thành phần, luồng dữ liệu và nơi đưa ra quyết định. Bắt đầu từ yêu cầu, ràng buộc rồi giải thích cách chia thành phần và xử lý khi một phần gặp lỗi.
+
+  Chia thành phần theo trách nhiệm khác chia theo tên thư viện. Một ranh giới tốt làm rõ dữ liệu đi qua, lỗi có thể xảy ra và bên chịu trách nhiệm khôi phục.
+
+  Ví dụ, tách nhập tài liệu khỏi trả lời trực tuyến để lỗi đọc PDF không chặn mọi yêu cầu chat. Tự kiểm tra: sơ đồ nhiều dịch vụ có luôn tốt hơn không? Không; mỗi ranh giới thêm giao tiếp và vận hành. Bắt đầu với cấu trúc đơn giản, chỉ tách khi có yêu cầu hoặc điểm nghẽn cụ thể.
+concept_notes_en: |-
+  Architecture assigns components, data flow and decision ownership from requirements and constraints, including failure handling.
+
+  Responsibility boundaries differ from library names. A useful boundary states exchanged data, possible errors and recovery ownership.
+
+  Separating document ingestion from online answering prevents one PDF-reading failure from blocking all chat requests. Self-check: are more services always better? No: each boundary adds communication and operations. Start simply and split only for a concrete requirement or bottleneck.
 why_it_matters_vi: Chọn vấn đề có người dùng, tiêu chí đánh giá và kiến trúc giải thích được.
 why_it_matters_en: Choose a real user problem with measurable metrics and an architecture you can defend in an interview.
 study_steps_vi:
@@ -207,6 +215,10 @@ review_cards:
 # Thiết kế kiến trúc hệ thống / Design the architecture
 
 Kiến trúc mô tả thành phần, luồng dữ liệu và nơi đưa ra quyết định. Bắt đầu từ yêu cầu, ràng buộc rồi giải thích cách chia thành phần và xử lý khi một phần gặp lỗi.
+
+Chia thành phần theo trách nhiệm khác chia theo tên thư viện. Một ranh giới tốt làm rõ dữ liệu đi qua, lỗi có thể xảy ra và bên chịu trách nhiệm khôi phục.
+
+Ví dụ, tách nhập tài liệu khỏi trả lời trực tuyến để lỗi đọc PDF không chặn mọi yêu cầu chat. Tự kiểm tra: sơ đồ nhiều dịch vụ có luôn tốt hơn không? Không; mỗi ranh giới thêm giao tiếp và vận hành. Bắt đầu với cấu trúc đơn giản, chỉ tách khi có yêu cầu hoặc điểm nghẽn cụ thể.
 
 ## Thực hành
 

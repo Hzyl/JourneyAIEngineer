@@ -25,11 +25,18 @@ key_terms:
 - gradient
 - optimization
 - retrieval
-concept_notes_vi: Tìm kiếm vector xếp biểu diễn theo độ tương đồng hoặc khoảng cách. Chất lượng phụ thuộc embedding,
-  cách biểu diễn câu hỏi và dữ liệu; kết quả gần nhất chưa chắc chứa câu trả lời.
-concept_notes_en: Vector search is a foundation for numerical representations. Track tensor shapes, units, and axes;
-  verify multiplication on a small example before using a large batch. For similarity, normalize the measure so
-  scale differences do not change the conclusion.
+concept_notes_vi: |-
+  Tìm kiếm vector xếp biểu diễn theo độ tương đồng hoặc khoảng cách. Chất lượng phụ thuộc embedding, cách biểu diễn câu hỏi và dữ liệu; kết quả gần nhất chưa chắc chứa câu trả lời.
+
+  Tìm kiếm chính xác tính trên toàn bộ vector; tìm kiếm gần đúng dùng chỉ mục để giảm công việc và có thể bỏ sót hàng xóm thật. Tốc độ và độ bao phủ cần đo cùng nhau.
+
+  Ví dụ, câu hỏi về 'hủy đơn' có thể tìm được đoạn 'ngừng giao hàng' dù không trùng từ. Tự kiểm tra: kết quả đứng đầu có chắc trả lời được không? Không; đọc xem có điều kiện hủy cụ thể và kiểm tra quyền truy cập trước khi đưa vào ngữ cảnh.
+concept_notes_en: |-
+  Vector search ranks representations by similarity or distance. Quality depends on embeddings, query representation and data; the nearest item may lack the answer.
+
+  Exact search evaluates all vectors; approximate indexing reduces work but may miss true neighbors. Measure speed and retrieval coverage together.
+
+  A cancellation query might retrieve 'stop delivery' without matching words. Self-check: must the first result answer the question? No: inspect actual cancellation conditions and verify access before adding it to context.
 why_it_matters_vi: Thiết kế cách chia đoạn, lưu siêu dữ liệu và tìm kiếm để đo chất lượng truy xuất trước khi sinh
   câu trả lời.
 why_it_matters_en: Design retrieval with chunks, metadata, vector search, and reranking so recall is measured before
@@ -220,6 +227,10 @@ review_cards:
 # Tìm kiếm vector / Vector search
 
 Tìm kiếm vector xếp biểu diễn theo độ tương đồng hoặc khoảng cách. Chất lượng phụ thuộc embedding, cách biểu diễn câu hỏi và dữ liệu; kết quả gần nhất chưa chắc chứa câu trả lời.
+
+Tìm kiếm chính xác tính trên toàn bộ vector; tìm kiếm gần đúng dùng chỉ mục để giảm công việc và có thể bỏ sót hàng xóm thật. Tốc độ và độ bao phủ cần đo cùng nhau.
+
+Ví dụ, câu hỏi về 'hủy đơn' có thể tìm được đoạn 'ngừng giao hàng' dù không trùng từ. Tự kiểm tra: kết quả đứng đầu có chắc trả lời được không? Không; đọc xem có điều kiện hủy cụ thể và kiểm tra quyền truy cập trước khi đưa vào ngữ cảnh.
 
 ## Thực hành
 

@@ -25,11 +25,18 @@ key_terms:
 - baseline
 - evaluation
 - ml-framing
-concept_notes_vi: Đặc trưng là thông tin dùng để dự đoán; nhãn là kết quả cần học. Đặc trưng phải có sẵn tại thời
-  điểm dự đoán.
-concept_notes_en: 'Dataset, feature và label is a classical Machine Learning decision: define the label, baseline,
-  split, and metric before choosing a model. Fit preprocessing on train only; error analysis should identify the
-  groups where the model fails and how to retest the hypothesis.'
+concept_notes_vi: |-
+  Một tập dữ liệu thường gồm các mẫu, đặc trưng và nhãn. Mẫu là đơn vị quan sát; đặc trưng là thông tin dùng để dự đoán; nhãn là kết quả cần học. Ý nghĩa mỗi dòng cần được xác định trước khi huấn luyện.
+
+  Cột có trong bảng chưa chắc là đặc trưng hợp lệ. Thông tin chỉ xuất hiện sau thời điểm dự đoán có thể tiết lộ đáp án. Nếu dự đoán khách hủy đơn ngay khi đặt hàng, trạng thái hoàn tiền cuối cùng không được làm đầu vào; lịch sử mua trước thời điểm đặt đơn có thể phù hợp.
+
+  Tự kiểm tra: xóa cột nhãn đã loại hết rò rỉ chưa? Chưa; các cột khác hoặc cách tổng hợp vẫn có thể chứa thông tin về kết quả tương lai. Kiểm tra mốc thời gian mà từng đặc trưng thực sự có sẵn.
+concept_notes_en: |-
+  A dataset commonly contains examples, features and labels. An example is the observation unit; features are prediction inputs; the label is the target. Define what each row represents before training.
+
+  A column's presence in a table does not make it a valid feature. Information available only after prediction time can reveal the answer. To predict cancellation when an order is placed, the eventual refund status cannot be an input; earlier purchase history may be appropriate.
+
+  Self-check: does removing the label column eliminate all leakage? No; other columns or aggregations can still contain information about future outcomes. Check when each feature actually becomes available.
 why_it_matters_vi: Làm rõ người dùng, nhãn, cách chia dữ liệu và mốc so sánh trước khi chọn mô hình.
 why_it_matters_en: 'Frame the problem before choosing a model: user, label, split, baseline, and leakage risks.'
 study_steps_vi:
@@ -211,7 +218,11 @@ review_cards:
 ---
 # Tập dữ liệu, đặc trưng và nhãn / Datasets, features and labels
 
-Đặc trưng là thông tin dùng để dự đoán; nhãn là kết quả cần học. Đặc trưng phải có sẵn tại thời điểm dự đoán.
+Một tập dữ liệu thường gồm các mẫu, đặc trưng và nhãn. Mẫu là đơn vị quan sát; đặc trưng là thông tin dùng để dự đoán; nhãn là kết quả cần học. Ý nghĩa mỗi dòng cần được xác định trước khi huấn luyện.
+
+Cột có trong bảng chưa chắc là đặc trưng hợp lệ. Thông tin chỉ xuất hiện sau thời điểm dự đoán có thể tiết lộ đáp án. Nếu dự đoán khách hủy đơn ngay khi đặt hàng, trạng thái hoàn tiền cuối cùng không được làm đầu vào; lịch sử mua trước thời điểm đặt đơn có thể phù hợp.
+
+Tự kiểm tra: xóa cột nhãn đã loại hết rò rỉ chưa? Chưa; các cột khác hoặc cách tổng hợp vẫn có thể chứa thông tin về kết quả tương lai. Kiểm tra mốc thời gian mà từng đặc trưng thực sự có sẵn.
 
 ## Thực hành
 

@@ -27,11 +27,18 @@ key_terms:
 - loss
 - training
 - genai-transformers
-concept_notes_vi: Encoder tạo biểu diễn ngữ cảnh; decoder phục vụ tạo đầu ra theo cấu trúc kiến trúc. Mặt nạ nhân
-  quả cần thiết khi huấn luyện dự đoán token tiếp theo.
-concept_notes_en: Transformer encoder và decoder explains how a Transformer weights relevant tokens. Track the shapes
-  of Q, K, V, masks, and context length; during inference, KV cache avoids recomputing keys and values at the cost
-  of memory.
+concept_notes_vi: |-
+  Encoder tạo biểu diễn ngữ cảnh; decoder phục vụ tạo đầu ra theo cấu trúc kiến trúc. Mặt nạ nhân quả cần thiết khi huấn luyện dự đoán token tiếp theo.
+
+  Encoder kiểu hai chiều có thể kết hợp ngữ cảnh cả trước và sau token. Decoder tự hồi quy dùng mặt nạ nhân quả để không thấy token tương lai; trong mô hình encoder-decoder, cross-attention còn cho phép decoder đọc biểu diễn từ encoder.
+
+  Ví dụ, dịch câu có thể đọc toàn bộ câu nguồn rồi sinh câu đích từng token; mô hình decoder-only nhận prompt và tiếp tục chuỗi. Tự kiểm tra: bỏ mặt nạ khi huấn luyện dự đoán token tiếp theo có sao không? Có; mô hình có thể nhìn đáp án tương lai mà lúc sinh thật chưa tồn tại, khiến đánh giá việc học bị sai lệch.
+concept_notes_en: |-
+  An encoder creates contextual representations; a decoder generates outputs according to its architecture. Next-token training requires a causal mask.
+
+  A bidirectional encoder can use preceding and following context. An autoregressive decoder blocks future tokens; an encoder-decoder model also uses cross-attention to read encoder representations.
+
+  Translation can read the full source before generating target tokens, while a decoder-only model continues a prompt. Self-check: can the next-token training mask be removed safely? No: the model could see future answers unavailable during generation, undermining the training objective and its interpretation.
 why_it_matters_vi: Hiểu Transformer qua kích thước tensor, trọng số attention và chi phí suy luận.
 why_it_matters_en: Transformers become understandable when you trace tensor shapes, attention weights, and inference
   cost.
@@ -130,6 +137,15 @@ resources:
   purpose_en: Official reference to verify the lesson concept.
   read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
   read_en: Read the relevant section, run a small example, and record one verified insight.
+- language: en
+  title: "Stanford CS336: Language Modeling from Scratch (Spring 2026)"
+  url: https://cs336.stanford.edu/
+  kind: official
+  required: false
+  purpose_vi: "Tài liệu học nâng cao nối dữ liệu, Transformer, huấn luyện, đánh giá và triển khai mô hình ngôn ngữ."
+  purpose_en: "Advanced course material connecting data, Transformers, training, evaluation, and language-model deployment."
+  read_vi: "Đọc đề cương và bài phù hợp sau khi đã vững Python, PyTorch, hệ thống và toán; lịch Spring 2026 đã qua, không xem đây là khóa đang tuyển sinh."
+  read_en: "Use the syllabus and relevant assignments only after building Python, PyTorch, systems, and math foundations; Spring 2026 has passed, so this is not an active enrollment offer."
 - title: Giải thích và hướng dẫn thực hành trong bài
   url: ''
   language: vi
@@ -219,6 +235,10 @@ review_cards:
 # Encoder và decoder của Transformer / Transformer encoders and decoders
 
 Encoder tạo biểu diễn ngữ cảnh; decoder phục vụ tạo đầu ra theo cấu trúc kiến trúc. Mặt nạ nhân quả cần thiết khi huấn luyện dự đoán token tiếp theo.
+
+Encoder kiểu hai chiều có thể kết hợp ngữ cảnh cả trước và sau token. Decoder tự hồi quy dùng mặt nạ nhân quả để không thấy token tương lai; trong mô hình encoder-decoder, cross-attention còn cho phép decoder đọc biểu diễn từ encoder.
+
+Ví dụ, dịch câu có thể đọc toàn bộ câu nguồn rồi sinh câu đích từng token; mô hình decoder-only nhận prompt và tiếp tục chuỗi. Tự kiểm tra: bỏ mặt nạ khi huấn luyện dự đoán token tiếp theo có sao không? Có; mô hình có thể nhìn đáp án tương lai mà lúc sinh thật chưa tồn tại, khiến đánh giá việc học bị sai lệch.
 
 ## Thực hành
 

@@ -27,10 +27,22 @@ key_terms:
 - debugging
 - maintainability
 - learning-system
-concept_notes_vi: Nhật ký buổi học nên ghi mục tiêu, việc đã tự làm, kết quả và câu hỏi còn vướng. Thời lượng cho
-  biết mức đầu tư; kết quả thực hành giúp bạn quyết định bước học tiếp theo.
-concept_notes_en: Cách ghi study session is a concept in the learning-system module. Identify the inputs, outputs,
-  assumptions, failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Nhật ký buổi học ghi mục tiêu, phần đã tự làm, kết quả và câu hỏi còn vướng. Ghi đủ cụ thể để buổi sau có thể tiếp tục mà không phải đoán mình đã làm đến đâu.
+
+  Thời lượng đo mức đầu tư, còn sản phẩm và phép kiểm tra cho biết kết quả của thời gian đó. Hai thông tin bổ sung cho nhau; ngồi lâu không tự chứng minh hiểu bài.
+
+  Thay vì ghi 'học Python một giờ', ghi 'viết hàm đọc JSON; dữ liệu hợp lệ chạy đúng, chưa xử lý tệp rỗng', kèm tên tệp và thông báo lỗi. Bước sau đã rõ: xác định chính sách cho tệp rỗng.
+
+  Tự kiểm tra: nên ghi lời giải AI như phần tự làm không? Không; ghi rõ đã nhận gợi ý gì để đánh giá đúng chỗ còn phụ thuộc.
+concept_notes_en: |-
+  A study-session note records the goal, unaided work, results and unresolved questions. Make it concrete enough to resume without guessing where you stopped.
+
+  Duration measures effort; artifacts and checks show what that effort produced. Both matter, but a long session does not itself establish understanding.
+
+  Instead of 'one hour of Python', write 'JSON reader handles valid data; empty files remain unresolved', with the filename and error. The next step is then clear: decide the empty-file policy.
+
+  Self-check: should an AI solution be recorded as independent work? No; disclose the assistance so remaining dependencies are visible.
 why_it_matters_vi: Gắn việc học với kết quả tự làm để biết điều đã hiểu và điều cần luyện tiếp.
 why_it_matters_en: Build an evidence-based learning system with sessions, journals, reviews, and checkpoints instead
   of passive reading.
@@ -210,7 +222,13 @@ review_cards:
 ---
 # Ghi lại một buổi học / Record a study session
 
-Nhật ký buổi học nên ghi mục tiêu, việc đã tự làm, kết quả và câu hỏi còn vướng. Thời lượng cho biết mức đầu tư; kết quả thực hành giúp bạn quyết định bước học tiếp theo.
+Nhật ký buổi học ghi mục tiêu, phần đã tự làm, kết quả và câu hỏi còn vướng. Ghi đủ cụ thể để buổi sau có thể tiếp tục mà không phải đoán mình đã làm đến đâu.
+
+Thời lượng đo mức đầu tư, còn sản phẩm và phép kiểm tra cho biết kết quả của thời gian đó. Hai thông tin bổ sung cho nhau; ngồi lâu không tự chứng minh hiểu bài.
+
+Thay vì ghi 'học Python một giờ', ghi 'viết hàm đọc JSON; dữ liệu hợp lệ chạy đúng, chưa xử lý tệp rỗng', kèm tên tệp và thông báo lỗi. Bước sau đã rõ: xác định chính sách cho tệp rỗng.
+
+Tự kiểm tra: nên ghi lời giải AI như phần tự làm không? Không; ghi rõ đã nhận gợi ý gì để đánh giá đúng chỗ còn phụ thuộc.
 
 ## Thực hành
 

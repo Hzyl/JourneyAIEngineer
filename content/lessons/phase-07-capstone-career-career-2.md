@@ -27,10 +27,18 @@ key_terms:
 - debugging
 - maintainability
 - career
-concept_notes_vi: Câu chuyện cần nối vấn đề, quyết định, kết quả và điều rút ra. Phân biệt phần tự làm với phần
-  của nhóm; chuẩn bị giải thích cả lựa chọn chưa thành công.
-concept_notes_en: Trình bày project is a concept in the career module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Câu chuyện cần nối vấn đề, quyết định, kết quả và điều rút ra. Phân biệt phần tự làm với phần của nhóm; chuẩn bị giải thích cả lựa chọn chưa thành công.
+
+  Mô tả kiến trúc trả lời hệ thống gồm gì; trình bày quyết định trả lời vì sao chọn như vậy. Nêu phương án đã so sánh giúp người nghe thấy cách suy luận, không chỉ nhớ tên công nghệ.
+
+  Ví dụ, giải thích chọn truy xuất trước tinh chỉnh vì chính sách thay đổi thường xuyên và cần dẫn nguồn. Tự kiểm tra: kết quả tốt có đủ nếu không nói phần nhóm làm không? Không; phân định đóng góp cá nhân, trình bày một thất bại và bằng chứng khiến bạn sửa quyết định.
+concept_notes_en: |-
+  A project story connects problem, decisions, results and lessons. Distinguish personal work from team contributions and explain unsuccessful choices too.
+
+  Architecture describes what exists; decision reasoning explains why. Compared alternatives reveal judgment beyond technology names.
+
+  For example, explain choosing retrieval before fine-tuning because policies change frequently and need citations. Self-check: is a strong result enough without clarifying team roles? No: identify personal contributions, describe a failure and show the evidence that changed your decision.
 why_it_matters_vi: Chuyển kinh nghiệm thực hành thành CV và câu chuyện phỏng vấn có căn cứ.
 why_it_matters_en: Turn your skills into a focused CV, interview stories, and structured AI system design answers.
 study_steps_vi:
@@ -209,6 +217,10 @@ review_cards:
 # Trình bày dự án trong phỏng vấn / Presenting projects
 
 Câu chuyện cần nối vấn đề, quyết định, kết quả và điều rút ra. Phân biệt phần tự làm với phần của nhóm; chuẩn bị giải thích cả lựa chọn chưa thành công.
+
+Mô tả kiến trúc trả lời hệ thống gồm gì; trình bày quyết định trả lời vì sao chọn như vậy. Nêu phương án đã so sánh giúp người nghe thấy cách suy luận, không chỉ nhớ tên công nghệ.
+
+Ví dụ, giải thích chọn truy xuất trước tinh chỉnh vì chính sách thay đổi thường xuyên và cần dẫn nguồn. Tự kiểm tra: kết quả tốt có đủ nếu không nói phần nhóm làm không? Không; phân định đóng góp cá nhân, trình bày một thất bại và bằng chứng khiến bạn sửa quyết định.
 
 ## Thực hành
 

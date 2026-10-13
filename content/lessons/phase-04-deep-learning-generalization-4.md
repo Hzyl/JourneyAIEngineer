@@ -27,10 +27,18 @@ key_terms:
 - loss
 - training
 - generalization
-concept_notes_vi: Dừng sớm dùng chất lượng kiểm định để quyết định khi nào ngừng huấn luyện. Muốn tiếp tục đúng
-  trạng thái, cần lưu các thành phần liên quan thay vì chỉ trọng số cuối cùng.
-concept_notes_en: Early stopping và resume is a concept in the generalization module. Identify the inputs, outputs,
-  assumptions, failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Dừng sớm theo dõi một thước đo kiểm định và ngừng khi kết quả không cải thiện đủ theo quy tắc đã chọn. Patience là số lần đánh giá chấp nhận chờ, không nhất thiết là số epoch nếu bạn đánh giá nhiều lần trong một epoch.
+
+  Bản lưu tốt nhất khác bản lưu mới nhất. Ví dụ, validation loss qua bốn lượt là 0,6; 0,4; 0,5; 0,55 thì lượt hai có loss thấp nhất. Dừng ở lượt bốn không có nghĩa nên dùng trọng số của lượt bốn để dự đoán.
+
+  Tự kiểm tra: chỉ lưu best weights có đủ để tiếp tục đúng lịch huấn luyện không? Không; cần trạng thái optimizer, scheduler và thông tin vị trí chạy phù hợp. Phân biệt mục tiêu lấy mô hình tốt nhất để dùng với mục tiêu phục hồi một công việc bị gián đoạn.
+concept_notes_en: |-
+  Early stopping monitors a validation metric and stops when improvement falls short of a chosen rule. Patience counts evaluation checks; it need not count epochs if evaluation happens more often.
+
+  The best checkpoint differs from the latest one. If validation losses across four checks are 0.6, 0.4, 0.5 and 0.55, the second check has the lowest loss. Stopping at the fourth check does not mean its weights should be used for prediction.
+
+  Self-check: are best weights alone enough to resume the same training schedule? No; appropriate optimizer, scheduler and progress states are needed. Distinguish selecting a model for use from recovering an interrupted job.
 why_it_matters_vi: Nhận diện quá khớp và đánh giá tác dụng của điều chuẩn, tăng cường dữ liệu, dừng sớm.
 why_it_matters_en: Diagnose overfitting and improve generalization with regularization, augmentation, and early
   stopping.
@@ -216,7 +224,11 @@ review_cards:
 ---
 # Dừng sớm và tiếp tục huấn luyện / Early stopping and resuming training
 
-Dừng sớm dùng chất lượng kiểm định để quyết định khi nào ngừng huấn luyện. Muốn tiếp tục đúng trạng thái, cần lưu các thành phần liên quan thay vì chỉ trọng số cuối cùng.
+Dừng sớm theo dõi một thước đo kiểm định và ngừng khi kết quả không cải thiện đủ theo quy tắc đã chọn. Patience là số lần đánh giá chấp nhận chờ, không nhất thiết là số epoch nếu bạn đánh giá nhiều lần trong một epoch.
+
+Bản lưu tốt nhất khác bản lưu mới nhất. Ví dụ, validation loss qua bốn lượt là 0,6; 0,4; 0,5; 0,55 thì lượt hai có loss thấp nhất. Dừng ở lượt bốn không có nghĩa nên dùng trọng số của lượt bốn để dự đoán.
+
+Tự kiểm tra: chỉ lưu best weights có đủ để tiếp tục đúng lịch huấn luyện không? Không; cần trạng thái optimizer, scheduler và thông tin vị trí chạy phù hợp. Phân biệt mục tiêu lấy mô hình tốt nhất để dùng với mục tiêu phục hồi một công việc bị gián đoạn.
 
 ## Thực hành
 

@@ -26,10 +26,18 @@ key_terms:
 - debugging
 - maintainability
 - portfolio
-concept_notes_vi: Video nên bắt đầu bằng nhu cầu, đi qua thao tác chính và chỉ ra kết quả quan sát được. Nêu điều
-  kiện chạy hoặc dữ liệu mô phỏng để người xem hiểu đúng phạm vi.
-concept_notes_en: Video demo is a concept in the portfolio module. Identify the inputs, outputs, assumptions, failure
-  modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Video nên bắt đầu bằng nhu cầu, đi qua thao tác chính và chỉ ra kết quả quan sát được. Nêu điều kiện chạy hoặc dữ liệu mô phỏng để người xem hiểu đúng phạm vi.
+
+  Demo là minh họa một lần sử dụng; benchmark là phép đo theo điều kiện và tập thử đã định. Video đẹp không chứng minh hệ thống đúng với mọi đầu vào hay chịu được tải thực.
+
+  Ví dụ, quay câu hỏi có nguồn rồi câu hỏi ngoài tài liệu để cho thấy cách báo thiếu bằng chứng. Tự kiểm tra: cắt bỏ toàn bộ thời gian chờ có nên gọi là tốc độ thực không? Không; ghi rõ đoạn tua nhanh và điều kiện máy, giữ kết quả lỗi tiêu biểu để người xem hiểu phạm vi.
+concept_notes_en: |-
+  A demo video starts with a need, shows core actions and reports observable outcomes. State run conditions and simulated data.
+
+  A demo illustrates one use; a benchmark measures a defined workload. Polished footage cannot establish universal correctness or production capacity.
+
+  Show an answer with evidence and an out-of-scope question that triggers abstention. Self-check: can an edited-away wait be presented as real speed? No: label time compression and hardware conditions, and retain representative failures to communicate limits.
 why_it_matters_vi: Trình bày năng lực bằng dự án có bằng chứng kỹ thuật và đóng góp rõ.
 why_it_matters_en: Tell the technical story through a README, architecture diagram, video, and a curated GitHub
   profile.
@@ -207,6 +215,10 @@ review_cards:
 # Quay video demo / Video demos
 
 Video nên bắt đầu bằng nhu cầu, đi qua thao tác chính và chỉ ra kết quả quan sát được. Nêu điều kiện chạy hoặc dữ liệu mô phỏng để người xem hiểu đúng phạm vi.
+
+Demo là minh họa một lần sử dụng; benchmark là phép đo theo điều kiện và tập thử đã định. Video đẹp không chứng minh hệ thống đúng với mọi đầu vào hay chịu được tải thực.
+
+Ví dụ, quay câu hỏi có nguồn rồi câu hỏi ngoài tài liệu để cho thấy cách báo thiếu bằng chứng. Tự kiểm tra: cắt bỏ toàn bộ thời gian chờ có nên gọi là tốc độ thực không? Không; ghi rõ đoạn tua nhanh và điều kiện máy, giữ kết quả lỗi tiêu biểu để người xem hiểu phạm vi.
 
 ## Thực hành
 

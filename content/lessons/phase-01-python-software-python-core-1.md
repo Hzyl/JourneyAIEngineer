@@ -27,10 +27,22 @@ key_terms:
 - debugging
 - maintainability
 - python-core
-concept_notes_vi: Biến trong Python là tên tham chiếu tới đối tượng. Kiểu dữ liệu quyết định phép toán hợp lệ; với
-  đối tượng có thể thay đổi như list, nhiều tên có thể cùng tham chiếu tới một dữ liệu.
-concept_notes_en: Kiểu dữ liệu và biến is a concept in the python-core module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Biến Python là tên tham chiếu tới đối tượng; kiểu của đối tượng quyết định các phép toán hợp lệ. Phép gán liên kết tên với đối tượng, không mặc nhiên sao chép toàn bộ dữ liệu.
+
+  Phân biệt khả năng thay đổi đối tượng với gán lại tên. List có thể đổi tại chỗ; số nguyên và chuỗi là bất biến. Hai tên cùng tham chiếu một list sẽ cùng nhìn thấy nội dung bị sửa.
+
+  Với a = [1] rồi b = a, thao tác b.append(2) khiến a cũng thành [1, 2]. Nhưng b = [9] chỉ gán lại b, không thay list mà a đang tham chiếu.
+
+  Tự kiểm tra: a == b và a is b hỏi cùng điều không? Không; == so sánh giá trị theo kiểu, còn is kiểm tra có cùng một đối tượng.
+concept_notes_en: |-
+  Python variables are names referring to objects; an object's type determines valid operations. Assignment binds a name and does not automatically copy all data.
+
+  Distinguish mutating an object from rebinding a name. Lists can change in place; integers and strings are immutable. Two names referring to the same list observe its mutations.
+
+  After a = [1] and b = a, b.append(2) makes a contain [1, 2] too. But b = [9] only rebinds b; a still refers to the earlier list.
+
+  Self-check: do a == b and a is b ask the same question? No; equality compares values according to the type, while is tests object identity.
 why_it_matters_vi: Nắm Python đủ để đọc mã AI, viết hàm nhỏ và tự kiểm tra hành vi của chương trình.
 why_it_matters_en: Build enough Python fluency to read AI code, write small tested functions, and work beyond notebooks.
 study_steps_vi:
@@ -218,7 +230,13 @@ review_cards:
 ---
 # Kiểu dữ liệu và biến / Data types and variables
 
-Biến trong Python là tên tham chiếu tới đối tượng. Kiểu dữ liệu quyết định phép toán hợp lệ; với đối tượng có thể thay đổi như list, nhiều tên có thể cùng tham chiếu tới một dữ liệu.
+Biến Python là tên tham chiếu tới đối tượng; kiểu của đối tượng quyết định các phép toán hợp lệ. Phép gán liên kết tên với đối tượng, không mặc nhiên sao chép toàn bộ dữ liệu.
+
+Phân biệt khả năng thay đổi đối tượng với gán lại tên. List có thể đổi tại chỗ; số nguyên và chuỗi là bất biến. Hai tên cùng tham chiếu một list sẽ cùng nhìn thấy nội dung bị sửa.
+
+Với a = [1] rồi b = a, thao tác b.append(2) khiến a cũng thành [1, 2]. Nhưng b = [9] chỉ gán lại b, không thay list mà a đang tham chiếu.
+
+Tự kiểm tra: a == b và a is b hỏi cùng điều không? Không; == so sánh giá trị theo kiểu, còn is kiểm tra có cùng một đối tượng.
 
 ## Thực hành
 

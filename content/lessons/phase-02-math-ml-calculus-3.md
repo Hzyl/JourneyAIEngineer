@@ -26,11 +26,22 @@ key_terms:
 - vector
 - optimization
 - calculus
-concept_notes_vi: Gradient tập hợp các đạo hàm riêng và chỉ hướng tăng nhanh nhất tại một điểm theo khoảng cách
-  Euclid. Đường đồng mức nối các điểm có cùng giá trị hàm, giúp hình dung bài toán tối ưu.
-concept_notes_en: Gradient và level set describes how an output changes when a parameter changes. Use finite differences
-  on a small input to check a gradient, then trace the chain rule through each transformation; gradient sign and
-  scale determine whether updates are stable.
+concept_notes_vi: |-
+  Gradient là vector gồm các đạo hàm riêng. Với hàm khả vi và độ dài Euclid, gradient khác không chỉ hướng tăng nhanh nhất cục bộ; hướng ngược lại dùng để tìm bước giảm.
+
+  Đường hoặc mặt đồng mức gồm các điểm có cùng giá trị hàm. Tại điểm trơn có gradient khác không, gradient vuông góc mặt đồng mức. Gradient bằng không chỉ báo điểm dừng, chưa phân biệt cực tiểu, cực đại hay điểm yên ngựa.
+
+  Với f(x,y)=x²+y² tại (1,2), gradient là (2,4), còn các điểm cùng giá trị nằm trên đường tròn x²+y²=5. Bước quá dài theo hướng giảm vẫn có thể vượt qua vùng tốt.
+
+  Tự kiểm tra: đổi thang đo một tọa độ có ảnh hưởng đường tối ưu không? Có; hình học theo tọa độ và độ lớn gradient sẽ thay đổi.
+concept_notes_en: |-
+  The gradient is the vector of partial derivatives. For a differentiable function under Euclidean distance, a nonzero gradient gives the locally steepest increase; its negative suggests a descent direction.
+
+  A level set contains points with the same function value. At a regular point, the gradient is perpendicular to it. A zero gradient indicates a stationary point, not necessarily a minimum.
+
+  For f(x,y)=x²+y² at (1,2), the gradient is (2,4), and the level set is x²+y²=5. An excessively long descent step can still overshoot.
+
+  Self-check: can rescaling a coordinate alter optimization? Yes; coordinate geometry and gradient magnitudes change.
 why_it_matters_vi: Hiểu đạo hàm và quy tắc dây chuyền để giải thích cách cập nhật tham số.
 why_it_matters_en: Understand derivatives, gradients, and the chain rule as parameter-update mechanisms rather than
   isolated formulas.
@@ -210,7 +221,13 @@ review_cards:
 ---
 # Gradient và đường đồng mức / Gradients and level sets
 
-Gradient tập hợp các đạo hàm riêng và chỉ hướng tăng nhanh nhất tại một điểm theo khoảng cách Euclid. Đường đồng mức nối các điểm có cùng giá trị hàm, giúp hình dung bài toán tối ưu.
+Gradient là vector gồm các đạo hàm riêng. Với hàm khả vi và độ dài Euclid, gradient khác không chỉ hướng tăng nhanh nhất cục bộ; hướng ngược lại dùng để tìm bước giảm.
+
+Đường hoặc mặt đồng mức gồm các điểm có cùng giá trị hàm. Tại điểm trơn có gradient khác không, gradient vuông góc mặt đồng mức. Gradient bằng không chỉ báo điểm dừng, chưa phân biệt cực tiểu, cực đại hay điểm yên ngựa.
+
+Với f(x,y)=x²+y² tại (1,2), gradient là (2,4), còn các điểm cùng giá trị nằm trên đường tròn x²+y²=5. Bước quá dài theo hướng giảm vẫn có thể vượt qua vùng tốt.
+
+Tự kiểm tra: đổi thang đo một tọa độ có ảnh hưởng đường tối ưu không? Có; hình học theo tọa độ và độ lớn gradient sẽ thay đổi.
 
 ## Thực hành
 

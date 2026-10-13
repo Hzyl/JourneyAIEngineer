@@ -5,16 +5,16 @@ module_id: rag-foundations
 title_vi: Đọc cấu trúc và nhập tài liệu
 title_en: Document parsing and ingestion
 summary_vi: Nhập tài liệu cần giữ nội dung, nguồn và cấu trúc hữu ích như tiêu đề hoặc bảng.
-summary_en: Learn Document parsing and ingestion through an input → transformation → output model, then verify it
-  with an edge-case exercise.
+summary_en: Ingest documents while preserving their content, source identity and useful structure such as headings
+  or tables.
 learning_objectives:
 - Đối chiếu văn bản trích xuất với tài liệu gốc và ghi phần bị mất.
 - Lần từ câu trả lời về đúng đoạn nguồn và bản tài liệu.
 - Giải thích kết quả và nêu một giới hạn của bài làm.
 learning_objectives_en:
-- Explain document parsing and ingestion with a concrete example.
-- Write or adapt a small code example applying document parsing and ingestion.
-- Recognize its assumptions, limits and one common failure mode.
+- Compare extracted text with the source and record lost structure.
+- Trace each chunk to its document version and source position.
+- Reject empty or duplicate inputs and explain the parser's limits.
 prerequisites:
 - phase-11-llm-application-llm-application-4
 - phase-11-llm-application-llm-application-1
@@ -27,52 +27,52 @@ key_terms:
 - retrieval
 - evaluation
 - rag-foundations
-concept_notes_vi: Nhập tài liệu cần giữ nội dung, nguồn và cấu trúc hữu ích như tiêu đề hoặc bảng. Kiểm tra đầu
-  ra trước khi lập chỉ mục để lỗi đọc tài liệu không lan sang truy xuất.
-concept_notes_en: Document parsing và ingestion is a concept in the rag-foundations module. Identify the inputs,
-  outputs, assumptions, failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Nhập tài liệu cần giữ nội dung, nguồn và cấu trúc hữu ích như tiêu đề hoặc bảng. Kiểm tra đầu ra trước khi lập chỉ mục để lỗi đọc tài liệu không lan sang truy xuất.
+
+  Parsing biến định dạng tài liệu thành nội dung có cấu trúc; ingestion là cả luồng tiếp nhận, kiểm tra và đưa nội dung vào hệ thống. OCR nhận chữ từ ảnh, nhưng không tự bảo đảm thứ tự đọc hoặc liên kết giữa ô trong bảng.
+
+  Ví dụ, PDF hai cột có thể bị đọc xen dòng, làm câu đúng trở thành đoạn vô nghĩa. Tự kiểm tra: mở được tệp và lấy được văn bản đã đủ lập chỉ mục chưa? Chưa; đối chiếu một số trang có bảng, tiêu đề và ký hiệu, giữ nguồn cùng vị trí để truy ngược khi câu trả lời sai.
+concept_notes_en: |-
+  Document ingestion should retain useful content, provenance and structure such as headings and tables. Check extracted output before indexing.
+
+  Parsing converts a file format into structured content; ingestion covers receiving, validating and incorporating it. OCR recognizes text from images but does not guarantee reading order or table relationships.
+
+  A two-column PDF may produce interleaved lines that destroy meaning. Self-check: is successfully extracting text enough to index it? No: compare pages containing tables, headings and symbols, and retain source locations so answer failures can be traced back.
 why_it_matters_vi: Tách truy xuất khỏi sinh câu trả lời để truy nguồn và xử lý thiếu bằng chứng.
 why_it_matters_en: RAG separates retrieval from generation so answers can be sourced and can abstain without evidence.
 study_steps_vi:
-- Đọc phần giải thích, xác định khái niệm và điều kiện cần dùng cho nhiệm vụ bên dưới.
-- Tìm mục tương ứng với “Document parsing and ingestion” trong tài liệu tham khảo; đối chiếu với phần giải thích
-  của bài.
-- Đối chiếu văn bản trích xuất với tài liệu gốc và ghi phần bị mất.
-- Lần từ câu trả lời về đúng đoạn nguồn và bản tài liệu. Ghi kết quả đối chiếu và điều bạn đã sửa nếu lần đầu chưa
-  đúng.
-- Tự trả lời thẻ ôn tập, rồi kiểm tra các tiêu chí hoàn thành trước khi chuyển bài.
+- Đọc phần kiến thức và phân biệt nhập tài liệu với truy xuất và sinh câu trả lời.
+- Lưu ví dụ thành ingest.py rồi chạy bằng Python 3.11 trở lên; không cần cài thêm gói.
+- Đối chiếu từng đoạn với dòng gốc, rồi thử tài liệu rỗng và trùng ID/phiên bản.
+- Đổi tiêu đề hoặc thêm dòng trống; giải thích vì sao số dòng thay đổi nhưng vẫn trỏ đúng nguồn.
+- 'Lưu kết quả cùng một giới hạn: ví dụ chỉ đọc văn bản thuần, chưa xử lý PDF, bảng hay OCR.'
 study_steps_en:
-- 'Read the concept notes and answer: RAG separates retrieval from generation so answers can be sourced and can
-  abstain without evidence.'
-- Open Qdrant Concepts, read the section marked Read this lesson, and record one verified example or definition.
-- Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the
-  test.
-- 'Complete the practice task: Build an ingestion pipeline for Vietnamese documents, preserve metadata, benchmark
-  top-k, and answer with evidence chunks.'
-- Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact.
+- Distinguish ingestion from retrieval and answer generation.
+- Save the example as ingest.py and run it with Python 3.11 or newer; no packages are required.
+- Compare each chunk with its original line, then try empty documents and duplicate ID/version pairs.
+- Change a heading or add blank lines; explain why line numbers change while citations still resolve.
+- 'Save results and one limitation: this example handles plain text, not PDF, tables or OCR.'
 practice_plan:
   vi:
-    task: 'Đối chiếu văn bản trích xuất với tài liệu gốc và ghi phần bị mất.
-
-
-      Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Xây quy trình nhập tài liệu tiếng Việt,
-      lưu siêu dữ liệu, đánh giá top-k và trả lời kèm đoạn nguồn.'
+    task: Viết hàm nhập văn bản giữ document_id, version, tiêu đề và số dòng. Dùng hai tài liệu tự tạo, lần
+      từ mỗi đoạn về dòng nguồn; ghi lại phần định dạng mà cách tách dòng không giữ được.
     deliverables:
-    - Đoạn tài liệu, siêu dữ liệu và kết quả của từng bước RAG
-    - Kết quả đối chiếu kèm dữ liệu hoặc điều kiện thực hiện
-    - Một giới hạn và cách kiểm tra thêm
-    checkpoint: Lần từ câu trả lời về đúng đoạn nguồn và bản tài liệu.
-    stretch: Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào.
+    - Mã nhập dữ liệu và hai tài liệu mẫu
+    - Danh sách đoạn kèm nguồn cùng kết quả test rỗng/trùng
+    - Ghi chú giới hạn của cách tách dòng
+    checkpoint: Mỗi đoạn khớp đúng dòng trong đúng phiên bản tài liệu; đầu vào rỗng/trùng được xử lý rõ.
+    stretch: Thử bảng nhiều dòng; chỉ ra thông tin quan hệ giữa các ô mà cách tách đơn giản làm mất.
   en:
-    task: Build an ingestion pipeline for Vietnamese documents, preserve metadata, benchmark top-k, and answer with
-      evidence chunks.
+    task: Implement plain-text ingestion retaining document_id, version, heading and line number. Use two synthetic
+      documents, trace every chunk to its source line and record formatting lost by line splitting.
     deliverables:
-    - One working implementation
-    - One test or benchmark
-    - One note on failure modes and trade-offs
-    checkpoint: You can attribute a failure to parsing, chunking, retrieval, or generation with a concrete evaluation
-      case.
-    stretch: Add a failure test for document parsing and ingestion and explain the result.
+    - Ingestion code and two synthetic documents
+    - Source-linked chunks and empty/duplicate test results
+    - A note on line-splitting limitations
+    checkpoint: Every chunk matches a line in the correct document version; empty and duplicate inputs have
+      explicit outcomes.
+    stretch: Try a multiline table and identify cell relationships that simple splitting loses.
 interview_questions:
   vi:
   - Bạn sẽ giải thích nội dung “Đọc cấu trúc và nhập tài liệu” bằng ví dụ nào?
@@ -85,20 +85,38 @@ interview_questions:
 formulas: []
 code_examples:
 - language: python
-  title: 'Document parsing and ingestion: inspect one complete path'
-  code: "# Topic: Document parsing and ingestion (phase-12-genai-rag-rag-foundations-1)\nfrom dataclasses import\
-    \ dataclass\n\n@dataclass(frozen=True)\nclass Result:\n    value: str\n    valid: bool\n\nresult = Result(value='ready',\
-    \ valid=True)\nprint(result)"
+  title: Nhập văn bản và giữ vị trí nguồn / Preserve source positions
   status: runnable
-  purpose_vi: Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.
-  purpose_en: Illustrate the input-to-output path for document parsing and ingestion.
-  setup: Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.
-  expected_output: Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.
-  edge_case_vi: Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.
-  edge_case_en: Try an empty input, a wrong shape or missing data and record the failure.
-  explanation_vi: Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần
-    nội dung; cần hoàn thành riêng nhiệm vụ thực hành.
-  explanation_en: Keep the boundary executable and inspectable; change one input and verify the expected output.
+  code: "def ingest(documents):\n    chunks, seen = [], set()\n    for document in documents:\n        doc_id,\
+    \ version, text = (document[k] for k in ('id', 'version', 'text'))\n        if not all(isinstance(v, str)\
+    \ and v.strip() for v in (doc_id, version, text)):\n            raise ValueError('empty document or metadata')\n\
+    \        identity = (doc_id, version)\n        if identity in seen:\n            raise ValueError('duplicate\
+    \ document version')\n        seen.add(identity)\n        heading = ''\n        for line_no, line in enumerate(text.splitlines(),\
+    \ start=1):\n            if line.startswith('#') and line.lstrip('#').startswith(' '):\n              \
+    \  heading = line.lstrip('#').strip()\n            elif line.strip():\n                chunks.append({'document_id':\
+    \ doc_id, 'version': version,\n                               'line': line_no, 'heading': heading, 'text':\
+    \ line,\n                               'source': f'{doc_id}@{version}:L{line_no}'})\n    return chunks\n\
+    \n\nif __name__ == '__main__':\n    document = {'id': 'guide', 'version': 'v1',\n                'text':\
+    \ '# Quy định\\nHọc 25 phút.\\n\\n# Nguồn\\nGhi ID tài liệu.'}\n    chunks = ingest([document])\n    assert\
+    \ [c['line'] for c in chunks] == [2, 5]\n    assert chunks[1]['heading'] == 'Nguồn'\n    for chunk in chunks:\n\
+    \        assert document['text'].splitlines()[chunk['line'] - 1] == chunk['text']\n    for invalid in ([dict(document,\
+    \ text=' ')], [document, document]):\n        try:\n            ingest(invalid)\n        except ValueError:\n\
+    \            pass\n        else:\n            raise AssertionError('invalid corpus accepted')\n    print([chunk['source']\
+    \ for chunk in chunks])\n    print('empty and duplicate: rejected')\n"
+  setup: Python 3.11+; lưu thành ingest.py và chạy python ingest.py. Standard library only.
+  expected_output: '[''guide@v1:L2'', ''guide@v1:L5'']
+
+    empty and duplicate: rejected'
+  purpose_vi: Tách dòng nội dung, giữ tiêu đề, ID, phiên bản và vị trí để kiểm tra lại nguồn.
+  purpose_en: Extract content lines while retaining heading, ID, version and source position.
+  edge_case_vi: Tài liệu rỗng và trùng ID/phiên bản phải bị từ chối. Dòng trống vẫn được tính khi đánh số dòng
+    nguồn.
+  edge_case_en: Reject empty documents and duplicate ID/version pairs. Blank lines still count in source numbering.
+  explanation_vi: Mỗi đoạn giữ nguyên dòng văn bản và đường dẫn nguồn có thể đối chiếu. Đây là bước nhập văn
+    bản thuần; chưa có embeddings, LLM, OCR hay xử lý bảng. Với PDF, phải kiểm tra cấu trúc trích xuất bằng
+    cách khác.
+  explanation_en: Each chunk retains its original text line and a verifiable source locator. This is plain-text
+    ingestion, without embeddings, an LLM, OCR or table parsing. PDF extraction needs separate structural checks.
 resources:
 - language: en
   title: Qdrant Concepts
@@ -215,8 +233,10 @@ review_cards:
 
 Nhập tài liệu cần giữ nội dung, nguồn và cấu trúc hữu ích như tiêu đề hoặc bảng. Kiểm tra đầu ra trước khi lập chỉ mục để lỗi đọc tài liệu không lan sang truy xuất.
 
+Parsing biến định dạng tài liệu thành nội dung có cấu trúc; ingestion là cả luồng tiếp nhận, kiểm tra và đưa nội dung vào hệ thống. OCR nhận chữ từ ảnh, nhưng không tự bảo đảm thứ tự đọc hoặc liên kết giữa ô trong bảng.
+
+Ví dụ, PDF hai cột có thể bị đọc xen dòng, làm câu đúng trở thành đoạn vô nghĩa. Tự kiểm tra: mở được tệp và lấy được văn bản đã đủ lập chỉ mục chưa? Chưa; đối chiếu một số trang có bảng, tiêu đề và ký hiệu, giữ nguồn cùng vị trí để truy ngược khi câu trả lời sai.
+
 ## Thực hành
 
-Đối chiếu văn bản trích xuất với tài liệu gốc và ghi phần bị mất.
-
-Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Xây quy trình nhập tài liệu tiếng Việt, lưu siêu dữ liệu, đánh giá top-k và trả lời kèm đoạn nguồn.
+Viết hàm nhập văn bản giữ document_id, version, tiêu đề và số dòng. Dùng hai tài liệu tự tạo, lần từ mỗi đoạn về dòng nguồn; ghi lại phần định dạng mà cách tách dòng không giữ được.

@@ -28,11 +28,18 @@ key_terms:
 - retrieval
 - evaluation
 - ai-agents
-concept_notes_vi: Bước người duyệt cho phép kiểm tra thao tác có ảnh hưởng trước khi thực hiện. Yêu cầu duyệt cần
-  nêu hành động, dữ liệu liên quan và tác dụng dự kiến để người dùng quyết định rõ ràng.
-concept_notes_en: Human in the loop và guardrails extends a model with controlled actions. Tool schemas must validate
-  inputs, limit permissions, and define timeout and retry; an agent loop needs stopping conditions, step logs, and
-  human approval for side effects.
+concept_notes_vi: |-
+  Bước người duyệt cho phép kiểm tra thao tác có ảnh hưởng trước khi thực hiện. Yêu cầu duyệt cần nêu hành động, dữ liệu liên quan và tác dụng dự kiến để người dùng quyết định rõ ràng.
+
+  Xin duyệt là điểm ra quyết định trước tác dụng phụ; gửi thông báo sau thao tác chỉ cung cấp thông tin. Sự đồng ý cần gắn với hành động và dữ liệu cụ thể, vì thay người nhận hoặc nội dung có thể thay ý nghĩa phê duyệt.
+
+  Ví dụ, trước khi gửi báo cáo ra ngoài, hiển thị bản cuối và người nhận để người dùng duyệt. Tự kiểm tra: người dùng đồng ý đọc tài liệu có đồng nghĩa đồng ý gửi tài liệu đó không? Không; quyền đọc và quyền chia sẻ khác nhau. Giữ kết quả đã chuẩn bị và chỉ thực thi trong phạm vi được cho phép.
+concept_notes_en: |-
+  Human review checks consequential actions before execution. A review request should identify the action, relevant data and expected effects.
+
+  Approval is a decision before a side effect; a notification afterward merely reports it. Consent must apply to concrete content and actions because changing a recipient or payload may change what was approved.
+
+  Before externally sending a report, show its final content and recipient. Self-check: does permission to read a document imply permission to send it? No: reading and sharing are different scopes. Preserve prepared work and execute only within authorization.
 why_it_matters_vi: Agent cần trạng thái, giới hạn và dấu vết rõ để hành động có thể kiểm tra.
 why_it_matters_en: An agent is a control loop with state and side effects; reliability comes from limits and observability.
 study_steps_vi:
@@ -129,6 +136,15 @@ resources:
   purpose_en: Official reference to verify the lesson concept.
   read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
   read_en: Read the relevant section, run a small example, and record one verified insight.
+- language: en
+  title: "Hugging Face Agents Course"
+  url: https://huggingface.co/learn/agents-course/unit0/introduction
+  kind: official
+  required: false
+  purpose_vi: "Lộ trình tác nhân gồm nền tảng, công cụ và vòng lặp hành động/quan sát; có Agentic RAG cùng phần đánh giá/quan sát tùy chọn."
+  purpose_en: "Agent learning path covering fundamentals, tools, and action/observation loops, with Agentic RAG and optional evaluation/observability."
+  read_vi: "Đọc Unit 1 để ôn nền tảng, Unit 3 về Agentic RAG; chỉ mở phần Observability/Evaluation khi cần."
+  read_en: "Use Unit 1 to review foundations and Unit 3 for Agentic RAG; consult Observability/Evaluation only when relevant."
 - title: Giải thích và hướng dẫn thực hành trong bài
   url: ''
   language: vi
@@ -218,6 +234,10 @@ review_cards:
 # Người duyệt và giới hạn an toàn / Human in the loop and guardrails
 
 Bước người duyệt cho phép kiểm tra thao tác có ảnh hưởng trước khi thực hiện. Yêu cầu duyệt cần nêu hành động, dữ liệu liên quan và tác dụng dự kiến để người dùng quyết định rõ ràng.
+
+Xin duyệt là điểm ra quyết định trước tác dụng phụ; gửi thông báo sau thao tác chỉ cung cấp thông tin. Sự đồng ý cần gắn với hành động và dữ liệu cụ thể, vì thay người nhận hoặc nội dung có thể thay ý nghĩa phê duyệt.
+
+Ví dụ, trước khi gửi báo cáo ra ngoài, hiển thị bản cuối và người nhận để người dùng duyệt. Tự kiểm tra: người dùng đồng ý đọc tài liệu có đồng nghĩa đồng ý gửi tài liệu đó không? Không; quyền đọc và quyền chia sẻ khác nhau. Giữ kết quả đã chuẩn bị và chỉ thực thi trong phạm vi được cho phép.
 
 ## Thực hành
 

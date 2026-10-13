@@ -27,11 +27,18 @@ key_terms:
 - loss
 - training
 - vision-nlp
-concept_notes_vi: Embedding biểu diễn token hoặc văn bản bằng vector. Khi phân loại, cần thống nhất cách tách token,
-  xử lý độ dài và gom biểu diễn, rồi đánh giá theo từng nhóm văn bản.
-concept_notes_en: Embedding và text classifier is a Software Engineering skill for turning an idea into code that
-  can be read, tested, and maintained. Define the inputs, outputs, invariants, and failure modes before implementing.
-  In Python, small boundaries make tests fast and tracebacks actionable.
+concept_notes_vi: |-
+  Tokenization chia văn bản thành đơn vị mà mô hình xử lý; token có thể là một phần từ, không nhất thiết là một từ hoàn chỉnh. Embedding ánh xạ các đơn vị đó thành vector để mô hình tính toán, không trực tiếp cho biết câu đúng hay sai.
+
+  Embedding tĩnh gán một vector cho mỗi ID trong bảng tra. Biểu diễn theo ngữ cảnh còn phụ thuộc các token xung quanh. Muốn phân loại cả câu, cần cách gom biểu diễn và xử lý padding để phần đệm không vô tình chi phối kết quả.
+
+  Tự kiểm tra: trung bình mọi vector trong lô đã cho một vector đúng cho mỗi câu chưa? Chưa; phải gom theo chiều token của từng câu và loại vị trí đệm theo mask. Giữ tokenizer, giới hạn độ dài và quy tắc gom nhất quán khi huấn luyện và dự đoán.
+concept_notes_en: |-
+  Tokenization divides text into units a model processes; a token may be part of a word rather than a whole word. Embeddings map these units to vectors for computation, not directly to judgments of factual truth.
+
+  A static embedding table associates each ID with a vector. Contextual representations also depend on surrounding tokens. Sentence classification requires a pooling rule and padding handling so padded positions do not unintentionally dominate the result.
+
+  Self-check: does averaging every vector in a batch produce one correct vector per sentence? No; pool over each sentence's token axis and exclude padding positions with a mask. Keep tokenizer, length limits and pooling consistent between training and prediction.
 why_it_matters_vi: Hiểu CNN, học chuyển giao, embedding và attention để chọn cách biểu diễn phù hợp.
 why_it_matters_en: Understand CNNs, transfer learning, embeddings, and attention well enough to choose a CV or NLP
   path.
@@ -227,7 +234,11 @@ review_cards:
 ---
 # Embedding và phân loại văn bản / Embeddings and text classifiers
 
-Embedding biểu diễn token hoặc văn bản bằng vector. Khi phân loại, cần thống nhất cách tách token, xử lý độ dài và gom biểu diễn, rồi đánh giá theo từng nhóm văn bản.
+Tokenization chia văn bản thành đơn vị mà mô hình xử lý; token có thể là một phần từ, không nhất thiết là một từ hoàn chỉnh. Embedding ánh xạ các đơn vị đó thành vector để mô hình tính toán, không trực tiếp cho biết câu đúng hay sai.
+
+Embedding tĩnh gán một vector cho mỗi ID trong bảng tra. Biểu diễn theo ngữ cảnh còn phụ thuộc các token xung quanh. Muốn phân loại cả câu, cần cách gom biểu diễn và xử lý padding để phần đệm không vô tình chi phối kết quả.
+
+Tự kiểm tra: trung bình mọi vector trong lô đã cho một vector đúng cho mỗi câu chưa? Chưa; phải gom theo chiều token của từng câu và loại vị trí đệm theo mask. Giữ tokenizer, giới hạn độ dài và quy tắc gom nhất quán khi huấn luyện và dự đoán.
 
 ## Thực hành
 

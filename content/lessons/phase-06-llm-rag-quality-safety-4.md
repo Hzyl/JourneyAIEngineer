@@ -28,11 +28,22 @@ key_terms:
 - reproducibility
 - deployment
 - quality-safety
-concept_notes_vi: Chi phí phụ thuộc lượng token và cách tính của dịch vụ; độ trễ còn phụ thuộc mạng, truy xuất và
-  sinh đầu ra. Ghi số liệu từng bước để tìm phần cần tối ưu.
-concept_notes_en: 'Latency và token cost belongs to LLM Application Engineering: design the contract between the
-  application and the model. Define instructions, inputs, output schema, timeout, retry, and token limits; parse
-  model output as untrusted data and return actionable errors.'
+concept_notes_vi: |-
+  Chi phí phụ thuộc lượng token và cách tính của dịch vụ; độ trễ còn phụ thuộc mạng, truy xuất và sinh đầu ra. Ghi số liệu từng bước để tìm phần cần tối ưu.
+
+  Token đầu vào và đầu ra có thể có đơn giá khác nhau; độ trễ đầu tiên khác thời gian hoàn tất. Trả từng phần giúp người dùng thấy phản hồi sớm nhưng không tự giảm tổng token hay thời gian sinh.
+
+  Ví dụ giả định, giá 2 đơn vị mỗi triệu token vào và 6 đơn vị mỗi triệu token ra: 1000 token vào cộng 500 token ra tốn 0,005 đơn vị. Đây là bài tính minh họa, không phải bảng giá dịch vụ.
+
+  Tự kiểm tra: chỉ rút ngắn prompt đã xử lý mọi độ trễ chưa? Chưa; đo truy xuất, hàng đợi, kết nối và sinh đầu ra để tìm phần chậm thật.
+concept_notes_en: |-
+  Cost depends on token usage and service billing rules; latency also includes networking, retrieval and generation. Measure stages separately.
+
+  Input and output rates may differ. Time to first output differs from completion time: streaming exposes progress earlier without automatically reducing total tokens or generation time.
+
+  At hypothetical rates of 2 units per million input tokens and 6 per million output tokens, 1000 input plus 500 output tokens costs 0.005 units. This is arithmetic, not a service price quote.
+
+  Self-check: does shortening the prompt fix every delay? No: measure retrieval, queues, connection time and output generation to locate the bottleneck.
 why_it_matters_vi: Đánh giá đồng thời chất lượng, độ trễ, chi phí và khả năng giữ đúng phạm vi yêu cầu.
 why_it_matters_en: Measure quality, latency, cost, and safety together; treat hallucinations and injection as test
   cases.
@@ -223,6 +234,12 @@ review_cards:
 # Độ trễ và chi phí token / Latency and token cost
 
 Chi phí phụ thuộc lượng token và cách tính của dịch vụ; độ trễ còn phụ thuộc mạng, truy xuất và sinh đầu ra. Ghi số liệu từng bước để tìm phần cần tối ưu.
+
+Token đầu vào và đầu ra có thể có đơn giá khác nhau; độ trễ đầu tiên khác thời gian hoàn tất. Trả từng phần giúp người dùng thấy phản hồi sớm nhưng không tự giảm tổng token hay thời gian sinh.
+
+Ví dụ giả định, giá 2 đơn vị mỗi triệu token vào và 6 đơn vị mỗi triệu token ra: 1000 token vào cộng 500 token ra tốn 0,005 đơn vị. Đây là bài tính minh họa, không phải bảng giá dịch vụ.
+
+Tự kiểm tra: chỉ rút ngắn prompt đã xử lý mọi độ trễ chưa? Chưa; đo truy xuất, hàng đợi, kết nối và sinh đầu ra để tìm phần chậm thật.
 
 ## Thực hành
 

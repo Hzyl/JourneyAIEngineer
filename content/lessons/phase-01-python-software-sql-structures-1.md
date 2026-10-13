@@ -27,10 +27,22 @@ key_terms:
 - debugging
 - maintainability
 - sql-structures
-concept_notes_vi: SELECT lấy các cột cần dùng, JOIN kết hợp dữ liệu theo điều kiện, GROUP BY tạo nhóm để tổng hợp.
-  Quan hệ một-nhiều có thể làm tăng số dòng sau JOIN, nên cần kiểm tra trước khi cộng hoặc đếm.
-concept_notes_en: SELECT, JOIN và GROUP BY is a concept in the sql-structures module. Identify the inputs, outputs,
-  assumptions, failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  SELECT chọn dữ liệu, JOIN ghép các dòng theo điều kiện, GROUP BY gom dòng để tính tổng hợp. Trước khi viết truy vấn, xác định một dòng kết quả đại diện cho khách hàng, đơn hàng hay sản phẩm.
+
+  Phân biệt lọc dòng bằng WHERE với lọc nhóm bằng HAVING. Quan hệ một-nhiều trong JOIN có thể nhân bản thông tin phía một, khiến phép cộng sau đó sai dù truy vấn chạy được.
+
+  Một đơn hàng có hai dòng sản phẩm sẽ xuất hiện hai lần khi ghép chi tiết. Cộng tổng tiền của đơn từ kết quả ghép có thể đếm đôi; cần tổng hợp ở đúng cấp hoặc dùng giá trị từng dòng chi tiết.
+
+  Tự kiểm tra: COUNT(*) sau JOIN luôn là số đơn hàng không? Không; nó đếm dòng kết quả, nên phải kiểm tra quan hệ và khóa.
+concept_notes_en: |-
+  SELECT chooses data, JOIN combines matching rows, and GROUP BY forms aggregation groups. First decide whether each output row represents a customer, order or product.
+
+  WHERE filters rows; HAVING filters groups. A one-to-many join can repeat information from the one side, making a later sum wrong despite valid SQL.
+
+  An order with two product lines appears twice after joining details. Summing the order total can double-count it; aggregate at the intended level or sum appropriate detail values.
+
+  Self-check: does COUNT(*) after a join always count orders? No; it counts output rows, so inspect keys and relationships.
 why_it_matters_vi: Hiểu quan hệ dữ liệu và chi phí xử lý để chọn truy vấn, cấu trúc dữ liệu phù hợp.
 why_it_matters_en: 'Develop structured-data thinking: write correct queries, understand relations, and reason about
   algorithmic cost.'
@@ -221,7 +233,13 @@ review_cards:
 ---
 # Truy vấn với SELECT, JOIN và GROUP BY / SELECT, JOIN and GROUP BY
 
-SELECT lấy các cột cần dùng, JOIN kết hợp dữ liệu theo điều kiện, GROUP BY tạo nhóm để tổng hợp. Quan hệ một-nhiều có thể làm tăng số dòng sau JOIN, nên cần kiểm tra trước khi cộng hoặc đếm.
+SELECT chọn dữ liệu, JOIN ghép các dòng theo điều kiện, GROUP BY gom dòng để tính tổng hợp. Trước khi viết truy vấn, xác định một dòng kết quả đại diện cho khách hàng, đơn hàng hay sản phẩm.
+
+Phân biệt lọc dòng bằng WHERE với lọc nhóm bằng HAVING. Quan hệ một-nhiều trong JOIN có thể nhân bản thông tin phía một, khiến phép cộng sau đó sai dù truy vấn chạy được.
+
+Một đơn hàng có hai dòng sản phẩm sẽ xuất hiện hai lần khi ghép chi tiết. Cộng tổng tiền của đơn từ kết quả ghép có thể đếm đôi; cần tổng hợp ở đúng cấp hoặc dùng giá trị từng dòng chi tiết.
+
+Tự kiểm tra: COUNT(*) sau JOIN luôn là số đơn hàng không? Không; nó đếm dòng kết quả, nên phải kiểm tra quan hệ và khóa.
 
 ## Thực hành
 

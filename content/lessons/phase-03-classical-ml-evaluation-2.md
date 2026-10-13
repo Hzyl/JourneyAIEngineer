@@ -26,11 +26,22 @@ key_terms:
 - feature
 - baseline
 - evaluation
-concept_notes_vi: MAE đo sai số tuyệt đối trung bình; MSE phạt sai số lớn mạnh hơn; RMSE đưa kết quả về đơn vị của
-  biến mục tiêu. Cần đọc cả phân bố sai số và các nhóm dữ liệu quan trọng.
-concept_notes_en: 'Regression metrics is a classical Machine Learning decision: define the label, baseline, split,
-  and metric before choosing a model. Fit preprocessing on train only; error analysis should identify the groups
-  where the model fails and how to retest the hypothesis.'
+concept_notes_vi: |-
+  MAE là trung bình độ lớn sai số; MSE là trung bình bình phương sai số; RMSE là căn bậc hai của MSE. MAE và RMSE có cùng đơn vị với biến mục tiêu, còn MSE dùng đơn vị bình phương.
+
+  Bình phương làm sai số lớn có ảnh hưởng mạnh hơn. Vì vậy hai mô hình cùng MAE vẫn có thể khác RMSE; cần chọn thước đo theo hậu quả của sai lệch lớn trong ứng dụng.
+
+  Với sai số dự đoán là 0 và 2, MAE bằng 1, MSE bằng 2, RMSE xấp xỉ 1,414. Đây là ba cách tóm tắt cùng dữ liệu, không phải ba kết quả dự đoán khác nhau.
+
+  Tự kiểm tra: điểm trung bình tốt có bảo đảm mọi nhóm đều tốt không? Không; xem thêm sai số từng nhóm và các trường hợp lệch lớn.
+concept_notes_en: |-
+  MAE averages absolute errors; MSE averages squared errors; RMSE is the square root of MSE. MAE and RMSE have the target's units, while MSE has squared units.
+
+  Squaring gives large errors greater influence. Models with the same MAE can therefore differ in RMSE. Choose metrics according to the consequences of large mistakes.
+
+  For prediction errors of 0 and 2, MAE is 1, MSE is 2, and RMSE is approximately 1.414. These summarize the same predictions in different ways.
+
+  Self-check: does a good average guarantee good performance for every group? No; inspect group errors and large deviations too.
 why_it_matters_vi: Chọn thước đo theo chi phí sai lầm và giữ tập kiểm tra ngoài quá trình lựa chọn mô hình.
 why_it_matters_en: Choose metrics by error cost, use cross-validation, and tune without peeking at the test set.
 study_steps_vi:
@@ -208,7 +219,13 @@ review_cards:
 ---
 # Thước đo cho hồi quy / Regression metrics
 
-MAE đo sai số tuyệt đối trung bình; MSE phạt sai số lớn mạnh hơn; RMSE đưa kết quả về đơn vị của biến mục tiêu. Cần đọc cả phân bố sai số và các nhóm dữ liệu quan trọng.
+MAE là trung bình độ lớn sai số; MSE là trung bình bình phương sai số; RMSE là căn bậc hai của MSE. MAE và RMSE có cùng đơn vị với biến mục tiêu, còn MSE dùng đơn vị bình phương.
+
+Bình phương làm sai số lớn có ảnh hưởng mạnh hơn. Vì vậy hai mô hình cùng MAE vẫn có thể khác RMSE; cần chọn thước đo theo hậu quả của sai lệch lớn trong ứng dụng.
+
+Với sai số dự đoán là 0 và 2, MAE bằng 1, MSE bằng 2, RMSE xấp xỉ 1,414. Đây là ba cách tóm tắt cùng dữ liệu, không phải ba kết quả dự đoán khác nhau.
+
+Tự kiểm tra: điểm trung bình tốt có bảo đảm mọi nhóm đều tốt không? Không; xem thêm sai số từng nhóm và các trường hợp lệch lớn.
 
 ## Thực hành
 

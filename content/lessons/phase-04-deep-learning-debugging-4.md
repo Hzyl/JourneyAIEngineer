@@ -26,11 +26,18 @@ key_terms:
 - loss
 - training
 - debugging
-concept_notes_vi: Nhật ký thí nghiệm cần gắn kết quả với cấu hình, dữ liệu và phiên bản mã nguồn. Nhờ vậy bạn có
-  thể so sánh và tái hiện kết quả thay vì giữ biểu đồ không rõ nguồn.
-concept_notes_en: Experiment logging is a Software Engineering skill for turning an idea into code that can be read,
-  tested, and maintained. Define the inputs, outputs, invariants, and failure modes before implementing. In Python,
-  small boundaries make tests fast and tracebacks actionable.
+concept_notes_vi: |-
+  Nhật ký thí nghiệm nối kết quả với cấu hình, dữ liệu và phiên bản mã nguồn. Một đường loss đẹp nhưng không biết tập dữ liệu, cách chia hay checkpoint nào tạo ra nó không đủ để so sánh hoặc tái hiện.
+
+  Phân biệt tính lặp lại trong cùng môi trường với việc tái hiện kết luận ở môi trường khác. Cố định seed giúp kiểm soát một số nguồn ngẫu nhiên, nhưng không bảo đảm kết quả giống từng bit trên mọi thiết bị và phiên bản thư viện.
+
+  Ví dụ, khi đổi optimizer, giữ cùng dữ liệu và phép đo rồi lưu cả kết quả thất bại. Tự kiểm tra: hai lượt cùng seed có đủ chứng minh thay đổi mới tốt hơn không? Không; còn cần kiểm tra những điều kiện khác và, khi phù hợp, nhiều seed để nhận biết mức dao động.
+concept_notes_en: |-
+  An experiment log connects results to configuration, data and code versions. A smooth loss curve without its dataset, split or checkpoint cannot support comparison or reproduction.
+
+  Distinguish repeating a result in the same environment from reproducing a conclusion elsewhere. Fixing a seed controls some randomness, but does not guarantee bitwise-identical outcomes across every device and library version.
+
+  For example, when changing optimizers, keep data and measurements consistent and retain failed runs too. Self-check: do two runs with the same seed prove a change is better? No; check other conditions and, where appropriate, several seeds to understand variability.
 why_it_matters_vi: Dùng bằng chứng để tìm lỗi kích thước, NaN, bộ nhớ GPU và so sánh thí nghiệm.
 why_it_matters_en: Debug shape errors, NaNs, GPU memory, and experiment tracking with contextual logs.
 study_steps_vi:
@@ -218,7 +225,11 @@ review_cards:
 ---
 # Ghi lại thí nghiệm / Experiment logging
 
-Nhật ký thí nghiệm cần gắn kết quả với cấu hình, dữ liệu và phiên bản mã nguồn. Nhờ vậy bạn có thể so sánh và tái hiện kết quả thay vì giữ biểu đồ không rõ nguồn.
+Nhật ký thí nghiệm nối kết quả với cấu hình, dữ liệu và phiên bản mã nguồn. Một đường loss đẹp nhưng không biết tập dữ liệu, cách chia hay checkpoint nào tạo ra nó không đủ để so sánh hoặc tái hiện.
+
+Phân biệt tính lặp lại trong cùng môi trường với việc tái hiện kết luận ở môi trường khác. Cố định seed giúp kiểm soát một số nguồn ngẫu nhiên, nhưng không bảo đảm kết quả giống từng bit trên mọi thiết bị và phiên bản thư viện.
+
+Ví dụ, khi đổi optimizer, giữ cùng dữ liệu và phép đo rồi lưu cả kết quả thất bại. Tự kiểm tra: hai lượt cùng seed có đủ chứng minh thay đổi mới tốt hơn không? Không; còn cần kiểm tra những điều kiện khác và, khi phù hợp, nhiều seed để nhận biết mức dao động.
 
 ## Thực hành
 

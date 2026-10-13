@@ -27,10 +27,22 @@ key_terms:
 - baseline
 - evaluation
 - analysis
-concept_notes_vi: Diễn giải làm rõ thông tin ảnh hưởng tới dự đoán và giới hạn của kết luận. Khi lưu mô hình, cần
-  giữ cả bước tiền xử lý và thông tin phiên bản để nạp lại đúng cách.
-concept_notes_en: Model interpretation và serialization is a concept in the analysis module. Identify the inputs,
-  outputs, assumptions, failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Diễn giải mô hình tìm hiểu đặc trưng và cấu trúc nào liên quan đến dự đoán. Giải thích toàn cục mô tả hành vi chung; giải thích cục bộ tập trung vào một mẫu và có thể không đại diện cho toàn bộ dữ liệu.
+
+  Mức quan trọng của đặc trưng không tự chứng minh quan hệ nhân quả. Các đặc trưng tương quan có thể chia sẻ thông tin, làm mức quan trọng phụ thuộc cách đo và tập dữ liệu dùng để đo.
+
+  Khi lưu một mô hình dự đoán giá, lưu cả bộ điền dữ liệu thiếu, mã hóa, thứ tự cột và phiên bản thư viện. Nạp lại rồi so sánh dự đoán trên cùng đầu vào là cách kiểm tra chuỗi xử lý được giữ nguyên.
+
+  Tự kiểm tra: chỉ lưu trọng số có đủ tái tạo dự đoán không? Không nếu đầu vào còn cần bước tiền xử lý đã học từ dữ liệu.
+concept_notes_en: |-
+  Model interpretation examines which features and structures relate to predictions. Global explanations describe broad behavior; local explanations concern one example and may not represent the full dataset.
+
+  Feature importance does not establish causality. Correlated features can share information, making importance depend on the measurement method and evaluation data.
+
+  When saving a price predictor, include fitted imputation, encoding, column order, and library versions. Reloading it and comparing predictions on identical inputs checks that the processing chain was preserved.
+
+  Self-check: are weights alone enough to reproduce predictions? No, if the inputs require preprocessing learned from training data.
 why_it_matters_vi: Phân tích lỗi theo nhóm để hiểu giới hạn trước khi lưu và chia sẻ mô hình.
 why_it_matters_en: Move from one aggregate score to error analysis, calibration, a model card, and reloadable artifacts.
 study_steps_vi:
@@ -216,7 +228,13 @@ review_cards:
 ---
 # Diễn giải và lưu mô hình / Model interpretation and serialization
 
-Diễn giải làm rõ thông tin ảnh hưởng tới dự đoán và giới hạn của kết luận. Khi lưu mô hình, cần giữ cả bước tiền xử lý và thông tin phiên bản để nạp lại đúng cách.
+Diễn giải mô hình tìm hiểu đặc trưng và cấu trúc nào liên quan đến dự đoán. Giải thích toàn cục mô tả hành vi chung; giải thích cục bộ tập trung vào một mẫu và có thể không đại diện cho toàn bộ dữ liệu.
+
+Mức quan trọng của đặc trưng không tự chứng minh quan hệ nhân quả. Các đặc trưng tương quan có thể chia sẻ thông tin, làm mức quan trọng phụ thuộc cách đo và tập dữ liệu dùng để đo.
+
+Khi lưu một mô hình dự đoán giá, lưu cả bộ điền dữ liệu thiếu, mã hóa, thứ tự cột và phiên bản thư viện. Nạp lại rồi so sánh dự đoán trên cùng đầu vào là cách kiểm tra chuỗi xử lý được giữ nguyên.
+
+Tự kiểm tra: chỉ lưu trọng số có đủ tái tạo dự đoán không? Không nếu đầu vào còn cần bước tiền xử lý đã học từ dữ liệu.
 
 ## Thực hành
 

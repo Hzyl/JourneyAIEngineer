@@ -28,11 +28,18 @@ key_terms:
 - retrieval
 - evaluation
 - llm-application
-concept_notes_vi: JSON Schema mô tả cấu trúc dữ liệu mong đợi. JSON hợp lệ về cú pháp vẫn có thể sai schema hoặc
-  sai nghiệp vụ, nên cần các lớp kiểm tra tương ứng.
-concept_notes_en: Structured output và JSON Schema describes a boundary between data and a service. A sound request
-  has a schema, validation, status code, timeout, and actionable errors; a sound query uses parameter binding, appropriate
-  indexes, and tests empty or malformed data.
+concept_notes_vi: |-
+  JSON Schema mô tả cấu trúc dữ liệu mong đợi. JSON hợp lệ về cú pháp vẫn có thể sai schema hoặc sai nghiệp vụ, nên cần các lớp kiểm tra tương ứng.
+
+  Cú pháp JSON quy định cách viết đối tượng; schema quy định trường, kiểu và ràng buộc; nghiệp vụ kiểm tra giá trị có hợp lý trong tình huống cụ thể. Khai báo properties không tự làm mọi trường thành bắt buộc; cần dùng required theo schema.
+
+  Ví dụ, số lượng hàng là số nguyên có thể qua kiểm tra kiểu nhưng vẫn phải nằm trong phạm vi cho phép. Tự kiểm tra: JSON đúng schema có bảo đảm thông tin do mô hình trích xuất đúng nguồn không? Không; cần đối chiếu nội dung với bằng chứng, xử lý trường thiếu và từ chối kết quả không đáp ứng nghiệp vụ.
+concept_notes_en: |-
+  JSON Schema describes expected data structure. Syntactically valid JSON can still violate its schema or business rules, requiring separate checks.
+
+  JSON syntax governs representation; a schema constrains fields and types; business validation checks values in context. Defining properties does not make them mandatory without required.
+
+  An integer order quantity may have the right type yet exceed allowed limits. Self-check: does schema compliance prove model-extracted information matches its source? No: compare values with evidence, handle missing fields and reject results that violate business requirements.
 why_it_matters_vi: Xác định cấu trúc trao đổi và cách xử lý lỗi quanh mô hình để ứng dụng dùng được kết quả.
 why_it_matters_en: LLM application engineering designs contracts and failure boundaries around a model, not just
   a long prompt.
@@ -230,6 +237,10 @@ review_cards:
 # Đầu ra có cấu trúc và JSON Schema / Structured outputs and JSON Schema
 
 JSON Schema mô tả cấu trúc dữ liệu mong đợi. JSON hợp lệ về cú pháp vẫn có thể sai schema hoặc sai nghiệp vụ, nên cần các lớp kiểm tra tương ứng.
+
+Cú pháp JSON quy định cách viết đối tượng; schema quy định trường, kiểu và ràng buộc; nghiệp vụ kiểm tra giá trị có hợp lý trong tình huống cụ thể. Khai báo properties không tự làm mọi trường thành bắt buộc; cần dùng required theo schema.
+
+Ví dụ, số lượng hàng là số nguyên có thể qua kiểm tra kiểu nhưng vẫn phải nằm trong phạm vi cho phép. Tự kiểm tra: JSON đúng schema có bảo đảm thông tin do mô hình trích xuất đúng nguồn không? Không; cần đối chiếu nội dung với bằng chứng, xử lý trường thiếu và từ chối kết quả không đáp ứng nghiệp vụ.
 
 ## Thực hành
 

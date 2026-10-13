@@ -27,11 +27,18 @@ key_terms:
 - loss
 - training
 - genai-transformers
-concept_notes_vi: KV cache lưu key và value của token đã xử lý để tránh tính lại trong quá trình sinh tự hồi quy.
-  Nó đánh đổi bộ nhớ để giảm công việc lặp lại; lợi ích cần đo theo độ dài chuỗi và tải.
-concept_notes_en: KV cache và inference efficiency explains how a Transformer weights relevant tokens. Track the
-  shapes of Q, K, V, masks, and context length; during inference, KV cache avoids recomputing keys and values at
-  the cost of memory.
+concept_notes_vi: |-
+  KV cache lưu key và value của token đã xử lý để tránh tính lại trong quá trình sinh tự hồi quy. Nó đánh đổi bộ nhớ để giảm công việc lặp lại; lợi ích cần đo theo độ dài chuỗi và tải.
+
+  KV cache khác bộ nhớ đệm câu trả lời: nó tái sử dụng trạng thái tính toán của chuỗi, không phải văn bản đầu ra đã hoàn tất. Mỗi token mới vẫn phải được xử lý và dùng thông tin liên quan từ ngữ cảnh trước.
+
+  Ví dụ, khi sinh câu trả lời dài, lưu K và V tránh chiếu lại toàn bộ phần đã xử lý ở mỗi bước. Tuy nhiên, nhiều yêu cầu đồng thời có thể làm bộ nhớ cache trở thành giới hạn. Tự kiểm tra: bật cache có nghĩa là mọi prompt đều dùng chung dữ liệu không? Không; tái sử dụng phải bảo đảm tiền tố và trạng thái tương thích cùng cách ly dữ liệu phù hợp.
+concept_notes_en: |-
+  A KV cache stores keys and values from processed tokens to avoid repeated work in autoregressive generation. It trades memory for computation; benefits depend on sequence length and load.
+
+  Unlike an answer cache, it reuses internal sequence state rather than finished text. Each new token still requires computation and access to relevant prior context.
+
+  Long responses avoid repeatedly projecting their processed prefix, but concurrent requests can make cache memory a bottleneck. Self-check: does enabling caching mean every prompt shares data? No: reuse requires compatible prefixes and state, with appropriate data isolation.
 why_it_matters_vi: Hiểu Transformer qua kích thước tensor, trọng số attention và chi phí suy luận.
 why_it_matters_en: Transformers become understandable when you trace tensor shapes, attention weights, and inference
   cost.
@@ -227,6 +234,10 @@ review_cards:
 # KV cache và hiệu quả suy luận / KV cache and inference efficiency
 
 KV cache lưu key và value của token đã xử lý để tránh tính lại trong quá trình sinh tự hồi quy. Nó đánh đổi bộ nhớ để giảm công việc lặp lại; lợi ích cần đo theo độ dài chuỗi và tải.
+
+KV cache khác bộ nhớ đệm câu trả lời: nó tái sử dụng trạng thái tính toán của chuỗi, không phải văn bản đầu ra đã hoàn tất. Mỗi token mới vẫn phải được xử lý và dùng thông tin liên quan từ ngữ cảnh trước.
+
+Ví dụ, khi sinh câu trả lời dài, lưu K và V tránh chiếu lại toàn bộ phần đã xử lý ở mỗi bước. Tuy nhiên, nhiều yêu cầu đồng thời có thể làm bộ nhớ cache trở thành giới hạn. Tự kiểm tra: bật cache có nghĩa là mọi prompt đều dùng chung dữ liệu không? Không; tái sử dụng phải bảo đảm tiền tố và trạng thái tương thích cùng cách ly dữ liệu phù hợp.
 
 ## Thực hành
 

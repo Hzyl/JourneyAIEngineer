@@ -25,10 +25,18 @@ key_terms:
 - loss
 - training
 - pytorch-core
-concept_notes_vi: Broadcasting cho phép tính với tensor có kích thước tương thích mà không cần tự sao chép dữ liệu.
-  Phép toán chạy được không có nghĩa các chiều đã khớp đúng ý nghĩa bài toán.
-concept_notes_en: Broadcasting is a concept in the pytorch-core module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Broadcasting cho phép tính theo từng phần tử giữa các tensor có kích thước tương thích. So từ chiều cuối trở về trước: mỗi cặp kích thước phải bằng nhau hoặc có một bên bằng 1; chiều còn thiếu được xem như có kích thước 1.
+
+  Ví dụ, cộng tensor (3, 1) với (1, 4) tạo kết quả (3, 4). Nhưng lấy dự đoán (3, 1) trừ nhãn (3,) cũng tạo (3, 3), thay vì ba sai số bạn mong đợi. Phép toán hợp lệ về kích thước vẫn có thể sai về bài toán.
+
+  Tự kiểm tra: broadcasting có giống nhân ma trận không? Không; broadcasting mở rộng các chiều tương thích cho phép toán theo phần tử, còn nhân ma trận cộng các tích theo chiều chung. Hãy kiểm tra shape của cả đầu vào và kết quả, nhất là trước khi tính loss.
+concept_notes_en: |-
+  Broadcasting enables elementwise operations on tensors with compatible shapes. Compare dimensions from the end: each pair must match or include a size of 1; a missing dimension is treated as size 1.
+
+  For example, adding shapes (3, 1) and (1, 4) produces (3, 4). However, subtracting targets shaped (3,) from predictions shaped (3, 1) also produces (3, 3), rather than the three errors you intended. A shape-valid operation can still be wrong for the task.
+
+  Self-check: is broadcasting the same as matrix multiplication? No. Broadcasting extends compatible dimensions for elementwise operations; matrix multiplication sums products along a shared dimension. Check input and output shapes, especially before calculating a loss.
 why_it_matters_vi: Hiểu kích thước tensor, cách lấy dữ liệu và gradient để tự viết vòng lặp huấn luyện.
 why_it_matters_en: Read tensor shapes, datasets, and autograd well enough to write a small PyTorch training loop.
 study_steps_vi:
@@ -206,7 +214,11 @@ review_cards:
 ---
 # Quy tắc broadcasting / Broadcasting
 
-Broadcasting cho phép tính với tensor có kích thước tương thích mà không cần tự sao chép dữ liệu. Phép toán chạy được không có nghĩa các chiều đã khớp đúng ý nghĩa bài toán.
+Broadcasting cho phép tính theo từng phần tử giữa các tensor có kích thước tương thích. So từ chiều cuối trở về trước: mỗi cặp kích thước phải bằng nhau hoặc có một bên bằng 1; chiều còn thiếu được xem như có kích thước 1.
+
+Ví dụ, cộng tensor (3, 1) với (1, 4) tạo kết quả (3, 4). Nhưng lấy dự đoán (3, 1) trừ nhãn (3,) cũng tạo (3, 3), thay vì ba sai số bạn mong đợi. Phép toán hợp lệ về kích thước vẫn có thể sai về bài toán.
+
+Tự kiểm tra: broadcasting có giống nhân ma trận không? Không; broadcasting mở rộng các chiều tương thích cho phép toán theo phần tử, còn nhân ma trận cộng các tích theo chiều chung. Hãy kiểm tra shape của cả đầu vào và kết quả, nhất là trước khi tính loss.
 
 ## Thực hành
 

@@ -26,10 +26,18 @@ key_terms:
 - reproducibility
 - deployment
 - genai-production
-concept_notes_vi: Hàng đợi tách nhận việc khỏi xử lý để hấp thụ tải. Công việc có thể được giao lại khi lỗi, nên
-  cần quản lý trạng thái và tránh tác dụng ghi trùng.
-concept_notes_en: Queue và worker is a concept in the genai-production module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Hàng đợi tách nhận việc khỏi xử lý để hấp thụ tải. Công việc có thể được giao lại khi lỗi, nên cần quản lý trạng thái và tránh tác dụng ghi trùng.
+
+  Queue giữ công việc chờ; worker lấy và thực hiện; trạng thái công việc giúp người gọi biết đang chờ, chạy, thất bại hay hoàn tất. Chấp nhận yêu cầu vào hàng đợi không có nghĩa kết quả đã được tạo thành công.
+
+  Ví dụ, nhập tài liệu dài trả mã công việc để giao diện theo dõi, còn worker ghi kết quả và trạng thái cuối. Tự kiểm tra: giao lại một công việc sau khi worker mất kết nối có thể tạo trùng không? Có; lần trước có thể đã ghi nhưng chưa xác nhận. Thiết kế thao tác ghi lũy đẳng và lưu nhận diện công việc để xử lý lại an toàn.
+concept_notes_en: |-
+  Queues separate accepting work from processing it and absorb bursts. Jobs may be redelivered after failures, requiring state management and duplicate-effect prevention.
+
+  A queue holds pending jobs, a worker executes them and job state distinguishes waiting, running, failure and completion. Acceptance is not successful completion.
+
+  A long document import returns a job ID while workers later store results and final status. Self-check: can redelivery after a lost worker connection duplicate work? Yes: an earlier write may have succeeded before acknowledgment. Use idempotent writes and stable job identity for safe reprocessing.
 why_it_matters_vi: Thiết kế hành vi khi nhà cung cấp chậm, lỗi hoặc tải tăng để duy trì mức phục vụ đã đặt ra.
 why_it_matters_en: Production quality is behavior when providers are slow, failing, expensive, or traffic grows—not
   just the happy path.
@@ -210,6 +218,10 @@ review_cards:
 # Hàng đợi và tiến trình xử lý nền / Queues and workers
 
 Hàng đợi tách nhận việc khỏi xử lý để hấp thụ tải. Công việc có thể được giao lại khi lỗi, nên cần quản lý trạng thái và tránh tác dụng ghi trùng.
+
+Queue giữ công việc chờ; worker lấy và thực hiện; trạng thái công việc giúp người gọi biết đang chờ, chạy, thất bại hay hoàn tất. Chấp nhận yêu cầu vào hàng đợi không có nghĩa kết quả đã được tạo thành công.
+
+Ví dụ, nhập tài liệu dài trả mã công việc để giao diện theo dõi, còn worker ghi kết quả và trạng thái cuối. Tự kiểm tra: giao lại một công việc sau khi worker mất kết nối có thể tạo trùng không? Có; lần trước có thể đã ghi nhưng chưa xác nhận. Thiết kế thao tác ghi lũy đẳng và lưu nhận diện công việc để xử lý lại an toàn.
 
 ## Thực hành
 

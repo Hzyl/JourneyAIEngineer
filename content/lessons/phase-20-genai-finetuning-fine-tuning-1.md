@@ -27,10 +27,18 @@ key_terms:
 - retrieval
 - evaluation
 - fine-tuning
-concept_notes_vi: Tinh chỉnh có giám sát học từ cặp đầu vào, đầu ra mẫu. Dữ liệu cần định dạng nhất quán, quyền
-  sử dụng rõ và chia tập tránh trùng hoặc rò rỉ.
-concept_notes_en: Dataset preparation và SFT is a concept in the fine-tuning module. Identify the inputs, outputs,
-  assumptions, failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Tinh chỉnh có giám sát học từ cặp đầu vào, đầu ra mẫu. Dữ liệu cần định dạng nhất quán, quyền sử dụng rõ và chia tập tránh trùng hoặc rò rỉ.
+
+  SFT điều chỉnh trọng số theo các câu trả lời mẫu; RAG cung cấp tài liệu ở thời điểm suy luận. Tinh chỉnh có thể học cách trả lời hoặc định dạng, nhưng không tự tạo cơ chế cập nhật và dẫn nguồn cho kiến thức thường xuyên thay đổi.
+
+  Ví dụ, tập mẫu phân loại yêu cầu cần nhãn nhất quán và các trường hợp khó, không chỉ nhiều bản sao của câu dễ. Tự kiểm tra: loss huấn luyện thấp đã chứng minh dữ liệu tốt chưa? Chưa; mô hình có thể ghi nhớ mẫu sai hoặc trùng. Kiểm tra nhãn, chia theo nguồn phù hợp và đánh giá trên ví dụ chưa dùng để điều chỉnh.
+concept_notes_en: |-
+  Supervised fine-tuning learns from example input-output pairs. Data needs consistent formatting, clear usage rights and splits that prevent duplication or leakage.
+
+  SFT changes model weights; RAG supplies documents during inference. Fine-tuning can teach response behavior or format but does not automatically maintain changing knowledge or citations.
+
+  A request-classification dataset needs consistent labels and difficult cases, not repeated easy examples. Self-check: does low training loss prove good data? No: the model may memorize incorrect or duplicate examples. Inspect labels, split by an appropriate source unit and evaluate on examples not used for tuning.
 why_it_matters_vi: Chỉ chọn tinh chỉnh khi dữ liệu và đánh giá cho thấy giải pháp hiện tại chưa đáp ứng nhiệm vụ.
 why_it_matters_en: Fine-tuning is justified only when data and evaluation show prompting/RAG are insufficient.
 study_steps_vi:
@@ -215,6 +223,10 @@ review_cards:
 # Chuẩn bị dữ liệu và tinh chỉnh có giám sát / Dataset preparation and SFT
 
 Tinh chỉnh có giám sát học từ cặp đầu vào, đầu ra mẫu. Dữ liệu cần định dạng nhất quán, quyền sử dụng rõ và chia tập tránh trùng hoặc rò rỉ.
+
+SFT điều chỉnh trọng số theo các câu trả lời mẫu; RAG cung cấp tài liệu ở thời điểm suy luận. Tinh chỉnh có thể học cách trả lời hoặc định dạng, nhưng không tự tạo cơ chế cập nhật và dẫn nguồn cho kiến thức thường xuyên thay đổi.
+
+Ví dụ, tập mẫu phân loại yêu cầu cần nhãn nhất quán và các trường hợp khó, không chỉ nhiều bản sao của câu dễ. Tự kiểm tra: loss huấn luyện thấp đã chứng minh dữ liệu tốt chưa? Chưa; mô hình có thể ghi nhớ mẫu sai hoặc trùng. Kiểm tra nhãn, chia theo nguồn phù hợp và đánh giá trên ví dụ chưa dùng để điều chỉnh.
 
 ## Thực hành
 

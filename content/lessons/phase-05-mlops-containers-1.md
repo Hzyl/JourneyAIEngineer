@@ -26,10 +26,22 @@ key_terms:
 - reproducibility
 - deployment
 - containers
-concept_notes_vi: Docker image đóng gói hệ thống tệp và cấu hình cần để khởi chạy ứng dụng. Image tái lập cần phụ
-  thuộc rõ, lệnh khởi động đúng và không chứa bí mật của môi trường sử dụng.
-concept_notes_en: Docker image connects code to a real runtime. Document the artifact, dependencies, configuration,
-  health check, and rollback path; a successful build is not enough without a smoke test in a production-like environment.
+concept_notes_vi: |-
+  Docker image đóng gói hệ thống tệp và cấu hình cần để khởi chạy ứng dụng. Image tái lập cần phụ thuộc rõ, lệnh khởi động đúng và không chứa bí mật của môi trường sử dụng.
+
+  Image là mẫu bất biến dùng để tạo container; container là tiến trình chạy với hệ thống tệp của image và phần ghi riêng. Nó không phải máy ảo đầy đủ, nên kiến trúc CPU và môi trường chạy vẫn ảnh hưởng khả năng sử dụng.
+
+  Ví dụ, COPY requirements.txt rồi cài thư viện giúp bước cài có thể dùng lại khi chỉ đổi mã ứng dụng. Dữ liệu cần giữ qua lần thay container phải được lưu ở volume hoặc dịch vụ lưu trữ phù hợp.
+
+  Tự kiểm tra: xóa container có nên làm mất dữ liệu học của người dùng không? Không; đó là lý do cần tách dữ liệu bền vững khỏi phần ghi tạm của container và thử khôi phục.
+concept_notes_en: |-
+  A Docker image packages filesystem content and startup configuration. Reproducible builds need explicit dependencies, a correct startup command and no deployment secrets embedded in the image.
+
+  An image is an immutable template; a container is a running process with the image filesystem and its own writable layer. It is not a complete virtual machine, so CPU architecture and runtime environment still matter.
+
+  Copy dependency declarations before application code to allow reuse of the installation layer. Store data that must survive container replacement in a suitable volume or storage service.
+
+  Self-check: should removing a container erase learner progress? No: separate persistent data from its temporary writable layer and test recovery.
 why_it_matters_vi: Đóng gói môi trường để người khác chạy được cùng dịch vụ và kiểm tra tự động.
 why_it_matters_en: Package the environment with Docker and CI so another engineer can run the same service from
   a clone.
@@ -207,6 +219,12 @@ review_cards:
 # Tạo Docker image / Docker images
 
 Docker image đóng gói hệ thống tệp và cấu hình cần để khởi chạy ứng dụng. Image tái lập cần phụ thuộc rõ, lệnh khởi động đúng và không chứa bí mật của môi trường sử dụng.
+
+Image là mẫu bất biến dùng để tạo container; container là tiến trình chạy với hệ thống tệp của image và phần ghi riêng. Nó không phải máy ảo đầy đủ, nên kiến trúc CPU và môi trường chạy vẫn ảnh hưởng khả năng sử dụng.
+
+Ví dụ, COPY requirements.txt rồi cài thư viện giúp bước cài có thể dùng lại khi chỉ đổi mã ứng dụng. Dữ liệu cần giữ qua lần thay container phải được lưu ở volume hoặc dịch vụ lưu trữ phù hợp.
+
+Tự kiểm tra: xóa container có nên làm mất dữ liệu học của người dùng không? Không; đó là lý do cần tách dữ liệu bền vững khỏi phần ghi tạm của container và thử khôi phục.
 
 ## Thực hành
 

@@ -28,10 +28,18 @@ key_terms:
 - retrieval
 - evaluation
 - advanced-rag
-concept_notes_vi: Viết lại truy vấn có thể làm rõ ý tìm kiếm nhưng cũng có thể đổi ý người dùng. Bộ lọc giới hạn
-  phạm vi dữ liệu; cần kiểm tra cả ý nghĩa câu hỏi và quyền truy cập.
-concept_notes_en: Query rewrite và metadata filtering is a concept in the advanced-rag module. Identify the inputs,
-  outputs, assumptions, failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Viết lại truy vấn có thể làm rõ ý tìm kiếm nhưng cũng có thể đổi ý người dùng. Bộ lọc giới hạn phạm vi dữ liệu; cần kiểm tra cả ý nghĩa câu hỏi và quyền truy cập.
+
+  Viết lại truy vấn thay cách diễn đạt để tìm kiếm; lọc siêu dữ liệu giới hạn tập được phép tìm. Điều kiện quyền phải do ứng dụng xác lập từ danh tính đã xác thực, không tin hoàn toàn vào bộ lọc do mô hình đề xuất.
+
+  Ví dụ, thay 'nó có được đổi không?' bằng câu hỏi có tên mặt hàng từ hội thoại, nhưng vẫn giữ điều kiện cửa hàng và ngày mua. Tự kiểm tra: bỏ bộ lọc để lấy thêm kết quả khi không tìm thấy có an toàn không? Không nếu bộ lọc bảo vệ quyền; báo thiếu bằng chứng hoặc yêu cầu làm rõ mà vẫn giữ phạm vi truy cập.
+concept_notes_en: |-
+  Query rewriting can clarify search intent but may change meaning. Metadata filters restrict data scope; validate both semantics and access.
+
+  Rewriting changes wording, while filtering limits the searchable set. Access filters must come from authenticated application policy, not solely from model-proposed arguments.
+
+  Resolve 'can it be returned?' using the named item in the conversation while preserving store and purchase-date conditions. Self-check: may filters be removed when retrieval is empty? Not when they enforce access. Report insufficient evidence or clarify the query while preserving authorization boundaries.
 why_it_matters_vi: Đánh giá cải tiến truy xuất bằng số liệu để biết thành phần nào đáng giữ.
 why_it_matters_en: Advanced RAG should improve retrieval with measurements rather than simply adding components.
 study_steps_vi:
@@ -219,6 +227,10 @@ review_cards:
 # Viết lại truy vấn và lọc siêu dữ liệu / Query rewriting and metadata filtering
 
 Viết lại truy vấn có thể làm rõ ý tìm kiếm nhưng cũng có thể đổi ý người dùng. Bộ lọc giới hạn phạm vi dữ liệu; cần kiểm tra cả ý nghĩa câu hỏi và quyền truy cập.
+
+Viết lại truy vấn thay cách diễn đạt để tìm kiếm; lọc siêu dữ liệu giới hạn tập được phép tìm. Điều kiện quyền phải do ứng dụng xác lập từ danh tính đã xác thực, không tin hoàn toàn vào bộ lọc do mô hình đề xuất.
+
+Ví dụ, thay 'nó có được đổi không?' bằng câu hỏi có tên mặt hàng từ hội thoại, nhưng vẫn giữ điều kiện cửa hàng và ngày mua. Tự kiểm tra: bỏ bộ lọc để lấy thêm kết quả khi không tìm thấy có an toàn không? Không nếu bộ lọc bảo vệ quyền; báo thiếu bằng chứng hoặc yêu cầu làm rõ mà vẫn giữ phạm vi truy cập.
 
 ## Thực hành
 

@@ -27,11 +27,18 @@ key_terms:
 - embedding
 - retrieval
 - evaluation
-concept_notes_vi: MCP chuẩn hóa trao đổi giữa ứng dụng và nguồn công cụ, ngữ cảnh. Phân biệt ứng dụng chủ, client
-  và server để biết phần nào khám phá khả năng, gửi yêu cầu và thực thi.
-concept_notes_en: MCP architecture và message flow extends a model with controlled actions. Tool schemas must validate
-  inputs, limit permissions, and define timeout and retry; an agent loop needs stopping conditions, step logs, and
-  human approval for side effects.
+concept_notes_vi: |-
+  MCP chuẩn hóa trao đổi giữa ứng dụng và nguồn công cụ, ngữ cảnh. Phân biệt ứng dụng chủ, client và server để biết phần nào khám phá khả năng, gửi yêu cầu và thực thi.
+
+  MCP là giao thức trao đổi, không phải mô hình hay thuật toán quyết định hành động. Host tổ chức ứng dụng; client giao tiếp với server; server cung cấp khả năng theo giao thức. Chuẩn chung không tự bảo đảm nội dung đúng hoặc thao tác an toàn.
+
+  Ví dụ, ứng dụng có thể dùng server tài liệu để đọc nội dung rồi gửi phần phù hợp vào mô hình. Tự kiểm tra: kết nối MCP thành công có chứng minh agent dùng đúng công cụ không? Không; phải kiểm tra khả năng được công bố, đối số, quyền và kết quả trong luồng ứng dụng cụ thể.
+concept_notes_en: |-
+  MCP standardizes exchanges between applications and sources of tools or context. Distinguish the host, client and server responsibilities.
+
+  It is a communication protocol, not a model or action-selection algorithm. The host organizes the application, clients communicate and servers provide capabilities. Standardization alone does not establish correctness or safety.
+
+  An application can read material through a document server and pass relevant content to its model. Self-check: does a successful MCP connection prove correct tool use? No: inspect advertised capabilities, arguments, permissions and results in the actual application workflow.
 why_it_matters_vi: Hiểu cách kết nối công cụ, ngữ cảnh và giữ ranh giới quyền truy cập.
 why_it_matters_en: MCP standardizes how models discover context and capabilities without removing access-control
   responsibility.
@@ -217,6 +224,10 @@ review_cards:
 # Kiến trúc MCP và luồng thông điệp / MCP architecture and message flow
 
 MCP chuẩn hóa trao đổi giữa ứng dụng và nguồn công cụ, ngữ cảnh. Phân biệt ứng dụng chủ, client và server để biết phần nào khám phá khả năng, gửi yêu cầu và thực thi.
+
+MCP là giao thức trao đổi, không phải mô hình hay thuật toán quyết định hành động. Host tổ chức ứng dụng; client giao tiếp với server; server cung cấp khả năng theo giao thức. Chuẩn chung không tự bảo đảm nội dung đúng hoặc thao tác an toàn.
+
+Ví dụ, ứng dụng có thể dùng server tài liệu để đọc nội dung rồi gửi phần phù hợp vào mô hình. Tự kiểm tra: kết nối MCP thành công có chứng minh agent dùng đúng công cụ không? Không; phải kiểm tra khả năng được công bố, đối số, quyền và kết quả trong luồng ứng dụng cụ thể.
 
 ## Thực hành
 

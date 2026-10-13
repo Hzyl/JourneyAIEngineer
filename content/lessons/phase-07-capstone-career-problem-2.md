@@ -26,10 +26,18 @@ key_terms:
 - testing
 - debugging
 - maintainability
-concept_notes_vi: Bản mô tả nêu ai gặp khó khăn, quy trình hiện tại và kết quả mong muốn. Phân biệt nhu cầu với
-  giải pháp để việc chọn mô hình không quyết định trước cách hiểu bài toán.
-concept_notes_en: Viết problem statement is a concept in the problem module. Identify the inputs, outputs, assumptions,
-  failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Bản mô tả nêu ai gặp khó khăn, quy trình hiện tại và kết quả mong muốn. Phân biệt nhu cầu với giải pháp để việc chọn mô hình không quyết định trước cách hiểu bài toán.
+
+  Nhu cầu là kết quả người dùng muốn; tính năng là một cách đáp ứng. Mô tả vấn đề nên giữ khả năng thử giải pháp đơn giản trước khi quyết định cần agent hay mô hình lớn.
+
+  Ví dụ, 'nhân viên mất thời gian tìm điều khoản đổi hàng' nêu khó khăn rõ hơn 'xây chatbot nhiều agent'. Tự kiểm tra: làm xong chatbot đã chứng minh giải quyết vấn đề chưa? Chưa; đo thời gian tìm đúng quy định và lỗi trước, sau thử nghiệm, đồng thời ghi điều kiện so sánh.
+concept_notes_en: |-
+  A problem statement identifies who struggles, the current process and the desired outcome. Separate the need from a prematurely chosen solution.
+
+  A need is a user outcome; a feature is one possible means. Preserve the option to test simpler approaches before choosing agents or a large model.
+
+  'Staff struggle to find return clauses' is clearer than 'build a multi-agent chatbot'. Self-check: does delivering a chatbot prove success? No: compare time to find the correct policy and errors under stated conditions.
 why_it_matters_vi: Chọn vấn đề có người dùng, tiêu chí đánh giá và kiến trúc giải thích được.
 why_it_matters_en: Choose a real user problem with measurable metrics and an architecture you can defend in an interview.
 study_steps_vi:
@@ -209,6 +217,10 @@ review_cards:
 # Viết bản mô tả vấn đề / Write a problem statement
 
 Bản mô tả nêu ai gặp khó khăn, quy trình hiện tại và kết quả mong muốn. Phân biệt nhu cầu với giải pháp để việc chọn mô hình không quyết định trước cách hiểu bài toán.
+
+Nhu cầu là kết quả người dùng muốn; tính năng là một cách đáp ứng. Mô tả vấn đề nên giữ khả năng thử giải pháp đơn giản trước khi quyết định cần agent hay mô hình lớn.
+
+Ví dụ, 'nhân viên mất thời gian tìm điều khoản đổi hàng' nêu khó khăn rõ hơn 'xây chatbot nhiều agent'. Tự kiểm tra: làm xong chatbot đã chứng minh giải quyết vấn đề chưa? Chưa; đo thời gian tìm đúng quy định và lỗi trước, sau thử nghiệm, đồng thời ghi điều kiện so sánh.
 
 ## Thực hành
 

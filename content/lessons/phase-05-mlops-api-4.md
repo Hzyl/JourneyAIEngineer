@@ -25,10 +25,22 @@ key_terms:
 - reproducibility
 - deployment
 - api
-concept_notes_vi: Suy luận theo lô gom nhiều mẫu để tận dụng tài nguyên nhưng có thể tăng thời gian chờ từng yêu
-  cầu. Cần giữ đúng thứ tự kết quả và đo cả thông lượng lẫn độ trễ.
-concept_notes_en: Batch inference is a concept in the api module. Identify the inputs, outputs, assumptions, failure
-  modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Suy luận theo lô gom nhiều mẫu để tận dụng tài nguyên nhưng có thể tăng thời gian chờ từng yêu cầu. Cần giữ đúng thứ tự kết quả và đo cả thông lượng lẫn độ trễ.
+
+  Thông lượng là số mẫu xử lý trong một khoảng thời gian; độ trễ là thời gian một yêu cầu phải chờ. Gom lô có thể tăng thông lượng nhờ dùng thiết bị hiệu quả, nhưng phải chờ đủ mẫu hoặc hết thời hạn gom.
+
+  Ví dụ, ba văn bản A, B, C có độ dài khác nhau được sắp theo độ dài để giảm phần đệm. Sau dự đoán phải ánh xạ kết quả về đúng ID, không trả thứ tự mới như thể vẫn là A, B, C.
+
+  Tự kiểm tra: lô lớn nhất có luôn tốt nhất không? Không; có thể hết bộ nhớ hoặc vượt thời gian chờ. Thử nhiều cỡ lô với cùng tải và ghi cả lỗi, độ trễ lẫn thông lượng.
+concept_notes_en: |-
+  Batch inference groups samples to use resources efficiently, but may increase individual waiting time. Preserve result ordering and measure throughput alongside latency.
+
+  Throughput counts completed samples per time interval; latency measures one request's wait. Batching can improve device utilization while adding time to collect enough samples or reach a deadline.
+
+  Suppose texts A, B and C are sorted by length to reduce padding. Map predictions back to their original IDs; returning the sorted order would attach answers to the wrong inputs.
+
+  Self-check: is the largest batch always best? No: it can exhaust memory or violate deadlines. Compare batch sizes under the same workload and record errors, latency and throughput.
 why_it_matters_vi: Đóng gói mô hình thành dịch vụ có cấu hình và cấu trúc yêu cầu, phản hồi rõ ràng.
 why_it_matters_en: Package a model as an inference service with configuration, request/response schemas, and a clear
   batch path.
@@ -215,6 +227,12 @@ review_cards:
 # Suy luận theo lô / Batch inference
 
 Suy luận theo lô gom nhiều mẫu để tận dụng tài nguyên nhưng có thể tăng thời gian chờ từng yêu cầu. Cần giữ đúng thứ tự kết quả và đo cả thông lượng lẫn độ trễ.
+
+Thông lượng là số mẫu xử lý trong một khoảng thời gian; độ trễ là thời gian một yêu cầu phải chờ. Gom lô có thể tăng thông lượng nhờ dùng thiết bị hiệu quả, nhưng phải chờ đủ mẫu hoặc hết thời hạn gom.
+
+Ví dụ, ba văn bản A, B, C có độ dài khác nhau được sắp theo độ dài để giảm phần đệm. Sau dự đoán phải ánh xạ kết quả về đúng ID, không trả thứ tự mới như thể vẫn là A, B, C.
+
+Tự kiểm tra: lô lớn nhất có luôn tốt nhất không? Không; có thể hết bộ nhớ hoặc vượt thời gian chờ. Thử nhiều cỡ lô với cùng tải và ghi cả lỗi, độ trễ lẫn thông lượng.
 
 ## Thực hành
 

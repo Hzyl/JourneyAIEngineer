@@ -26,10 +26,18 @@ key_terms:
 - debugging
 - maintainability
 - problem
-concept_notes_vi: Lĩnh vực phù hợp có người dùng cụ thể, dữ liệu tiếp cận hợp lệ và vấn đề đủ nhỏ để kiểm chứng.
-  Chọn theo khả năng giải quyết và đánh giá, không chỉ theo độ phổ biến công nghệ.
-concept_notes_en: Chọn domain is a concept in the problem module. Identify the inputs, outputs, assumptions, failure
-  modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Lĩnh vực phù hợp có người dùng cụ thể, dữ liệu tiếp cận hợp lệ và vấn đề đủ nhỏ để kiểm chứng. Chọn theo khả năng giải quyết và đánh giá, không chỉ theo độ phổ biến công nghệ.
+
+  Lĩnh vực là bối cảnh rộng, còn bài toán là quyết định hoặc thao tác cụ thể cần cải thiện. 'AI cho giáo dục' quá rộng nếu chưa biết ai dùng, dữ liệu ở đâu và kết quả được kiểm tra thế nào.
+
+  Ví dụ, hỗ trợ sinh viên tìm quy định trong bộ tài liệu công khai là phạm vi dễ kiểm chứng hơn 'thay thế cố vấn học tập'. Tự kiểm tra: có mô hình mạnh nhưng không có dữ liệu hợp lệ thì đã đủ bắt đầu chưa? Chưa; chọn nguồn truy cập được, người dùng cụ thể và một luồng nhỏ có tiêu chí đo.
+concept_notes_en: |-
+  A suitable domain has identifiable users, legitimately accessible data and a small, testable problem. Choose by solvability and evaluation, not technology popularity.
+
+  A domain is broad context; a problem is a specific decision or activity to improve. 'AI for education' lacks scope without users, data and success criteria.
+
+  Helping students search public regulations is more testable than replacing all academic advising. Self-check: is a strong model enough without usable data? No: identify accessible sources, concrete users and one measurable workflow.
 why_it_matters_vi: Chọn vấn đề có người dùng, tiêu chí đánh giá và kiến trúc giải thích được.
 why_it_matters_en: Choose a real user problem with measurable metrics and an architecture you can defend in an interview.
 study_steps_vi:
@@ -205,6 +213,10 @@ review_cards:
 # Chọn lĩnh vực cho đồ án / Choose a domain
 
 Lĩnh vực phù hợp có người dùng cụ thể, dữ liệu tiếp cận hợp lệ và vấn đề đủ nhỏ để kiểm chứng. Chọn theo khả năng giải quyết và đánh giá, không chỉ theo độ phổ biến công nghệ.
+
+Lĩnh vực là bối cảnh rộng, còn bài toán là quyết định hoặc thao tác cụ thể cần cải thiện. 'AI cho giáo dục' quá rộng nếu chưa biết ai dùng, dữ liệu ở đâu và kết quả được kiểm tra thế nào.
+
+Ví dụ, hỗ trợ sinh viên tìm quy định trong bộ tài liệu công khai là phạm vi dễ kiểm chứng hơn 'thay thế cố vấn học tập'. Tự kiểm tra: có mô hình mạnh nhưng không có dữ liệu hợp lệ thì đã đủ bắt đầu chưa? Chưa; chọn nguồn truy cập được, người dùng cụ thể và một luồng nhỏ có tiêu chí đo.
 
 ## Thực hành
 

@@ -29,10 +29,22 @@ key_terms:
 - gradient
 - optimization
 - probability
-concept_notes_vi: Biến ngẫu nhiên gán giá trị số cho kết quả của phép thử. Phân phối mô tả các giá trị có thể xuất
-  hiện và mức độ có khả năng của chúng; cần phân biệt dữ liệu quan sát với phân phối giả định.
-concept_notes_en: Biến ngẫu nhiên và phân phối is a concept in the probability module. Identify the inputs, outputs,
-  assumptions, failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Biến ngẫu nhiên gán một giá trị số cho kết quả của phép thử. Phân phối xác suất mô tả những giá trị có thể xuất hiện và xác suất tương ứng; nó là mô hình cho quá trình sinh dữ liệu.
+
+  Biến rời rạc nhận các giá trị đếm được, còn biến liên tục thường được mô tả bằng mật độ. Với biến liên tục có mật độ, xác suất của một giá trị riêng lẻ bằng không; xác suất được tính trên một khoảng, không đọc trực tiếp từ chiều cao mật độ.
+
+  Số yêu cầu đến máy chủ là một đại lượng đếm, còn thời gian xử lý thường được mô hình hóa liên tục. Biểu đồ từ nhật ký là mô tả mẫu quan sát, không tự xác nhận một họ phân phối.
+
+  Tự kiểm tra: thấy biểu đồ gần hình chuông có đủ kết luận phân phối chuẩn không? Không; cần xem giả định, đuôi phân phối và mục đích sử dụng.
+concept_notes_en: |-
+  A random variable assigns a numerical value to an outcome of an experiment. A probability distribution describes possible values and their probabilities, modeling the data-generating process.
+
+  Discrete variables have countable values; continuous variables are often described by a density. For a variable with a continuous density, a single exact value has probability zero. Probability concerns intervals, not the density height itself.
+
+  Server request counts are discrete, while processing time is often modeled continuously. A histogram from logs describes a sample and does not establish a distribution family.
+
+  Self-check: does a roughly bell-shaped histogram establish normality? No; inspect assumptions, tails, and the intended use.
 why_it_matters_vi: Dùng xác suất để mô tả bất định và đánh giá mức tin cậy của kết luận từ mẫu.
 why_it_matters_en: Use probability and statistics to quantify uncertainty, sampling, and the reliability of conclusions.
 study_steps_vi:
@@ -218,7 +230,13 @@ review_cards:
 ---
 # Biến ngẫu nhiên và phân phối / Random variables and distributions
 
-Biến ngẫu nhiên gán giá trị số cho kết quả của phép thử. Phân phối mô tả các giá trị có thể xuất hiện và mức độ có khả năng của chúng; cần phân biệt dữ liệu quan sát với phân phối giả định.
+Biến ngẫu nhiên gán một giá trị số cho kết quả của phép thử. Phân phối xác suất mô tả những giá trị có thể xuất hiện và xác suất tương ứng; nó là mô hình cho quá trình sinh dữ liệu.
+
+Biến rời rạc nhận các giá trị đếm được, còn biến liên tục thường được mô tả bằng mật độ. Với biến liên tục có mật độ, xác suất của một giá trị riêng lẻ bằng không; xác suất được tính trên một khoảng, không đọc trực tiếp từ chiều cao mật độ.
+
+Số yêu cầu đến máy chủ là một đại lượng đếm, còn thời gian xử lý thường được mô hình hóa liên tục. Biểu đồ từ nhật ký là mô tả mẫu quan sát, không tự xác nhận một họ phân phối.
+
+Tự kiểm tra: thấy biểu đồ gần hình chuông có đủ kết luận phân phối chuẩn không? Không; cần xem giả định, đuôi phân phối và mục đích sử dụng.
 
 ## Thực hành
 

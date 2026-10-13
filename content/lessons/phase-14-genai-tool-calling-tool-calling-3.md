@@ -27,11 +27,18 @@ key_terms:
 - retrieval
 - evaluation
 - tool-calling
-concept_notes_vi: Thử lại thao tác ghi có thể tạo tác dụng phụ lặp. Tính lũy đẳng (idempotency) nghĩa là thực hiện
-  lại cùng thao tác vẫn cho cùng tác dụng cuối như thực hiện một lần. Khóa chống xử lý trùng giúp nhận ra cùng một
-  yêu cầu; cần đặt thời gian chờ cùng giới hạn số lần thử.
-concept_notes_en: Retry, timeout và idempotency is a concept in the tool-calling module. Identify the inputs, outputs,
-  assumptions, failure modes, and verification method with a small example before scaling to a project.
+concept_notes_vi: |-
+  Thử lại thao tác ghi có thể tạo tác dụng phụ lặp. Tính lũy đẳng (idempotency) nghĩa là thực hiện lại cùng thao tác vẫn cho cùng tác dụng cuối như thực hiện một lần. Khóa chống xử lý trùng giúp nhận ra cùng một yêu cầu; cần đặt thời gian chờ cùng giới hạn số lần thử.
+
+  Timeout cho biết bên gọi đã ngừng chờ, không chứng minh bên nhận chưa làm xong. Retry an toàn cần nhận diện cùng ý định thao tác; khóa lũy đẳng phải gắn với nội dung yêu cầu và được xử lý nhất quán ở phía dịch vụ.
+
+  Ví dụ, tạo phiếu hỗ trợ thành công nhưng phản hồi bị mất; gửi lại với cùng khóa giúp tránh tạo thêm phiếu nếu dịch vụ có cơ chế chống trùng. Tự kiểm tra: mỗi lần thử dùng khóa mới có chống lặp không? Không; hệ thống sẽ có thể coi đó là thao tác mới. Khi trạng thái chưa rõ, tra kết quả trước khi thử tiếp.
+concept_notes_en: |-
+  Retrying writes can duplicate side effects. Idempotency means repeating the same operation has the same final effect as performing it once. Deduplication keys, timeouts and attempt limits support controlled retries.
+
+  A timeout means the caller stopped waiting, not that the server did nothing. Safe retries require a consistently implemented key tied to the same request intent.
+
+  A ticket may be created even if its response is lost; retrying with the same supported key avoids duplication. Self-check: does a fresh key on every attempt help? No: it may identify a new operation. Check uncertain status before retrying.
 why_it_matters_vi: Kiểm tra lời gọi và quyền trước khi biến đề xuất của mô hình thành hành động.
 why_it_matters_en: Tool calling turns model output into actions, so its contracts must be stricter than ordinary
   chat.
@@ -222,6 +229,10 @@ review_cards:
 # Thử lại, thời gian chờ và tính lũy đẳng / Retries, timeouts, and idempotency
 
 Thử lại thao tác ghi có thể tạo tác dụng phụ lặp. Tính lũy đẳng (idempotency) nghĩa là thực hiện lại cùng thao tác vẫn cho cùng tác dụng cuối như thực hiện một lần. Khóa chống xử lý trùng giúp nhận ra cùng một yêu cầu; cần đặt thời gian chờ cùng giới hạn số lần thử.
+
+Timeout cho biết bên gọi đã ngừng chờ, không chứng minh bên nhận chưa làm xong. Retry an toàn cần nhận diện cùng ý định thao tác; khóa lũy đẳng phải gắn với nội dung yêu cầu và được xử lý nhất quán ở phía dịch vụ.
+
+Ví dụ, tạo phiếu hỗ trợ thành công nhưng phản hồi bị mất; gửi lại với cùng khóa giúp tránh tạo thêm phiếu nếu dịch vụ có cơ chế chống trùng. Tự kiểm tra: mỗi lần thử dùng khóa mới có chống lặp không? Không; hệ thống sẽ có thể coi đó là thao tác mới. Khi trạng thái chưa rõ, tra kết quả trước khi thử tiếp.
 
 ## Thực hành
 

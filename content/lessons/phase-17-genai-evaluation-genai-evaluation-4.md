@@ -27,11 +27,18 @@ key_terms:
 - retrieval
 - evaluation
 - genai-evaluation
-concept_notes_vi: 'Thước đo cần định nghĩa rõ điều đang chấm: đúng thực tế, được nguồn hỗ trợ hay đủ nội dung. Các
-  tiêu chí có thể cho kết quả khác nhau, nên không gộp chúng khi báo cáo.'
-concept_notes_en: 'Hallucination, faithfulness và metrics is a classical Machine Learning decision: define the label,
-  baseline, split, and metric before choosing a model. Fit preprocessing on train only; error analysis should identify
-  the groups where the model fails and how to retest the hypothesis.'
+concept_notes_vi: |-
+  Thước đo cần định nghĩa rõ điều đang chấm: đúng thực tế, được nguồn hỗ trợ hay đủ nội dung. Các tiêu chí có thể cho kết quả khác nhau, nên không gộp chúng khi báo cáo.
+
+  Tính đúng thực tế, bám sát nguồn và đầy đủ là ba câu hỏi khác nhau. Một câu có thể đúng nhưng không được nguồn cung cấp hỗ trợ; một câu chỉ lặp lại tài liệu sai có thể bám nguồn mà sai thực tế.
+
+  Ví dụ, nguồn chỉ nêu giờ mở cửa ngày thường thì câu trả lời suy ra cả ngày lễ là phát biểu vượt bằng chứng. Tự kiểm tra: LLM chấm điểm có thể thay hoàn toàn kiểm tra của con người không? Không; bộ chấm cũng có sai lệch. Dùng tiêu chí rõ, ví dụ đã được người kiểm và đối chiếu các trường hợp bất đồng trước khi tin điểm tổng hợp.
+concept_notes_en: |-
+  Metrics must specify whether they measure factual correctness, source support or completeness. These dimensions can disagree and should be reported separately.
+
+  A statement can be true without support in supplied evidence. Repeating an inaccurate document can be source-faithful yet factually wrong.
+
+  Weekday opening hours do not establish holiday hours; inferring the latter exceeds the evidence. Self-check: can an LLM judge fully replace human checking? No: judges also have biases and errors. Use an explicit rubric and human-checked examples, then inspect disagreements before relying on aggregate scores.
 why_it_matters_vi: Dùng tiêu chí và dữ liệu đại diện để biết hệ thống tốt ở đâu, còn lỗi ở đâu.
 why_it_matters_en: Evaluation distinguishes a fluent demo from a trustworthy system that can improve.
 study_steps_vi:
@@ -228,6 +235,10 @@ review_cards:
 # Thông tin bịa đặt, mức bám sát nguồn và thước đo / Hallucination, faithfulness, and metrics
 
 Thước đo cần định nghĩa rõ điều đang chấm: đúng thực tế, được nguồn hỗ trợ hay đủ nội dung. Các tiêu chí có thể cho kết quả khác nhau, nên không gộp chúng khi báo cáo.
+
+Tính đúng thực tế, bám sát nguồn và đầy đủ là ba câu hỏi khác nhau. Một câu có thể đúng nhưng không được nguồn cung cấp hỗ trợ; một câu chỉ lặp lại tài liệu sai có thể bám nguồn mà sai thực tế.
+
+Ví dụ, nguồn chỉ nêu giờ mở cửa ngày thường thì câu trả lời suy ra cả ngày lễ là phát biểu vượt bằng chứng. Tự kiểm tra: LLM chấm điểm có thể thay hoàn toàn kiểm tra của con người không? Không; bộ chấm cũng có sai lệch. Dùng tiêu chí rõ, ví dụ đã được người kiểm và đối chiếu các trường hợp bất đồng trước khi tin điểm tổng hợp.
 
 ## Thực hành
 

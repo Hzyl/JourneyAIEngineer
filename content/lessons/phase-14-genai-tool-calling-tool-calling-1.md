@@ -28,11 +28,18 @@ key_terms:
 - retrieval
 - evaluation
 - tool-calling
-concept_notes_vi: Schema mô tả tên, tham số và mục đích công cụ để mô hình đề xuất lời gọi. Quyết định thực thi
-  thuộc ứng dụng, nơi kiểm tra dữ liệu và quyền.
-concept_notes_en: Function calling và tool schema is a Software Engineering skill for turning an idea into code
-  that can be read, tested, and maintained. Define the inputs, outputs, invariants, and failure modes before implementing.
-  In Python, small boundaries make tests fast and tracebacks actionable.
+concept_notes_vi: |-
+  Schema mô tả tên, tham số và mục đích công cụ để mô hình đề xuất lời gọi. Quyết định thực thi thuộc ứng dụng, nơi kiểm tra dữ liệu và quyền.
+
+  Lời gọi công cụ do mô hình sinh là đề xuất dữ liệu, khác với việc ứng dụng đã chạy hàm thành công. Schema giúp mô tả đầu vào nhưng không chứng minh người dùng có quyền thực hiện thao tác hoặc kết quả đáp ứng mục tiêu.
+
+  Ví dụ, mô hình đề xuất tra đơn hàng với mã đơn; ứng dụng xác thực người gọi, kiểm tra mã rồi mới truy vấn. Tự kiểm tra: mô hình trả đúng tên hàm và đủ tham số đã có thể báo hoàn tất chưa? Chưa; cần kết quả thực thi được xác nhận, xử lý lỗi và chỉ thông báo điều công cụ thực sự trả về.
+concept_notes_en: |-
+  A tool schema describes a function's name, purpose and parameters so the model can propose a call. The application validates data and permissions before execution.
+
+  A model-generated call is proposed data, not proof that a function ran successfully. A schema does not establish authorization or task success.
+
+  For an order lookup, authenticate the caller and validate the order ID before querying. Self-check: do the correct function name and complete arguments justify reporting completion? No: wait for confirmed execution, handle errors and report only what the tool result actually establishes.
 why_it_matters_vi: Kiểm tra lời gọi và quyền trước khi biến đề xuất của mô hình thành hành động.
 why_it_matters_en: Tool calling turns model output into actions, so its contracts must be stricter than ordinary
   chat.
@@ -221,6 +228,10 @@ review_cards:
 # Gọi hàm và schema công cụ / Function calling and tool schemas
 
 Schema mô tả tên, tham số và mục đích công cụ để mô hình đề xuất lời gọi. Quyết định thực thi thuộc ứng dụng, nơi kiểm tra dữ liệu và quyền.
+
+Lời gọi công cụ do mô hình sinh là đề xuất dữ liệu, khác với việc ứng dụng đã chạy hàm thành công. Schema giúp mô tả đầu vào nhưng không chứng minh người dùng có quyền thực hiện thao tác hoặc kết quả đáp ứng mục tiêu.
+
+Ví dụ, mô hình đề xuất tra đơn hàng với mã đơn; ứng dụng xác thực người gọi, kiểm tra mã rồi mới truy vấn. Tự kiểm tra: mô hình trả đúng tên hàm và đủ tham số đã có thể báo hoàn tất chưa? Chưa; cần kết quả thực thi được xác nhận, xử lý lỗi và chỉ thông báo điều công cụ thực sự trả về.
 
 ## Thực hành
 
