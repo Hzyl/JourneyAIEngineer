@@ -328,9 +328,22 @@ export const hostedApi = {
   },
   createNote: async (payload: { lesson_slug?: string; title: string; body: string }) => {
     const user = await requireHostedUser()
-    const { data, error } = await requireSupabase().from('notes').insert({ user_id: user.id, lesson_slug: payload.lesson_slug ?? null, title: payload.title, body: payload.body }).select('id,lesson_slug,title,body,created_at,updated_at').single()
-    if (error) errorMessage(error)
-    return data
+    const note = { lesson_slug: payload.lesson_slug ?? null, title: payload.title, body: payload.body }
+    return withMutationRequest(user.id, 'note', note, async (requestId) => {
+      const client = requireSupabase()
+      const columns = 'id,lesson_slug,title,body,created_at,updated_at'
+      const { data, error } = await client.from('notes')
+        .insert({ id: requestId, user_id: user.id, ...note }).select(columns).single()
+      if (!error) return data
+      if (error.code !== '23505') errorMessage(error)
+      // A committed insert may have lost its response. Never overwrite a conflict.
+      const { data: existing, error: readError } = await client.from('notes').select(columns)
+        .eq('id', requestId).eq('user_id', user.id).single()
+      if (readError) errorMessage(readError)
+      if (!existing || existing.lesson_slug !== note.lesson_slug
+        || existing.title !== note.title || existing.body !== note.body) errorMessage(error)
+      return existing
+    })
   },
   journalEntries: async () => ({ entries: (await selectRows<any>('journal_entries', 'id,week_start,title,body,created_at,updated_at')).sort((a, b) => String(b.week_start).localeCompare(String(a.week_start))) }),
   upsertJournalEntry: async (payload: { week_start: string; title: string; body: string }) => {

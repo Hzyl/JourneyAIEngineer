@@ -156,3 +156,84 @@ Lượt P0 này chưa chạy Colab/model, Docling, PDF/OCR hoặc LLM thật; ch
 dịch vụ production, commit/push hay xuất bản thay đổi. TikTok vẫn chỉ là nguồn
 gợi ý. Không suy chất lượng mô hình hoặc khả năng chống injection từ mô phỏng.
 Đề xuất lô kế tiếp ở trên giữ nguyên, chưa thuộc phần triển khai lần này.
+
+## Tích hợp bài chunking và sửa lưu ghi chú — 14/10/2026
+
+Mốc đối chiếu là `5dd5baabf0a2c0c2760b8854e58d81fb6471ad50`.
+Đề xuất bài chunking của lượt trước đã được thực hiện trong lượt này, sau khi
+đọc lại nguồn và xác nhận không có bản curated ghi đè. Không mở rộng sang
+embedding, reranking hoặc đánh giá agent khi chưa có lỗi cụ thể.
+
+Bài `phase-12-genai-rag-rag-foundations-2` giữ phần giải thích hữu ích về ngoại lệ
+hoàn tiền và overlap, thay ví dụ chỉ nối câu trả lời/nguồn bằng hai tệp Python
+chuẩn: `chunk_documents.py` và `check_chunking.py`. Người học so tách dòng với
+nhóm theo tiêu đề, lần về ID/phiên bản/khoảng dòng/text gốc, rồi ghép nguyên đoạn
+trong ngân sách ký tự có tính nhãn nguồn và dấu phân cách. Ví dụ báo đoạn bị bỏ;
+`packed` chỉ mô tả việc ghép vừa, không chứng minh đủ bằng chứng về ngữ nghĩa.
+Top-1 là khớp từ khóa đầu tiên theo thứ tự nguồn, không phải semantic retrieval.
+Nội dung Việt–Anh, câu hỏi/đáp án ôn tập và hướng dẫn tạo hai tệp trên Colab đã
+được làm khớp. Tái sử dụng nguồn đọc Docling đã có; không thêm gói phụ thuộc.
+
+Review tích hợp phát hiện một ca biên chưa có trong test: dòng trống ngay trước
+tiêu đề mới làm hàm ghép từ chối chính đoạn do hàm chia tạo ra. Đã tái hiện lỗi,
+sửa phép đếm dòng trên chuỗi chuẩn hóa LF và thêm bốn ca hồi quy cho dòng trống
+trước tiêu đề, nhiều dòng trống, cuối tài liệu và CRLF. Phép tái hiện độc lập
+đã chuyển từ exit 1 sang exit 0; bộ kiểm tra bài học có 28 ca đạt.
+
+Một lỗi dữ liệu riêng cũng đã được chứng minh: nếu insert ghi chú thành công
+nhưng mất phản hồi, lần thử lại trước đây tạo ghi chú thứ hai. Bản sửa dùng
+request UUID của cơ chế mutation hiện có làm ID ghi chú; chỉ khi nhận lỗi trùng
+khóa mới đọc theo cả ID và tài khoản rồi đối chiếu đầy đủ nội dung. Không
+upsert/ghi đè xung đột, không sửa SQL/RLS hoặc migration. Lưu mới sau khi đã nhận
+xác nhận thành công vẫn tạo ID mới. Phục hồi qua reload được kiểm tra trong
+cùng phiên trình duyệt, không suy thành đồng bộ retry giữa thiết bị.
+
+### Kiểm chứng bản cuối
+
+- Chạy `npm test` đúng một lượt sau sửa nguồn và tạo lại catalog: 318 kiểm thử
+  Python (61,26 giây) và 262 Vitest thuộc 43 tệp (7,76 giây) đạt; validator,
+  fingerprint, lint, TypeScript và Vite production build qua, exit 0.
+  28 ca chunking và 15 ca ghi chú đã nằm trong các tổng này.
+- Tám kiểm tra Playwright bài chunking đạt trong 17,2 giây: VI/EN × 320/1440 px
+  × sáng/tối, trên production build local tại cổng 4193. Kiểm tra nội dung,
+  mã nguồn, đáp án, hướng dẫn thực hành/Colab, stdout, font, tương phản, focus,
+  kích thước nút và tràn ngang. Có 24 ảnh; đã xem VI 320 px sáng/tối phần
+  kiến thức và EN 1440 px tối phần thực hành/mã. Khối mã giữ cuộn ngang sẵn có.
+- Hai luồng browser lưu ghi chú VI/EN đã đạt riêng trên production preview
+  (7,6 giây): lỗi sau commit, giữ bản nháp, reload, retry, trạng thái đang lưu,
+  chỉ còn một bản ghi, rồi lưu hành động mới. HTTP/Supabase đều giả lập.
+- Đối chiếu 208 bài nguồn và catalog với baseline giữ nguyên lesson/module/
+  phase ID, prerequisites, next lessons, exercise links và ID/loại thẻ ôn.
+  Chỉ nội dung bài chunking thay đổi; 207 bài khác giống baseline.
+  SHA-256 tệp `.data/journey.db` trước/sau kiểm thử giữ nguyên.
+- Log: `.build/audit-20261014/integration/npm-test.log`, `browser.log`,
+  `scope-verification.log`, `blank-line-red.log`, `blank-line-green.log`.
+  Bằng chứng ghi chú ở `.build/audit-20261014/notes/evidence.md`.
+  Chi tiết phạm vi và bàn giao ở
+  `docs/superpowers/plans/2026-10-14-evidence-audit.md`.
+
+### Những phần giữ nguyên và giới hạn
+
+Rà có giới hạn các đường ghi chú, backup/export và session chưa tìm thấy lỗi
+xuất dữ liệu hoặc rò chéo tài khoản cụ thể khác. Bộ lọc ứng dụng dùng `user.id`,
+SQL dùng `auth.uid()`; đây không phải kiểm toán RLS trên tài khoản thật.
+Hosted backup import vẫn chủ ý dành cho bản local, cloud export là chức năng
+riêng; journal upsert theo khóa tự nhiên chưa có lỗi cụ thể để sửa. Không tuyên
+bố đã review đầy đủ mọi đường session/review/progress.
+
+Trước các sửa đổi trên, 55 kiểm tra production-browser baseline đã đạt trong
+3,0 phút. CI quality và hosted-database của baseline đạt ở run `38432451543`;
+Cloudflare Pages check thành công với deployment
+`bcf7594a-691b-42f6-8d39-23347bc02571`. Đây là bằng chứng của bản baseline đã
+xuất bản, không chứng minh bản sửa hiện tại đã được triển khai.
+
+Codex chính còn mở landing và bài học mẫu đầu ở chế độ khách trên IAB:
+console không có lỗi; viewport/document/body ở 320 px đều rộng 320 px, ba đoạn
+đầu có cỡ chữ 19/16/18 px. Ảnh desktop đọc được; ảnh mobile bị nhà cung cấp co
+giãn bất tiện nên không kết luận đã nghiệm thu hình ảnh điện thoại. Chỉ đọc,
+không ghi production, đăng nhập tài khoản hay dùng thiết bị thật.
+
+Cảnh báo Fast Refresh, bundle lớn và 32 mục audit thụ động cần người review vẫn
+còn; không coi chúng là 32 lỗ hổng đã chứng minh. Chưa chạy Colab/model,
+Docling/PDF/OCR, Supabase thật hoặc kiểm thử tài khoản/thiết bị thật.
+Các thay đổi của lượt này chưa commit, push hay xuất bản.
