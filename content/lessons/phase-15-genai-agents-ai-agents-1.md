@@ -4,17 +4,16 @@ phase_id: phase-15-genai-agents
 module_id: ai-agents
 title_vi: Lập kế hoạch và chia nhỏ nhiệm vụ
 title_en: Planning and task decomposition
-summary_vi: Kế hoạch chia mục tiêu thành các bước có đầu vào, kết quả và điều kiện kiểm tra.
-summary_en: Plan steps with explicit inputs, observations and stop conditions; revise the next action when
-  a lookup fails.
+summary_vi: Chia nhiệm vụ tra cứu thành bước có điều kiện; kiểm tra kết quả công cụ trước khi chuyển bước hoặc báo có bằng chứng.
+summary_en: Decompose a lookup into guarded steps; validate tool observations before advancing or claiming evidence.
 learning_objectives:
-- Chia nhiệm vụ thành các bước và nêu điều kiện chuyển sang bước tiếp.
-- Thử tình huống không đạt mục tiêu và xác nhận điều kiện dừng.
-- Giải thích kết quả và nêu một giới hạn của bài làm.
+- Phân biệt kế hoạch dự kiến, lời gọi đã thực hiện và kết quả đã kiểm tra.
+- So sánh workflow cố định với chính sách thử lại theo kịch bản trên cùng nhiệm vụ.
+- Kiểm tra hợp đồng kết quả công cụ, ngân sách lời gọi và lý do dừng; nêu giới hạn của mô phỏng.
 learning_objectives_en:
-- Separate intended steps from observed execution state.
+- Distinguish intended plans, attempted calls and validated observations.
 - Compare a fixed workflow with a scripted adaptive policy on the same lookup task.
-- Verify call limits, tool failures and explicit stop reasons.
+- Check tool-result contracts, call budgets and stop reasons; explain the simulation's limits.
 prerequisites:
 - phase-14-genai-tool-calling-tool-calling-4
 - phase-14-genai-tool-calling-tool-calling-1
@@ -22,10 +21,10 @@ key_terms:
 - planning
 - task
 - decomposition
-- token
-- embedding
-- retrieval
-- evaluation
+- observation
+- tool contract
+- call budget
+- stop reason
 - ai-agents
 concept_notes_vi: |-
   Kế hoạch chia mục tiêu thành các bước có đầu vào, kết quả và điều kiện kiểm tra. Agent cần điều chỉnh khi quan sát mới bác bỏ giả định, thay vì tiếp tục kế hoạch cũ một cách máy móc.
@@ -33,107 +32,222 @@ concept_notes_vi: |-
   Danh sách bước là dự định; trạng thái thực thi cho biết bước nào đã có bằng chứng hoàn thành. Chia nhiệm vụ hữu ích khi làm rõ phụ thuộc: phải có dữ liệu trước khi phân tích, và phải đánh giá kết quả trước khi báo xong.
 
   Ví dụ, agent đọc tài liệu, tìm điều khoản rồi soạn câu trả lời; nếu không đọc được nguồn thì cần sửa cách lấy dữ liệu hoặc báo thiếu. Tự kiểm tra: kế hoạch viết rất chi tiết có bảo đảm thành công không? Không; phải kiểm tra đầu ra từng bước, cập nhật khi giả định sai và tránh thực hiện bước sau bằng dữ liệu tưởng tượng.
+
+  Với tác vụ chỉ đọc trong ví dụ, search phải trả list các ID chuỗi không rỗng. List rỗng là quan sát hợp lệ nhưng không tìm thấy nguồn; chuỗi guide hoặc list chứa số là lỗi hợp đồng. read_document chỉ được coi là có bằng chứng khi trả chuỗi không chỉ có khoảng trắng. Sai hợp đồng dừng invalid_tool_result, không đoán dữ liệu thay thế.
+
+  plan ghi bước dự kiến; trace ghi lời gọi đã thử, kể cả lỗi; completed chỉ ghi lời gọi có quan sát hợp lệ. search trả list rỗng vẫn có thể nằm trong completed nhưng nhiệm vụ chưa thành công. Ngân sách giới hạn số lần gọi, còn seen chặn cặp công cụ/tham số lặp; cả hai cần thiết khi môi trường không cung cấp bằng chứng.
+
+  Workflow đi theo đường xử lý định trước; agent dùng LLM có thể chọn bước động từ phản hồi môi trường. Chính sách đổi truy vấn thành học ở đây được viết sẵn, chỉ minh họa vòng điều khiển. Không có LLM, framework hay API thật. TimeoutError là lỗi giả lập; giới hạn lời gọi không thể ngắt một công cụ đang treo và không chứng minh chống prompt injection.
 concept_notes_en: |-
   A plan divides a goal into steps with inputs, outputs and verification conditions. Agents should revise plans when observations contradict assumptions.
 
   A step list states intentions; execution state records what evidence supports completion. Useful decomposition exposes dependencies: obtain data before analysis and evaluate results before claiming success.
 
   An agent may read a document, locate a clause and draft an answer; failed reading requires recovery or a missing-evidence report. Self-check: does a detailed plan guarantee success? No: inspect each output, revise failed assumptions and do not continue using imagined data.
-why_it_matters_vi: Agent cần trạng thái, giới hạn và dấu vết rõ để hành động có thể kiểm tra.
-why_it_matters_en: An agent is a control loop with state and side effects; reliability comes from limits and observability.
+
+  In this read-only task, search must return a list of nonblank string IDs. An empty list is a valid observation with no source; the string guide or a list containing a number violates the contract. read_document counts as evidence only when it returns nonblank text. Contract violations stop with invalid_tool_result rather than invented replacement data.
+
+  plan records intended steps; trace records attempted calls including failures; completed records only calls with valid observations. A search returning an empty list may enter completed without completing the task. The budget bounds attempts while seen blocks repeated tool/argument pairs; both matter when the environment supplies no evidence.
+
+  Workflows follow predefined paths; an LLM agent can choose dynamic steps from environment feedback. The fallback query học is hard-coded here to illustrate a control loop. No real LLM, framework or API runs. TimeoutError is simulated; a call budget cannot interrupt a hanging tool and does not prove prompt-injection resistance.
+why_it_matters_vi: Kế hoạch chỉ đáng tin khi từng bước có kết quả hợp lệ và điều kiện dừng; báo thành công không thay thế bằng chứng thực thi.
+why_it_matters_en: A plan needs validated observations and stop conditions; a success claim cannot replace execution evidence.
 study_steps_vi:
 - Đọc phần kiến thức và phân biệt kế hoạch dự kiến với kết quả đã quan sát.
 - Lưu ví dụ thành agent_loop.py rồi chạy bằng Python 3.11 trở lên; không cần API key.
 - So trace của workflow cố định với chính sách mô phỏng biết thử truy vấn khác.
-- Đổi max_calls thành 1 và thử truy vấn timeout; kiểm tra lý do dừng.
+- Lưu ví dụ thứ hai thành check_agent.py cạnh agent_loop.py; chạy python check_agent.py rồi thử làm sai kiểm tra kết quả công cụ.
 - 'Ghi giới hạn: đây là bộ điều khiển giả lập, chưa kiểm tra khả năng quyết định của LLM hay hiệu quả agent
   thật.'
 study_steps_en:
 - Distinguish intended plans from observed execution state.
 - Save the example as agent_loop.py and run with Python 3.11 or newer; no API key is needed.
 - Compare traces from the fixed workflow and scripted adaptive policy.
-- Set max_calls to 1 and try the timeout query; check stop reasons.
+- Save the second example as check_agent.py beside agent_loop.py; run python check_agent.py, then deliberately break tool-result validation.
 - 'Record the limit: this is a simulated controller, not a test of LLM decisions or real-agent effectiveness.'
 practice_plan:
   vi:
-    task: Chạy workflow cố định và bộ điều khiển mô phỏng trên cùng nhiệm vụ chỉ đọc. Bổ sung case không có
-      nguồn, công cụ lỗi và lời gọi lặp; lưu trace cùng lý do dừng cho từng case.
+    task: Chạy hai ví dụ trong cùng thư mục hoặc runtime Colab. Giữ nguyên check_controller, sửa run để kiểm tra mọi kết quả search/read_document; đối chiếu trace với lời gọi thật khi không có nguồn, kết quả sai kiểu và hết ngân sách.
     deliverables:
     - Hai chính sách dùng cùng kho tài liệu giả
-    - 'Kết quả từng case: đầu ra, số lần gọi và lý do dừng'
+    - Hai tệp agent_loop.py và check_agent.py với đầu ra khớp hướng dẫn
+    - 'Kết quả từng case: plan, completed, trace, evidence và lý do dừng'
     - Giải thích điều mô phỏng chưa đo được ở LLM thật
-    checkpoint: Không vượt giới hạn lời gọi, chỉ dùng search/read_document và không diễn giải văn bản nguồn
-      thành lệnh thực thi.
+    checkpoint: check_controller(run) đạt; controller thành công giả và controller bỏ kiểm tra kết quả phải không đạt. Không vượt ngân sách hoặc gọi lặp; chỉ coi văn bản nguồn là dữ liệu.
     stretch: Thêm kiểm thử tài liệu chứa yêu cầu gọi công cụ ngoài quyền; giải thích vì sao kiểm thử giả lập
       chưa chứng minh chống prompt injection với LLM.
   en:
-    task: Run a fixed workflow and simulated adaptive controller on the same read-only task. Add missing-source,
-      tool-error and repeated-call cases; save each trace and stop reason.
+    task: Run both examples in the same folder or Colab runtime. Keep check_controller unchanged and edit run to validate every search/read_document result; compare traces with actual calls for missing sources, malformed results and exhausted budgets.
     deliverables:
     - Two policies using the same synthetic corpus
-    - Per-case output, call count and stop reason
+    - agent_loop.py and check_agent.py with the documented output
+    - Per-case plan, completed steps, trace, evidence and stop reason
     - An explanation of what the simulation does not measure in real LLMs
-    checkpoint: Respect call limits, use only search/read_document and never interpret source text as executable
-      instructions.
+    checkpoint: check_controller(run) passes; fake-success and unchecked-result controllers fail. Respect call budgets and repeated-call stops; treat source text as data only.
     stretch: Test a document requesting an unauthorized tool; explain why this simulated test does not establish
       LLM prompt-injection resistance.
 interview_questions:
   vi:
-  - Bạn sẽ giải thích nội dung “Lập kế hoạch và chia nhỏ nhiệm vụ” bằng ví dụ nào?
-  - Điều kiện nào cần kiểm tra trước khi áp dụng vào công việc thực tế?
-  - Bạn dùng bằng chứng nào để kết luận bài làm đáp ứng yêu cầu?
+  - Vì sao plan có read_document nhưng completed có thể chỉ có search?
+  - search trả chuỗi guide và read_document trả chuỗi rỗng phải dừng thế nào?
+  - Bộ kiểm tra phát hiện thành công giả ra sao và chưa chứng minh điều gì về LLM?
   en:
-  - How would you explain planning and task decomposition to a new teammate?
-  - Which assumption behind planning and task decomposition could fail in production?
-  - Which metric or test would prove the result is trustworthy?
+  - Why can plan include read_document while completed contains only search?
+  - How should a search string or empty document text stop the controller?
+  - How do the checks expose fake success, and what do they not establish about LLMs?
 formulas: []
 code_examples:
 - language: python
-  title: Quan sát rồi chọn bước tiếp / Observe before choosing the next step
+  title: Quan sát hợp lệ rồi chọn bước tiếp / Validate observations before choosing the next step
   status: runnable
-  code: "DOCUMENTS = {'guide': 'Học theo nhịp riêng; ghi lại nguồn và kết quả.'}\n\n\ndef search(query):\n\
-    \    if not isinstance(query, str) or not query.strip():\n        raise ValueError('invalid query')\n \
-    \   if query == 'timeout':\n        raise TimeoutError('simulated timeout')\n    return ['guide'] if query\
-    \ == 'học' else []\n\n\ndef read_document(document_id):\n    return DOCUMENTS[document_id]\n\n\nTOOLS =\
-    \ {'search': search, 'read_document': read_document}\n\n\ndef run(query, max_calls=5, adaptive=True, tools=None):\n\
-    \    tools = TOOLS if tools is None else tools\n    if not isinstance(query, str) or not query.strip():\n\
-    \        return {'stop': 'invalid_input', 'trace': [], 'evidence': None}\n    if type(max_calls) is not\
-    \ int or not 1 <= max_calls <= 5:\n        raise ValueError('max_calls must be 1..5')\n    trace, seen,\
-    \ evidence = [], set(), None\n    action, argument = 'search', query\n    for _ in range(max_calls):\n\
-    \        call = (action, argument)\n        if call in seen:\n            return {'stop': 'repeated_call',\
-    \ 'trace': trace, 'evidence': evidence}\n        seen.add(call)\n        try:\n            result = tools[action](argument)\n\
-    \        except (TimeoutError, ValueError, KeyError) as error:\n            trace.append({'tool': action,\
-    \ 'input': argument, 'error': type(error).__name__})\n            return {'stop': 'tool_error', 'trace':\
-    \ trace, 'evidence': evidence}\n        trace.append({'tool': action, 'input': argument, 'output': result})\n\
-    \        if action == 'read_document':\n            return {'stop': 'evidence_found', 'trace': trace, 'evidence':\
-    \ result}\n        if result:\n            action, argument = 'read_document', result[0]\n        elif\
-    \ adaptive:\n            argument = 'học'  # Scripted policy; no LLM decision is being tested.\n      \
-    \  else:\n            return {'stop': 'no_results', 'trace': trace, 'evidence': None}\n    return {'stop':\
-    \ 'call_limit', 'trace': trace, 'evidence': evidence}\n\n\nif __name__ == '__main__':\n    fixed = run('cách\
-    \ ôn', adaptive=False)\n    adaptive = run('cách ôn')\n    assert fixed['stop'] == 'no_results'\n    assert\
-    \ adaptive['stop'] == 'evidence_found' and len(adaptive['trace']) == 3\n    assert run('cách ôn', max_calls=1)['stop']\
-    \ == 'call_limit'\n    assert run('timeout')['stop'] == 'tool_error'\n    assert run('')['stop'] == 'invalid_input'\n\
-    \    empty_tools = {**TOOLS, 'search': lambda query: []}\n    assert run('cách ôn', tools=empty_tools)['stop']\
-    \ == 'repeated_call'\n    print(fixed['stop'], adaptive['stop'], len(adaptive['trace']))\n    print('call\
-    \ limit, timeout and invalid input: checked')\n"
-  setup: Python 3.11+; lưu thành agent_loop.py rồi chạy python agent_loop.py. Standard library only.
-  expected_output: 'no_results evidence_found 3
+  code: |
+    DOCUMENTS = {'guide': 'Học theo nhịp riêng; ghi lại nguồn và kết quả.'}
 
-    call limit, timeout and invalid input: checked'
-  purpose_vi: So workflow cố định với chính sách mô phỏng thay truy vấn sau khi không có kết quả; lưu trace
-    và lý do dừng.
-  purpose_en: Compare a fixed workflow with a scripted policy that revises an unsuccessful query; retain traces
-    and stop reasons.
-  edge_case_vi: Thử max_calls=1, truy vấn rỗng và timeout giả lập. Chỉ có hai công cụ đọc được định nghĩa sẵn;
-    nội dung tài liệu không được chuyển thành lệnh.
-  edge_case_en: Try max_calls=1, empty input and a simulated timeout. Only two predefined read tools exist;
-    document text is never converted into an instruction.
-  explanation_vi: Chính sách thay truy vấn bằng từ học được viết cố định để quan sát vòng lặp. Nó không chứng
-    minh agent dùng LLM tốt hơn workflow. Timeout là lỗi giả lập từ công cụ, chưa phải cơ chế ngắt một API
-    đang treo. Trace lưu công cụ, đầu vào, đầu ra hoặc lỗi, không lưu suy nghĩ nội bộ.
-  explanation_en: The fallback query is scripted to expose loop behavior, not to demonstrate that an LLM agent
-    outperforms a workflow. Timeout is a simulated tool exception, not cancellation of a hanging API. Traces
-    contain tools, inputs, outputs or errors, not private model reasoning.
+
+    def search(query):
+        if query == 'timeout':
+            raise TimeoutError('simulated timeout')
+        return ['guide'] if query == 'học' else []
+
+
+    def read_document(document_id):
+        return DOCUMENTS[document_id]
+
+
+    TOOLS = {'search': search, 'read_document': read_document}
+
+
+    def run(query, max_calls=5, adaptive=True, tools=None):
+        tools = TOOLS if tools is None else tools
+        trace, seen, completed = [], set(), []
+        plan = ['search', 'read_document']
+
+        def finish(stop, evidence=None):
+            return {'stop': stop, 'trace': trace, 'evidence': evidence,
+                    'plan': plan, 'completed': completed.copy()}
+
+        if not isinstance(query, str) or not query.strip():
+            return finish('invalid_input')
+        if type(max_calls) is not int or not 1 <= max_calls <= 5:
+            raise ValueError('max_calls must be 1..5')
+        action, argument = 'search', query
+        for _ in range(max_calls):
+            call = (action, argument)
+            if call in seen:
+                return finish('repeated_call')
+            seen.add(call)
+            event = {'tool': action, 'input': argument, 'status': 'requested'}
+            trace.append(event)  # Every attempted call, including failure, consumes budget.
+            try:
+                tool = tools[action]
+                if not callable(tool):
+                    event['status'] = 'invalid_tool'
+                    return finish('tool_error')
+                result = tool(argument)
+            except (TimeoutError, ValueError, KeyError) as error:
+                event.update(status='tool_error', error=type(error).__name__)
+                return finish('tool_error')
+            # Validate the entire observation before selecting a next action.
+            valid = (isinstance(result, list)
+                     and all(isinstance(item, str) and item.strip() for item in result)
+                     if action == 'search' else isinstance(result, str) and bool(result.strip()))
+            if not valid:
+                event['status'] = 'invalid_tool_result'
+                return finish('invalid_tool_result')
+            event.update(status='observed', output=result)
+            completed.append(action)
+            if action == 'read_document':
+                return finish('evidence_found', result)
+            if result:
+                action, argument = 'read_document', result[0]
+            elif adaptive:
+                argument = 'học'  # Scripted fallback; no model chooses an action.
+            else:
+                return finish('no_results')
+        return finish('call_limit')
+
+
+    if __name__ == '__main__':
+        fixed = run('cách ôn', adaptive=False)
+        adaptive = run('cách ôn')
+        assert fixed['stop'] == 'no_results'
+        assert adaptive['stop'] == 'evidence_found' and len(adaptive['trace']) == 3
+        assert run('cách ôn', max_calls=1)['stop'] == 'call_limit'
+        assert run('timeout')['stop'] == 'tool_error'
+        assert run('')['stop'] == 'invalid_input'
+        empty_tools = {**TOOLS, 'search': lambda query: []}
+        assert run('cách ôn', tools=empty_tools)['stop'] == 'repeated_call'
+        bad_search = {**TOOLS, 'search': lambda query: 'guide'}
+        bad_read = {**TOOLS, 'read_document': lambda document_id: ' '}
+        assert run('học', tools=bad_search)['stop'] == 'invalid_tool_result'
+        assert run('học', tools=bad_read)['stop'] == 'invalid_tool_result'
+        print(fixed['stop'], adaptive['stop'], len(adaptive['trace']))
+        print('call limit, timeout, invalid input and tool results: checked')
+  setup: "Python 3.11+; save as agent_loop.py and run python agent_loop.py. Standard library only."
+  expected_output: |
+    no_results evidence_found 3
+    call limit, timeout, invalid input and tool results: checked
+  purpose_vi: "So sánh workflow cố định và chính sách thử lại theo kịch bản; chỉ báo có bằng chứng sau khi kiểm tra kiểu và nội dung kết quả công cụ."
+  purpose_en: "Compare a fixed workflow with a scripted fallback; claim evidence only after validating tool-result type and content."
+  edge_case_vi: "search phải trả list gồm các ID chuỗi không rỗng; list rỗng là không có kết quả. read_document phải trả chuỗi không chỉ có khoảng trắng. Sai hợp đồng dừng invalid_tool_result, không đọc ký tự đầu của một chuỗi search."
+  edge_case_en: "search must return a list of nonblank string IDs; an empty list means no results. read_document must return nonblank text. Contract violations stop with invalid_tool_result; a search string is never treated as an ID list."
+  explanation_vi: "plan là dự định; completed chỉ ghi lời gọi có kết quả hợp lệ, chưa bảo đảm hoàn thành nhiệm vụ. Mỗi lần gọi thực tế ghi vào trace và tính vào ngân sách. Không thực hiện lời gọi lặp; không diễn giải nguồn thành lệnh. Trace chứa dữ liệu giả, không dùng để log dữ liệu riêng tư trong production. Timeout chỉ là ngoại lệ giả lập, không ngắt API đang treo."
+  explanation_en: "plan records intent; completed records calls with valid observations, not guaranteed task success. Every actual attempt enters the trace and consumes budget. Repeated calls are blocked and source text is not executed. Traces contain synthetic data, not a production private-data logging policy. Timeout is a simulated exception, not cancellation of a hanging API."
+- language: python
+  title: Tự kiểm tra controller / Check your controller
+  status: runnable
+  code: |
+    from agent_loop import run
+
+
+    def check_controller(candidate):
+        def case(query, search_result, read_result, expected, calls, **options):
+            observed = []
+
+            def fake_search(value):
+                observed.append(('search', value))
+                return search_result
+
+            def fake_read(value):
+                observed.append(('read_document', value))
+                return read_result
+
+            result = candidate(query, tools={'search': fake_search, 'read_document': fake_read}, **options)
+            assert result['stop'] == expected, (expected, result['stop'])
+            assert len(observed) == calls == len(result['trace'])
+            assert [(event['tool'], event['input']) for event in result['trace']] == observed
+            if expected == 'evidence_found':
+                assert result['evidence'] == read_result
+                assert result['completed'][-1] == 'read_document'
+            else:
+                assert result['evidence'] is None
+                assert 'read_document' not in result['completed']
+            return result
+
+        case('học', ['guide'], 'known evidence', 'evidence_found', 2)
+        case('học', ['guide'], 'known evidence', 'call_limit', 1, max_calls=1)
+        case('', ['guide'], 'known evidence', 'invalid_input', 0)
+        case('missing', [], 'unused', 'no_results', 1, adaptive=False)
+        case('missing', [], 'unused', 'repeated_call', 2)
+        for malformed in ('guide', {'id': 'guide'}, None, [3], ['guide', ' ']):
+            result = case('học', malformed, 'unused', 'invalid_tool_result', 1)
+            assert result['completed'] == []
+        for malformed in ('', '  ', None, 7, ['pretend evidence']):
+            case('học', ['guide'], malformed, 'invalid_tool_result', 2)
+        return True
+
+
+    if __name__ == '__main__':
+        assert check_controller(run)
+        print('controller acceptance: passed')
+  setup: "Save beside agent_loop.py as check_agent.py, then run python check_agent.py. Use both files in the same Colab runtime or local folder."
+  expected_output: "controller acceptance: passed"
+  purpose_vi: "Dùng công cụ giả ghi lại lời gọi thật để đối chiếu trace, ngân sách và bằng chứng; truyền hàm bạn sửa vào candidate."
+  purpose_en: "Use recording fake tools to compare actual calls, trace, budget and evidence; pass your edited function as candidate."
+  edge_case_vi: "Controller trả thành công mà không gọi tool phải không đạt; bỏ kiểm tra chuỗi search hoặc nội dung read cũng phải không đạt."
+  edge_case_en: "A success dictionary without tool calls must fail; skipping search-list or read-text validation must fail too."
+  explanation_vi: "Local: lưu check_agent.py cạnh agent_loop.py, chạy python check_agent.py. Colab: đặt %%writefile agent_loop.py ở dòng đầu ô chứa ví dụ 1 rồi chạy; đặt %%writefile check_agent.py ở dòng đầu ô chứa ví dụ 2 rồi chạy; ô mới chạy !python check_agent.py. Ô code thường không tự tạo tệp để import. Stdout đúng: controller acceptance: passed. Giữ nguyên checker khi sửa run; đây không phải chứng nhận agent production."
+  explanation_en: "Local: save check_agent.py beside agent_loop.py and run python check_agent.py. Colab: put %%writefile agent_loop.py first in the example 1 cell and run it; put %%writefile check_agent.py first in the example 2 cell and run it; run !python check_agent.py in a new cell. Ordinary cells do not create importable files. Expected stdout: controller acceptance: passed. Keep the checker unchanged while editing run; this is not production certification."
 resources:
 - title: Lab B · Colab
   url: https://colab.research.google.com/github/Hzyl/JourneyAIEngineer/blob/main/notebooks/lab-b-workflow-agent.ipynb
@@ -146,31 +260,22 @@ resources:
   read_en: Inspect traces, call limits and stop reasons; explain one failure and download the report.
 - language: en
   title: Building Effective Agents
-  url: https://www.anthropic.com/research/building-effective-agents
+  url: https://www.anthropic.com/engineering/building-effective-agents
   kind: official
   required: false
-  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.
-  purpose_en: Official reference to verify the lesson concept.
-  read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
-  read_en: Read the relevant section, run a small example, and record one verified insight.
+  purpose_vi: Phân biệt workflow theo đường định trước với agent chọn bước động bằng LLM.
+  purpose_en: Distinguish predefined workflows from agents whose LLM dynamically chooses steps.
+  read_vi: Đọc What are agents? và Agents; tìm vai trò phản hồi môi trường và giới hạn số vòng. Đối chiếu với fallback viết sẵn trong ví dụ, không coi đó là agent LLM đã chạy.
+  read_en: Read What are agents? and Agents for environment feedback and iteration limits. Contrast these with the scripted fallback; the example does not run an LLM agent.
 - language: en
-  title: LangGraph Documentation
-  url: https://langchain-ai.github.io/langgraph/
+  title: Thinking in LangGraph
+  url: https://docs.langchain.com/oss/javascript/langgraph/thinking-in-langgraph
   kind: official
   required: false
-  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.
-  purpose_en: Official reference to verify the lesson concept.
-  read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
-  read_en: Read the relevant section, run a small example, and record one verified insight.
-- language: en
-  title: OpenAI Cookbook
-  url: https://cookbook.openai.com/
-  kind: official
-  required: false
-  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.
-  purpose_en: Official reference to verify the lesson concept.
-  read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
-  read_en: Read the relevant section, run a small example, and record one verified insight.
+  purpose_vi: Chia luồng thành bước có trạng thái và xử lý lỗi thay vì chỉ viết danh sách dự định.
+  purpose_en: Decompose a workflow into stateful steps and error handling rather than an intention list.
+  read_vi: Đọc phần chia các bước, thiết kế state và xử lý lỗi. Vẽ ánh xạ plan/trace/completed của ví dụ sang state; đây là tài liệu JavaScript/TypeScript, không có LangGraph chạy trong bài.
+  read_en: Read the sections on workflow steps, state design and error handling. Map plan/trace/completed to state; the source uses JavaScript/TypeScript and this lesson does not run LangGraph.
 - language: en
   title: "UC Berkeley: LLM Agents (Fall 2024)"
   url: https://rdi.berkeley.edu/llm-agents/f24
@@ -198,81 +303,70 @@ review_item_ids:
 - phase-15-genai-agents-ai-agents-1-interview
 estimated_minutes: 60
 completion_checklist:
-- Chia nhiệm vụ thành các bước và nêu điều kiện chuyển sang bước tiếp.
-- Thử tình huống không đạt mục tiêu và xác nhận điều kiện dừng.
-- Lưu kết quả và giải thích được một giới hạn mà không nhìn lời giải.
+- Đối chiếu plan với trace và completed cho hai chính sách.
+- Chạy check_agent.py; xác nhận quan sát sai không được báo có bằng chứng.
+- Giải thích ngân sách lời gọi, chặn lặp và giới hạn timeout giả lập.
 completion_criteria:
-- 'Bài làm đáp ứng nhiệm vụ: Chia nhiệm vụ thành các bước và nêu điều kiện chuyển sang bước tiếp.'
-- Có kết quả đối chiếu với tiêu chí hoặc dự đoán đã ghi trước.
-- Thử tình huống không đạt mục tiêu và xác nhận điều kiện dừng.
+- Hai chương trình chạy và khớp stdout đã nêu.
+- Bộ kiểm tra chấp nhận controller đúng và bác bỏ thành công giả hoặc bỏ kiểm tra quan sát.
+- Sai kiểu search/read, hết ngân sách, lời gọi lặp và lỗi công cụ có lý do dừng cụ thể.
 common_mistakes:
-- Cho agent tiếp tục vô hạn hoặc bỏ qua yêu cầu người duyệt.
-- Kết luận từ một kết quả thuận lợi mà chưa kiểm tra trường hợp khác.
-- Chép lời giải nhưng không giải thích được quyết định trong bài làm của mình.
+- Coi chuỗi search là list rồi lấy ký tự đầu làm ID tài liệu.
+- Báo evidence_found khi read_document trả rỗng hoặc sai kiểu.
+- Nhầm plan với completed hoặc nhầm giới hạn số lần gọi với khả năng ngắt công cụ đang treo.
 next_lessons:
 - phase-15-genai-agents-ai-agents-2
 - phase-15-genai-agents-ai-agents-3
-review_question_vi: Nội dung cốt lõi của “Lập kế hoạch và chia nhỏ nhiệm vụ” là gì?
-review_question_en: Define planning and task decomposition in your own words. What are the input, transformation
-  and output?
-review_answer_vi: Kế hoạch chia mục tiêu thành các bước có đầu vào, kết quả và điều kiện kiểm tra. Agent cần điều
-  chỉnh khi quan sát mới bác bỏ giả định, thay vì tiếp tục kế hoạch cũ một cách máy móc.
-review_answer_en: A strong answer names the input, transformation, output and the context where planning and task
-  decomposition is used. Relate it specifically to planning and task decomposition in lesson phase-15-genai-agents-ai-agents-1.
+review_question_vi: Vì sao kế hoạch có bước đọc tài liệu chưa đủ để báo có bằng chứng?
+review_question_en: Why is a planned document-reading step insufficient to claim evidence?
+review_answer_vi: plan chỉ ghi dự định. Phải thực sự gọi search, kiểm tra list ID rồi gọi read_document và kiểm tra chuỗi không rỗng; trace ghi lần thử, completed ghi quan sát hợp lệ. Chỉ sau đó mới báo evidence_found.
+review_answer_en: plan records intent. Actually call search, validate its ID list, call read_document and validate nonblank text; trace records attempts and completed records valid observations. Only then report evidence_found.
 review_cards:
 - id: phase-15-genai-agents-ai-agents-1-recall
   type: recall
-  question_vi: Nội dung cốt lõi của “Lập kế hoạch và chia nhỏ nhiệm vụ” là gì?
-  question_en: Define planning and task decomposition in your own words. What are the input, transformation and
-    output?
-  answer_vi: Kế hoạch chia mục tiêu thành các bước có đầu vào, kết quả và điều kiện kiểm tra. Agent cần điều chỉnh
-    khi quan sát mới bác bỏ giả định, thay vì tiếp tục kế hoạch cũ một cách máy móc.
-  answer_en: A strong answer names the input, transformation, output and the context where planning and task decomposition
-    is used.
-  hint_vi: Nêu ý chính, sau đó minh họa bằng tình huống cụ thể.
-  hint_en: Start with a small example you can calculate by hand.
+  question_vi: Phân biệt plan, trace và completed trong ví dụ.
+  question_en: Distinguish plan, trace and completed in the example.
+  answer_vi: plan là danh sách dự định; trace lưu lời gọi đã thử kể cả lỗi; completed chỉ thêm công cụ sau quan sát hợp lệ. completed có search không có nghĩa đã tìm được nguồn hoặc đọc tài liệu.
+  answer_en: plan lists intentions; trace records attempted calls including errors; completed adds a tool only after a valid observation. A completed search does not imply that a source was found or read.
+  hint_vi: Thử search trả list rỗng và xem ba trường.
+  hint_en: Return an empty search list and inspect the three fields.
 - id: phase-15-genai-agents-ai-agents-1-application
   type: application
-  question_vi: Chia nhiệm vụ thành các bước và nêu điều kiện chuyển sang bước tiếp.
-  question_en: Write a small code example or design that applies planning and task decomposition to an AI engineering
-    problem.
-  answer_vi: 'Với nhiệm vụ “Chia nhiệm vụ thành các bước và nêu điều kiện chuyển sang bước tiếp”, cần lưu: kế hoạch
-    hoặc chuỗi hành động có trạng thái và giới hạn. Thử tình huống không đạt mục tiêu và xác nhận điều kiện dừng.'
-  answer_en: The planning and task decomposition example should have an explicit input, expected output and a way
-    to run or verify it (phase-15-genai-agents-ai-agents-1).
-  hint_vi: Bắt đầu từ nhiệm vụ thực hành của bài.
-  hint_en: Start from the lesson code example and change one assumption.
+  question_vi: Cùng truy vấn cách ôn, hai chính sách đi qua bước nào và dừng ra sao?
+  question_en: For the query cách ôn, which steps do the two policies take and where do they stop?
+  answer_vi: Workflow cố định search một lần rồi dừng no_results. Chính sách mô phỏng search cách ôn, search học rồi read_document guide; ba lời gọi trả evidence_found khi đọc được văn bản hợp lệ.
+  answer_en: The fixed workflow searches once and stops with no_results. The scripted policy searches cách ôn, searches học and reads guide; three calls yield evidence_found only after valid text is read.
+  hint_vi: So trace và số lời gọi, không chỉ so tên trạng thái cuối.
+  hint_en: Compare traces and actual call counts, not only final status names.
 - id: phase-15-genai-agents-ai-agents-1-debug
   type: debug
-  question_vi: Khi làm bài “Lập kế hoạch và chia nhỏ nhiệm vụ”, bạn cần tránh lỗi nào và kiểm tra lại ra sao?
-  question_en: If planning and task decomposition produces a wrong result or a metric drops, what would you debug
-    first?
-  answer_vi: 'Trong bài “Lập kế hoạch và chia nhỏ nhiệm vụ”, lỗi cần tránh là: cho agent tiếp tục vô hạn hoặc bỏ
-    qua yêu cầu người duyệt. Thử tình huống không đạt mục tiêu và xác nhận điều kiện dừng. Dùng ví dụ nhỏ để tìm
-    bước đầu tiên có kết quả khác dự kiến.'
-  answer_en: For planning and task decomposition, check inputs/shapes, preprocessing and the baseline first; then
-    isolate the failure with a small test and error analysis (phase-15-genai-agents-ai-agents-1).
-  hint_vi: Tìm bước đầu tiên xuất hiện khác biệt.
-  hint_en: Do not start by changing the model or adding complexity.
+  question_vi: search trả chuỗi guide hoặc read_document trả khoảng trắng thì xử lý thế nào?
+  question_en: What happens when search returns the string guide or read_document returns whitespace?
+  answer_vi: Cả hai vi phạm hợp đồng và phải dừng invalid_tool_result với evidence None. Chuỗi search không được lấy ký tự đầu làm ID; kết quả đọc rỗng không được báo thành công. Lời gọi sai vẫn nằm trong trace và tính vào ngân sách.
+  answer_en: Both violate the contract and stop with invalid_tool_result and evidence None. Never use the first character of a search string as an ID or claim success from blank reading results. The failed attempt remains in the trace and counts against the budget.
+  hint_vi: Kiểm tra kiểu và nội dung quan sát trước khi đổi action.
+  hint_en: Validate observation type and content before changing action.
 - id: phase-15-genai-agents-ai-agents-1-interview
   type: interview
-  question_vi: Bạn dùng kết quả nào từ bài “Lập kế hoạch và chia nhỏ nhiệm vụ” để giải thích cách làm và giới hạn?
-  question_en: In an interview, how would you explain a trade-off and one edge case of planning and task decomposition?
-  answer_vi: Bắt đầu từ nhiệm vụ “Chia nhiệm vụ thành các bước và nêu điều kiện chuyển sang bước tiếp”. Trình bày
-    kết quả đã lưu, cách đối chiếu và một điều kiện có thể khiến kết luận thay đổi; không chỉ đọc lại định nghĩa.
-  answer_en: The answer about planning and task decomposition should cover assumptions, metrics/cost, limitations
-    and how to reduce production risk (phase-15-genai-agents-ai-agents-1).
-  hint_vi: Dùng quyết định thật trong bài làm, tránh chỉ đọc định nghĩa.
-  hint_en: Relate it to latency, quality, cost or observability where relevant.
+  question_vi: Giới hạn lời gọi và test này bảo đảm gì, chưa bảo đảm gì?
+  question_en: What do the call budget and these tests establish, and what do they not?
+  answer_vi: Mô phỏng có tối đa năm lần gọi, chặn cặp lời gọi lặp và không thành công với quan sát sai hợp đồng. Chúng không ngắt công cụ đang treo, không đo quyết định của LLM thật, không chứng nhận production hoặc chống mọi injection.
+  answer_en: The simulation makes at most five calls, blocks repeated call pairs and rejects malformed observations instead of claiming success. It does not cancel a hanging tool, measure real LLM decisions, certify production behavior or prove resistance to all injection.
+  hint_vi: Phân biệt số lần gọi với thời gian chờ và quyết định viết sẵn với quyết định LLM.
+  hint_en: Separate call count from waiting time and scripted choices from LLM decisions.
 ---
 # Lập kế hoạch và chia nhỏ nhiệm vụ / Planning and task decomposition
 
-Kế hoạch chia mục tiêu thành các bước có đầu vào, kết quả và điều kiện kiểm tra. Agent cần điều chỉnh khi quan sát mới bác bỏ giả định, thay vì tiếp tục kế hoạch cũ một cách máy móc.
+Kế hoạch ghi bước dự kiến; trạng thái thực thi phải dựa vào quan sát hợp lệ. Ví dụ chỉ dùng hai công cụ đọc và chính sách thử lại viết sẵn, không gọi LLM hay framework.
 
-Danh sách bước là dự định; trạng thái thực thi cho biết bước nào đã có bằng chứng hoàn thành. Chia nhiệm vụ hữu ích khi làm rõ phụ thuộc: phải có dữ liệu trước khi phân tích, và phải đánh giá kết quả trước khi báo xong.
+search phải trả list ID chuỗi không rỗng; list rỗng là không có kết quả, còn chuỗi guide là sai hợp đồng. read_document phải trả văn bản không chỉ có khoảng trắng. Sai kết quả dừng invalid_tool_result trước khi báo có bằng chứng.
 
-Ví dụ, agent đọc tài liệu, tìm điều khoản rồi soạn câu trả lời; nếu không đọc được nguồn thì cần sửa cách lấy dữ liệu hoặc báo thiếu. Tự kiểm tra: kế hoạch viết rất chi tiết có bảo đảm thành công không? Không; phải kiểm tra đầu ra từng bước, cập nhật khi giả định sai và tránh thực hiện bước sau bằng dữ liệu tưởng tượng.
+plan ghi dự định, trace ghi lời gọi đã thử và completed ghi quan sát hợp lệ. Ngân sách tính cả lỗi công cụ; cặp công cụ/tham số lặp bị chặn. TimeoutError chỉ mô phỏng lỗi, không ngắt API đang treo.
 
 ## Thực hành
 
-Chạy workflow cố định và bộ điều khiển mô phỏng trên cùng nhiệm vụ chỉ đọc. Bổ sung case không có nguồn, công cụ lỗi và lời gọi lặp; lưu trace cùng lý do dừng cho từng case.
+Lưu hai ví dụ thành agent_loop.py và check_agent.py trong cùng thư mục hoặc runtime Colab. Chạy lần lượt, đối chiếu stdout, rồi sửa run trong khi giữ nguyên check_controller. Thành công giả hoặc bỏ kiểm tra kết quả phải bị phát hiện; không dùng kết quả này để khẳng định chất lượng agent LLM.
+
+## Practice
+
+Save the two examples as agent_loop.py and check_agent.py in the same folder or Colab runtime. Run them in order, compare stdout, then edit run while keeping check_controller unchanged. Fake success and unchecked observations must fail; this simulation does not establish real LLM-agent quality.

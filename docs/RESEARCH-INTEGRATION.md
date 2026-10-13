@@ -78,3 +78,81 @@ Model tham chiếu: [multilingual MiniLM](https://huggingface.co/sentence-transf
 - HTTP/Supabase trong kiểm thử giao diện được giả lập; chưa nghiệm thu dịch vụ
   thật, cài model trên Colab hoặc triển khai web. Các kết quả trên được ghi nhận
   trước khi commit/push và không xác nhận trạng thái triển khai sau đó.
+
+## Rà lại hai bài P0 — 13/10/2026
+
+Mốc đối chiếu là commit `3d17d0c`, sau đợt tích hợp trước. Đã đọc hồ sơ nghiên cứu
+đến mục 13 (N8–N13), hai bài nguồn, chuẩn biên tập và tài liệu bàn giao trong repo.
+Hai ví dụ P0 đã đúng chủ đề; yêu cầu “thay ví dụ chung” trong hồ sơ xuất phát từ
+snapshot cũ. Lần này mở rộng ví dụ hiện có ở nơi còn thiếu kiểm tra, làm khớp
+câu hỏi/đáp án ôn tập Việt–Anh và chỉ rõ mục cần đọc ở nguồn chính thức.
+
+Hai bài không có bản curated ghi đè. Nguồn biên tập vẫn là
+`phase-12-genai-rag-rag-foundations-1.md` và
+`phase-15-genai-agents-ai-agents-1.md` trong `content/lessons/`.
+Giữ danh mục tài nguyên chung; không tạo bản sao của nguồn đã có.
+
+### Căn cứ nguồn và giới hạn
+
+- [Docling — Chunking](https://docling-project.github.io/docling/concepts/chunking/):
+  đọc Introduction và phần chunk có metadata; tài liệu này giúp phân biệt bộ
+  tách văn bản đơn giản trong bài với xử lý tài liệu có cấu trúc. Chưa chạy Docling,
+  OCR hoặc chuyển đổi PDF. Không coi chunking là cách sửa lỗi đọc tài liệu.
+- [Anthropic — Building effective agents](https://www.anthropic.com/engineering/building-effective-agents):
+  đọc What are agents? và Agents để đối chiếu workflow, quan sát từ công cụ và
+  điều kiện dừng. Bài nguồn có từ năm 2024; dùng phân biệt khái niệm, không sao
+  chép hướng dẫn API cũ.
+- [Thinking in LangGraph](https://docs.langchain.com/oss/javascript/langgraph/thinking-in-langgraph):
+  dùng cách phân biệt bước xử lý và trạng thái làm tài liệu đọc thêm. Ví dụ của
+  Journey dùng Python chuẩn, không phải triển khai LangGraph hay kiểm thử SDK.
+
+Các trang trên đã đọc lại trong lượt này. TikTok chỉ gợi ý chủ đề; không bổ sung
+kết luận về nội dung video chưa xem hết. Không cài thư viện, tải model hay gọi API.
+
+### Đề xuất lô kế tiếp sau đối chiếu
+
+Ưu tiên bài `phase-12-genai-rag-rag-foundations-2` (Chunking, metadata và context).
+Phần giải thích đã nói về ranh giới đoạn, ngoại lệ và ngân sách ngữ cảnh, nhưng
+ví dụ hiện tại là `grounded_answer(answer, evidence)`: chỉ nối câu trả lời với
+chuỗi nguồn. Khoảng trống cụ thể là chưa cho người học chạy và kiểm tra cách chia
+đoạn, không phải thiếu toàn bộ chủ đề RAG.
+
+Lô tiếp theo nên dùng văn bản giả có tiêu đề, điều kiện và ngoại lệ; so tách theo
+dòng với nhóm theo cấu trúc, giữ ID/phiên bản/vị trí nguồn và đo phần bằng chứng
+bị tách mất. Test cần bắt lỗi bỏ metadata và tách điều kiện khỏi ngoại lệ; không
+gọi số từ là số token. Có thể dùng N8 để đọc sâu, chưa cần thêm dependency.
+
+Các bài embedding, reranking và đánh giá agent đã có ví dụ riêng sau đợt trước.
+N9/N10/N13 là hướng đào sâu tùy nhu cầu, không đủ căn cứ kết luận những bài này
+còn thiếu. Chưa mở rộng chúng trong đợt hai P0.
+
+### Kiểm chứng lượt này
+
+- Hai bài có ví dụ chính và đoạn tự kiểm tra chạy được; hướng dẫn Việt–Anh nêu
+  tên tệp, lệnh, stdout và cách dùng `%%writefile` trên Colab. Các bài chỉ chạy
+  Python chuẩn với dữ liệu giả; hướng dẫn Colab không phải bằng chứng đã chạy
+  runtime Google.
+- `npm test` đạt 290 kiểm thử Python và 247 kiểm thử Vitest; validator nội dung,
+  fingerprint, lint, TypeScript và production build đều qua. 39 kiểm thử P0
+  nằm trong 290 kiểm thử Python, không phải số bổ sung. Chúng đối chiếu stdout,
+  dữ liệu biên và chứng minh checker bác bỏ sai số dòng, đầu ra rỗng, thành công
+  giả hoặc kết quả công cụ chưa kiểm tra.
+- 16 kiểm tra Playwright đạt trong 34,5 giây trên production build local:
+  hai bài × Việt/Anh × chiều rộng 320/1440 px × giao diện sáng/tối.
+  Supabase được giả lập với người dùng tổng hợp, không kết nối production.
+  Codex chính đã xem ảnh đại diện phần kiến thức và thực hành. Đây là trình
+  duyệt local với kích thước mô phỏng, không phải thử trên thiết bị thật.
+- Đối chiếu xác nhận 208 ID và quan hệ catalog giữ nguyên; 206 bài không thuộc
+  phạm vi không thay đổi. Không sửa hoặc xóa cơ sở dữ liệu học của người dùng.
+- Review phát hiện checklist RAG cũ yêu cầu lần từ câu trả lời sinh ra về nguồn,
+  trong khi ví dụ chỉ nhập tài liệu. Đã sửa hai chỗ thành lần từ từng đoạn về
+  dòng và phiên bản nguồn. Sau chỉnh sửa câu chữ này, đã sinh lại catalog;
+  validator, fingerprint, đối chiếu ID/quan hệ và `git diff --check` đều đạt.
+  Log tổng kiểm thử ở trên là trước chỉnh sửa nhỏ đó.
+- Cảnh báo Fast Refresh và kích thước bundle vẫn còn. 32 mục từ audit thụ động
+  cần con người xem xét, không phải 32 lỗ hổng đã được chứng minh.
+
+Lượt P0 này chưa chạy Colab/model, Docling, PDF/OCR hoặc LLM thật; chưa kiểm tra
+dịch vụ production, commit/push hay xuất bản thay đổi. TikTok vẫn chỉ là nguồn
+gợi ý. Không suy chất lượng mô hình hoặc khả năng chống injection từ mô phỏng.
+Đề xuất lô kế tiếp ở trên giữ nguyên, chưa thuộc phần triển khai lần này.
