@@ -1,0 +1,114 @@
+{
+  "stages": [
+    {
+      "id": "start", "number": "00", "phase_ids": ["phase-00-onboarding"],
+      "title_vi": "Bắt đầu và chọn hướng học", "title_en": "Start and choose your direction",
+      "topics_vi": "Môi trường Python, tự đánh giá đầu vào và cách ghi lại việc đã học.",
+      "topics_en": "Python setup, entry assessment and a record of what you have learned.",
+      "before_vi": "Không cần biết lập trình trước. Nếu đã có kinh nghiệm, dùng bài tự đánh giá để chọn điểm bắt đầu.",
+      "before_en": "No programming experience required. Use the entry assessment to find your starting point if you already have experience.",
+      "checkpoint_vi": "Chạy được tệp Python đầu tiên và ghi lại kết quả cùng kế hoạch học phù hợp.",
+      "checkpoint_en": "Run your first Python file and record its output alongside a suitable study plan."
+    },
+    {
+      "id": "python", "number": "01", "phase_ids": ["phase-01-python-software"],
+      "title_vi": "Python và kỹ thuật phần mềm", "title_en": "Python and software foundations",
+      "topics_vi": "Hàm, cấu trúc dữ liệu, xử lý tệp, kiểm thử, Git, HTTP/JSON và SQL.",
+      "topics_en": "Functions, data structures, files, testing, Git, HTTP/JSON and SQL.",
+      "before_vi": "Biết chạy Python và chọn đúng môi trường làm việc.",
+      "before_en": "Be able to run Python in the intended environment.",
+      "checkpoint_vi": "Viết công cụ xử lý CSV/JSON có kiểm thử đầu vào lỗi và README hướng dẫn chạy.",
+      "checkpoint_en": "Build a CSV/JSON utility with invalid-input tests and a README explaining how to run it."
+    },
+    {
+      "id": "math", "number": "02", "phase_ids": ["phase-02-math-ml"],
+      "title_vi": "Toán cho AI", "title_en": "Mathematics for AI",
+      "topics_vi": "Vector, ma trận, xác suất, thống kê, đạo hàm và tối ưu hóa.",
+      "topics_en": "Vectors, matrices, probability, statistics, derivatives and optimization.",
+      "before_vi": "Nắm Python cơ bản; có thể học toán song song với các ví dụ xử lý dữ liệu.",
+      "before_en": "Know basic Python; learn the mathematics alongside data examples.",
+      "checkpoint_vi": "Tính và giải thích được cosine similarity, gradient và một bước cập nhật tham số bằng ví dụ nhỏ.",
+      "checkpoint_en": "Calculate and explain cosine similarity, a gradient and one parameter update using small examples."
+    },
+    {
+      "id": "ml", "number": "03", "phase_ids": ["phase-03-classical-ml"],
+      "title_vi": "Machine Learning", "title_en": "Machine learning",
+      "topics_vi": "Chia dữ liệu, mô hình làm mốc, tiền xử lý, metric và phân tích lỗi.",
+      "topics_en": "Data splits, baselines, preprocessing, metrics and error analysis.",
+      "before_vi": "Viết được Python xử lý dữ liệu và hiểu các khái niệm toán dùng trong bài.",
+      "before_en": "Be comfortable processing data in Python and with the mathematics used in the lesson.",
+      "checkpoint_vi": "Làm project dữ liệu bảng, so sánh với baseline và giải thích lỗi trên tập đánh giá tách biệt.",
+      "checkpoint_en": "Build a tabular-data project, compare against a baseline and explain errors on a held-out evaluation set."
+    },
+    {
+      "id": "dl", "number": "04", "phase_ids": ["phase-04-deep-learning"],
+      "title_vi": "Deep Learning với PyTorch", "title_en": "Deep learning with PyTorch",
+      "topics_vi": "Tensor, autograd, vòng lặp huấn luyện, mô hình ảnh/văn bản và gỡ lỗi.",
+      "topics_en": "Tensors, autograd, training loops, image/text models and debugging.",
+      "before_vi": "Hiểu chia dữ liệu, loss, metric, gradient và overfitting. Chọn nhánh này khi muốn huấn luyện mô hình.",
+      "before_en": "Understand data splits, loss, metrics, gradients and overfitting. Choose this branch when you want to train models.",
+      "checkpoint_vi": "Huấn luyện mô hình nhỏ, lưu checkpoint, tái chạy thí nghiệm và so sánh với baseline.",
+      "checkpoint_en": "Train a small model, save a checkpoint, reproduce the experiment and compare it with a baseline."
+    },
+    {
+      "id": "engineering", "number": "05", "phase_ids": ["phase-05-mlops", "phase-08-genai-software"],
+      "title_vi": "Backend và MLOps", "title_en": "Backend and MLOps",
+      "topics_vi": "API, Docker, CI, quản lý cấu hình, phiên bản mô hình và thí nghiệm.",
+      "topics_en": "APIs, Docker, CI, configuration, model versions and experiments.",
+      "before_vi": "Biết Python, HTTP/JSON và kiểm thử. Dịch vụ dự đoán cần thêm mô hình đã được đánh giá.",
+      "before_en": "Know Python, HTTP/JSON and testing. A prediction service also needs an evaluated model.",
+      "checkpoint_vi": "Đưa một chức năng dự đoán hoặc AI lên API có kiểm tra đầu vào, test và hướng dẫn chạy lại.",
+      "checkpoint_en": "Expose a prediction or AI feature through an API with input validation, tests and reproducible setup."
+    },
+    {
+      "id": "llm", "number": "06", "phase_ids": ["phase-06-llm-rag", "phase-09-genai-ml-fundamentals", "phase-10-genai-transformers", "phase-11-llm-application"],
+      "title_vi": "LLM và mô hình nền tảng", "title_en": "LLMs and foundation models",
+      "topics_vi": "Token, embedding, Transformer, prompt, đầu ra có cấu trúc, chi phí và độ trễ.",
+      "topics_en": "Tokens, embeddings, transformers, prompts, structured output, cost and latency.",
+      "before_vi": "Hướng ứng dụng cần Python, HTTP/JSON và nền tảng ML phù hợp; không bắt buộc tự huấn luyện LLM trước.",
+      "before_en": "The application path needs Python, HTTP/JSON and relevant ML foundations; training your own LLM is not required first.",
+      "checkpoint_vi": "Xây chức năng LLM trả dữ liệu đúng schema, xử lý lỗi và ghi lại chi phí cùng giới hạn của ví dụ.",
+      "checkpoint_en": "Build an LLM feature with schema-valid output, error handling and a record of costs and limitations."
+    },
+    {
+      "id": "rag", "number": "07", "phase_ids": ["phase-12-genai-rag", "phase-13-genai-advanced-rag"],
+      "title_vi": "RAG và tìm kiếm", "title_en": "RAG and search",
+      "topics_vi": "Nhập tài liệu, chia đoạn, tìm kiếm vector/hybrid, reranking và trích nguồn.",
+      "topics_en": "Document ingestion, chunking, vector/hybrid search, reranking and citations.",
+      "before_vi": "Hiểu embedding và cách gọi LLM; ôn vector, dot product và cosine khi cần. Có thể làm ví dụ retrieval trước khi dựng API.",
+      "before_en": "Understand embeddings and LLM calls; revisit vectors, dot products and cosine as needed. Retrieval examples can precede an API.",
+      "checkpoint_vi": "Làm trợ lý tài liệu tiếng Việt có trích nguồn, từ chối khi thiếu bằng chứng và bộ câu hỏi để đo lỗi.",
+      "checkpoint_en": "Build a Vietnamese document assistant with citations, abstention and an evaluation question set."
+    },
+    {
+      "id": "agents", "number": "08", "phase_ids": ["phase-14-genai-tool-calling", "phase-15-genai-agents", "phase-16-genai-mcp"],
+      "title_vi": "Công cụ và agent AI", "title_en": "Tools and AI agents",
+      "topics_vi": "Tool calling, workflow, điều kiện dừng, giới hạn quyền và MCP khi cần.",
+      "topics_en": "Tool calling, workflows, stop conditions, permission boundaries and MCP when needed.",
+      "before_vi": "Có tác vụ rõ ràng và cách đánh giá kết quả. Bắt đầu với workflow hoặc một agent; nhiều agent là lựa chọn theo nhu cầu.",
+      "before_en": "Have a clear task and a way to evaluate outcomes. Start with a workflow or one agent; multiple agents are optional.",
+      "checkpoint_vi": "Chạy tác vụ qua công cụ chỉ đọc, kiểm tra lỗi, giới hạn số bước/thời gian và đối chiếu kết quả thực tế.",
+      "checkpoint_en": "Run a task with read-only tools, test failures, bound steps/time and verify the actual outcome."
+    },
+    {
+      "id": "production", "number": "09", "phase_ids": ["phase-17-genai-evaluation", "phase-18-genai-observability", "phase-19-genai-production", "phase-22-genai-system-design"],
+      "title_vi": "Đánh giá và vận hành", "title_en": "Evaluation and production",
+      "topics_vi": "Bộ đánh giá, log/trace, độ trễ, chi phí, an toàn, triển khai và rollback.",
+      "topics_en": "Evaluation sets, logs/traces, latency, cost, safety, deployment and rollback.",
+      "before_vi": "Đánh giá từ những ví dụ đầu, trước khi thêm agent; sau đó mở rộng theo rủi ro của ứng dụng. LLM-as-a-judge chỉ là một cách chấm.",
+      "before_en": "Evaluate early, before adding agents, then expand coverage with application risk. LLM-as-a-judge is only one grading method.",
+      "checkpoint_vi": "Có báo cáo đánh giá, tình huống lỗi, log vận hành và cách phục hồi khi một bản cập nhật làm hệ thống kém đi.",
+      "checkpoint_en": "Produce an evaluation report, failure cases, operational logs and a recovery plan for regressions."
+    },
+    {
+      "id": "portfolio", "number": "10", "phase_ids": ["phase-07-capstone-career"],
+      "title_vi": "Đồ án, portfolio và ứng tuyển", "title_en": "Capstone, portfolio and applications",
+      "topics_vi": "Bài toán thực tế, demo, README, kiến trúc, kết quả đánh giá và câu chuyện phỏng vấn.",
+      "topics_en": "A real problem, demo, README, architecture, evaluation results and interview stories.",
+      "before_vi": "Tích lũy bài làm từ đầu; chọn dự án phù hợp với hướng ứng tuyển và hoàn thiện từng dự án.",
+      "before_en": "Collect evidence from the start; choose projects relevant to your intended role and finish them carefully.",
+      "checkpoint_vi": "Người khác chạy lại được dự án; bạn giải thích được lựa chọn kỹ thuật, kết quả, lỗi và giới hạn. Dùng portfolio để xin góp ý và chuẩn bị ứng tuyển.",
+      "checkpoint_en": "Others can reproduce the project; you can explain decisions, results, failures and limits. Seek feedback and prepare applications with this portfolio."
+    }
+  ]
+}

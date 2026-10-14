@@ -21,12 +21,20 @@ for (const language of ['vi', 'en'] as const) {
     await application.click()
     await page.reload()
     await expect(application).toHaveAttribute('aria-pressed', 'true')
+    const firstStage = page.locator('.roadmap-stage-card').first()
+    await firstStage.locator('summary').click()
+    await expect(firstStage.locator('details')).toHaveAttribute('open', '')
+    await expect(firstStage.locator('dd').last()).toContainText(vi ? 'Python đầu tiên' : 'first Python file')
     for (const width of [1440, 820, 390, 320]) {
       await page.setViewportSize({ width, height: 900 })
       for (const theme of ['light', 'dark'] as const) {
         await page.emulateMedia({ colorScheme: theme })
         await checkThemeContrast(page)
+        expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
+        await page.evaluate(() => window.scrollTo(0, 0))
         await page.screenshot({ path: `.build/public-entry-evidence/${language}-${theme}-${width}-roadmap.png` })
+        await firstStage.scrollIntoViewIfNeeded()
+        await page.screenshot({ path: `.build/public-entry-evidence/${language}-${theme}-${width}-roadmap-stages.png` })
       }
     }
     await page.getByRole('button', { name: vi ? 'Bắt đầu với bài học mẫu' : 'Start with a sample lesson' }).click()

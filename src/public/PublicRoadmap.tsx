@@ -3,6 +3,7 @@ import { LearningIllustration } from '../components/LearningIllustration'
 import { useState } from 'react'
 import curriculum from '../../content/curriculum.json'
 import routes from '../../content/learning_routes.json'
+import roadmapOverview from '../../content/roadmap_overview.json'
 
 type Props = { language: 'vi' | 'en'; standalone?: boolean; onStart: () => void }
 
@@ -17,6 +18,58 @@ export function PublicRoadmap({ language, standalone, onStart }: Props) {
   return <section className="public-roadmap" id="roadmap" aria-labelledby="route-title">
     <span className="eyebrow">{vi ? 'LỘ TRÌNH CỦA BẠN' : 'YOUR LEARNING PATH'}</span>
     <Heading id="route-title">{vi ? 'Chọn đích đến. Bắt đầu vừa sức.' : 'Choose a direction. Start at your level.'}</Heading>
+    <div className="roadmap-overview-hero">
+      <div className="roadmap-overview-copy">
+        <span className="eyebrow accent">{vi ? 'TỪ NỀN TẢNG ĐẾN PORTFOLIO' : 'FROM FOUNDATIONS TO PORTFOLIO'}</span>
+        <h3>{vi ? 'Từ kiến thức nền tảng đến dự án thực tế.' : 'From foundations to practical projects.'}</h3>
+        <p>{vi
+          ? 'Bản đồ giúp bạn hình dung thứ tự học. Mỗi chặng bên dưới nêu kiến thức cần có và bài thực hành để tự kiểm tra trước khi học tiếp.'
+          : 'The map shows the learning sequence. Each stage below lists prerequisites and a practical checkpoint to help you decide when to move on.'}</p>
+        <p className="roadmap-overview-note">{vi
+          ? 'Ảnh tóm tắt các phase lõi; danh sách bên dưới thêm bước bắt đầu và portfolio. Hoàn thành một mốc không đồng nghĩa đã thành thạo: hãy lưu code, output, test và ghi chú giới hạn.'
+          : 'The image summarizes the core phases; the list below adds onboarding and portfolio. A checkpoint is not mastery: save code, output, tests and limitations as evidence.'}</p>
+        <a href="#roadmap-paths">{vi ? 'Chọn hướng học phù hợp' : 'Choose your learning path'} ↓</a>
+      </div>
+      <figure className="roadmap-image-card">
+        <img src="/images/roadmap/ai-engineer-roadmap.jpg" width={1376} height={768}
+          alt={vi ? 'Bản đồ trực quan các chặng học AI Engineer' : 'Visual map of the AI Engineer learning stages'} />
+        <figcaption>{vi ? 'Bản đồ trực quan · Mở ảnh lớn để xem chi tiết' : 'Visual map · Open the large image for detail'}
+          <a href="/images/roadmap/ai-engineer-roadmap.jpg" target="_blank" rel="noreferrer">
+            {vi ? 'Mở ảnh' : 'Open image'} ↗
+          </a>
+        </figcaption>
+      </figure>
+    </div>
+    <section className="roadmap-stage-list" aria-labelledby="roadmap-stage-title">
+      <div className="roadmap-section-heading">
+        <span className="eyebrow">01 · {vi ? 'ĐƯỜNG HỌC CHÍNH' : 'THE LEARNING ARC'}</span>
+        <h3 id="roadmap-stage-title">{vi ? 'Học từ đâu tới đâu?' : 'Where do you start and where do you go?'}</h3>
+        <p>{vi ? 'Mở từng chặng để xem điều kiện bắt đầu và sản phẩm cần tạo.'
+          : 'Open each stage to see its starting point and the evidence you should create.'}</p>
+      </div>
+      <ol>
+        {roadmapOverview.stages.map((stage) => <li key={stage.id} className="roadmap-stage-card">
+          <div className="roadmap-stage-number">{stage.number}</div>
+          <div className="roadmap-stage-body">
+            <h4>{vi ? stage.title_vi : stage.title_en}</h4>
+            <p>{vi ? stage.topics_vi : stage.topics_en}</p>
+            <details>
+              <summary>{vi ? 'Xem điều kiện và mốc thực hành' : 'See prerequisites and checkpoint'}</summary>
+              <dl>
+                <dt>{vi ? 'Cần có trước' : 'Before you start'}</dt>
+                <dd>{vi ? stage.before_vi : stage.before_en}</dd>
+                <dt>{vi ? 'Mốc kiểm chứng' : 'Checkpoint'}</dt>
+                <dd>{vi ? stage.checkpoint_vi : stage.checkpoint_en}</dd>
+              </dl>
+            </details>
+          </div>
+        </li>)}
+      </ol>
+    </section>
+    <div className="roadmap-section-heading roadmap-route-heading">
+      <span className="eyebrow">02 · {vi ? 'CHỌN NHỊP HỌC' : 'CHOOSE YOUR PACE'}</span>
+      <h3 id="roadmap-paths">{vi ? 'Chọn hướng học phù hợp với điểm xuất phát.' : 'Choose a path that matches your starting point.'}</h3>
+    </div>
     <div className="route-choices" role="group" aria-label={vi ? 'Hướng học' : 'Learning direction'}>
       {routes.routes.map((item) => <button key={item.id} aria-pressed={selected === item.id}
         onClick={() => {
