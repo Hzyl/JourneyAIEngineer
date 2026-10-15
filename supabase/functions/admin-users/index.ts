@@ -23,7 +23,8 @@ Deno.serve(async (request) => {
       return error || !data.user ? null : { id: data.user.id }
     },
     async isAdmin(id: string) {
-      const scoped = createClient(url, publicKey, { ...options, global: { headers: { Authorization: `Bearer ${request.headers.get('Authorization') ?? ''}` } } })
+      const authorization = request.headers.get('Authorization') ?? ''
+      const scoped = createClient(url, publicKey, { ...options, global: { headers: { Authorization: authorization } } })
       const { data, error } = await scoped.rpc('is_current_user_admin')
       return !error && data === true && id.length > 0
     },
