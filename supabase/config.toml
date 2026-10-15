@@ -8,6 +8,9 @@ project_id = "journey-ai-engineer"
 [functions.delete-account]
 verify_jwt = false
 
+[functions.admin-users]
+verify_jwt = false
+
 [api]
 enabled = true
 # Port to use for the API URL.

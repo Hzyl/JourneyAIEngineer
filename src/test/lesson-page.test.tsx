@@ -51,6 +51,32 @@ test.each(['vi', 'en'] as const)('Colab practice opens the lesson notebook safel
     language === 'vi' ? 'Mở notebook Colab' : 'Open Colab notebook')
 })
 
+test.each(['vi', 'en'] as const)('every code example exposes its run guide in %s', async (language) => {
+  const examples = [
+    { language: 'python', title: 'First example', code: 'print(1)',
+      setup: 'Python 3.11+', expected_output: '1',
+      edge_case_vi: 'Kiểm tra đầu vào rỗng.', edge_case_en: 'Check empty input.',
+      explanation_vi: 'Ví dụ đầu.', explanation_en: 'First example.' },
+    { language: 'python', title: 'Outcome example', code: 'print("pass")',
+      setup: 'Paste into a separate Colab cell.', expected_output: '<report>pass</report>',
+      edge_case_vi: 'Thiếu báo cáo phải trượt.', edge_case_en: 'A missing report must fail.',
+      explanation_vi: 'Ví dụ thứ hai.', explanation_en: 'Second example.' },
+  ]
+  await render(language, { ...lessonFixture, code_examples: examples })
+  const cards = host.querySelectorAll('.code-example')
+  expect(cards).toHaveLength(2)
+  examples.forEach((example, index) => {
+    const guide = cards[index].querySelector('.code-example-guide')!
+    expect(guide).not.toBeNull()
+    expect([...guide.querySelectorAll('dd')].map(node => node.textContent)).toEqual([
+      example.setup, example.expected_output, example[`edge_case_${language}`],
+    ])
+    expect(guide.querySelector('dt')!.textContent).toBe(language === 'vi' ? 'Chuẩn bị' : 'Setup')
+    expect(guide.querySelector('report')).toBeNull()
+  })
+  expect(onProgress).not.toHaveBeenCalled()
+})
+
 test('ordinary resources do not promise a hosted notebook runtime', async () => {
   await render()
   expect(host.querySelector('.lesson-colab')).toBeNull()

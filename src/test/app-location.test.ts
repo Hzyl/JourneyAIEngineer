@@ -16,3 +16,9 @@ test('valid lesson IDs retain their identity and hosted routes exclude local too
   expect(appLocation('/roadmap/', false)).toEqual({ view: 'roadmap', lesson: null })
   expect(appLocation('/', true)).toEqual({ view: 'dashboard', lesson: null })
 })
+
+test('hosted admin route has a stable path for the backend authorization boundary', () => {
+  expect(appLocation('/admin', true)).toEqual({ view: 'admin', lesson: null })
+  expect(appLocation('/admin/users', true)).toEqual({ view: 'admin', lesson: null })
+  expect(appPath('admin', null)).toBe('/admin/users')
+})

@@ -6,15 +6,28 @@ import routes from '../../content/learning_routes.json'
 import roadmapOverview from '../../content/roadmap_overview.json'
 
 type Props = { language: 'vi' | 'en'; standalone?: boolean; onStart: () => void }
+type TrackFilter = 'all' | 'core' | 'specialization'
 
 export function PublicRoadmap({ language, standalone, onStart }: Props) {
   const [selected, setSelected] = useState(() => {
     const requested = new URLSearchParams(window.location.search).get('route')
     return routes.routes.some((route) => route.id === requested) ? requested! : 'foundation'
   })
+  const [track, setTrack] = useState<TrackFilter>(() => {
+    const requested = new URLSearchParams(window.location.search).get('track')
+    return requested === 'core' || requested === 'specialization' ? requested : 'all'
+  })
   const vi = language === 'vi'
   const Heading = standalone ? 'h1' : 'h2'
   const route = routes.routes.find((item) => item.id === selected)!
+  const stages = roadmapOverview.stages.filter((stage) => track === 'all' || stage.track === track)
+  const setTrackFilter = (next: TrackFilter) => {
+    setTrack(next)
+    const url = new URL(window.location.href)
+    if (next === 'all') url.searchParams.delete('track')
+    else url.searchParams.set('track', next)
+    window.history.replaceState(window.history.state, '', url)
+  }
   return <section className="public-roadmap" id="roadmap" aria-labelledby="route-title">
     <span className="eyebrow">{vi ? 'LỘ TRÌNH CỦA BẠN' : 'YOUR LEARNING PATH'}</span>
     <Heading id="route-title">{vi ? 'Chọn đích đến. Bắt đầu vừa sức.' : 'Choose a direction. Start at your level.'}</Heading>
@@ -47,19 +60,36 @@ export function PublicRoadmap({ language, standalone, onStart }: Props) {
         <p>{vi ? 'Mở từng chặng để xem điều kiện bắt đầu và sản phẩm cần tạo.'
           : 'Open each stage to see its starting point and the evidence you should create.'}</p>
       </div>
+      <div className="public-track-filter" role="group" aria-label={vi ? 'Lọc nền tảng và chuyên sâu' : 'Filter by track'}>
+        {(['all', 'core', 'specialization'] as const).map((item) => <button key={item}
+          data-public-track-filter={item} aria-pressed={track === item} onClick={() => setTrackFilter(item)}>
+          {item === 'all' ? (vi ? 'Tất cả' : 'All tracks') : item === 'core'
+            ? (vi ? 'Nền tảng' : 'Core') : (vi ? 'Chuyên sâu' : 'Specialization')}
+        </button>)}
+      </div>
       <ol>
-        {roadmapOverview.stages.map((stage) => <li key={stage.id} className="roadmap-stage-card">
+        {stages.map((stage) => <li key={stage.id} className="roadmap-stage-card">
           <div className="roadmap-stage-number">{stage.number}</div>
           <div className="roadmap-stage-body">
+            <span className={`roadmap-stage-track ${stage.track}`}>{stage.track === 'core'
+              ? (vi ? 'Nền tảng' : 'Core') : (vi ? 'Chuyên sâu' : 'Specialization')}</span>
             <h4>{vi ? stage.title_vi : stage.title_en}</h4>
-            <p>{vi ? stage.topics_vi : stage.topics_en}</p>
+            <p>{vi ? stage.purpose.vi : stage.purpose.en}</p>
             <details>
-              <summary>{vi ? 'Xem điều kiện và mốc thực hành' : 'See prerequisites and checkpoint'}</summary>
+              <summary>{vi ? 'Xem điều kiện và bằng chứng' : 'See prerequisites and evidence'}</summary>
               <dl>
-                <dt>{vi ? 'Cần có trước' : 'Before you start'}</dt>
-                <dd>{vi ? stage.before_vi : stage.before_en}</dd>
-                <dt>{vi ? 'Mốc kiểm chứng' : 'Checkpoint'}</dt>
-                <dd>{vi ? stage.checkpoint_vi : stage.checkpoint_en}</dd>
+                <dt>{vi ? 'Hướng bắt buộc' : 'Required for routes'}</dt>
+                <dd>{stage.required_for_routes.length ? stage.required_for_routes.join(', ') : (vi ? 'Mở rộng tùy chọn' : 'Optional extension')}</dd>
+                <dt>{vi ? 'Điều kiện trước' : 'Prerequisites'}</dt>
+                <dd>{vi ? stage.prerequisites.vi : stage.prerequisites.en}</dd>
+                <dt>{vi ? 'Khối lượng ước tính' : 'Estimated workload'}</dt>
+                <dd>{stage.estimated_weeks} {vi ? 'tuần' : 'weeks'}</dd>
+                <dt>{vi ? 'Dự án liên quan' : 'Related projects'}</dt>
+                <dd>{stage.project_slugs.length ? stage.project_slugs.join(', ') : (vi ? 'Chưa có dự án riêng' : 'No dedicated project')}</dd>
+                <dt>{vi ? 'Tiêu chí đầu ra' : 'Exit criteria'}</dt>
+                <dd>{vi ? stage.exit_criteria.vi : stage.exit_criteria.en}</dd>
+                <dt>{vi ? 'Bằng chứng cần có' : 'Evidence required'}</dt>
+                <dd><ul>{(vi ? stage.evidence_required.vi : stage.evidence_required.en).map((item) => <li key={item}>{item}</li>)}</ul></dd>
               </dl>
             </details>
           </div>

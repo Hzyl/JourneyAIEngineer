@@ -25,6 +25,48 @@ def test_fresh_learner_has_no_review_debt(app):
     assert app.due_reviews()["items"] == []
 
 
+@pytest.mark.parametrize("rating,initial,expected,interval", [
+    ("easy", 9.95, 9.99, 130),
+    ("easy", 9.99, 9.99, 130),
+    ("good", 10.15, 9.99, 100),
+    ("hard", 10.15, 9.99, 12),
+    ("again", 10.5, 9.99, 1),
+    ("easy", 2.5, 2.65, 34),
+    ("good", 2.5, 2.5, 25),
+    ("hard", 1.3, 1.3, 12),
+    ("again", 1.3, 1.3, 1),
+])
+def test_review_ease_bounds_match_hosted_storage(app, rating, initial, expected, interval):
+    app.update_progress(FIRST, app.ProgressUpdate(status="completed"))
+    card_id = app.lesson_detail(FIRST)["reviews"][0]["id"]
+    with app.connect() as db:
+        db.execute(
+            "UPDATE review_state SET ease_factor=?,repetitions=3,interval_days=10 WHERE card_id=?",
+            (initial, card_id),
+        )
+        db.execute(
+            "UPDATE review_items SET ease_factor=?,repetitions=3,interval_days=10 WHERE id=?",
+            (initial, card_id),
+        )
+    result = app.answer_review(card_id, app.ReviewAnswer(rating=rating))
+    assert result["ease_factor"] == pytest.approx(expected)
+    assert result["interval_days"] == interval
+    assert result["repetitions"] == (0 if rating == "again" else 4)
+    assert result["lapses"] == (1 if rating == "again" else 0)
+    with app.connect() as db:
+        state = db.execute("SELECT * FROM review_state WHERE card_id=?", (card_id,)).fetchone()
+        legacy = db.execute("SELECT * FROM review_items WHERE id=?", (card_id,)).fetchone()
+        for stored in (state, legacy):
+            assert stored["ease_factor"] == pytest.approx(expected)
+            assert stored["interval_days"] == interval
+            assert stored["repetitions"] == result["repetitions"]
+            assert stored["due_at"] == result["next_due_at"]
+    if rating == "easy" and initial >= 9.95:
+        again = app.answer_review(card_id, app.ReviewAnswer(rating="easy"))
+        assert again["ease_factor"] == 9.99
+        assert again["interval_days"] == 365
+
+
 def test_completion_activates_only_its_cards(app):
     app.update_progress(FIRST, app.ProgressUpdate(status="completed"))
     queue = app.due_reviews()

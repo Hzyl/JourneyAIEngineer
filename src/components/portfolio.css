@@ -12,6 +12,27 @@
   padding: 22px;
 }
 
+.portfolio-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+}
+
+.portfolio-card .requirement-required {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--teal) 18%, var(--surface));
+}
+
+.portfolio-card .requirement-recommended {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--gold, #d6a21f) 18%, var(--surface));
+}
+
+.portfolio-card .requirement-optional {
+  color: var(--muted);
+}
+
 .portfolio-board .portfolio-card h4 {
   font-size: 22px;
   line-height: 1.35;
@@ -24,6 +45,18 @@
   line-height: 1.7;
   color: var(--muted);
   min-height: 0;
+}
+
+.portfolio-card .portfolio-routes,
+.portfolio-card .portfolio-evidence {
+  margin: 0.85rem 0 0;
+  color: var(--ink);
+  font-size: 0.9rem;
+}
+
+.portfolio-card .portfolio-routes strong,
+.portfolio-card .portfolio-evidence strong {
+  color: var(--muted);
 }
 
 .portfolio-board summary {

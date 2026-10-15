@@ -15,10 +15,14 @@ type Props = {
   children?: ReactNode
 }
 
+type TrackFilter = 'all' | 'core' | 'specialization'
+
 function filtersFromUrl() {
   const params = new URLSearchParams(window.location.search)
+  const requestedTrack = params.get('track')
   return { q: params.get('q') ?? '', route: params.get('route') ?? 'all',
-    phase: params.get('phase') ?? 'all', status: params.get('status') ?? 'all' }
+    phase: params.get('phase') ?? 'all', status: params.get('status') ?? 'all',
+    track: requestedTrack === 'core' || requestedTrack === 'specialization' ? requestedTrack : 'all' as TrackFilter }
 }
 
 export function RoadmapView({ roadmap, language, showCompletedLessons, onOpenLesson, children }: Props) {
@@ -39,8 +43,12 @@ export function RoadmapView({ roadmap, language, showCompletedLessons, onOpenLes
   }
   if (!roadmap) return <p role="status">{vi ? 'Chưa tải được lộ trình.' : 'Roadmap unavailable.'}</p>
   const ordered = route ? route.phase_ids.flatMap((id) => roadmap.phases.filter((phase) => phase.slug === id))
+    .concat(route.optional_phase_ids.flatMap((id) => roadmap.phases.filter((phase) => phase.slug === id)))
     : roadmap.phases
+  const corePhaseIds = new Set(route?.core_phase_ids ?? routes.routes.flatMap((item) => item.core_phase_ids))
+  const phaseTrack = (phase: Phase): Exclude<TrackFilter, 'all'> => corePhaseIds.has(phase.slug) ? 'core' : 'specialization'
   const phases = ordered.filter((phase) => filters.phase === 'all' || phase.slug === filters.phase)
+    .filter((phase) => filters.track === 'all' || phaseTrack(phase) === filters.track)
     .map((phase) => ({ ...phase, modules: phase.modules.map((module) => ({
       ...module, lessons: module.lessons.filter((lesson) => {
         if (!showCompletedLessons && filters.status !== 'completed' && lesson.status === 'completed') return false
@@ -58,16 +66,26 @@ export function RoadmapView({ roadmap, language, showCompletedLessons, onOpenLes
     </header>
     <section className="route-choices" aria-label={vi ? 'Chọn hướng học' : 'Choose a learning path'}>
       {routes.routes.map((item) => <button key={item.id} className="route-choice"
-        aria-pressed={route?.id === item.id} onClick={() => change({ route: item.id, phase: 'all' })}>
+        aria-pressed={route?.id === item.id} onClick={() => change({ route: item.id, phase: 'all', track: 'all' })}>
         <strong>{vi ? item.title_vi : item.title_en}</strong>
         <span>{vi ? item.audience_vi : item.audience_en}</span>
         <small>{item.weekly_hours.join('–')} {vi ? 'giờ/tuần gợi ý' : 'suggested hours/week'}</small>
       </button>)}
     </section>
     {route && <section className="section-card">
-      <h3>{vi ? 'Sản phẩm để tự đánh giá' : 'Your practical checkpoint'}</h3>
-      <p>{vi ? route.outcome_vi : route.outcome_en}</p>
-      <p>{vi ? route.next_vi : route.next_en}</p>
+      <h3>{vi ? 'Mốc thực hành của hướng học' : 'Route checkpoint'}</h3>
+      <dl className="route-metadata">
+        <dt>{vi ? 'Nhãn hướng học' : 'Path label'}</dt>
+        <dd>{vi ? route.title_vi : route.title_en}</dd>
+        <dt>{vi ? 'Kết quả đầu ra' : 'Outcome'}</dt>
+        <dd>{vi ? route.outcome_vi : route.outcome_en}</dd>
+        <dt>{vi ? 'Điều kiện tiếp theo' : 'Next step'}</dt>
+        <dd>{vi ? route.next_vi : route.next_en}</dd>
+        <dt>{vi ? 'Khối lượng gợi ý' : 'Suggested workload'}</dt>
+        <dd>{route.weekly_hours.join('–')} {vi ? 'giờ/tuần' : 'hours/week'}</dd>
+        <dt>{vi ? 'Portfolio tối thiểu' : 'Minimum portfolio path'}</dt>
+        <dd><ul>{route.minimum_project_slugs.map((slug) => <li key={slug}>{slug}</li>)}</ul></dd>
+      </dl>
     </section>}
     <div className="filter-bar" role="search">
       <input type="search" aria-label={vi ? 'Tìm bài học hoặc học phần' : 'Search lessons or modules'} value={filters.q}
@@ -86,8 +104,17 @@ export function RoadmapView({ roadmap, language, showCompletedLessons, onOpenLes
         <option value="completed">{vi ? 'Hoàn thành' : 'Completed'}</option>
         <option value="needs_review">{vi ? 'Cần ôn' : 'Needs review'}</option>
       </select>
-      <button className="text-button" onClick={() => change({ route: 'all', phase: 'all', q: '', status: 'all' })}>
+      <button className="text-button" onClick={() => change({ route: 'all', phase: 'all', q: '', status: 'all', track: 'all' })}>
         {vi ? 'Xóa bộ lọc' : 'Clear filters'}</button>
+      <div className="track-filter" role="group" aria-label={vi ? 'Lọc nền tảng và chuyên sâu' : 'Filter by track'}>
+        {(['all', 'core', 'specialization'] as const).map((track) => <button key={track}
+          data-track-filter={track} className="text-button" aria-pressed={filters.track === track}
+          onClick={() => change({ track })}>
+          {track === 'all' ? (vi ? 'Tất cả hướng' : 'All tracks')
+            : track === 'core' ? (vi ? 'Nền tảng' : 'Core path')
+              : (vi ? 'Chuyên sâu' : 'Specialization')}
+        </button>)}
+      </div>
     </div>
     <p role="status">{count} {vi ? 'bài học' : 'lessons'} · {vi ? 'Thời lượng là thời gian đọc ước tính.'
       : 'Durations estimate reading time.'}</p>
@@ -95,10 +122,11 @@ export function RoadmapView({ roadmap, language, showCompletedLessons, onOpenLes
       ? 'Bài hoàn thành đang được ẩn theo cài đặt. Chọn trạng thái “Hoàn thành” để xem lại.'
       : 'Completed lessons are hidden by your settings. Choose “Completed” to revisit them.'}</p>}
     {!count && <p>{vi ? 'Không có bài phù hợp bộ lọc này.' : 'No lessons match these filters.'}</p>}
-    {phases.map((phase, index) => <section className="phase-block" key={phase.slug}>
+    {phases.map((phase, index) => <section className="phase-block" key={phase.slug} data-phase-track={phaseTrack(phase)}>
       <header className="phase-header"><span className="phase-index">{String(index + 1).padStart(2, '0')}</span>
         <LearningIllustration name={illustrationForLesson(phase.slug)} variant="thumbnail" />
-    <h3>{vi ? phase.title_vi : phase.title_en}</h3></header>
+    <h3>{vi ? phase.title_vi : phase.title_en}</h3><span className="phase-track">{phaseTrack(phase) === 'core'
+      ? (vi ? 'Nền tảng' : 'Core') : (vi ? 'Chuyên sâu' : 'Specialization')}</span></header>
       {phase.modules.map((module) => <div className="module-block" key={module.slug}>
         <h4 className="module-title">{vi ? module.title_vi : module.title_en}</h4>
         {module.lessons.map((lesson) => <button className={`lesson-row ${lesson.status === 'completed' ? 'done' : ''}`}

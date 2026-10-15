@@ -2,7 +2,7 @@ export type AppMode = 'local' | 'hosted'
 
 export type RuntimeConfig =
   | { mode: 'local' }
-  | { mode: 'hosted'; supabaseUrl: string; publishableKey: string }
+  | { mode: 'hosted'; supabaseUrl: string; publishableKey: string; adminCheckEnabled: boolean }
 
 type RuntimeEnvironment = Record<string, string | boolean | undefined>
 
@@ -44,7 +44,12 @@ export function readRuntimeConfig(env: RuntimeEnvironment): RuntimeConfig {
     throw new Error('A service-role/secret key must never be used in the browser.')
   }
 
-  return { mode, supabaseUrl: parsed.origin, publishableKey }
+  return {
+    mode,
+    supabaseUrl: parsed.origin,
+    publishableKey,
+    adminCheckEnabled: env.VITE_ADMIN_CHECK_ENABLED !== 'false',
+  }
 }
 
 export const runtimeConfig = readRuntimeConfig(import.meta.env)

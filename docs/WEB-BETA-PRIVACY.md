@@ -35,3 +35,6 @@ Supabase provides authentication and database infrastructure. Cloudflare Pages s
 ## Changes
 
 This notice must be updated before adding analytics, AI providers, file uploads, OAuth, cross-device local-data import, or a new data processor.
+## Admin user directory
+
+The `/admin/users` directory (with `/admin` kept as a compatibility alias) is restricted by a database role keyed to the Auth user UUID. Email addresses are displayed for support, but they are never used as an authorization rule. Mutations are handled by the `admin-users` Edge Function, which validates the bearer token, origin and action, prevents self-lockout and admin targeting, and records a non-secret audit event. Password reset emails use the existing recovery callback and the reset link is never returned to the browser.

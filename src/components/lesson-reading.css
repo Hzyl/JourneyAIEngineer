@@ -48,6 +48,12 @@
   line-height: 1.5;
 }
 
+.lesson-detail .code-example-guide {
+  font-size: 1rem;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
 .lesson-detail .study-step-card small,
 .lesson-detail .study-step-card a,
 .lesson-detail .study-step-answer summary {

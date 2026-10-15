@@ -185,3 +185,57 @@ message `fix: clarify bilingual retrieval reviews and improve readability` to
 `https://github.com/Hzyl/JourneyAIEngineer.git`, `origin/main`. Publication and
 new CI/provider results must be checked separately after push. No physical-device,
 real-account, Colab/model or Docling/PDF/OCR acceptance is claimed.
+
+## Final bounded batch: review ease and agent outcomes
+
+The preceding batch was published as `2c7c3359b589be9c5f2cfefe384417e781c3ff10`.
+CI `38455734884` passed quality and hosted-database; Cloudflare deployment
+`75dc1863-67da-463f-a540-d7570d60a834` succeeded. This does not publish the
+following working-tree changes. No additional audit areas were opened.
+
+- Local `answer_review` now clamps ease to 1.30..9.99 before calculating the
+  next interval, matching the hosted bound. Synthetic tests reproduced the
+  old upper-bound failure. Nine additional cases cover each rating, normal
+  and lower-bound behavior, legacy above-cap values and repeated easy ratings;
+  response and both scheduling tables agree. All 13 tests in the file passed.
+  No migration, stored learner-data rewrite or observed data loss is claimed.
+- Phase 17-3 retains its first example verbatim and adds one independent
+  standard-library outcome grader. Eight outputs distinguish false success,
+  alternate valid paths, incorrect/missing reports, permission and budget
+  failures, and a task-definition error. Trusted observations are explicitly
+  distinct from solver claims. Twenty-five tests execute the example and
+  documented solution, including missing required keys whose expected value
+  is null. Four bilingual cards retain their identities. Lab B is unchanged.
+- Browser checks caught missing setup/output/edge-case metadata in the main
+  code-example blocks. LessonContent now renders the existing fields with
+  localized labels and the established definition-list layout. Two VI/EN
+  regressions failed before the fix and passed after it; text is escaped.
+  Scoped reading CSS ensures 16px guide text and wrapping. No redesign.
+
+Evidence beneath ignored `.build/audit-20261014/`:
+
+- `review-schedule/cap-red.log`: five expected pre-fix failures; `cap-green.log`:
+  all 13 scheduling tests passed. No hosted SQL was rerun for this local fix.
+- `agent-eval-integration/npm-test.log`: 352 Python tests (76.62s), 262 Vitest
+  tests (43 files), content/fingerprint/lint/TypeScript/build passed, exit 0.
+  Following the UI fix, the full frontend suite passed 264 tests (7.37s), and
+  lint plus TypeScript/production build passed again. Python sources did not
+  change after the full run; no second Python suite is implied.
+- `agent-eval-integration/browser-selector-failure.log` preserves the missing
+  metadata failure. Final `browser.log` and `agent-eval-ui/results.json`:
+  eight passed in 20.2s, with VI/EN, 320/1440px and light/dark themes.
+  Checks include code/output, prose and guide font sizes, contrast, keyboard
+  focus, target size, document overflow, page errors and unexpected requests.
+  Supabase/auth are synthetic; preview uses port 4195 and a fresh build.
+- Thirty-two screenshots in `agent-eval-ui/evidence/`; root inspected outcome
+  VI 320px light and EN 1440px dark. Long code retains horizontal scrolling.
+  No physical-device or real-account acceptance is claimed.
+- `agent-eval-integration/scope.json`: 208 identities and card IDs/types
+  preserved, 207 lesson records unchanged, original example/output unchanged,
+  and the real learner database file hash unchanged. Catalog was regenerated.
+- `git diff --check` passed. Existing Fast Refresh/bundle warnings and passive
+  audit review items remain; they are not new demonstrated vulnerabilities.
+
+Current batch is local and uncommitted. No new model/API, installation, real
+Supabase run, production write or deployment was performed. Publication needs
+the applicable current confirmation with an exact commit message and target.

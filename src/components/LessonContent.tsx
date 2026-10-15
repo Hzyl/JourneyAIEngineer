@@ -81,6 +81,16 @@ export function LessonReading({ lesson, language }: ContentProps) {
         <strong>{example.title}</strong>
         <pre tabIndex={0} aria-label={example.title}><code>{example.code}</code></pre>
         <p className="muted">{vi ? example.explanation_vi : example.explanation_en}</p>
+        {(example.setup || example.expected_output || example.edge_case_vi || example.edge_case_en)
+          && <dl className="code-example-guide">
+            {example.setup && <><dt>{vi ? 'Chuẩn bị' : 'Setup'}</dt><dd>{example.setup}</dd></>}
+            {example.expected_output && <><dt>{vi ? 'Kết quả mong đợi' : 'Expected output'}</dt>
+              <dd>{example.expected_output}</dd></>}
+            {(example.edge_case_vi || example.edge_case_en) && <>
+              <dt>{vi ? 'Trường hợp biên' : 'Edge case'}</dt>
+              <dd>{vi ? example.edge_case_vi : example.edge_case_en}</dd>
+            </>}
+          </dl>}
       </div>)}
     </section>}
   </>

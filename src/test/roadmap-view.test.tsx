@@ -66,3 +66,15 @@ test('route ordering and bilingual search survive URL restoration and language c
   expect(host.querySelectorAll('.lesson-row')).toHaveLength(0)
   expect(host.textContent).toContain('Không có bài phù hợp')
 })
+
+test('shows route metadata and filters core versus specialization phases', async () => {
+  await restore('/roadmap?route=foundation')
+  await render(true)
+  expect(host.textContent).toContain('Core path')
+  expect(host.textContent).toContain('tabular-ml')
+  expect(host.querySelectorAll<HTMLButtonElement>('[data-track-filter]')).toHaveLength(3)
+  expect(host.querySelector('[data-phase-track="core"]')).not.toBeNull()
+  await act(async () => host.querySelector<HTMLButtonElement>('[data-track-filter="specialization"]')!.click())
+  expect(host.querySelectorAll('.lesson-row')).toHaveLength(0)
+  expect(window.location.search).toContain('track=specialization')
+})

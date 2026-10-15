@@ -1560,11 +1560,11 @@ def answer_review(review_id: int, payload: ReviewAnswer) -> dict[str, Any]:
         if quality < 3:
             repetitions = 0
             lapses += 1
-            ease = max(1.3, ease - 0.2)
+            ease = min(9.99, max(1.3, ease - 0.2))
             interval = 1
         else:
             repetitions += 1
-            ease = max(1.3, ease + (0.15 if quality == 5 else -0.15 if quality == 3 else 0.0))
+            ease = min(9.99, max(1.3, ease + (0.15 if quality == 5 else -0.15 if quality == 3 else 0.0)))
             if rating == "hard":
                 interval = max(1, round((interval_before or 1) * 1.2))
             elif repetitions == 1:

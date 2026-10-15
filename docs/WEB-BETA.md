@@ -127,3 +127,6 @@ Every remote project creation, migration push, environment-variable change and d
 - [Cloudflare Pages redirects](https://developers.cloudflare.com/pages/configuration/redirects/)
 - [Cloudflare Pages headers](https://developers.cloudflare.com/pages/configuration/headers/)
 - [Cloudflare Pages rollback](https://developers.cloudflare.com/pages/configuration/rollbacks/)
+## Administration
+
+Support operators use the protected `/admin/users` route (`/admin` remains a compatibility alias) for paginated user lookup, temporary bans, unbans and password-reset email requests. The role is granted by Auth UUID through a controlled SQL operation; no administrator email is embedded in the web bundle. See [admin user directory](ADMIN-USER-DIRECTORY.md) for the local migration and operational sequence.

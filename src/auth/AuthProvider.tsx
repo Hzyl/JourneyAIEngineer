@@ -5,12 +5,16 @@ import { supabase } from '../platform/hosted/supabase-client'
 import { sessionLifetime } from './session-lifetime'
 
 export type AuthState = 'local' | 'loading' | 'error' | 'signed_out' | 'signed_in' | 'expired'
+export type AdminAccess = 'checking' | 'authorized' | 'denied' | 'error'
 
 type AuthContextValue = {
   state: AuthState
   session: Session | null
   signOut: () => Promise<void>
   retrySession: () => void
+  adminAccess: AdminAccess
+  adminError: string | null
+  refreshAdminAccess: () => void
 }
 
 const AuthContext = createContext<AuthContextValue>({
@@ -18,12 +22,18 @@ const AuthContext = createContext<AuthContextValue>({
   session: null,
   signOut: async () => undefined,
   retrySession: () => undefined,
+  adminAccess: 'denied',
+  adminError: null,
+  refreshAdminAccess: () => undefined,
 })
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<AuthState>(runtimeConfig.mode === 'hosted' ? 'loading' : 'local')
   const [session, setSession] = useState<Session | null>(null)
   const [attempt, setAttempt] = useState(0)
+  const [adminAccess, setAdminAccess] = useState<AdminAccess>('denied')
+  const [adminError, setAdminError] = useState<string | null>(null)
+  const [adminAttempt, setAdminAttempt] = useState(0)
   const reading = useRef(true)
   const retrySession = useCallback(() => {
     if (reading.current || runtimeConfig.mode !== 'hosted') return
@@ -79,16 +89,50 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [attempt])
 
+  const refreshAdminAccess = useCallback(() => setAdminAttempt((value) => value + 1), [])
+
+  useEffect(() => {
+    if (runtimeConfig.mode !== 'hosted' || !runtimeConfig.adminCheckEnabled
+      || state !== 'signed_in' || !session || !supabase) {
+      setAdminAccess('denied')
+      setAdminError(null)
+      return
+    }
+    let active = true
+    setAdminAccess('checking')
+    setAdminError(null)
+    void (async () => {
+      try {
+        const { data, error } = await supabase.rpc('is_current_user_admin')
+        if (!active) return
+        if (error) {
+          setAdminAccess('error')
+          setAdminError('Không thể kiểm tra quyền quản trị.')
+        } else {
+          setAdminAccess(data === true ? 'authorized' : 'denied')
+        }
+      } catch {
+        if (!active) return
+        setAdminAccess('error')
+        setAdminError('Không thể kiểm tra quyền quản trị.')
+      }
+    })()
+    return () => { active = false }
+  }, [adminAttempt, session, state])
+
   const value = useMemo<AuthContextValue>(() => ({
     state,
     session,
     retrySession,
+    adminAccess,
+    adminError,
+    refreshAdminAccess,
     signOut: async () => {
       if (!supabase) return
       const { error } = await supabase.auth.signOut()
       if (error) throw error
     },
-  }), [retrySession, session, state])
+  }), [adminAccess, adminError, refreshAdminAccess, retrySession, session, state])
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 

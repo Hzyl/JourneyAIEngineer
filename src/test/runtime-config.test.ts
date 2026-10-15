@@ -19,7 +19,17 @@ describe('readRuntimeConfig', () => {
       mode: 'hosted',
       supabaseUrl: 'http://127.0.0.1:54321',
       publishableKey: 'sb_publishable_local_test',
+      adminCheckEnabled: true,
     })
+  })
+
+  it('can disable admin checks only in a synthetic test runtime', () => {
+    expect(readRuntimeConfig({
+      VITE_APP_MODE: 'hosted',
+      VITE_SUPABASE_URL: 'https://project.supabase.co',
+      VITE_SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_local_test',
+      VITE_ADMIN_CHECK_ENABLED: 'false',
+    })).toMatchObject({ adminCheckEnabled: false })
   })
 
   it('rejects a Supabase secret key in browser configuration', () => {

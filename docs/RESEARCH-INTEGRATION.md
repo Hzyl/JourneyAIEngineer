@@ -286,3 +286,41 @@ Kết quả này thuộc bản trước, không phải bằng chứng triển kh
 Người dùng đã xác nhận commit/push lô này. CI/deployment của commit mới cần
 được kiểm tra riêng sau push; các bằng chứng local trên không thay thế bước đó.
 Không chạy model/Colab, Docling/PDF/OCR hoặc nghiệm thu tài khoản Supabase thật.
+
+## Chốt lịch ôn tập và bài đánh giá agent — 2026-10-14
+
+Lô retrieval phía trên đã xuất bản ở commit `2c7c335`: CI run `38455734884`
+đạt cả quality và hosted-database; Cloudflare deployment
+`75dc1863-67da-463f-a540-d7570d60a834` thành công. Các thay đổi dưới đây mới
+được kiểm chứng local, chưa commit/push/deploy.
+
+- Lịch ôn local nay giới hạn hệ số giãn cách ở `1.30..9.99`, khớp giới hạn
+  hosted. Giá trị cũ vượt ngưỡng được đưa về giới hạn khi ôn tiếp, không viết
+  lại database. Đây là khác biệt được tái hiện bằng dữ liệu giả khi chọn
+  “Dễ” nhiều lần, không phải bằng chứng người học đã mất lịch ôn.
+- Bài `phase-17-genai-evaluation-genai-evaluation-3` giữ nguyên mã và đầu ra
+  ví dụ đầu. Ví dụ thứ hai chấm báo cáo do bộ chạy kiểm thử quan sát, thay vì
+  tin lời agent tự báo thành công. Có tám tình huống, hướng dẫn thực hành,
+  lời giải tự kiểm tra và bốn thẻ Việt/Anh. Lỗi đề bài được tách khỏi lỗi agent;
+  ví dụ cũng kiểm tra quyền công cụ, số lần gọi, thời gian và trường bị thiếu.
+- Đối chiếu nguồn Inspect Tasks và Anthropic Demystifying evals for AI agents
+  trong hồ sơ nghiên cứu. Mã chỉ dùng thư viện chuẩn và dữ liệu giả; chưa chạy
+  model hay xây bộ ghi nhận đáng tin cho hệ thống thật. Lab B giữ nguyên.
+- Kiểm tra browser phát hiện khối mã nguồn chưa hiện hướng dẫn/đầu ra của
+  từng ví dụ. `LessonContent` nay hiển thị các trường sẵn có bằng bố cục dùng
+  trong hướng dẫn thực hành, có nhãn Việt/Anh, chữ 16px và xuống dòng.
+
+Kiểm chứng: 13 test lịch ôn và 25 test bài agent đạt. Bộ `npm test` đạt
+352 Python, 262 Vitest, validator, fingerprint, lint, TypeScript và build.
+Sau sửa hiển thị cuối, chạy lại toàn bộ Vitest được 264 test đạt, cùng lint,
+TypeScript và production build; không chạy lại phần Python không đổi.
+Tám Playwright trên production preview đạt trong 20,2 giây: VI/EN ×
+320/1440px × sáng/tối, kiểm tra mã/đầu ra, font, tương phản, focus và tràn ngang.
+Đã xem ảnh ví dụ thứ hai ở VI 320px sáng và EN 1440px tối; mã dài dùng vùng
+cuộn ngang hiện có. Đây là viewport giả lập, chưa phải thiết bị thật.
+
+Catalog được sinh lại từ Markdown: chỉ một bài đổi, 207 bài còn lại và toàn
+bộ ID/loại thẻ giữ nguyên. SHA-256 database người học trước/sau không đổi.
+Log và ảnh ở `.build/audit-20261014/agent-eval-integration/`, `agent-eval-ui/`
+và `review-schedule/`. Không thử nghiệm tài khoản Supabase thật hay thay schema.
+Các cảnh báo Fast Refresh, bundle lớn và audit thụ động đã ghi ở trên vẫn còn.

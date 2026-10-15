@@ -19,6 +19,7 @@ export default defineConfig({
       // Test-only public-shaped values: no account or live Supabase access.
       VITE_SUPABASE_URL: 'https://example.supabase.co',
       VITE_SUPABASE_PUBLISHABLE_KEY: 'local-preview-key',
+      VITE_ADMIN_CHECK_ENABLED: 'false',
     },
   },
 })

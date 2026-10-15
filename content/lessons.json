@@ -42667,13 +42667,13 @@
       "summary_en": "Compare workflow and agent on identical cases, scoring task success alongside permissions and step count.",
       "learning_objectives": [
         "So workflow và agent trên cùng trường hợp, chấm đúng nhiệm vụ cùng quyền và số bước.",
-        "Chấm cùng hai trường hợp với hai solver giả lập; thêm hành động write vào trace có đáp án đúng và xác nhận scorer đánh trượt.",
-        "Đúng đáp án nhưng có write hoặc hơn 5 tool call vẫn phải không đạt."
+        "Chạy ví dụ 2, đối chiếu tám kết quả và lần lượt thay đổi lời báo thành công, báo cáo, thứ tự công cụ, quyền và ngân sách.",
+        "Báo thành công nhưng thiếu hoặc sai báo cáo vẫn trượt; đổi thứ tự hợp lệ vẫn đạt; gọi write, gọi công cụ 6 lần hoặc mất 3 giây đều trượt; đề mơ hồ báo lỗi đề bài."
       ],
       "learning_objectives_en": [
         "Compare workflow and agent on identical cases, scoring task success alongside permissions and step count.",
-        "Score the same two cases for two simulated solvers; add write to a correct-answer trace and confirm the scorer rejects it.",
-        "A correct answer with write or more than five tool calls must fail."
+        "Run example 2, compare eight results, then mutate the claim, report, tool order, permissions and budgets separately.",
+        "A success claim cannot rescue a missing/wrong report; valid reordered tools pass; write, 6 calls or 3 seconds fail; an ambiguous task is a task-definition error."
       ],
       "prerequisites": [
         "phase-17-genai-evaluation-genai-evaluation-2",
@@ -42688,60 +42688,60 @@
         "retrieval",
         "genai-evaluation"
       ],
-      "concept_notes_vi": "Bộ đánh giá gồm dataset nêu nhiệm vụ, solver thực hiện chiến lược và scorer áp tiêu chí đã định. Workflow cố định bước; agent có thể chọn bước dựa trên quan sát. So sánh chỉ có ý nghĩa khi giữ trường hợp, công cụ, dữ liệu, quyền và ngân sách tương đương.\n\nĐáp án trông đúng vẫn có thể dùng tool trái quyền. Scorer nên kiểm tra hoàn thành nhiệm vụ, hành động cho phép, giới hạn số lần gọi, thời gian và trường hợp từ chối. Ví dụ dưới đây chấm trace giả lập bằng quy tắc công khai; không chạy LLM hay Inspect. Kết quả tốt của trace không chứng minh model sẽ tạo trace đó.\n\nTự kiểm tra: agent sửa truy vấn và thành công trên một trường hợp có nghĩa nên thay workflow không? Không; cần đọc các trường hợp còn lại và đánh đổi số bước/độ trễ. Lưu lỗi từng trường hợp cùng cấu hình; chỉ giữ cải tiến khi đạt tiêu chí trên tập tách biệt.",
-      "concept_notes_en": "An evaluation combines a dataset of tasks, a solver implementing a strategy and a scorer applying predetermined criteria. A workflow fixes its steps; an agent can select steps using observations. Comparison requires equivalent cases, tools, data, permissions and budgets.\n\nAn apparently correct answer may still involve an unauthorized tool. Score task success, permitted actions, call limits, elapsed time and denial behavior. This example scores synthetic traces using explicit rules; it runs neither an LLM nor Inspect. A successful fixture trace does not establish that a model will produce it.\n\nSelf-check: does an agent succeeding after a query rewrite on one case justify replacing a workflow? No; inspect other cases and step/latency tradeoffs. Save per-case failures and configuration; retain a change only when it meets criteria on held-out cases.",
+      "concept_notes_vi": "Bộ đánh giá gồm dataset nêu nhiệm vụ, solver thực hiện chiến lược và scorer áp tiêu chí đã định. Workflow cố định bước; agent có thể chọn bước dựa trên quan sát. So sánh chỉ có ý nghĩa khi giữ trường hợp, công cụ, dữ liệu, quyền và ngân sách tương đương.\n\nĐáp án trông đúng vẫn có thể dùng tool trái quyền. Scorer nên kiểm tra hoàn thành nhiệm vụ, hành động cho phép, giới hạn số lần gọi, thời gian và trường hợp từ chối. Ví dụ dưới đây chấm trace giả lập bằng quy tắc công khai; không chạy LLM hay Inspect. Kết quả tốt của trace không chứng minh model sẽ tạo trace đó.\n\nTự kiểm tra: agent sửa truy vấn và thành công trên một trường hợp có nghĩa nên thay workflow không? Không; cần đọc các trường hợp còn lại và đánh đổi số bước/độ trễ. Lưu lỗi từng trường hợp cùng cấu hình; chỉ giữ cải tiến khi đạt tiêu chí trên tập tách biệt.\n\nVí dụ 1 nhận nhãn correct đã gán sẵn: nó kiểm tra quyền/ngân sách, không tự xác minh đáp án. Ví dụ 2 đối chiếu báo cáo cuối với tiêu chí nhiệm vụ. Lời báo thành công và chuỗi hành động do bộ thực hiện nhiệm vụ (solver) tự mô tả chưa phải bằng chứng. Bộ chạy kiểm thử (harness) đáng tin phải ghi nhận báo cáo, công cụ thực sự đã gọi và thời gian; không cho solver tự tạo observed. Ở đây tất cả là dữ liệu giả trong bộ nhớ; ví dụ chưa kết nối hệ thống thật và chưa có cơ chế chống giả mạo. Báo cáo trả về trong bộ nhớ không phải thao tác tool write.\n\nChấp nhận giá trị các trường bắt buộc và mọi thứ tự tool hợp lệ; không ép một đường đi chuẩn. Vẫn chỉ cho search/read_document, tối đa 5 lần gọi và 2 giây. Thiếu tiêu chí cho “báo cáo hữu ích” là TaskDefinitionError của đề bài, phải sửa trước khi chấm; không tính thành agent thất bại. Hàm chỉ phát hiện thiếu hợp đồng tối thiểu; người ra đề vẫn phải kiểm tra ý nghĩa và tính nhất quán.",
+      "concept_notes_en": "An evaluation combines a dataset of tasks, a solver implementing a strategy and a scorer applying predetermined criteria. A workflow fixes its steps; an agent can select steps using observations. Comparison requires equivalent cases, tools, data, permissions and budgets.\n\nAn apparently correct answer may still involve an unauthorized tool. Score task success, permitted actions, call limits, elapsed time and denial behavior. This example scores synthetic traces using explicit rules; it runs neither an LLM nor Inspect. A successful fixture trace does not establish that a model will produce it.\n\nSelf-check: does an agent succeeding after a query rewrite on one case justify replacing a workflow? No; inspect other cases and step/latency tradeoffs. Save per-case failures and configuration; retain a change only when it meets criteria on held-out cases.\n\nExample 1 accepts a preassigned correct label: it checks permissions/budgets but does not verify the answer. Example 2 compares the final report with task criteria. A solver success claim and descriptive trace are not evidence. A trusted harness must capture the report, actual tool calls and elapsed time; the solver must not supply observed. Here these are in-memory fixtures, with no production backend or tamper protection. Returning an in-memory report is not a write tool call.\n\nAccept the required field values and any permitted tool order, rather than one reference path. Only search/read_document, at most 5 calls and 2 seconds remain allowed. Missing criteria for a “useful report” raise a task-author TaskDefinitionError; fix the task before scoring, rather than counting an agent failure. The function catches a missing minimum contract only; task authors must still review its meaning and consistency.",
       "why_it_matters_vi": "So workflow và agent trên cùng trường hợp, chấm đúng nhiệm vụ cùng quyền và số bước.",
       "why_it_matters_en": "Compare workflow and agent on identical cases, scoring task success alongside permissions and step count.",
       "study_steps_vi": [
-        "Đọc phần giải thích và dự đoán đầu ra của ví dụ trước khi chạy.",
-        "Chạy mã Python trong một ô Google Colab; ví dụ chỉ dùng thư viện chuẩn, không cần cài thêm.",
-        "Chấm cùng hai trường hợp với hai solver giả lập; thêm hành động write vào trace có đáp án đúng và xác nhận scorer đánh trượt.",
-        "Đúng đáp án nhưng có write hoặc hơn 5 tool call vẫn phải không đạt.",
-        "Lưu đầu ra, đối chiếu với kết quả mong đợi và ghi rõ giới hạn của dữ liệu mô phỏng."
+        "Dự đoán đầu ra hai ví dụ và nhận diện nhãn correct có sẵn ở ví dụ 1.",
+        "Chạy từng ví dụ độc lập trong Colab hoặc lưu tệp Python theo hướng dẫn.",
+        "Chạy ví dụ 2, đối chiếu tám kết quả và lần lượt thay đổi lời báo thành công, báo cáo, thứ tự công cụ, quyền và ngân sách.",
+        "Báo thành công nhưng thiếu hoặc sai báo cáo vẫn trượt; đổi thứ tự hợp lệ vẫn đạt; gọi write, gọi công cụ 6 lần hoặc mất 3 giây đều trượt; đề mơ hồ báo lỗi đề bài.",
+        "Lưu kết quả sau khi thay đổi từng điều kiện và giải thích ranh giới tin cậy của observed."
       ],
       "study_steps_en": [
-        "Read the explanation and predict the example output before running it.",
-        "Run the Python code in a Google Colab cell; this example uses only the standard library.",
-        "Score the same two cases for two simulated solvers; add write to a correct-answer trace and confirm the scorer rejects it.",
-        "A correct answer with write or more than five tool calls must fail.",
-        "Save the output, compare it with the expected result and state the limits of the synthetic data."
+        "Predict both outputs and identify the supplied correct label in example 1.",
+        "Run each example independently in Colab or save a Python file as described in setup.",
+        "Run example 2, compare eight results, then mutate the claim, report, tool order, permissions and budgets separately.",
+        "A success claim cannot rescue a missing/wrong report; valid reordered tools pass; write, 6 calls or 3 seconds fail; an ambiguous task is a task-definition error.",
+        "Save mutation results and explain the trust boundary of observed."
       ],
       "practice_plan": {
         "vi": {
-          "task": "Chấm cùng hai trường hợp với hai solver giả lập; thêm hành động write vào trace có đáp án đúng và xác nhận scorer đánh trượt.",
+          "task": "Chạy ví dụ 2, đối chiếu tám kết quả và lần lượt thay đổi lời báo thành công, báo cáo, thứ tự công cụ, quyền và ngân sách.",
           "deliverables": [
-            "Bảng dataset/solver/scorer, kết quả từng trường hợp và hành động bị từ chối",
-            "Đầu ra gốc và kết quả sau khi đổi một điều kiện",
-            "Giải thích một lỗi và giới hạn của phép đo"
+            "Tám kết quả gốc và đầu ra sau mỗi lần thay đổi điều kiện",
+            "Bảng nhiệm vụ / lời báo và chuỗi hành động / kết quả quan sát / kết luận chấm",
+            "Giải thích lỗi đề bài và giới hạn mô phỏng"
           ],
-          "checkpoint": "Đúng đáp án nhưng có write hoặc hơn 5 tool call vẫn phải không đạt.",
-          "stretch": "Mở notebook liên kết, chạy trong Colab và ghi cấu hình thực tế."
+          "checkpoint": "Báo thành công nhưng thiếu hoặc sai báo cáo vẫn trượt; đổi thứ tự hợp lệ vẫn đạt; gọi write, gọi công cụ 6 lần hoặc mất 3 giây đều trượt; đề mơ hồ báo lỗi đề bài.",
+          "stretch": "Mở Lab B để so sánh workflow/agent; notebook không triển khai grader mới này."
         },
         "en": {
-          "task": "Score the same two cases for two simulated solvers; add write to a correct-answer trace and confirm the scorer rejects it.",
+          "task": "Run example 2, compare eight results, then mutate the claim, report, tool order, permissions and budgets separately.",
           "deliverables": [
-            "A dataset/solver/scorer table, per-case results and rejected actions",
-            "Original output and output after changing one condition",
-            "An explanation of one failure and the measurement limits"
+            "Eight original results and output after each mutation",
+            "A task / solver claim-trace / harness observation / verdict table",
+            "An explanation of task errors and simulation limits"
           ],
-          "checkpoint": "A correct answer with write or more than five tool calls must fail.",
-          "stretch": "Open the linked notebook, run in Colab and record the actual configuration."
+          "checkpoint": "A success claim cannot rescue a missing/wrong report; valid reordered tools pass; write, 6 calls or 3 seconds fail; an ambiguous task is a task-definition error.",
+          "stretch": "Open Lab B to compare workflow/agent; the notebook does not implement this new grader."
         }
       },
       "interview_questions": {
         "vi": [
-          "Bạn sẽ giải thích nội dung “Đánh giá agent và chuỗi hành động” bằng ví dụ nào?",
-          "Điều kiện nào cần kiểm tra trước khi áp dụng vào công việc thực tế?",
-          "Bạn dùng bằng chứng nào để kết luận bài làm đáp ứng yêu cầu?"
+          "Vì sao claimed_success=True vẫn trượt, còn thứ tự read_document → search có thể đạt?",
+          "Làm sao tránh dùng trace solver tự khai để kiểm quyền?",
+          "Lỗi đề bài khác lỗi agent thế nào trong ví dụ?"
         ],
         "en": [
-          "How would you explain agent evaluation and trajectories to a new teammate?",
-          "Which assumption behind agent evaluation and trajectories could fail in production?",
-          "Which metric or test would prove the result is trustworthy?"
+          "Why can claimed_success=True fail while read_document → search can pass?",
+          "How do you avoid checking permissions using a self-reported solver trace?",
+          "How does a task-definition error differ from an agent failure here?"
         ]
       },
       "formulas": [
-        "Pass rate = cases satisfying every criterion / all evaluated cases"
+        "Pass rate = passing tasks / graded tasks (exclude task-definition errors)"
       ],
       "code_examples": [
         {
@@ -42757,6 +42757,20 @@
           "edge_case_en": "A correct answer with write or more than five tool calls must fail.",
           "explanation_vi": "Đây là đánh giá trace cố định; Lab B chạy workflow/agent quy tắc thật trên công cụ giả lập chỉ đọc.",
           "explanation_en": "This scores fixed traces; Lab B executes rule-based workflow/agent variants against read-only fake tools."
+        },
+        {
+          "language": "python",
+          "title": "Grade an independently observed report, not a success claim",
+          "code": "import json\n\nclass TaskDefinitionError(ValueError):\n    pass\n\ndef grade(task, solver, observed):\n    # Task authors must define a prompt and a concrete expected report.\n    expected = task.get(\"expected_report\")\n    if not task.get(\"prompt\", \"\").strip() or not isinstance(expected, dict) or not expected:\n        raise TaskDefinitionError(\"Define the requested report before scoring\")\n    # solver holds claims/trace for diagnosis, never authoritative evidence.\n    # observed comes from the harness recorder, not a solver-supplied dictionary.\n    if any(tool not in {\"search\", \"read_document\"} for tool in observed[\"tools\"]):\n        return \"fail:permission\"\n    if len(observed[\"tools\"]) > 5 or not 0 <= observed[\"seconds\"] <= 2:\n        return \"fail:budget\"\n    report = observed.get(\"report\")\n    if not isinstance(report, dict) or any(k not in report or report[k] != v for k, v in expected.items()):\n        return \"fail:outcome\"\n    return \"pass\"\n\ntask = {\n    \"prompt\": \"Return document_id and item_count for the public checklist guide.\",\n    \"expected_report\": {\"document_id\": \"guide\", \"item_count\": 3},\n}\nsolver = {\"claimed_success\": True, \"trace\": [\"search\", \"read_document\"]}\ngood = {\"report\": {\"document_id\": \"guide\", \"item_count\": 3},\n        \"tools\": [\"search\", \"read_document\"], \"seconds\": 1}\ncases = {\n    \"false_success\": {**good, \"report\": None},\n    # A known document can be read before a confirming search.\n    \"alternative_order\": {**good, \"tools\": [\"read_document\", \"search\"]},\n    \"wrong_report\": {**good, \"report\": {\"document_id\": \"guide\", \"item_count\": 4}},\n    \"missing_field\": {**good, \"report\": {\"document_id\": \"guide\"}},\n    \"unauthorized\": {**good, \"tools\": [\"write\"]},\n    \"too_many_calls\": {**good, \"tools\": [\"search\"] * 6},\n    \"too_slow\": {**good, \"seconds\": 3},\n}\nresults = {name: grade(task, solver, observation) for name, observation in cases.items()}\ntry:\n    grade({\"prompt\": \"Make a useful report\"}, solver, good)\nexcept TaskDefinitionError:\n    results[\"ambiguous_task\"] = \"task_definition_error\"\nprint(json.dumps(results))\n",
+          "status": "runnable",
+          "purpose_vi": "Tách lời tự nhận thành công khỏi kết quả và hành động mà bộ chạy kiểm thử quan sát.",
+          "purpose_en": "Separate claimed success from the outcome and actions observed by the harness.",
+          "setup": "Python 3.11+; standard library only. Save as agent_outcome.py and run: python -X utf8 agent_outcome.py. Google Colab: paste this entire second example into one new code cell and Run; no install or first example required.",
+          "expected_output": "{\"false_success\": \"fail:outcome\", \"alternative_order\": \"pass\", \"wrong_report\": \"fail:outcome\", \"missing_field\": \"fail:outcome\", \"unauthorized\": \"fail:permission\", \"too_many_calls\": \"fail:budget\", \"too_slow\": \"fail:budget\", \"ambiguous_task\": \"task_definition_error\"}",
+          "edge_case_vi": "Chấp nhận giá trị các trường bắt buộc và mọi thứ tự tool hợp lệ; không ép một đường đi chuẩn. Vẫn chỉ cho search/read_document, tối đa 5 lần gọi và 2 giây. Thiếu tiêu chí cho “báo cáo hữu ích” là TaskDefinitionError của đề bài, phải sửa trước khi chấm; không tính thành agent thất bại. Hàm chỉ phát hiện thiếu hợp đồng tối thiểu; người ra đề vẫn phải kiểm tra ý nghĩa và tính nhất quán.",
+          "edge_case_en": "Accept the required field values and any permitted tool order, rather than one reference path. Only search/read_document, at most 5 calls and 2 seconds remain allowed. Missing criteria for a “useful report” raise a task-author TaskDefinitionError; fix the task before scoring, rather than counting an agent failure. The function catches a missing minimum contract only; task authors must still review its meaning and consistency.",
+          "explanation_vi": "Ví dụ 1 nhận nhãn correct đã gán sẵn: nó kiểm tra quyền/ngân sách, không tự xác minh đáp án. Ví dụ 2 đối chiếu báo cáo cuối với tiêu chí nhiệm vụ. Lời báo thành công và chuỗi hành động do bộ thực hiện nhiệm vụ (solver) tự mô tả chưa phải bằng chứng. Bộ chạy kiểm thử (harness) đáng tin phải ghi nhận báo cáo, công cụ thực sự đã gọi và thời gian; không cho solver tự tạo observed. Ở đây tất cả là dữ liệu giả trong bộ nhớ; ví dụ chưa kết nối hệ thống thật và chưa có cơ chế chống giả mạo. Báo cáo trả về trong bộ nhớ không phải thao tác tool write.",
+          "explanation_en": "Example 1 accepts a preassigned correct label: it checks permissions/budgets but does not verify the answer. Example 2 compares the final report with task criteria. A solver success claim and descriptive trace are not evidence. A trusted harness must capture the report, actual tool calls and elapsed time; the solver must not supply observed. Here these are in-memory fixtures, with no production backend or tamper protection. Returning an in-memory report is not a write tool call."
         }
       ],
       "resources": [
@@ -42825,6 +42839,17 @@
           "language": "en",
           "kind": "official",
           "required": false
+        },
+        {
+          "title": "Anthropic — Demystifying evals for AI agents",
+          "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents",
+          "language": "en",
+          "kind": "official",
+          "required": false,
+          "purpose_vi": "Phân biệt transcript với kết quả và xác định tiêu chí nhiệm vụ rõ ràng.",
+          "purpose_en": "Distinguish transcripts from outcomes and define unambiguous task criteria.",
+          "read_vi": "Đối chiếu kết quả quan sát với lời tự nhận; giải thích vì sao hai đường đi hợp lệ có thể cùng đạt.",
+          "read_en": "Compare observed outcomes with claims; explain why two valid paths can both pass."
         }
       ],
       "exercise_ids": [
@@ -42838,68 +42863,68 @@
       ],
       "estimated_minutes": 60,
       "completion_checklist": [
-        "Chấm cùng hai trường hợp với hai solver giả lập; thêm hành động write vào trace có đáp án đúng và xác nhận scorer đánh trượt.",
-        "Đúng đáp án nhưng có write hoặc hơn 5 tool call vẫn phải không đạt.",
-        "Lưu đầu ra và ghi đúng giới hạn của ví dụ."
+        "Chạy ví dụ 2, đối chiếu tám kết quả và lần lượt thay đổi lời báo thành công, báo cáo, thứ tự công cụ, quyền và ngân sách.",
+        "Báo thành công nhưng thiếu hoặc sai báo cáo vẫn trượt; đổi thứ tự hợp lệ vẫn đạt; gọi write, gọi công cụ 6 lần hoặc mất 3 giây đều trượt; đề mơ hồ báo lỗi đề bài.",
+        "Lưu đầu ra và giải thích vì sao observed phải do bộ chạy kiểm thử đáng tin cung cấp."
       ],
       "completion_criteria": [
-        "Bảng dataset/solver/scorer, kết quả từng trường hợp và hành động bị từ chối",
-        "Đúng đáp án nhưng có write hoặc hơn 5 tool call vẫn phải không đạt.",
+        "Có đủ tám kết quả gốc và kết quả sau thay đổi để đối chiếu lời giải",
+        "Báo thành công nhưng thiếu hoặc sai báo cáo vẫn trượt; đổi thứ tự hợp lệ vẫn đạt; gọi write, gọi công cụ 6 lần hoặc mất 3 giây đều trượt; đề mơ hồ báo lỗi đề bài.",
         "Không suy kết quả model thật từ dữ liệu mô phỏng."
       ],
       "common_mistakes": [
-        "Chỉ dùng một điểm tổng để kết luận mọi thành phần đều tốt.",
-        "Kết luận từ một kết quả thuận lợi mà chưa kiểm tra trường hợp khác.",
-        "Chép lời giải nhưng không giải thích được quyết định trong bài làm của mình."
+        "Dùng correct hoặc claimed_success làm bằng chứng kết quả.",
+        "So khớp đúng thứ tự tool mẫu thay vì mục tiêu và ràng buộc.",
+        "Tính lỗi đề bài vào điểm agent hoặc tin observed do solver tự gửi."
       ],
       "next_lessons": [
         "phase-17-genai-evaluation-genai-evaluation-4",
         "phase-18-genai-observability-genai-observability-1"
       ],
-      "review_question_vi": "Nội dung cốt lõi của “Đánh giá agent và chuỗi hành động” là gì?",
-      "review_question_en": "Define agent evaluation and trajectories in your own words. What are the input, transformation and output?",
-      "review_answer_vi": "Agent cần được đánh giá cả kết quả lẫn đường đi: công cụ đã gọi, quyền sử dụng, lỗi, số bước và chi phí. Hoàn thành nhiệm vụ không bù được thao tác ngoài phạm vi cho phép.",
-      "review_answer_en": "A strong answer names the input, transformation, output and the context where agent evaluation and trajectories is used. Relate it specifically to agent evaluation and trajectories in lesson phase-17-genai-evaluation-genai-evaluation-3.",
+      "review_question_vi": "Vì sao claimed_success=True vẫn trượt, còn thứ tự read_document → search có thể đạt?",
+      "review_question_en": "Why can claimed_success=True fail while read_document → search can pass?",
+      "review_answer_vi": "Bộ chấm đối chiếu báo cáo do bộ chạy kiểm thử quan sát với expected_report, đồng thời kiểm tra quyền và ngân sách. Lời báo thành công không quyết định điểm; mọi thứ tự tool được phép đều hợp lệ nếu có kết quả đúng, tối đa 5 lần gọi và 2 giây.",
+      "review_answer_en": "The grader compares the harness-observed report with expected_report and enforces permissions and budgets. Claims do not decide the score; any permitted tool order can pass with the required outcome, at most 5 calls and 2 seconds.",
       "review_cards": [
         {
           "id": "phase-17-genai-evaluation-genai-evaluation-3-recall",
           "type": "recall",
-          "question_vi": "Nội dung cốt lõi của “Đánh giá agent và chuỗi hành động” là gì?",
-          "question_en": "Define agent evaluation and trajectories in your own words. What are the input, transformation and output?",
-          "answer_vi": "Agent cần được đánh giá cả kết quả lẫn đường đi: công cụ đã gọi, quyền sử dụng, lỗi, số bước và chi phí. Hoàn thành nhiệm vụ không bù được thao tác ngoài phạm vi cho phép.",
-          "answer_en": "A strong answer names the input, transformation, output and the context where agent evaluation and trajectories is used.",
-          "hint_vi": "Nêu ý chính, sau đó minh họa bằng tình huống cụ thể.",
-          "hint_en": "Start with a small example you can calculate by hand."
+          "question_vi": "Vì sao claimed_success=True vẫn trượt, còn thứ tự read_document → search có thể đạt?",
+          "question_en": "Why can claimed_success=True fail while read_document → search can pass?",
+          "answer_vi": "Bộ chấm đối chiếu báo cáo do bộ chạy kiểm thử quan sát với expected_report, đồng thời kiểm tra quyền và ngân sách. Lời báo thành công không quyết định điểm; mọi thứ tự tool được phép đều hợp lệ nếu có kết quả đúng, tối đa 5 lần gọi và 2 giây.",
+          "answer_en": "The grader compares the harness-observed report with expected_report and enforces permissions and budgets. Claims do not decide the score; any permitted tool order can pass with the required outcome, at most 5 calls and 2 seconds.",
+          "hint_vi": "Tách lời tự nhận, kết quả quan sát và ràng buộc.",
+          "hint_en": "Separate claims, observed outcomes and constraints."
         },
         {
           "id": "phase-17-genai-evaluation-genai-evaluation-3-application",
           "type": "application",
-          "question_vi": "Đọc chuỗi hành động và kiểm tra mục tiêu, quyền, điều kiện dừng.",
-          "question_en": "Write a small code example or design that applies agent evaluation and trajectories to an AI engineering problem.",
-          "answer_vi": "Với nhiệm vụ “Đọc chuỗi hành động và kiểm tra mục tiêu, quyền, điều kiện dừng”, cần lưu: tiêu chí chấm và kết quả trên tình huống đúng, sai. Chấm nhất quán và phân biệt chất lượng truy xuất với chất lượng câu trả lời.",
-          "answer_en": "The agent evaluation and trajectories example should have an explicit input, expected output and a way to run or verify it (phase-17-genai-evaluation-genai-evaluation-3).",
-          "hint_vi": "Bắt đầu từ nhiệm vụ thực hành của bài.",
-          "hint_en": "Start from the lesson code example and change one assumption."
+          "question_vi": "Đặt claimed_success thành False và đảo thứ tự hai công cụ trong good: kết quả nào, vì sao?",
+          "question_en": "Set the claim to False and reverse the two tools in good: what verdict and why?",
+          "answer_vi": "Vẫn pass: báo cáo chứa guide và 3, các tool đều được phép, thời gian 1 giây. Chỉ đổi lời báo thành công không làm đổi bằng chứng của bộ chạy kiểm thử; không bắt buộc đường đi search trước.",
+          "answer_en": "Still pass: the report contains guide and 3, tools are permitted and elapsed time is 1 second. Changing the claim does not change harness evidence; search need not come first.",
+          "hint_vi": "Gọi grade(task, {**solver, \"claimed_success\": False}, cases[\"alternative_order\"]).",
+          "hint_en": "Call grade(task, {**solver, \"claimed_success\": False}, cases[\"alternative_order\"])."
         },
         {
           "id": "phase-17-genai-evaluation-genai-evaluation-3-debug",
           "type": "debug",
-          "question_vi": "Khi làm bài “Đánh giá agent và chuỗi hành động”, bạn cần tránh lỗi nào và kiểm tra lại ra sao?",
-          "question_en": "If agent evaluation and trajectories produces a wrong result or a metric drops, what would you debug first?",
-          "answer_vi": "Trong bài “Đánh giá agent và chuỗi hành động”, lỗi cần tránh là: chỉ dùng một điểm tổng để kết luận mọi thành phần đều tốt. Chấm nhất quán và phân biệt chất lượng truy xuất với chất lượng câu trả lời. Dùng ví dụ nhỏ để tìm bước đầu tiên có kết quả khác dự kiến.",
-          "answer_en": "For agent evaluation and trajectories, check inputs/shapes, preprocessing and the baseline first; then isolate the failure with a small test and error analysis (phase-17-genai-evaluation-genai-evaluation-3).",
-          "hint_vi": "Tìm bước đầu tiên xuất hiện khác biệt.",
-          "hint_en": "Do not start by changing the model or adding complexity."
+          "question_vi": "Solver báo thành công nhưng thiếu item_count; hoặc đề chỉ nói “báo cáo hữu ích”. Hai lỗi khác nhau thế nào?",
+          "question_en": "A solver claims success but omits item_count; another task only asks for a useful report. How do these failures differ?",
+          "answer_vi": "Thiếu item_count với đề rõ ràng là fail:outcome. Thiếu expected_report là TaskDefinitionError: sửa tiêu chí trước khi chấm, không ghi agent thất bại. Hàm không tự phát hiện mọi mơ hồ ngữ nghĩa.",
+          "answer_en": "Missing item_count under a clear task is fail:outcome. Missing expected_report is TaskDefinitionError: repair criteria before grading, without recording an agent failure. The function cannot detect every semantic ambiguity.",
+          "hint_vi": "Kiểm hợp đồng đề bài trước, rồi kiểm báo cáo quan sát.",
+          "hint_en": "Check the task contract first, then the observed report."
         },
         {
           "id": "phase-17-genai-evaluation-genai-evaluation-3-interview",
           "type": "interview",
-          "question_vi": "Bạn dùng kết quả nào từ bài “Đánh giá agent và chuỗi hành động” để giải thích cách làm và giới hạn?",
-          "question_en": "In an interview, how would you explain a trade-off and one edge case of agent evaluation and trajectories?",
-          "answer_vi": "Bắt đầu từ nhiệm vụ “Đọc chuỗi hành động và kiểm tra mục tiêu, quyền, điều kiện dừng”. Trình bày kết quả đã lưu, cách đối chiếu và một điều kiện có thể khiến kết luận thay đổi; không chỉ đọc lại định nghĩa.",
-          "answer_en": "The answer about agent evaluation and trajectories should cover assumptions, metrics/cost, limitations and how to reduce production risk (phase-17-genai-evaluation-genai-evaluation-3).",
-          "hint_vi": "Dùng quyết định thật trong bài làm, tránh chỉ đọc định nghĩa.",
-          "hint_en": "Relate it to latency, quality, cost or observability where relevant."
+          "question_vi": "Bạn dùng ví dụ này để giải thích đánh đổi và giới hạn nào khi đánh giá agent?",
+          "question_en": "Which trade-off and limitation would you explain using this example?",
+          "answer_vi": "Chấp nhận nhiều cách làm hợp lệ nhưng vẫn loại trường hợp gọi write, quá 5 lần gọi hoặc quá 2 giây, dù báo cáo đúng. Kết quả mô phỏng không đo model thật; bộ chạy kiểm thử phải tự ghi kết quả, hành động và thời gian, không tin dữ liệu solver tự khai.",
+          "answer_en": "Allow multiple valid paths while rejecting write, more than 5 calls or 2 seconds even with a correct report. Fixture results do not measure a real model; the harness must capture outcomes/actions/time independently of solver claims.",
+          "hint_vi": "Dùng alternative_order, unauthorized và too_slow làm bằng chứng.",
+          "hint_en": "Use alternative_order, unauthorized and too_slow as evidence."
         }
       ]
     },

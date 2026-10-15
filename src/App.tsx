@@ -28,6 +28,7 @@ import { TodayView } from './components/TodayView'
 import { ReviewView } from './components/ReviewView'
 import { RoadmapView } from './components/RoadmapView'
 import { ThemeToggle } from './theme/ThemeToggle'
+import { AdminUsersView } from './components/AdminUsersView'
 
 const locationState = () => appLocation(window.location.pathname, runtimeConfig.mode === 'hosted')
 const baseNavItems: Array<{ id: View; label: string; icon: string; hint: string }> = [
@@ -41,6 +42,7 @@ const baseNavItems: Array<{ id: View; label: string; icon: string; hint: string 
   { id: 'community', label: 'Cộng đồng', icon: '✦', hint: 'Góp ý · cải thiện bài học' },
   { id: 'journal', label: 'Nhật ký & Git', icon: '✎', hint: 'Ghi lại việc học' },
   { id: 'settings', label: 'Cài đặt', icon: '⚙', hint: 'Nhịp học cá nhân' },
+  { id: 'admin', label: 'Quản trị', icon: '⌂', hint: 'Người dùng beta' },
 ]
 
 function App() {
@@ -61,8 +63,9 @@ function App() {
     tools: ['Tools', 'Choose for the task'], security: ['Security Lab', 'Passive endpoint review'],
     resources: ['Resources', 'Books, courses and docs'], community: ['Community', 'Improve the lessons'],
     journal: [hosted ? 'Journal' : 'Journal & Git', 'Record your learning'], settings: ['Settings', 'Your learning rhythm'],
+    admin: ['Admin', 'Manage beta users'],
   }
-  const navItems = baseNavItems.map((item) => ({ ...item,
+  const navItems = baseNavItems.filter((item) => item.id !== 'admin' || (hosted && auth.adminAccess === 'authorized')).map((item) => ({ ...item,
     label: vi ? (hosted && item.id === 'journal' ? 'Nhật ký' : item.label) : englishNav[item.id][0],
     hint: vi ? (hosted && item.id === 'exercises' ? 'Hướng dẫn thực hành' : item.hint) : englishNav[item.id][1],
   }))
@@ -174,7 +177,8 @@ function App() {
           {view === 'lesson' ? <div className="topbar-title">{vi ? 'Bài học' : 'Lesson workspace'}</div>
             : <h1>{view === 'dashboard' ? (vi ? 'Hôm nay học gì?' : 'What will you learn today?')
               : view === 'missing' ? (vi ? 'Không tìm thấy trang' : 'Page not found')
-                : navItems.find((item) => item.id === view)?.label}</h1>}
+                : view === 'admin' ? (vi ? 'Quản trị' : 'Admin')
+                  : navItems.find((item) => item.id === view)?.label}</h1>}
         </div>
         <div className="topbar-actions">
           <ThemeToggle language={settings.language} />
@@ -232,6 +236,10 @@ function App() {
               onRestored={refresh} onSave={saveSettings} />}
             {view === 'journal' && <JournalView hosted={hosted} language={settings.language}
               onExportContext={(question) => api.exportContext({ lesson_slug: lesson?.slug, question })} />}
+            {view === 'admin' && (!hosted || auth.adminAccess === 'denied') && <section className="empty-state" role="alert"><h3>{vi ? 'Không có quyền' : 'Access denied'}</h3><p>{vi ? 'Tài khoản này không có quyền quản trị.' : 'This account is not authorized for administration.'}</p></section>}
+            {view === 'admin' && hosted && auth.adminAccess === 'checking' && <section className="empty-state" role="status"><p>{vi ? 'Đang kiểm tra quyền…' : 'Checking admin access…'}</p></section>}
+            {view === 'admin' && hosted && auth.adminAccess === 'error' && <section className="empty-state" role="alert"><h3>{vi ? 'Không kiểm tra được quyền' : 'Could not check access'}</h3><p>{auth.adminError}</p><button className="primary-button" onClick={auth.refreshAdminAccess}>{vi ? 'Thử lại' : 'Retry'}</button></section>}
+            {view === 'admin' && hosted && auth.adminAccess === 'authorized' && <AdminUsersView language={settings.language} />}
           </div>}
     </main>
   </div>

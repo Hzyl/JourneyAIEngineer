@@ -71,9 +71,14 @@
 .roadmap-section-heading h3 { margin: .5rem 0; }
 .roadmap-section-heading p { color: var(--public-muted); font-size: 1rem; }
 .roadmap-stage-list { margin: 2rem 0 3rem; }
+.public-track-filter { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1rem 0 1.25rem; }
+.public-track-filter button { min-height: 44px; padding: .55rem .9rem; border: 1px solid var(--field-border); border-radius: 8px; background: var(--surface); color: var(--public-ink); cursor: pointer; }
+.public-track-filter button[aria-pressed="true"] { border-color: var(--teal); background: var(--teal); color: var(--on-accent); }
 .roadmap-stage-list > ol { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; padding: 0; margin: 0; list-style: none; }
 .roadmap-stage-card { display: grid; grid-template-columns: 3rem minmax(0, 1fr); gap: 1rem; padding: 1.25rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
 .roadmap-stage-number { color: var(--teal); font: 700 1.25rem/1 var(--display-font, system-ui); }
+.roadmap-stage-track { display: inline-block; margin-bottom: .45rem; color: var(--public-muted); font-size: .78rem; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; }
+.roadmap-stage-track.specialization { color: var(--teal); }
 .roadmap-stage-body h4 { margin: 0 0 .45rem; font-size: 1.2rem; }
 .roadmap-stage-body p { margin: 0; font-size: 1rem; }
 .roadmap-stage-body details { margin-top: .9rem; border-top: 1px solid var(--line); padding-top: .75rem; }
@@ -81,6 +86,7 @@
 .roadmap-stage-body dl { display: grid; grid-template-columns: minmax(7rem, auto) minmax(0, 1fr); gap: .35rem .75rem; margin: .6rem 0 0; font-size: .95rem; }
 .roadmap-stage-body dt { color: var(--public-muted); font-weight: 700; }
 .roadmap-stage-body dd { margin: 0; }
+.roadmap-stage-body dd ul { margin: 0; padding-left: 1.15rem; }
 .roadmap-route-heading { margin-top: 2.5rem; }
 
 @media (max-width: 760px) {

@@ -20,7 +20,17 @@
         6
       ],
       "next_vi": "Sau khi có mô hình ban đầu, chọn hướng xây ứng dụng LLM hoặc học sâu hơn về học máy. Dùng bài thực hành đầu vào để xác định phần đã nắm vững và có thể bỏ qua.",
-      "next_en": "After the baseline, choose LLM applications or deeper ML. Use the entry exercise to skip familiar material."
+      "next_en": "After the baseline, choose LLM applications or deeper ML. Use the entry exercise to skip familiar material.",
+      "core_phase_ids": [
+        "phase-00-onboarding",
+        "phase-01-python-software",
+        "phase-02-math-ml",
+        "phase-03-classical-ml"
+      ],
+      "optional_phase_ids": [],
+      "minimum_project_slugs": [
+        "tabular-ml"
+      ]
     },
     {
       "id": "application",
@@ -46,7 +56,33 @@
         8
       ],
       "next_vi": "Nếu chưa vững Python, hãy học phần nền tảng trước. Học cách đánh giá hệ thống trước khi xây tác tử AI; RAG nâng cao, gọi công cụ và MCP là các phần mở rộng tùy nhu cầu.",
-      "next_en": "Missing Python skills? Start with foundations. Learn evaluation before agents; advanced RAG, tool calling and MCP are optional extensions."
+      "next_en": "Missing Python skills? Start with foundations. Learn evaluation before agents; advanced RAG, tool calling and MCP are optional extensions.",
+      "core_phase_ids": [
+        "phase-00-onboarding",
+        "phase-08-genai-software",
+        "phase-09-genai-ml-fundamentals",
+        "phase-11-llm-application",
+        "phase-12-genai-rag",
+        "phase-17-genai-evaluation",
+        "phase-18-genai-observability",
+        "phase-19-genai-production",
+        "phase-07-capstone-career"
+      ],
+      "optional_phase_ids": [
+        "phase-10-genai-transformers",
+        "phase-13-genai-advanced-rag",
+        "phase-14-genai-tool-calling",
+        "phase-15-genai-agents",
+        "phase-16-genai-mcp",
+        "phase-20-genai-finetuning",
+        "phase-21-genai-local-llm",
+        "phase-22-genai-system-design"
+      ],
+      "minimum_project_slugs": [
+        "tabular-ml",
+        "vietnamese-rag",
+        "production-genai-system"
+      ]
     },
     {
       "id": "deep-ml",
@@ -70,7 +106,27 @@
         10
       ],
       "next_vi": "Có thể học tiếp Transformer và tinh chỉnh mô hình khi phù hợp với mục tiêu. Chỉ tăng độ phức tạp sau khi đã có mô hình làm mốc so sánh và quy trình đánh giá đáng tin cậy.",
-      "next_en": "Continue with transformers and fine-tuning when relevant. Increase complexity only after establishing a baseline and evaluation."
+      "next_en": "Continue with transformers and fine-tuning when relevant. Increase complexity only after establishing a baseline and evaluation.",
+      "core_phase_ids": [
+        "phase-00-onboarding",
+        "phase-01-python-software",
+        "phase-02-math-ml",
+        "phase-03-classical-ml",
+        "phase-04-deep-learning",
+        "phase-05-mlops",
+        "phase-07-capstone-career"
+      ],
+      "optional_phase_ids": [
+        "phase-10-genai-transformers",
+        "phase-20-genai-finetuning",
+        "phase-21-genai-local-llm",
+        "phase-22-genai-system-design"
+      ],
+      "minimum_project_slugs": [
+        "tabular-ml",
+        "deep-learning",
+        "production-genai-system"
+      ]
     }
   ],
   "workload_note_vi": "Số giờ mỗi tuần chỉ là gợi ý để sắp xếp lịch học, không phải cam kết về thời gian hoàn thành hay khả năng tìm việc. Thời lượng đọc bài chưa bao gồm thời gian gỡ lỗi, ôn tập và hoàn thiện hồ sơ dự án.",

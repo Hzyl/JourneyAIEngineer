@@ -82,3 +82,6 @@ CI kiểm tra nội dung, chạy kiểm thử Python, `pip check`, `npm ci`, ki�
   và lưu dữ liệu học theo tài khoản. Xem [WEB-BETA.md](WEB-BETA.md) để biết trạng thái triển khai đăng nhập.
 - **Sau beta:** hoàn thiện trang học công khai và duyệt phản hồi, cho phép tự xóa tài khoản,
   tăng kiểm thử đầu cuối và theo dõi bản web, bổ sung kết nối nhà cung cấp khi cần; giữ xuất/nhập dữ liệu trên máy làm phương án dự phòng.
+## Hosted administration
+
+The hosted application keeps administration behind the Supabase boundary. `AuthProvider` performs a hosted-only `is_current_user_admin()` RPC check; `App` hides the navigation item for other users while the `admin-users` Edge Function remains the authorization boundary for direct requests. Service-role credentials exist only in the function runtime. See [admin user directory](ADMIN-USER-DIRECTORY.md).

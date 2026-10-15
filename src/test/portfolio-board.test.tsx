@@ -50,3 +50,12 @@ test('missing portfolio data has a clear empty state', async () => {
   await act(async () => root.render(<PortfolioBoard program={{}} language="en" />))
   expect(host.querySelector('[role="status"]')!.textContent).toBe('No project ideas are available yet.')
 })
+
+test('shows requirement level, route labels and evidence metadata', async () => {
+  await render('en')
+  const first = host.querySelector<HTMLElement>('.portfolio-card')!
+  expect(first.textContent).toContain('Required')
+  expect(first.textContent).toContain('foundation')
+  expect(first.textContent).toContain('Evidence required')
+  expect(first.querySelectorAll('li').length).toBeGreaterThan(0)
+})
