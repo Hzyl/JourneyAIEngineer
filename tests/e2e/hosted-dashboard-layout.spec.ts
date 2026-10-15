@@ -22,6 +22,7 @@ for (const language of ['vi', 'en']) {
         if (path === '/rest/v1/rpc/get_session_deadline') return route.fulfill({ json: {
           server_time: new Date().toISOString(), expires_at: new Date(Date.now() + 86400000).toISOString(),
         } })
+        if (path === '/rest/v1/rpc/is_current_user_admin') return route.fulfill({ json: false })
         if (path === '/rest/v1/user_settings') return route.fulfill({ json: {
           user_id: user.id, language, track: 'standard', weekly_goal_minutes: 720,
           show_completed_lessons: true, target_role: 'internship', experience_level: 'beginner',

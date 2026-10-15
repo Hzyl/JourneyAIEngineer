@@ -23,7 +23,33 @@ export type Database = {
           }
         },"public": {
           Tables: {
-            "journal_entries": {
+            "admin_audit_log": {
+                  Row: {
+                    "action": string,"admin_id": string | null,"id": number,"metadata": NonNullable<Json>,"occurred_at": string,"target_user_id": string | null
+                  }
+                  Insert: {
+                    "action": string,"admin_id"?: string | null,"id"?: number,"metadata"?: NonNullable<Json>,"occurred_at"?: string,"target_user_id"?: string | null
+                  }
+                  Update: {
+                    "action"?: string,"admin_id"?: string | null,"id"?: number,"metadata"?: NonNullable<Json>,"occurred_at"?: string,"target_user_id"?: string | null
+                  }
+                  Relationships: [
+
+                  ]
+                },"admin_roles": {
+                  Row: {
+                    "granted_at": string,"granted_by": string | null,"role": string,"user_id": string
+                  }
+                  Insert: {
+                    "granted_at"?: string,"granted_by"?: string | null,"role"?: string,"user_id": string
+                  }
+                  Update: {
+                    "granted_at"?: string,"granted_by"?: string | null,"role"?: string,"user_id"?: string
+                  }
+                  Relationships: [
+
+                  ]
+                },"journal_entries": {
                   Row: {
                     "body": string,"created_at": string,"id": string,"title": string,"updated_at": string,"user_id": string,"week_start": string
                   }
@@ -175,6 +201,9 @@ export type Database = {
                            },
 "get_session_deadline":
 { Args: Record<PropertyKey, never>; Returns: Json
+                           },
+"is_current_user_admin":
+{ Args: Record<PropertyKey, never>; Returns: boolean
                            },
 "record_lesson_progress":
 { Args: { "p_lesson_slug": string,"p_minutes"?: number,"p_status": Database["public"]['Enums']["lesson_status"] }; Returns: {

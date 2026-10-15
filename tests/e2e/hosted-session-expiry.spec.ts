@@ -24,6 +24,7 @@ for (const language of ['vi', 'en'] as const) {
       if (url.pathname === '/rest/v1/rpc/get_session_deadline') return route.fulfill({ json: {
         server_time: '2026-10-09T00:00:00Z', expires_at: '2026-10-09T00:00:00Z',
       } })
+      if (url.pathname === '/rest/v1/rpc/is_current_user_admin') return route.fulfill({ json: false })
       if (url.pathname === '/auth/v1/user') return route.fulfill({ json: user })
       if (url.pathname === '/auth/v1/logout') {
         expect(url.searchParams.get('scope')).toBe('local')

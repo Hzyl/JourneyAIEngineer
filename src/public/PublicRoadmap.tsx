@@ -1,12 +1,19 @@
 import { illustrationForLesson } from '../components/learning-illustrations'
 import { LearningIllustration } from '../components/LearningIllustration'
-import { useState } from 'react'
-import curriculum from '../../content/curriculum.json'
+import { useEffect, useRef, useState } from 'react'
 import routes from '../../content/learning_routes.json'
 import roadmapOverview from '../../content/roadmap_overview.json'
 
 type Props = { language: 'vi' | 'en'; standalone?: boolean; onStart: () => void }
 type TrackFilter = 'all' | 'core' | 'specialization'
+type CurriculumPayload = {
+  phases: Array<{
+    slug: string
+    title_vi: string
+    title_en: string
+    modules: Array<{ slug: string; title_vi: string; title_en: string }>
+  }>
+}
 type RoadmapStage = typeof roadmapOverview.stages[number] & {
   bridge_phase_ids?: string[]
   optional_phase_ids?: string[]
@@ -15,6 +22,10 @@ type RoadmapStage = typeof roadmapOverview.stages[number] & {
 }
 
 export function PublicRoadmap({ language, standalone, onStart }: Props) {
+  const roadmapRef = useRef<HTMLElement>(null)
+  const [curriculum, setCurriculum] = useState<CurriculumPayload | null>(null)
+  const [curriculumLoading, setCurriculumLoading] = useState(false)
+  const [curriculumError, setCurriculumError] = useState(false)
   const [selected, setSelected] = useState(() => {
     const requested = new URLSearchParams(window.location.search).get('route')
     return routes.routes.some((route) => route.id === requested) ? requested! : 'foundation'
@@ -25,10 +36,43 @@ export function PublicRoadmap({ language, standalone, onStart }: Props) {
   })
   const vi = language === 'vi'
   const Heading = standalone ? 'h1' : 'h2'
+
+  useEffect(() => {
+    let requested = false
+    const requestCurriculum = () => {
+      if (requested) return
+      requested = true
+      setCurriculumLoading(true)
+      void import('../../content/curriculum.json')
+        .then(({ default: payload }) => setCurriculum(payload as CurriculumPayload))
+        .catch(() => setCurriculumError(true))
+        .finally(() => setCurriculumLoading(false))
+    }
+
+    if (standalone) {
+      requestCurriculum()
+      return
+    }
+
+    const node = roadmapRef.current
+    if (!node || !('IntersectionObserver' in window)) {
+      requestCurriculum()
+      return
+    }
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        requestCurriculum()
+        observer.disconnect()
+      }
+    }, { rootMargin: '600px 0px' })
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [standalone])
+
   const route = routes.routes.find((item) => item.id === selected)!
   const stages = roadmapOverview.stages.filter((stage) => track === 'all' || stage.track === track) as RoadmapStage[]
   const phaseTitle = (id: string) => {
-    const phase = curriculum.phases.find((item) => item.slug === id)
+    const phase = curriculum?.phases.find((item) => item.slug === id)
     return phase ? (vi ? phase.title_vi : phase.title_en) : id
   }
   const setTrackFilter = (next: TrackFilter) => {
@@ -38,7 +82,7 @@ export function PublicRoadmap({ language, standalone, onStart }: Props) {
     else url.searchParams.set('track', next)
     window.history.replaceState(window.history.state, '', url)
   }
-  return <section className="public-roadmap" id="roadmap" aria-labelledby="route-title">
+  return <section ref={roadmapRef} className="public-roadmap" id="roadmap" aria-labelledby="route-title">
     <span className="eyebrow">{vi ? 'LỘ TRÌNH CỦA BẠN' : 'YOUR LEARNING PATH'}</span>
     <Heading id="route-title">{vi ? 'Chọn đích đến. Bắt đầu vừa sức.' : 'Choose a direction. Start at your level.'}</Heading>
     <div className="roadmap-overview-hero">
@@ -132,18 +176,25 @@ export function PublicRoadmap({ language, standalone, onStart }: Props) {
     <p>{vi ? route.audience_vi : route.audience_en}</p>
     <p><strong>{vi ? 'Sản phẩm đầu ra: ' : 'Your outcome: '}</strong>{vi ? route.outcome_vi : route.outcome_en}</p>
     <ol className="route-phases">
-      {route.phase_ids.map((id) => {
-        const phase = curriculum.phases.find((item) => item.slug === id)!
+      {curriculum ? route.phase_ids.map((id) => {
+        const phase = curriculum.phases.find((item) => item.slug === id)
+        if (!phase) return null
         return <li key={id}>
           <LearningIllustration name={illustrationForLesson(id)} variant="thumbnail" />
-    <details>
+          <details>
             <summary>{vi ? phase.title_vi : phase.title_en}</summary>
             <ul>{phase.modules.map((module) => <li key={module.slug}>
               {vi ? module.title_vi : module.title_en}
             </li>)}</ul>
           </details>
         </li>
-      })}
+      }) : <li role="status">
+        {curriculumError
+          ? (vi ? 'Không thể tải chi tiết chặng học.' : 'Could not load route details.')
+          : curriculumLoading
+            ? (vi ? 'Đang tải chi tiết chặng học…' : 'Loading route details…')
+            : (vi ? 'Chi tiết chặng học sẽ tải khi bạn tới phần này.' : 'Route details load as you reach this section.')}
+      </li>}
     </ol>
     <p>{vi ? route.next_vi : route.next_en}</p>
     <p className="public-footnote">{route.weekly_hours.join('–')} {vi ? 'giờ/tuần' : 'hours/week'}.{' '}

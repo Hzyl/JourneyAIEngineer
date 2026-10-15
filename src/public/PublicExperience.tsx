@@ -3,7 +3,6 @@ import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { AuthScreen } from '../auth/AuthScreen'
 import type { CatalogLesson } from '../platform/hosted/catalog'
 import { PublicLesson } from './PublicLesson'
-import { PublicRoadmap } from './PublicRoadmap'
 import { ThemeToggle } from '../theme/ThemeToggle'
 import { GitHubLink } from '../components/GitHubLink'
 import { usePublicLanguage } from './public-language'
@@ -13,6 +12,7 @@ import './public-lesson.css'
 import './public-roadmap.css'
 
 const PublicExercises = lazy(() => import('./PublicExercises'))
+const PublicRoadmap = lazy(() => import('./PublicRoadmap').then(({ PublicRoadmap: component }) => ({ default: component })))
 
 const samples = import.meta.glob<CatalogLesson>('../../content/curated/*.json', {
   eager: true,
@@ -31,6 +31,13 @@ export function PublicExperience() {
   const lastPath = useRef(window.location.pathname)
   const vi = language === 'vi'
   const selectedLesson = lessons.find((lesson) => lesson.lesson_id === page)
+  const [loadRoadmap, setLoadRoadmap] = useState(page === 'roadmap')
+
+  useEffect(() => {
+    if (page === 'roadmap') return
+    const timer = window.setTimeout(() => setLoadRoadmap(true), 1200)
+    return () => window.clearTimeout(timer)
+  }, [page])
 
   useEffect(() => {
     const restore = () => {
@@ -102,7 +109,9 @@ export function PublicExperience() {
       {selectedLesson ? <>
         <button className="public-back" onClick={() => navigate('home')}>← {vi ? 'Bài học mẫu' : 'Sample lessons'}</button>
         <PublicLesson lesson={selectedLesson} language={language} onSignIn={openSignIn} />
-      </> : page === 'roadmap' ? <PublicRoadmap language={language} standalone onStart={() => navigate(firstSlug)} />
+      </> : page === 'roadmap' ? <Suspense fallback={<PublicRoadmapFallback language={language} standalone />}>
+        <PublicRoadmap language={language} standalone onStart={() => navigate(firstSlug)} />
+      </Suspense>
         : page === 'exercises' ? <>
         <h1 className="sr-only">{vi ? 'Bài tập' : 'Exercises'}</h1>
         <Suspense fallback={<p role="status">{vi ? 'Đang tải bài tập…' : 'Loading exercises…'}</p>}>
@@ -160,7 +169,9 @@ export function PublicExperience() {
             </button>
           </li>)}</ol>
         </section>
-        <PublicRoadmap language={language} onStart={() => navigate(firstSlug)} />
+        <Suspense fallback={loadRoadmap ? <PublicRoadmapFallback language={language} /> : null}>
+          {loadRoadmap ? <PublicRoadmap language={language} onStart={() => navigate(firstSlug)} /> : null}
+        </Suspense>
         <section className="public-modes">
           <h2>{vi ? 'Đọc trên web. Thực hành trên máy của bạn.' : 'Learn on the web. Practise locally.'}</h2>
           <div><article><h3>Web beta</h3><p>{vi ? 'Đọc bài ngay mà không cần tài khoản. Đăng nhập khi muốn lưu tiến độ, ghi chú và lịch ôn tập.'
@@ -177,4 +188,14 @@ export function PublicExperience() {
       <a href="https://github.com/Hzyl/JourneyAIEngineer">{vi ? 'Mã nguồn, góp ý và đóng góp trên GitHub ↗' : 'Source, feedback & contributions on GitHub ↗'}</a>
     </footer>
   </div>
+}
+
+function PublicRoadmapFallback({ language, standalone = false }: { language: 'vi' | 'en'; standalone?: boolean }) {
+  const vi = language === 'vi'
+  const Heading = standalone ? 'h1' : 'h2'
+  return <section className="public-roadmap public-roadmap-loading" aria-labelledby="roadmap-loading-title">
+    <span className="eyebrow">{vi ? 'LỘ TRÌNH HỌC' : 'LEARNING ROADMAP'}</span>
+    <Heading id="roadmap-loading-title">{vi ? 'Đang mở bản đồ học tập…' : 'Loading the learning map…'}</Heading>
+    <p role="status">{vi ? 'Bản đồ sẽ hiện ngay sau phần giới thiệu.' : 'The roadmap will appear after the introduction.'}</p>
+  </section>
 }

@@ -46,6 +46,7 @@ for (const language of ['vi', 'en'] as const) {
           server_time: new Date().toISOString(), expires_at: new Date(Date.now() + 86_400_000).toISOString(),
         } })
       }
+      if (path === '/rest/v1/rpc/is_current_user_admin') return route.fulfill({ json: false })
       if (path === '/rest/v1/user_settings') {
         privateReads += 1
         return route.fulfill({ json: { user_id: user.id, language, track: 'standard', weekly_goal_minutes: 720,
