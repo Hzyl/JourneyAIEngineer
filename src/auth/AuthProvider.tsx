@@ -31,7 +31,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<AuthState>(runtimeConfig.mode === 'hosted' ? 'loading' : 'local')
   const [session, setSession] = useState<Session | null>(null)
   const [attempt, setAttempt] = useState(0)
-  const [adminAccess, setAdminAccess] = useState<AdminAccess>('denied')
+  const [adminAccess, setAdminAccess] = useState<AdminAccess>(runtimeConfig.mode === 'hosted' ? 'checking' : 'denied')
   const [adminError, setAdminError] = useState<string | null>(null)
   const [adminAttempt, setAdminAttempt] = useState(0)
   const reading = useRef(true)

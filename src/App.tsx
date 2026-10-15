@@ -78,6 +78,16 @@ function App() {
     main: mainRef, show: openNavigation, close: closeNavigation,
   } = useMobileNavigation()
 
+  useEffect(() => {
+    if (!hosted || view !== 'admin' || auth.state !== 'signed_in' || auth.adminAccess !== 'denied') return
+    // Unauthorized deep links return to the learner dashboard without exposing an admin error screen.
+    // oxlint-disable-next-line react/set-state-in-effect
+    setSelectedLesson(null)
+    // oxlint-disable-next-line react/set-state-in-effect
+    setView('dashboard')
+    closeNavigation(true)
+  }, [auth.adminAccess, auth.state, closeNavigation, hosted, view])
+
   const navigate = (nextView: View) => {
     setView(nextView)
     if (nextView !== 'lesson') setSelectedLesson(null)
@@ -236,7 +246,6 @@ function App() {
               onRestored={refresh} onSave={saveSettings} />}
             {view === 'journal' && <JournalView hosted={hosted} language={settings.language}
               onExportContext={(question) => api.exportContext({ lesson_slug: lesson?.slug, question })} />}
-            {view === 'admin' && (!hosted || auth.adminAccess === 'denied') && <section className="empty-state" role="alert"><h3>{vi ? 'Không có quyền' : 'Access denied'}</h3><p>{vi ? 'Tài khoản này không có quyền quản trị.' : 'This account is not authorized for administration.'}</p></section>}
             {view === 'admin' && hosted && auth.adminAccess === 'checking' && <section className="empty-state" role="status"><p>{vi ? 'Đang kiểm tra quyền…' : 'Checking admin access…'}</p></section>}
             {view === 'admin' && hosted && auth.adminAccess === 'error' && <section className="empty-state" role="alert"><h3>{vi ? 'Không kiểm tra được quyền' : 'Could not check access'}</h3><p>{auth.adminError}</p><button className="primary-button" onClick={auth.refreshAdminAccess}>{vi ? 'Thử lại' : 'Retry'}</button></section>}
             {view === 'admin' && hosted && auth.adminAccess === 'authorized' && <AdminUsersView language={settings.language} />}

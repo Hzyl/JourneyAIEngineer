@@ -47,6 +47,14 @@ describe('roadmap metadata contracts', () => {
     expect(overview.sequence_note_vi).toContain('tool/agent')
     expect(overview.stages.find((stage) => stage.id === 'engineering')?.phase_ids).toEqual(['phase-05-mlops'])
     expect(overview.stages.find((stage) => stage.id === 'engineering')?.bridge_phase_ids).toEqual(['phase-08-genai-software'])
+    const llm = overview.stages.find((stage) => stage.id === 'llm')!
+    expect(llm.phase_ids).toEqual([
+      'phase-09-genai-ml-fundamentals',
+      'phase-10-genai-transformers',
+      'phase-11-llm-application',
+    ])
+    expect(llm.optional_phase_ids).toEqual(['phase-06-llm-rag'])
+    expect(curriculum.phases.find((phase) => phase.slug === 'phase-06-llm-rag')?.title_vi).toBe('Khảo sát NLP và LLM')
     expect(overview.stages.find((stage) => stage.id === 'specialization')?.phase_ids).toEqual([
       'phase-20-genai-finetuning',
       'phase-21-genai-local-llm',

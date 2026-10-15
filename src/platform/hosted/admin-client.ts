@@ -32,6 +32,10 @@ async function invoke<T>(body: Record<string, unknown>): Promise<T> {
 
 export async function readAdminUsers(page = 1, perPage = 25, q = ''): Promise<AdminDirectoryPage> {
   const client = requireSupabase()
+  // Ask Auth for the current user first so an expired access token can be
+  // refreshed before the function request is assembled.
+  const { data: currentUser, error: userError } = await client.auth.getUser()
+  if (userError || !currentUser.user) throw new Error('authentication_required')
   const { data: session } = await client.auth.getSession()
   const token = session.session?.access_token
   if (!token) throw new Error('Bạn cần đăng nhập để mở khu vực quản trị.')

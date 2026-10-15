@@ -272,7 +272,9 @@
       "id": "llm",
       "number": "06",
       "phase_ids": [
-        "phase-06-llm-rag"
+        "phase-09-genai-ml-fundamentals",
+        "phase-10-genai-transformers",
+        "phase-11-llm-application"
       ],
       "title_vi": "LLM và mô hình nền tảng",
       "title_en": "LLMs and foundation models",
@@ -311,13 +313,11 @@
       "project_slugs": [
         "llm-chat-api"
       ],
-      "bridge_phase_ids": [
-        "phase-09-genai-ml-fundamentals",
-        "phase-10-genai-transformers",
-        "phase-11-llm-application"
+      "optional_phase_ids": [
+        "phase-06-llm-rag"
       ],
-      "note_vi": "Phase-06 là bài khảo sát rộng. Route ứng dụng dùng ba module cầu nối tách nhỏ để học ML/embedding, Transformer và hợp đồng ứng dụng LLM theo đúng thứ tự.",
-      "note_en": "Phase-06 is the broad survey. The application route uses three focused bridge modules for ML/embeddings, Transformers, and LLM application contracts in order."
+      "note_vi": "Chuỗi chính dùng ba module tập trung về ML/embedding, Transformer và ứng dụng LLM. Phase-06 chỉ là bài khảo sát NLP/LLM để xem lại, không phải một chặng RAG thứ hai.",
+      "note_en": "The main sequence uses three focused modules for ML/embeddings, Transformers and LLM applications. Phase-06 is only an NLP/LLM survey, not a second RAG stage."
     },
     {
       "id": "rag",

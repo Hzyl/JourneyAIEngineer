@@ -2265,10 +2265,10 @@
       "slug": "phase-06-llm-rag",
       "order": 6,
       "duration_weeks": 10,
-      "title_vi": "Xử lý ngôn ngữ, LLM và RAG",
-      "title_en": "NLP, LLMs and RAG",
-      "summary_vi": "Hiểu embedding, Transformer, truy xuất và đánh giá để xây trợ lý tài liệu tiếng Việt.",
-      "summary_en": "Understand embeddings, Transformers, retrieval, evaluation and build a Vietnamese document assistant.",
+      "title_vi": "Khảo sát NLP và LLM",
+      "title_en": "NLP and LLM survey",
+      "summary_vi": "Khảo sát embedding, Transformer, truy xuất và kiến trúc RAG ở mức khái niệm; phần thực hành RAG nền tảng nằm ở phase-12.",
+      "summary_en": "Survey embeddings, Transformers, retrieval and RAG architecture at a conceptual level; hands-on RAG foundations live in phase-12.",
       "modules": [
         {
           "slug": "nlp-foundations",
