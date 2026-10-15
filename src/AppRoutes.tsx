@@ -61,7 +61,7 @@ export function AppRoutes() {
   let content: ReactNode
   if (hosted && auth.state === 'expired') content = <SessionExpired />
   else if (callback) content = <AuthCallback />
-  else if (hosted && auth.state === 'loading') content = <LoadingScreen />
+  else if (hosted && auth.state === 'loading') content = <PublicExperience />
   else if (hosted && auth.state === 'error') content = <SessionRecovery />
   else if (hosted && auth.state !== 'signed_in') content = <PublicExperience />
   else content = hosted ? <SignedInEntry key={auth.session?.user.id} /> : <LearningApp key="local" />

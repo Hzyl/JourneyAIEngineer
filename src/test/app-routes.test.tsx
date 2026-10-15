@@ -34,9 +34,9 @@ afterEach(async () => {
 })
 const render = () => act(async () => { root.render(<AppRoutes />) })
 
-test('hosted auth transitions mount only the appropriate learning surface', async () => {
+test('hosted public routes remain available while auth is still loading', async () => {
   await render()
-  expect(host.querySelector('[role="status"]')?.textContent).toContain('Loading')
+  expect(host.textContent).toBe('Public learning')
   expect(host.textContent).not.toContain('Personal learning app')
   state.auth = 'signed_out'
   await render()
