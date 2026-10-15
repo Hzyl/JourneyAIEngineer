@@ -244,7 +244,7 @@
         "evaluation": "Schema validity, latency, retry behavior, rate-limit correctness, and cost per request.",
         "github_path": "projects/llm-chat-api",
         "estimated_weeks": 3,
-        "track": "genai-specialization",
+        "track": "core",
         "deliverables_vi": [
           "Đặc tả API",
           "Demo trả lời từng phần",

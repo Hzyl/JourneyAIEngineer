@@ -236,7 +236,6 @@
       "checkpoint_en": "Expose a prediction or AI feature through an API with input validation, tests and reproducible setup.",
       "track": "core",
       "required_for_routes": [
-        "application",
         "deep-ml"
       ],
       "difficulty": "intermediate",
@@ -455,9 +454,7 @@
         ]
       },
       "estimated_weeks": 6,
-      "project_slugs": [
-        "production-genai-system"
-      ]
+      "project_slugs": []
     },
     {
       "id": "specialization",

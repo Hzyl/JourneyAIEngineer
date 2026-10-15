@@ -13,7 +13,8 @@
         "phase-00-onboarding",
         "phase-01-python-software",
         "phase-02-math-ml",
-        "phase-03-classical-ml"
+        "phase-03-classical-ml",
+        "phase-07-capstone-career"
       ],
       "weekly_hours": [
         4,
@@ -25,7 +26,8 @@
         "phase-00-onboarding",
         "phase-01-python-software",
         "phase-02-math-ml",
-        "phase-03-classical-ml"
+        "phase-03-classical-ml",
+        "phase-07-capstone-career"
       ],
       "optional_phase_ids": [],
       "minimum_project_slugs": [
