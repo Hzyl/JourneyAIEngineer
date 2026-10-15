@@ -81,17 +81,17 @@ export function AdminUsersView({ language }: { language: 'vi' | 'en' }) {
     </div>
     <form className="admin-search" onSubmit={(event) => { event.preventDefault(); setPage(1); setSubmitted(query.trim()) }}>
       <label htmlFor="admin-user-search">{vi ? 'Tìm email hoặc ID' : 'Search email or ID'}</label>
-      <input id="admin-user-search" value={query} maxLength={200} onChange={(event) => setQuery(event.target.value)} />
+      <input id="admin-user-search" type="search" value={query} maxLength={200} onChange={(event) => setQuery(event.target.value)} />
       <button className="primary-button" type="submit">{vi ? 'Tìm' : 'Search'}</button>
     </form>
     {error && <p className="admin-error" role="alert">{error} <button className="text-button" onClick={() => void load()}>{vi ? 'Thử lại' : 'Retry'}</button></p>}
     {loading && <p role="status">{vi ? 'Đang tải…' : 'Loading…'}</p>}
     {!loading && result && <div className="admin-table-wrap"><table className="admin-table"><thead><tr>
-      <th>{vi ? 'Email' : 'Email'}</th><th>ID</th><th>{vi ? 'Tạo lúc' : 'Created'}</th><th>{vi ? 'Xác nhận email' : 'Confirmed'}</th><th>{vi ? 'Đăng nhập cuối' : 'Last sign-in'}</th><th>{vi ? 'Trạng thái' : 'Status'}</th><th>{vi ? 'Thao tác' : 'Actions'}</th>
+      <th scope="col">{vi ? 'Email' : 'Email'}</th><th scope="col">ID</th><th scope="col">{vi ? 'Tạo lúc' : 'Created'}</th><th scope="col">{vi ? 'Xác nhận email' : 'Confirmed'}</th><th scope="col">{vi ? 'Đăng nhập cuối' : 'Last sign-in'}</th><th scope="col">{vi ? 'Trạng thái' : 'Status'}</th><th scope="col">{vi ? 'Thao tác' : 'Actions'}</th>
     </tr></thead><tbody>{result.users.map((user) => { const bannedNow = Boolean(user.banned_until && Date.parse(user.banned_until) > renderNow); return <tr key={user.id}>
-      <td data-label="Email">{user.email ?? '—'}</td><td data-label="ID"><code>{user.id}</code></td><td data-label="Created">{date(user.created_at ?? null, vi)}</td><td data-label="Confirmed">{date(user.confirmed_at ?? null, vi)}</td><td data-label="Last sign-in">{date(user.last_sign_in_at ?? null, vi)}</td>
-      <td data-label="Status"><span className={bannedNow ? 'admin-badge banned' : 'admin-badge'}>{bannedNow ? (vi ? 'Đang khoá' : 'Banned') : (vi ? 'Hoạt động' : 'Active')}</span></td>
-      <td data-label="Actions" className="admin-actions"><button className="secondary-button" disabled={busy !== null} onClick={() => void action(user.id, bannedNow ? 'unban' : 'ban', '24h')}>{busy === `${bannedNow ? 'unban' : 'ban'}:${user.id}` ? '…' : (bannedNow ? (vi ? 'Mở khoá' : 'Unban') : (vi ? 'Khoá 24h' : 'Ban 24h'))}</button><button className="text-button" disabled={busy !== null} onClick={() => void action(user.id, 'send_reset')}>{vi ? 'Đặt lại mật khẩu' : 'Reset password'}</button></td>
+      <td data-label="Email">{user.email ?? '—'}</td><td data-label="ID"><code>{user.id}</code></td><td data-label={vi ? 'Tạo lúc' : 'Created'}>{date(user.created_at ?? null, vi)}</td><td data-label={vi ? 'Xác nhận email' : 'Confirmed'}>{date(user.confirmed_at ?? null, vi)}</td><td data-label={vi ? 'Đăng nhập cuối' : 'Last sign-in'}>{date(user.last_sign_in_at ?? null, vi)}</td>
+      <td data-label={vi ? 'Trạng thái' : 'Status'}><span className={bannedNow ? 'admin-badge banned' : 'admin-badge'}>{bannedNow ? (vi ? 'Đang khoá' : 'Banned') : (vi ? 'Hoạt động' : 'Active')}</span></td>
+      <td data-label={vi ? 'Thao tác' : 'Actions'} className="admin-actions"><button className="secondary-button" disabled={busy !== null} onClick={() => void action(user.id, bannedNow ? 'unban' : 'ban', '24h')}>{busy === `${bannedNow ? 'unban' : 'ban'}:${user.id}` ? '…' : (bannedNow ? (vi ? 'Mở khoá' : 'Unban') : (vi ? 'Khoá 24h' : 'Ban 24h'))}</button><button className="text-button" disabled={busy !== null} onClick={() => void action(user.id, 'send_reset')}>{vi ? 'Đặt lại mật khẩu' : 'Reset password'}</button></td>
     </tr> })}</tbody></table></div>}
     {!loading && result && <div className="admin-pagination"><button className="secondary-button" disabled={page <= 1 || loading} onClick={() => setPage((value) => value - 1)}>{vi ? '‹ Trước' : '‹ Previous'}</button><span>{page} / {result.pages}</span><button className="secondary-button" disabled={page >= result.pages || loading} onClick={() => setPage((value) => value + 1)}>{vi ? 'Sau ›' : 'Next ›'}</button></div>}
   </section>

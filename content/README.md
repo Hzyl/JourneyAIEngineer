@@ -54,9 +54,10 @@ Thư mục bài tập thường có `starter.py`, `test_exercise.py` và README.
 của từng bài: bài có kiểm thử hành vi khác với bài tự tổng kết. Việc có hai trường
 `result` và `explanation` không đủ chứng minh đáp án đúng hoặc bạn đã thành thạo.
 
-`program.portfolio_projects` mô tả bốn mốc dự án: học máy với dữ liệu bảng, học sâu,
-RAG tiếng Việt và dự án tổng kết. `program.career_checklist` giúp bạn tự xem lại mức
-sẵn sàng nghề nghiệp và chất lượng bài làm; đây không phải cam kết tuyển dụng.
+`program.portfolio_projects` mô tả mười dự án, gồm các mốc cốt lõi về học máy với dữ liệu
+bảng, học sâu, ứng dụng LLM, RAG tiếng Việt và dự án tổng kết, cùng các nhánh chuyên sâu.
+`program.career_checklist` giúp bạn tự xem lại mức sẵn sàng nghề nghiệp và chất lượng bài
+làm; đây không phải cam kết tuyển dụng.
 
 ## Giữ dữ liệu học khi cập nhật nội dung
 

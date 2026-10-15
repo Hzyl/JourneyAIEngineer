@@ -41,7 +41,7 @@ test('public landing and route selection work on mobile without private writes',
   await expect(roadmapImage).toHaveAttribute('src', '/images/roadmap/ai-engineer-roadmap.jpg')
   await expect(roadmapImage).toHaveAttribute('alt', /AI Engineer learning stages|chặng học AI Engineer/)
   await expect.poll(() => roadmapImage.evaluate((image) => (image as HTMLImageElement).naturalWidth)).toBeGreaterThan(0)
-  await expect(page.locator('.roadmap-stage-card')).toHaveCount(11)
+  await expect(page.locator('.roadmap-stage-card')).toHaveCount(12)
   await page.getByRole('button', { name: 'Làm ứng dụng AI', exact: true }).click()
   await expect(page.locator('p').filter({ hasText: 'Sản phẩm đầu ra:' })).toContainText('Trợ lý tài liệu tiếng Việt có trích nguồn')
   await page.getByRole('button', { name: 'Switch to English' }).click()

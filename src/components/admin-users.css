@@ -12,7 +12,8 @@
 .admin-table th, .admin-table td { text-align: left; padding: 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
 .admin-table th { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .05em; }
 .admin-table tbody tr:last-child td { border-bottom: 0; }
-.admin-table code { color: var(--muted); font-size: 10px; }
+.admin-table td { overflow-wrap: anywhere; }
+.admin-table code { color: var(--muted); font-size: 10px; overflow-wrap: anywhere; word-break: break-word; }
 .admin-badge { color: var(--teal); background: var(--surface-subtle); border: 1px solid var(--line); border-radius: 20px; padding: 5px 8px; white-space: nowrap; }
 .admin-badge.banned { color: var(--warning-text); background: var(--warning-bg); border-color: var(--warning-border); }
 .admin-actions { display: flex; gap: 8px; flex-wrap: wrap; }

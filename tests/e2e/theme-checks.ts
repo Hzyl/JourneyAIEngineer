@@ -6,7 +6,13 @@ export async function checkThemeContrast(page: Page) {
   const failures = await page.evaluate(() => {
     type Color = [number, number, number, number]
     const parse = (value: string): Color => {
-      const values = value.match(/[\d.]+/g)?.map(Number) ?? [0, 0, 0, 0]
+      const normalized = value.trim().toLowerCase()
+      const srgb = normalized.match(/color\(\s*srgb\s+([\d.+-]+)\s+([\d.+-]+)\s+([\d.+-]+)(?:\s*\/\s*([\d.+-]+))?\s*\)/)
+      if (srgb) {
+        const channel = (raw: string) => Math.max(0, Math.min(1, Number(raw))) * 255
+        return [channel(srgb[1]), channel(srgb[2]), channel(srgb[3]), srgb[4] === undefined ? 1 : Number(srgb[4])]
+      }
+      const values = normalized.match(/[\d.]+/g)?.map(Number) ?? [0, 0, 0, 0]
       return [values[0], values[1], values[2], values[3] ?? 1]
     }
     const over = (top: Color, bottom: Color): Color => [

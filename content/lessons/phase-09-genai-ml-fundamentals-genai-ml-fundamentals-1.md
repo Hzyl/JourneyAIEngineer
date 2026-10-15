@@ -3,7 +3,7 @@ lesson_id: phase-09-genai-ml-fundamentals-genai-ml-fundamentals-1
 phase_id: phase-09-genai-ml-fundamentals
 module_id: genai-ml-fundamentals
 title_vi: Học có giám sát và không giám sát cho GenAI
-title_en: Supervised and unsupervised learning
+title_en: Supervised and unsupervised learning for GenAI
 summary_vi: Nhiệm vụ phân loại có nhãn và nhiệm vụ tìm nhóm dữ liệu đòi hỏi cách đánh giá khác nhau.
 summary_en: Learn Supervised and unsupervised learning through an input → transformation → output model, then verify
   it with an edge-case exercise.

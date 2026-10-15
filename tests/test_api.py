@@ -178,6 +178,39 @@ def test_backup_export_preview_and_import_keep_safety_snapshot(tmp_path, monkeyp
     assert any("must be an object" in error for error in malformed["errors"])
     assert "https://example.com/repo.git" in module.sanitize_remote("origin https://user:password@example.com/repo.git (fetch)")
 
+def test_private_learning_routes_reject_remote_requests(tmp_path, monkeypatch):
+    module = load_module(tmp_path, monkeypatch)
+
+    class RemoteRequest:
+        client = type("Client", (), {"host": "192.0.2.10"})()
+        headers = {}
+
+    remote = RemoteRequest()
+    slug = "phase-00-onboarding-environment-1"
+    protected = [
+        lambda: module.runtime_heartbeat(module.RuntimeClientRequest(client_id="remote-client"), remote),
+        lambda: module.runtime_disconnect(module.RuntimeClientRequest(client_id="remote-client"), remote),
+        lambda: module.roadmap(remote),
+        lambda: module.search(request=remote),
+        lambda: module.dashboard(remote),
+        lambda: module.lesson_detail(slug, remote),
+        lambda: module.update_progress(slug, module.ProgressUpdate(status="completed"), remote),
+        lambda: module.create_session(module.SessionCreate(minutes=5), remote),
+        lambda: module.due_reviews(remote),
+        lambda: module.answer_review(1, module.ReviewAnswer(rating="good"), remote),
+        lambda: module.review_history(request=remote),
+        lambda: module.weak_topics(remote),
+        lambda: module.exercises(remote),
+        lambda: module.get_settings(remote),
+        lambda: module.update_settings(module.SettingsUpdate(language="en"), remote),
+        lambda: module.list_notes(remote),
+        lambda: module.create_note(module.NoteCreate(title="Remote", body="Should be blocked"), remote),
+    ]
+    for call in protected:
+        with pytest.raises(module.HTTPException) as denied:
+            call()
+        assert denied.value.status_code == 403
+
 
 def test_runtime_heartbeat_disconnect_and_expiry(tmp_path, monkeypatch):
     module = load_module(tmp_path, monkeypatch)

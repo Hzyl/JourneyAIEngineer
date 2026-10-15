@@ -1066,9 +1066,10 @@ def security_audit(request: Request = None) -> dict[str, Any]:  # type: ignore[a
 
 
 @app.post("/api/runtime/heartbeat")
-def runtime_heartbeat(payload: RuntimeClientRequest) -> dict[str, Any]:
+def runtime_heartbeat(payload: RuntimeClientRequest, request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
     """Register a live browser tab without touching durable learning data."""
 
+    require_local_request(request)
     with _RUNTIME_LOCK:
         _RUNTIME_CLIENTS[payload.client_id] = time.monotonic()
         active_clients = _prune_runtime_clients()
@@ -1076,9 +1077,10 @@ def runtime_heartbeat(payload: RuntimeClientRequest) -> dict[str, Any]:
 
 
 @app.post("/api/runtime/disconnect")
-def runtime_disconnect(payload: RuntimeClientRequest) -> dict[str, Any]:
+def runtime_disconnect(payload: RuntimeClientRequest, request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
     """Remove a tab immediately when pagehide/sendBeacon is available."""
 
+    require_local_request(request)
     with _RUNTIME_LOCK:
         _RUNTIME_CLIENTS.pop(payload.client_id, None)
         active_clients = _prune_runtime_clients()
@@ -1086,7 +1088,8 @@ def runtime_disconnect(payload: RuntimeClientRequest) -> dict[str, Any]:
 
 
 @app.get("/api/roadmap")
-def roadmap() -> dict[str, Any]:
+def roadmap(request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
+    require_local_request(request)
     with connect() as db:
         phases = [phase_payload(db, phase) for phase in db.execute("SELECT * FROM phases ORDER BY order_index").fetchall()]
     return {"program": json.loads((CONTENT_ROOT / "curriculum.json").read_text(encoding="utf-8"))["program"], "phases": phases}
@@ -1117,9 +1120,10 @@ def resources(query: str | None = None, phase: str | None = None, resource_type:
 
 
 @app.get("/api/search")
-def search(q: str = "", type: str = "all", phase: str = "all", status: str = "all", limit: int = 50) -> dict[str, Any]:
+def search(q: str = "", type: str = "all", phase: str = "all", status: str = "all", limit: int = 50, request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
     """Search local lessons, curated resources, and exercises with stable output."""
 
+    require_local_request(request)
     query = q.strip()
     if len(query) > 120:
         raise HTTPException(400, "q must contain at most 120 characters")
@@ -1380,7 +1384,8 @@ def update_feedback_moderation(feedback_id: int, payload: FeedbackModerationUpda
 
 
 @app.get("/api/dashboard")
-def dashboard() -> dict[str, Any]:
+def dashboard(request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
+    require_local_request(request)
     with connect() as db:
         totals = db.execute("SELECT COUNT(*) AS total, SUM(CASE WHEN p.status='completed' THEN 1 ELSE 0 END) AS completed, SUM(CASE WHEN p.status='in_progress' THEN 1 ELSE 0 END) AS in_progress FROM lessons l LEFT JOIN progress p ON p.lesson_id=l.id").fetchone()
         review_totals = review_counts(db, now_iso())
@@ -1418,7 +1423,8 @@ def dashboard() -> dict[str, Any]:
 
 
 @app.get("/api/lessons/{slug}")
-def lesson_detail(slug: str) -> dict[str, Any]:
+def lesson_detail(slug: str, request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
+    require_local_request(request)
     with connect() as db:
         row = db.execute("""SELECT l.*,m.slug AS module_slug,m.title_vi AS module_title_vi,m.title_en AS module_title_en,p.slug AS phase_slug,p.title_vi AS phase_title_vi,p.title_en AS phase_title_en,COALESCE(pr.status,'not_started') AS status,COALESCE(pr.minutes_spent,0) AS minutes_spent
             FROM lessons l JOIN modules m ON m.id=l.module_id JOIN phases p ON p.id=m.phase_id LEFT JOIN progress pr ON pr.lesson_id=l.id WHERE l.slug=?""", (slug,)).fetchone()
@@ -1485,7 +1491,8 @@ def lesson_detail(slug: str) -> dict[str, Any]:
 
 
 @app.patch("/api/lessons/{slug}/progress")
-def update_progress(slug: str, payload: ProgressUpdate) -> dict[str, Any]:
+def update_progress(slug: str, payload: ProgressUpdate, request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
+    require_local_request(request)
     timestamp = now_iso()
     with connect() as db:
         fingerprint, receipt = begin_mutation(
@@ -1507,7 +1514,8 @@ def update_progress(slug: str, payload: ProgressUpdate) -> dict[str, Any]:
 
 
 @app.post("/api/study-sessions")
-def create_session(payload: SessionCreate) -> dict[str, Any]:
+def create_session(payload: SessionCreate, request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
+    require_local_request(request)
     with connect() as db:
         fingerprint, receipt = begin_mutation(
             db, payload.request_id, "session",
@@ -1527,13 +1535,15 @@ def create_session(payload: SessionCreate) -> dict[str, Any]:
 
 
 @app.get("/api/reviews/due")
-def due_reviews() -> dict[str, Any]:
+def due_reviews(request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
+    require_local_request(request)
     with connect() as db:
         return learning_review_queue(db, now_iso())
 
 
 @app.post("/api/reviews/{review_id}/answer")
-def answer_review(review_id: int, payload: ReviewAnswer) -> dict[str, Any]:
+def answer_review(review_id: int, payload: ReviewAnswer, request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
+    require_local_request(request)
     with connect() as db:
         fingerprint, receipt = begin_mutation(
             db, payload.request_id, "review",
@@ -1592,7 +1602,8 @@ def answer_review(review_id: int, payload: ReviewAnswer) -> dict[str, Any]:
 
 
 @app.get("/api/reviews/history")
-def review_history(limit: int = 50) -> dict[str, Any]:
+def review_history(limit: int = 50, request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
+    require_local_request(request)
     bounded_limit = max(1, min(limit, 200))
     with connect() as db:
         rows = db.execute(
@@ -1605,7 +1616,8 @@ def review_history(limit: int = 50) -> dict[str, Any]:
 
 
 @app.get("/api/reviews/weak-topics")
-def weak_topics() -> dict[str, Any]:
+def weak_topics(request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
+    require_local_request(request)
     with connect() as db:
         rows = db.execute(
             """SELECT l.slug AS lesson_slug,l.title_vi,COUNT(h.id) AS attempts,
@@ -1619,7 +1631,8 @@ def weak_topics() -> dict[str, Any]:
 
 
 @app.get("/api/exercises")
-def exercises() -> dict[str, Any]:
+def exercises(request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
+    require_local_request(request)
     with connect() as db:
         rows = db.execute("""SELECT e.*,m.title_vi AS module_title_vi,p.title_vi AS phase_title_vi,w.id AS workspace_id,w.path AS workspace_path
             FROM exercises e JOIN modules m ON m.id=e.module_id JOIN phases p ON p.id=m.phase_id LEFT JOIN workspaces w ON w.exercise_id=e.id ORDER BY p.order_index,m.order_index,e.id""").fetchall()
@@ -1872,7 +1885,8 @@ def tools() -> dict[str, Any]:
 
 
 @app.get("/api/settings")
-def get_settings() -> dict[str, Any]:
+def get_settings(request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
+    require_local_request(request)
     with connect() as db:
         values = settings_payload(db)
     return {
@@ -1887,7 +1901,8 @@ def get_settings() -> dict[str, Any]:
 
 
 @app.patch("/api/settings")
-def update_settings(payload: SettingsUpdate) -> dict[str, Any]:
+def update_settings(payload: SettingsUpdate, request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
+    require_local_request(request)
     changes = payload.model_dump(exclude_none=True)
     if "show_completed_lessons" in changes:
         changes["show_completed_lessons"] = "true" if changes["show_completed_lessons"] else "false"
@@ -1912,7 +1927,8 @@ def update_settings(payload: SettingsUpdate) -> dict[str, Any]:
 
 
 @app.get("/api/notes")
-def list_notes() -> dict[str, Any]:
+def list_notes(request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
+    require_local_request(request)
     with connect() as db:
         rows = db.execute("""
             SELECT n.*,l.slug AS lesson_slug,l.title_vi AS lesson_title_vi,l.title_en AS lesson_title_en
@@ -1922,7 +1938,8 @@ def list_notes() -> dict[str, Any]:
 
 
 @app.post("/api/notes")
-def create_note(payload: NoteCreate) -> dict[str, Any]:
+def create_note(payload: NoteCreate, request: Request = None) -> dict[str, Any]:  # type: ignore[assignment]
+    require_local_request(request)
     lesson_id = None
     with connect() as db:
         if payload.lesson_slug:
