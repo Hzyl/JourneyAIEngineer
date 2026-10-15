@@ -80,9 +80,12 @@
         "phase-22-genai-system-design"
       ],
       "minimum_project_slugs": [
-        "tabular-ml",
-        "vietnamese-rag",
-        "production-genai-system"
+        "llm-chat-api",
+        "vietnamese-rag"
+      ],
+      "capstone_project_slugs": [
+        "production-genai-system",
+        "capstone-ai-product"
       ],
       "bridge_phase_ids": [
         "phase-08-genai-software",
@@ -132,8 +135,7 @@
       ],
       "minimum_project_slugs": [
         "tabular-ml",
-        "deep-learning",
-        "production-genai-system"
+        "deep-learning"
       ]
     }
   ],

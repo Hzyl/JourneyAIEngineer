@@ -13,17 +13,24 @@ describe('roadmap metadata contracts', () => {
       expect(route.core_phase_ids.length).toBeGreaterThan(0)
       expect(route.optional_phase_ids).toEqual(expect.any(Array))
       expect(route.minimum_project_slugs.length).toBeGreaterThan(0)
+      expect((route.capstone_project_slugs ?? []).every((slug) => projectSlugs.has(slug))).toBe(true)
+      expect(route.minimum_project_slugs.every((slug) => projectSlugs.has(slug))).toBe(true)
+      expect(route.minimum_project_slugs.every((slug) => curriculum.program.portfolio_projects
+        .find((project) => project.slug === slug)?.applicable_routes.includes(route.id))).toBe(true)
       expect(route.core_phase_ids.every((id) => route.phase_ids.includes(id))).toBe(true)
       expect(route.phase_ids.every((id) => phaseIds.has(id))).toBe(true)
     }
     const application = routes.routes.find((route) => route.id === 'application')!
     expect(application.core_phase_ids).toContain('phase-10-genai-transformers')
     expect(application.optional_phase_ids).not.toContain('phase-10-genai-transformers')
+    expect(application.minimum_project_slugs).toEqual(['llm-chat-api', 'vietnamese-rag'])
+    expect(application.capstone_project_slugs).toEqual(['production-genai-system', 'capstone-ai-product'])
     expect(application.bridge_phase_ids).toEqual([
       'phase-08-genai-software',
       'phase-09-genai-ml-fundamentals',
       'phase-10-genai-transformers',
     ])
+    expect(overview.sequence_note_vi).not.toContain('RAG → tool/agent')
   })
 
   test('public stages expose planning metadata for every phase reference', () => {
@@ -44,7 +51,7 @@ describe('roadmap metadata contracts', () => {
       expect((stage.optional_phase_ids ?? []).every((id) => phaseIds.has(id))).toBe(true)
     }
     expect(overview.sequence_note_vi).toContain('Python')
-    expect(overview.sequence_note_vi).toContain('tool/agent')
+    expect(overview.sequence_note_vi).toContain('Tool calling')
     expect(overview.stages.find((stage) => stage.id === 'engineering')?.phase_ids).toEqual(['phase-05-mlops'])
     expect(overview.stages.find((stage) => stage.id === 'engineering')?.bridge_phase_ids).toEqual(['phase-08-genai-software'])
     const llm = overview.stages.find((stage) => stage.id === 'llm')!
@@ -69,5 +76,11 @@ describe('roadmap metadata contracts', () => {
       expect(project.evidence_required.length).toBeGreaterThan(0)
       expect(phaseIds.has(project.phase_id)).toBe(true)
     }
+    expect(curriculum.program.portfolio_projects.find((project) => project.slug === 'vietnamese-rag')?.phase_id)
+      .toBe('phase-12-genai-rag')
+    expect(routes.routes.find((route) => route.id === 'deep-ml')?.minimum_project_slugs)
+      .toEqual(['tabular-ml', 'deep-learning'])
+    expect(curriculum.program.portfolio_projects.find((project) => project.slug === 'production-genai-system')?.applicable_routes)
+      .toEqual(['application'])
   })
 })

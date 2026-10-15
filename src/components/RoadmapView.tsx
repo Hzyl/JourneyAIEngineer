@@ -33,6 +33,9 @@ export function RoadmapView({ roadmap, language, showCompletedLessons, onOpenLes
   const bridgeNote = route && 'bridge_note_vi' in route
     ? { vi: route.bridge_note_vi ?? '', en: route.bridge_note_en ?? '' }
     : null
+  const capstoneProjectSlugs = route && 'capstone_project_slugs' in route
+    ? route.capstone_project_slugs ?? []
+    : []
   useEffect(() => {
     const restore = () => setFilters(filtersFromUrl())
     window.addEventListener('popstate', restore)
@@ -93,6 +96,10 @@ export function RoadmapView({ roadmap, language, showCompletedLessons, onOpenLes
         <dd>{route.weekly_hours.join('–')} {vi ? 'giờ/tuần' : 'hours/week'}</dd>
         <dt>{vi ? 'Portfolio tối thiểu' : 'Minimum portfolio path'}</dt>
         <dd><ul>{route.minimum_project_slugs.map((slug) => <li key={slug}>{slug}</li>)}</ul></dd>
+        {capstoneProjectSlugs.length > 0 && <>
+          <dt>{vi ? 'Đồ án tốt nghiệp / nâng cao' : 'Capstone / advanced project'}</dt>
+          <dd><ul>{capstoneProjectSlugs.map((slug) => <li key={slug}>{slug}</li>)}</ul></dd>
+        </>}
         {bridgePhaseIds.length > 0 && <>
           <dt>{vi ? 'Module cầu nối' : 'Bridge modules'}</dt>
           <dd>

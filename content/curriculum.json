@@ -93,7 +93,7 @@
           "Báo cáo thí nghiệm"
         ],
         "evaluation_vi": "Quy trình kiểm định, thí nghiệm loại bỏ thành phần hoặc so sánh bộ tối ưu, và phân tích thất bại.",
-        "requirement_level": "recommended",
+        "requirement_level": "required",
         "applicable_routes": [
           "deep-ml"
         ],
@@ -117,7 +117,7 @@
         "slug": "vietnamese-rag",
         "title_vi": "Trợ lý tài liệu tiếng Việt",
         "title_en": "Vietnamese Document Assistant",
-        "phase_id": "phase-06-llm-rag",
+        "phase_id": "phase-12-genai-rag",
         "problem_vi": "Trả lời theo tài liệu tiếng Việt, có truy xuất, trích nguồn và từ chối khi thiếu bằng chứng.",
         "problem_en": "Answer questions over Vietnamese documents with retrieval, citations and abstention.",
         "stack": [

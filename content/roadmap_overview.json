@@ -554,6 +554,6 @@
       ]
     }
   ],
-  "sequence_note_vi": "Chuỗi chính: Python/kỹ thuật phần mềm → Toán → Machine Learning → Deep Learning → MLOps/backend → LLM → RAG → tool/agent → evaluation/production → portfolio. Module cầu nối chỉ là bản cô đọng cho route ứng dụng, không phải học lại toàn bộ phase nền tảng.",
-  "sequence_note_en": "Main sequence: Python/software engineering → Mathematics → Classical ML → Deep Learning → MLOps/backend → LLM → RAG → tools/agents → evaluation/production → portfolio. Bridge modules are compact application-route prerequisites, not a second full copy of the foundation phases."
+  "sequence_note_vi": "Chuỗi core: Python/kỹ thuật phần mềm → Toán và nền tảng ML/LLM phù hợp → ứng dụng LLM → RAG → đánh giá → quan sát và vận hành → portfolio. Tool calling, agent, MCP, fine-tuning, local model và system design là các nhánh chuyên sâu tùy mục tiêu; nếu học agent, hãy đánh giá hệ thống trước rồi mới thêm hành động.",
+  "sequence_note_en": "Main sequence: Python/software engineering → relevant ML/LLM foundations → LLM applications → RAG → evaluation → observability and production → portfolio. Tool calling, agents, MCP, fine-tuning, local models and system design are goal-dependent specializations; evaluate the system before adding agent actions."
 }
