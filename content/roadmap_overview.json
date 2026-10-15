@@ -224,8 +224,7 @@
       "id": "engineering",
       "number": "05",
       "phase_ids": [
-        "phase-05-mlops",
-        "phase-08-genai-software"
+        "phase-05-mlops"
       ],
       "title_vi": "Backend và MLOps",
       "title_en": "Backend and MLOps",
@@ -262,16 +261,18 @@
         ]
       },
       "estimated_weeks": 4,
-      "project_slugs": []
+      "project_slugs": [],
+      "bridge_phase_ids": [
+        "phase-08-genai-software"
+      ],
+      "note_vi": "Không học trùng: phase-05 là nền tảng MLOps đầy đủ cho route đào sâu ML; phase-08 là bản cầu nối cô đọng để route ứng dụng dựng dịch vụ GenAI.",
+      "note_en": "No duplicate study: phase-05 is the full MLOps foundation for the deep-ML route; phase-08 is a compact bridge for shipping a GenAI service on the application route."
     },
     {
       "id": "llm",
       "number": "06",
       "phase_ids": [
-        "phase-06-llm-rag",
-        "phase-09-genai-ml-fundamentals",
-        "phase-10-genai-transformers",
-        "phase-11-llm-application"
+        "phase-06-llm-rag"
       ],
       "title_vi": "LLM và mô hình nền tảng",
       "title_en": "LLMs and foundation models",
@@ -309,14 +310,20 @@
       "estimated_weeks": 5,
       "project_slugs": [
         "llm-chat-api"
-      ]
+      ],
+      "bridge_phase_ids": [
+        "phase-09-genai-ml-fundamentals",
+        "phase-10-genai-transformers",
+        "phase-11-llm-application"
+      ],
+      "note_vi": "Phase-06 là bài khảo sát rộng. Route ứng dụng dùng ba module cầu nối tách nhỏ để học ML/embedding, Transformer và hợp đồng ứng dụng LLM theo đúng thứ tự.",
+      "note_en": "Phase-06 is the broad survey. The application route uses three focused bridge modules for ML/embeddings, Transformers, and LLM application contracts in order."
     },
     {
       "id": "rag",
       "number": "07",
       "phase_ids": [
-        "phase-12-genai-rag",
-        "phase-13-genai-advanced-rag"
+        "phase-12-genai-rag"
       ],
       "title_vi": "RAG và tìm kiếm",
       "title_en": "RAG and search",
@@ -356,7 +363,12 @@
         "vietnamese-rag",
         "document-intelligence",
         "advanced-rag-system"
-      ]
+      ],
+      "optional_phase_ids": [
+        "phase-13-genai-advanced-rag"
+      ],
+      "note_vi": "RAG nền tảng là mốc bắt buộc của route ứng dụng; RAG nâng cao là phần mở rộng sau khi có bộ đánh giá.",
+      "note_en": "RAG foundations is the application route checkpoint; advanced RAG is an extension after an evaluation set exists."
     },
     {
       "id": "agents",
@@ -406,8 +418,7 @@
       "phase_ids": [
         "phase-17-genai-evaluation",
         "phase-18-genai-observability",
-        "phase-19-genai-production",
-        "phase-22-genai-system-design"
+        "phase-19-genai-production"
       ],
       "title_vi": "Đánh giá và vận hành",
       "title_en": "Evaluation and production",
@@ -449,8 +460,56 @@
       ]
     },
     {
-      "id": "portfolio",
+      "id": "specialization",
       "number": "10",
+      "phase_ids": [
+        "phase-20-genai-finetuning",
+        "phase-21-genai-local-llm",
+        "phase-22-genai-system-design"
+      ],
+      "title_vi": "Chuyên sâu tùy mục tiêu",
+      "title_en": "Optional specialization",
+      "topics_vi": "Fine-tuning, PEFT, mô hình cục bộ, tối ưu suy luận và thiết kế hệ thống AI.",
+      "topics_en": "Fine-tuning, PEFT, local models, inference optimization, and AI system design.",
+      "before_vi": "Đã có một ứng dụng AI chạy được, bộ đánh giá và báo cáo vận hành.",
+      "before_en": "Have a working AI application, an evaluation set, and an operations report.",
+      "checkpoint_vi": "Chọn một nhánh chuyên sâu, đo được cải thiện hoặc giới hạn, và ghi lại quyết định kỹ thuật bằng bằng chứng.",
+      "checkpoint_en": "Choose one specialization, measure its improvement or limits, and document the technical decision with evidence.",
+      "track": "specialization",
+      "required_for_routes": [],
+      "difficulty": "advanced",
+      "purpose": {
+        "vi": "Các nhánh mở rộng sau khi đã hoàn thành chuỗi AI Engineer cốt lõi; không cần học hết.",
+        "en": "Extensions after the core AI Engineer sequence; you do not need to complete every branch."
+      },
+      "prerequisites": {
+        "vi": "Có project LLM/RAG hoặc production AI đã được đánh giá.",
+        "en": "An evaluated LLM/RAG or production AI project."
+      },
+      "exit_criteria": {
+        "vi": "Có một thử nghiệm chuyên sâu có baseline, số đo, giới hạn và hướng tiếp theo.",
+        "en": "One specialized experiment with a baseline, measurements, limits, and next steps."
+      },
+      "evidence_required": {
+        "vi": [
+          "Notebook hoặc service chạy lại được",
+          "So sánh baseline và kết quả",
+          "README nêu chi phí, giới hạn và lựa chọn kỹ thuật"
+        ],
+        "en": [
+          "A reproducible notebook or service",
+          "Baseline comparison and results",
+          "README covering cost, limits, and technical choices"
+        ]
+      },
+      "estimated_weeks": 6,
+      "project_slugs": [],
+      "note_vi": "Fine-tuning, Local LLM và System Design là ba nhánh riêng; chọn theo mục tiêu công việc thay vì học tuần tự cả ba.",
+      "note_en": "Fine-tuning, Local LLM, and System Design are separate branches; choose based on your target role instead of taking all three in sequence."
+    },
+    {
+      "id": "portfolio",
+      "number": "11",
       "phase_ids": [
         "phase-07-capstone-career"
       ],
@@ -494,5 +553,7 @@
         "capstone-ai-product"
       ]
     }
-  ]
+  ],
+  "sequence_note_vi": "Chuỗi chính: Python/kỹ thuật phần mềm → Toán → Machine Learning → Deep Learning → MLOps/backend → LLM → RAG → tool/agent → evaluation/production → portfolio. Module cầu nối chỉ là bản cô đọng cho route ứng dụng, không phải học lại toàn bộ phase nền tảng.",
+  "sequence_note_en": "Main sequence: Python/software engineering → Mathematics → Classical ML → Deep Learning → MLOps/backend → LLM → RAG → tools/agents → evaluation/production → portfolio. Bridge modules are compact application-route prerequisites, not a second full copy of the foundation phases."
 }

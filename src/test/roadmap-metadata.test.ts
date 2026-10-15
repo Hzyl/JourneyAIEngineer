@@ -16,6 +16,14 @@ describe('roadmap metadata contracts', () => {
       expect(route.core_phase_ids.every((id) => route.phase_ids.includes(id))).toBe(true)
       expect(route.phase_ids.every((id) => phaseIds.has(id))).toBe(true)
     }
+    const application = routes.routes.find((route) => route.id === 'application')!
+    expect(application.core_phase_ids).toContain('phase-10-genai-transformers')
+    expect(application.optional_phase_ids).not.toContain('phase-10-genai-transformers')
+    expect(application.bridge_phase_ids).toEqual([
+      'phase-08-genai-software',
+      'phase-09-genai-ml-fundamentals',
+      'phase-10-genai-transformers',
+    ])
   })
 
   test('public stages expose planning metadata for every phase reference', () => {
@@ -32,7 +40,18 @@ describe('roadmap metadata contracts', () => {
       expect(stage.phase_ids.every((id) => phaseIds.has(id))).toBe(true)
       expect(stage.required_for_routes.every((id) => routeIds.has(id))).toBe(true)
       expect(stage.project_slugs.every((slug) => projectSlugs.has(slug))).toBe(true)
+      expect((stage.bridge_phase_ids ?? []).every((id) => phaseIds.has(id))).toBe(true)
+      expect((stage.optional_phase_ids ?? []).every((id) => phaseIds.has(id))).toBe(true)
     }
+    expect(overview.sequence_note_vi).toContain('Python')
+    expect(overview.sequence_note_vi).toContain('tool/agent')
+    expect(overview.stages.find((stage) => stage.id === 'engineering')?.phase_ids).toEqual(['phase-05-mlops'])
+    expect(overview.stages.find((stage) => stage.id === 'engineering')?.bridge_phase_ids).toEqual(['phase-08-genai-software'])
+    expect(overview.stages.find((stage) => stage.id === 'specialization')?.phase_ids).toEqual([
+      'phase-20-genai-finetuning',
+      'phase-21-genai-local-llm',
+      'phase-22-genai-system-design',
+    ])
   })
 
   test('portfolio projects classify requirement and evidence for routes', () => {

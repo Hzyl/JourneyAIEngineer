@@ -29,6 +29,10 @@ export function RoadmapView({ roadmap, language, showCompletedLessons, onOpenLes
   const vi = language === 'vi'
   const [filters, setFilters] = useState(filtersFromUrl)
   const route = routes.routes.find((item) => item.id === filters.route)
+  const bridgePhaseIds = route && 'bridge_phase_ids' in route ? route.bridge_phase_ids ?? [] : []
+  const bridgeNote = route && 'bridge_note_vi' in route
+    ? { vi: route.bridge_note_vi ?? '', en: route.bridge_note_en ?? '' }
+    : null
   useEffect(() => {
     const restore = () => setFilters(filtersFromUrl())
     window.addEventListener('popstate', restore)
@@ -42,6 +46,10 @@ export function RoadmapView({ roadmap, language, showCompletedLessons, onOpenLes
     window.history.replaceState(window.history.state, '', `/roadmap${params.size ? `?${params}` : ''}`)
   }
   if (!roadmap) return <p role="status">{vi ? 'Chưa tải được lộ trình.' : 'Roadmap unavailable.'}</p>
+  const phaseTitle = (id: string) => {
+    const phase = roadmap.phases.find((item) => item.slug === id)
+    return phase ? (vi ? phase.title_vi : phase.title_en) : id
+  }
   const ordered = route ? route.phase_ids.flatMap((id) => roadmap.phases.filter((phase) => phase.slug === id))
     .concat(route.optional_phase_ids.flatMap((id) => roadmap.phases.filter((phase) => phase.slug === id)))
     : roadmap.phases
@@ -85,6 +93,13 @@ export function RoadmapView({ roadmap, language, showCompletedLessons, onOpenLes
         <dd>{route.weekly_hours.join('–')} {vi ? 'giờ/tuần' : 'hours/week'}</dd>
         <dt>{vi ? 'Portfolio tối thiểu' : 'Minimum portfolio path'}</dt>
         <dd><ul>{route.minimum_project_slugs.map((slug) => <li key={slug}>{slug}</li>)}</ul></dd>
+        {bridgePhaseIds.length > 0 && <>
+          <dt>{vi ? 'Module cầu nối' : 'Bridge modules'}</dt>
+          <dd>
+            <ul>{bridgePhaseIds.map((id) => <li key={id}>{phaseTitle(id)}</li>)}</ul>
+            {bridgeNote && <p className="muted">{vi ? bridgeNote.vi : bridgeNote.en}</p>}
+          </dd>
+        </>}
       </dl>
     </section>}
     <div className="filter-bar" role="search">

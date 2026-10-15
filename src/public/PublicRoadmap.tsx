@@ -7,6 +7,12 @@ import roadmapOverview from '../../content/roadmap_overview.json'
 
 type Props = { language: 'vi' | 'en'; standalone?: boolean; onStart: () => void }
 type TrackFilter = 'all' | 'core' | 'specialization'
+type RoadmapStage = typeof roadmapOverview.stages[number] & {
+  bridge_phase_ids?: string[]
+  optional_phase_ids?: string[]
+  note_vi?: string
+  note_en?: string
+}
 
 export function PublicRoadmap({ language, standalone, onStart }: Props) {
   const [selected, setSelected] = useState(() => {
@@ -20,7 +26,11 @@ export function PublicRoadmap({ language, standalone, onStart }: Props) {
   const vi = language === 'vi'
   const Heading = standalone ? 'h1' : 'h2'
   const route = routes.routes.find((item) => item.id === selected)!
-  const stages = roadmapOverview.stages.filter((stage) => track === 'all' || stage.track === track)
+  const stages = roadmapOverview.stages.filter((stage) => track === 'all' || stage.track === track) as RoadmapStage[]
+  const phaseTitle = (id: string) => {
+    const phase = curriculum.phases.find((item) => item.slug === id)
+    return phase ? (vi ? phase.title_vi : phase.title_en) : id
+  }
   const setTrackFilter = (next: TrackFilter) => {
     setTrack(next)
     const url = new URL(window.location.href)
@@ -41,6 +51,7 @@ export function PublicRoadmap({ language, standalone, onStart }: Props) {
         <p className="roadmap-overview-note">{vi
           ? 'Ảnh tóm tắt các phase lõi; danh sách bên dưới thêm bước bắt đầu và portfolio. Hoàn thành một mốc không đồng nghĩa đã thành thạo: hãy lưu code, output, test và ghi chú giới hạn.'
           : 'The image summarizes the core phases; the list below adds onboarding and portfolio. A checkpoint is not mastery: save code, output, tests and limitations as evidence.'}</p>
+        <p className="roadmap-sequence-note">{vi ? roadmapOverview.sequence_note_vi : roadmapOverview.sequence_note_en}</p>
         <a href="#roadmap-paths">{vi ? 'Chọn hướng học phù hợp' : 'Choose your learning path'} ↓</a>
       </div>
       <figure className="roadmap-image-card">
@@ -75,6 +86,7 @@ export function PublicRoadmap({ language, standalone, onStart }: Props) {
               ? (vi ? 'Nền tảng' : 'Core') : (vi ? 'Chuyên sâu' : 'Specialization')}</span>
             <h4>{vi ? stage.title_vi : stage.title_en}</h4>
             <p>{vi ? stage.purpose.vi : stage.purpose.en}</p>
+            {(stage.note_vi || stage.note_en) && <p className="roadmap-stage-note">{vi ? stage.note_vi : stage.note_en}</p>}
             <details>
               <summary>{vi ? 'Xem điều kiện và bằng chứng' : 'See prerequisites and evidence'}</summary>
               <dl>
@@ -86,6 +98,14 @@ export function PublicRoadmap({ language, standalone, onStart }: Props) {
                 <dd>{stage.estimated_weeks} {vi ? 'tuần' : 'weeks'}</dd>
                 <dt>{vi ? 'Dự án liên quan' : 'Related projects'}</dt>
                 <dd>{stage.project_slugs.length ? stage.project_slugs.join(', ') : (vi ? 'Chưa có dự án riêng' : 'No dedicated project')}</dd>
+                {stage.bridge_phase_ids?.length ? <>
+                  <dt>{vi ? 'Module cầu nối' : 'Bridge modules'}</dt>
+                  <dd><ul>{stage.bridge_phase_ids.map((id) => <li key={id}>{phaseTitle(id)}</li>)}</ul></dd>
+                </> : null}
+                {stage.optional_phase_ids?.length ? <>
+                  <dt>{vi ? 'Phần mở rộng' : 'Optional extensions'}</dt>
+                  <dd><ul>{stage.optional_phase_ids.map((id) => <li key={id}>{phaseTitle(id)}</li>)}</ul></dd>
+                </> : null}
                 <dt>{vi ? 'Tiêu chí đầu ra' : 'Exit criteria'}</dt>
                 <dd>{vi ? stage.exit_criteria.vi : stage.exit_criteria.en}</dd>
                 <dt>{vi ? 'Bằng chứng cần có' : 'Evidence required'}</dt>
