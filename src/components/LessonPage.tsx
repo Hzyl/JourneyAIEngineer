@@ -9,6 +9,7 @@ import { checklistKey, readChecklist } from '../platform/checklist-storage'
 import { LessonReading, LessonChecks, LessonRelated, LessonResources } from './LessonContent'
 import { LessonNotes } from './LessonNotes'
 import { LessonProgress, type ProgressAction } from './LessonProgress'
+import type { LessonContinuation } from './lesson-route'
 import './lesson-reading.css'
 
 type Actions = {
@@ -16,6 +17,8 @@ type Actions = {
   onOpenLesson: (slug: string) => void
   nextLessonTitles: Record<string, string>
   onOpenExercise: (slug: string) => void
+  continuation?: LessonContinuation
+  onOpenRoadmap?: () => void
 }
 type Props = Actions & {
   lesson: Lesson | null; lessonLoading: boolean; language: 'vi' | 'en'; onBack: () => void

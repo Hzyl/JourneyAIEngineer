@@ -54,6 +54,10 @@
   overflow-wrap: anywhere;
 }
 
+.lesson-detail .code-example-guide dd {
+  white-space: pre-wrap;
+}
+
 .lesson-detail .study-step-card small,
 .lesson-detail .study-step-card a,
 .lesson-detail .study-step-answer summary {
@@ -74,6 +78,15 @@
 
 .lesson-detail .review-prompt details p {
   margin-top: .5rem;
+}
+
+.lesson-detail .lesson-section-completion {
+  padding: clamp(1rem, 3vw, 1.5rem);
+}
+
+.lesson-detail .lesson-section-completion > .muted {
+  font-size: 1rem;
+  line-height: 1.6;
 }
 
 .lesson-detail .study-step-card pre,

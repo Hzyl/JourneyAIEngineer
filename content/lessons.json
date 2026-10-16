@@ -12096,7 +12096,7 @@
       "title_vi": "Hồi quy tuyến tính",
       "title_en": "Linear regression",
       "summary_vi": "Hồi quy tuyến tính mô tả đầu ra bằng tổ hợp tuyến tính của các đặc trưng.",
-      "summary_en": "Learn Linear regression through an input → transformation → output model, then verify it with an edge-case exercise.",
+      "summary_en": "Linear regression predicts a numeric target from a weighted sum of features and an intercept.",
       "learning_objectives": [
         "Huấn luyện mô hình hồi quy tuyến tính và đọc sai số trên tập kiểm định.",
         "So sánh với mô hình cơ sở và đọc ít nhất một dự đoán sai.",
@@ -12150,14 +12150,14 @@
           "stretch": "Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào."
         },
         "en": {
-          "task": "Train a simple model first, add trees/boosting, and record metrics plus a representative error for each model.",
+          "task": "Fit a univariate line using training data and compare its held-out MSE with a training-mean baseline. The supplied toy example demonstrates this comparison; repeat it on data with noise and inspect an error.",
           "deliverables": [
-            "One executable code file",
-            "One test or expected output",
-            "One note describing an edge case and trade-off"
+            "Training and validation data, fitted slope and intercept",
+            "Validation predictions and MSE for the line and mean baseline",
+            "One residual and one limitation of the fitted relationship"
           ],
-          "checkpoint": "You can explain trade-offs among interpretability, latency, data size, and quality.",
-          "stretch": "Add a failure test for linear regression and explain the result."
+          "checkpoint": "The baseline uses only training labels, and both models use the same validation samples.",
+          "stretch": "Add noise to one training target and explain how the slope, intercept and validation errors change."
         }
       },
       "interview_questions": {
@@ -12178,17 +12178,17 @@
       "code_examples": [
         {
           "language": "python",
-          "title": "Linear regression: inspect one complete path",
-          "code": "# Topic: Linear regression (phase-03-classical-ml-models-1)\ndef accuracy(y_true: list[int], y_pred: list[int]) -> float:\n    if len(y_true) != len(y_pred) or not y_true:\n        raise ValueError('non-empty aligned labels are required')\n    return sum(a == b for a, b in zip(y_true, y_pred)) / len(y_true)\n\nprint(accuracy([1, 0, 1], [1, 1, 1]))",
+          "title": "Fit a line and compare held-out MSE with a mean baseline",
+          "code": "from math import isfinite\n\n\ndef validate_pairs(first, second):\n    if not first or len(first) != len(second):\n        raise ValueError(\"non-empty aligned sequences are required\")\n    if any(not isinstance(value, (int, float)) or not isfinite(value)\n           for values in (first, second) for value in values):\n        raise ValueError(\"all values must be finite numbers\")\n\n\ndef fit_line(xs, ys):\n    validate_pairs(xs, ys)\n    mean_x = sum(xs) / len(xs)\n    mean_y = sum(ys) / len(ys)\n    denominator = sum((value - mean_x) ** 2 for value in xs)\n    if denominator == 0:\n        raise ValueError(\"at least two distinct x values are required\")\n    numerator = sum((value - mean_x) * (target - mean_y)\n                    for value, target in zip(xs, ys))\n    slope = numerator / denominator\n    intercept = mean_y - slope * mean_x\n    return slope, intercept\n\n\ndef mse(y_true, y_pred):\n    validate_pairs(y_true, y_pred)\n    return sum((actual - predicted) ** 2\n               for actual, predicted in zip(y_true, y_pred)) / len(y_true)\n\n\nif __name__ == \"__main__\":\n    train_x = [1.0, 2.0, 3.0, 4.0]\n    train_y = [3.0, 5.0, 7.0, 9.0]\n    validation_x = [1.5, 3.5]\n    validation_y = [4.0, 8.0]\n    slope, intercept = fit_line(train_x, train_y)\n    predicted = [slope * value + intercept for value in validation_x]\n    training_mean = sum(train_y) / len(train_y)\n    baseline = [training_mean] * len(validation_y)\n    print(f\"slope={slope:.2f}, intercept={intercept:.2f}\")\n    print(f\"baseline_mse={mse(validation_y, baseline):.2f}\")\n    print(f\"linear_mse={mse(validation_y, predicted):.2f}\")",
           "status": "runnable",
-          "purpose_vi": "Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.",
-          "purpose_en": "Illustrate the input-to-output path for linear regression.",
-          "setup": "Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.",
-          "expected_output": "Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.",
-          "edge_case_vi": "Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.",
-          "edge_case_en": "Try an empty input, a wrong shape or missing data and record the failure.",
-          "explanation_vi": "Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần nội dung; cần hoàn thành riêng nhiệm vụ thực hành.",
-          "explanation_en": "Keep the boundary executable and inspectable; change one input and verify the expected output."
+          "purpose_vi": "Khớp đường thẳng bằng bình phương tối thiểu một biến, rồi so MSE trên hai mẫu kiểm định với baseline trung bình tập train.",
+          "purpose_en": "Fit a univariate least-squares line and compare its MSE on two held-out samples with a training-mean baseline.",
+          "setup": "Python 3.11+; chỉ dùng thư viện chuẩn / standard library only. Save as linear_demo.py and run python linear_demo.py.",
+          "expected_output": "slope=2.00, intercept=1.00\nbaseline_mse=4.00\nlinear_mse=0.00",
+          "edge_case_vi": "Thử fit_line([2, 2], [1, 3]), hai danh sách khác độ dài hoặc giá trị NaN; mỗi trường hợp phải báo ValueError. mse cũng từ chối dữ liệu rỗng hoặc không cùng độ dài.",
+          "edge_case_en": "Try fit_line([2, 2], [1, 3]), unequal lengths or NaN; each must raise ValueError. mse also rejects empty or misaligned inputs.",
+          "explanation_vi": "Từ điều kiện đạo hàm của tổng bình phương phần dư bằng 0, hệ số góc là tổng (x−x̄)(y−ȳ) chia tổng (x−x̄)², hệ số chặn là ȳ−slope×x̄. Chỉ tập train xác định hệ số và baseline. Dữ liệu đồ chơi nằm đúng trên một đường thẳng nên MSE kiểm định bằng 0; điều này không bảo đảm kết quả trên dữ liệu thật hay khi ngoại suy.",
+          "explanation_en": "Setting the squared-error derivatives to zero gives slope = sum((x−mean_x)(y−mean_y)) / sum((x−mean_x)²) and intercept = mean_y−slope×mean_x. Only training data determine the fit and baseline. The toy points lie exactly on a line, so zero validation MSE does not establish real-world accuracy or safe extrapolation."
         }
       ],
       "resources": [
@@ -12200,8 +12200,8 @@
           "required": false,
           "purpose_vi": "Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.",
           "purpose_en": "Official reference to verify the lesson concept.",
-          "read_vi": "Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.",
-          "read_en": "Read the relevant section, run a small example, and record one verified insight."
+          "read_vi": "Trong User Guide, mở Linear Models → Ordinary Least Squares; đối chiếu mục tiêu tối thiểu hóa tổng bình phương phần dư với fit_line.",
+          "read_en": "In the User Guide, open Linear Models → Ordinary Least Squares and compare its residual-sum-of-squares objective with fit_line."
         },
         {
           "language": "en",
@@ -12266,50 +12266,50 @@
         "phase-03-classical-ml-models-2",
         "phase-03-classical-ml-models-3"
       ],
-      "review_question_vi": "Nội dung cốt lõi của “Hồi quy tuyến tính” là gì?",
-      "review_question_en": "Define linear regression in your own words. What are the input, transformation and output?",
-      "review_answer_vi": "Hồi quy tuyến tính mô tả đầu ra bằng tổ hợp tuyến tính của các đặc trưng. Hệ số giúp diễn giải quan hệ trong mô hình, nhưng không tự chứng minh quan hệ nhân quả.",
-      "review_answer_en": "A strong answer names the input, transformation, output and the context where linear regression is used. Relate it specifically to linear regression in lesson phase-03-classical-ml-models-1.",
+      "review_question_vi": "Hồi quy tuyến tính tính dự đoán như thế nào, và hệ số 2 trong ŷ = 2x + 1 cho biết điều gì?",
+      "review_question_en": "How does linear regression predict, and what does the coefficient 2 in ŷ = 2x + 1 mean?",
+      "review_answer_vi": "Dự đoán là tổng có trọng số của các đặc trưng cộng hệ số chặn. Với ŷ = 2x + 1, x tăng một đơn vị thì dự đoán tăng 2. Trong mô hình nhiều đặc trưng, diễn giải này giữ các đặc trưng khác cố định. Hệ số không tự chứng minh quan hệ nhân quả.",
+      "review_answer_en": "The prediction is a weighted sum of features plus an intercept. In ŷ = 2x + 1, a one-unit increase in x raises the prediction by 2. In a model with multiple features, this interpretation holds other features fixed. The coefficient alone does not establish causation.",
       "review_cards": [
         {
           "id": "phase-03-classical-ml-models-1-recall",
           "type": "recall",
-          "question_vi": "Nội dung cốt lõi của “Hồi quy tuyến tính” là gì?",
-          "question_en": "Define linear regression in your own words. What are the input, transformation and output?",
-          "answer_vi": "Hồi quy tuyến tính mô tả đầu ra bằng tổ hợp tuyến tính của các đặc trưng. Hệ số giúp diễn giải quan hệ trong mô hình, nhưng không tự chứng minh quan hệ nhân quả.",
-          "answer_en": "A strong answer names the input, transformation, output and the context where linear regression is used.",
-          "hint_vi": "Nêu ý chính, sau đó minh họa bằng tình huống cụ thể.",
-          "hint_en": "Start with a small example you can calculate by hand."
+          "question_vi": "Với ŷ = 2x + 1, dự đoán tại x = 3 là bao nhiêu? Có thể kết luận tăng x gây ra tăng y không?",
+          "question_en": "For ŷ = 2x + 1, what is the prediction at x = 3? Does the coefficient prove that increasing x causes y to rise?",
+          "answer_vi": "Dự đoán là 2 × 3 + 1 = 7. Hệ số 2 mô tả quan hệ trong mô hình đã khớp; dữ liệu quan sát và hệ số này chưa đủ để kết luận tác động nhân quả.",
+          "answer_en": "The prediction is 2 × 3 + 1 = 7. The coefficient describes a relationship in the fitted model; observational data and this coefficient alone are insufficient to infer a causal effect.",
+          "hint_vi": "Tách phép tính dự đoán khỏi kết luận về can thiệp ngoài đời.",
+          "hint_en": "Separate a model prediction from a claim about a real-world intervention."
         },
         {
           "id": "phase-03-classical-ml-models-1-application",
           "type": "application",
-          "question_vi": "Huấn luyện mô hình hồi quy tuyến tính và đọc sai số trên tập kiểm định.",
-          "question_en": "Write a small code example or design that applies linear regression to an AI engineering problem.",
-          "answer_vi": "Với nhiệm vụ “Huấn luyện mô hình hồi quy tuyến tính và đọc sai số trên tập kiểm định”, cần lưu: cấu hình mô hình và kết quả trên cùng tập kiểm định. So sánh với mô hình cơ sở và đọc ít nhất một dự đoán sai.",
-          "answer_en": "The linear regression example should have an explicit input, expected output and a way to run or verify it (phase-03-classical-ml-models-1).",
-          "hint_vi": "Bắt đầu từ nhiệm vụ thực hành của bài.",
-          "hint_en": "Start from the lesson code example and change one assumption."
+          "question_vi": "Bạn kiểm tra hồi quy tuyến tính có tốt hơn cách luôn dự đoán trung bình như thế nào?",
+          "question_en": "How would you check whether linear regression improves on always predicting the mean?",
+          "answer_vi": "Tính trung bình mục tiêu trên tập train để tạo baseline, rồi khớp hồi quy tuyến tính trên cùng tập train. So sánh MSE của cả hai trên cùng tập kiểm định, lưu cấu hình và xem ít nhất một mẫu có sai số lớn. Không dùng nhãn kiểm định để tính trung bình baseline hoặc khớp mô hình.",
+          "answer_en": "Compute the target mean on the training set for the baseline, and fit linear regression on that same training set. Compare both models' MSE on the same validation set, save the configuration, and inspect at least one large error. Do not use validation labels to fit either model or calculate the baseline mean.",
+          "hint_vi": "Baseline cũng phải được học từ tập train; chỉ chấm điểm trên tập kiểm định.",
+          "hint_en": "Fit the baseline on training data too; use validation data only to evaluate it."
         },
         {
           "id": "phase-03-classical-ml-models-1-debug",
           "type": "debug",
-          "question_vi": "Khi làm bài “Hồi quy tuyến tính”, bạn cần tránh lỗi nào và kiểm tra lại ra sao?",
-          "question_en": "If linear regression produces a wrong result or a metric drops, what would you debug first?",
-          "answer_vi": "Trong bài “Hồi quy tuyến tính”, lỗi cần tránh là: chọn mô hình chỉ vì điểm huấn luyện cao. So sánh với mô hình cơ sở và đọc ít nhất một dự đoán sai. Dùng ví dụ nhỏ để tìm bước đầu tiên có kết quả khác dự kiến.",
-          "answer_en": "For linear regression, check inputs/shapes, preprocessing and the baseline first; then isolate the failure with a small test and error analysis (phase-03-classical-ml-models-1).",
-          "hint_vi": "Tìm bước đầu tiên xuất hiện khác biệt.",
-          "hint_en": "Do not start by changing the model or adding complexity."
+          "question_vi": "Mô hình khớp tốt khi x từ 1 đến 10 nhưng sai lớn tại x = 100. Bạn cần kiểm tra gì?",
+          "question_en": "A model fits well for x between 1 and 10 but makes a large error at x = 100. What should you check?",
+          "answer_vi": "Xác nhận đơn vị và tiền xử lý của x nhất quán, rồi so phạm vi đầu vào với dữ liệu train. x = 100 nằm ngoài miền đã quan sát nên đây là ngoại suy. Sai số nhỏ trong miền 1–10 không chứng minh dự đoán ngoài miền đáng tin; cần dữ liệu phù hợp hoặc giới hạn phạm vi sử dụng.",
+          "answer_en": "Check that x uses the same units and preprocessing, then compare its range with the training data. x = 100 is outside the observed range, so this is extrapolation. Small errors within 1–10 do not validate predictions outside that range; collect relevant data or restrict the model's use.",
+          "hint_vi": "So sánh miền dữ liệu dùng để khớp với miền đang dự đoán.",
+          "hint_en": "Compare the fitted data range with the prediction range."
         },
         {
           "id": "phase-03-classical-ml-models-1-interview",
           "type": "interview",
-          "question_vi": "Bạn dùng kết quả nào từ bài “Hồi quy tuyến tính” để giải thích cách làm và giới hạn?",
-          "question_en": "In an interview, how would you explain a trade-off and one edge case of linear regression?",
-          "answer_vi": "Bắt đầu từ nhiệm vụ “Huấn luyện mô hình hồi quy tuyến tính và đọc sai số trên tập kiểm định”. Trình bày kết quả đã lưu, cách đối chiếu và một điều kiện có thể khiến kết luận thay đổi; không chỉ đọc lại định nghĩa.",
-          "answer_en": "The answer about linear regression should cover assumptions, metrics/cost, limitations and how to reduce production risk (phase-03-classical-ml-models-1).",
-          "hint_vi": "Dùng quyết định thật trong bài làm, tránh chỉ đọc định nghĩa.",
-          "hint_en": "Relate it to latency, quality, cost or observability where relevant."
+          "question_vi": "Vì sao chọn hồi quy tuyến tính làm baseline, và khi nào hệ số của nó khó diễn giải?",
+          "question_en": "Why use linear regression as a baseline, and when can its coefficients be difficult to interpret?",
+          "answer_vi": "Cách tính dự đoán đơn giản và các hệ số giúp mô tả quan hệ giữa đặc trưng với mục tiêu. Tuy nhiên, các đặc trưng tương quan làm khó tách riêng vai trò của từng hệ số, và quan hệ phi tuyến có thể không được biểu diễn tốt bằng các đặc trưng hiện có. Dùng sai số kiểm định và phần dư để đánh giá giới hạn đó.",
+          "answer_en": "Its prediction rule is simple, and coefficients help describe feature–target relationships. However, correlated features make individual effects difficult to separate, and the supplied features may not capture nonlinear relationships. Use validation errors and residuals to assess these limitations.",
+          "hint_vi": "Phân biệt khả năng đọc công thức với khả năng diễn giải từng hệ số một cách độc lập.",
+          "hint_en": "A readable formula does not guarantee that each coefficient has an independent interpretation."
         }
       ]
     },
@@ -12320,7 +12320,7 @@
       "title_vi": "Hồi quy logistic",
       "title_en": "Logistic regression",
       "summary_vi": "Hồi quy logistic chuyển tổ hợp tuyến tính thành xác suất cho bài toán phân loại.",
-      "summary_en": "Learn Logistic regression through an input → transformation → output model, then verify it with an edge-case exercise.",
+      "summary_en": "Logistic regression maps a linear score to a class probability; a decision threshold turns that probability into a label.",
       "learning_objectives": [
         "So sánh precision và recall khi thay ngưỡng quyết định.",
         "So sánh với mô hình cơ sở và đọc ít nhất một dự đoán sai.",
@@ -12374,14 +12374,14 @@
           "stretch": "Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào."
         },
         "en": {
-          "task": "Train a simple model first, add trees/boosting, and record metrics plus a representative error for each model.",
+          "task": "Compare precision and recall at different decision thresholds. First use the fixed-coefficient sigmoid example; when evaluating a fitted model, estimate coefficients on training data and compare thresholds on validation data.",
           "deliverables": [
-            "One executable code file",
-            "One test or expected output",
-            "One note describing an edge case and trade-off"
+            "The probabilities, labels and threshold values used",
+            "Predictions, precision and recall for each threshold",
+            "One false positive or false negative and its consequence"
           ],
-          "checkpoint": "You can explain trade-offs among interpretability, latency, data size, and quality.",
-          "stretch": "Add a failure test for logistic regression and explain the result."
+          "checkpoint": "Changing the threshold keeps probabilities fixed; choose thresholds without consulting test labels.",
+          "stretch": "Try a threshold with no predicted positives and explain the demo convention of precision equal to 0.0."
         }
       },
       "interview_questions": {
@@ -12403,17 +12403,17 @@
       "code_examples": [
         {
           "language": "python",
-          "title": "Logistic regression: inspect one complete path",
-          "code": "# Topic: Logistic regression (phase-03-classical-ml-models-2)\ndef accuracy(y_true: list[int], y_pred: list[int]) -> float:\n    if len(y_true) != len(y_pred) or not y_true:\n        raise ValueError('non-empty aligned labels are required')\n    return sum(a == b for a, b in zip(y_true, y_pred)) / len(y_true)\n\nprint(accuracy([1, 0, 1], [1, 1, 1]))",
+          "title": "Fixed logistic scores, two thresholds, precision and recall",
+          "code": "from math import exp, isfinite, log\n\n\ndef finite_number(value):\n    return isinstance(value, (int, float)) and isfinite(value)\n\n\ndef sigmoid(score):\n    if not finite_number(score):\n        raise ValueError(\"score must be a finite number\")\n    if score >= 0:\n        return 1.0 / (1.0 + exp(-score))\n    exponential = exp(score)\n    return exponential / (1.0 + exponential)\n\n\ndef classify(probabilities, threshold):\n    if not finite_number(threshold) or not 0 <= threshold <= 1:\n        raise ValueError(\"threshold must be in [0, 1]\")\n    if not probabilities:\n        raise ValueError(\"probabilities must not be empty\")\n    if any(not finite_number(value) or not 0 <= value <= 1\n           for value in probabilities):\n        raise ValueError(\"probabilities must be finite and in [0, 1]\")\n    return [int(probability >= threshold) for probability in probabilities]\n\n\ndef binary_metrics(labels, predictions):\n    # For this demo, an undefined precision or recall is reported as 0.0.\n    if not labels or len(labels) != len(predictions):\n        raise ValueError(\"non-empty aligned labels are required\")\n    if any(value not in (0, 1)\n           for values in (labels, predictions) for value in values):\n        raise ValueError(\"labels and predictions must be binary 0 or 1\")\n    true_positive = sum(actual == 1 and predicted == 1\n                        for actual, predicted in zip(labels, predictions))\n    predicted_positive = sum(predictions)\n    actual_positive = sum(labels)\n    precision = true_positive / predicted_positive if predicted_positive else 0.0\n    recall = true_positive / actual_positive if actual_positive else 0.0\n    return {\"precision\": precision, \"recall\": recall}\n\n\nif __name__ == \"__main__\":\n    # Fixed coefficients illustrate inference; no model is fitted here.\n    weight = 1.0\n    intercept = 0.0\n    features = [log(4), log(1.5), log(2 / 3), log(0.25)]\n    labels = [1, 0, 1, 0]\n    probabilities = [sigmoid(weight * value + intercept) for value in features]\n    print(f\"probabilities={[round(value, 1) for value in probabilities]}\")\n    for threshold in (0.5, 0.3):\n        predictions = classify(probabilities, threshold)\n        metrics = binary_metrics(labels, predictions)\n        print(f\"threshold={threshold:.1f}, labels={predictions}\")\n        print(f\"precision={metrics['precision']:.3f}, recall={metrics['recall']:.3f}\")",
           "status": "runnable",
-          "purpose_vi": "Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.",
-          "purpose_en": "Illustrate the input-to-output path for logistic regression.",
-          "setup": "Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.",
-          "expected_output": "Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.",
-          "edge_case_vi": "Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.",
-          "edge_case_en": "Try an empty input, a wrong shape or missing data and record the failure.",
-          "explanation_vi": "Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần nội dung; cần hoàn thành riêng nhiệm vụ thực hành.",
-          "explanation_en": "Keep the boundary executable and inspectable; change one input and verify the expected output."
+          "purpose_vi": "Dùng hệ số cố định để tính sigmoid, đổi ngưỡng và đo precision/recall; ví dụ minh họa suy luận, không huấn luyện hồi quy logistic.",
+          "purpose_en": "Use fixed coefficients to compute sigmoid probabilities, change thresholds and measure precision/recall. This demonstrates inference, not logistic-regression fitting.",
+          "setup": "Python 3.11+; chỉ dùng thư viện chuẩn / standard library only. Save as logistic_demo.py and run python logistic_demo.py.",
+          "expected_output": "probabilities=[0.8, 0.6, 0.4, 0.2]\nthreshold=0.5, labels=[1, 1, 0, 0]\nprecision=0.500, recall=0.500\nthreshold=0.3, labels=[1, 1, 1, 0]\nprecision=0.667, recall=1.000",
+          "edge_case_vi": "sigmoid(1000) và sigmoid(-1000) không tràn số. Thử xác suất 1,2, ngưỡng ngoài [0, 1], danh sách rỗng hoặc nhãn 2; phải báo ValueError. Khi không có dự đoán dương hoặc nhãn dương, metric tương ứng được quy ước là 0,0.",
+          "edge_case_en": "sigmoid(1000) and sigmoid(-1000) avoid overflow. A probability of 1.2, a threshold outside [0, 1], empty data or label 2 must raise ValueError. Undefined precision or recall is assigned 0.0 in this demo.",
+          "explanation_vi": "Điểm là weight×x+intercept với hệ số đã cho; sigmoid biến điểm thành xác suất. Quy tắc của ví dụ là p ≥ ngưỡng thì gán lớp 1. Ngưỡng 0,3 bắt thêm một mẫu dương thật nên cả precision và recall đều tăng trong bộ dữ liệu nhỏ này; precision không nhất thiết giảm khi hạ ngưỡng. Đây không phải bằng chứng về mô hình đã được huấn luyện hoặc hiệu chỉnh xác suất.",
+          "explanation_en": "The score is weight×x+intercept with supplied coefficients; sigmoid maps it to a probability. This demo assigns class 1 when p ≥ threshold. Threshold 0.3 adds a true positive, so both precision and recall rise on these toy labels; lower thresholds do not necessarily reduce precision. The example provides no evidence of model fitting or probability calibration."
         }
       ],
       "resources": [
@@ -12425,8 +12425,8 @@
           "required": false,
           "purpose_vi": "Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.",
           "purpose_en": "Official reference to verify the lesson concept.",
-          "read_vi": "Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.",
-          "read_en": "Read the relevant section, run a small example, and record one verified insight."
+          "read_vi": "Trong User Guide, đọc Linear Models → Logistic regression → Binary Case và Tuning the decision threshold for class prediction; tách bước ước lượng xác suất khỏi bước chọn nhãn.",
+          "read_en": "In the User Guide, read Linear Models → Logistic regression → Binary Case and Tuning the decision threshold for class prediction; distinguish probability estimation from label selection."
         },
         {
           "language": "en",
@@ -12491,50 +12491,50 @@
         "phase-03-classical-ml-models-3",
         "phase-03-classical-ml-models-4"
       ],
-      "review_question_vi": "Nội dung cốt lõi của “Hồi quy logistic” là gì?",
-      "review_question_en": "Define logistic regression in your own words. What are the input, transformation and output?",
-      "review_answer_vi": "Hồi quy logistic chuyển tổ hợp tuyến tính thành xác suất cho bài toán phân loại. Ngưỡng quyết định biến xác suất thành nhãn; thay ngưỡng làm thay đổi các loại lỗi.",
-      "review_answer_en": "A strong answer names the input, transformation, output and the context where logistic regression is used. Relate it specifically to logistic regression in lesson phase-03-classical-ml-models-2.",
+      "review_question_vi": "Hồi quy logistic nhị phân biến đặc trưng thành xác suất và nhãn như thế nào?",
+      "review_question_en": "How does binary logistic regression turn features into a probability and then a label?",
+      "review_answer_vi": "Mô hình tính điểm tuyến tính từ đặc trưng rồi dùng sigmoid để ước lượng xác suất lớp dương. Ngưỡng quyết định biến xác suất thành nhãn; với quy tắc p ≥ ngưỡng, p = 0,4 cho nhãn âm ở ngưỡng 0,5 nhưng nhãn dương ở ngưỡng 0,3. Thay ngưỡng không cần huấn luyện lại mô hình.",
+      "review_answer_en": "The model computes a linear feature score and applies a sigmoid to estimate positive-class probability. A threshold turns that probability into a label. Using p ≥ threshold, p = 0.4 is negative at 0.5 but positive at 0.3. Changing this threshold does not require retraining the model.",
       "review_cards": [
         {
           "id": "phase-03-classical-ml-models-2-recall",
           "type": "recall",
-          "question_vi": "Nội dung cốt lõi của “Hồi quy logistic” là gì?",
-          "question_en": "Define logistic regression in your own words. What are the input, transformation and output?",
-          "answer_vi": "Hồi quy logistic chuyển tổ hợp tuyến tính thành xác suất cho bài toán phân loại. Ngưỡng quyết định biến xác suất thành nhãn; thay ngưỡng làm thay đổi các loại lỗi.",
-          "answer_en": "A strong answer names the input, transformation, output and the context where logistic regression is used.",
-          "hint_vi": "Nêu ý chính, sau đó minh họa bằng tình huống cụ thể.",
-          "hint_en": "Start with a small example you can calculate by hand."
+          "question_vi": "Với xác suất lớp dương 0,4, nhãn thay đổi thế nào khi hạ ngưỡng từ 0,5 xuống 0,3? Có phải huấn luyện lại không?",
+          "question_en": "For a positive-class probability of 0.4, what changes when the threshold drops from 0.5 to 0.3? Is retraining needed?",
+          "answer_vi": "Nếu gán dương khi p ≥ ngưỡng, nhãn đổi từ âm sang dương. Xác suất mô hình vẫn là 0,4; chỉ quy tắc quyết định thay đổi, nên không cần huấn luyện lại.",
+          "answer_en": "If positive means p ≥ threshold, the label changes from negative to positive. The model probability remains 0.4; only the decision rule changes, so retraining is unnecessary.",
+          "hint_vi": "Phân biệt đầu ra xác suất với bước chuyển xác suất thành nhãn.",
+          "hint_en": "Distinguish the probability estimate from the rule that assigns a label."
         },
         {
           "id": "phase-03-classical-ml-models-2-application",
           "type": "application",
-          "question_vi": "So sánh precision và recall khi thay ngưỡng quyết định.",
-          "question_en": "Write a small code example or design that applies logistic regression to an AI engineering problem.",
-          "answer_vi": "Với nhiệm vụ “So sánh precision và recall khi thay ngưỡng quyết định”, cần lưu: cấu hình mô hình và kết quả trên cùng tập kiểm định. So sánh với mô hình cơ sở và đọc ít nhất một dự đoán sai.",
-          "answer_en": "The logistic regression example should have an explicit input, expected output and a way to run or verify it (phase-03-classical-ml-models-2).",
-          "hint_vi": "Bắt đầu từ nhiệm vụ thực hành của bài.",
-          "hint_en": "Start from the lesson code example and change one assumption."
+          "question_vi": "Với nhãn thật [1, 0, 1, 0] và xác suất [0,8; 0,6; 0,4; 0,2], precision và recall ở ngưỡng 0,5 và 0,3 là bao nhiêu?",
+          "question_en": "For labels [1, 0, 1, 0] and probabilities [0.8, 0.6, 0.4, 0.2], what are precision and recall at thresholds 0.5 and 0.3?",
+          "answer_vi": "Gán dương khi p ≥ ngưỡng. Ở ngưỡng 0,5 có TP = 1, FP = 1, FN = 1 nên precision = 1/2 và recall = 1/2. Ở ngưỡng 0,3 có TP = 2, FP = 1, FN = 0 nên precision = 2/3 và recall = 1. So ngưỡng trên tập kiểm định theo chi phí báo nhầm và bỏ sót; không chọn ngưỡng bằng kết quả tập test.",
+          "answer_en": "Assign positive when p ≥ threshold. At 0.5, TP = 1, FP = 1 and FN = 1, so precision = 1/2 and recall = 1/2. At 0.3, TP = 2, FP = 1 and FN = 0, so precision = 2/3 and recall = 1. Compare thresholds on validation data using false-positive and false-negative costs; do not choose the threshold using test results.",
+          "hint_vi": "Lập nhãn dự đoán ở từng ngưỡng rồi đếm TP, FP và FN trước khi tính tỉ lệ.",
+          "hint_en": "Assign labels at each threshold, then count TP, FP and FN before computing the ratios."
         },
         {
           "id": "phase-03-classical-ml-models-2-debug",
           "type": "debug",
-          "question_vi": "Khi làm bài “Hồi quy logistic”, bạn cần tránh lỗi nào và kiểm tra lại ra sao?",
-          "question_en": "If logistic regression produces a wrong result or a metric drops, what would you debug first?",
-          "answer_vi": "Trong bài “Hồi quy logistic”, lỗi cần tránh là: chọn mô hình chỉ vì điểm huấn luyện cao. So sánh với mô hình cơ sở và đọc ít nhất một dự đoán sai. Dùng ví dụ nhỏ để tìm bước đầu tiên có kết quả khác dự kiến.",
-          "answer_en": "For logistic regression, check inputs/shapes, preprocessing and the baseline first; then isolate the failure with a small test and error analysis (phase-03-classical-ml-models-2).",
-          "hint_vi": "Tìm bước đầu tiên xuất hiện khác biệt.",
-          "hint_en": "Do not start by changing the model or adding complexity."
+          "question_vi": "Accuracy cao nhưng mô hình bỏ sót nhiều mẫu dương. Bạn sẽ kiểm tra gì trước khi đổi mô hình?",
+          "question_en": "Accuracy is high, but the model misses many positive cases. What would you inspect before changing the model?",
+          "answer_vi": "Kiểm tra tỉ lệ lớp, cách xác định lớp dương và confusion matrix trên tập kiểm định. So recall với baseline luôn dự đoán lớp đa số, rồi thử các ngưỡng trên cùng xác suất và ghi cả precision lẫn recall. Hạ ngưỡng không bảo đảm precision tăng; cần đọc số báo nhầm và bỏ sót thực tế.",
+          "answer_en": "Check class proportions, the positive-class definition and the validation confusion matrix. Compare recall with a majority-class baseline, then evaluate thresholds on the same probabilities and record both precision and recall. Lowering the threshold does not guarantee better precision; inspect actual false positives and false negatives.",
+          "hint_vi": "Accuracy có thể bị lớp đa số chi phối; hãy nhìn riêng các mẫu dương.",
+          "hint_en": "The majority class can dominate accuracy; examine positive cases separately."
         },
         {
           "id": "phase-03-classical-ml-models-2-interview",
           "type": "interview",
-          "question_vi": "Bạn dùng kết quả nào từ bài “Hồi quy logistic” để giải thích cách làm và giới hạn?",
-          "question_en": "In an interview, how would you explain a trade-off and one edge case of logistic regression?",
-          "answer_vi": "Bắt đầu từ nhiệm vụ “So sánh precision và recall khi thay ngưỡng quyết định”. Trình bày kết quả đã lưu, cách đối chiếu và một điều kiện có thể khiến kết luận thay đổi; không chỉ đọc lại định nghĩa.",
-          "answer_en": "The answer about logistic regression should cover assumptions, metrics/cost, limitations and how to reduce production risk (phase-03-classical-ml-models-2).",
-          "hint_vi": "Dùng quyết định thật trong bài làm, tránh chỉ đọc định nghĩa.",
-          "hint_en": "Relate it to latency, quality, cost or observability where relevant."
+          "question_vi": "Dự đoán xác suất 0,8 có tự chứng minh mô hình đã được hiệu chỉnh tốt không?",
+          "question_en": "Does a predicted probability of 0.8 by itself show that the model is well calibrated?",
+          "answer_vi": "Không. Hiệu chỉnh tốt nghĩa là trong nhiều mẫu được dự đoán gần 0,8, tỉ lệ dương quan sát được cũng gần 80% trên dữ liệu phù hợp. Cần kiểm tra theo nhóm xác suất và các nhóm dữ liệu quan trọng; một dự đoán đơn lẻ không chứng minh điều đó. Chọn ngưỡng là quyết định riêng, phụ thuộc chi phí từng loại lỗi.",
+          "answer_en": "No. Good calibration means that among many cases scored near 0.8, the observed positive rate is also near 80% on appropriate data. Check probability groups and relevant data subgroups; one prediction cannot establish calibration. Threshold selection is a separate decision based on the costs of different errors.",
+          "hint_vi": "Xác suất nói về tần suất trong nhiều trường hợp tương tự, không phải bảo đảm cho một mẫu.",
+          "hint_en": "A probability concerns frequencies across similar cases, not a guarantee for one case."
         }
       ]
     },
@@ -12545,7 +12545,7 @@
       "title_vi": "Cây quyết định và rừng ngẫu nhiên",
       "title_en": "Decision trees and random forests",
       "summary_vi": "Cây quyết định chia dữ liệu qua các điều kiện; rừng ngẫu nhiên kết hợp nhiều cây để giảm biến động của dự đoán.",
-      "summary_en": "Learn Decision trees and random forests through an input → transformation → output model, then verify it with an edge-case exercise.",
+      "summary_en": "Decision trees predict through successive conditions; random forests combine randomized trees to reduce prediction variability.",
       "learning_objectives": [
         "So sánh một cây với rừng ngẫu nhiên trên cùng tập kiểm định.",
         "So sánh với mô hình cơ sở và đọc ít nhất một dự đoán sai.",
@@ -12601,14 +12601,14 @@
           "stretch": "Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào."
         },
         "en": {
-          "task": "Train a simple model first, add trees/boosting, and record metrics plus a representative error for each model.",
+          "task": "Use the toy stump to inspect Gini-based splitting and supplied predictions to inspect voting. For the full lesson task, train a decision tree and an actual random forest and compare them on the same validation set; the supplied votes do not complete that training experiment.",
           "deliverables": [
-            "One executable code file",
-            "One test or expected output",
-            "One note describing an edge case and trade-off"
+            "The selected stump threshold and its two leaf predictions",
+            "For the full comparison, tree and forest settings plus validation metrics",
+            "One disagreement, runtime or model-size comparison and a limitation"
           ],
-          "checkpoint": "You can explain trade-offs among interpretability, latency, data size, and quality.",
-          "stretch": "Add a failure test for decision trees and random forests and explain the result."
+          "checkpoint": "Separate the stump-and-vote illustration from evidence obtained by training and evaluating a real forest.",
+          "stretch": "Change one binary label and explain whether the best Gini split or a leaf majority changes."
         }
       },
       "interview_questions": {
@@ -12627,17 +12627,17 @@
       "code_examples": [
         {
           "language": "python",
-          "title": "Decision trees and random forests: inspect one complete path",
-          "code": "# Topic: Decision trees and random forests (phase-03-classical-ml-models-3)\nfrom collections import Counter\n\nsamples = ['pass', 'pass', 'fail', 'pass']\ncounts = Counter(samples)\nprobability_pass = counts['pass'] / len(samples)\nprint({'counts': dict(counts), 'p_pass': probability_pass})",
+          "title": "Fit a Gini stump and illustrate voting with supplied predictions",
+          "code": "from math import isfinite\n\n\ndef majority(labels):\n    if not labels or any(label not in (0, 1) for label in labels):\n        raise ValueError(\"non-empty binary labels are required\")\n    return int(2 * sum(labels) > len(labels))  # A tie selects class 0.\n\n\ndef gini(labels):\n    probability = sum(labels) / len(labels)\n    return 2 * probability * (1 - probability)\n\n\ndef fit_stump(xs, ys):\n    if not xs or len(xs) != len(ys):\n        raise ValueError(\"non-empty aligned data are required\")\n    if any(not isinstance(value, (int, float)) or not isfinite(value)\n           for value in xs):\n        raise ValueError(\"features must be finite numbers\")\n    majority(ys)  # Validate the binary labels before evaluating splits.\n    distinct = sorted(set(xs))\n    if len(distinct) < 2:\n        raise ValueError(\"at least two distinct x values are required\")\n    best_score = float(\"inf\")\n    best_stump = None\n    for lower, upper in zip(distinct, distinct[1:]):\n        threshold = lower / 2 + upper / 2\n        if threshold >= upper:\n            threshold = lower\n        left = [label for value, label in zip(xs, ys) if value <= threshold]\n        right = [label for value, label in zip(xs, ys) if value > threshold]\n        score = (len(left) * gini(left) + len(right) * gini(right)) / len(ys)\n        if score < best_score:\n            best_score = score\n            best_stump = {\n                \"threshold\": threshold,\n                \"left\": majority(left),\n                \"right\": majority(right),\n            }\n    return best_stump\n\n\ndef predict_stump(stump, value):\n    if not isinstance(value, (int, float)) or not isfinite(value):\n        raise ValueError(\"feature must be a finite number\")\n    return stump[\"left\"] if value <= stump[\"threshold\"] else stump[\"right\"]\n\n\nif __name__ == \"__main__\":\n    features = [1, 2, 3, 4, 5, 6]\n    labels = [0, 0, 0, 1, 1, 1]\n    stump = fit_stump(features, labels)\n    predictions = [predict_stump(stump, value) for value in (2, 5)]\n    print(f\"threshold={stump['threshold']:.1f}\")\n    print(f\"stump_predictions={predictions}\")\n    # Supplied predictions from three imagined trees, not a trained forest.\n    tree_predictions = [[0, 1], [0, 0], [1, 1]]\n    votes = [majority(list(sample_votes))\n             for sample_votes in zip(*tree_predictions)]\n    print(f\"supplied_tree_votes={votes}\")",
           "status": "runnable",
-          "purpose_vi": "Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.",
-          "purpose_en": "Illustrate the input-to-output path for decision trees and random forests.",
-          "setup": "Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.",
-          "expected_output": "Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.",
-          "edge_case_vi": "Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.",
-          "edge_case_en": "Try an empty input, a wrong shape or missing data and record the failure.",
-          "explanation_vi": "Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần nội dung; cần hoàn thành riêng nhiệm vụ thực hành.",
-          "explanation_en": "Keep the boundary executable and inspectable; change one input and verify the expected output."
+          "purpose_vi": "Tìm ngưỡng chia tốt nhất cho cây một tầng theo Gini nhị phân; sau đó minh họa bỏ phiếu từ dự đoán được cho sẵn, không huấn luyện rừng ngẫu nhiên.",
+          "purpose_en": "Fit a one-split classification tree using binary Gini impurity, then illustrate voting with supplied tree predictions. This does not train a random forest.",
+          "setup": "Python 3.11+; chỉ dùng thư viện chuẩn / standard library only. Save as tree_demo.py and run python tree_demo.py.",
+          "expected_output": "threshold=3.5\nstump_predictions=[0, 1]\nsupplied_tree_votes=[0, 1]",
+          "edge_case_vi": "Thử đặc trưng không đổi, dữ liệu rỗng, khác độ dài hoặc nhãn ngoài {0, 1}; phải báo ValueError. majority([0, 1]) trả về 0 theo quy tắc phá hòa đã ghi. Nếu nhiều ngưỡng có Gini bằng nhau, ví dụ giữ ngưỡng nhỏ nhất được xét.",
+          "edge_case_en": "Constant features, empty or misaligned data, and non-binary labels must raise ValueError. majority([0, 1]) returns 0 under the documented tie rule. Equal-quality splits retain the first, lowest threshold considered.",
+          "explanation_vi": "Với tỉ lệ lớp 1 là p, Gini nhị phân bằng 2p(1−p). Mã xét ngưỡng giữa các giá trị đặc trưng phân biệt và tối thiểu hóa Gini trung bình có trọng số theo số mẫu hai nhánh; mỗi lá trả về lớp đa số. Ba danh sách dự đoán chỉ minh họa cách kết hợp cây. Rừng thật còn lấy mẫu dữ liệu và chọn tập đặc trưng ngẫu nhiên; RandomForestClassifier của scikit-learn trung bình hóa xác suất thay vì bỏ phiếu nhãn như ví dụ này.",
+          "explanation_en": "For class-1 proportion p, binary Gini is 2p(1−p). The code tests thresholds between distinct feature values and minimizes child Gini weighted by sample count; leaves predict their majority class. The three supplied prediction lists illustrate aggregation only. A real forest also samples data and features; scikit-learn RandomForestClassifier averages probabilities rather than using this hard-label vote."
         }
       ],
       "resources": [
@@ -12649,8 +12649,8 @@
           "required": false,
           "purpose_vi": "Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.",
           "purpose_en": "Official reference to verify the lesson concept.",
-          "read_vi": "Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.",
-          "read_en": "Read the relevant section, run a small example, and record one verified insight."
+          "read_vi": "Trong User Guide, đọc Decision Trees → Mathematical formulation và Ensembles → Random forests; kiểm tra Gini có trọng số và cách scikit-learn kết hợp xác suất của cây.",
+          "read_en": "In the User Guide, read Decision Trees → Mathematical formulation and Ensembles → Random forests; check weighted Gini and scikit-learn probability aggregation."
         },
         {
           "language": "en",
@@ -12726,50 +12726,50 @@
         "phase-03-classical-ml-models-4",
         "phase-03-classical-ml-preprocessing-1"
       ],
-      "review_question_vi": "Nội dung cốt lõi của “Cây quyết định và rừng ngẫu nhiên” là gì?",
-      "review_question_en": "Define decision trees and random forests in your own words. What are the input, transformation and output?",
-      "review_answer_vi": "Cây quyết định chia dữ liệu qua các điều kiện; rừng ngẫu nhiên kết hợp nhiều cây để giảm biến động của dự đoán. Độ sâu và số mẫu ở lá ảnh hưởng khả năng khái quát hóa.",
-      "review_answer_en": "A strong answer names the input, transformation, output and the context where decision trees and random forests is used. Relate it specifically to decision trees and random forests in lesson phase-03-classical-ml-models-3.",
+      "review_question_vi": "Cây quyết định dự đoán như thế nào, và rừng ngẫu nhiên giúp giảm biến động bằng cách nào?",
+      "review_question_en": "How does a decision tree predict, and how can a random forest reduce prediction variability?",
+      "review_answer_vi": "Cây đi qua các điều kiện chia dữ liệu đến một lá rồi dùng dự đoán tại lá đó. Rừng kết hợp nhiều cây được tạo với sự ngẫu nhiên trong lấy mẫu dữ liệu và lựa chọn đặc trưng. Kết hợp dự đoán giúp giảm biến động khi lỗi của các cây không hoàn toàn giống nhau; độ sâu và số mẫu tối thiểu ở lá vẫn cần được kiểm soát.",
+      "review_answer_en": "A tree follows split conditions to a leaf and uses that leaf's prediction. A forest combines trees randomized through data sampling and feature selection. Combining predictions reduces variability when the trees do not make identical errors; depth and minimum leaf size still need to be controlled.",
       "review_cards": [
         {
           "id": "phase-03-classical-ml-models-3-recall",
           "type": "recall",
-          "question_vi": "Nội dung cốt lõi của “Cây quyết định và rừng ngẫu nhiên” là gì?",
-          "question_en": "Define decision trees and random forests in your own words. What are the input, transformation and output?",
-          "answer_vi": "Cây quyết định chia dữ liệu qua các điều kiện; rừng ngẫu nhiên kết hợp nhiều cây để giảm biến động của dự đoán. Độ sâu và số mẫu ở lá ảnh hưởng khả năng khái quát hóa.",
-          "answer_en": "A strong answer names the input, transformation, output and the context where decision trees and random forests is used.",
-          "hint_vi": "Nêu ý chính, sau đó minh họa bằng tình huống cụ thể.",
-          "hint_en": "Start with a small example you can calculate by hand."
+          "question_vi": "Vì sao rừng ngẫu nhiên cần các cây khác nhau thay vì sao chép cùng một cây nhiều lần?",
+          "question_en": "Why does a random forest need different trees instead of many copies of the same tree?",
+          "answer_vi": "Sao chép một cây giữ nguyên dự đoán và lỗi của nó, nên kết hợp các bản sao không giảm biến động. Lấy mẫu dữ liệu và chọn ngẫu nhiên các đặc trưng được xét giúp tạo cây khác nhau; lợi ích xuất hiện khi lỗi của chúng không hoàn toàn trùng nhau.",
+          "answer_en": "Copies of one tree make the same predictions and errors, so combining them does not reduce variability. Data sampling and random feature selection help create different trees; the benefit depends on their errors not being identical.",
+          "hint_vi": "Nếu mọi cây trả về cùng một dự đoán thì lấy trung bình có đổi kết quả không?",
+          "hint_en": "If every tree returns the same prediction, does averaging change it?"
         },
         {
           "id": "phase-03-classical-ml-models-3-application",
           "type": "application",
-          "question_vi": "So sánh một cây với rừng ngẫu nhiên trên cùng tập kiểm định.",
-          "question_en": "Write a small code example or design that applies decision trees and random forests to an AI engineering problem.",
-          "answer_vi": "Với nhiệm vụ “So sánh một cây với rừng ngẫu nhiên trên cùng tập kiểm định”, cần lưu: cấu hình mô hình và kết quả trên cùng tập kiểm định. So sánh với mô hình cơ sở và đọc ít nhất một dự đoán sai.",
-          "answer_en": "The decision trees and random forests example should have an explicit input, expected output and a way to run or verify it (phase-03-classical-ml-models-3).",
-          "hint_vi": "Bắt đầu từ nhiệm vụ thực hành của bài.",
-          "hint_en": "Start from the lesson code example and change one assumption."
+          "question_vi": "Bạn sẽ so sánh một cây với rừng ngẫu nhiên công bằng và ghi lại những gì?",
+          "question_en": "How would you compare a decision tree with a random forest fairly, and what would you record?",
+          "answer_vi": "Dùng cùng tập train, tập kiểm định, đặc trưng và thước đo. Lưu độ sâu, số mẫu tối thiểu ở lá, số cây và seed; so chất lượng kiểm định với baseline, thời gian dự đoán và kích thước mô hình. Xem ít nhất một mẫu mà hai mô hình dự đoán khác nhau để giải thích lợi ích hoặc giới hạn của rừng.",
+          "answer_en": "Use the same training and validation sets, features and metric. Record depth, minimum leaf size, tree count and seed; compare validation quality with a baseline, prediction time and model size. Inspect at least one case where the models disagree to explain a benefit or limitation of the forest.",
+          "hint_vi": "Giữ cách chia dữ liệu cố định để khác biệt kết quả có ý nghĩa.",
+          "hint_en": "Keep the data split fixed so the comparison is meaningful."
         },
         {
           "id": "phase-03-classical-ml-models-3-debug",
           "type": "debug",
-          "question_vi": "Khi làm bài “Cây quyết định và rừng ngẫu nhiên”, bạn cần tránh lỗi nào và kiểm tra lại ra sao?",
-          "question_en": "If decision trees and random forests produces a wrong result or a metric drops, what would you debug first?",
-          "answer_vi": "Trong bài “Cây quyết định và rừng ngẫu nhiên”, lỗi cần tránh là: chọn mô hình chỉ vì điểm huấn luyện cao. So sánh với mô hình cơ sở và đọc ít nhất một dự đoán sai. Dùng ví dụ nhỏ để tìm bước đầu tiên có kết quả khác dự kiến.",
-          "answer_en": "For decision trees and random forests, check inputs/shapes, preprocessing and the baseline first; then isolate the failure with a small test and error analysis (phase-03-classical-ml-models-3).",
-          "hint_vi": "Tìm bước đầu tiên xuất hiện khác biệt.",
-          "hint_en": "Do not start by changing the model or adding complexity."
+          "question_vi": "Một cây dự đoán gần hoàn hảo trên train nhưng kém trên kiểm định. Bạn kiểm tra và thử điều gì?",
+          "question_en": "A tree predicts almost perfectly on training data but poorly on validation data. What would you check and try?",
+          "answer_vi": "Kiểm tra cách chia dữ liệu và rò rỉ đặc trưng trước, rồi xem độ sâu và số mẫu trong các lá. Cây quá sâu có thể ghi nhớ tập train. Thử giới hạn độ sâu hoặc tăng số mẫu tối thiểu ở lá, so lại chênh lệch train–validation trên cùng phép chia. Nhiều cây hơn không sửa được rò rỉ dữ liệu.",
+          "answer_en": "First check the split and feature leakage, then inspect tree depth and leaf sample counts. An overly deep tree may memorize training data. Try limiting depth or increasing minimum leaf size, and compare the training–validation gap on the same split. Adding trees cannot repair data leakage.",
+          "hint_vi": "Xem điều kiện chia và số mẫu ở lá trước khi tăng số cây.",
+          "hint_en": "Inspect split conditions and leaf sample counts before increasing tree count."
         },
         {
           "id": "phase-03-classical-ml-models-3-interview",
           "type": "interview",
-          "question_vi": "Bạn dùng kết quả nào từ bài “Cây quyết định và rừng ngẫu nhiên” để giải thích cách làm và giới hạn?",
-          "question_en": "In an interview, how would you explain a trade-off and one edge case of decision trees and random forests?",
-          "answer_vi": "Bắt đầu từ nhiệm vụ “So sánh một cây với rừng ngẫu nhiên trên cùng tập kiểm định”. Trình bày kết quả đã lưu, cách đối chiếu và một điều kiện có thể khiến kết luận thay đổi; không chỉ đọc lại định nghĩa.",
-          "answer_en": "The answer about decision trees and random forests should cover assumptions, metrics/cost, limitations and how to reduce production risk (phase-03-classical-ml-models-3).",
-          "hint_vi": "Dùng quyết định thật trong bài làm, tránh chỉ đọc định nghĩa.",
-          "hint_en": "Relate it to latency, quality, cost or observability where relevant."
+          "question_vi": "Khi nào bạn vẫn chọn một cây nhỏ dù rừng ngẫu nhiên có điểm kiểm định tốt hơn?",
+          "question_en": "When might you choose a small tree even if a random forest has a better validation score?",
+          "answer_vi": "Một cây nhỏ có thể phù hợp khi cần giải thích từng quyết định bằng chuỗi điều kiện ngắn hoặc ngân sách bộ nhớ và thời gian dự đoán hạn chế. Rừng thường giảm biến động nhưng khó diễn giải toàn bộ và cần lưu, chạy nhiều cây. Quyết định dựa trên mức cải thiện chất lượng và chi phí đo được, không chỉ tên mô hình.",
+          "answer_en": "A small tree may fit a need for short, traceable decision rules or tight memory and prediction-time budgets. A forest often reduces variability but is harder to explain as a whole and requires storing and evaluating many trees. Choose using the measured quality gain and costs, not the model name alone.",
+          "hint_vi": "Đối chiếu độ chính xác với yêu cầu giải thích, bộ nhớ và thời gian dự đoán.",
+          "hint_en": "Weigh predictive quality against explanation needs, memory and prediction time."
         }
       ]
     },
@@ -12780,7 +12780,7 @@
       "title_vi": "Gradient boosting",
       "title_en": "Gradient boosting",
       "summary_vi": "Gradient boosting bổ sung mô hình yếu theo từng bước để giảm hàm mất mát hiện tại.",
-      "summary_en": "Learn Gradient boosting through an input → transformation → output model, then verify it with an edge-case exercise.",
+      "summary_en": "Gradient boosting adds weak models sequentially to reduce the current ensemble loss, with a learning rate controlling each contribution.",
       "learning_objectives": [
         "Theo dõi chất lượng kiểm định khi tăng số bước boosting.",
         "So sánh với mô hình cơ sở và đọc ít nhất một dự đoán sai.",
@@ -12803,7 +12803,7 @@
         "optimization",
         "models"
       ],
-      "concept_notes_vi": "Gradient boosting thêm các mô hình thành phần theo từng bước để giảm hàm mất mát của tổ hợp hiện tại. Mô hình mới được học theo hướng gradient của loss; với bình phương sai số, hướng này liên quan trực tiếp tới phần dư.\n\nKhác rừng ngẫu nhiên chủ yếu kết hợp nhiều cây được xây riêng, boosting tạo chuỗi bước phụ thuộc vào kết quả trước. Tốc độ học điều chỉnh mức đóng góp của mỗi bước; tốc độ nhỏ thường cần nhiều bước hơn và không tự bảo đảm chất lượng tốt hơn.\n\nTự kiểm tra: thêm cây tới khi train loss rất thấp có luôn cải thiện dự đoán mới không? Không; vẫn có thể quá khớp. Theo dõi kiểm định, giới hạn độ phức tạp và ngân sách, rồi so với baseline trên cùng phép chia dữ liệu.",
+      "concept_notes_vi": "Gradient boosting thêm các mô hình thành phần theo từng bước để giảm hàm mất mát của tổ hợp hiện tại. Mô hình mới được học theo hướng gradient âm của loss; với bình phương sai số, hướng này liên quan trực tiếp tới phần dư.\n\nKhác rừng ngẫu nhiên chủ yếu kết hợp nhiều cây được xây riêng, boosting tạo chuỗi bước phụ thuộc vào kết quả trước. Tốc độ học điều chỉnh mức đóng góp của mỗi bước; tốc độ nhỏ thường cần nhiều bước hơn và không tự bảo đảm chất lượng tốt hơn.\n\nTự kiểm tra: thêm cây tới khi train loss rất thấp có luôn cải thiện dự đoán mới không? Không; vẫn có thể quá khớp. Theo dõi kiểm định, giới hạn độ phức tạp và ngân sách, rồi so với baseline trên cùng phép chia dữ liệu.",
       "concept_notes_en": "Gradient boosting adds component models sequentially to reduce the current ensemble's loss. New models fit a direction derived from loss gradients; for squared error, this direction is directly related to residuals.\n\nUnlike a random forest that primarily combines separately built trees, boosting creates steps dependent on earlier results. Learning rate controls each step's contribution; smaller rates often require more steps and do not automatically improve quality.\n\nSelf-check: does adding trees until training loss is tiny always improve new predictions? No; overfitting remains possible. Monitor validation, bound complexity and budget, and compare against a baseline using the same data split.",
       "why_it_matters_vi": "So sánh mô hình theo giả định, độ phức tạp và dạng lỗi trên cùng dữ liệu.",
       "why_it_matters_en": "Compare models by assumptions, complexity, and error patterns instead of trying many models without a baseline.",
@@ -12833,14 +12833,14 @@
           "stretch": "Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào."
         },
         "en": {
-          "task": "Train a simple model first, add trees/boosting, and record metrics plus a representative error for each model.",
+          "task": "Run the single residual-boosting step and explain its training-MSE reduction. For the full lesson task, track a separate validation set over multiple boosting steps and choose a step count within a fixed budget.",
           "deliverables": [
-            "One executable code file",
-            "One test or expected output",
-            "One note describing an edge case and trade-off"
+            "The mean baseline, residual stump and learning rate",
+            "For multiple steps, a table or curve of training and validation loss",
+            "A comparison with the baseline and one representative error"
           ],
-          "checkpoint": "You can explain trade-offs among interpretability, latency, data size, and quality.",
-          "stretch": "Add a failure test for gradient boosting and explain the result."
+          "checkpoint": "Do not treat a drop in training loss as proof of generalization; choose the step count using validation data.",
+          "stretch": "Compare learning rates 0.1 and 0.5 in the toy update, then explain why a smaller update may require more steps."
         }
       },
       "interview_questions": {
@@ -12861,17 +12861,17 @@
       "code_examples": [
         {
           "language": "python",
-          "title": "Gradient boosting: inspect one complete path",
-          "code": "# Topic: Gradient boosting (phase-03-classical-ml-models-4)\ndef finite_difference(f, x, step=1e-5):\n    if step <= 0:\n        raise ValueError('step must be positive')\n    return (f(x + step) - f(x - step)) / (2 * step)\n\nprint(round(finite_difference(lambda value: value ** 2, 3.0), 5))",
+          "title": "One residual-boosting step from a mean baseline",
+          "code": "from math import isfinite\n\n\ndef fit_stump(xs, residuals):\n    if not xs or len(xs) != len(residuals):\n        raise ValueError(\"non-empty aligned data are required\")\n    if any(not isinstance(value, (int, float)) or not isfinite(value)\n           for values in (xs, residuals) for value in values):\n        raise ValueError(\"features and residuals must be finite numbers\")\n    distinct = sorted(set(xs))\n    if len(distinct) < 2:\n        raise ValueError(\"at least two distinct x values are required\")\n    best_error = float(\"inf\")\n    best_stump = None\n    for lower, upper in zip(distinct, distinct[1:]):\n        threshold = lower / 2 + upper / 2\n        if threshold >= upper:\n            threshold = lower\n        left = [residual for value, residual in zip(xs, residuals)\n                if value <= threshold]\n        right = [residual for value, residual in zip(xs, residuals)\n                 if value > threshold]\n        left_mean = sum(left) / len(left)\n        right_mean = sum(right) / len(right)\n        error = (sum((value - left_mean) ** 2 for value in left)\n                 + sum((value - right_mean) ** 2 for value in right))\n        if error < best_error:\n            best_error = error\n            best_stump = {\n                \"threshold\": threshold,\n                \"left\": left_mean,\n                \"right\": right_mean,\n            }\n    return best_stump\n\n\ndef predict_stump(stump, value):\n    if not isinstance(value, (int, float)) or not isfinite(value):\n        raise ValueError(\"feature must be a finite number\")\n    return stump[\"left\"] if value <= stump[\"threshold\"] else stump[\"right\"]\n\n\nif __name__ == \"__main__\":\n    features = [1.0, 2.0, 3.0, 4.0]\n    targets = [1.0, 1.0, 4.0, 4.0]\n    baseline = sum(targets) / len(targets)\n    predictions = [baseline] * len(targets)\n    residuals = [actual - predicted\n                 for actual, predicted in zip(targets, predictions)]\n    stump = fit_stump(features, residuals)\n    learning_rate = 0.5\n    if not isfinite(learning_rate) or not 0 < learning_rate <= 1:\n        raise ValueError(\"learning_rate must be in (0, 1] for this demo\")\n    updated = [predicted + learning_rate * predict_stump(stump, value)\n               for value, predicted in zip(features, predictions)]\n    loss_before = sum((actual - predicted) ** 2\n                      for actual, predicted in zip(targets, predictions)) / len(targets)\n    loss_after = sum((actual - predicted) ** 2\n                     for actual, predicted in zip(targets, updated)) / len(targets)\n    print(f\"baseline={baseline:.2f}, threshold={stump['threshold']:.1f}\")\n    print(f\"learning_rate={learning_rate:.1f}, predictions={updated}\")\n    print(f\"training_mse_before={loss_before:.4f}\")\n    print(f\"training_mse_after={loss_after:.4f}\")",
           "status": "runnable",
-          "purpose_vi": "Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.",
-          "purpose_en": "Illustrate the input-to-output path for gradient boosting.",
-          "setup": "Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.",
-          "expected_output": "Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.",
-          "edge_case_vi": "Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.",
-          "edge_case_en": "Try an empty input, a wrong shape or missing data and record the failure.",
-          "explanation_vi": "Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần nội dung; cần hoàn thành riêng nhiệm vụ thực hành.",
-          "explanation_en": "Keep the boundary executable and inspectable; change one input and verify the expected output."
+          "purpose_vi": "Bắt đầu từ trung bình mục tiêu, khớp một cây hồi quy một tầng vào phần dư và quan sát MSE train trước/sau cập nhật có tốc độ học.",
+          "purpose_en": "Start from the target mean, fit a one-split regression tree to residuals, and inspect training MSE before and after a learning-rate-scaled update.",
+          "setup": "Python 3.11+; chỉ dùng thư viện chuẩn / standard library only. Save as boosting_demo.py and run python boosting_demo.py.",
+          "expected_output": "baseline=2.50, threshold=2.5\nlearning_rate=0.5, predictions=[1.75, 1.75, 3.25, 3.25]\ntraining_mse_before=2.2500\ntraining_mse_after=0.5625",
+          "edge_case_vi": "fit_stump phải báo ValueError khi x không đổi, dữ liệu rỗng, khác độ dài hoặc có NaN. Khi phần dư đều bằng 0 và x vẫn phân biệt, hai lá dự đoán 0 nên bước cập nhật không đổi dự đoán. Ví dụ giới hạn tốc độ học trong (0, 1].",
+          "edge_case_en": "fit_stump must reject constant x, empty or misaligned data, and NaN. With distinct x and all-zero residuals, both leaves predict zero and the update leaves predictions unchanged. This demo restricts the learning rate to (0, 1].",
+          "explanation_vi": "Với loss một mẫu bằng một nửa bình phương sai số, gradient âm theo dự đoán là y−F(x). Mỗi ngưỡng được chấm bằng tổng bình phương sai số phần dư quanh trung bình hai lá; chọn ngưỡng tốt nhất rồi cập nhật F_new(x)=F_old(x)+learning_rate×stump(x). MSE được in trên chính tập train để thấy cơ chế một bước. Đây chưa phải đánh giá khái quát hóa hoặc một hệ thống boosting đầy đủ; nhiệm vụ chọn số bước cần thêm tập kiểm định riêng.",
+          "explanation_en": "For half squared-error loss, the negative gradient with respect to a prediction is y−F(x). Score each split by residual squared error around the two leaf means, choose the best split, and update F_new(x)=F_old(x)+learning_rate×stump(x). Printed MSE uses the training set to expose one step. This is neither a generalization evaluation nor a complete boosting system; selecting a step count requires separate validation data."
         }
       ],
       "resources": [
@@ -12883,8 +12883,8 @@
           "required": false,
           "purpose_vi": "Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.",
           "purpose_en": "Official reference to verify the lesson concept.",
-          "read_vi": "Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.",
-          "read_en": "Read the relevant section, run a small example, and record one verified insight."
+          "read_vi": "Trong User Guide, đọc Ensembles → Gradient-boosted trees → Mathematical formulation; đối chiếu khởi tạo bằng trung bình, gradient âm và cập nhật cộng.",
+          "read_en": "In the User Guide, read Ensembles → Gradient-boosted trees → Mathematical formulation; compare mean initialization, negative gradients and additive updates."
         },
         {
           "language": "en",
@@ -12949,50 +12949,50 @@
         "phase-03-classical-ml-preprocessing-1",
         "phase-03-classical-ml-preprocessing-2"
       ],
-      "review_question_vi": "Nội dung cốt lõi của “Gradient boosting” là gì?",
-      "review_question_en": "Define gradient boosting in your own words. What are the input, transformation and output?",
-      "review_answer_vi": "Gradient boosting bổ sung mô hình yếu theo từng bước để giảm hàm mất mát hiện tại. Số bước, độ phức tạp của mô hình thành phần và tốc độ học cần được chọn qua kiểm định.",
-      "review_answer_en": "A strong answer names the input, transformation, output and the context where gradient boosting is used. Relate it specifically to gradient boosting in lesson phase-03-classical-ml-models-4.",
+      "review_question_vi": "Gradient boosting khác rừng ngẫu nhiên ở cách xây mô hình thành phần như thế nào?",
+      "review_question_en": "How does gradient boosting differ from a random forest in how its component models are built?",
+      "review_answer_vi": "Boosting thêm mô hình theo chuỗi, mỗi bước học một hướng cập nhật dựa trên gradient âm của loss tại dự đoán hiện tại. Với bình phương sai số, hướng này tương ứng phần dư. Rừng ngẫu nhiên chủ yếu xây các cây riêng rồi kết hợp. Trong boosting, tốc độ học điều chỉnh đóng góp của từng bước; số bước cần chọn qua kiểm định.",
+      "review_answer_en": "Boosting adds models sequentially, fitting each update to the negative loss gradient at the current predictions. For squared error, this corresponds to residuals. A random forest primarily builds trees separately and combines them. In boosting, the learning rate scales each contribution; select the number of steps using validation data.",
       "review_cards": [
         {
           "id": "phase-03-classical-ml-models-4-recall",
           "type": "recall",
-          "question_vi": "Nội dung cốt lõi của “Gradient boosting” là gì?",
-          "question_en": "Define gradient boosting in your own words. What are the input, transformation and output?",
-          "answer_vi": "Gradient boosting bổ sung mô hình yếu theo từng bước để giảm hàm mất mát hiện tại. Số bước, độ phức tạp của mô hình thành phần và tốc độ học cần được chọn qua kiểm định.",
-          "answer_en": "A strong answer names the input, transformation, output and the context where gradient boosting is used.",
-          "hint_vi": "Nêu ý chính, sau đó minh họa bằng tình huống cụ thể.",
-          "hint_en": "Start with a small example you can calculate by hand."
+          "question_vi": "Dự đoán hiện tại là 8, cây mới dự đoán phần dư là 2 và tốc độ học là 0,1. Dự đoán sau bước boosting là bao nhiêu?",
+          "question_en": "The current prediction is 8, a new tree predicts a residual of 2, and the learning rate is 0.1. What is the updated prediction?",
+          "answer_vi": "Theo cập nhật cộng, dự đoán mới là 8 + 0,1 × 2 = 8,2. Tốc độ học chỉ cho phép bước này đóng góp 0,2. Nếu nhãn thật là 10 thì phần dư giảm từ 2 xuống 1,8; ví dụ một mẫu này không chứng minh chất lượng kiểm định tăng.",
+          "answer_en": "The additive update gives 8 + 0.1 × 2 = 8.2. The learning rate limits this step's contribution to 0.2. If the true target is 10, the residual falls from 2 to 1.8; this single-case calculation does not establish an improvement in validation quality.",
+          "hint_vi": "Nhân đầu ra cây mới với tốc độ học rồi cộng vào dự đoán hiện tại.",
+          "hint_en": "Multiply the new tree's output by the learning rate, then add it to the current prediction."
         },
         {
           "id": "phase-03-classical-ml-models-4-application",
           "type": "application",
-          "question_vi": "Theo dõi chất lượng kiểm định khi tăng số bước boosting.",
-          "question_en": "Write a small code example or design that applies gradient boosting to an AI engineering problem.",
-          "answer_vi": "Với nhiệm vụ “Theo dõi chất lượng kiểm định khi tăng số bước boosting”, cần lưu: cấu hình mô hình và kết quả trên cùng tập kiểm định. So sánh với mô hình cơ sở và đọc ít nhất một dự đoán sai.",
-          "answer_en": "The gradient boosting example should have an explicit input, expected output and a way to run or verify it (phase-03-classical-ml-models-4).",
-          "hint_vi": "Bắt đầu từ nhiệm vụ thực hành của bài.",
-          "hint_en": "Start from the lesson code example and change one assumption."
+          "question_vi": "Bạn theo dõi và chọn số bước boosting như thế nào khi chưa được dùng tập test để chọn mô hình?",
+          "question_en": "How would you track and choose the number of boosting steps without using the test set for model selection?",
+          "answer_vi": "Giữ cố định phép chia train–validation, tốc độ học và độ phức tạp cây. Ghi loss train, loss kiểm định và thời gian theo số bước; chọn bước có loss kiểm định tốt nhất trong ngân sách và các bước đã thử. So với baseline trên cùng tập kiểm định, đọc một lỗi tiêu biểu, rồi đánh giá cấu hình đã chốt trên tập test.",
+          "answer_en": "Keep the training–validation split, learning rate and tree complexity fixed. Record training loss, validation loss and runtime by step; choose the best validation loss among the tested steps within budget. Compare against a baseline on the same validation set, inspect a representative error, and evaluate the selected configuration on the test set.",
+          "hint_vi": "Chọn bằng kiểm định; giữ tập test cho lần đánh giá cấu hình đã chốt.",
+          "hint_en": "Select with validation data; reserve test data for evaluating the chosen configuration."
         },
         {
           "id": "phase-03-classical-ml-models-4-debug",
           "type": "debug",
-          "question_vi": "Khi làm bài “Gradient boosting”, bạn cần tránh lỗi nào và kiểm tra lại ra sao?",
-          "question_en": "If gradient boosting produces a wrong result or a metric drops, what would you debug first?",
-          "answer_vi": "Trong bài “Gradient boosting”, lỗi cần tránh là: chọn mô hình chỉ vì điểm huấn luyện cao. So sánh với mô hình cơ sở và đọc ít nhất một dự đoán sai. Dùng ví dụ nhỏ để tìm bước đầu tiên có kết quả khác dự kiến.",
-          "answer_en": "For gradient boosting, check inputs/shapes, preprocessing and the baseline first; then isolate the failure with a small test and error analysis (phase-03-classical-ml-models-4).",
-          "hint_vi": "Tìm bước đầu tiên xuất hiện khác biệt.",
-          "hint_en": "Do not start by changing the model or adding complexity."
+          "question_vi": "Loss train tiếp tục giảm nhưng loss kiểm định tăng khi thêm cây. Bạn nên làm gì?",
+          "question_en": "Training loss keeps falling, but validation loss rises as trees are added. What should you do?",
+          "answer_vi": "Kiểm tra cách chia và tính nhất quán của dữ liệu, rồi xem đường loss theo từng bước. Nếu xu hướng tăng trên kiểm định được xác nhận, đây là dấu hiệu quá khớp; chọn lại bước có loss kiểm định thấp hơn thay vì chỉ tối thiểu hóa loss train. Có thể thử cây đơn giản hơn hoặc tốc độ học khác, nhưng phải kiểm định lại.",
+          "answer_en": "Check the split and data consistency, then inspect loss curves by step. If the validation increase is confirmed, it indicates overfitting; select an earlier step with lower validation loss instead of only minimizing training loss. Simpler trees or a different learning rate are further candidates to validate.",
+          "hint_vi": "Loss trên dữ liệu chưa dùng để khớp quyết định liệu thêm cây có còn hữu ích.",
+          "hint_en": "Loss on data not used for fitting helps decide whether extra trees remain useful."
         },
         {
           "id": "phase-03-classical-ml-models-4-interview",
           "type": "interview",
-          "question_vi": "Bạn dùng kết quả nào từ bài “Gradient boosting” để giải thích cách làm và giới hạn?",
-          "question_en": "In an interview, how would you explain a trade-off and one edge case of gradient boosting?",
-          "answer_vi": "Bắt đầu từ nhiệm vụ “Theo dõi chất lượng kiểm định khi tăng số bước boosting”. Trình bày kết quả đã lưu, cách đối chiếu và một điều kiện có thể khiến kết luận thay đổi; không chỉ đọc lại định nghĩa.",
-          "answer_en": "The answer about gradient boosting should cover assumptions, metrics/cost, limitations and how to reduce production risk (phase-03-classical-ml-models-4).",
-          "hint_vi": "Dùng quyết định thật trong bài làm, tránh chỉ đọc định nghĩa.",
-          "hint_en": "Relate it to latency, quality, cost or observability where relevant."
+          "question_vi": "Vì sao giảm tốc độ học thường cần nhiều bước hơn, và có bảo đảm mô hình tốt hơn không?",
+          "question_en": "Why does a smaller learning rate often require more steps, and does it guarantee a better model?",
+          "answer_vi": "Mỗi mô hình thành phần đóng góp ít hơn nên thường cần nhiều bước để thay đổi dự đoán một mức tương tự. Nhiều bước làm tăng chi phí huấn luyện và có thể tăng chi phí dự đoán; chất lượng còn phụ thuộc dữ liệu, độ phức tạp cây và số bước. So các cặp tốc độ học–số bước bằng kiểm định trong cùng ngân sách, không mặc định nhỏ hơn là tốt hơn.",
+          "answer_en": "Each component contributes less, so more steps are often needed for a similar change in predictions. More steps increase training cost and can increase prediction cost. Quality also depends on data, tree complexity and step count. Compare learning-rate and step-count combinations on validation data within the same budget; a smaller rate is not automatically better.",
+          "hint_vi": "Xem đồng thời mức đóng góp mỗi bước, số bước và ngân sách tính toán.",
+          "hint_en": "Consider the contribution per step, the number of steps and the compute budget together."
         }
       ]
     },

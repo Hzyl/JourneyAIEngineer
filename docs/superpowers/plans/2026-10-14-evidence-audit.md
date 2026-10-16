@@ -239,3 +239,57 @@ Evidence beneath ignored `.build/audit-20261014/`:
 Current batch is local and uncommitted. No new model/API, installation, real
 Supabase run, production write or deployment was performed. Publication needs
 the applicable current confirmation with an exact commit message and target.
+
+## 2026-10-16: route continuation and Classical ML examples
+
+Baseline for this batch is `8a5116eb8b3506fcea03162b5c9bd3c07cb69e97`.
+The three Copilot stage/project metadata corrections were already published in
+`4e9b0cf`; the following fixes address separate runtime and lesson-content gaps.
+
+- Lesson continuation now follows the selected learning route instead of the
+  global authored sequence. Application RAG leads to evaluation, production
+  leads to capstone, and the last core lesson offers a return to the roadmap.
+  Selecting one optional phase does not enroll the learner in other optional
+  phases. Authored links remain the fallback without a valid route/catalog.
+  URL route context, browser history, reload and original roadmap filters are
+  retained. No progress data or existing IDs were changed.
+- Four canonical Classical ML lessons now use topic-specific runnable examples:
+  least-squares regression, stable logistic probabilities and threshold metrics,
+  a learned Gini split, and one squared-error boosting update. Each has exact
+  output, edge cases and explanations. Logistic coefficients and forest votes
+  are explicitly supplied illustrations, not trained models. The boosting
+  example reports training error, not an unsupported generalization claim.
+  Sixteen bilingual review cards now provide actual answers. Catalog and
+  fingerprint were regenerated; all 208 lesson identities and card IDs/types
+  were preserved, with exactly four changed and 204 unchanged lesson records.
+- Browser verification exposed missing card padding and small path labels.
+  Scoped lesson styles restore padding/readability and preserve multiline code
+  output. Theme tokens and horizontally scrollable code remain in use.
+
+Verification on this working tree:
+
+- `npm test`: exit 0; 385 Python tests, 288 Vitest tests in 47 files,
+  content/fingerprint validation, lint, TypeScript and production build passed.
+  This includes 32 executable Classical ML checks and 11 route unit checks.
+- Local Playwright `lesson-route-navigation.spec.ts` and `today-roadmap.spec.ts`:
+  eight passed. After the final padding adjustment,
+  `lesson-language.spec.ts`: two passed, including reading/progress retry.
+- Production-build Playwright `hosted-route-navigation.spec.ts`,
+  `hosted-classical-lessons.spec.ts`, `hosted-models.spec.ts`: six passed
+  in 31.9 seconds after the final CSS cleanup. VI/EN, 390/1440px, light/dark,
+  keyboard answer disclosure, fonts, contrast, output line breaks and document
+  overflow were checked. Synthetic Auth rejects local API, unexpected writes
+  and real external requests. Real Supabase acceptance is not implied.
+- Ignored screenshots: `.build/route-evidence/` and
+  `.build/models-lesson-evidence/`. Root inspected mobile Vietnamese dark
+  logistic output and desktop English light boosting answer, plus the earlier
+  terminal-route views. No physical-device inspection is claimed.
+- `git diff --check` and an independent catalog identity/scope comparison passed.
+  Existing AuthProvider lint warnings and large-chunk warning remain. Passive
+  security review flags are review items, not demonstrated vulnerabilities.
+
+No new dependencies, model downloads, production writes or real learner-data
+changes were required. This is a bounded audit batch, not a completed review of
+all 208 lessons. Remaining work includes other generic English answer rubrics,
+admin expiry-display behavior, and the separately approved production rollout of
+admin RPC hardening. Publication status must be recorded after an actual push.

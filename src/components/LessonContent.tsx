@@ -1,5 +1,6 @@
 import type { Lesson } from '../api'
 import { StudyStepAccordion } from './StudyStepAccordion'
+import type { LessonContinuation } from './lesson-route'
 
 type ContentProps = { lesson: Lesson; language: 'vi' | 'en' }
 type NavigationProps = { onOpenLesson: (slug: string) => void; nextLessonTitles: Record<string, string> }
@@ -145,9 +146,15 @@ export function LessonChecks({ lesson, language, checked, nudge, onToggle, onOpe
   </>
 }
 
-export function LessonRelated({ lesson, language, onOpenExercise, onOpenLesson, nextLessonTitles }:
-  ContentProps & NavigationProps & { onOpenExercise: (slug: string) => void }) {
+export function LessonRelated({ lesson, language, onOpenExercise, onOpenLesson, nextLessonTitles,
+  continuation, onOpenRoadmap }:
+  ContentProps & NavigationProps & {
+    onOpenExercise: (slug: string) => void
+    continuation?: LessonContinuation
+    onOpenRoadmap?: () => void
+  }) {
   const vi = language === 'vi'
+  const nextLessons = continuation?.nextLessons ?? lesson.next_lessons
   return <>
     <section className="detail-section lesson-section lesson-section-practice" aria-labelledby="lesson-exercise-title">
       <h2 id="lesson-exercise-title">{vi ? 'Bài tập liên quan' : 'Practice exercise'}</h2>
@@ -167,10 +174,22 @@ export function LessonRelated({ lesson, language, onOpenExercise, onOpenLesson, 
       </> : <p className="muted">{vi ? 'Chưa có bài tập riêng cho bài học này.'
         : 'No dedicated exercise is linked yet.'}</p>}
     </section>
-    {lesson.next_lessons.length > 0 && <section
+    {(nextLessons.length > 0 || continuation?.end) && <section
       className="detail-section lesson-section lesson-section-completion" aria-labelledby="lesson-next-title">
       <h2 id="lesson-next-title">{vi ? 'Bài tiếp theo' : 'Next lessons'}</h2>
-      <div className="next-lesson-list">{lesson.next_lessons.map((slug) =>
+      {continuation && <p className="muted">{vi ? 'Hướng học' : 'Learning path'}: {' '}
+        {vi ? continuation.route.title_vi : continuation.route.title_en}</p>}
+      {continuation?.end && <>
+        <p>{continuation.scope === 'core'
+          ? (vi ? 'Bạn đang ở bài cuối của phần nền tảng trong hướng học này. Hãy đối chiếu sản phẩm thực hành với tiêu chí của lộ trình trước khi chọn phần chuyên sâu.'
+            : 'This is the last core lesson in this path. Check your project evidence against the roadmap criteria before choosing a specialization.')
+          : (vi ? 'Bạn đang ở bài cuối của chặng chuyên sâu này. Quay lại lộ trình để chọn bước tiếp theo phù hợp với mục tiêu.'
+            : 'This is the last lesson in this specialization. Return to the roadmap to choose the next step for your goal.')}</p>
+        {onOpenRoadmap && <button type="button" className="secondary-button" onClick={onOpenRoadmap}>
+          {vi ? 'Xem lại lộ trình' : 'Review the roadmap'} <span aria-hidden="true">→</span>
+        </button>}
+      </>}
+      <div className="next-lesson-list">{nextLessons.map((slug) =>
         <button className="text-button" key={slug} onClick={() => onOpenLesson(slug)}>
           {nextLessonTitles[slug] ?? slug} →
         </button>)}

@@ -5,8 +5,7 @@ module_id: models
 title_vi: Hồi quy logistic
 title_en: Logistic regression
 summary_vi: Hồi quy logistic chuyển tổ hợp tuyến tính thành xác suất cho bài toán phân loại.
-summary_en: Learn Logistic regression through an input → transformation → output model, then verify it with an edge-case
-  exercise.
+summary_en: Logistic regression maps a linear score to a class probability; a decision threshold turns that probability into a label.
 learning_objectives:
 - So sánh precision và recall khi thay ngưỡng quyết định.
 - So sánh với mô hình cơ sở và đọc ít nhất một dự đoán sai.
@@ -59,11 +58,10 @@ study_steps_en:
 - Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact.
 practice_plan:
   vi:
-    task: 'So sánh precision và recall khi thay ngưỡng quyết định.
+    task: |-
+      So sánh precision và recall khi thay ngưỡng quyết định.
 
-
-      Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Huấn luyện mô hình đơn giản, thêm cây
-      hoặc boosting rồi ghi thước đo cùng một lỗi tiêu biểu cho mỗi mô hình.'
+      Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Huấn luyện mô hình đơn giản, thêm cây hoặc boosting rồi ghi thước đo cùng một lỗi tiêu biểu cho mỗi mô hình.
     deliverables:
     - Cấu hình mô hình và kết quả trên cùng tập kiểm định
     - Kết quả đối chiếu kèm dữ liệu hoặc điều kiện thực hiện
@@ -71,14 +69,15 @@ practice_plan:
     checkpoint: So sánh với mô hình cơ sở và đọc ít nhất một dự đoán sai.
     stretch: Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào.
   en:
-    task: Train a simple model first, add trees/boosting, and record metrics plus a representative error for each
-      model.
+    task: Compare precision and recall at different decision thresholds. First use the fixed-coefficient sigmoid
+      example; when evaluating a fitted model, estimate coefficients on training data and compare thresholds on
+      validation data.
     deliverables:
-    - One executable code file
-    - One test or expected output
-    - One note describing an edge case and trade-off
-    checkpoint: You can explain trade-offs among interpretability, latency, data size, and quality.
-    stretch: Add a failure test for logistic regression and explain the result.
+    - The probabilities, labels and threshold values used
+    - Predictions, precision and recall for each threshold
+    - One false positive or false negative and its consequence
+    checkpoint: Changing the threshold keeps probabilities fixed; choose thresholds without consulting test labels.
+    stretch: Try a threshold with no predicted positives and explain the demo convention of precision equal to 0.0.
 interview_questions:
   vi:
   - Bạn sẽ giải thích nội dung “Hồi quy logistic” bằng ví dụ nào?
@@ -93,21 +92,90 @@ formulas:
 - precision = TP / (TP + FP)
 code_examples:
 - language: python
-  title: 'Logistic regression: inspect one complete path'
-  code: "# Topic: Logistic regression (phase-03-classical-ml-models-2)\ndef accuracy(y_true: list[int], y_pred:\
-    \ list[int]) -> float:\n    if len(y_true) != len(y_pred) or not y_true:\n        raise ValueError('non-empty\
-    \ aligned labels are required')\n    return sum(a == b for a, b in zip(y_true, y_pred)) / len(y_true)\n\nprint(accuracy([1,\
-    \ 0, 1], [1, 1, 1]))"
+  title: Fixed logistic scores, two thresholds, precision and recall
+  code: |-
+    from math import exp, isfinite, log
+
+
+    def finite_number(value):
+        return isinstance(value, (int, float)) and isfinite(value)
+
+
+    def sigmoid(score):
+        if not finite_number(score):
+            raise ValueError("score must be a finite number")
+        if score >= 0:
+            return 1.0 / (1.0 + exp(-score))
+        exponential = exp(score)
+        return exponential / (1.0 + exponential)
+
+
+    def classify(probabilities, threshold):
+        if not finite_number(threshold) or not 0 <= threshold <= 1:
+            raise ValueError("threshold must be in [0, 1]")
+        if not probabilities:
+            raise ValueError("probabilities must not be empty")
+        if any(not finite_number(value) or not 0 <= value <= 1
+               for value in probabilities):
+            raise ValueError("probabilities must be finite and in [0, 1]")
+        return [int(probability >= threshold) for probability in probabilities]
+
+
+    def binary_metrics(labels, predictions):
+        # For this demo, an undefined precision or recall is reported as 0.0.
+        if not labels or len(labels) != len(predictions):
+            raise ValueError("non-empty aligned labels are required")
+        if any(value not in (0, 1)
+               for values in (labels, predictions) for value in values):
+            raise ValueError("labels and predictions must be binary 0 or 1")
+        true_positive = sum(actual == 1 and predicted == 1
+                            for actual, predicted in zip(labels, predictions))
+        predicted_positive = sum(predictions)
+        actual_positive = sum(labels)
+        precision = true_positive / predicted_positive if predicted_positive else 0.0
+        recall = true_positive / actual_positive if actual_positive else 0.0
+        return {"precision": precision, "recall": recall}
+
+
+    if __name__ == "__main__":
+        # Fixed coefficients illustrate inference; no model is fitted here.
+        weight = 1.0
+        intercept = 0.0
+        features = [log(4), log(1.5), log(2 / 3), log(0.25)]
+        labels = [1, 0, 1, 0]
+        probabilities = [sigmoid(weight * value + intercept) for value in features]
+        print(f"probabilities={[round(value, 1) for value in probabilities]}")
+        for threshold in (0.5, 0.3):
+            predictions = classify(probabilities, threshold)
+            metrics = binary_metrics(labels, predictions)
+            print(f"threshold={threshold:.1f}, labels={predictions}")
+            print(f"precision={metrics['precision']:.3f}, recall={metrics['recall']:.3f}")
   status: runnable
-  purpose_vi: Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.
-  purpose_en: Illustrate the input-to-output path for logistic regression.
-  setup: Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.
-  expected_output: Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.
-  edge_case_vi: Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.
-  edge_case_en: Try an empty input, a wrong shape or missing data and record the failure.
-  explanation_vi: Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần
-    nội dung; cần hoàn thành riêng nhiệm vụ thực hành.
-  explanation_en: Keep the boundary executable and inspectable; change one input and verify the expected output.
+  purpose_vi: Dùng hệ số cố định để tính sigmoid, đổi ngưỡng và đo precision/recall; ví dụ minh họa suy luận, không
+    huấn luyện hồi quy logistic.
+  purpose_en: Use fixed coefficients to compute sigmoid probabilities, change thresholds and measure precision/recall.
+    This demonstrates inference, not logistic-regression fitting.
+  setup: Python 3.11+; chỉ dùng thư viện chuẩn / standard library only. Save as logistic_demo.py and run python
+    logistic_demo.py.
+  expected_output: |-
+    probabilities=[0.8, 0.6, 0.4, 0.2]
+    threshold=0.5, labels=[1, 1, 0, 0]
+    precision=0.500, recall=0.500
+    threshold=0.3, labels=[1, 1, 1, 0]
+    precision=0.667, recall=1.000
+  edge_case_vi: sigmoid(1000) và sigmoid(-1000) không tràn số. Thử xác suất 1,2, ngưỡng ngoài [0, 1], danh sách
+    rỗng hoặc nhãn 2; phải báo ValueError. Khi không có dự đoán dương hoặc nhãn dương, metric tương ứng được quy
+    ước là 0,0.
+  edge_case_en: sigmoid(1000) and sigmoid(-1000) avoid overflow. A probability of 1.2, a threshold outside [0, 1],
+    empty data or label 2 must raise ValueError. Undefined precision or recall is assigned 0.0 in this demo.
+  explanation_vi: Điểm là weight×x+intercept với hệ số đã cho; sigmoid biến điểm thành xác suất. Quy tắc của ví
+    dụ là p ≥ ngưỡng thì gán lớp 1. Ngưỡng 0,3 bắt thêm một mẫu dương thật nên cả precision và recall đều tăng trong
+    bộ dữ liệu nhỏ này; precision không nhất thiết giảm khi hạ ngưỡng. Đây không phải bằng chứng về mô hình đã được
+    huấn luyện hoặc hiệu chỉnh xác suất.
+  explanation_en: The score is weight×x+intercept with supplied coefficients; sigmoid maps it to a probability.
+    This demo assigns class 1 when p ≥ threshold. Threshold 0.3 adds a true positive, so both precision and recall
+    rise on these toy labels; lower thresholds do not necessarily reduce precision. The example provides no evidence
+    of model fitting or probability calibration.
 resources:
 - language: en
   title: scikit-learn User Guide
@@ -116,8 +184,10 @@ resources:
   required: false
   purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.
   purpose_en: Official reference to verify the lesson concept.
-  read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
-  read_en: Read the relevant section, run a small example, and record one verified insight.
+  read_vi: Trong User Guide, đọc Linear Models → Logistic regression → Binary Case và Tuning the decision threshold
+    for class prediction; tách bước ước lượng xác suất khỏi bước chọn nhãn.
+  read_en: In the User Guide, read Linear Models → Logistic regression → Binary Case and Tuning the decision threshold
+    for class prediction; distinguish probability estimation from label selection.
 - language: en
   title: scikit-learn Model Evaluation
   url: https://scikit-learn.org/stable/modules/model_evaluation.html
@@ -168,53 +238,61 @@ common_mistakes:
 next_lessons:
 - phase-03-classical-ml-models-3
 - phase-03-classical-ml-models-4
-review_question_vi: Nội dung cốt lõi của “Hồi quy logistic” là gì?
-review_question_en: Define logistic regression in your own words. What are the input, transformation and output?
-review_answer_vi: Hồi quy logistic chuyển tổ hợp tuyến tính thành xác suất cho bài toán phân loại. Ngưỡng quyết
-  định biến xác suất thành nhãn; thay ngưỡng làm thay đổi các loại lỗi.
-review_answer_en: A strong answer names the input, transformation, output and the context where logistic regression
-  is used. Relate it specifically to logistic regression in lesson phase-03-classical-ml-models-2.
+review_question_vi: Hồi quy logistic nhị phân biến đặc trưng thành xác suất và nhãn như thế nào?
+review_question_en: How does binary logistic regression turn features into a probability and then a label?
+review_answer_vi: Mô hình tính điểm tuyến tính từ đặc trưng rồi dùng sigmoid để ước lượng xác suất lớp dương.
+  Ngưỡng quyết định biến xác suất thành nhãn; với quy tắc p ≥ ngưỡng, p = 0,4 cho nhãn âm ở ngưỡng 0,5 nhưng
+  nhãn dương ở ngưỡng 0,3. Thay ngưỡng không cần huấn luyện lại mô hình.
+review_answer_en: The model computes a linear feature score and applies a sigmoid to estimate positive-class
+  probability. A threshold turns that probability into a label. Using p ≥ threshold, p = 0.4 is negative at 0.5
+  but positive at 0.3. Changing this threshold does not require retraining the model.
 review_cards:
 - id: phase-03-classical-ml-models-2-recall
   type: recall
-  question_vi: Nội dung cốt lõi của “Hồi quy logistic” là gì?
-  question_en: Define logistic regression in your own words. What are the input, transformation and output?
-  answer_vi: Hồi quy logistic chuyển tổ hợp tuyến tính thành xác suất cho bài toán phân loại. Ngưỡng quyết định
-    biến xác suất thành nhãn; thay ngưỡng làm thay đổi các loại lỗi.
-  answer_en: A strong answer names the input, transformation, output and the context where logistic regression is
-    used.
-  hint_vi: Nêu ý chính, sau đó minh họa bằng tình huống cụ thể.
-  hint_en: Start with a small example you can calculate by hand.
+  question_vi: Với xác suất lớp dương 0,4, nhãn thay đổi thế nào khi hạ ngưỡng từ 0,5 xuống 0,3? Có phải huấn luyện lại không?
+  question_en: For a positive-class probability of 0.4, what changes when the threshold drops from 0.5 to 0.3? Is retraining needed?
+  answer_vi: Nếu gán dương khi p ≥ ngưỡng, nhãn đổi từ âm sang dương. Xác suất mô hình vẫn là 0,4; chỉ quy tắc
+    quyết định thay đổi, nên không cần huấn luyện lại.
+  answer_en: If positive means p ≥ threshold, the label changes from negative to positive. The model probability
+    remains 0.4; only the decision rule changes, so retraining is unnecessary.
+  hint_vi: Phân biệt đầu ra xác suất với bước chuyển xác suất thành nhãn.
+  hint_en: Distinguish the probability estimate from the rule that assigns a label.
 - id: phase-03-classical-ml-models-2-application
   type: application
-  question_vi: So sánh precision và recall khi thay ngưỡng quyết định.
-  question_en: Write a small code example or design that applies logistic regression to an AI engineering problem.
-  answer_vi: 'Với nhiệm vụ “So sánh precision và recall khi thay ngưỡng quyết định”, cần lưu: cấu hình mô hình và
-    kết quả trên cùng tập kiểm định. So sánh với mô hình cơ sở và đọc ít nhất một dự đoán sai.'
-  answer_en: The logistic regression example should have an explicit input, expected output and a way to run or
-    verify it (phase-03-classical-ml-models-2).
-  hint_vi: Bắt đầu từ nhiệm vụ thực hành của bài.
-  hint_en: Start from the lesson code example and change one assumption.
+  question_vi: Với nhãn thật [1, 0, 1, 0] và xác suất [0,8; 0,6; 0,4; 0,2], precision và recall ở ngưỡng 0,5 và 0,3 là bao nhiêu?
+  question_en: For labels [1, 0, 1, 0] and probabilities [0.8, 0.6, 0.4, 0.2], what are precision and recall at thresholds 0.5 and 0.3?
+  answer_vi: Gán dương khi p ≥ ngưỡng. Ở ngưỡng 0,5 có TP = 1, FP = 1, FN = 1 nên precision = 1/2 và recall = 1/2.
+    Ở ngưỡng 0,3 có TP = 2, FP = 1, FN = 0 nên precision = 2/3 và recall = 1. So ngưỡng trên tập kiểm định theo
+    chi phí báo nhầm và bỏ sót; không chọn ngưỡng bằng kết quả tập test.
+  answer_en: Assign positive when p ≥ threshold. At 0.5, TP = 1, FP = 1 and FN = 1, so precision = 1/2 and recall = 1/2.
+    At 0.3, TP = 2, FP = 1 and FN = 0, so precision = 2/3 and recall = 1. Compare thresholds on validation data
+    using false-positive and false-negative costs; do not choose the threshold using test results.
+  hint_vi: Lập nhãn dự đoán ở từng ngưỡng rồi đếm TP, FP và FN trước khi tính tỉ lệ.
+  hint_en: Assign labels at each threshold, then count TP, FP and FN before computing the ratios.
 - id: phase-03-classical-ml-models-2-debug
   type: debug
-  question_vi: Khi làm bài “Hồi quy logistic”, bạn cần tránh lỗi nào và kiểm tra lại ra sao?
-  question_en: If logistic regression produces a wrong result or a metric drops, what would you debug first?
-  answer_vi: 'Trong bài “Hồi quy logistic”, lỗi cần tránh là: chọn mô hình chỉ vì điểm huấn luyện cao. So sánh với
-    mô hình cơ sở và đọc ít nhất một dự đoán sai. Dùng ví dụ nhỏ để tìm bước đầu tiên có kết quả khác dự kiến.'
-  answer_en: For logistic regression, check inputs/shapes, preprocessing and the baseline first; then isolate the
-    failure with a small test and error analysis (phase-03-classical-ml-models-2).
-  hint_vi: Tìm bước đầu tiên xuất hiện khác biệt.
-  hint_en: Do not start by changing the model or adding complexity.
+  question_vi: Accuracy cao nhưng mô hình bỏ sót nhiều mẫu dương. Bạn sẽ kiểm tra gì trước khi đổi mô hình?
+  question_en: Accuracy is high, but the model misses many positive cases. What would you inspect before changing the model?
+  answer_vi: Kiểm tra tỉ lệ lớp, cách xác định lớp dương và confusion matrix trên tập kiểm định. So recall với
+    baseline luôn dự đoán lớp đa số, rồi thử các ngưỡng trên cùng xác suất và ghi cả precision lẫn recall.
+    Hạ ngưỡng không bảo đảm precision tăng; cần đọc số báo nhầm và bỏ sót thực tế.
+  answer_en: Check class proportions, the positive-class definition and the validation confusion matrix. Compare
+    recall with a majority-class baseline, then evaluate thresholds on the same probabilities and record both
+    precision and recall. Lowering the threshold does not guarantee better precision; inspect actual false positives and false negatives.
+  hint_vi: Accuracy có thể bị lớp đa số chi phối; hãy nhìn riêng các mẫu dương.
+  hint_en: The majority class can dominate accuracy; examine positive cases separately.
 - id: phase-03-classical-ml-models-2-interview
   type: interview
-  question_vi: Bạn dùng kết quả nào từ bài “Hồi quy logistic” để giải thích cách làm và giới hạn?
-  question_en: In an interview, how would you explain a trade-off and one edge case of logistic regression?
-  answer_vi: Bắt đầu từ nhiệm vụ “So sánh precision và recall khi thay ngưỡng quyết định”. Trình bày kết quả đã
-    lưu, cách đối chiếu và một điều kiện có thể khiến kết luận thay đổi; không chỉ đọc lại định nghĩa.
-  answer_en: The answer about logistic regression should cover assumptions, metrics/cost, limitations and how to
-    reduce production risk (phase-03-classical-ml-models-2).
-  hint_vi: Dùng quyết định thật trong bài làm, tránh chỉ đọc định nghĩa.
-  hint_en: Relate it to latency, quality, cost or observability where relevant.
+  question_vi: Dự đoán xác suất 0,8 có tự chứng minh mô hình đã được hiệu chỉnh tốt không?
+  question_en: Does a predicted probability of 0.8 by itself show that the model is well calibrated?
+  answer_vi: Không. Hiệu chỉnh tốt nghĩa là trong nhiều mẫu được dự đoán gần 0,8, tỉ lệ dương quan sát được cũng
+    gần 80% trên dữ liệu phù hợp. Cần kiểm tra theo nhóm xác suất và các nhóm dữ liệu quan trọng; một dự đoán
+    đơn lẻ không chứng minh điều đó. Chọn ngưỡng là quyết định riêng, phụ thuộc chi phí từng loại lỗi.
+  answer_en: No. Good calibration means that among many cases scored near 0.8, the observed positive rate is also
+    near 80% on appropriate data. Check probability groups and relevant data subgroups; one prediction cannot
+    establish calibration. Threshold selection is a separate decision based on the costs of different errors.
+  hint_vi: Xác suất nói về tần suất trong nhiều trường hợp tương tự, không phải bảo đảm cho một mẫu.
+  hint_en: A probability concerns frequencies across similar cases, not a guarantee for one case.
 ---
 # Hồi quy logistic / Logistic regression
 
@@ -223,6 +301,8 @@ Dù có chữ hồi quy trong tên, hồi quy logistic thường dùng cho phân
 Ngưỡng quyết định biến điểm xác suất thành nhãn. Điểm 0,4 được gán âm với ngưỡng 0,5 nhưng dương với ngưỡng 0,3; đổi ngưỡng không cần huấn luyện lại mô hình. Hạ ngưỡng thường tăng số trường hợp bị báo dương, gồm cả đúng và sai.
 
 Tự kiểm tra: dự đoán 0,8 có nghĩa đúng chính xác 80% ở mọi nhóm không? Không; cần kiểm tra hiệu chỉnh xác suất trên dữ liệu phù hợp. Chọn ngưỡng theo tác hại của từng loại lỗi và dùng tập kiểm định, không chọn bằng điểm tập kiểm tra.
+
+Ví dụ mã dùng hệ số cố định để minh họa sigmoid, ngưỡng quyết định và precision/recall; không thực hiện bước học hệ số. Muốn đánh giá mô hình được huấn luyện, cần học hệ số trên tập train rồi chọn ngưỡng trên tập kiểm định riêng.
 
 ## Thực hành
 

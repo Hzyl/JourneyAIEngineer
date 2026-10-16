@@ -29,8 +29,19 @@ import { ReviewView } from './components/ReviewView'
 import { RoadmapView } from './components/RoadmapView'
 import { ThemeToggle } from './theme/ThemeToggle'
 import { AdminUsersView } from './components/AdminUsersView'
+import { learningRouteFromSearch, lessonRouteContinuation, roadmapRoutePath } from './components/lesson-route'
 
 const locationState = () => appLocation(window.location.pathname, runtimeConfig.mode === 'hosted')
+function lessonReturnState(routeId: string | null): { view: View; url: string } {
+  const url = window.history.state?.lessonReturnUrl
+  if (typeof url === 'string' && url.startsWith('/') && !url.startsWith('//')) {
+    const destination = appLocation(url.split(/[?#]/)[0], runtimeConfig.mode === 'hosted')
+    if (destination.view !== 'lesson' && destination.view !== 'missing') {
+      return { view: destination.view, url }
+    }
+  }
+  return { view: 'roadmap', url: roadmapRoutePath(routeId) }
+}
 const baseNavItems: Array<{ id: View; label: string; icon: string; hint: string }> = [
   { id: 'dashboard', label: 'Tổng quan', icon: '◐', hint: 'Nhịp học hôm nay' },
   { id: 'roadmap', label: 'Lộ trình', icon: '◎', hint: '3 hướng học · tự chọn nhịp' },
@@ -70,7 +81,9 @@ function App() {
     hint: vi ? (hosted && item.id === 'exercises' ? 'Hướng dẫn thực hành' : item.hint) : englishNav[item.id][1],
   }))
   const [selectedLesson, setSelectedLesson] = useState<string | null>(initialLocation.lesson)
-  const lessonReturn = useRef<{ view: View; url: string }>({ view: 'roadmap', url: '/roadmap' })
+  const [lessonRouteId, setLessonRouteId] = useState<string | null>(() =>
+    initialLocation.view === 'lesson' ? learningRouteFromSearch(window.location.search)?.id ?? null : null)
+  const lessonReturn = useRef(lessonReturnState(lessonRouteId))
   const { lesson, loading: lessonLoading, error: lessonFailed, reload: reloadLesson } =
     useLesson(selectedLesson, !hosted || auth.state === 'signed_in')
   const {
@@ -90,13 +103,19 @@ function App() {
 
   const navigate = (nextView: View) => {
     setView(nextView)
-    if (nextView !== 'lesson') setSelectedLesson(null)
+    if (nextView !== 'lesson') {
+      setSelectedLesson(null)
+      setLessonRouteId(null)
+    }
     closeNavigation(true)
   }
 
   useEffect(() => {
     const onPopState = () => {
       const next = locationState()
+      const routeId = next.view === 'lesson' ? learningRouteFromSearch(window.location.search)?.id ?? null : null
+      setLessonRouteId(routeId)
+      if (next.view === 'lesson') lessonReturn.current = lessonReturnState(routeId)
       closeNavigation(true)
       if (next.view === view && next.lesson === selectedLesson) return
       setView(next.view)
@@ -109,8 +128,13 @@ function App() {
   useEffect(() => {
     if (typeof window === 'undefined') return
     const nextPath = appPath(view, selectedLesson)
-    if (nextPath && window.location.pathname !== nextPath) window.history.pushState({ view, lesson: selectedLesson }, '', nextPath)
-  }, [view, selectedLesson])
+    const routeChanged = view === 'lesson'
+      && (learningRouteFromSearch(window.location.search)?.id ?? null) !== lessonRouteId
+    if (nextPath && (window.location.pathname !== nextPath || routeChanged)) {
+      const search = view === 'lesson' && lessonRouteId ? `?route=${encodeURIComponent(lessonRouteId)}` : ''
+      window.history.pushState({ view, lesson: selectedLesson, lessonReturnUrl: lessonReturn.current.url }, '', nextPath + search)
+    }
+  }, [view, selectedLesson, lessonRouteId])
 
   useEffect(() => {
     if (hosted) return
@@ -131,6 +155,7 @@ function App() {
   const openLesson = (slug: string) => {
     if (view !== 'lesson') {
       lessonReturn.current = { view, url: window.location.pathname + window.location.search + window.location.hash }
+      setLessonRouteId(view === 'roadmap' ? learningRouteFromSearch(window.location.search)?.id ?? null : null)
     }
     setSelectedLesson(slug)
     setView('lesson')
@@ -140,6 +165,10 @@ function App() {
     const destination = lessonReturn.current
     window.history.pushState({ view: destination.view }, '', destination.url)
     navigate(destination.view)
+  }
+  const openLessonRoadmap = () => {
+    window.history.pushState({ view: 'roadmap' }, '', roadmapRoutePath(lessonRouteId))
+    navigate('roadmap')
   }
   const noticeKind = lessonFailed ? 'lesson' : languageFailed ? 'language' : workspaceFailed ? 'load' : null
   const retryNotice = () => {
@@ -228,6 +257,8 @@ function App() {
             </RoadmapView>}
             {view === 'lesson' && <LessonPage lesson={lesson} lessonLoading={lessonLoading} language={settings.language}
               onBack={closeLesson} onProgress={updateProgress} onOpenLesson={openLesson} nextLessonTitles={lessonTitleMap}
+              continuation={lesson ? lessonRouteContinuation(roadmap, lesson.slug, lessonRouteId) : undefined}
+              onOpenRoadmap={openLessonRoadmap}
               onOpenExercise={(slug) => selectSearchResult({ type: 'exercise', id: slug, title: slug })} />}
             {view === 'review' && <ReviewView language={settings.language} reviews={reviews}
               onAnswer={async (id, rating, thoughtSeconds, answerText) => {
