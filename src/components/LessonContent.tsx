@@ -78,21 +78,25 @@ export function LessonReading({ lesson, language }: ContentProps) {
     {lesson.code_examples.length > 0 && <section
       className="detail-section lesson-section lesson-section-practice" aria-labelledby="lesson-code-title">
       <h2 id="lesson-code-title">{vi ? 'Ví dụ mã nguồn' : 'Code examples'}</h2>
-      {lesson.code_examples.map((example) => <div className="code-example" key={example.title}>
-        <strong>{example.title}</strong>
-        <pre tabIndex={0} aria-label={example.title}><code>{example.code}</code></pre>
-        <p className="muted">{vi ? example.explanation_vi : example.explanation_en}</p>
-        {(example.setup || example.expected_output || example.edge_case_vi || example.edge_case_en)
-          && <dl className="code-example-guide">
-            {example.setup && <><dt>{vi ? 'Chuẩn bị' : 'Setup'}</dt><dd>{example.setup}</dd></>}
-            {example.expected_output && <><dt>{vi ? 'Kết quả mong đợi' : 'Expected output'}</dt>
-              <dd>{example.expected_output}</dd></>}
-            {(example.edge_case_vi || example.edge_case_en) && <>
-              <dt>{vi ? 'Trường hợp biên' : 'Edge case'}</dt>
-              <dd>{vi ? example.edge_case_vi : example.edge_case_en}</dd>
-            </>}
-          </dl>}
-      </div>)}
+      {lesson.code_examples.map((example) => {
+        const setup = [example[`setup_${language}`], example.setup, vi ? example.setup_en : example.setup_vi]
+          .find((value) => value?.trim())
+        return <div className="code-example" key={example.title}>
+          <strong>{example.title}</strong>
+          <pre tabIndex={0} aria-label={example.title}><code>{example.code}</code></pre>
+          <p className="muted">{vi ? example.explanation_vi : example.explanation_en}</p>
+          {(setup || example.expected_output || example.edge_case_vi || example.edge_case_en)
+            && <dl className="code-example-guide">
+              {setup && <><dt>{vi ? 'Chuẩn bị' : 'Setup'}</dt><dd>{setup}</dd></>}
+              {example.expected_output && <><dt>{vi ? 'Kết quả mong đợi' : 'Expected output'}</dt>
+                <dd>{example.expected_output}</dd></>}
+              {(example.edge_case_vi || example.edge_case_en) && <>
+                <dt>{vi ? 'Trường hợp biên' : 'Edge case'}</dt>
+                <dd>{vi ? example.edge_case_vi : example.edge_case_en}</dd>
+              </>}
+            </dl>}
+        </div>
+      })}
     </section>}
   </>
 }

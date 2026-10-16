@@ -115,6 +115,12 @@ code_examples:
   purpose_en: Measure regression errors rather than exact-label accuracy.
   setup: Python 3.11+; standard library only. Run in Colab or save as regression_metrics.py and run python
     regression_metrics.py.
+  setup_vi: |-
+    Dùng Python 3.11 trở lên; chỉ cần thư viện chuẩn, không cần cài thêm gói.
+    Dán toàn bộ ví dụ vào một ô mã Python trên Google Colab rồi chạy ô đó, hoặc lưu thành regression_metrics.py và chạy lệnh python regression_metrics.py trong thư mục chứa tệp.
+  setup_en: |-
+    Use Python 3.11 or later; only the standard library is needed, with no additional packages to install.
+    Paste the entire example into one Python code cell in Google Colab and run it, or save it as regression_metrics.py and run python regression_metrics.py from the folder containing the file.
   expected_output: |-
     uniform mae=2.000 mse=4.000 rmse=2.000
     one_large mae=2.000 mse=16.000 rmse=4.000

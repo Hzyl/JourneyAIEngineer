@@ -94,6 +94,23 @@ export type LessonPracticePlan = {
 
 export type LessonInterviewQuestions = { vi?: string[]; en?: string[] }
 
+export type CodeExample = {
+  language: string
+  title: string
+  code: string
+  status?: 'runnable' | 'conceptual'
+  purpose_vi?: string
+  purpose_en?: string
+  setup?: string
+  setup_vi?: string
+  setup_en?: string
+  expected_output?: string
+  edge_case_vi?: string
+  edge_case_en?: string
+  explanation_vi: string
+  explanation_en: string
+}
+
 export type Lesson = {
   quality_status?: 'draft' | 'reviewed'
   reviewed_at?: string | null
@@ -110,7 +127,7 @@ export type Lesson = {
   concept_notes_vi: string
   concept_notes_en: string
   formulas: string[]
-  code_examples: Array<{ language: string; title: string; code: string; status?: 'runnable' | 'conceptual'; purpose_vi?: string; purpose_en?: string; setup?: string; expected_output?: string; edge_case_vi?: string; edge_case_en?: string; explanation_vi: string; explanation_en: string }>
+  code_examples: CodeExample[]
   resources: Array<{
     title: string
     url: string

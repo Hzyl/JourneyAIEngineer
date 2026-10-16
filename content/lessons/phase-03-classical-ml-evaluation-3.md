@@ -130,6 +130,12 @@ code_examples:
   purpose_vi: Fit baseline riêng trong mỗi train và chấm trên phần giữ lại.
   purpose_en: Fit a separate baseline within each training split and score held-out rows.
   setup: Python 3.11+; standard library only. Run in Colab or save as cross_validation.py and run python cross_validation.py.
+  setup_vi: |-
+    Dùng Python 3.11 trở lên; chỉ cần thư viện chuẩn, không cần cài thêm gói.
+    Dán toàn bộ ví dụ vào một ô mã Python trên Google Colab rồi chạy ô đó, hoặc lưu thành cross_validation.py và chạy lệnh python cross_validation.py trong thư mục chứa tệp.
+  setup_en: |-
+    Use Python 3.11 or later; only the standard library is needed, with no additional packages to install.
+    Paste the entire example into one Python code cell in Google Colab and run it, or save it as cross_validation.py and run python cross_validation.py from the folder containing the file.
   expected_output: |-
     fold=1 train=[2, 3, 4, 5] valid=[0, 1]
     train_mean=9.000 mae=6.000

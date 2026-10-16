@@ -84,6 +84,63 @@ test('ordinary resources do not promise a hosted notebook runtime', async () => 
     url: 'https://colab.research.google.com.example.test/lab.ipynb' }] })
   expect(host.querySelector('.lesson-colab')).toBeNull()
 })
+
+test('code setup switches language on rerender and escapes localized instructions', async () => {
+  const example = {
+    language: 'python', title: 'Localized setup', code: 'print(1)',
+    setup: 'Legacy setup must not appear.',
+    setup_vi: 'Dán vào Colab: <img src=x onerror="alert(1)"> & chạy ô.',
+    setup_en: 'Paste into Colab: <script>alert(2)</script> & run the cell.',
+    expected_output: '1', explanation_vi: 'Ví dụ.', explanation_en: 'Example.',
+  }
+  const lesson = { ...lessonFixture, code_examples: [example] }
+  for (const language of ['vi', 'en', 'vi'] as const) {
+    await render(language, lesson)
+    const guide = host.querySelector('.code-example-guide')!
+    expect(guide.querySelector('dd')!.textContent).toBe(example[`setup_${language}`])
+    expect(guide.querySelector('dt')!.textContent).toBe(language === 'vi' ? 'Chuẩn bị' : 'Setup')
+    expect(guide.querySelector('img, script')).toBeNull()
+    expect(guide.textContent).not.toContain(example.setup)
+    expect(host.querySelector('.code-example code')!.textContent).toBe(example.code)
+    expect(guide.querySelectorAll('dd')[1].textContent).toBe(example.expected_output)
+  }
+  expect(onProgress).not.toHaveBeenCalled()
+})
+
+test.each(['vi', 'en'] as const)('code setup uses nonblank language, legacy, then alternate in %s', async (language) => {
+  const alternate = language === 'vi' ? 'en' : 'vi'
+  const setups = [
+    { setup: 'Legacy only.' },
+    { [`setup_${language}`]: ' \n\t', setup: 'Legacy before alternate.', [`setup_${alternate}`]: 'Alternate.' },
+    { [`setup_${language}`]: ' ', setup: '\t', [`setup_${alternate}`]: 'Alternate without legacy.' },
+    { [`setup_${language}`]: 'Localized only.' },
+  ]
+  const examples = setups.map((setup, index) => ({
+    language: 'python', title: `Fallback ${index}`, code: 'print(1)',
+    explanation_vi: 'Ví dụ.', explanation_en: 'Example.', ...setup,
+  }))
+  await render(language, { ...lessonFixture, code_examples: examples })
+  expect([...host.querySelectorAll('.code-example-guide dd')].map(node => node.textContent)).toEqual([
+    'Legacy only.', 'Legacy before alternate.', 'Alternate without legacy.', 'Localized only.',
+  ])
+})
+
+test.each(['vi', 'en'] as const)('missing and blank setup omit the setup row in %s', async (language) => {
+  const example = { language: 'python', title: 'No setup', code: 'print(1)',
+    explanation_vi: 'Ví dụ.', explanation_en: 'Example.' }
+  await render(language, { ...lessonFixture, code_examples: [
+    example,
+    { ...example, title: 'Blank setup', setup: '\t', setup_vi: ' ', setup_en: '\n' },
+    { ...example, title: 'Output only', setup_vi: ' ', expected_output: '1' },
+  ] })
+  const cards = host.querySelectorAll('.code-example')
+  expect(cards[0].querySelector('.code-example-guide')).toBeNull()
+  expect(cards[1].querySelector('.code-example-guide')).toBeNull()
+  const guide = cards[2].querySelector('.code-example-guide')!
+  expect(guide.querySelectorAll('dt')).toHaveLength(1)
+  expect(guide.querySelector('dt')!.textContent).toBe(language === 'vi' ? 'Kết quả mong đợi' : 'Expected output')
+  expect(guide.querySelector('dd')!.textContent).toBe('1')
+})
 afterEach(async () => {
   await act(async () => root.unmount())
   host.remove()

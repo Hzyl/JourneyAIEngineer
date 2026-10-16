@@ -141,6 +141,12 @@ code_examples:
   purpose_en: Fit a univariate least-squares line and compare its MSE on two held-out samples with a training-mean
     baseline.
   setup: Python 3.11+; chỉ dùng thư viện chuẩn / standard library only. Save as linear_demo.py and run python linear_demo.py.
+  setup_vi: |-
+    Dùng Python 3.11 trở lên; chỉ cần thư viện chuẩn, không cần cài thêm gói.
+    Dán toàn bộ ví dụ vào một ô mã Python trên Google Colab rồi chạy ô đó, hoặc lưu thành linear_demo.py và chạy lệnh python linear_demo.py trong thư mục chứa tệp.
+  setup_en: |-
+    Use Python 3.11 or later; only the standard library is needed, with no additional packages to install.
+    Paste the entire example into one Python code cell in Google Colab and run it, or save it as linear_demo.py and run python linear_demo.py from the folder containing the file.
   expected_output: |-
     slope=2.00, intercept=1.00
     baseline_mse=4.00

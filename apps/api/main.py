@@ -30,6 +30,7 @@ from apps.api.backup_recovery import guarded_restore, recover_backup_import, res
 from apps.api.backup_identity import metadata_warnings, remap_review_keys
 from apps.api.backup_validation import validate_backup_values
 from apps.api.learning_mutations import begin_mutation, ensure_mutations, finish_mutation
+from apps.api.local_access import require_loopback_request
 from apps.api.security_audit import audit_app
 from apps.api.review_queue import learning_review_queue, review_counts
 from apps.api.catalog_content import load_lesson_catalog
@@ -87,14 +88,7 @@ def require_local_request(request: Request | None = None) -> None:
 
     if not local_only_enabled() or request is None:
         return
-    client_host = request.client.host if request.client else ""
-    if client_host not in {"127.0.0.1", "::1", "localhost"}:
-        raise HTTPException(403, "This capability is local-only")
-    origin = request.headers.get("origin", "").strip()
-    if origin:
-        parsed = urlsplit(origin)
-        if parsed.scheme not in {"http", "https"} or parsed.hostname not in {"127.0.0.1", "localhost", "::1"}:
-            raise HTTPException(403, "This capability is local-only")
+    require_loopback_request(request)
 
 
 def now_iso() -> str:
@@ -459,7 +453,7 @@ def ensure_schema(db: sqlite3.Connection) -> None:
     has_lesson_unique = False
     for index in card_indexes:
         if int(index[2]) == 1:
-            columns_for_index = db.execute(f"PRAGMA index_info('{index[1]}')").fetchall()
+            columns_for_index = db.execute("SELECT * FROM pragma_index_info(?)", (index[1],)).fetchall()
             if [row[2] for row in columns_for_index] == ["lesson_id"]:
                 has_lesson_unique = True
                 break
@@ -1059,9 +1053,7 @@ def security_audit(request: Request = None) -> dict[str, Any]:  # type: ignore[a
     """Run a passive local source/endpoint review without network or payloads."""
 
     if request is not None:
-        client_host = request.client.host if request.client else ""
-        if client_host not in {"127.0.0.1", "::1", "localhost"}:
-            raise HTTPException(403, "Passive security audit is local-only")
+        require_loopback_request(request)
     return audit_app(app, PROJECT_ROOT)
 
 

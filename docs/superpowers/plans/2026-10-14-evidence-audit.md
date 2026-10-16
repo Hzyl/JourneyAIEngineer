@@ -360,3 +360,126 @@ overrides finds 183 of 208 lessons with a generic English recall-answer rubric;
 this is a triage signal, not a finding that all of their concepts are wrong.
 Other pending areas include full content review, shared code-example setup
 localization, hosted payload size and production admin RPC hardening.
+
+## 2026-10-16: local HTTP boundary, preprocessing and bilingual code setup
+
+The preceding approved batch was pushed as
+`7c00a8d668ccee61de7e8254e7b341c3cbf921ae`. The remote main SHA was
+verified, CI run `38864900600` passed both quality and hosted-database,
+and Cloudflare Pages deployment `3e0e81b8-a1c9-480c-83fc-339b8450c19c`
+reported success. This does not publish the following new working-tree batch.
+
+Route: codex-ui. Existing local implementation and verification; no bridge or
+new provider/model run. Handoff: none. Local edits/tests are authorized;
+publication of this new batch still requires its own confirmed message/target.
+
+### Changes and reproduced failures
+
+- Real isolated Uvicorn requests showed a loopback peer could use an untrusted
+  Host to read/write private notes. A malformed IPv6 Origin raised a server
+  error. The initial HTTP regression run had 15 failures and eight passes.
+  A shared helper now validates peer, Host and any Origin, including duplicate
+  Origin headers and malformed ports. Private handlers retain their existing
+  local-only policy; the passive audit remains local even when other local
+  capabilities are explicitly opted out. No cloud authorization was changed.
+- A legitimate SQLite index named `review's unique id` broke startup because
+  index metadata was interpolated into SQL. A parameterized
+  `pragma_index_info(?)` query fixes the crash. A failing-then-passing restart
+  regression preserves progress, notes, review state and schema version.
+- Four canonical preprocessing lessons now teach train-only median imputation,
+  frozen one-hot vocabulary with distinct missing/unknown flags, scaling/log
+  transforms, and point-in-time feature construction. Each has bilingual tasks,
+  four substantive review answers and an executable standard-library example
+  with exact output. Feature windows check both event and availability times;
+  neutral output names also support a non-default window. Tiny examples prove
+  arithmetic/data boundaries, not generalization or production readiness.
+- Shared code-example setup now supports `setup_vi`/`setup_en`, falling back
+  to legacy setup and then the other language, skipping blanks. Existing
+  content stays compatible. Eight earlier models/evaluation lessons changed
+  only these two metadata fields; four preprocessing lessons also use them.
+  A first complete check exposed JSON-inferred catalog types incorrectly
+  requiring localized fields on old curated content. The catalog type now
+  explicitly keeps these fields optional; no unsafe fixture cast was added.
+- Patched only transitive dev/build dependency `source-map-js` from 1.2.1 to
+  1.2.2 in the lockfile, using `--ignore-scripts --no-audit`. Its advisory is
+  [GHSA-68fv-2mgg-jv7q](https://github.com/advisories/GHSA-68fv-2mgg-jv7q).
+  `package.json` is unchanged; no new top-level dependency was introduced.
+
+### Fresh verification
+
+- `npm test`: final exit 0, 477 Python tests (78.39s), 309 Vitest tests in
+  48 files (9.53s), fingerprint/content validation, lint, TypeScript and Vite
+  build. The earlier run passed tests but failed TypeScript; the final run
+  above was after correcting the optional catalog fields.
+- Thirty-five independent preprocessing checks run standalone examples,
+  compare documented stdout, test known numerical results, frozen training
+  state, unknown/missing categories, constant columns and time boundaries.
+- Twenty-six real HTTP tests plus one quoted-index restart regression use
+  disposable data. No real notes or learner history are fixtures.
+- Full local Playwright: 60 passed, exit 0, 3.2 minutes, one worker and repo
+  venv Python in PATH. This includes VI/EN real-API checks for all 12 lessons,
+  navigation, recovery, interactions, localization, themes and responsive UI.
+- Hosted production-build Classical ML Playwright: two passed, exit 0,
+  39.8s, covering 12 lessons in VI/EN at 390/1440px, light/dark, keyboard answer
+  disclosure, outputs, setup localization, contrast and overflow. Synthetic
+  Auth rejects local API calls, unexpected writes and real external requests.
+- Root inspected fresh mobile Vietnamese dark categorical output, desktop
+  English feature recall and mobile Vietnamese localized setup screenshots.
+  Artifacts remain ignored under `.build/models-lesson-evidence/`.
+- Catalog comparison: all 208 lesson identities and review IDs/types retained;
+  12 changed and 196 identical records. The eight older lessons only gained
+  localized setup. No progress schema migration was needed.
+- `npm audit --json`: exit 0, zero advisories, including dev dependencies.
+  `python -m pip check`: exit 0, no broken requirements. This is not a Python
+  vulnerability scan; no Python advisory scanner was installed or run.
+
+### Remaining scope and limits
+
+The passive source scan still reports 31 manual-review flags. Triage found
+18 marker-based auth flags (the scanner does not recognize the local guard),
+seven body-model flags on bodyless commands, and six f-string SQL sites using
+fixed identifiers/fragments with request values bound separately. This bounded
+inspection is not proof the entire API is secure; scanner rules were not
+weakened to hide flags. See [Host validation](https://fastapi.tiangolo.com/advanced/middleware/#trustedhostmiddleware)
+and [SQLite PRAGMA functions](https://www.sqlite.org/pragma.html#pragma_index_info)
+for the boundary and parameterization approaches.
+
+After curated overrides, 179 of 208 lessons still contain a generic English
+recall rubric; this triage count does not imply all their concepts are wrong.
+Other pending work includes content review, hosted payload size, existing
+AuthProvider lint warnings and production admin RPC hardening. No real-account
+acceptance, physical-device inspection, packaged-executable rebuild, production
+database change, new commit, push or deploy was performed in this batch.
+
+### Publication verification after user confirmation
+
+The user confirmed commit and push for
+`fix(learning): harden local access and improve preprocessing lessons` to
+`origin/main` at `https://github.com/Hzyl/JourneyAIEngineer.git`.
+No catalog-loading implementation or analysis-module lesson rewrite was saved
+by the interrupted follow-up tasks, so neither is included in this release.
+
+Fresh checks on 2026-10-16 before publication:
+
+- `npm test`: exit 0; 477 Python tests, 309 Vitest tests in 48 files,
+  content/fingerprint validation, lint, TypeScript and production build passed.
+- `npx playwright test tests/e2e/lesson-code-setup.spec.ts --workers=1`:
+  two passed, exit 0, real local API and all 12 lesson pages in VI/EN.
+  Root inspected the refreshed mobile setup screenshots in both languages.
+- Catalog comparison again preserved all 208 lesson IDs and review IDs/types;
+  exactly 12 records changed. The source secret scan checked 780 files without
+  finding a supported secret marker. The staged diff passed whitespace checks.
+- Full hosted production browser verification: 64 passed, exit 0 in 3.9
+  minutes, using synthetic Supabase settings. The run used an elevated runner
+  after sandbox artifact/process restrictions; no package installation or
+  source change was needed. The result file was updated at 16:58:43 local time.
+- The sandbox initially redirected temporary files and the browser cache to
+  inaccessible or absent paths. Runner-scoped `.build` temp directories and
+  the already installed Chromium resolved these environment failures without
+  installing packages or changing source. Local Playwright passed its cases
+  but needed elevated cleanup of its two verified test-server PIDs to finish.
+
+Only the 27 reviewed files are selected for publication. The six existing
+`outputs/ai-engineer-learning-roadmap/` artifacts remain untracked. Supabase
+production, real user accounts and learner data are unchanged. The full-system
+audit remains open with the limitations listed above.

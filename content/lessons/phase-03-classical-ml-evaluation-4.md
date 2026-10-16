@@ -153,6 +153,12 @@ code_examples:
   purpose_vi: Thực hiện lựa chọn siêu tham số từ dự đoán thật trên validation rồi đánh giá test sau refit.
   purpose_en: Perform hyperparameter selection from actual validation predictions and evaluate test after refitting.
   setup: Python 3.11+; standard library only. Run in Colab or save as tuning.py and run python tuning.py.
+  setup_vi: |-
+    Dùng Python 3.11 trở lên; chỉ cần thư viện chuẩn, không cần cài thêm gói.
+    Dán toàn bộ ví dụ vào một ô mã Python trên Google Colab rồi chạy ô đó, hoặc lưu thành tuning.py và chạy lệnh python tuning.py trong thư mục chứa tệp.
+  setup_en: |-
+    Use Python 3.11 or later; only the standard library is needed, with no additional packages to install.
+    Paste the entire example into one Python code cell in Google Colab and run it, or save it as tuning.py and run python tuning.py from the folder containing the file.
   expected_output: |-
     k=1 validation_mae=2.000
     k=3 validation_mae=0.667

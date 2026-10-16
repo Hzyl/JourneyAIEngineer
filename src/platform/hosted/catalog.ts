@@ -4,8 +4,15 @@ import lessonPayload from '../../../content/lessons.json'
 import moduleGuidePayload from '../../../content/module_guides.json'
 import resourcePayload from '../../../content/resources.json'
 import toolPayload from '../../../content/tools.json'
+import type { CodeExample } from '../../api'
 
-export type CatalogLesson = (typeof lessonPayload.lessons)[number] & {
+type CatalogCodeExample = Omit<
+  (typeof lessonPayload.lessons)[number]['code_examples'][number],
+  'setup_vi' | 'setup_en'
+> & Pick<CodeExample, 'setup_vi' | 'setup_en'>
+
+export type CatalogLesson = Omit<(typeof lessonPayload.lessons)[number], 'code_examples'> & {
+  code_examples: CatalogCodeExample[]
   quality_status: 'draft' | 'reviewed'
   reviewed_at?: string
   completion_checklist_en?: string[]

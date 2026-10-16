@@ -164,6 +164,12 @@ code_examples:
   purpose_en: Fit a one-split classification tree using binary Gini impurity, then illustrate voting with supplied
     tree predictions. This does not train a random forest.
   setup: Python 3.11+; chỉ dùng thư viện chuẩn / standard library only. Save as tree_demo.py and run python tree_demo.py.
+  setup_vi: |-
+    Dùng Python 3.11 trở lên; chỉ cần thư viện chuẩn, không cần cài thêm gói.
+    Dán toàn bộ ví dụ vào một ô mã Python trên Google Colab rồi chạy ô đó, hoặc lưu thành tree_demo.py và chạy lệnh python tree_demo.py trong thư mục chứa tệp.
+  setup_en: |-
+    Use Python 3.11 or later; only the standard library is needed, with no additional packages to install.
+    Paste the entire example into one Python code cell in Google Colab and run it, or save it as tree_demo.py and run python tree_demo.py from the folder containing the file.
   expected_output: |-
     threshold=3.5
     stump_predictions=[0, 1]

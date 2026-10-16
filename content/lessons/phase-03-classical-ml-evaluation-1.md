@@ -137,6 +137,12 @@ code_examples:
   purpose_vi: Đếm lỗi thật và so sánh baseline trên dữ liệu mất cân bằng.
   purpose_en: Count actual errors and compare a baseline on imbalanced labels.
   setup: Python 3.11+; standard library only. Run in Colab or save as metrics.py and run python metrics.py.
+  setup_vi: |-
+    Dùng Python 3.11 trở lên; chỉ cần thư viện chuẩn, không cần cài thêm gói.
+    Dán toàn bộ ví dụ vào một ô mã Python trên Google Colab rồi chạy ô đó, hoặc lưu thành metrics.py và chạy lệnh python metrics.py trong thư mục chứa tệp.
+  setup_en: |-
+    Use Python 3.11 or later; only the standard library is needed, with no additional packages to install.
+    Paste the entire example into one Python code cell in Google Colab and run it, or save it as metrics.py and run python metrics.py from the folder containing the file.
   expected_output: |-
     filter TP FP TN FN: (1, 1, 7, 1)
     accuracy=0.800 precision=0.500 recall=0.500 f1=0.500

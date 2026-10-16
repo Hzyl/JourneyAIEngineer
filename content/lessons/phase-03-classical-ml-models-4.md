@@ -163,6 +163,12 @@ code_examples:
     before and after a learning-rate-scaled update.
   setup: Python 3.11+; chỉ dùng thư viện chuẩn / standard library only. Save as boosting_demo.py and run python
     boosting_demo.py.
+  setup_vi: |-
+    Dùng Python 3.11 trở lên; chỉ cần thư viện chuẩn, không cần cài thêm gói.
+    Dán toàn bộ ví dụ vào một ô mã Python trên Google Colab rồi chạy ô đó, hoặc lưu thành boosting_demo.py và chạy lệnh python boosting_demo.py trong thư mục chứa tệp.
+  setup_en: |-
+    Use Python 3.11 or later; only the standard library is needed, with no additional packages to install.
+    Paste the entire example into one Python code cell in Google Colab and run it, or save it as boosting_demo.py and run python boosting_demo.py from the folder containing the file.
   expected_output: |-
     baseline=2.50, threshold=2.5
     learning_rate=0.5, predictions=[1.75, 1.75, 3.25, 3.25]

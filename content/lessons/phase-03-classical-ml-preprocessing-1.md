@@ -4,17 +4,17 @@ phase_id: phase-03-classical-ml
 module_id: preprocessing
 title_vi: Xử lý dữ liệu thiếu
 title_en: Missing data
-summary_vi: Dữ liệu thiếu có thể phản ánh lỗi thu thập hoặc đặc điểm của quy trình thực tế.
-summary_en: Learn Missing data through an input → transformation → output model, then verify it with an edge-case
-  exercise.
+summary_vi: Điền trung vị từ train, giữ cờ thiếu và kiểm tra cột toàn thiếu.
+summary_en: Impute with a training median, preserve missingness indicators, and handle all-missing columns
+  explicitly.
 learning_objectives:
-- So sánh cách điền dữ liệu thiếu với phương án cơ sở và ghi giả định.
-- Xác nhận tham số biến đổi chỉ được học từ tập huấn luyện.
-- Giải thích kết quả và nêu một giới hạn của bài làm.
+- Tính trung vị chỉ từ train và biến đổi dữ liệu mới mà không fit lại.
+- Phân biệt None, số 0 và mã thiếu; giải thích cờ thiếu.
+- Kiểm tra train toàn thiếu và so trung vị với trung bình.
 learning_objectives_en:
-- Explain missing data with a concrete example.
-- Write or adapt a small code example applying missing data.
-- Recognize its assumptions, limits and one common failure mode.
+- Fit a median on training values and reuse it unchanged.
+- Distinguish None, zero and sentinels; explain missingness flags.
+- Test all-missing training data and compare median with mean.
 prerequisites:
 - phase-03-classical-ml-models-4
 - phase-02-math-ml-linear-algebra-1
@@ -27,127 +27,142 @@ key_terms:
 - evaluation
 - preprocessing
 concept_notes_vi: |-
-  Dữ liệu thiếu có thể do lỗi thu thập, người dùng bỏ qua câu hỏi hoặc một phép đo không áp dụng. Giá trị thiếu khác giá trị 0: không biết thu nhập không đồng nghĩa thu nhập bằng 0. Tìm hiểu nơi và lý do xuất hiện thiếu trước khi chọn cách xử lý.
+  Thiếu là chưa biết, không phải số 0. Ví dụ thu nhập 0 vẫn là một quan sát hợp lệ; None trong bài này mới biểu diễn thiếu. Trước khi điền, đo tỷ lệ thiếu theo cột/nhóm và kiểm tra nguyên nhân. Xóa mọi dòng thiếu có thể loại có hệ thống một nhóm người dùng.
 
-  Điền trung bình hoặc trung vị là một baseline, không khôi phục được giá trị thật. Học thống kê điền chỉ từ tập train rồi dùng lại cho validation và test. Một cột đánh dấu thiếu có thể hữu ích nếu trạng thái thiếu mang thông tin và cũng có sẵn lúc dự đoán.
+  Tách train/validation/test trước. Fit lấy trung vị của các giá trị quan sát trong train; transform thay None bằng trung vị đã lưu và thêm cờ 1 khi thiếu, 0 khi có. Validation/test không được thay đổi trung vị. Trong cross-validation, fit lại trên phần train của từng fold. Pipeline giúp giữ đúng ranh giới này khi dùng thư viện.
 
-  Tự kiểm tra: bỏ mọi dòng thiếu có luôn an toàn không? Không; có thể loại có hệ thống một nhóm người dùng và làm dữ liệu lệch. Ghi tỷ lệ thiếu theo nhóm và so kết quả các cách xử lý.
+  Với train [10, None, 20, 100], trung vị là 20 còn trung bình là 43,33. Trung vị ít bị 100 kéo lệch hơn, nhưng không khôi phục giá trị thật hoặc bảo đảm mô hình tốt hơn. Cờ thiếu chỉ hữu ích nếu trạng thái đó cũng có sẵn khi dự đoán. Cột toàn thiếu không có trung vị: ví dụ báo lỗi; thực tế phải chọn bỏ cột hoặc hằng số có lý do từ train, giữ schema nhất quán.
+
+  Hợp đồng ví dụ chỉ nhận số hữu hạn hoặc None; NaN, vô cực, chuỗi và boolean bị từ chối. Nếu nguồn dùng -999 hay chuỗi rỗng, chuyển về None sau khi xác nhận đó là mã thiếu, tránh biến một giá trị thật thành thiếu.
 concept_notes_en: |-
-  Missing data can reflect collection errors, skipped questions or measurements that do not apply. Missing differs from zero: unknown income is not zero income. Inspect where and why values are absent before choosing a treatment.
+  Missing means unknown, not zero. An income of zero is an observed value; this example uses None for missingness. Inspect missing rates by column/group and collection causes first. Dropping every incomplete row can systematically remove a user group.
 
-  Mean or median imputation is a baseline, not recovery of true values. Learn imputation statistics only from training data and reuse them for validation and test. A missingness indicator may help when missingness carries information and is available at prediction time.
+  Split train/validation/test first. Fit computes the median of observed training values; transform fills None with the saved median and adds a missingness flag (1 missing, 0 observed). Validation/test must not change that median. In cross-validation, refit inside each training fold. A library Pipeline helps maintain this boundary.
 
-  Self-check: is dropping every incomplete row always safe? No; it may systematically remove a user group and bias data. Record missingness by group and compare handling strategies.
-why_it_matters_vi: Giữ cách xử lý dữ liệu nhất quán giữa huấn luyện và dự đoán để tránh rò rỉ hoặc sai lệch.
-why_it_matters_en: Build consistent, leakage-safe preprocessing that turns messy data into reproducible features.
+  For training [10, None, 20, 100], the median is 20 and the mean is 43.33. The median is less affected by 100, but neither recovers truth nor guarantees better predictions. A missingness flag must be available at prediction time. An entirely missing column has no median: this example rejects it; a real pipeline needs a justified training-time constant or column-removal policy with a stable schema.
+
+  The example accepts finite numbers or None only; NaN, infinity, strings and booleans fail validation. If a source uses -999 or empty strings, normalize them to None only after verifying the sentinel contract so real values are not erased.
+why_it_matters_vi: Giữ cách xử lý dữ liệu nhất quán giữa huấn luyện và dự đoán để tránh rò rỉ hoặc sai
+  lệch.
+why_it_matters_en: Build consistent, leakage-safe preprocessing that turns messy data into reproducible
+  features.
 study_steps_vi:
-- Đọc phần giải thích, xác định khái niệm và điều kiện cần dùng cho nhiệm vụ bên dưới.
-- Tìm mục tương ứng với “Missing data” trong tài liệu tham khảo; đối chiếu với phần giải thích của bài.
-- So sánh cách điền dữ liệu thiếu với phương án cơ sở và ghi giả định.
-- Xác nhận tham số biến đổi chỉ được học từ tập huấn luyện. Ghi kết quả đối chiếu và điều bạn đã sửa nếu lần đầu
-  chưa đúng.
-- Tự trả lời thẻ ôn tập, rồi kiểm tra các tiêu chí hoàn thành trước khi chuyển bài.
+- Đọc khái niệm và mục Univariate feature imputation của tài liệu.
+- Lưu mã, chạy python missing_demo.py và đối chiếu output.
+- Chạy ví dụ. Thêm 1000 vào validation và kiểm tra trung vị vẫn 20. So với điền bằng trung bình train
+  130/3; ghi hai kết quả khi đầu vào là None.
+- Chạy các ca biên, lưu kết quả và trả lời bốn thẻ ôn tập.
 study_steps_en:
-- 'Read the concept notes and answer: Build consistent, leakage-safe preprocessing that turns messy data into reproducible
-  features.'
-- Open scikit-learn User Guide, read the section marked Read this lesson, and record one verified example or definition.
-- Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the
-  test.
-- 'Complete the practice task: Put imputation, encoding, and scaling in a Pipeline, fit only on train, and test
-  a missing-data case.'
-- Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact.
+- Read the concepts and Univariate feature imputation in the reference.
+- Save the code, run python missing_demo.py, and compare the output.
+- Run the example. Add 1000 to validation and confirm the median stays 20. Compare with training-mean
+  imputation using 130/3; record both outputs for None.
+- Run boundary cases, save results, and answer the four review cards.
 practice_plan:
   vi:
-    task: 'So sánh cách điền dữ liệu thiếu với phương án cơ sở và ghi giả định.
-
-
-      Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Đặt bước điền giá trị thiếu, mã hóa
-      và chuẩn hóa trong Pipeline; chỉ học tham số từ tập huấn luyện rồi thử dữ liệu thiếu.'
+    task: Chạy ví dụ. Thêm 1000 vào validation và kiểm tra trung vị vẫn 20. So với điền bằng trung bình
+      train 130/3; ghi hai kết quả khi đầu vào là None.
     deliverables:
-    - Quy trình biến đổi và ví dụ dữ liệu chưa từng thấy
-    - Kết quả đối chiếu kèm dữ liệu hoặc điều kiện thực hiện
-    - Một giới hạn và cách kiểm tra thêm
-    checkpoint: Xác nhận tham số biến đổi chỉ được học từ tập huấn luyện.
-    stretch: Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào.
+    - missing_demo.py và output đúng mẫu
+    - Assert cho None, 0, tập rỗng và train toàn thiếu
+    - Ghi trung vị 20, trung bình 130/3 và giới hạn của cách điền
+    checkpoint: None thành (20.0, 1), 0 thành (0.0, 0); thay validation không đổi fit.
+    stretch: Dùng train [10, 20, 30, 100] và xác nhận trung vị 25; giải thích cách lấy trung bình hai
+      giá trị giữa.
   en:
-    task: Put imputation, encoding, and scaling in a Pipeline, fit only on train, and test a missing-data case.
+    task: Run the example. Add 1000 to validation and confirm the median stays 20. Compare with training-mean
+      imputation using 130/3; record both outputs for None.
     deliverables:
-    - One executable code file
-    - One test or expected output
-    - One note describing an edge case and trade-off
-    checkpoint: You can serialize the pipeline and reuse identical preprocessing during training and inference.
-    stretch: Add a failure test for missing data and explain the result.
+    - missing_demo.py with matching output
+    - Assertions for None, zero, empty input and all-missing train
+    - Median 20, mean 130/3 and a limitation of imputation
+    checkpoint: None becomes (20.0, 1), zero becomes (0.0, 0); validation changes cannot alter the fit.
+    stretch: Use train [10, 20, 30, 100] and verify median 25; explain averaging the two middle values.
 interview_questions:
   vi:
-  - Bạn sẽ giải thích nội dung “Xử lý dữ liệu thiếu” bằng ví dụ nào?
-  - Điều kiện nào cần kiểm tra trước khi áp dụng vào công việc thực tế?
-  - Bạn dùng bằng chứng nào để kết luận bài làm đáp ứng yêu cầu?
+  - 'Train [10, None, 20, 100], validation [None, 0]: kết quả?'
+  - Train toàn None thì sửa lỗi thế nào?
+  - Trung vị tốt hơn trung bình trong mọi trường hợp không?
   en:
-  - How would you explain missing data to a new teammate?
-  - Which assumption behind missing data could fail in production?
-  - Which metric or test would prove the result is trustworthy?
+  - With train [10, None, 20, 100] and validation [None, 0], what is the output?
+  - What should happen when training is entirely None?
+  - Is median imputation always better than mean imputation?
 formulas: []
 code_examples:
 - language: python
-  title: 'Missing data: inspect one complete path'
-  code: "# Topic: Missing data (phase-03-classical-ml-preprocessing-1)\nfrom dataclasses import dataclass\n\n@dataclass(frozen=True)\n\
-    class Result:\n    value: str\n    valid: bool\n\nresult = Result(value='ready', valid=True)\nprint(result)"
+  title: Fit a training median and retain missingness
+  code: |-
+    from math import isfinite
+    from statistics import median
+
+
+    def validate_values(values):
+        for value in values:
+            if value is not None and (
+                isinstance(value, bool)
+                or not isinstance(value, (int, float))
+                or not isfinite(value)
+            ):
+                raise ValueError("expected finite numbers or None")
+
+
+    def fit_median(train_values):
+        validate_values(train_values)
+        observed = [value for value in train_values if value is not None]
+        if not observed:
+            raise ValueError("training column has no observed values")
+        return float(median(observed))
+
+
+    def transform_missing(values, fill_value):
+        validate_values(values)
+        validate_values([fill_value])
+        if fill_value is None:
+            raise ValueError("fill value must be observed")
+        return [
+            (float(fill_value if value is None else value), int(value is None))
+            for value in values
+        ]
+
+
+    if __name__ == "__main__":
+        training = [10, None, 20, 100]
+        frozen_median = fit_median(training)
+        print(f"train_median={frozen_median:.1f}")
+        print("validation=", transform_missing([None, 0, 200], frozen_median), sep="")
+        print("test=", transform_missing([None, 30], frozen_median), sep="")
+        print(f"median_after_transform={frozen_median:.1f}")
   status: runnable
-  purpose_vi: Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.
-  purpose_en: Illustrate the input-to-output path for missing data.
-  setup: Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.
-  expected_output: Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.
-  edge_case_vi: Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.
-  edge_case_en: Try an empty input, a wrong shape or missing data and record the failure.
-  explanation_vi: Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần
-    nội dung; cần hoàn thành riêng nhiệm vụ thực hành.
-  explanation_en: Keep the boundary executable and inspectable; change one input and verify the expected output.
+  purpose_vi: Tách bước học trung vị và bước điền; xuất cặp (giá trị, cờ thiếu).
+  purpose_en: Separate fitting from transformation; emit (value, missing flag) pairs.
+  setup: Python 3.11+; standard library only. Save as missing_demo.py and run python missing_demo.py.
+  setup_vi: Python 3.11+; chỉ thư viện chuẩn. Lưu thành missing_demo.py rồi chạy python missing_demo.py.
+  setup_en: Python 3.11+; standard library only. Save as missing_demo.py and run python missing_demo.py.
+  expected_output: |-
+    train_median=20.0
+    validation=[(20.0, 1), (0.0, 0), (200.0, 0)]
+    test=[(20.0, 1), (30.0, 0)]
+    median_after_transform=20.0
+  edge_case_vi: fit_median([]) và fit_median([None, None]) báo ValueError; transform_missing([], 20) trả
+    []; NaN bị từ chối. Số 0 giữ cờ 0.
+  edge_case_en: fit_median([]) and fit_median([None, None]) raise ValueError; transform_missing([], 20)
+    returns []; NaN is rejected. Zero retains flag 0.
+  explanation_vi: Ba giá trị đã sắp là 10, 20, 100 nên trung vị 20. Giá trị validation 200 không tham
+    gia fit. Mỗi lần transform dùng cùng số đã lưu, không sửa đầu vào.
+  explanation_en: Sorted observed values are 10, 20, 100, so the median is 20. Validation value 200 never
+    enters fit. Every transform reuses the saved scalar without changing input data.
 resources:
-- language: en
-  title: scikit-learn User Guide
-  url: https://scikit-learn.org/stable/user_guide.html
-  kind: official
-  required: false
-  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.
-  purpose_en: Official reference to verify the lesson concept.
-  read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
-  read_en: Read the relevant section, run a small example, and record one verified insight.
-- language: en
-  title: scikit-learn Model Evaluation
-  url: https://scikit-learn.org/stable/modules/model_evaluation.html
-  kind: official
-  required: false
-  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.
-  purpose_en: Official reference to verify the lesson concept.
-  read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
-  read_en: Read the relevant section, run a small example, and record one verified insight.
-- language: en
-  title: scikit-learn Pipelines
-  url: https://scikit-learn.org/stable/modules/compose.html
-  kind: official
-  required: false
-  purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.
-  purpose_en: Official reference to verify the lesson concept.
-  read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
-  read_en: Read the relevant section, run a small example, and record one verified insight.
-- title: scikit-learn Preprocessing
-  url: https://scikit-learn.org/stable/modules/preprocessing.html
+- title: 'scikit-learn: Imputation'
+  url: https://scikit-learn.org/stable/modules/impute.html
   language: en
-  purpose_vi: Đưa bước điền giá trị thiếu, mã hóa và chuẩn hóa vào quy trình ngăn rò rỉ dữ liệu.
-  read_vi: Đọc về bộ biến đổi, ColumnTransformer và sự khác nhau giữa fit với transform.
-  purpose_en: Use leakage-safe imputation, encoding, and scaling in pipelines.
-  read_en: Read transformers, ColumnTransformer, and the fit/transform boundary.
   kind: official
   required: true
-- title: Giải thích và hướng dẫn thực hành trong bài
-  url: ''
-  language: vi
-  kind: in_app
-  purpose_vi: Đọc giải thích, thực hiện nhiệm vụ và đối chiếu tiêu chí hoàn thành.
-  purpose_en: The explanation, code example, checklist, and completion criteria inside the app.
-  read_vi: Đọc giải thích → xem ví dụ → thực hành → tự kiểm tra.
-  read_en: Follow Study plan → Concept notes → Code example → Practice plan.
-  required: true
+  purpose_vi: Đối chiếu chiến lược điền và cờ thiếu.
+  purpose_en: Compare imputation strategies and missingness indicators.
+  read_vi: Đọc Univariate feature imputation và Marking imputed values; đối chiếu với hợp đồng None của
+    ví dụ.
+  read_en: Read Univariate feature imputation and Marking imputed values; compare with the example None
+    contract.
 exercise_ids:
 - exercise-3-preprocessing
 review_item_ids:
@@ -157,78 +172,90 @@ review_item_ids:
 - phase-03-classical-ml-preprocessing-1-interview
 estimated_minutes: 60
 completion_checklist:
-- So sánh cách điền dữ liệu thiếu với phương án cơ sở và ghi giả định.
-- Xác nhận tham số biến đổi chỉ được học từ tập huấn luyện.
-- Lưu kết quả và giải thích được một giới hạn mà không nhìn lời giải.
+- missing_demo.py và output đúng mẫu
+- Assert cho None, 0, tập rỗng và train toàn thiếu
+- Ghi trung vị 20, trung bình 130/3 và giới hạn của cách điền
 completion_criteria:
-- 'Bài làm đáp ứng nhiệm vụ: So sánh cách điền dữ liệu thiếu với phương án cơ sở và ghi giả định.'
-- Có kết quả đối chiếu với tiêu chí hoặc dự đoán đã ghi trước.
-- Xác nhận tham số biến đổi chỉ được học từ tập huấn luyện.
+- None thành (20.0, 1), 0 thành (0.0, 0); thay validation không đổi fit.
+- Các ca lỗi trả ValueError; giải thích được vì sao không fit trên test.
 common_mistakes:
-- Học thống kê tiền xử lý trên toàn bộ dữ liệu trước khi chia tập.
-- Kết luận từ một kết quả thuận lợi mà chưa kiểm tra trường hợp khác.
-- Chép lời giải nhưng không giải thích được quyết định trong bài làm của mình.
+- Fit trung vị trên toàn bộ dữ liệu.
+- Đổi số 0 thật thành thiếu.
+- Tự coi train toàn thiếu có trung vị 0.
 next_lessons:
 - phase-03-classical-ml-preprocessing-2
 - phase-03-classical-ml-preprocessing-3
-review_question_vi: Nội dung cốt lõi của “Xử lý dữ liệu thiếu” là gì?
-review_question_en: Define missing data in your own words. What are the input, transformation and output?
-review_answer_vi: Dữ liệu thiếu có thể phản ánh lỗi thu thập hoặc đặc điểm của quy trình thực tế. Trước khi điền
-  giá trị, kiểm tra nơi xuất hiện và nguyên nhân; chỉ học thống kê điền từ tập huấn luyện.
-review_answer_en: A strong answer names the input, transformation, output and the context where missing data is
-  used. Relate it specifically to missing data in lesson phase-03-classical-ml-preprocessing-1.
+review_question_vi: Vì sao không điền mọi giá trị thiếu bằng 0?
+review_question_en: Why not fill every missing value with zero?
+review_answer_vi: 0 có thể là giá trị thật. None là chưa biết; điền trung vị train và giữ cờ thiếu phân
+  biệt hai trạng thái nhưng không khôi phục sự thật.
+review_answer_en: Zero may be a genuine observation. None is unknown; a training median plus a missingness
+  flag distinguishes states but cannot recover truth.
 review_cards:
 - id: phase-03-classical-ml-preprocessing-1-recall
   type: recall
-  question_vi: Nội dung cốt lõi của “Xử lý dữ liệu thiếu” là gì?
-  question_en: Define missing data in your own words. What are the input, transformation and output?
-  answer_vi: Dữ liệu thiếu có thể phản ánh lỗi thu thập hoặc đặc điểm của quy trình thực tế. Trước khi điền giá
-    trị, kiểm tra nơi xuất hiện và nguyên nhân; chỉ học thống kê điền từ tập huấn luyện.
-  answer_en: A strong answer names the input, transformation, output and the context where missing data is used.
-  hint_vi: Nêu ý chính, sau đó minh họa bằng tình huống cụ thể.
-  hint_en: Start with a small example you can calculate by hand.
+  question_vi: Vì sao không điền mọi giá trị thiếu bằng 0?
+  question_en: Why not fill every missing value with zero?
+  answer_vi: 0 có thể là giá trị thật. None là chưa biết; điền trung vị train và giữ cờ thiếu phân biệt
+    hai trạng thái nhưng không khôi phục sự thật.
+  answer_en: Zero may be a genuine observation. None is unknown; a training median plus a missingness
+    flag distinguishes states but cannot recover truth.
+  hint_vi: So sánh (0, 0) với (20, 1).
+  hint_en: Compare (0, 0) with (20, 1).
 - id: phase-03-classical-ml-preprocessing-1-application
   type: application
-  question_vi: So sánh cách điền dữ liệu thiếu với phương án cơ sở và ghi giả định.
-  question_en: Write a small code example or design that applies missing data to an AI engineering problem.
-  answer_vi: 'Với nhiệm vụ “So sánh cách điền dữ liệu thiếu với phương án cơ sở và ghi giả định”, cần lưu: quy trình
-    biến đổi và ví dụ dữ liệu chưa từng thấy. Xác nhận tham số biến đổi chỉ được học từ tập huấn luyện.'
-  answer_en: The missing data example should have an explicit input, expected output and a way to run or verify
-    it (phase-03-classical-ml-preprocessing-1).
-  hint_vi: Bắt đầu từ nhiệm vụ thực hành của bài.
-  hint_en: Start from the lesson code example and change one assumption.
+  question_vi: 'Train [10, None, 20, 100], validation [None, 0]: kết quả?'
+  question_en: With train [10, None, 20, 100] and validation [None, 0], what is the output?
+  answer_vi: Trung vị 20; [(20.0, 1), (0.0, 0)]. Không tính lại trung vị trên validation.
+  answer_en: Median 20; [(20.0, 1), (0.0, 0)]. Do not recompute the median on validation.
+  hint_vi: Bỏ None khi fit, giữ vị trí khi transform.
+  hint_en: Ignore None during fit, preserve positions during transform.
 - id: phase-03-classical-ml-preprocessing-1-debug
   type: debug
-  question_vi: Khi làm bài “Xử lý dữ liệu thiếu”, bạn cần tránh lỗi nào và kiểm tra lại ra sao?
-  question_en: If missing data produces a wrong result or a metric drops, what would you debug first?
-  answer_vi: 'Trong bài “Xử lý dữ liệu thiếu”, lỗi cần tránh là: học thống kê tiền xử lý trên toàn bộ dữ liệu trước
-    khi chia tập. Xác nhận tham số biến đổi chỉ được học từ tập huấn luyện. Dùng ví dụ nhỏ để tìm bước đầu tiên
-    có kết quả khác dự kiến.'
-  answer_en: For missing data, check inputs/shapes, preprocessing and the baseline first; then isolate the failure
-    with a small test and error analysis (phase-03-classical-ml-preprocessing-1).
-  hint_vi: Tìm bước đầu tiên xuất hiện khác biệt.
-  hint_en: Do not start by changing the model or adding complexity.
+  question_vi: Train toàn None thì sửa lỗi thế nào?
+  question_en: What should happen when training is entirely None?
+  answer_vi: 'Không có thống kê để học: báo lỗi rồi chọn chính sách bỏ cột hoặc hằng số có lý do và schema
+    ổn định. Không mượn test để tính trung vị.'
+  answer_en: 'There is no statistic to learn: fail, then choose a justified constant or column removal
+    with stable schema. Do not borrow test values.'
+  hint_vi: Có giá trị nào để lấy trung vị không?
+  hint_en: Are there observed values to take a median of?
 - id: phase-03-classical-ml-preprocessing-1-interview
   type: interview
-  question_vi: Bạn dùng kết quả nào từ bài “Xử lý dữ liệu thiếu” để giải thích cách làm và giới hạn?
-  question_en: In an interview, how would you explain a trade-off and one edge case of missing data?
-  answer_vi: Bắt đầu từ nhiệm vụ “So sánh cách điền dữ liệu thiếu với phương án cơ sở và ghi giả định”. Trình bày
-    kết quả đã lưu, cách đối chiếu và một điều kiện có thể khiến kết luận thay đổi; không chỉ đọc lại định nghĩa.
-  answer_en: The answer about missing data should cover assumptions, metrics/cost, limitations and how to reduce
-    production risk (phase-03-classical-ml-preprocessing-1).
-  hint_vi: Dùng quyết định thật trong bài làm, tránh chỉ đọc định nghĩa.
-  hint_en: Relate it to latency, quality, cost or observability where relevant.
+  question_vi: Trung vị tốt hơn trung bình trong mọi trường hợp không?
+  question_en: Is median imputation always better than mean imputation?
+  answer_vi: Không. Trung vị ít nhạy với ngoại lệ nhưng làm mất biến thiên và có thể lệch nhóm. So trên
+    cùng validation, kiểm tra tỷ lệ thiếu theo nhóm; chỉ train học tham số.
+  answer_en: No. Median is less outlier-sensitive but loses variation and can bias groups. Compare on
+    the same validation set, inspect group missingness, and learn parameters only on train.
+  hint_vi: Tách tính bền với ngoại lệ khỏi chất lượng dự đoán.
+  hint_en: Separate resistance to outliers from predictive quality.
+completion_checklist_en:
+- missing_demo.py with matching output
+- Assertions for None, zero, empty input and all-missing train
+- Median 20, mean 130/3 and a limitation of imputation
+completion_criteria_en:
+- None becomes (20.0, 1), zero becomes (0.0, 0); validation changes cannot alter the fit.
+- Failure cases raise ValueError; explain why test data must not be fitted.
+common_mistakes_en:
+- Fitting a median on the full dataset.
+- Treating genuine zeros as missing.
+- Assuming an all-missing training column has median zero.
 ---
 # Xử lý dữ liệu thiếu / Missing data
 
-Dữ liệu thiếu có thể do lỗi thu thập, người dùng bỏ qua câu hỏi hoặc một phép đo không áp dụng. Giá trị thiếu khác giá trị 0: không biết thu nhập không đồng nghĩa thu nhập bằng 0. Tìm hiểu nơi và lý do xuất hiện thiếu trước khi chọn cách xử lý.
+Thiếu là chưa biết, không phải số 0. Ví dụ thu nhập 0 vẫn là một quan sát hợp lệ; None trong bài này mới biểu diễn thiếu. Trước khi điền, đo tỷ lệ thiếu theo cột/nhóm và kiểm tra nguyên nhân. Xóa mọi dòng thiếu có thể loại có hệ thống một nhóm người dùng.
 
-Điền trung bình hoặc trung vị là một baseline, không khôi phục được giá trị thật. Học thống kê điền chỉ từ tập train rồi dùng lại cho validation và test. Một cột đánh dấu thiếu có thể hữu ích nếu trạng thái thiếu mang thông tin và cũng có sẵn lúc dự đoán.
+Tách train/validation/test trước. Fit lấy trung vị của các giá trị quan sát trong train; transform thay None bằng trung vị đã lưu và thêm cờ 1 khi thiếu, 0 khi có. Validation/test không được thay đổi trung vị. Trong cross-validation, fit lại trên phần train của từng fold. Pipeline giúp giữ đúng ranh giới này khi dùng thư viện.
 
-Tự kiểm tra: bỏ mọi dòng thiếu có luôn an toàn không? Không; có thể loại có hệ thống một nhóm người dùng và làm dữ liệu lệch. Ghi tỷ lệ thiếu theo nhóm và so kết quả các cách xử lý.
+Với train [10, None, 20, 100], trung vị là 20 còn trung bình là 43,33. Trung vị ít bị 100 kéo lệch hơn, nhưng không khôi phục giá trị thật hoặc bảo đảm mô hình tốt hơn. Cờ thiếu chỉ hữu ích nếu trạng thái đó cũng có sẵn khi dự đoán. Cột toàn thiếu không có trung vị: ví dụ báo lỗi; thực tế phải chọn bỏ cột hoặc hằng số có lý do từ train, giữ schema nhất quán.
 
-## Thực hành
+Hợp đồng ví dụ chỉ nhận số hữu hạn hoặc None; NaN, vô cực, chuỗi và boolean bị từ chối. Nếu nguồn dùng -999 hay chuỗi rỗng, chuyển về None sau khi xác nhận đó là mã thiếu, tránh biến một giá trị thật thành thiếu.
 
-So sánh cách điền dữ liệu thiếu với phương án cơ sở và ghi giả định.
+Missing means unknown, not zero. An income of zero is an observed value; this example uses None for missingness. Inspect missing rates by column/group and collection causes first. Dropping every incomplete row can systematically remove a user group.
 
-Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Đặt bước điền giá trị thiếu, mã hóa và chuẩn hóa trong Pipeline; chỉ học tham số từ tập huấn luyện rồi thử dữ liệu thiếu.
+Split train/validation/test first. Fit computes the median of observed training values; transform fills None with the saved median and adds a missingness flag (1 missing, 0 observed). Validation/test must not change that median. In cross-validation, refit inside each training fold. A library Pipeline helps maintain this boundary.
+
+For training [10, None, 20, 100], the median is 20 and the mean is 43.33. The median is less affected by 100, but neither recovers truth nor guarantees better predictions. A missingness flag must be available at prediction time. An entirely missing column has no median: this example rejects it; a real pipeline needs a justified training-time constant or column-removal policy with a stable schema.
+
+The example accepts finite numbers or None only; NaN, infinity, strings and booleans fail validation. If a source uses -999 or empty strings, normalize them to None only after verifying the sentinel contract so real values are not erased.

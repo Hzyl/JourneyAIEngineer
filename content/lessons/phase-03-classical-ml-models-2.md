@@ -157,6 +157,12 @@ code_examples:
     This demonstrates inference, not logistic-regression fitting.
   setup: Python 3.11+; chỉ dùng thư viện chuẩn / standard library only. Save as logistic_demo.py and run python
     logistic_demo.py.
+  setup_vi: |-
+    Dùng Python 3.11 trở lên; chỉ cần thư viện chuẩn, không cần cài thêm gói.
+    Dán toàn bộ ví dụ vào một ô mã Python trên Google Colab rồi chạy ô đó, hoặc lưu thành logistic_demo.py và chạy lệnh python logistic_demo.py trong thư mục chứa tệp.
+  setup_en: |-
+    Use Python 3.11 or later; only the standard library is needed, with no additional packages to install.
+    Paste the entire example into one Python code cell in Google Colab and run it, or save it as logistic_demo.py and run python logistic_demo.py from the folder containing the file.
   expected_output: |-
     probabilities=[0.8, 0.6, 0.4, 0.2]
     threshold=0.5, labels=[1, 1, 0, 0]

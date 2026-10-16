@@ -1,11 +1,12 @@
 import { expect, test } from '@playwright/test'
 import catalog from '../../content/lessons.json' with { type: 'json' }
+import type { CodeExample } from '../../src/api'
 import { checkEditorialReading } from './editorial-reading-checks'
 import { mockAuthenticatedLearner } from './hosted-learner'
 import { checkThemeContrast } from './theme-checks'
 
 type ExampleFixture = {
-  group: 'models' | 'evaluation'
+  group: 'preprocessing' | 'models' | 'evaluation'
   number: number
   functionName: string
   expectedOutput: string
@@ -13,6 +14,64 @@ type ExampleFixture = {
 }
 
 const examples: ExampleFixture[] = [
+  {
+    group: 'preprocessing',
+    number: 1,
+    functionName: 'fit_median',
+    expectedOutput: [
+      'train_median=20.0',
+      'validation=[(20.0, 1), (0.0, 0), (200.0, 0)]',
+      'test=[(20.0, 1), (30.0, 0)]',
+      'median_after_transform=20.0',
+    ].join('\n'),
+    recall: { vi: '0 có thể là giá trị thật', en: 'Zero may be a genuine observation' },
+  },
+  {
+    group: 'preprocessing',
+    number: 2,
+    functionName: 'fit_categories',
+    expectedOutput: [
+      "vocabulary=('blue', 'red')",
+      'validation=[[0, 1, 0, 0], [0, 0, 0, 1], [0, 0, 1, 0]]',
+      'test=[[1, 0, 0, 0], [0, 0, 0, 1]]',
+      "vocabulary_after_transform=('blue', 'red')",
+    ].join('\n'),
+    recall: {
+      vi: 'One-hot tạo cờ từng nhóm, không áp đặt thứ tự',
+      en: 'One-hot creates group indicators without imposing order',
+    },
+  },
+  {
+    group: 'preprocessing',
+    number: 3,
+    functionName: 'fit_scaler',
+    expectedOutput: [
+      'state=(15.0, 5.0)',
+      'train=[-1.0, 1.0]',
+      'validation=[0.0, 2.0]',
+      'constant_state=(7.0, 1.0)',
+      'constant_validation=[0.0, 2.0]',
+      'log_counts=[0.0, 1.3863, 2.1972]',
+    ].join('\n'),
+    recall: {
+      vi: 'Standardization học mean và độ lệch chuẩn từ train',
+      en: 'Standardization learns training mean and standard deviation',
+    },
+  },
+  {
+    group: 'preprocessing',
+    number: 4,
+    functionName: 'purchase_features',
+    expectedOutput: [
+      "A_day30={'purchase_count': 2, 'total_spend': 30.0, 'mean_purchase': 15.0, 'no_history': 0}",
+      "new_customer={'purchase_count': 0, 'total_spend': 0.0, 'mean_purchase': 0.0, 'no_history': 1}",
+      "A_day32={'purchase_count': 4, 'total_spend': 200.0, 'mean_purchase': 50.0, 'no_history': 0}",
+    ].join('\n'),
+    recall: {
+      vi: 'Đúng khách hàng, đúng cửa sổ và đã có sẵn trước cutoff',
+      en: 'Use the correct customer, time window and information available before cutoff',
+    },
+  },
   {
     group: 'models',
     number: 1,
@@ -105,7 +164,8 @@ const examples: ExampleFixture[] = [
 for (const language of ['vi', 'en'] as const) {
   test(`${language} Classical ML lessons expose runnable examples and readable substantive review answers`,
     async ({ page, baseURL }) => {
-      test.setTimeout(120_000)
+      test.setTimeout(180_000)
+      expect(examples).toHaveLength(12)
       if (!baseURL) throw new Error('Classical ML tests require the configured hosted preview baseURL')
       const unexpected = await mockAuthenticatedLearner(page, new URL(baseURL).origin, language)
       const browserErrors: string[] = []
@@ -124,6 +184,18 @@ for (const language of ['vi', 'en'] as const) {
           await expect(page).toHaveURL(lessonPath)
           const example = page.locator('.code-example')
           await expect(example).toHaveCount(1)
+          const codeExample: CodeExample = lesson.code_examples[0]
+          const alternate = language === 'vi' ? 'en' : 'vi'
+          const localizedSetup = codeExample[`setup_${language}`]
+          const alternateSetup = codeExample[`setup_${alternate}`]
+          expect(localizedSetup?.trim(), `${slug} setup_${language}`).toBeTruthy()
+          expect(alternateSetup?.trim(), `${slug} setup_${alternate}`).toBeTruthy()
+          expect(localizedSetup).not.toBe(alternateSetup)
+          const guide = example.locator('.code-example-guide')
+          const setup = guide.locator('dd').first()
+          await expect(guide.locator('dt').first()).toHaveText(language === 'vi' ? 'Chuẩn bị' : 'Setup')
+          await expect(setup).toHaveText(localizedSetup!)
+          await expect(guide).not.toContainText(alternateSetup!)
           const source = example.locator('pre')
           await expect(source).toContainText(`def ${fixture.functionName}(`)
           await source.focus()
@@ -131,14 +203,17 @@ for (const language of ['vi', 'en'] as const) {
           await page.keyboard.press('Tab')
           await expect(source).not.toBeFocused()
 
-          expect(lesson.code_examples[0].expected_output).toBe(fixture.expectedOutput)
+          const expectedOutput = fixture.expectedOutput
+          expect(expectedOutput.trim(), `${slug} must provide concrete expected output`).toBeTruthy()
+          expect(expectedOutput).not.toMatch(/Một output nhỏ|small output|expected output here/i)
+          expect(codeExample.expected_output).toBe(fixture.expectedOutput)
           const output = example.locator('.code-example-guide dd').filter({
-            hasText: fixture.expectedOutput.split('\n')[0],
+            hasText: expectedOutput.split('\n')[0],
           })
           await expect(output).toHaveCount(1)
           await expect(output).toBeVisible()
           await expect(output).toHaveCSS('white-space', 'pre-wrap')
-          expect(await output.innerText()).toBe(fixture.expectedOutput)
+          expect(await output.innerText()).toBe(expectedOutput)
 
           expect(lesson.review_cards.map((card) => card.type))
             .toEqual(['recall', 'application', 'debug', 'interview'])
@@ -167,6 +242,8 @@ for (const language of ['vi', 'en'] as const) {
             for (const theme of ['light', 'dark'] as const) {
               await page.emulateMedia({ colorScheme: theme, reducedMotion: 'reduce' })
               await expect(page.locator('html')).toHaveAttribute('data-theme', theme)
+              await expect(setup).toBeVisible()
+              await expect(setup).toHaveText(localizedSetup!)
               await checkThemeContrast(page)
               const reading = await checkEditorialReading(page, page.locator(
                 '.concept-notes > p, .code-example > p, .code-example pre, .code-example pre code, '
@@ -174,6 +251,12 @@ for (const language of ['vi', 'en'] as const) {
                 + '.review-prompt details > p, .review-prompt summary',
               ))
               readability.push({ lesson: slug, language, width, theme, ...reading })
+              if (fixture.group === 'models' && fixture.number === 1 && theme === 'light') {
+                await guide.screenshot({
+                  path: `.build/models-lesson-evidence/hosted-${language}-setup-${width}.png`,
+                  animations: 'disabled',
+                })
+              }
               if (fixture.number === 2 && width === 390 && theme === 'dark') {
                 await example.locator('.code-example-guide').screenshot({
                   path: `.build/models-lesson-evidence/hosted-${language}-${fixture.group}-2-output-dark-390.png`,
