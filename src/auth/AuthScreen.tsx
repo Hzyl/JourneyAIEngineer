@@ -8,6 +8,8 @@ import { AuthIntro } from './AuthIntro'
 import { PasswordField } from './PasswordField'
 import { SignupConfirmation } from './SignupConfirmation'
 import { clearConfirmationReturn, rememberConfirmationReturn } from './confirmation-return'
+import { clearPendingSignup, readPendingSignup, rememberPendingSignup } from './pending-signup'
+import { authReturnPath } from '../public/public-navigation'
 import './auth.css'
 import './auth-layout.css'
 
@@ -21,12 +23,14 @@ export function AuthScreen({ loading, language = 'vi', expired = false }: {
   const text = authCopy[language]
   const [mode, setMode] = useState<Mode>(() =>
     !expired && window.location.pathname === '/auth/sign-up' ? 'sign_up' : 'sign_in')
-  const [email, setEmail] = useState('')
+  const [restoredSignup] = useState(() => expired ? null : readPendingSignup())
+  const [email, setEmail] = useState(restoredSignup?.email ?? '')
   const [password, setPassword] = useState('')
   const [confirmation, setConfirmation] = useState('')
   const [pending, setPending] = useState<'submit' | null>(null)
   const inFlight = useRef(false)
-  const [challenge, setChallenge] = useState<{ email: string; justSent: boolean } | null>(null)
+  const [challenge, setChallenge] = useState<{ email: string; justSent: boolean; resendAt?: number } | null>(() =>
+    restoredSignup ? { email: restoredSignup.email, justSent: false, resendAt: restoredSignup.resendAfter } : null)
   const [notice, setNotice] = useState<Notice | null>(null)
   const [error, setError] = useState<FormError | null>(null)
   const disabled = loading || pending !== null
@@ -44,6 +48,8 @@ export function AuthScreen({ loading, language = 'vi', expired = false }: {
       window.history.replaceState(window.history.state, '', url)
     }
     setChallenge(null)
+    clearPendingSignup()
+    clearConfirmationReturn()
     resetNotice()
   }
   const callbackUrl = (recovery = false) => {
@@ -55,6 +61,7 @@ export function AuthScreen({ loading, language = 'vi', expired = false }: {
   const finish = () => { inFlight.current = false; setPending(null) }
   const openConfirmation = (justSent: boolean) => {
     rememberConfirmationReturn()
+    rememberPendingSignup(email, justSent)
     setChallenge({ email: email.trim(), justSent })
     setPassword('')
     setConfirmation('')
@@ -80,13 +87,17 @@ export function AuthScreen({ loading, language = 'vi', expired = false }: {
           throw authError
         }
         clearConfirmationReturn()
+        clearPendingSignup()
       } else if (mode === 'sign_up') {
         const { data, error: authError } = await client.auth.signUp({
           email: email.trim(), password, options: { emailRedirectTo: callbackUrl() },
         })
         if (authError) throw authError
         if (!data?.session) openConfirmation(true)
-        else clearConfirmationReturn()
+        else {
+          clearConfirmationReturn()
+          clearPendingSignup()
+        }
       } else {
         const { error: authError } = await client.auth.resetPasswordForEmail(email, { redirectTo: callbackUrl(true) })
         if (authError) throw authError
@@ -103,8 +114,13 @@ export function AuthScreen({ loading, language = 'vi', expired = false }: {
       <section className="auth-form-panel" aria-labelledby="auth-title">
         <div className="auth-theme-toolbar"><ThemeToggle language={language} /></div>
         {challenge ? <SignupConfirmation key={challenge.email} email={challenge.email} language={language}
-          justSent={challenge.justSent} loading={loading}
-          onChangeEmail={() => switchMode('sign_up')} onBack={() => switchMode('sign_in')} /> : <>
+          justSent={challenge.justSent} resendAt={challenge.resendAt} loading={loading}
+          onChangeEmail={() => switchMode('sign_up')} onBack={() => switchMode('sign_in')}
+          onContinue={() => {
+            const destination = authReturnPath()
+            clearPendingSignup()
+            window.location.assign(destination)
+          }} /> : <>
         <div className="auth-mode-switch" role="group" aria-label={text.chooseMode}>
           <button type="button" aria-pressed={mode === 'sign_in'} disabled={disabled}
             className={mode === 'sign_in' ? 'is-active' : ''} onClick={() => switchMode('sign_in')}>

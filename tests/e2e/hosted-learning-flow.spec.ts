@@ -106,6 +106,9 @@ for (const theme of ['light', 'dark'] as const) {
       await expect(page.locator('html')).toHaveAttribute('data-theme', theme === 'dark' ? 'light' : 'dark')
       await checkThemeContrast(page)
       await page.getByRole('button', { name: `Chuyển sang giao diện ${theme === 'dark' ? 'tối' : 'sáng'}` }).click()
+      // Dismiss this signup through the UI before starting the next viewport case.
+      await page.getByRole('button', { name: 'Quay về đăng nhập', exact: true }).click()
+      await expect(page.getByRole('heading', { name: 'Chào mừng bạn trở lại' })).toBeVisible()
     }
   })
 }

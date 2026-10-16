@@ -4,6 +4,7 @@ import { AuthCallback } from './auth/AuthCallback'
 import { SessionRecovery } from './auth/SessionRecovery'
 import { runtimeConfig } from './platform/runtime-config'
 import { authReturnPath, isAuthEntry } from './public/public-navigation'
+import { usePendingSignup } from './auth/pending-signup'
 
 const LearningApp = lazy(() => import('./App'))
 const SessionExpired = lazy(() => import('./auth/SessionExpired').then((module) => ({
@@ -56,6 +57,8 @@ class RouteBoundary extends Component<{ children: ReactNode }, { failed: boolean
 
 export function AppRoutes() {
   const auth = useAuth()
+  const pendingSignup = usePendingSignup()
+  const atEntry = useSyncExternalStore(subscribeLocation, isAuthEntry, () => false)
   const hosted = runtimeConfig.mode === 'hosted'
   const callback = window.location.pathname === '/auth/callback'
   let content: ReactNode
@@ -63,6 +66,7 @@ export function AppRoutes() {
   else if (callback) content = <AuthCallback />
   else if (hosted && auth.state === 'loading') content = <PublicExperience />
   else if (hosted && auth.state === 'error') content = <SessionRecovery />
+  else if (hosted && atEntry && pendingSignup) content = <PublicExperience />
   else if (hosted && auth.state !== 'signed_in') content = <PublicExperience />
   else content = hosted ? <SignedInEntry key={auth.session?.user.id} /> : <LearningApp key="local" />
 

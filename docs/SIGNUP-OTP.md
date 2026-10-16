@@ -1,12 +1,25 @@
-# Signup OTP and email identity
+# Signup email-link confirmation and email identity
 
-## Local correction — 2026-10-11
+## Current frontend correction — 2026-10-17
 
-The confirmation screen now starts with instructions to open the link in the
-confirmation email. Numeric code entry is available only after the learner selects
-“My email contains a confirmation code”. The UI does not promise a branded sender,
-a delivered code, or successful inbox delivery. Resend requests are described as
-confirmation emails and retain the 60-second cooldown.
+The confirmation screen only offers the link sent in the signup email. The old
+numeric-code input and its toggle have been removed. The UI does not promise a
+branded sender or successful inbox delivery. Resend retains its 60-second cooldown.
+
+The original signup tab now shows “Email confirmed” and an explicit “Continue
+learning” action after Auth verifies the same email in another tab. SDK auth events
+are wake-up signals, not proof: `getUser()` runs outside the event callback and
+must return the matching email with `email_confirmed_at`. Focus, pageshow and
+visible-page changes recover missed events without polling. Signout and account
+changes invalidate stale checks. The screen never admits a user to private data;
+the existing server session deadline remains the admission gate.
+
+Tab-local `journey-pending-signup` session storage contains only email, resend
+deadline and a one-hour expiry. It restores the pending screen after reload and
+requires a fresh Auth check before showing success. It contains no password,
+token or saved confirmation flag. If session storage is unavailable, in-memory
+state works until reload. Confirmation in another browser or device cannot notify
+this tab; the learner can return to password sign-in after using the email link.
 
 `/auth/sign-up` opens account creation directly. Selecting Create account keeps that
 intent in the URL across reload, including the existing `next` destination. The
@@ -60,24 +73,28 @@ Ignored operational evidence is in `.build/signup-otp-deployment/`.
 ## User flow
 
 Password signup opens an email confirmation screen. The learner follows the link
-in their email, or selects optional code entry if their actual email includes a
-numeric code. They can correct the address, return to sign-in, or resend after a
-60-second cooldown. Incorrect/expired codes, rate limits and transport failures
-have localized feedback. Passwords are cleared on entering confirmation; codes are
-never persisted and are cleared when hiding the optional code form.
+in their email. The original tab updates after successful verification in the same
+browser, and stays on the success message until the learner continues. They can
+also request a status recheck, correct the address, return to sign-in or resend
+after a 60-second cooldown. Expired links remain errors in the callback tab and
+never confirm the original tab. Passwords are cleared on entering confirmation.
 
-An unconfirmed password sign-in opens the same screen. After reloading or reopening
-the site, sign in with the email and password just created to reach confirmation.
+An unconfirmed password sign-in opens the same screen. Reloading the same tab
+restores its pending email for up to one hour; reopening a separate browser starts
+the ordinary sign-in flow.
 Existing confirmation links and password-recovery callbacks continue to work.
 
-The frontend uses `auth.verifyOtp({ email, token, type: 'email' })` and
-`auth.resend({ type: 'signup', email })`. Supabase determines the actual code length
-and expiration; the UI accepts bounded numeric input without assuming hosted settings.
+The frontend uses `auth.onAuthStateChange`, `auth.getUser()` and
+`auth.resend({ type: 'signup', email })`. It no longer submits numeric signup codes.
 The client cooldown is UX feedback, not a replacement for server rate limits.
 After verification, AuthProvider checks the existing server session deadline before
 loading personal data. This change does not replace the deployed 24-hour policy.
 
-## Email prepared for review
+## Historical email candidate — not compatible with the current UI
+
+The following code-only candidate was never applied to hosted Auth. Do not deploy
+it with the current link-only screen. A future branding change must retain the
+confirmation link and receive its own template/sender review and authorization.
 
 - Template: [`confirm-signup.html`](../supabase/templates/confirm-signup.html).
 - Supabase template category: **Confirm signup**, not Magic Link.
@@ -90,7 +107,8 @@ loading personal data. This change does not replace the deployed 24-hour policy.
 `supabase/config.toml` selects this local template. Editing that file or pushing the
 frontend does **not** change the hosted Auth email template. Local default
 `enable_confirmations = false` stays unchanged for existing test workflows.
-The dedicated OTP test stack enables confirmations independently.
+The historical dedicated OTP test stack enables confirmations independently;
+it tests the old candidate, not the current frontend signup flow.
 
 Email content/subject and sender identity are separate settings. To use an owned
 sender address, configure a verified sending domain and custom SMTP with sender
@@ -101,11 +119,11 @@ intended for public production delivery; custom SMTP requires separate configura
 
 ## Verification
 
-The 2026-10-11 local regression suite reproduces link-only email UI, direct signup
-mode, mode persistence on reload, and operation-specific error handling. Browser
-tests use synthetic Supabase responses for both optional OTP verification and the
-post-validation link callback. These do not validate hosted link tokens or delivery.
-See `.build/auth-fix-report.md` for the current run results.
+The current regression suite covers link-only signup, same-browser two-tab success,
+reload recovery, missing BroadcastChannel, wrong-account rejection, expired links,
+safe continuation paths and the existing session admission boundary. Browser tests
+use synthetic Supabase responses; they do not validate real email delivery or
+hosted tokens. Current local evidence is under `.build/auth-email-link/`.
 
 During the previous rollout, on the isolated `journey-readiness-otp` stack, real Auth and Mailpit passed 17
 assertions: signup without a session, branded subject/body, numeric code delivery,
@@ -132,25 +150,21 @@ The production build passed with its existing large-chunk warning.
 
 ## Controlled production rollout — approval required
 
-1. Review this candidate and its exact commit/target, then approve commit, push,
-   Cloudflare deployment and the **Confirm signup** subject/body change for project
-   `tnnlpsecrzatxdpoaagw`. SMTP, DNS, credentials and billing remain a separate decision.
-2. Retain the existing hosted confirmation template/settings for rollback without
-   copying secrets into Git. Verify Confirm email remains enabled and inspect the
-   configured code lifetime/length. Do not change them incidentally.
-3. Deploy the frontend first and verify link instructions and optional code entry
-   are available on the deployed commit. Keep callback support for confirmation links.
-4. Apply the reviewed subject/body to **Confirm signup**, then verify the saved
-   template. This is a separate Auth dashboard/Management API operation: the current
-   Supabase MCP tools do not expose Auth template configuration.
-5. Complete an approved real signup with a maintainer-controlled address. Confirm
-   brand, code entry, resend, password sign-in and progress after reload. Stop on a
-   mail-provider rejection; do not repeatedly consume the sender's rate limit.
-6. During the frontend/template transition, messages may contain links or codes;
-   follow the actual message. For a code, choose the optional code-entry action.
-   Both routes must remain supported even if a hosted template changes later.
-7. If rolling back the frontend, restore the link-capable confirmation template first.
-   A code-only email cannot be completed in the old UI. No database rollback is needed.
+1. Review the exact frontend commit and target, then authorize commit, push and
+   Cloudflare deployment. This correction requires no Auth template, SMTP, DNS,
+   credentials, billing or database changes.
+2. On the deployed commit, verify that signup has link instructions and no numeric
+   code input. Keep the existing link-capable hosted confirmation template.
+3. With an authorized maintainer-controlled signup, open the delivered link in a
+   second tab of the same browser. Confirm both the callback and original-tab
+   success state, then use Continue learning. Reload the original tab and verify
+   ordinary signed-in behavior and persisted learning progress.
+4. Check an expired link and confirmation opened on another device. The original
+   tab must not invent success; another device requires password sign-in here.
+5. Verify resend once within provider limits. Stop on a mail-provider rejection.
+   Real inbox delivery and sender branding remain separate acceptance items.
+6. Roll back the frontend commit if necessary. This change has no database or
+   hosted-email configuration migration to undo.
 
 Public email acceptance remains open until real delivery and sender identity have
 been checked. The separately reported progress issue still needs reproduction details.

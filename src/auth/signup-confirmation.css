@@ -9,7 +9,7 @@
   line-height: 1.15;
 }
 
-.signup-confirmation .text-button[data-action='enter-code'] {
+.signup-confirmation button {
   min-height: 44px;
   max-width: 100%;
   font-size: 1rem;
@@ -31,37 +31,14 @@
 
 .otp-destination span {
   color: var(--muted);
-  font-size: .85rem;
+  font-size: 1rem;
 }
 
-.otp-input {
-  width: 100%;
-  min-width: 0;
-  min-height: 56px;
-  padding: 12px;
-  border: 1px solid var(--field-border);
-  border-radius: 10px;
-  color: var(--ink);
-  background: var(--surface);
-  font: 700 1.4rem/1.4 ui-monospace, monospace;
-  letter-spacing: .13em;
-}
-
-.otp-input::placeholder {
+.confirmation-feedback {
+  margin: 0;
   color: var(--muted);
-  font-family: var(--body-font, sans-serif);
-  font-size: .9rem;
-  font-weight: 400;
-  letter-spacing: normal;
-}
-
-.otp-input:focus-visible {
-  outline: 3px solid var(--teal);
-  outline-offset: 3px;
-}
-
-.otp-input[aria-invalid='true'] {
-  border-color: var(--danger-text);
+  font-size: 1rem;
+  line-height: 1.6;
 }
 
 .otp-resend {
@@ -74,7 +51,7 @@
 .otp-resend p {
   margin: 0;
   color: var(--muted);
-  font-size: .88rem;
+  font-size: 1rem;
   line-height: 1.5;
 }
 

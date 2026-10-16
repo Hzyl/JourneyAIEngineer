@@ -3,9 +3,11 @@ import { act } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { AuthScreen } from '../auth/AuthScreen'
+import { clearPendingSignup, readPendingSignup } from '../auth/pending-signup'
 
 const auth = vi.hoisted(() => ({
-  signInWithPassword: vi.fn(), signUp: vi.fn(), resend: vi.fn(), resetPasswordForEmail: vi.fn(), verifyOtp: vi.fn(),
+  signInWithPassword: vi.fn(), signUp: vi.fn(), resend: vi.fn(), resetPasswordForEmail: vi.fn(),
+  getUser: vi.fn(), onAuthStateChange: vi.fn(),
 }))
 vi.mock('../platform/hosted/supabase-client', () => ({ requireSupabase: () => ({ auth }) }))
 vi.mock('../theme/ThemeToggle', () => ({ ThemeToggle: () => <button>Theme</button> }))
@@ -23,10 +25,14 @@ const click = (selector: string) => act(async () => host.querySelector<HTMLButto
 const submit = () => host.querySelector('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
 beforeEach(async () => {
   localStorage.clear()
+  sessionStorage.clear()
+  clearPendingSignup()
   window.history.replaceState({}, '', '/auth/sign-in')
   Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true })
   vi.resetAllMocks()
   for (const call of Object.values(auth)) call.mockResolvedValue({ error: null })
+  auth.getUser.mockResolvedValue({ data: { user: null }, error: null })
+  auth.onAuthStateChange.mockReturnValue({ data: { subscription: { unsubscribe: vi.fn() } } })
   host = document.createElement('div')
   document.body.append(host)
   root = createRoot(host)
@@ -99,10 +105,12 @@ test('signup explains the email link and correcting the address clears password 
   expect(host.querySelector('#signup-code')).toBeNull()
   expect(host.textContent).toContain('confirmation link')
   expect(host.querySelector('.otp-destination')!.textContent).toContain('learner@example.com')
+  expect(readPendingSignup()?.email).toBe('learner@example.com')
   await click('[data-action="change-email"]')
   expect(host.querySelector<HTMLInputElement>('input[type="email"]')!.value).toBe('learner@example.com')
   expect([...host.querySelectorAll<HTMLInputElement>('input[autocomplete="new-password"]')]
     .every((input) => input.value === '')).toBe(true)
+  expect(readPendingSignup()).toBeNull()
 })
 
 test('a direct signup route opens account creation and never sends a password login', async () => {
@@ -150,4 +158,25 @@ test('recovery notice stays generic about account existence and retains the emai
   expect(host.querySelector('[role="status"]')!.textContent).toContain('If this email has an account')
   await render('vi')
   expect(host.querySelector('[role="status"]')!.textContent).toContain('Nếu email có tài khoản')
+})
+
+test('remount restores the pending email without storing passwords or repeating signup', async () => {
+  await click('.auth-mode-switch button:last-child')
+  const inputs = host.querySelectorAll<HTMLInputElement>('input[autocomplete="new-password"]')
+  await fill(`#${inputs[1].id}`, 'example-password')
+  await act(async () => { submit() })
+  const stored = readPendingSignup()
+  expect(stored?.resendAfter).toBeGreaterThan(Date.now())
+  expect(Object.keys(stored!).sort()).toEqual(['email', 'expiresAt', 'resendAfter'])
+  await act(async () => root.unmount())
+  root = createRoot(host)
+  await render()
+  expect(host.querySelector('.otp-destination')!.textContent).toContain('learner@example.com')
+  expect(host.querySelector('[data-confirmation="confirmed"]')).toBeNull()
+  expect(host.querySelector('form, input[type="password"]')).toBeNull()
+  expect(auth.signUp).toHaveBeenCalledTimes(1)
+  expect(readPendingSignup()).toEqual(stored)
+  await click('[data-action="change-email"]')
+  expect(host.querySelector<HTMLInputElement>('input[type="email"]')!.value).toBe('learner@example.com')
+  expect(readPendingSignup()).toBeNull()
 })
