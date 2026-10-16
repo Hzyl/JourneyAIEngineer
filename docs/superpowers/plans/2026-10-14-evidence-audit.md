@@ -293,3 +293,70 @@ changes were required. This is a bounded audit batch, not a completed review of
 all 208 lessons. Remaining work includes other generic English answer rubrics,
 admin expiry-display behavior, and the separately approved production rollout of
 admin RPC hardening. Publication status must be recorded after an actual push.
+
+## 2026-10-16: admin directory state and Classical ML evaluation
+
+The preceding batch was pushed as
+`141b2f12f018559d6bdcc4b9ad33d65a821be73e`. GitHub run `38861885348`
+completed both quality and hosted-database successfully. The Cloudflare Pages
+check for that SHA reported success, deployment
+`01e3ac54-e0e8-4df4-90a0-a9d4f370f240`. These results do not publish the
+following working-tree changes.
+
+Admin UI bugs were reproduced before fixing them:
+
+- A module-level timestamp left expired bans displayed as still in force.
+  The view now recomputes expiry with a bounded local timer and on focus or
+  visibility resume. No polling of the real account service is added.
+- Slow old directory requests could replace a newer search or add a stale
+  error. Only the latest mounted request can update the view.
+- Permission/session errors retained personal rows and action buttons.
+  New list loads clear prior results; an authorization failure during a
+  mutation also clears them. A mutation completed after unmount no longer
+  triggers a new list fetch. Confirmation and duplicate-action guards remain.
+- Rendered admin text was 10–11px. Labels, values and controls are now at least
+  16px at the tested root size, with stacked mobile fields, readable search
+  layout and a non-wrapping status badge. The ban count explicitly says it
+  covers this page. Backend authorization and role assignment are unchanged.
+
+Four Evaluation lessons now have substantive matching bilingual tasks and
+sixteen review answers. Runnable standard-library examples calculate a binary
+confusion matrix, compare absolute/squared regression errors, fit the mean
+baseline separately inside each cross-validation fold, and select k-NN
+hyperparameters using validation before refitting and opening the test data.
+The text distinguishes descriptive fold spread from statistical confidence
+and tiny worked examples from generalization evidence. Canonical Markdown
+was edited and the catalog regenerated: 208 lesson identities/card identities
+remain stable, exactly four records changed and 204 stayed identical.
+
+Verification after integration:
+
+- `npm test`: exit 0 at 2026-10-16 13:53 local time; 415 Python tests
+  (100.65s), 304 Vitest tests in 48 files (9.37s), content/fingerprint,
+  lint, TypeScript and production build passed.
+- The admin regression file had eleven meaningful failures before fixes;
+  all sixteen tests now pass, including expiry/resume, response races,
+  permission failures, confirmation and unmount behavior.
+- Thirty independent Python checks execute the four lesson snippets, compare
+  exact documented outputs, check hand-calculated metrics, reject invalid
+  fold partitions and verify no within-fold fit leakage.
+- Fresh hosted-production browser run: seven passed in 44.1s. Coverage includes
+  ordinary-user navigation hiding, confirmed synthetic ban/unban/reset actions,
+  eight Classical ML lessons in VI/EN, route continuation, keyboard answer
+  disclosure and 390/1440px light/dark readability/contrast/overflow.
+- Root inspected mobile Vietnamese and desktop English admin screenshots, then
+  corrected a wrapped Active badge and reran. It also inspected mobile regression
+  output and desktop hyperparameter review answers. Ignored artifacts are under
+  `.build/admin-directory-evidence/` and `.build/models-lesson-evidence/`.
+- `git diff --check` and focused lint passed. Existing AuthProvider warnings,
+  large hosted-client chunk and passive security review flags remain.
+
+All accounts and action requests in browser tests were synthetic. No real reset
+email, ban, production database migration, deployment, physical-device test,
+installation or model run was performed in this batch. It remains local.
+
+The broad audit is still incomplete. A fresh scan after applying curated
+overrides finds 183 of 208 lessons with a generic English recall-answer rubric;
+this is a triage signal, not a finding that all of their concepts are wrong.
+Other pending areas include full content review, shared code-example setup
+localization, hosted payload size and production admin RPC hardening.

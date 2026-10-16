@@ -4,14 +4,24 @@ import { checkEditorialReading } from './editorial-reading-checks'
 import { mockAuthenticatedLearner } from './hosted-learner'
 import { checkThemeContrast } from './theme-checks'
 
-const examples = [
+type ExampleFixture = {
+  group: 'models' | 'evaluation'
+  number: number
+  functionName: string
+  expectedOutput: string
+  recall: { vi: string; en: string }
+}
+
+const examples: ExampleFixture[] = [
   {
+    group: 'models',
     number: 1,
     functionName: 'fit_line',
     expectedOutput: 'slope=2.00, intercept=1.00\nbaseline_mse=4.00\nlinear_mse=0.00',
     recall: { vi: '2 × 3 + 1 = 7', en: '2 × 3 + 1 = 7' },
   },
   {
+    group: 'models',
     number: 2,
     functionName: 'sigmoid',
     expectedOutput: [
@@ -24,12 +34,14 @@ const examples = [
     recall: { vi: 'Xác suất mô hình vẫn là 0,4', en: 'model probability remains 0.4' },
   },
   {
+    group: 'models',
     number: 3,
     functionName: 'fit_stump',
     expectedOutput: 'threshold=3.5\nstump_predictions=[0, 1]\nsupplied_tree_votes=[0, 1]',
     recall: { vi: 'Sao chép một cây', en: 'Copies of one tree' },
   },
   {
+    group: 'models',
     number: 4,
     functionName: 'fit_stump',
     expectedOutput: [
@@ -39,6 +51,54 @@ const examples = [
       'training_mse_after=0.5625',
     ].join('\n'),
     recall: { vi: '8 + 0,1 × 2 = 8,2', en: '8 + 0.1 × 2 = 8.2' },
+  },
+  {
+    group: 'evaluation',
+    number: 1,
+    functionName: 'binary_metrics',
+    expectedOutput: [
+      'filter TP FP TN FN: (1, 1, 7, 1)',
+      'accuracy=0.800 precision=0.500 recall=0.500 f1=0.500',
+      'baseline TP FP TN FN: (0, 0, 8, 2)',
+      'accuracy=0.800 precision=0.000 recall=0.000 f1=0.000',
+    ].join('\n'),
+    recall: { vi: 'Recall=TP/(TP+FN)', en: 'Recall=TP/(TP+FN)' },
+  },
+  {
+    group: 'evaluation',
+    number: 2,
+    functionName: 'regression_metrics',
+    expectedOutput: 'uniform mae=2.000 mse=4.000 rmse=2.000\none_large mae=2.000 mse=16.000 rmse=4.000',
+    recall: { vi: 'MAE=mean(|e|)', en: 'MAE=mean(|e|)' },
+  },
+  {
+    group: 'evaluation',
+    number: 3,
+    functionName: 'cross_validate_mean',
+    expectedOutput: [
+      'fold=1 train=[2, 3, 4, 5] valid=[0, 1]',
+      'train_mean=9.000 mae=6.000',
+      'fold=2 train=[0, 1, 4, 5] valid=[2, 3]',
+      'train_mean=7.000 mae=1.000',
+      'fold=3 train=[0, 1, 2, 3] valid=[4, 5]',
+      'train_mean=5.000 mae=6.000',
+      'mean_mae=4.333 descriptive_sd=2.357',
+    ].join('\n'),
+    recall: { vi: 'các tập train giữa các lượt chồng lặp', en: 'training sets across iterations overlap' },
+  },
+  {
+    group: 'evaluation',
+    number: 4,
+    functionName: 'select_neighbors',
+    expectedOutput: [
+      'k=1 validation_mae=2.000',
+      'k=3 validation_mae=0.667',
+      'k=5 validation_mae=0.500',
+      'selected_k=5 candidate_fits=3',
+      'test_mae=1.000',
+      'baseline_test_mae=2.000',
+    ].join('\n'),
+    recall: { vi: 'k là số láng giềng', en: 'k is the number of neighbors' },
   },
 ]
 
@@ -54,8 +114,8 @@ for (const language of ['vi', 'en'] as const) {
       const readability: Array<Record<string, string | number>> = []
 
       for (const fixture of examples) {
-        await test.step(`models-${fixture.number}: code, output and all four answer hints`, async () => {
-          const slug = `phase-03-classical-ml-models-${fixture.number}`
+        await test.step(`${fixture.group}-${fixture.number}: code, output and all four answer hints`, async () => {
+          const slug = `phase-03-classical-ml-${fixture.group}-${fixture.number}`
           const lesson = catalog.lessons.find((item) => item.lesson_id === slug)
           if (!lesson) throw new Error(`Classical ML catalog fixture is missing ${slug}`)
           const lessonPath = `/lesson/${slug}?route=foundation`
@@ -116,13 +176,13 @@ for (const language of ['vi', 'en'] as const) {
               readability.push({ lesson: slug, language, width, theme, ...reading })
               if (fixture.number === 2 && width === 390 && theme === 'dark') {
                 await example.locator('.code-example-guide').screenshot({
-                  path: `.build/models-lesson-evidence/hosted-${language}-logistic-output-dark-390.png`,
+                  path: `.build/models-lesson-evidence/hosted-${language}-${fixture.group}-2-output-dark-390.png`,
                   animations: 'disabled',
                 })
               }
               if (fixture.number === 4 && width === 1440 && theme === 'light') {
                 await prompts.first().screenshot({
-                  path: `.build/models-lesson-evidence/hosted-${language}-boosting-answer-light-1440.png`,
+                  path: `.build/models-lesson-evidence/hosted-${language}-${fixture.group}-4-answer-light-1440.png`,
                   animations: 'disabled',
                 })
               }

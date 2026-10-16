@@ -4,111 +4,126 @@ phase_id: phase-03-classical-ml
 module_id: evaluation
 title_vi: Thước đo cho hồi quy
 title_en: Regression metrics
-summary_vi: MAE đo sai số tuyệt đối trung bình; MSE phạt sai số lớn mạnh hơn; RMSE đưa kết quả về đơn vị của biến
-  mục tiêu.
-summary_en: Learn Regression metrics through an input → transformation → output model, then verify it with an edge-case
-  exercise.
+summary_vi: Tính MAE, MSE và RMSE; so sánh sai số đều với một sai số lớn để thấy tác động của bình phương.
+summary_en: Calculate MAE, MSE and RMSE; compare uniform errors with one large error to see the effect of squaring.
 learning_objectives:
-- So sánh MAE và RMSE trên dữ liệu có một sai số lớn.
-- Đối chiếu thước đo với loại sai lầm cần hạn chế.
-- Giải thích kết quả và nêu một giới hạn của bài làm.
+- Tính MAE/MSE/RMSE từ nhãn thật và dự đoán.
+- Giải thích vì sao cùng MAE nhưng khác RMSE.
+- Chọn thước đo theo chi phí sai số và ghi đơn vị.
 learning_objectives_en:
-- Explain regression metrics with a concrete example.
-- Write or adapt a small code example applying regression metrics.
-- Recognize its assumptions, limits and one common failure mode.
+- Compute MAE/MSE/RMSE from targets and predictions.
+- Explain equal MAE but different RMSE.
+- Choose a metric by error cost and report its units.
 prerequisites:
 - phase-03-classical-ml-evaluation-1
 - phase-02-math-ml-linear-algebra-1
 key_terms:
-- regression
-- metrics
-- dataset
-- feature
-- baseline
-- evaluation
+- residual
+- MAE
+- MSE
+- RMSE
+- outlier
+- target units
 concept_notes_vi: |-
-  MAE là trung bình độ lớn sai số; MSE là trung bình bình phương sai số; RMSE là căn bậc hai của MSE. MAE và RMSE có cùng đơn vị với biến mục tiêu, còn MSE dùng đơn vị bình phương.
+  Đặt sai số e_i = y_i − ŷ_i. MAE là trung bình |e_i|; MSE là trung bình e_i²; RMSE là căn MSE. Nếu mục tiêu tính bằng phút, MAE/RMSE tính bằng phút còn MSE bằng phút². Giá trị nhỏ hơn tốt hơn trên cùng bộ dữ liệu, đơn vị và nhiệm vụ.
 
-  Bình phương làm sai số lớn có ảnh hưởng mạnh hơn. Vì vậy hai mô hình cùng MAE vẫn có thể khác RMSE; cần chọn thước đo theo hậu quả của sai lệch lớn trong ứng dụng.
+  Bốn sai số [2,2,2,2] cho MAE=2, MSE=4, RMSE=2. Các sai số [0,0,0,8] cũng MAE=2 nhưng MSE=16, RMSE=4. Một sai số 8 đóng góp 64 vào tổng bình phương; cả bốn sai số 2 chỉ đóng góp 16.
 
-  Với sai số dự đoán là 0 và 2, MAE bằng 1, MSE bằng 2, RMSE xấp xỉ 1,414. Đây là ba cách tóm tắt cùng dữ liệu, không phải ba kết quả dự đoán khác nhau.
+  MAE phản ánh chi phí tăng tuyến tính theo độ lớn lỗi. MSE/RMSE nhạy hơn với lỗi lớn; trên cùng dữ liệu chúng xếp hạng mô hình giống nhau vì căn bậc hai tăng đơn điệu. Không kết luận RMSE=4 là gấp đôi mọi lỗi hoặc luôn chọn RMSE. Kiểm tra sai số từng mẫu/nhóm và hậu quả sử dụng.
 
-  Tự kiểm tra: điểm trung bình tốt có bảo đảm mọi nhóm đều tốt không? Không; xem thêm sai số từng nhóm và các trường hợp lệch lớn.
+  Ví dụ dùng dự đoán có sẵn, không huấn luyện mô hình. Trong dự án thật, so với baseline học từ tập train và chỉ báo kết quả trên dữ liệu chưa dùng để chọn mô hình.
 concept_notes_en: |-
-  MAE averages absolute errors; MSE averages squared errors; RMSE is the square root of MSE. MAE and RMSE have the target's units, while MSE has squared units.
+  Let error e_i = y_i − ŷ_i. MAE averages |e_i|; MSE averages e_i²; RMSE is the square root of MSE. If targets are minutes, MAE/RMSE are minutes and MSE is minutes². Lower is better on the same data, units and task.
 
-  Squaring gives large errors greater influence. Models with the same MAE can therefore differ in RMSE. Choose metrics according to the consequences of large mistakes.
+  Four errors [2,2,2,2] give MAE=2, MSE=4, RMSE=2. Errors [0,0,0,8] also give MAE=2 but MSE=16 and RMSE=4. One error of 8 contributes 64 to the squared-error sum; all four errors of 2 contribute only 16.
 
-  For prediction errors of 0 and 2, MAE is 1, MSE is 2, and RMSE is approximately 1.414. These summarize the same predictions in different ways.
+  MAE reflects cost growing linearly with error size. MSE/RMSE emphasize large errors; on the same data they rank models identically because square root is increasing. RMSE=4 does not mean every error doubled, nor should RMSE always be preferred. Inspect sample/group errors and practical consequences.
 
-  Self-check: does a good average guarantee good performance for every group? No; inspect group errors and large deviations too.
-why_it_matters_vi: Chọn thước đo theo chi phí sai lầm và giữ tập kiểm tra ngoài quá trình lựa chọn mô hình.
-why_it_matters_en: Choose metrics by error cost, use cross-validation, and tune without peeking at the test set.
+  The example evaluates supplied predictions rather than fitting a model. In a real project, compare against a baseline learned from training data and report results on data not used for model selection.
+why_it_matters_vi: Một điểm trung bình có thể che lỗi nghiêm trọng; thước đo và đơn vị phải phù hợp hậu quả
+  của dự đoán sai.
+why_it_matters_en: An average can hide severe errors; the metric and units must match the consequences of prediction
+  mistakes.
 study_steps_vi:
-- Đọc phần giải thích, xác định khái niệm và điều kiện cần dùng cho nhiệm vụ bên dưới.
-- Tìm mục tương ứng với “Regression metrics” trong tài liệu tham khảo; đối chiếu với phần giải thích của bài.
-- So sánh MAE và RMSE trên dữ liệu có một sai số lớn.
-- Đối chiếu thước đo với loại sai lầm cần hạn chế. Ghi kết quả đối chiếu và điều bạn đã sửa nếu lần đầu chưa đúng.
-- Tự trả lời thẻ ôn tập, rồi kiểm tra các tiêu chí hoàn thành trước khi chuyển bài.
+- Tính tay các sai số [2,2,2,2] và [0,0,0,8].
+- Đọc Mean absolute error và Mean squared error trong tài liệu chính thức.
+- Mở hướng dẫn Practice Lab, tải mã hoặc chép vào Colab/Python 3.11 rồi chạy.
+- Đối chiếu ba thước đo và kiểm tra dự đoán hoàn hảo, đầu vào rỗng.
+- Lưu kết quả với đơn vị phút/phút² và lý do chọn thước đo.
 study_steps_en:
-- 'Read the concept notes and answer: Choose metrics by error cost, use cross-validation, and tune without peeking
-  at the test set.'
-- Open scikit-learn User Guide, read the section marked Read this lesson, and record one verified example or definition.
-- Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the
-  test.
-- 'Complete the practice task: Write a metric decision table, run cross-validation, tune one hyperparameter, and
-  record results in a table.'
-- Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact.
+- Calculate the errors [2,2,2,2] and [0,0,0,8] by hand.
+- Read Mean absolute error and Mean squared error in the official reference.
+- Open the Practice Lab guide, download the code or copy it into Colab/Python 3.11 and run it.
+- Compare the three metrics and test perfect predictions and empty input.
+- Save results with minute/minute² units and explain your metric choice.
 practice_plan:
   vi:
-    task: 'So sánh MAE và RMSE trên dữ liệu có một sai số lớn.
-
-
-      Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Lập bảng chọn thước đo, chạy kiểm định
-      chéo, điều chỉnh một siêu tham số và lưu kết quả so sánh.'
+    task: Đánh giá hai bộ dự đoán thời gian trên cùng bốn nhãn; giải thích cùng MAE nhưng RMSE khác nhau.
     deliverables:
-    - Bảng thước đo, cách chia dữ liệu và lý do lựa chọn
-    - Kết quả đối chiếu kèm dữ liệu hoặc điều kiện thực hiện
-    - Một giới hạn và cách kiểm tra thêm
-    checkpoint: Đối chiếu thước đo với loại sai lầm cần hạn chế.
-    stretch: Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào.
+    - Mã và output MAE/MSE/RMSE cho hai bộ dự đoán
+    - Bảng sai số tuyệt đối và bình phương từng mẫu
+    - Đơn vị, lựa chọn thước đo và một giới hạn
+    checkpoint: Tự tính được MAE=2 cho cả hai; RMSE lần lượt 2 và 4.
+    stretch: Đổi sai số lớn từ 8 thành 16 rồi tính lại; giải thích MSE tăng theo bình phương.
   en:
-    task: Write a metric decision table, run cross-validation, tune one hyperparameter, and record results in a
-      table.
+    task: Evaluate two time-prediction sets on the same four targets; explain equal MAE but different RMSE.
     deliverables:
-    - One executable code file
-    - One test or expected output
-    - One note describing an edge case and trade-off
-    checkpoint: You can explain when accuracy, F1, PR-AUC, MAE, or calibration is the right choice.
-    stretch: Add a failure test for regression metrics and explain the result.
+    - Code and MAE/MSE/RMSE output for both prediction sets
+    - Per-sample absolute and squared errors
+    - Units, metric choice and one limitation
+    checkpoint: Calculate MAE=2 for both and RMSE values of 2 and 4.
+    stretch: Change the large error from 8 to 16 and recalculate; explain the squared contribution to MSE.
 interview_questions:
   vi:
-  - Bạn sẽ giải thích nội dung “Thước đo cho hồi quy” bằng ví dụ nào?
-  - Điều kiện nào cần kiểm tra trước khi áp dụng vào công việc thực tế?
-  - Bạn dùng bằng chứng nào để kết luận bài làm đáp ứng yêu cầu?
+  - Tính thước đo cho sai số [0,0,0,8].
+  - Sai số [-5,5] có trung bình 0; dự đoán có hoàn hảo không?
+  - Khi nào cần xem RMSE bên cạnh MAE, và còn giới hạn gì?
   en:
-  - How would you explain regression metrics to a new teammate?
-  - Which assumption behind regression metrics could fail in production?
-  - Which metric or test would prove the result is trustworthy?
+  - Calculate the metrics for errors [0,0,0,8].
+  - Errors [-5,5] average to zero; are predictions perfect?
+  - When should RMSE accompany MAE, and what limitation remains?
 formulas:
-- MSE = (1/n) Σ_i (y_i − ŷ_i)²
+- e_i = y_i − ŷ_i
+- MAE = Σ|e_i| / n
+- MSE = Σ(e_i²) / n
+- RMSE = √MSE
 code_examples:
 - language: python
-  title: 'Regression metrics: inspect one complete path'
-  code: "# Topic: Regression metrics (phase-03-classical-ml-evaluation-2)\ndef accuracy(y_true: list[int], y_pred:\
-    \ list[int]) -> float:\n    if len(y_true) != len(y_pred) or not y_true:\n        raise ValueError('non-empty\
-    \ aligned labels are required')\n    return sum(a == b for a, b in zip(y_true, y_pred)) / len(y_true)\n\nprint(accuracy([1,\
-    \ 0, 1], [1, 1, 1]))"
+  title: Equal MAE, different outlier cost
+  code: |
+    from math import isfinite, sqrt
+
+    def regression_metrics(actual, predicted):
+        if not actual or len(actual) != len(predicted):
+            raise ValueError("non-empty aligned values are required")
+        if not all(isfinite(value) for value in [*actual, *predicted]):
+            raise ValueError("values must be finite")
+        errors = [truth - guess for truth, guess in zip(actual, predicted)]
+        mae = sum(abs(error) for error in errors) / len(errors)
+        mse = sum(error ** 2 for error in errors) / len(errors)
+        return {"mae": mae, "mse": mse, "rmse": sqrt(mse)}
+
+    actual = [10, 10, 10, 10]
+    predictions = {"uniform": [8, 8, 8, 8], "one_large": [10, 10, 10, 2]}
+    for name, predicted in predictions.items():
+        result = regression_metrics(actual, predicted)
+        print(name, " ".join(f"{metric}={result[metric]:.3f}"
+                             for metric in ("mae", "mse", "rmse")))
+    assert regression_metrics(actual, actual) == {"mae": 0, "mse": 0, "rmse": 0}
   status: runnable
-  purpose_vi: Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.
-  purpose_en: Illustrate the input-to-output path for regression metrics.
-  setup: Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.
-  expected_output: Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.
-  edge_case_vi: Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.
-  edge_case_en: Try an empty input, a wrong shape or missing data and record the failure.
-  explanation_vi: Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần
-    nội dung; cần hoàn thành riêng nhiệm vụ thực hành.
-  explanation_en: Keep the boundary executable and inspectable; change one input and verify the expected output.
+  purpose_vi: Đo đúng sai số hồi quy thay vì so khớp nhãn bằng accuracy.
+  purpose_en: Measure regression errors rather than exact-label accuracy.
+  setup: Python 3.11+; standard library only. Run in Colab or save as regression_metrics.py and run python
+    regression_metrics.py.
+  expected_output: |-
+    uniform mae=2.000 mse=4.000 rmse=2.000
+    one_large mae=2.000 mse=16.000 rmse=4.000
+  edge_case_vi: Dự đoán hoàn hảo cho ba số 0. Danh sách rỗng, khác độ dài hoặc NaN/infinity gây ValueError.
+  edge_case_en: Perfect predictions give three zeros. Empty lists, unequal lengths or NaN/infinity raise ValueError.
+  explanation_vi: Fixture bốn mẫu cho phép tính tay và kiểm tra chi phí lỗi lớn; không chứng minh mô hình nào
+    tốt hơn trên dân số.
+  explanation_en: The four-row fixture supports hand calculation and comparison of large-error cost; it does
+    not establish population-level model quality.
 resources:
 - language: en
   title: scikit-learn User Guide
@@ -121,13 +136,15 @@ resources:
   read_en: Read the relevant section, run a small example, and record one verified insight.
 - language: en
   title: scikit-learn Model Evaluation
-  url: https://scikit-learn.org/stable/modules/model_evaluation.html
+  url: https://scikit-learn.org/stable/modules/model_evaluation.html#regression-metrics
   kind: official
   required: false
   purpose_vi: Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.
   purpose_en: Official reference to verify the lesson concept.
-  read_vi: Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.
-  read_en: Read the relevant section, run a small example, and record one verified insight.
+  read_vi: Đọc Mean absolute error, Mean squared error và Root mean squared error; kiểm tra đơn vị và chiều
+    tốt/xấu.
+  read_en: Read Mean absolute error, Mean squared error and Root mean squared error; verify units and which
+    direction is better.
 - language: en
   title: scikit-learn Pipelines
   url: https://scikit-learn.org/stable/modules/compose.html
@@ -155,80 +172,91 @@ review_item_ids:
 - phase-03-classical-ml-evaluation-2-interview
 estimated_minutes: 60
 completion_checklist:
-- So sánh MAE và RMSE trên dữ liệu có một sai số lớn.
-- Đối chiếu thước đo với loại sai lầm cần hạn chế.
-- Lưu kết quả và giải thích được một giới hạn mà không nhìn lời giải.
+- Tái tạo hai dòng output và ghi đúng đơn vị.
+- Giải thích tổng bình phương 16 so với 64.
+- Kiểm tra dự đoán hoàn hảo và từ chối dữ liệu không hợp lệ.
 completion_criteria:
-- 'Bài làm đáp ứng nhiệm vụ: So sánh MAE và RMSE trên dữ liệu có một sai số lớn.'
-- Có kết quả đối chiếu với tiêu chí hoặc dự đoán đã ghi trước.
-- Đối chiếu thước đo với loại sai lầm cần hạn chế.
+- Tái tạo hai dòng output và ghi đúng đơn vị.
+- Giải thích tổng bình phương 16 so với 64.
+- Kiểm tra dự đoán hoàn hảo và từ chối dữ liệu không hợp lệ.
 common_mistakes:
-- Dùng tập kiểm tra để liên tục chọn siêu tham số.
-- Kết luận từ một kết quả thuận lợi mà chưa kiểm tra trường hợp khác.
-- Chép lời giải nhưng không giải thích được quyết định trong bài làm của mình.
+- Dùng accuracy cho mục tiêu liên tục.
+- Lấy trung bình sai số có dấu làm lỗi triệt tiêu nhau.
+- Báo MSE theo đơn vị gốc hoặc bỏ qua lỗi lớn.
 next_lessons:
 - phase-03-classical-ml-evaluation-3
 - phase-03-classical-ml-evaluation-4
-review_question_vi: Nội dung cốt lõi của “Thước đo cho hồi quy” là gì?
-review_question_en: Define regression metrics in your own words. What are the input, transformation and output?
-review_answer_vi: MAE đo sai số tuyệt đối trung bình; MSE phạt sai số lớn mạnh hơn; RMSE đưa kết quả về đơn vị của
-  biến mục tiêu. Cần đọc cả phân bố sai số và các nhóm dữ liệu quan trọng.
-review_answer_en: A strong answer names the input, transformation, output and the context where regression metrics
-  is used. Relate it specifically to regression metrics in lesson phase-03-classical-ml-evaluation-2.
+review_question_vi: MAE, MSE và RMSE khác nhau thế nào về công thức và đơn vị?
+review_question_en: How do MAE, MSE and RMSE differ in formula and units?
+review_answer_vi: MAE=mean(|e|), MSE=mean(e²), RMSE=√MSE. Với e tính bằng phút, MAE/RMSE là phút và MSE là
+  phút²; cả ba không âm.
+review_answer_en: MAE=mean(|e|), MSE=mean(e²), RMSE=√MSE. For errors in minutes, MAE/RMSE use minutes and MSE
+  uses minutes²; all are nonnegative.
 review_cards:
 - id: phase-03-classical-ml-evaluation-2-recall
   type: recall
-  question_vi: Nội dung cốt lõi của “Thước đo cho hồi quy” là gì?
-  question_en: Define regression metrics in your own words. What are the input, transformation and output?
-  answer_vi: MAE đo sai số tuyệt đối trung bình; MSE phạt sai số lớn mạnh hơn; RMSE đưa kết quả về đơn vị của biến
-    mục tiêu. Cần đọc cả phân bố sai số và các nhóm dữ liệu quan trọng.
-  answer_en: A strong answer names the input, transformation, output and the context where regression metrics is
-    used.
-  hint_vi: Nêu ý chính, sau đó minh họa bằng tình huống cụ thể.
-  hint_en: Start with a small example you can calculate by hand.
+  question_vi: MAE, MSE và RMSE khác nhau thế nào về công thức và đơn vị?
+  question_en: How do MAE, MSE and RMSE differ in formula and units?
+  answer_vi: MAE=mean(|e|), MSE=mean(e²), RMSE=√MSE. Với e tính bằng phút, MAE/RMSE là phút và MSE là phút²;
+    cả ba không âm.
+  answer_en: MAE=mean(|e|), MSE=mean(e²), RMSE=√MSE. For errors in minutes, MAE/RMSE use minutes and MSE uses
+    minutes²; all are nonnegative.
+  hint_vi: Bình phương rồi lấy căn.
+  hint_en: Square, then take the root.
 - id: phase-03-classical-ml-evaluation-2-application
   type: application
-  question_vi: So sánh MAE và RMSE trên dữ liệu có một sai số lớn.
-  question_en: Write a small code example or design that applies regression metrics to an AI engineering problem.
-  answer_vi: 'Với nhiệm vụ “So sánh MAE và RMSE trên dữ liệu có một sai số lớn”, cần lưu: bảng thước đo, cách chia
-    dữ liệu và lý do lựa chọn. Đối chiếu thước đo với loại sai lầm cần hạn chế.'
-  answer_en: The regression metrics example should have an explicit input, expected output and a way to run or verify
-    it (phase-03-classical-ml-evaluation-2).
-  hint_vi: Bắt đầu từ nhiệm vụ thực hành của bài.
-  hint_en: Start from the lesson code example and change one assumption.
+  question_vi: Tính thước đo cho sai số [0,0,0,8].
+  question_en: Calculate the metrics for errors [0,0,0,8].
+  answer_vi: MAE=8/4=2; MSE=64/4=16; RMSE=4. So với [2,2,2,2], cùng MAE nhưng RMSE tăng từ 2 lên 4.
+  answer_en: MAE=8/4=2; MSE=64/4=16; RMSE=4. Compared with [2,2,2,2], MAE is unchanged but RMSE rises from
+    2 to 4.
+  hint_vi: Chia tổng cho bốn mẫu.
+  hint_en: Divide each sum by four samples.
 - id: phase-03-classical-ml-evaluation-2-debug
   type: debug
-  question_vi: Khi làm bài “Thước đo cho hồi quy”, bạn cần tránh lỗi nào và kiểm tra lại ra sao?
-  question_en: If regression metrics produces a wrong result or a metric drops, what would you debug first?
-  answer_vi: 'Trong bài “Thước đo cho hồi quy”, lỗi cần tránh là: dùng tập kiểm tra để liên tục chọn siêu tham số.
-    Đối chiếu thước đo với loại sai lầm cần hạn chế. Dùng ví dụ nhỏ để tìm bước đầu tiên có kết quả khác dự kiến.'
-  answer_en: For regression metrics, check inputs/shapes, preprocessing and the baseline first; then isolate the
-    failure with a small test and error analysis (phase-03-classical-ml-evaluation-2).
-  hint_vi: Tìm bước đầu tiên xuất hiện khác biệt.
-  hint_en: Do not start by changing the model or adding complexity.
+  question_vi: Sai số [-5,5] có trung bình 0; dự đoán có hoàn hảo không?
+  question_en: Errors [-5,5] average to zero; are predictions perfect?
+  answer_vi: Không. Sai số có dấu triệt tiêu; MAE=5, MSE=25, RMSE=5. Dự đoán hoàn hảo yêu cầu mọi sai số bằng
+    0; dùng trị tuyệt đối hoặc bình phương trước khi lấy trung bình.
+  answer_en: No. Signed errors cancel; MAE=5, MSE=25, RMSE=5. Perfect predictions require every error to be
+    zero; apply absolute value or squaring before averaging.
+  hint_vi: Phân biệt độ lệch có dấu và độ lớn sai số.
+  hint_en: Distinguish signed bias from error magnitude.
 - id: phase-03-classical-ml-evaluation-2-interview
   type: interview
-  question_vi: Bạn dùng kết quả nào từ bài “Thước đo cho hồi quy” để giải thích cách làm và giới hạn?
-  question_en: In an interview, how would you explain a trade-off and one edge case of regression metrics?
-  answer_vi: Bắt đầu từ nhiệm vụ “So sánh MAE và RMSE trên dữ liệu có một sai số lớn”. Trình bày kết quả đã lưu,
-    cách đối chiếu và một điều kiện có thể khiến kết luận thay đổi; không chỉ đọc lại định nghĩa.
-  answer_en: The answer about regression metrics should cover assumptions, metrics/cost, limitations and how to
-    reduce production risk (phase-03-classical-ml-evaluation-2).
-  hint_vi: Dùng quyết định thật trong bài làm, tránh chỉ đọc định nghĩa.
-  hint_en: Relate it to latency, quality, cost or observability where relevant.
+  question_vi: Khi nào cần xem RMSE bên cạnh MAE, và còn giới hạn gì?
+  question_en: When should RMSE accompany MAE, and what limitation remains?
+  answer_vi: Khi lỗi lớn gây hậu quả nặng, RMSE làm chúng nổi bật hơn MAE. Cả hai vẫn là số tổng hợp; xem từng
+    nhóm/mẫu, đơn vị và baseline, không suy chất lượng thực tế từ bốn mẫu.
+  answer_en: When large errors are especially costly, RMSE emphasizes them more than MAE. Both remain aggregates;
+    inspect groups/samples, units and a baseline, and do not infer real-world quality from four rows.
+  hint_vi: Liên hệ lỗi lớn với chi phí thực tế.
+  hint_en: Connect large errors to practical cost.
+completion_checklist_en:
+- Reproduce both output lines with correct units.
+- Explain squared-error sums of 16 versus 64.
+- Test perfect predictions and reject invalid data.
+completion_criteria_en:
+- Reproduce both output lines with correct units.
+- Explain squared-error sums of 16 versus 64.
+- Test perfect predictions and reject invalid data.
+common_mistakes_en:
+- Use accuracy for continuous targets.
+- Average signed errors and let them cancel.
+- Report MSE in original units or ignore large errors.
 ---
 # Thước đo cho hồi quy / Regression metrics
 
-MAE là trung bình độ lớn sai số; MSE là trung bình bình phương sai số; RMSE là căn bậc hai của MSE. MAE và RMSE có cùng đơn vị với biến mục tiêu, còn MSE dùng đơn vị bình phương.
+Đặt sai số e_i = y_i − ŷ_i. MAE là trung bình |e_i|; MSE là trung bình e_i²; RMSE là căn MSE. Nếu mục tiêu tính bằng phút, MAE/RMSE tính bằng phút còn MSE bằng phút². Giá trị nhỏ hơn tốt hơn trên cùng bộ dữ liệu, đơn vị và nhiệm vụ.
 
-Bình phương làm sai số lớn có ảnh hưởng mạnh hơn. Vì vậy hai mô hình cùng MAE vẫn có thể khác RMSE; cần chọn thước đo theo hậu quả của sai lệch lớn trong ứng dụng.
+Bốn sai số [2,2,2,2] cho MAE=2, MSE=4, RMSE=2. Các sai số [0,0,0,8] cũng MAE=2 nhưng MSE=16, RMSE=4. Một sai số 8 đóng góp 64 vào tổng bình phương; cả bốn sai số 2 chỉ đóng góp 16.
 
-Với sai số dự đoán là 0 và 2, MAE bằng 1, MSE bằng 2, RMSE xấp xỉ 1,414. Đây là ba cách tóm tắt cùng dữ liệu, không phải ba kết quả dự đoán khác nhau.
+MAE phản ánh chi phí tăng tuyến tính theo độ lớn lỗi. MSE/RMSE nhạy hơn với lỗi lớn; trên cùng dữ liệu chúng xếp hạng mô hình giống nhau vì căn bậc hai tăng đơn điệu. Không kết luận RMSE=4 là gấp đôi mọi lỗi hoặc luôn chọn RMSE. Kiểm tra sai số từng mẫu/nhóm và hậu quả sử dụng.
 
-Tự kiểm tra: điểm trung bình tốt có bảo đảm mọi nhóm đều tốt không? Không; xem thêm sai số từng nhóm và các trường hợp lệch lớn.
+Ví dụ dùng dự đoán có sẵn, không huấn luyện mô hình. Trong dự án thật, so với baseline học từ tập train và chỉ báo kết quả trên dữ liệu chưa dùng để chọn mô hình.
 
-## Thực hành
+## Practice / Thực hành
 
-So sánh MAE và RMSE trên dữ liệu có một sai số lớn.
+Đánh giá hai bộ dự đoán thời gian trên cùng bốn nhãn; giải thích cùng MAE nhưng RMSE khác nhau.
 
-Sau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Lập bảng chọn thước đo, chạy kiểm định chéo, điều chỉnh một siêu tham số và lưu kết quả so sánh.
+Evaluate two time-prediction sets on the same four targets; explain equal MAE but different RMSE.

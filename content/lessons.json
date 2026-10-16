@@ -13922,100 +13922,102 @@
       "module_id": "evaluation",
       "title_vi": "Thước đo cho phân loại",
       "title_en": "Classification metrics",
-      "summary_vi": "Accuracy, precision, recall và F1 nhấn mạnh các khía cạnh khác nhau của lỗi phân loại.",
-      "summary_en": "Learn Classification metrics through an input → transformation → output model, then verify it with an edge-case exercise.",
+      "summary_vi": "Tính accuracy, precision, recall và F1 từ TP/FP/TN/FN; nhận ra accuracy có thể che giấu việc bỏ sót lớp hiếm.",
+      "summary_en": "Compute accuracy, precision, recall and F1 from TP/FP/TN/FN; see how accuracy can hide missed rare cases.",
       "learning_objectives": [
-        "Từ ma trận nhầm lẫn, tính thước đo phù hợp với một tình huống sử dụng.",
-        "Đối chiếu thước đo với loại sai lầm cần hạn chế.",
-        "Giải thích kết quả và nêu một giới hạn của bài làm."
+        "Xác định lớp dương và đếm TP/FP/TN/FN.",
+        "Tính bốn thước đo và xử lý mẫu số bằng 0.",
+        "So sánh với baseline toàn âm và chọn thước đo theo chi phí lỗi."
       ],
       "learning_objectives_en": [
-        "Explain classification metrics with a concrete example.",
-        "Write or adapt a small code example applying classification metrics.",
-        "Recognize its assumptions, limits and one common failure mode."
+        "Declare the positive class and count TP/FP/TN/FN.",
+        "Calculate four metrics and handle zero denominators.",
+        "Compare an all-negative baseline and choose metrics by error cost."
       ],
       "prerequisites": [
         "phase-03-classical-ml-preprocessing-4",
         "phase-02-math-ml-linear-algebra-1"
       ],
       "key_terms": [
-        "classification",
-        "metrics",
-        "dataset",
-        "feature",
-        "baseline",
-        "evaluation"
+        "positive class",
+        "confusion matrix",
+        "precision",
+        "recall",
+        "F1",
+        "class imbalance"
       ],
-      "concept_notes_vi": "Accuracy là tỷ lệ dự đoán đúng. Precision đo tỷ lệ đúng trong các dự đoán dương; recall đo tỷ lệ mẫu dương được phát hiện. F1 kết hợp precision và recall bằng trung bình điều hòa.\n\nCác thước đo trả lời những câu hỏi khác nhau, không có một chỉ số tốt nhất cho mọi bài toán. Với nhiều lớp, cách lấy trung bình cũng quyết định lớp hiếm được coi trọng đến đâu.\n\nBộ lọc thư rác cần cân nhắc cả thư rác lọt qua và thư hợp lệ bị chặn. Thay ngưỡng quyết định sẽ đổi hai loại lỗi; hãy xem ma trận nhầm lẫn và chi phí thực tế.\n\nTự kiểm tra: accuracy cao có bảo đảm recall lớp hiếm cao không? Không; dự đoán toàn lớp phổ biến vẫn có thể đạt accuracy cao.",
-      "concept_notes_en": "Accuracy is the fraction of correct predictions. Precision measures correctness among predicted positives; recall measures the fraction of actual positives found. F1 combines precision and recall through their harmonic mean.\n\nThese metrics answer different questions. No single metric is best for every task, and multiclass averaging determines how much rare classes matter.\n\nA spam filter must balance missed spam against blocked legitimate mail. Changing its threshold changes these errors; inspect the confusion matrix and practical costs.\n\nSelf-check: does high accuracy guarantee high rare-class recall? No; predicting only the common class can still produce high accuracy.",
-      "why_it_matters_vi": "Chọn thước đo theo chi phí sai lầm và giữ tập kiểm tra ngoài quá trình lựa chọn mô hình.",
-      "why_it_matters_en": "Choose metrics by error cost, use cross-validation, and tune without peeking at the test set.",
+      "concept_notes_vi": "Lớp 1 là thư rác, lớp 0 là thư hợp lệ. TP: thư rác bị chặn; FP: thư hợp lệ bị chặn; TN: thư hợp lệ được giữ; FN: thư rác lọt qua. Ma trận có hàng là nhãn thật, cột là dự đoán, thứ tự [0, 1]: [[TN, FP], [FN, TP]].\n\nAccuracy dùng tất cả mẫu; precision hỏi trong các thư bị chặn có bao nhiêu thư rác; recall hỏi phát hiện được bao nhiêu thư rác thật. F1 là trung bình điều hòa của precision và recall, không tính TN và không biểu diễn mọi chi phí kinh doanh.\n\nVí dụ 10 thư có 2 thư rác. Mô hình có TP=1, FP=1, TN=7, FN=1, đạt accuracy=0.8 và precision=recall=F1=0.5. Baseline toàn âm cũng accuracy=0.8 nhưng recall=0.\n\nKhông có dự đoán dương thì precision không xác định; không có nhãn dương thì recall không xác định; F1 không xác định khi TP=FP=FN=0. Mã quy ước trả 0 cho mẫu số 0, tương ứng lựa chọn zero_division=0 trong scikit-learn; cần ghi quy ước, không hiểu số 0 là phép chia hợp lệ.",
+      "concept_notes_en": "Class 1 is spam and class 0 is legitimate mail. TP is blocked spam; FP is blocked legitimate mail; TN is retained legitimate mail; FN is missed spam. With true labels as rows, predictions as columns and order [0, 1], the matrix is [[TN, FP], [FN, TP]].\n\nAccuracy uses every case; precision asks how much blocked mail is spam; recall asks how much actual spam was found. F1 is the harmonic mean of precision and recall, ignores TN and does not encode every business cost.\n\nThe 10-mail fixture has 2 spam messages. TP=1, FP=1, TN=7, FN=1 gives accuracy=0.8 and precision=recall=F1=0.5. The all-negative baseline also has accuracy=0.8 but recall=0.\n\nPrecision is undefined without predicted positives; recall is undefined without actual positives; F1 is undefined when TP=FP=FN=0. This code returns 0 for zero denominators, matching the explicit scikit-learn choice zero_division=0. Report the convention rather than treating 0 as a valid division.",
+      "why_it_matters_vi": "Chặn nhầm thư hợp lệ và bỏ sót thư rác có hậu quả khác nhau; một accuracy cao chưa đủ để quyết định.",
+      "why_it_matters_en": "Blocking legitimate mail and missing spam have different consequences; high accuracy alone cannot decide.",
       "study_steps_vi": [
-        "Đọc phần giải thích, xác định khái niệm và điều kiện cần dùng cho nhiệm vụ bên dưới.",
-        "Tìm mục tương ứng với “Classification metrics” trong tài liệu tham khảo; đối chiếu với phần giải thích của bài.",
-        "Từ ma trận nhầm lẫn, tính thước đo phù hợp với một tình huống sử dụng.",
-        "Đối chiếu thước đo với loại sai lầm cần hạn chế. Ghi kết quả đối chiếu và điều bạn đã sửa nếu lần đầu chưa đúng.",
-        "Tự trả lời thẻ ôn tập, rồi kiểm tra các tiêu chí hoàn thành trước khi chuyển bài."
+        "Vẽ ma trận [[TN, FP], [FN, TP]] và tính tay bốn thước đo.",
+        "Đọc mục Precision, recall and F-measures trong tài liệu chính thức.",
+        "Mở hướng dẫn Practice Lab; tải mã hoặc chép vào Colab/Python 3.11, chạy và đối chiếu output.",
+        "Chạy baseline toàn âm, rồi thử dữ liệu toàn âm để thấy mẫu số 0.",
+        "Lưu bảng kết quả, quy ước mẫu số 0 và lý do ưu tiên precision hay recall."
       ],
       "study_steps_en": [
-        "Read the concept notes and answer: Choose metrics by error cost, use cross-validation, and tune without peeking at the test set.",
-        "Open scikit-learn User Guide, read the section marked Read this lesson, and record one verified example or definition.",
-        "Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the test.",
-        "Complete the practice task: Write a metric decision table, run cross-validation, tune one hyperparameter, and record results in a table.",
-        "Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact."
+        "Draw [[TN, FP], [FN, TP]] and calculate all four metrics by hand.",
+        "Read Precision, recall and F-measures in the official reference.",
+        "Open the Practice Lab guide; download the code or copy it into Colab/Python 3.11, run and compare the output.",
+        "Run the all-negative baseline, then all-negative labels to expose zero denominators.",
+        "Save the results, zero-denominator convention and your reason for prioritizing precision or recall."
       ],
       "practice_plan": {
         "vi": {
-          "task": "Từ ma trận nhầm lẫn, tính thước đo phù hợp với một tình huống sử dụng.\n\nSau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Lập bảng chọn thước đo, chạy kiểm định chéo, điều chỉnh một siêu tham số và lưu kết quả so sánh.",
+          "task": "So sánh bộ lọc thư rác và baseline toàn âm trên cùng 10 nhãn; giải thích vì sao cùng accuracy nhưng khác recall.",
           "deliverables": [
-            "Bảng thước đo, cách chia dữ liệu và lý do lựa chọn",
-            "Kết quả đối chiếu kèm dữ liệu hoặc điều kiện thực hiện",
-            "Một giới hạn và cách kiểm tra thêm"
+            "Mã chạy được và output bốn thước đo của hai cách dự đoán",
+            "Ma trận nhầm lẫn với lớp dương ghi rõ",
+            "Ghi chú mẫu số 0 và chi phí FP/FN"
           ],
-          "checkpoint": "Đối chiếu thước đo với loại sai lầm cần hạn chế.",
-          "stretch": "Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào."
+          "checkpoint": "Tự tính được TP=1, FP=1, TN=7, FN=1 và F1=0.5.",
+          "stretch": "Đổi một FN thành TP; dự đoán rồi kiểm tra recall và precision thay đổi ra sao."
         },
         "en": {
-          "task": "Write a metric decision table, run cross-validation, tune one hyperparameter, and record results in a table.",
+          "task": "Compare the spam filter and all-negative baseline on the same 10 labels; explain equal accuracy but different recall.",
           "deliverables": [
-            "One executable code file",
-            "One test or expected output",
-            "One note describing an edge case and trade-off"
+            "Runnable code and four metrics for both prediction sets",
+            "Confusion matrix with the positive class declared",
+            "Zero-denominator convention and FP/FN costs"
           ],
-          "checkpoint": "You can explain when accuracy, F1, PR-AUC, MAE, or calibration is the right choice.",
-          "stretch": "Add a failure test for classification metrics and explain the result."
+          "checkpoint": "Calculate TP=1, FP=1, TN=7, FN=1 and F1=0.5 yourself.",
+          "stretch": "Change one FN to TP; predict and check how recall and precision change."
         }
       },
       "interview_questions": {
         "vi": [
-          "Bạn sẽ giải thích nội dung “Thước đo cho phân loại” bằng ví dụ nào?",
-          "Điều kiện nào cần kiểm tra trước khi áp dụng vào công việc thực tế?",
-          "Bạn dùng bằng chứng nào để kết luận bài làm đáp ứng yêu cầu?"
+          "TP=1, FP=1, TN=7, FN=1 cho accuracy và F1 nào?",
+          "Precision gặp chia 0 khi dự đoán toàn âm: sửa thế nào?",
+          "Nếu chặn nhầm thư hợp lệ rất tốn kém, chọn thước đo ra sao?"
         ],
         "en": [
-          "How would you explain classification metrics to a new teammate?",
-          "Which assumption behind classification metrics could fail in production?",
-          "Which metric or test would prove the result is trustworthy?"
+          "With TP=1, FP=1, TN=7, FN=1, what are accuracy and F1?",
+          "Precision divides by zero for all-negative predictions: what should you do?",
+          "If blocking legitimate mail is costly, how should you choose metrics?"
         ]
       },
       "formulas": [
-        "σ(z) = 1 / (1 + e^(−z))",
-        "precision = TP / (TP + FP)"
+        "accuracy = (TP + TN) / N",
+        "precision = TP / (TP + FP)",
+        "recall = TP / (TP + FN)",
+        "F1 = 2TP / (2TP + FP + FN); zero denominator: report convention"
       ],
       "code_examples": [
         {
           "language": "python",
-          "title": "Classification metrics: inspect one complete path",
-          "code": "# Topic: Classification metrics (phase-03-classical-ml-evaluation-1)\ndef accuracy(y_true: list[int], y_pred: list[int]) -> float:\n    if len(y_true) != len(y_pred) or not y_true:\n        raise ValueError('non-empty aligned labels are required')\n    return sum(a == b for a, b in zip(y_true, y_pred)) / len(y_true)\n\nprint(accuracy([1, 0, 1], [1, 1, 1]))",
+          "title": "Spam filter versus an all-negative baseline",
+          "code": "def binary_metrics(actual, predicted):\n    if not actual or len(actual) != len(predicted):\n        raise ValueError(\"non-empty aligned labels are required\")\n    if any(label not in (0, 1) for label in [*actual, *predicted]):\n        raise ValueError(\"labels must be 0 or 1\")\n    true_positive = false_positive = true_negative = false_negative = 0\n    for truth, guess in zip(actual, predicted):\n        if truth == 1 and guess == 1:\n            true_positive += 1\n        elif truth == 0 and guess == 1:\n            false_positive += 1\n        elif truth == 0 and guess == 0:\n            true_negative += 1\n        else:\n            false_negative += 1\n    def divide_or_zero(numerator, denominator):\n        return numerator / denominator if denominator else 0.0\n    precision = divide_or_zero(true_positive, true_positive + false_positive)\n    recall = divide_or_zero(true_positive, true_positive + false_negative)\n    f1 = divide_or_zero(2 * true_positive,\n                        2 * true_positive + false_positive + false_negative)\n    return {\n        \"counts\": (true_positive, false_positive, true_negative, false_negative),\n        \"accuracy\": (true_positive + true_negative) / len(actual),\n        \"precision\": precision,\n        \"recall\": recall,\n        \"f1\": f1,\n    }\n\nactual = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]\npredictions = {\"filter\": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0],\n               \"baseline\": [0] * 10}\nfor name, predicted in predictions.items():\n    result = binary_metrics(actual, predicted)\n    print(name, \"TP FP TN FN:\", result[\"counts\"])\n    print(\" \".join(f\"{metric}={result[metric]:.3f}\"\n                   for metric in (\"accuracy\", \"precision\", \"recall\", \"f1\")))\nassert binary_metrics([0, 0], [0, 0])[\"f1\"] == 0.0\n",
           "status": "runnable",
-          "purpose_vi": "Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.",
-          "purpose_en": "Illustrate the input-to-output path for classification metrics.",
-          "setup": "Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.",
-          "expected_output": "Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.",
-          "edge_case_vi": "Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.",
-          "edge_case_en": "Try an empty input, a wrong shape or missing data and record the failure.",
-          "explanation_vi": "Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần nội dung; cần hoàn thành riêng nhiệm vụ thực hành.",
-          "explanation_en": "Keep the boundary executable and inspectable; change one input and verify the expected output."
+          "purpose_vi": "Đếm lỗi thật và so sánh baseline trên dữ liệu mất cân bằng.",
+          "purpose_en": "Count actual errors and compare a baseline on imbalanced labels.",
+          "setup": "Python 3.11+; standard library only. Run in Colab or save as metrics.py and run python metrics.py.",
+          "expected_output": "filter TP FP TN FN: (1, 1, 7, 1)\naccuracy=0.800 precision=0.500 recall=0.500 f1=0.500\nbaseline TP FP TN FN: (0, 0, 8, 2)\naccuracy=0.800 precision=0.000 recall=0.000 f1=0.000",
+          "edge_case_vi": "Thử []/[], nhãn 2 và độ dài khác nhau: ValueError. Thử [0,0]/[0,0]: accuracy=1 nhưng precision/recall/F1=0 theo quy ước.",
+          "edge_case_en": "Try empty lists, label 2 or unequal lengths: ValueError. For [0,0]/[0,0], accuracy=1 but precision/recall/F1=0 by convention.",
+          "explanation_vi": "Chỉ đánh giá nhãn nhị phân có sẵn, không huấn luyện bộ lọc và không đánh giá xác suất. F1 cao không bảo đảm xác suất được hiệu chỉnh.",
+          "explanation_en": "This evaluates supplied binary labels; it does not train a filter or assess probabilities. High F1 does not guarantee calibrated probabilities."
         }
       ],
       "resources": [
@@ -14033,13 +14035,13 @@
         {
           "language": "en",
           "title": "scikit-learn Model Evaluation",
-          "url": "https://scikit-learn.org/stable/modules/model_evaluation.html",
+          "url": "https://scikit-learn.org/stable/modules/model_evaluation.html#precision-recall-f-measures-and-support",
           "kind": "official",
           "required": false,
           "purpose_vi": "Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.",
           "purpose_en": "Official reference to verify the lesson concept.",
-          "read_vi": "Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.",
-          "read_en": "Read the relevant section, run a small example, and record one verified insight."
+          "read_vi": "Đọc Precision, recall and F-measures; đối chiếu mẫu số 0 và cách lấy trung bình nhiều lớp.",
+          "read_en": "Read Precision, recall and F-measures; check zero denominators and multiclass averaging."
         },
         {
           "language": "en",
@@ -14075,69 +14077,84 @@
       ],
       "estimated_minutes": 60,
       "completion_checklist": [
-        "Từ ma trận nhầm lẫn, tính thước đo phù hợp với một tình huống sử dụng.",
-        "Đối chiếu thước đo với loại sai lầm cần hạn chế.",
-        "Lưu kết quả và giải thích được một giới hạn mà không nhìn lời giải."
+        "Đối chiếu đủ bốn thước đo cho hai bộ dự đoán.",
+        "Giải thích quy ước 0 khi không có dự đoán dương.",
+        "Nêu chi phí FP/FN và giới hạn của fixture 10 thư."
       ],
       "completion_criteria": [
-        "Bài làm đáp ứng nhiệm vụ: Từ ma trận nhầm lẫn, tính thước đo phù hợp với một tình huống sử dụng.",
-        "Có kết quả đối chiếu với tiêu chí hoặc dự đoán đã ghi trước.",
-        "Đối chiếu thước đo với loại sai lầm cần hạn chế."
+        "Đối chiếu đủ bốn thước đo cho hai bộ dự đoán.",
+        "Giải thích quy ước 0 khi không có dự đoán dương.",
+        "Nêu chi phí FP/FN và giới hạn của fixture 10 thư."
       ],
       "common_mistakes": [
-        "Dùng tập kiểm tra để liên tục chọn siêu tham số.",
-        "Kết luận từ một kết quả thuận lợi mà chưa kiểm tra trường hợp khác.",
-        "Chép lời giải nhưng không giải thích được quyết định trong bài làm của mình."
+        "Đổi nhầm lớp dương hoặc đảo hàng/cột của ma trận.",
+        "Kết luận từ accuracy khi lớp dương hiếm.",
+        "Giấu mẫu số 0 hoặc coi F1 là thước đo hiệu chỉnh xác suất."
       ],
       "next_lessons": [
         "phase-03-classical-ml-evaluation-2",
         "phase-03-classical-ml-evaluation-3"
       ],
-      "review_question_vi": "Nội dung cốt lõi của “Thước đo cho phân loại” là gì?",
-      "review_question_en": "Define classification metrics in your own words. What are the input, transformation and output?",
-      "review_answer_vi": "Accuracy, precision, recall và F1 nhấn mạnh các khía cạnh khác nhau của lỗi phân loại. Chọn thước đo theo chi phí từng loại sai lầm và phân bố lớp.",
-      "review_answer_en": "A strong answer names the input, transformation, output and the context where classification metrics is used. Relate it specifically to classification metrics in lesson phase-03-classical-ml-evaluation-1.",
+      "review_question_vi": "Recall tính gì, khác precision thế nào?",
+      "review_question_en": "What does recall measure, and how does it differ from precision?",
+      "review_answer_vi": "Recall=TP/(TP+FN) xét nhãn dương thật; precision=TP/(TP+FP) xét dự đoán dương. Với TP=1, FP=1, FN=1, cả hai bằng 0.5.",
+      "review_answer_en": "Recall=TP/(TP+FN) considers actual positives; precision=TP/(TP+FP) considers predicted positives. For TP=1, FP=1, FN=1, both are 0.5.",
       "review_cards": [
         {
           "id": "phase-03-classical-ml-evaluation-1-recall",
           "type": "recall",
-          "question_vi": "Nội dung cốt lõi của “Thước đo cho phân loại” là gì?",
-          "question_en": "Define classification metrics in your own words. What are the input, transformation and output?",
-          "answer_vi": "Accuracy, precision, recall và F1 nhấn mạnh các khía cạnh khác nhau của lỗi phân loại. Chọn thước đo theo chi phí từng loại sai lầm và phân bố lớp.",
-          "answer_en": "A strong answer names the input, transformation, output and the context where classification metrics is used.",
-          "hint_vi": "Nêu ý chính, sau đó minh họa bằng tình huống cụ thể.",
-          "hint_en": "Start with a small example you can calculate by hand."
+          "question_vi": "Recall tính gì, khác precision thế nào?",
+          "question_en": "What does recall measure, and how does it differ from precision?",
+          "answer_vi": "Recall=TP/(TP+FN) xét nhãn dương thật; precision=TP/(TP+FP) xét dự đoán dương. Với TP=1, FP=1, FN=1, cả hai bằng 0.5.",
+          "answer_en": "Recall=TP/(TP+FN) considers actual positives; precision=TP/(TP+FP) considers predicted positives. For TP=1, FP=1, FN=1, both are 0.5.",
+          "hint_vi": "Xem hai mẫu số.",
+          "hint_en": "Compare the two denominators."
         },
         {
           "id": "phase-03-classical-ml-evaluation-1-application",
           "type": "application",
-          "question_vi": "Từ ma trận nhầm lẫn, tính thước đo phù hợp với một tình huống sử dụng.",
-          "question_en": "Write a small code example or design that applies classification metrics to an AI engineering problem.",
-          "answer_vi": "Với nhiệm vụ “Từ ma trận nhầm lẫn, tính thước đo phù hợp với một tình huống sử dụng”, cần lưu: bảng thước đo, cách chia dữ liệu và lý do lựa chọn. Đối chiếu thước đo với loại sai lầm cần hạn chế.",
-          "answer_en": "The classification metrics example should have an explicit input, expected output and a way to run or verify it (phase-03-classical-ml-evaluation-1).",
-          "hint_vi": "Bắt đầu từ nhiệm vụ thực hành của bài.",
-          "hint_en": "Start from the lesson code example and change one assumption."
+          "question_vi": "TP=1, FP=1, TN=7, FN=1 cho accuracy và F1 nào?",
+          "question_en": "With TP=1, FP=1, TN=7, FN=1, what are accuracy and F1?",
+          "answer_vi": "N=10; accuracy=(1+7)/10=0.8; F1=2/(2+1+1)=0.5. Baseline toàn âm cũng accuracy=0.8 nhưng bỏ sót cả hai mẫu dương.",
+          "answer_en": "N=10; accuracy=(1+7)/10=0.8; F1=2/(2+1+1)=0.5. An all-negative baseline also has accuracy=0.8 but misses both positives.",
+          "hint_vi": "F1 không dùng TN.",
+          "hint_en": "F1 does not use TN."
         },
         {
           "id": "phase-03-classical-ml-evaluation-1-debug",
           "type": "debug",
-          "question_vi": "Khi làm bài “Thước đo cho phân loại”, bạn cần tránh lỗi nào và kiểm tra lại ra sao?",
-          "question_en": "If classification metrics produces a wrong result or a metric drops, what would you debug first?",
-          "answer_vi": "Trong bài “Thước đo cho phân loại”, lỗi cần tránh là: dùng tập kiểm tra để liên tục chọn siêu tham số. Đối chiếu thước đo với loại sai lầm cần hạn chế. Dùng ví dụ nhỏ để tìm bước đầu tiên có kết quả khác dự kiến.",
-          "answer_en": "For classification metrics, check inputs/shapes, preprocessing and the baseline first; then isolate the failure with a small test and error analysis (phase-03-classical-ml-evaluation-1).",
-          "hint_vi": "Tìm bước đầu tiên xuất hiện khác biệt.",
-          "hint_en": "Do not start by changing the model or adding complexity."
+          "question_vi": "Precision gặp chia 0 khi dự đoán toàn âm: sửa thế nào?",
+          "question_en": "Precision divides by zero for all-negative predictions: what should you do?",
+          "answer_vi": "TP+FP=0 nên precision không xác định. Ghi rõ quy ước trả 0 như ví dụ; báo thêm số dự đoán dương. Recall vẫn xác định nếu có nhãn dương thật.",
+          "answer_en": "TP+FP=0 makes precision undefined. Explicitly document the example convention of returning 0 and report the predicted-positive count. Recall remains defined if actual positives exist.",
+          "hint_vi": "Không âm thầm đổi mẫu số thành 1.",
+          "hint_en": "Do not silently replace the denominator with 1."
         },
         {
           "id": "phase-03-classical-ml-evaluation-1-interview",
           "type": "interview",
-          "question_vi": "Bạn dùng kết quả nào từ bài “Thước đo cho phân loại” để giải thích cách làm và giới hạn?",
-          "question_en": "In an interview, how would you explain a trade-off and one edge case of classification metrics?",
-          "answer_vi": "Bắt đầu từ nhiệm vụ “Từ ma trận nhầm lẫn, tính thước đo phù hợp với một tình huống sử dụng”. Trình bày kết quả đã lưu, cách đối chiếu và một điều kiện có thể khiến kết luận thay đổi; không chỉ đọc lại định nghĩa.",
-          "answer_en": "The answer about classification metrics should cover assumptions, metrics/cost, limitations and how to reduce production risk (phase-03-classical-ml-evaluation-1).",
-          "hint_vi": "Dùng quyết định thật trong bài làm, tránh chỉ đọc định nghĩa.",
-          "hint_en": "Relate it to latency, quality, cost or observability where relevant."
+          "question_vi": "Nếu chặn nhầm thư hợp lệ rất tốn kém, chọn thước đo ra sao?",
+          "question_en": "If blocking legitimate mail is costly, how should you choose metrics?",
+          "answer_vi": "Ưu tiên precision của lớp thư rác, đồng thời báo recall và số FP/FN. Ngưỡng cao hơn có thể giảm FP nhưng bỏ sót thêm thư rác; phải kiểm tra trên dữ liệu kiểm định đại diện.",
+          "answer_en": "Prioritize spam precision while reporting recall and FP/FN counts. A higher threshold may reduce FP while missing more spam; check this on representative validation data.",
+          "hint_vi": "Nối lỗi FP với chi phí.",
+          "hint_en": "Connect false positives to cost."
         }
+      ],
+      "completion_checklist_en": [
+        "Verify all four metrics for both prediction sets.",
+        "Explain the zero convention when no positives are predicted.",
+        "State FP/FN costs and the limits of the 10-mail fixture."
+      ],
+      "completion_criteria_en": [
+        "Verify all four metrics for both prediction sets.",
+        "Explain the zero convention when no positives are predicted.",
+        "State FP/FN costs and the limits of the 10-mail fixture."
+      ],
+      "common_mistakes_en": [
+        "Swap the positive class or matrix row/column axes.",
+        "Conclude from accuracy when positives are rare.",
+        "Hide zero denominators or treat F1 as probability calibration."
       ]
     },
     {
@@ -14146,99 +14163,102 @@
       "module_id": "evaluation",
       "title_vi": "Thước đo cho hồi quy",
       "title_en": "Regression metrics",
-      "summary_vi": "MAE đo sai số tuyệt đối trung bình; MSE phạt sai số lớn mạnh hơn; RMSE đưa kết quả về đơn vị của biến mục tiêu.",
-      "summary_en": "Learn Regression metrics through an input → transformation → output model, then verify it with an edge-case exercise.",
+      "summary_vi": "Tính MAE, MSE và RMSE; so sánh sai số đều với một sai số lớn để thấy tác động của bình phương.",
+      "summary_en": "Calculate MAE, MSE and RMSE; compare uniform errors with one large error to see the effect of squaring.",
       "learning_objectives": [
-        "So sánh MAE và RMSE trên dữ liệu có một sai số lớn.",
-        "Đối chiếu thước đo với loại sai lầm cần hạn chế.",
-        "Giải thích kết quả và nêu một giới hạn của bài làm."
+        "Tính MAE/MSE/RMSE từ nhãn thật và dự đoán.",
+        "Giải thích vì sao cùng MAE nhưng khác RMSE.",
+        "Chọn thước đo theo chi phí sai số và ghi đơn vị."
       ],
       "learning_objectives_en": [
-        "Explain regression metrics with a concrete example.",
-        "Write or adapt a small code example applying regression metrics.",
-        "Recognize its assumptions, limits and one common failure mode."
+        "Compute MAE/MSE/RMSE from targets and predictions.",
+        "Explain equal MAE but different RMSE.",
+        "Choose a metric by error cost and report its units."
       ],
       "prerequisites": [
         "phase-03-classical-ml-evaluation-1",
         "phase-02-math-ml-linear-algebra-1"
       ],
       "key_terms": [
-        "regression",
-        "metrics",
-        "dataset",
-        "feature",
-        "baseline",
-        "evaluation"
+        "residual",
+        "MAE",
+        "MSE",
+        "RMSE",
+        "outlier",
+        "target units"
       ],
-      "concept_notes_vi": "MAE là trung bình độ lớn sai số; MSE là trung bình bình phương sai số; RMSE là căn bậc hai của MSE. MAE và RMSE có cùng đơn vị với biến mục tiêu, còn MSE dùng đơn vị bình phương.\n\nBình phương làm sai số lớn có ảnh hưởng mạnh hơn. Vì vậy hai mô hình cùng MAE vẫn có thể khác RMSE; cần chọn thước đo theo hậu quả của sai lệch lớn trong ứng dụng.\n\nVới sai số dự đoán là 0 và 2, MAE bằng 1, MSE bằng 2, RMSE xấp xỉ 1,414. Đây là ba cách tóm tắt cùng dữ liệu, không phải ba kết quả dự đoán khác nhau.\n\nTự kiểm tra: điểm trung bình tốt có bảo đảm mọi nhóm đều tốt không? Không; xem thêm sai số từng nhóm và các trường hợp lệch lớn.",
-      "concept_notes_en": "MAE averages absolute errors; MSE averages squared errors; RMSE is the square root of MSE. MAE and RMSE have the target's units, while MSE has squared units.\n\nSquaring gives large errors greater influence. Models with the same MAE can therefore differ in RMSE. Choose metrics according to the consequences of large mistakes.\n\nFor prediction errors of 0 and 2, MAE is 1, MSE is 2, and RMSE is approximately 1.414. These summarize the same predictions in different ways.\n\nSelf-check: does a good average guarantee good performance for every group? No; inspect group errors and large deviations too.",
-      "why_it_matters_vi": "Chọn thước đo theo chi phí sai lầm và giữ tập kiểm tra ngoài quá trình lựa chọn mô hình.",
-      "why_it_matters_en": "Choose metrics by error cost, use cross-validation, and tune without peeking at the test set.",
+      "concept_notes_vi": "Đặt sai số e_i = y_i − ŷ_i. MAE là trung bình |e_i|; MSE là trung bình e_i²; RMSE là căn MSE. Nếu mục tiêu tính bằng phút, MAE/RMSE tính bằng phút còn MSE bằng phút². Giá trị nhỏ hơn tốt hơn trên cùng bộ dữ liệu, đơn vị và nhiệm vụ.\n\nBốn sai số [2,2,2,2] cho MAE=2, MSE=4, RMSE=2. Các sai số [0,0,0,8] cũng MAE=2 nhưng MSE=16, RMSE=4. Một sai số 8 đóng góp 64 vào tổng bình phương; cả bốn sai số 2 chỉ đóng góp 16.\n\nMAE phản ánh chi phí tăng tuyến tính theo độ lớn lỗi. MSE/RMSE nhạy hơn với lỗi lớn; trên cùng dữ liệu chúng xếp hạng mô hình giống nhau vì căn bậc hai tăng đơn điệu. Không kết luận RMSE=4 là gấp đôi mọi lỗi hoặc luôn chọn RMSE. Kiểm tra sai số từng mẫu/nhóm và hậu quả sử dụng.\n\nVí dụ dùng dự đoán có sẵn, không huấn luyện mô hình. Trong dự án thật, so với baseline học từ tập train và chỉ báo kết quả trên dữ liệu chưa dùng để chọn mô hình.",
+      "concept_notes_en": "Let error e_i = y_i − ŷ_i. MAE averages |e_i|; MSE averages e_i²; RMSE is the square root of MSE. If targets are minutes, MAE/RMSE are minutes and MSE is minutes². Lower is better on the same data, units and task.\n\nFour errors [2,2,2,2] give MAE=2, MSE=4, RMSE=2. Errors [0,0,0,8] also give MAE=2 but MSE=16 and RMSE=4. One error of 8 contributes 64 to the squared-error sum; all four errors of 2 contribute only 16.\n\nMAE reflects cost growing linearly with error size. MSE/RMSE emphasize large errors; on the same data they rank models identically because square root is increasing. RMSE=4 does not mean every error doubled, nor should RMSE always be preferred. Inspect sample/group errors and practical consequences.\n\nThe example evaluates supplied predictions rather than fitting a model. In a real project, compare against a baseline learned from training data and report results on data not used for model selection.",
+      "why_it_matters_vi": "Một điểm trung bình có thể che lỗi nghiêm trọng; thước đo và đơn vị phải phù hợp hậu quả của dự đoán sai.",
+      "why_it_matters_en": "An average can hide severe errors; the metric and units must match the consequences of prediction mistakes.",
       "study_steps_vi": [
-        "Đọc phần giải thích, xác định khái niệm và điều kiện cần dùng cho nhiệm vụ bên dưới.",
-        "Tìm mục tương ứng với “Regression metrics” trong tài liệu tham khảo; đối chiếu với phần giải thích của bài.",
-        "So sánh MAE và RMSE trên dữ liệu có một sai số lớn.",
-        "Đối chiếu thước đo với loại sai lầm cần hạn chế. Ghi kết quả đối chiếu và điều bạn đã sửa nếu lần đầu chưa đúng.",
-        "Tự trả lời thẻ ôn tập, rồi kiểm tra các tiêu chí hoàn thành trước khi chuyển bài."
+        "Tính tay các sai số [2,2,2,2] và [0,0,0,8].",
+        "Đọc Mean absolute error và Mean squared error trong tài liệu chính thức.",
+        "Mở hướng dẫn Practice Lab, tải mã hoặc chép vào Colab/Python 3.11 rồi chạy.",
+        "Đối chiếu ba thước đo và kiểm tra dự đoán hoàn hảo, đầu vào rỗng.",
+        "Lưu kết quả với đơn vị phút/phút² và lý do chọn thước đo."
       ],
       "study_steps_en": [
-        "Read the concept notes and answer: Choose metrics by error cost, use cross-validation, and tune without peeking at the test set.",
-        "Open scikit-learn User Guide, read the section marked Read this lesson, and record one verified example or definition.",
-        "Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the test.",
-        "Complete the practice task: Write a metric decision table, run cross-validation, tune one hyperparameter, and record results in a table.",
-        "Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact."
+        "Calculate the errors [2,2,2,2] and [0,0,0,8] by hand.",
+        "Read Mean absolute error and Mean squared error in the official reference.",
+        "Open the Practice Lab guide, download the code or copy it into Colab/Python 3.11 and run it.",
+        "Compare the three metrics and test perfect predictions and empty input.",
+        "Save results with minute/minute² units and explain your metric choice."
       ],
       "practice_plan": {
         "vi": {
-          "task": "So sánh MAE và RMSE trên dữ liệu có một sai số lớn.\n\nSau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Lập bảng chọn thước đo, chạy kiểm định chéo, điều chỉnh một siêu tham số và lưu kết quả so sánh.",
+          "task": "Đánh giá hai bộ dự đoán thời gian trên cùng bốn nhãn; giải thích cùng MAE nhưng RMSE khác nhau.",
           "deliverables": [
-            "Bảng thước đo, cách chia dữ liệu và lý do lựa chọn",
-            "Kết quả đối chiếu kèm dữ liệu hoặc điều kiện thực hiện",
-            "Một giới hạn và cách kiểm tra thêm"
+            "Mã và output MAE/MSE/RMSE cho hai bộ dự đoán",
+            "Bảng sai số tuyệt đối và bình phương từng mẫu",
+            "Đơn vị, lựa chọn thước đo và một giới hạn"
           ],
-          "checkpoint": "Đối chiếu thước đo với loại sai lầm cần hạn chế.",
-          "stretch": "Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào."
+          "checkpoint": "Tự tính được MAE=2 cho cả hai; RMSE lần lượt 2 và 4.",
+          "stretch": "Đổi sai số lớn từ 8 thành 16 rồi tính lại; giải thích MSE tăng theo bình phương."
         },
         "en": {
-          "task": "Write a metric decision table, run cross-validation, tune one hyperparameter, and record results in a table.",
+          "task": "Evaluate two time-prediction sets on the same four targets; explain equal MAE but different RMSE.",
           "deliverables": [
-            "One executable code file",
-            "One test or expected output",
-            "One note describing an edge case and trade-off"
+            "Code and MAE/MSE/RMSE output for both prediction sets",
+            "Per-sample absolute and squared errors",
+            "Units, metric choice and one limitation"
           ],
-          "checkpoint": "You can explain when accuracy, F1, PR-AUC, MAE, or calibration is the right choice.",
-          "stretch": "Add a failure test for regression metrics and explain the result."
+          "checkpoint": "Calculate MAE=2 for both and RMSE values of 2 and 4.",
+          "stretch": "Change the large error from 8 to 16 and recalculate; explain the squared contribution to MSE."
         }
       },
       "interview_questions": {
         "vi": [
-          "Bạn sẽ giải thích nội dung “Thước đo cho hồi quy” bằng ví dụ nào?",
-          "Điều kiện nào cần kiểm tra trước khi áp dụng vào công việc thực tế?",
-          "Bạn dùng bằng chứng nào để kết luận bài làm đáp ứng yêu cầu?"
+          "Tính thước đo cho sai số [0,0,0,8].",
+          "Sai số [-5,5] có trung bình 0; dự đoán có hoàn hảo không?",
+          "Khi nào cần xem RMSE bên cạnh MAE, và còn giới hạn gì?"
         ],
         "en": [
-          "How would you explain regression metrics to a new teammate?",
-          "Which assumption behind regression metrics could fail in production?",
-          "Which metric or test would prove the result is trustworthy?"
+          "Calculate the metrics for errors [0,0,0,8].",
+          "Errors [-5,5] average to zero; are predictions perfect?",
+          "When should RMSE accompany MAE, and what limitation remains?"
         ]
       },
       "formulas": [
-        "MSE = (1/n) Σ_i (y_i − ŷ_i)²"
+        "e_i = y_i − ŷ_i",
+        "MAE = Σ|e_i| / n",
+        "MSE = Σ(e_i²) / n",
+        "RMSE = √MSE"
       ],
       "code_examples": [
         {
           "language": "python",
-          "title": "Regression metrics: inspect one complete path",
-          "code": "# Topic: Regression metrics (phase-03-classical-ml-evaluation-2)\ndef accuracy(y_true: list[int], y_pred: list[int]) -> float:\n    if len(y_true) != len(y_pred) or not y_true:\n        raise ValueError('non-empty aligned labels are required')\n    return sum(a == b for a, b in zip(y_true, y_pred)) / len(y_true)\n\nprint(accuracy([1, 0, 1], [1, 1, 1]))",
+          "title": "Equal MAE, different outlier cost",
+          "code": "from math import isfinite, sqrt\n\ndef regression_metrics(actual, predicted):\n    if not actual or len(actual) != len(predicted):\n        raise ValueError(\"non-empty aligned values are required\")\n    if not all(isfinite(value) for value in [*actual, *predicted]):\n        raise ValueError(\"values must be finite\")\n    errors = [truth - guess for truth, guess in zip(actual, predicted)]\n    mae = sum(abs(error) for error in errors) / len(errors)\n    mse = sum(error ** 2 for error in errors) / len(errors)\n    return {\"mae\": mae, \"mse\": mse, \"rmse\": sqrt(mse)}\n\nactual = [10, 10, 10, 10]\npredictions = {\"uniform\": [8, 8, 8, 8], \"one_large\": [10, 10, 10, 2]}\nfor name, predicted in predictions.items():\n    result = regression_metrics(actual, predicted)\n    print(name, \" \".join(f\"{metric}={result[metric]:.3f}\"\n                         for metric in (\"mae\", \"mse\", \"rmse\")))\nassert regression_metrics(actual, actual) == {\"mae\": 0, \"mse\": 0, \"rmse\": 0}\n",
           "status": "runnable",
-          "purpose_vi": "Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.",
-          "purpose_en": "Illustrate the input-to-output path for regression metrics.",
-          "setup": "Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.",
-          "expected_output": "Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.",
-          "edge_case_vi": "Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.",
-          "edge_case_en": "Try an empty input, a wrong shape or missing data and record the failure.",
-          "explanation_vi": "Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần nội dung; cần hoàn thành riêng nhiệm vụ thực hành.",
-          "explanation_en": "Keep the boundary executable and inspectable; change one input and verify the expected output."
+          "purpose_vi": "Đo đúng sai số hồi quy thay vì so khớp nhãn bằng accuracy.",
+          "purpose_en": "Measure regression errors rather than exact-label accuracy.",
+          "setup": "Python 3.11+; standard library only. Run in Colab or save as regression_metrics.py and run python regression_metrics.py.",
+          "expected_output": "uniform mae=2.000 mse=4.000 rmse=2.000\none_large mae=2.000 mse=16.000 rmse=4.000",
+          "edge_case_vi": "Dự đoán hoàn hảo cho ba số 0. Danh sách rỗng, khác độ dài hoặc NaN/infinity gây ValueError.",
+          "edge_case_en": "Perfect predictions give three zeros. Empty lists, unequal lengths or NaN/infinity raise ValueError.",
+          "explanation_vi": "Fixture bốn mẫu cho phép tính tay và kiểm tra chi phí lỗi lớn; không chứng minh mô hình nào tốt hơn trên dân số.",
+          "explanation_en": "The four-row fixture supports hand calculation and comparison of large-error cost; it does not establish population-level model quality."
         }
       ],
       "resources": [
@@ -14256,13 +14276,13 @@
         {
           "language": "en",
           "title": "scikit-learn Model Evaluation",
-          "url": "https://scikit-learn.org/stable/modules/model_evaluation.html",
+          "url": "https://scikit-learn.org/stable/modules/model_evaluation.html#regression-metrics",
           "kind": "official",
           "required": false,
           "purpose_vi": "Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.",
           "purpose_en": "Official reference to verify the lesson concept.",
-          "read_vi": "Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.",
-          "read_en": "Read the relevant section, run a small example, and record one verified insight."
+          "read_vi": "Đọc Mean absolute error, Mean squared error và Root mean squared error; kiểm tra đơn vị và chiều tốt/xấu.",
+          "read_en": "Read Mean absolute error, Mean squared error and Root mean squared error; verify units and which direction is better."
         },
         {
           "language": "en",
@@ -14298,69 +14318,84 @@
       ],
       "estimated_minutes": 60,
       "completion_checklist": [
-        "So sánh MAE và RMSE trên dữ liệu có một sai số lớn.",
-        "Đối chiếu thước đo với loại sai lầm cần hạn chế.",
-        "Lưu kết quả và giải thích được một giới hạn mà không nhìn lời giải."
+        "Tái tạo hai dòng output và ghi đúng đơn vị.",
+        "Giải thích tổng bình phương 16 so với 64.",
+        "Kiểm tra dự đoán hoàn hảo và từ chối dữ liệu không hợp lệ."
       ],
       "completion_criteria": [
-        "Bài làm đáp ứng nhiệm vụ: So sánh MAE và RMSE trên dữ liệu có một sai số lớn.",
-        "Có kết quả đối chiếu với tiêu chí hoặc dự đoán đã ghi trước.",
-        "Đối chiếu thước đo với loại sai lầm cần hạn chế."
+        "Tái tạo hai dòng output và ghi đúng đơn vị.",
+        "Giải thích tổng bình phương 16 so với 64.",
+        "Kiểm tra dự đoán hoàn hảo và từ chối dữ liệu không hợp lệ."
       ],
       "common_mistakes": [
-        "Dùng tập kiểm tra để liên tục chọn siêu tham số.",
-        "Kết luận từ một kết quả thuận lợi mà chưa kiểm tra trường hợp khác.",
-        "Chép lời giải nhưng không giải thích được quyết định trong bài làm của mình."
+        "Dùng accuracy cho mục tiêu liên tục.",
+        "Lấy trung bình sai số có dấu làm lỗi triệt tiêu nhau.",
+        "Báo MSE theo đơn vị gốc hoặc bỏ qua lỗi lớn."
       ],
       "next_lessons": [
         "phase-03-classical-ml-evaluation-3",
         "phase-03-classical-ml-evaluation-4"
       ],
-      "review_question_vi": "Nội dung cốt lõi của “Thước đo cho hồi quy” là gì?",
-      "review_question_en": "Define regression metrics in your own words. What are the input, transformation and output?",
-      "review_answer_vi": "MAE đo sai số tuyệt đối trung bình; MSE phạt sai số lớn mạnh hơn; RMSE đưa kết quả về đơn vị của biến mục tiêu. Cần đọc cả phân bố sai số và các nhóm dữ liệu quan trọng.",
-      "review_answer_en": "A strong answer names the input, transformation, output and the context where regression metrics is used. Relate it specifically to regression metrics in lesson phase-03-classical-ml-evaluation-2.",
+      "review_question_vi": "MAE, MSE và RMSE khác nhau thế nào về công thức và đơn vị?",
+      "review_question_en": "How do MAE, MSE and RMSE differ in formula and units?",
+      "review_answer_vi": "MAE=mean(|e|), MSE=mean(e²), RMSE=√MSE. Với e tính bằng phút, MAE/RMSE là phút và MSE là phút²; cả ba không âm.",
+      "review_answer_en": "MAE=mean(|e|), MSE=mean(e²), RMSE=√MSE. For errors in minutes, MAE/RMSE use minutes and MSE uses minutes²; all are nonnegative.",
       "review_cards": [
         {
           "id": "phase-03-classical-ml-evaluation-2-recall",
           "type": "recall",
-          "question_vi": "Nội dung cốt lõi của “Thước đo cho hồi quy” là gì?",
-          "question_en": "Define regression metrics in your own words. What are the input, transformation and output?",
-          "answer_vi": "MAE đo sai số tuyệt đối trung bình; MSE phạt sai số lớn mạnh hơn; RMSE đưa kết quả về đơn vị của biến mục tiêu. Cần đọc cả phân bố sai số và các nhóm dữ liệu quan trọng.",
-          "answer_en": "A strong answer names the input, transformation, output and the context where regression metrics is used.",
-          "hint_vi": "Nêu ý chính, sau đó minh họa bằng tình huống cụ thể.",
-          "hint_en": "Start with a small example you can calculate by hand."
+          "question_vi": "MAE, MSE và RMSE khác nhau thế nào về công thức và đơn vị?",
+          "question_en": "How do MAE, MSE and RMSE differ in formula and units?",
+          "answer_vi": "MAE=mean(|e|), MSE=mean(e²), RMSE=√MSE. Với e tính bằng phút, MAE/RMSE là phút và MSE là phút²; cả ba không âm.",
+          "answer_en": "MAE=mean(|e|), MSE=mean(e²), RMSE=√MSE. For errors in minutes, MAE/RMSE use minutes and MSE uses minutes²; all are nonnegative.",
+          "hint_vi": "Bình phương rồi lấy căn.",
+          "hint_en": "Square, then take the root."
         },
         {
           "id": "phase-03-classical-ml-evaluation-2-application",
           "type": "application",
-          "question_vi": "So sánh MAE và RMSE trên dữ liệu có một sai số lớn.",
-          "question_en": "Write a small code example or design that applies regression metrics to an AI engineering problem.",
-          "answer_vi": "Với nhiệm vụ “So sánh MAE và RMSE trên dữ liệu có một sai số lớn”, cần lưu: bảng thước đo, cách chia dữ liệu và lý do lựa chọn. Đối chiếu thước đo với loại sai lầm cần hạn chế.",
-          "answer_en": "The regression metrics example should have an explicit input, expected output and a way to run or verify it (phase-03-classical-ml-evaluation-2).",
-          "hint_vi": "Bắt đầu từ nhiệm vụ thực hành của bài.",
-          "hint_en": "Start from the lesson code example and change one assumption."
+          "question_vi": "Tính thước đo cho sai số [0,0,0,8].",
+          "question_en": "Calculate the metrics for errors [0,0,0,8].",
+          "answer_vi": "MAE=8/4=2; MSE=64/4=16; RMSE=4. So với [2,2,2,2], cùng MAE nhưng RMSE tăng từ 2 lên 4.",
+          "answer_en": "MAE=8/4=2; MSE=64/4=16; RMSE=4. Compared with [2,2,2,2], MAE is unchanged but RMSE rises from 2 to 4.",
+          "hint_vi": "Chia tổng cho bốn mẫu.",
+          "hint_en": "Divide each sum by four samples."
         },
         {
           "id": "phase-03-classical-ml-evaluation-2-debug",
           "type": "debug",
-          "question_vi": "Khi làm bài “Thước đo cho hồi quy”, bạn cần tránh lỗi nào và kiểm tra lại ra sao?",
-          "question_en": "If regression metrics produces a wrong result or a metric drops, what would you debug first?",
-          "answer_vi": "Trong bài “Thước đo cho hồi quy”, lỗi cần tránh là: dùng tập kiểm tra để liên tục chọn siêu tham số. Đối chiếu thước đo với loại sai lầm cần hạn chế. Dùng ví dụ nhỏ để tìm bước đầu tiên có kết quả khác dự kiến.",
-          "answer_en": "For regression metrics, check inputs/shapes, preprocessing and the baseline first; then isolate the failure with a small test and error analysis (phase-03-classical-ml-evaluation-2).",
-          "hint_vi": "Tìm bước đầu tiên xuất hiện khác biệt.",
-          "hint_en": "Do not start by changing the model or adding complexity."
+          "question_vi": "Sai số [-5,5] có trung bình 0; dự đoán có hoàn hảo không?",
+          "question_en": "Errors [-5,5] average to zero; are predictions perfect?",
+          "answer_vi": "Không. Sai số có dấu triệt tiêu; MAE=5, MSE=25, RMSE=5. Dự đoán hoàn hảo yêu cầu mọi sai số bằng 0; dùng trị tuyệt đối hoặc bình phương trước khi lấy trung bình.",
+          "answer_en": "No. Signed errors cancel; MAE=5, MSE=25, RMSE=5. Perfect predictions require every error to be zero; apply absolute value or squaring before averaging.",
+          "hint_vi": "Phân biệt độ lệch có dấu và độ lớn sai số.",
+          "hint_en": "Distinguish signed bias from error magnitude."
         },
         {
           "id": "phase-03-classical-ml-evaluation-2-interview",
           "type": "interview",
-          "question_vi": "Bạn dùng kết quả nào từ bài “Thước đo cho hồi quy” để giải thích cách làm và giới hạn?",
-          "question_en": "In an interview, how would you explain a trade-off and one edge case of regression metrics?",
-          "answer_vi": "Bắt đầu từ nhiệm vụ “So sánh MAE và RMSE trên dữ liệu có một sai số lớn”. Trình bày kết quả đã lưu, cách đối chiếu và một điều kiện có thể khiến kết luận thay đổi; không chỉ đọc lại định nghĩa.",
-          "answer_en": "The answer about regression metrics should cover assumptions, metrics/cost, limitations and how to reduce production risk (phase-03-classical-ml-evaluation-2).",
-          "hint_vi": "Dùng quyết định thật trong bài làm, tránh chỉ đọc định nghĩa.",
-          "hint_en": "Relate it to latency, quality, cost or observability where relevant."
+          "question_vi": "Khi nào cần xem RMSE bên cạnh MAE, và còn giới hạn gì?",
+          "question_en": "When should RMSE accompany MAE, and what limitation remains?",
+          "answer_vi": "Khi lỗi lớn gây hậu quả nặng, RMSE làm chúng nổi bật hơn MAE. Cả hai vẫn là số tổng hợp; xem từng nhóm/mẫu, đơn vị và baseline, không suy chất lượng thực tế từ bốn mẫu.",
+          "answer_en": "When large errors are especially costly, RMSE emphasizes them more than MAE. Both remain aggregates; inspect groups/samples, units and a baseline, and do not infer real-world quality from four rows.",
+          "hint_vi": "Liên hệ lỗi lớn với chi phí thực tế.",
+          "hint_en": "Connect large errors to practical cost."
         }
+      ],
+      "completion_checklist_en": [
+        "Reproduce both output lines with correct units.",
+        "Explain squared-error sums of 16 versus 64.",
+        "Test perfect predictions and reject invalid data."
+      ],
+      "completion_criteria_en": [
+        "Reproduce both output lines with correct units.",
+        "Explain squared-error sums of 16 versus 64.",
+        "Test perfect predictions and reject invalid data."
+      ],
+      "common_mistakes_en": [
+        "Use accuracy for continuous targets.",
+        "Average signed errors and let them cancel.",
+        "Report MSE in original units or ignore large errors."
       ]
     },
     {
@@ -14369,110 +14404,115 @@
       "module_id": "evaluation",
       "title_vi": "Kiểm định chéo",
       "title_en": "Cross-validation",
-      "summary_vi": "Kiểm định chéo lặp việc huấn luyện và đánh giá trên các phần dữ liệu khác nhau.",
-      "summary_en": "Learn Cross-validation through an input → transformation → output model, then verify it with an edge-case exercise.",
+      "summary_vi": "Chia các fold rời nhau, học lại baseline trong từng tập train và báo MAE từng fold cùng trung bình/độ phân tán.",
+      "summary_en": "Build disjoint folds, refit a baseline within each training split and report fold MAEs with their mean and spread.",
       "learning_objectives": [
-        "Báo trung bình và độ biến động của thước đo qua các lần kiểm định chéo.",
-        "Đối chiếu thước đo với loại sai lầm cần hạn chế.",
-        "Giải thích kết quả và nêu một giới hạn của bài làm."
+        "Kiểm tra mỗi mẫu được đánh giá đúng một lần trong K-fold.",
+        "Học trung bình mục tiêu chỉ từ train của từng fold.",
+        "Báo điểm từng fold, trung bình, độ lệch chuẩn và giới hạn cách chia."
       ],
       "learning_objectives_en": [
-        "Explain cross-validation with a concrete example.",
-        "Write or adapt a small code example applying cross-validation.",
-        "Recognize its assumptions, limits and one common failure mode."
+        "Verify each sample is evaluated once in K-fold.",
+        "Learn the target mean only from each fold training split.",
+        "Report fold scores, mean, standard deviation and split limitations."
       ],
       "prerequisites": [
         "phase-03-classical-ml-evaluation-2",
         "phase-02-math-ml-linear-algebra-1"
       ],
       "key_terms": [
-        "cross",
-        "validation",
-        "dataset",
-        "feature",
-        "baseline",
-        "evaluation"
+        "fold",
+        "training split",
+        "validation split",
+        "train-only fitting",
+        "mean baseline",
+        "leakage"
       ],
-      "concept_notes_vi": "Kiểm định chéo chia dữ liệu thành các phần rồi luân phiên huấn luyện và đánh giá. Kết quả nhiều lần chia cho thấy mô hình nhạy với tập mẫu thế nào, nhưng các điểm số không phải các phép thử hoàn toàn độc lập.\n\nChia ngẫu nhiên phù hợp một số bài toán, còn dữ liệu thời gian hoặc nhiều dòng từ cùng đối tượng cần cách chia riêng. Bộ chuẩn hóa và chọn đặc trưng phải được học lại trong mỗi phần huấn luyện.\n\nNếu hồ sơ của cùng khách hàng xuất hiện ở cả hai phía, mô hình có thể nhận diện khách quen thay vì khái quát sang khách mới. Hãy chia theo khách hàng khi mục tiêu là dự đoán người chưa gặp.\n\nTự kiểm tra: chuẩn hóa toàn bộ dữ liệu trước kiểm định chéo có an toàn không? Không; thống kê của phần đánh giá đã lọt vào quá trình học.",
-      "concept_notes_en": "Cross-validation rotates training and evaluation across data partitions. Scores reveal sensitivity to the split, but are not fully independent experiments.\n\nRandom splits suit some tasks; time-ordered records or repeated subjects require appropriate splitting. Fit scaling and feature selection again within each training partition.\n\nIf one customer's records appear on both sides, a model may recognize familiar customers rather than generalize to new ones. Split by customer when unseen customers are the target.\n\nSelf-check: is scaling all data before cross-validation safe? No; evaluation statistics have entered the learning process.",
-      "why_it_matters_vi": "Chọn thước đo theo chi phí sai lầm và giữ tập kiểm tra ngoài quá trình lựa chọn mô hình.",
-      "why_it_matters_en": "Choose metrics by error cost, use cross-validation, and tune without peeking at the test set.",
+      "concept_notes_vi": "K-fold chia dữ liệu phát triển thành K phần; mỗi lượt giữ một phần làm validation và dùng các phần còn lại làm train. Trong mỗi lượt, chỉ số train và validation phải rời nhau. Các tập train giữa các lượt có thể chồng lặp; điểm các fold không phải các phép thử độc lập.\n\nVí dụ sáu thời gian giả lập [2,4,6,8,10,12] được xem là các quan sát độc lập, không có thứ tự thời gian hay nhóm. Ba fold validation là [0,1], [2,3], [4,5]. Baseline dự đoán bằng trung bình mục tiêu của riêng train: lần lượt 9,7,5. MAE validation tương ứng 6,1,6. Trung bình 4.333 và độ lệch chuẩn mô tả 2.357 cho thấy phụ thuộc cách chia.\n\nVí dụ chỉ fit baseline; không có bước chuẩn hóa. Khi thêm imputation, scaling hoặc chọn đặc trưng, fit chúng bên trong từng train rồi transform validation; Pipeline hỗ trợ quy trình này. Không tính trước thống kê bằng cả sáu dòng.\n\nCác fold liên tiếp này minh họa cơ chế, không phải splitter dùng được cho mọi dữ liệu. Nếu dự đoán tương lai, dùng chia theo thời gian không học từ tương lai; nếu đánh giá khách hàng mới, giữ toàn bộ một khách hàng ở một phía. Không có kiểm tra nhóm/thời gian nào trong ví dụ. Độ lệch chuẩn fold không phải khoảng tin cậy; tập test cuối vẫn phải giữ ngoài lựa chọn mô hình.",
+      "concept_notes_en": "K-fold partitions development data into K parts; each iteration holds out one part for validation and trains on the rest. Training and validation indices must be disjoint within each iteration. Training sets across iterations overlap, so fold scores are not independent experiments.\n\nThe six fictional durations [2,4,6,8,10,12] are treated as independent observations with no time or group structure. Validation folds are [0,1], [2,3], [4,5]. The baseline learns the target mean from training rows alone: 9,7,5 respectively. Validation MAEs are 6,1,6. Their mean 4.333 and descriptive standard deviation 2.357 show sensitivity to the split.\n\nThis example only fits a baseline; it has no scaling step. When adding imputation, scaling or feature selection, fit them inside each training split and transform validation; Pipeline supports this workflow. Do not precompute statistics using all six rows.\n\nThese consecutive folds demonstrate mechanics, not a universally suitable splitter. For future prediction, split by time without training on future records; for unseen customers, keep each customer on one side. This code performs no group/time checks. Fold standard deviation is not a confidence interval; keep the final test set outside model selection.",
+      "why_it_matters_vi": "Huấn luyện lại ở mỗi lượt ngăn thống kê validation lọt vào baseline; báo mọi fold tránh chỉ chọn kết quả thuận lợi.",
+      "why_it_matters_en": "Refitting each iteration keeps validation statistics out of the baseline; reporting every fold avoids cherry-picking a favorable result.",
       "study_steps_vi": [
-        "Đọc phần giải thích, xác định khái niệm và điều kiện cần dùng cho nhiệm vụ bên dưới.",
-        "Tìm mục tương ứng với “Cross-validation” trong tài liệu tham khảo; đối chiếu với phần giải thích của bài.",
-        "Báo trung bình và độ biến động của thước đo qua các lần kiểm định chéo.",
-        "Đối chiếu thước đo với loại sai lầm cần hạn chế. Ghi kết quả đối chiếu và điều bạn đã sửa nếu lần đầu chưa đúng.",
-        "Tự trả lời thẻ ôn tập, rồi kiểm tra các tiêu chí hoàn thành trước khi chuyển bài."
+        "Viết sáu chỉ số dòng và ba phần validation; lấy train bằng phần bù.",
+        "Đọc K-fold và Data transformation with held-out data trong tài liệu.",
+        "Mở hướng dẫn Practice Lab, tải mã hoặc chép vào Colab/Python 3.11 rồi chạy.",
+        "Đối chiếu trung bình train 9/7/5 và MAE 6/1/6; thử một chỉ số lặp.",
+        "Lưu mọi fold và giải thích vì sao dữ liệu thời gian/nhóm cần cách chia riêng."
       ],
       "study_steps_en": [
-        "Read the concept notes and answer: Choose metrics by error cost, use cross-validation, and tune without peeking at the test set.",
-        "Open scikit-learn User Guide, read the section marked Read this lesson, and record one verified example or definition.",
-        "Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the test.",
-        "Complete the practice task: Write a metric decision table, run cross-validation, tune one hyperparameter, and record results in a table.",
-        "Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact."
+        "List six row indices and three validation parts; construct training as the complement.",
+        "Read K-fold and Data transformation with held-out data in the reference.",
+        "Open the Practice Lab guide, download the code or copy it into Colab/Python 3.11 and run it.",
+        "Check training means 9/7/5 and MAEs 6/1/6; try a duplicate index.",
+        "Save every fold and explain why time/group data needs a suitable split."
       ],
       "practice_plan": {
         "vi": {
-          "task": "Báo trung bình và độ biến động của thước đo qua các lần kiểm định chéo.\n\nSau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Lập bảng chọn thước đo, chạy kiểm định chéo, điều chỉnh một siêu tham số và lưu kết quả so sánh.",
+          "task": "Chạy ba fold cho baseline trung bình; chứng minh train/validation rời nhau và tính MAE từng fold.",
           "deliverables": [
-            "Bảng thước đo, cách chia dữ liệu và lý do lựa chọn",
-            "Kết quả đối chiếu kèm dữ liệu hoặc điều kiện thực hiện",
-            "Một giới hạn và cách kiểm tra thêm"
+            "Mã cùng bảng chỉ số train/validation, trung bình train và MAE",
+            "MAE trung bình và độ lệch chuẩn mô tả",
+            "Ghi chú dữ liệu độc lập, không có kiểm tra thời gian/nhóm"
           ],
-          "checkpoint": "Đối chiếu thước đo với loại sai lầm cần hạn chế.",
-          "stretch": "Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào."
+          "checkpoint": "Mỗi chỉ số xuất hiện đúng một lần ở validation; MAE là 6,1,6.",
+          "stretch": "Đổi fold thành [0,3], [1,4], [2,5]; tính lại và giải thích độ nhạy với cách chia."
         },
         "en": {
-          "task": "Write a metric decision table, run cross-validation, tune one hyperparameter, and record results in a table.",
+          "task": "Run three folds for a mean baseline; prove train/validation disjointness and calculate each fold MAE.",
           "deliverables": [
-            "One executable code file",
-            "One test or expected output",
-            "One note describing an edge case and trade-off"
+            "Code and a table of train/validation indices, training means and MAEs",
+            "Mean MAE and descriptive standard deviation",
+            "Independent-row assumption and absence of time/group checks"
           ],
-          "checkpoint": "You can explain when accuracy, F1, PR-AUC, MAE, or calibration is the right choice.",
-          "stretch": "Add a failure test for cross-validation and explain the result."
+          "checkpoint": "Every index appears once in validation; MAEs are 6,1,6.",
+          "stretch": "Change folds to [0,3], [1,4], [2,5]; recompute and explain split sensitivity."
         }
       },
       "interview_questions": {
         "vi": [
-          "Bạn sẽ giải thích nội dung “Kiểm định chéo” bằng ví dụ nào?",
-          "Điều kiện nào cần kiểm tra trước khi áp dụng vào công việc thực tế?",
-          "Bạn dùng bằng chứng nào để kết luận bài làm đáp ứng yêu cầu?"
+          "Giữ lại chỉ số [0,1] của [2,4,6,8,10,12]: baseline và MAE bằng bao nhiêu?",
+          "Chuẩn hóa cả dữ liệu trước K-fold gây lỗi gì và sửa ở đâu?",
+          "MAE fold 6,1,6 có chứng minh hiệu năng tương lai không?"
         ],
         "en": [
-          "How would you explain cross-validation to a new teammate?",
-          "Which assumption behind cross-validation could fail in production?",
-          "Which metric or test would prove the result is trustworthy?"
+          "Hold out indices [0,1] of [2,4,6,8,10,12]: what are the baseline and MAE?",
+          "What is wrong with scaling all data before K-fold, and where is the fix?",
+          "Do fold MAEs of 6,1,6 prove future performance?"
         ]
       },
-      "formulas": [],
+      "formulas": [
+        "baseline_j = mean(y_train_j)",
+        "MAE_j = mean(|y_valid_j − baseline_j|)",
+        "mean_MAE = Σ MAE_j / K",
+        "descriptive_sd = √[Σ(MAE_j − mean_MAE)² / K]"
+      ],
       "code_examples": [
         {
           "language": "python",
-          "title": "Cross-validation: inspect one complete path",
-          "code": "# Topic: Cross-validation (phase-03-classical-ml-evaluation-3)\nfrom dataclasses import dataclass\n\n@dataclass(frozen=True)\nclass Result:\n    value: str\n    valid: bool\n\nresult = Result(value='ready', valid=True)\nprint(result)",
+          "title": "Three folds with a freshly fitted mean baseline",
+          "code": "from math import isfinite\nfrom statistics import mean, pstdev\n\ndef cross_validate_mean(targets, validation_folds):\n    if len(targets) < 2 or not all(isfinite(value) for value in targets):\n        raise ValueError(\"at least two finite targets are required\")\n    if len(validation_folds) < 2 or any(not fold for fold in validation_folds):\n        raise ValueError(\"at least two non-empty folds are required\")\n    flattened = [index for fold in validation_folds for index in fold]\n    if any(type(index) is not int for index in flattened):\n        raise ValueError(\"fold indices must be integers\")\n    if sorted(flattened) != list(range(len(targets))):\n        raise ValueError(\"folds must partition every index exactly once\")\n    results = []\n    for validation_indices in validation_folds:\n        training_indices = [index for index in range(len(targets))\n                            if index not in validation_indices]\n        assert set(training_indices).isdisjoint(validation_indices)\n        training_mean = mean(targets[index] for index in training_indices)\n        fold_mae = mean(abs(targets[index] - training_mean)\n                        for index in validation_indices)\n        results.append({\"train\": training_indices, \"valid\": validation_indices,\n                        \"training_mean\": training_mean, \"mae\": fold_mae})\n    return results\n\ntargets = [2, 4, 6, 8, 10, 12]\nresults = cross_validate_mean(targets, [[0, 1], [2, 3], [4, 5]])\nfor fold_number, result in enumerate(results, start=1):\n    print(f\"fold={fold_number} train={result['train']} valid={result['valid']}\")\n    print(f\"train_mean={result['training_mean']:.3f} mae={result['mae']:.3f}\")\nfold_scores = [result[\"mae\"] for result in results]\nprint(f\"mean_mae={mean(fold_scores):.3f} descriptive_sd={pstdev(fold_scores):.3f}\")\n",
           "status": "runnable",
-          "purpose_vi": "Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.",
-          "purpose_en": "Illustrate the input-to-output path for cross-validation.",
-          "setup": "Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.",
-          "expected_output": "Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.",
-          "edge_case_vi": "Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.",
-          "edge_case_en": "Try an empty input, a wrong shape or missing data and record the failure.",
-          "explanation_vi": "Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần nội dung; cần hoàn thành riêng nhiệm vụ thực hành.",
-          "explanation_en": "Keep the boundary executable and inspectable; change one input and verify the expected output."
+          "purpose_vi": "Fit baseline riêng trong mỗi train và chấm trên phần giữ lại.",
+          "purpose_en": "Fit a separate baseline within each training split and score held-out rows.",
+          "setup": "Python 3.11+; standard library only. Run in Colab or save as cross_validation.py and run python cross_validation.py.",
+          "expected_output": "fold=1 train=[2, 3, 4, 5] valid=[0, 1]\ntrain_mean=9.000 mae=6.000\nfold=2 train=[0, 1, 4, 5] valid=[2, 3]\ntrain_mean=7.000 mae=1.000\nfold=3 train=[0, 1, 2, 3] valid=[4, 5]\ntrain_mean=5.000 mae=6.000\nmean_mae=4.333 descriptive_sd=2.357",
+          "edge_case_vi": "Chỉ số lặp, thiếu, ngoài phạm vi hoặc fold rỗng gây ValueError; không có đánh giá trên tập train.",
+          "edge_case_en": "Duplicate, missing, out-of-range indices or empty folds raise ValueError; evaluation is not performed on training rows.",
+          "explanation_vi": "Đây là vòng lặp kiểm định chéo của baseline trung bình, không huấn luyện mô hình dùng đặc trưng và không bảo đảm tránh rò rỉ nhóm/thời gian.",
+          "explanation_en": "This is cross-validation of a mean baseline, not a feature-based fitted predictor and not a guarantee against group/time leakage."
         }
       ],
       "resources": [
         {
           "language": "en",
-          "title": "scikit-learn User Guide",
-          "url": "https://scikit-learn.org/stable/user_guide.html",
+          "title": "scikit-learn Cross-validation",
+          "url": "https://scikit-learn.org/stable/modules/cross_validation.html#k-fold",
           "kind": "official",
           "required": false,
           "purpose_vi": "Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.",
           "purpose_en": "Official reference to verify the lesson concept.",
-          "read_vi": "Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.",
-          "read_en": "Read the relevant section, run a small example, and record one verified insight."
+          "read_vi": "Đọc K-fold, Data transformation with held-out data và phần chia theo nhóm/thời gian.",
+          "read_en": "Read K-fold, Data transformation with held-out data and the group/time splitting sections."
         },
         {
           "language": "en",
@@ -14488,13 +14528,13 @@
         {
           "language": "en",
           "title": "scikit-learn Pipelines",
-          "url": "https://scikit-learn.org/stable/modules/compose.html",
+          "url": "https://scikit-learn.org/stable/modules/compose.html#pipeline-chaining-estimators",
           "kind": "official",
           "required": false,
           "purpose_vi": "Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.",
           "purpose_en": "Official reference to verify the lesson concept.",
-          "read_vi": "Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.",
-          "read_en": "Read the relevant section, run a small example, and record one verified insight."
+          "read_vi": "Đọc Pipeline; xác định bước fit nào phải nằm trong từng fold.",
+          "read_en": "Read Pipeline and identify which fit steps belong within every fold."
         },
         {
           "title": "Giải thích và hướng dẫn thực hành trong bài",
@@ -14519,69 +14559,84 @@
       ],
       "estimated_minutes": 60,
       "completion_checklist": [
-        "Báo trung bình và độ biến động của thước đo qua các lần kiểm định chéo.",
-        "Đối chiếu thước đo với loại sai lầm cần hạn chế.",
-        "Lưu kết quả và giải thích được một giới hạn mà không nhìn lời giải."
+        "Kiểm tra phân hoạch và trung bình train ở từng fold.",
+        "Tái tạo MAE 6/1/6, mean 4.333 và SD 2.357.",
+        "Phân biệt độ phân tán fold với khoảng tin cậy và tập test cuối."
       ],
       "completion_criteria": [
-        "Bài làm đáp ứng nhiệm vụ: Báo trung bình và độ biến động của thước đo qua các lần kiểm định chéo.",
-        "Có kết quả đối chiếu với tiêu chí hoặc dự đoán đã ghi trước.",
-        "Đối chiếu thước đo với loại sai lầm cần hạn chế."
+        "Kiểm tra phân hoạch và trung bình train ở từng fold.",
+        "Tái tạo MAE 6/1/6, mean 4.333 và SD 2.357.",
+        "Phân biệt độ phân tán fold với khoảng tin cậy và tập test cuối."
       ],
       "common_mistakes": [
-        "Dùng tập kiểm tra để liên tục chọn siêu tham số.",
-        "Kết luận từ một kết quả thuận lợi mà chưa kiểm tra trường hợp khác.",
-        "Chép lời giải nhưng không giải thích được quyết định trong bài làm của mình."
+        "Dùng trung bình của toàn bộ dữ liệu cho mọi fold.",
+        "Để cùng chỉ số trong cả train và validation.",
+        "Chia ngẫu nhiên bất chấp thời gian/nhóm hoặc coi SD fold là khoảng tin cậy."
       ],
       "next_lessons": [
         "phase-03-classical-ml-evaluation-4",
         "phase-03-classical-ml-analysis-1"
       ],
-      "review_question_vi": "Nội dung cốt lõi của “Kiểm định chéo” là gì?",
-      "review_question_en": "Define cross-validation in your own words. What are the input, transformation and output?",
-      "review_answer_vi": "Kiểm định chéo lặp việc huấn luyện và đánh giá trên các phần dữ liệu khác nhau. Cách chia phải tôn trọng nhóm hoặc thứ tự thời gian; mọi bước học từ dữ liệu cần nằm trong mỗi lần huấn luyện.",
-      "review_answer_en": "A strong answer names the input, transformation, output and the context where cross-validation is used. Relate it specifically to cross-validation in lesson phase-03-classical-ml-evaluation-3.",
+      "review_question_vi": "Trong K-fold, phần nào phải rời nhau và phần nào có thể chồng lặp?",
+      "review_question_en": "In K-fold, which parts must be disjoint and which may overlap?",
+      "review_answer_vi": "Train và validation của cùng lượt phải rời nhau. Mỗi mẫu thuộc đúng một fold validation; các tập train giữa các lượt chồng lặp, nên điểm fold không độc lập.",
+      "review_answer_en": "Training and validation within an iteration must be disjoint. Each sample belongs to one validation fold; training sets across iterations overlap, so fold scores are not independent.",
       "review_cards": [
         {
           "id": "phase-03-classical-ml-evaluation-3-recall",
           "type": "recall",
-          "question_vi": "Nội dung cốt lõi của “Kiểm định chéo” là gì?",
-          "question_en": "Define cross-validation in your own words. What are the input, transformation and output?",
-          "answer_vi": "Kiểm định chéo lặp việc huấn luyện và đánh giá trên các phần dữ liệu khác nhau. Cách chia phải tôn trọng nhóm hoặc thứ tự thời gian; mọi bước học từ dữ liệu cần nằm trong mỗi lần huấn luyện.",
-          "answer_en": "A strong answer names the input, transformation, output and the context where cross-validation is used.",
-          "hint_vi": "Nêu ý chính, sau đó minh họa bằng tình huống cụ thể.",
-          "hint_en": "Start with a small example you can calculate by hand."
+          "question_vi": "Trong K-fold, phần nào phải rời nhau và phần nào có thể chồng lặp?",
+          "question_en": "In K-fold, which parts must be disjoint and which may overlap?",
+          "answer_vi": "Train và validation của cùng lượt phải rời nhau. Mỗi mẫu thuộc đúng một fold validation; các tập train giữa các lượt chồng lặp, nên điểm fold không độc lập.",
+          "answer_en": "Training and validation within an iteration must be disjoint. Each sample belongs to one validation fold; training sets across iterations overlap, so fold scores are not independent.",
+          "hint_vi": "Phân biệt cùng lượt và giữa các lượt.",
+          "hint_en": "Distinguish within and across iterations."
         },
         {
           "id": "phase-03-classical-ml-evaluation-3-application",
           "type": "application",
-          "question_vi": "Báo trung bình và độ biến động của thước đo qua các lần kiểm định chéo.",
-          "question_en": "Write a small code example or design that applies cross-validation to an AI engineering problem.",
-          "answer_vi": "Với nhiệm vụ “Báo trung bình và độ biến động của thước đo qua các lần kiểm định chéo”, cần lưu: bảng thước đo, cách chia dữ liệu và lý do lựa chọn. Đối chiếu thước đo với loại sai lầm cần hạn chế.",
-          "answer_en": "The cross-validation example should have an explicit input, expected output and a way to run or verify it (phase-03-classical-ml-evaluation-3).",
-          "hint_vi": "Bắt đầu từ nhiệm vụ thực hành của bài.",
-          "hint_en": "Start from the lesson code example and change one assumption."
+          "question_vi": "Giữ lại chỉ số [0,1] của [2,4,6,8,10,12]: baseline và MAE bằng bao nhiêu?",
+          "question_en": "Hold out indices [0,1] of [2,4,6,8,10,12]: what are the baseline and MAE?",
+          "answer_vi": "Train=[6,8,10,12] nên trung bình=9. Validation=[2,4] có lỗi 7 và 5; MAE=6. Không được dùng trung bình toàn dữ liệu là 7.",
+          "answer_en": "Training targets [6,8,10,12] have mean 9. Validation targets [2,4] have errors 7 and 5; MAE=6. Do not use the full-data mean of 7.",
+          "hint_vi": "Chỉ tính trung bình từ bốn mẫu train.",
+          "hint_en": "Average only the four training targets."
         },
         {
           "id": "phase-03-classical-ml-evaluation-3-debug",
           "type": "debug",
-          "question_vi": "Khi làm bài “Kiểm định chéo”, bạn cần tránh lỗi nào và kiểm tra lại ra sao?",
-          "question_en": "If cross-validation produces a wrong result or a metric drops, what would you debug first?",
-          "answer_vi": "Trong bài “Kiểm định chéo”, lỗi cần tránh là: dùng tập kiểm tra để liên tục chọn siêu tham số. Đối chiếu thước đo với loại sai lầm cần hạn chế. Dùng ví dụ nhỏ để tìm bước đầu tiên có kết quả khác dự kiến.",
-          "answer_en": "For cross-validation, check inputs/shapes, preprocessing and the baseline first; then isolate the failure with a small test and error analysis (phase-03-classical-ml-evaluation-3).",
-          "hint_vi": "Tìm bước đầu tiên xuất hiện khác biệt.",
-          "hint_en": "Do not start by changing the model or adding complexity."
+          "question_vi": "Chuẩn hóa cả dữ liệu trước K-fold gây lỗi gì và sửa ở đâu?",
+          "question_en": "What is wrong with scaling all data before K-fold, and where is the fix?",
+          "answer_vi": "Thống kê validation đã lọt vào bước học. Fit scaler riêng trên train mỗi fold rồi transform validation; đặt scaler và mô hình trong Pipeline. Ví dụ hiện chỉ fit trung bình mục tiêu.",
+          "answer_en": "Validation statistics leaked into fitting. Fit the scaler separately on each training fold and transform validation; put scaler and estimator in a Pipeline. This example only fits the target mean.",
+          "hint_vi": "Tìm dữ liệu mà fit đã nhìn thấy.",
+          "hint_en": "Track which rows fit has seen."
         },
         {
           "id": "phase-03-classical-ml-evaluation-3-interview",
           "type": "interview",
-          "question_vi": "Bạn dùng kết quả nào từ bài “Kiểm định chéo” để giải thích cách làm và giới hạn?",
-          "question_en": "In an interview, how would you explain a trade-off and one edge case of cross-validation?",
-          "answer_vi": "Bắt đầu từ nhiệm vụ “Báo trung bình và độ biến động của thước đo qua các lần kiểm định chéo”. Trình bày kết quả đã lưu, cách đối chiếu và một điều kiện có thể khiến kết luận thay đổi; không chỉ đọc lại định nghĩa.",
-          "answer_en": "The answer about cross-validation should cover assumptions, metrics/cost, limitations and how to reduce production risk (phase-03-classical-ml-evaluation-3).",
-          "hint_vi": "Dùng quyết định thật trong bài làm, tránh chỉ đọc định nghĩa.",
-          "hint_en": "Relate it to latency, quality, cost or observability where relevant."
+          "question_vi": "MAE fold 6,1,6 có chứng minh hiệu năng tương lai không?",
+          "question_en": "Do fold MAEs of 6,1,6 prove future performance?",
+          "answer_vi": "Không. Mean=4.333, SD mô tả=2.357 cho thấy độ nhạy cách chia trên fixture nhỏ. Nếu có thời gian/nhóm phải đổi splitter; cần dữ liệu đại diện và test độc lập sau lựa chọn.",
+          "answer_en": "No. Mean=4.333 and descriptive SD=2.357 show split sensitivity on a tiny fixture. Time/group data needs an appropriate splitter; representative data and independent post-selection testing are required.",
+          "hint_vi": "Xem giả định về quan sát độc lập.",
+          "hint_en": "Check the independent-observation assumption."
         }
+      ],
+      "completion_checklist_en": [
+        "Verify the partition and training mean in every fold.",
+        "Reproduce MAEs 6/1/6, mean 4.333 and SD 2.357.",
+        "Distinguish fold spread from a confidence interval and final test set."
+      ],
+      "completion_criteria_en": [
+        "Verify the partition and training mean in every fold.",
+        "Reproduce MAEs 6/1/6, mean 4.333 and SD 2.357.",
+        "Distinguish fold spread from a confidence interval and final test set."
+      ],
+      "common_mistakes_en": [
+        "Use the full-data mean for every fold.",
+        "Place the same index in both training and validation.",
+        "Ignore time/groups when splitting or treat fold SD as a confidence interval."
       ]
     },
     {
@@ -14590,17 +14645,17 @@
       "module_id": "evaluation",
       "title_vi": "Điều chỉnh siêu tham số",
       "title_en": "Hyperparameter tuning",
-      "summary_vi": "Siêu tham số quy định cấu trúc hoặc cách học của mô hình.",
-      "summary_en": "Learn Hyperparameter tuning through an input → transformation → output model, then verify it with an edge-case exercise.",
+      "summary_vi": "Chọn số láng giềng k bằng MAE validation trên cùng cách chia; khóa lựa chọn, fit lại rồi mới đánh giá test.",
+      "summary_en": "Choose neighbor count k by validation MAE on a fixed split; lock the choice, refit and only then evaluate the test set.",
       "learning_objectives": [
-        "So sánh các giá trị siêu tham số theo cùng quy trình kiểm định.",
-        "Đối chiếu thước đo với loại sai lầm cần hạn chế.",
-        "Giải thích kết quả và nêu một giới hạn của bài làm."
+        "Phân biệt siêu tham số k và dữ liệu được lưu khi fit k-NN.",
+        "So sánh ba ứng viên bằng cùng train/validation và MAE.",
+        "Khóa lựa chọn trước test, báo ngân sách và giới hạn fixture nhỏ."
       ],
       "learning_objectives_en": [
-        "Explain hyperparameter tuning with a concrete example.",
-        "Write or adapt a small code example applying hyperparameter tuning.",
-        "Recognize its assumptions, limits and one common failure mode."
+        "Distinguish hyperparameter k from data stored when fitting k-NN.",
+        "Compare three candidates on identical train/validation rows using MAE.",
+        "Lock selection before testing and report budget and tiny-fixture limitations."
       ],
       "prerequisites": [
         "phase-03-classical-ml-evaluation-3",
@@ -14608,92 +14663,96 @@
       ],
       "key_terms": [
         "hyperparameter",
-        "tuning",
-        "dataset",
-        "feature",
-        "baseline",
-        "evaluation"
+        "k-nearest neighbors",
+        "validation MAE",
+        "search budget",
+        "refit",
+        "held-out test"
       ],
-      "concept_notes_vi": "Siêu tham số quy định cấu trúc hoặc cách học của mô hình, chẳng hạn độ sâu cây và tốc độ học. Chúng khác tham số như trọng số, vốn được ước lượng trong quá trình huấn luyện.\n\nDữ liệu kiểm định giúp chọn siêu tham số; tập kiểm tra dành cho đánh giá cuối. Thử nhiều cấu hình rồi chỉ báo cấu hình tốt nhất có thể làm kết quả kiểm định quá lạc quan, nên cần đánh giá độc lập. Ghi cả ngân sách tìm kiếm và thời gian chạy để cân nhắc mức cải thiện.\n\nTự kiểm tra: được dùng điểm tập kiểm tra để chọn thêm cấu hình không? Không; khi đó tập này đã tham gia lựa chọn và không còn là đánh giá cuối độc lập. Giữ cùng cách chia và thước đo khi so các cấu hình.",
-      "concept_notes_en": "Hyperparameters control a model's structure or learning process, such as tree depth and learning rate. They differ from parameters such as weights, which are estimated during training.\n\nValidation data supports hyperparameter selection; the test set is for final evaluation. Trying many configurations and reporting only the best can make validation results optimistic, so independent evaluation is needed. Record search budget and runtime to judge whether an improvement is worthwhile.\n\nSelf-check: can test scores guide additional configuration choices? No; that makes the test set part of selection rather than independent final evaluation. Keep splits and metrics consistent when comparing configurations.",
-      "why_it_matters_vi": "Chọn thước đo theo chi phí sai lầm và giữ tập kiểm tra ngoài quá trình lựa chọn mô hình.",
-      "why_it_matters_en": "Choose metrics by error cost, use cross-validation, and tune without peeking at the test set.",
+      "concept_notes_vi": "Siêu tham số quy định cách học hoặc dự đoán và được chọn bên ngoài lần fit: độ sâu cây, tốc độ học, hoặc số láng giềng k. Hồi quy k-NN lưu các cặp (đặc trưng, mục tiêu) của train; dự đoán là trung bình mục tiêu của k mẫu có khoảng cách gần nhất. Fit k-NN không học hệ số hồi quy.\n\nVí dụ dùng một đặc trưng số, khoảng cách tuyệt đối và trọng số đều. Train có sáu dòng, validation có hai dòng khác biệt. Thử đúng k=1,3,5 trên cùng train; MAE validation lần lượt 2.000,0.667,0.500 nên chọn k=5. Nếu bằng điểm, quy tắc đã định trước chọn k nhỏ hơn; bằng khoảng cách thì dùng thứ tự dòng train.\n\nSau lựa chọn, fit lại k=5 trên train+validation; lúc này validation đã trở thành dữ liệu huấn luyện, không được dùng điểm cũ như đánh giá độc lập của mô hình mới. Chỉ sau đó đọc hai dòng test để báo MAE=1.000, cùng baseline trung bình fit trên train+validation có MAE=2.000. Hàm chọn k không nhận dữ liệu test.\n\nĐây là tìm kiếm trên một split nhỏ, không phải GridSearchCV, benchmark hay bằng chứng k=5 luôn tốt nhất. Tìm nhiều ứng viên có thể khớp nhiễu validation; ghi cả ứng viên, metric và ngân sách (3 lần fit ứng viên + 1 lần refit k-NN). Trong dự án lớn, dùng cross-validation phù hợp và Pipeline cho bước tiền xử lý, rồi test độc lập; không đổi lưới tìm kiếm dựa trên điểm test.",
+      "concept_notes_en": "Hyperparameters control learning or prediction and are selected outside an individual fit: tree depth, learning rate or neighbor count k. k-NN regression stores training (feature, target) pairs; prediction averages the targets of the k nearest rows. Fitting k-NN does not learn regression coefficients.\n\nThe example uses one numeric feature, absolute distance and uniform weights. Training has six rows and validation has two distinct rows. Try k=1,3,5 on the same training data; validation MAEs are 2.000,0.667,0.500, so select k=5. A predeclared score tie rule prefers smaller k; equal distances use training-row order.\n\nAfter selection, refit k=5 on train+validation. Validation is now training data, so its old score is not an independent evaluation of the new model. Only then read the two test rows: test MAE=1.000, compared with MAE=2.000 for a mean baseline fitted on train+validation. The k-selection function receives no test data.\n\nThis is a tiny single-split search, not GridSearchCV, a benchmark or evidence that k=5 is universally best. Searching more candidates can fit validation noise; record candidates, metric and budget (3 candidate fits + 1 k-NN refit). Larger projects need suitable cross-validation and a preprocessing Pipeline, followed by independent testing; do not revise the search grid based on test scores.",
+      "why_it_matters_vi": "Điểm tốt nhất sau tìm kiếm dễ quá lạc quan; tách lựa chọn và đánh giá cuối giúp báo cáo trung thực.",
+      "why_it_matters_en": "The best score after a search can be optimistic; separating selection from final evaluation keeps reporting honest.",
       "study_steps_vi": [
-        "Đọc phần giải thích, xác định khái niệm và điều kiện cần dùng cho nhiệm vụ bên dưới.",
-        "Tìm mục tương ứng với “Hyperparameter tuning” trong tài liệu tham khảo; đối chiếu với phần giải thích của bài.",
-        "So sánh các giá trị siêu tham số theo cùng quy trình kiểm định.",
-        "Đối chiếu thước đo với loại sai lầm cần hạn chế. Ghi kết quả đối chiếu và điều bạn đã sửa nếu lần đầu chưa đúng.",
-        "Tự trả lời thẻ ôn tập, rồi kiểm tra các tiêu chí hoàn thành trước khi chuyển bài."
+        "Ghi vai trò train, validation, test và lưới k=1,3,5 trước khi chạy.",
+        "Đọc Exhaustive Grid Search và Model selection: development and evaluation.",
+        "Mở hướng dẫn Practice Lab, tải mã hoặc chép vào Colab/Python 3.11 rồi chạy.",
+        "Đối chiếu ba MAE validation; theo dõi refit trước khi mở test.",
+        "Lưu k được chọn, kết quả test/baseline, ngân sách và giới hạn dữ liệu nhỏ."
       ],
       "study_steps_en": [
-        "Read the concept notes and answer: Choose metrics by error cost, use cross-validation, and tune without peeking at the test set.",
-        "Open scikit-learn User Guide, read the section marked Read this lesson, and record one verified example or definition.",
-        "Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the test.",
-        "Complete the practice task: Write a metric decision table, run cross-validation, tune one hyperparameter, and record results in a table.",
-        "Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact."
+        "Record train, validation and test roles and the grid k=1,3,5 before running.",
+        "Read Exhaustive Grid Search and Model selection: development and evaluation.",
+        "Open the Practice Lab guide, download the code or copy it into Colab/Python 3.11 and run it.",
+        "Check the three validation MAEs; trace refitting before opening test data.",
+        "Save selected k, test/baseline results, budget and the tiny-data limitation."
       ],
       "practice_plan": {
         "vi": {
-          "task": "So sánh các giá trị siêu tham số theo cùng quy trình kiểm định.\n\nSau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Lập bảng chọn thước đo, chạy kiểm định chéo, điều chỉnh một siêu tham số và lưu kết quả so sánh.",
+          "task": "Chọn k từ 1,3,5 theo MAE validation, refit train+validation rồi báo test và baseline một lần.",
           "deliverables": [
-            "Bảng thước đo, cách chia dữ liệu và lý do lựa chọn",
-            "Kết quả đối chiếu kèm dữ liệu hoặc điều kiện thực hiện",
-            "Một giới hạn và cách kiểm tra thêm"
+            "Mã và bảng ba ứng viên với MAE validation",
+            "k được chọn, quy tắc hòa điểm và ngân sách fit",
+            "MAE test/baseline và ghi chú không dùng test để chọn lại"
           ],
-          "checkpoint": "Đối chiếu thước đo với loại sai lầm cần hạn chế.",
-          "stretch": "Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào."
+          "checkpoint": "Hàm lựa chọn không nhận test; k=5 được khóa trước khi tính test MAE.",
+          "stretch": "Trên dữ liệu phát triển, so sánh lựa chọn bằng cross-validation; cần test mới nếu test cũ đã dẫn dắt thay đổi."
         },
         "en": {
-          "task": "Write a metric decision table, run cross-validation, tune one hyperparameter, and record results in a table.",
+          "task": "Select k from 1,3,5 by validation MAE, refit on train+validation and report test and baseline once.",
           "deliverables": [
-            "One executable code file",
-            "One test or expected output",
-            "One note describing an edge case and trade-off"
+            "Code and a three-candidate validation MAE table",
+            "Selected k, score tie rule and fit budget",
+            "Test/baseline MAEs and a note that test does not guide reselection"
           ],
-          "checkpoint": "You can explain when accuracy, F1, PR-AUC, MAE, or calibration is the right choice.",
-          "stretch": "Add a failure test for hyperparameter tuning and explain the result."
+          "checkpoint": "The selection function receives no test data; k=5 is locked before test MAE is computed.",
+          "stretch": "On development data, compare cross-validation selection; use a new test set if the old test guided changes."
         }
       },
       "interview_questions": {
         "vi": [
-          "Bạn sẽ giải thích nội dung “Điều chỉnh siêu tham số” bằng ví dụ nào?",
-          "Điều kiện nào cần kiểm tra trước khi áp dụng vào công việc thực tế?",
-          "Bạn dùng bằng chứng nào để kết luận bài làm đáp ứng yêu cầu?"
+          "MAE validation của k=1,3,5 là 2,0.667,0.5: chọn gì và làm gì tiếp?",
+          "Sau khi xem test, thêm k=7 vì muốn điểm tốt hơn: sai ở đâu?",
+          "Vì sao không thể tuyên bố k=5 tốt nhất từ ví dụ này?"
         ],
         "en": [
-          "How would you explain hyperparameter tuning to a new teammate?",
-          "Which assumption behind hyperparameter tuning could fail in production?",
-          "Which metric or test would prove the result is trustworthy?"
+          "Validation MAEs for k=1,3,5 are 2,0.667,0.5: what do you select and do next?",
+          "After seeing test results, you add k=7 to improve them: what went wrong?",
+          "Why can this example not establish that k=5 is best in general?"
         ]
       },
-      "formulas": [],
+      "formulas": [
+        "ŷ(query; k) = mean(targets of k nearest training rows)",
+        "k* = argmin_k MAE_validation(k)",
+        "candidate fits in K-fold grid search = candidate_count × fold_count; refit adds one fit"
+      ],
       "code_examples": [
         {
           "language": "python",
-          "title": "Hyperparameter tuning: inspect one complete path",
-          "code": "# Topic: Hyperparameter tuning (phase-03-classical-ml-evaluation-4)\nfrom dataclasses import dataclass\n\n@dataclass(frozen=True)\nclass Result:\n    value: str\n    valid: bool\n\nresult = Result(value='ready', valid=True)\nprint(result)",
+          "title": "Select k using validation, then open the test set",
+          "code": "from math import isfinite\nfrom statistics import mean\n\ndef fit_knn(training_rows, neighbors):\n    if type(neighbors) is not int or not 1 <= neighbors <= len(training_rows):\n        raise ValueError(\"neighbors must be an integer within training size\")\n    if any(not isfinite(value) for row in training_rows for value in row):\n        raise ValueError(\"training values must be finite\")\n    return tuple(tuple(row) for row in training_rows), neighbors\n\ndef predict_knn(model, queries):\n    training_rows, neighbors = model\n    predictions = []\n    for query in queries:\n        if not isfinite(query):\n            raise ValueError(\"queries must be finite\")\n        nearest = sorted(enumerate(training_rows),\n                         key=lambda item: (abs(item[1][0] - query), item[0]))\n        predictions.append(mean(row[1] for _, row in nearest[:neighbors]))\n    return predictions\n\ndef mean_absolute_error(actual, predicted):\n    if not actual or len(actual) != len(predicted):\n        raise ValueError(\"non-empty aligned values are required\")\n    if not all(isfinite(value) for value in [*actual, *predicted]):\n        raise ValueError(\"metric values must be finite\")\n    return mean(abs(truth - guess) for truth, guess in zip(actual, predicted))\n\ndef select_neighbors(training_rows, validation_rows, candidates):\n    if not candidates or not validation_rows:\n        raise ValueError(\"candidates and validation rows must not be empty\")\n    results = []\n    for neighbors in candidates:\n        model = fit_knn(training_rows, neighbors)\n        predicted = predict_knn(model, [row[0] for row in validation_rows])\n        score = mean_absolute_error([row[1] for row in validation_rows], predicted)\n        results.append((neighbors, score))\n    best_neighbors, _ = min(results, key=lambda result: (result[1], result[0]))\n    return best_neighbors, results\n\ntraining_rows = [(0, 0), (1, 1), (2, 6), (3, 3), (4, 4), (5, 5)]\nvalidation_rows = [(1.9, 2), (3.9, 4)]\nbest_neighbors, results = select_neighbors(training_rows, validation_rows, [1, 3, 5])\nfor neighbors, score in results:\n    print(f\"k={neighbors} validation_mae={score:.3f}\")\nprint(f\"selected_k={best_neighbors} candidate_fits={len(results)}\")\ndevelopment_rows = training_rows + validation_rows\nfinal_model = fit_knn(development_rows, best_neighbors)\n# Test rows are opened only after selection and refitting are complete.\ntest_rows = [(0.5, 0.5), (4.5, 4.5)]\ntest_targets = [row[1] for row in test_rows]\ntest_predictions = predict_knn(final_model, [row[0] for row in test_rows])\nbaseline = mean(row[1] for row in development_rows)\nprint(f\"test_mae={mean_absolute_error(test_targets, test_predictions):.3f}\")\nprint(f\"baseline_test_mae={mean_absolute_error(test_targets, [baseline] * 2):.3f}\")\n",
           "status": "runnable",
-          "purpose_vi": "Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.",
-          "purpose_en": "Illustrate the input-to-output path for hyperparameter tuning.",
-          "setup": "Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.",
-          "expected_output": "Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.",
-          "edge_case_vi": "Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.",
-          "edge_case_en": "Try an empty input, a wrong shape or missing data and record the failure.",
-          "explanation_vi": "Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần nội dung; cần hoàn thành riêng nhiệm vụ thực hành.",
-          "explanation_en": "Keep the boundary executable and inspectable; change one input and verify the expected output."
+          "purpose_vi": "Thực hiện lựa chọn siêu tham số từ dự đoán thật trên validation rồi đánh giá test sau refit.",
+          "purpose_en": "Perform hyperparameter selection from actual validation predictions and evaluate test after refitting.",
+          "setup": "Python 3.11+; standard library only. Run in Colab or save as tuning.py and run python tuning.py.",
+          "expected_output": "k=1 validation_mae=2.000\nk=3 validation_mae=0.667\nk=5 validation_mae=0.500\nselected_k=5 candidate_fits=3\ntest_mae=1.000\nbaseline_test_mae=2.000",
+          "edge_case_vi": "k=0, k vượt số mẫu train, lưới rỗng hoặc validation rỗng gây ValueError. Hòa MAE chọn k nhỏ hơn; hòa khoảng cách dùng thứ tự train.",
+          "edge_case_en": "k=0, k beyond training size, an empty grid or empty validation raises ValueError. MAE ties choose smaller k; distance ties use training order.",
+          "explanation_vi": "Dữ liệu một chiều nhỏ, split cố định; ví dụ không kiểm tra rò rỉ theo nhóm/thời gian và không thay thế quy trình đánh giá trên dữ liệu đại diện.",
+          "explanation_en": "Small one-dimensional data and a fixed split; this example does not check group/time leakage or replace representative evaluation."
         }
       ],
       "resources": [
         {
           "language": "en",
-          "title": "scikit-learn User Guide",
-          "url": "https://scikit-learn.org/stable/user_guide.html",
+          "title": "scikit-learn Hyperparameter tuning",
+          "url": "https://scikit-learn.org/stable/modules/grid_search.html#model-selection-development-and-evaluation",
           "kind": "official",
           "required": false,
           "purpose_vi": "Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.",
           "purpose_en": "Official reference to verify the lesson concept.",
-          "read_vi": "Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.",
-          "read_en": "Read the relevant section, run a small example, and record one verified insight."
+          "read_vi": "Đọc Exhaustive Grid Search và Model selection: development and evaluation; phân biệt tập phát triển và tập đánh giá cuối.",
+          "read_en": "Read Exhaustive Grid Search and Model selection: development and evaluation; distinguish development data from final evaluation data."
         },
         {
           "language": "en",
@@ -14727,6 +14786,17 @@
           "read_vi": "Đọc giải thích → xem ví dụ → thực hành → tự kiểm tra.",
           "read_en": "Follow Study plan → Concept notes → Code example → Practice plan.",
           "required": true
+        },
+        {
+          "language": "en",
+          "title": "scikit-learn Nearest Neighbors Regression",
+          "url": "https://scikit-learn.org/stable/modules/neighbors.html#nearest-neighbors-regression",
+          "kind": "official",
+          "required": false,
+          "purpose_vi": "Kiểm chứng cách dự đoán hồi quy k-NN.",
+          "purpose_en": "Verify the k-NN regression prediction rule.",
+          "read_vi": "Đọc Nearest Neighbors Regression và lưu ý thứ tự dữ liệu khi bằng khoảng cách.",
+          "read_en": "Read Nearest Neighbors Regression and the warning about equal-distance ties."
         }
       ],
       "exercise_ids": [
@@ -14740,69 +14810,84 @@
       ],
       "estimated_minutes": 60,
       "completion_checklist": [
-        "So sánh các giá trị siêu tham số theo cùng quy trình kiểm định.",
-        "Đối chiếu thước đo với loại sai lầm cần hạn chế.",
-        "Lưu kết quả và giải thích được một giới hạn mà không nhìn lời giải."
+        "Tái tạo bảng validation và lựa chọn k=5.",
+        "Refit trước test; báo MAE test 1 và baseline 2.",
+        "Ghi ba candidate fits, một refit và giới hạn fixture."
       ],
       "completion_criteria": [
-        "Bài làm đáp ứng nhiệm vụ: So sánh các giá trị siêu tham số theo cùng quy trình kiểm định.",
-        "Có kết quả đối chiếu với tiêu chí hoặc dự đoán đã ghi trước.",
-        "Đối chiếu thước đo với loại sai lầm cần hạn chế."
+        "Tái tạo bảng validation và lựa chọn k=5.",
+        "Refit trước test; báo MAE test 1 và baseline 2.",
+        "Ghi ba candidate fits, một refit và giới hạn fixture."
       ],
       "common_mistakes": [
-        "Dùng tập kiểm tra để liên tục chọn siêu tham số.",
-        "Kết luận từ một kết quả thuận lợi mà chưa kiểm tra trường hợp khác.",
-        "Chép lời giải nhưng không giải thích được quyết định trong bài làm của mình."
+        "Dùng test để chọn k hoặc mở rộng lưới.",
+        "So ứng viên trên các split hoặc thước đo khác nhau.",
+        "Báo điểm validation tốt nhất như bằng chứng hiệu năng độc lập."
       ],
       "next_lessons": [
         "phase-03-classical-ml-analysis-1",
         "phase-03-classical-ml-analysis-2"
       ],
-      "review_question_vi": "Nội dung cốt lõi của “Điều chỉnh siêu tham số” là gì?",
-      "review_question_en": "Define hyperparameter tuning in your own words. What are the input, transformation and output?",
-      "review_answer_vi": "Siêu tham số quy định cấu trúc hoặc cách học của mô hình. Dùng dữ liệu kiểm định để lựa chọn, ghi ngân sách tìm kiếm và giữ tập kiểm tra ngoài quá trình điều chỉnh.",
-      "review_answer_en": "A strong answer names the input, transformation, output and the context where hyperparameter tuning is used. Relate it specifically to hyperparameter tuning in lesson phase-03-classical-ml-evaluation-4.",
+      "review_question_vi": "k là gì trong hồi quy k-NN; fit học điều gì?",
+      "review_question_en": "What is k in k-NN regression, and what does fit learn?",
+      "review_answer_vi": "k là số láng giềng lấy trung bình, một siêu tham số được chọn bằng validation. Fit lưu các dòng train; dự đoán dùng khoảng cách đến các dòng ấy, không học hệ số hồi quy.",
+      "review_answer_en": "k is the number of neighbors averaged, a hyperparameter selected using validation. Fit stores training rows; prediction uses distances to them rather than learned regression coefficients.",
       "review_cards": [
         {
           "id": "phase-03-classical-ml-evaluation-4-recall",
           "type": "recall",
-          "question_vi": "Nội dung cốt lõi của “Điều chỉnh siêu tham số” là gì?",
-          "question_en": "Define hyperparameter tuning in your own words. What are the input, transformation and output?",
-          "answer_vi": "Siêu tham số quy định cấu trúc hoặc cách học của mô hình. Dùng dữ liệu kiểm định để lựa chọn, ghi ngân sách tìm kiếm và giữ tập kiểm tra ngoài quá trình điều chỉnh.",
-          "answer_en": "A strong answer names the input, transformation, output and the context where hyperparameter tuning is used.",
-          "hint_vi": "Nêu ý chính, sau đó minh họa bằng tình huống cụ thể.",
-          "hint_en": "Start with a small example you can calculate by hand."
+          "question_vi": "k là gì trong hồi quy k-NN; fit học điều gì?",
+          "question_en": "What is k in k-NN regression, and what does fit learn?",
+          "answer_vi": "k là số láng giềng lấy trung bình, một siêu tham số được chọn bằng validation. Fit lưu các dòng train; dự đoán dùng khoảng cách đến các dòng ấy, không học hệ số hồi quy.",
+          "answer_en": "k is the number of neighbors averaged, a hyperparameter selected using validation. Fit stores training rows; prediction uses distances to them rather than learned regression coefficients.",
+          "hint_vi": "Phân biệt quy tắc dự đoán với dữ liệu được lưu.",
+          "hint_en": "Distinguish the prediction rule from stored data."
         },
         {
           "id": "phase-03-classical-ml-evaluation-4-application",
           "type": "application",
-          "question_vi": "So sánh các giá trị siêu tham số theo cùng quy trình kiểm định.",
-          "question_en": "Write a small code example or design that applies hyperparameter tuning to an AI engineering problem.",
-          "answer_vi": "Với nhiệm vụ “So sánh các giá trị siêu tham số theo cùng quy trình kiểm định”, cần lưu: bảng thước đo, cách chia dữ liệu và lý do lựa chọn. Đối chiếu thước đo với loại sai lầm cần hạn chế.",
-          "answer_en": "The hyperparameter tuning example should have an explicit input, expected output and a way to run or verify it (phase-03-classical-ml-evaluation-4).",
-          "hint_vi": "Bắt đầu từ nhiệm vụ thực hành của bài.",
-          "hint_en": "Start from the lesson code example and change one assumption."
+          "question_vi": "MAE validation của k=1,3,5 là 2,0.667,0.5: chọn gì và làm gì tiếp?",
+          "question_en": "Validation MAEs for k=1,3,5 are 2,0.667,0.5: what do you select and do next?",
+          "answer_vi": "Chọn k=5 vì MAE thấp nhất. Khóa k, refit train+validation, rồi đánh giá test chưa dùng để chọn; ví dụ cho MAE test=1 và baseline=2.",
+          "answer_en": "Choose k=5 for the lowest MAE. Lock k, refit on train+validation, then evaluate test data not used for selection; the example gives test MAE=1 and baseline MAE=2.",
+          "hint_vi": "MAE càng nhỏ càng tốt trên cùng tập.",
+          "hint_en": "Lower MAE is better on the same set."
         },
         {
           "id": "phase-03-classical-ml-evaluation-4-debug",
           "type": "debug",
-          "question_vi": "Khi làm bài “Điều chỉnh siêu tham số”, bạn cần tránh lỗi nào và kiểm tra lại ra sao?",
-          "question_en": "If hyperparameter tuning produces a wrong result or a metric drops, what would you debug first?",
-          "answer_vi": "Trong bài “Điều chỉnh siêu tham số”, lỗi cần tránh là: dùng tập kiểm tra để liên tục chọn siêu tham số. Đối chiếu thước đo với loại sai lầm cần hạn chế. Dùng ví dụ nhỏ để tìm bước đầu tiên có kết quả khác dự kiến.",
-          "answer_en": "For hyperparameter tuning, check inputs/shapes, preprocessing and the baseline first; then isolate the failure with a small test and error analysis (phase-03-classical-ml-evaluation-4).",
-          "hint_vi": "Tìm bước đầu tiên xuất hiện khác biệt.",
-          "hint_en": "Do not start by changing the model or adding complexity."
+          "question_vi": "Sau khi xem test, thêm k=7 vì muốn điểm tốt hơn: sai ở đâu?",
+          "question_en": "After seeing test results, you add k=7 to improve them: what went wrong?",
+          "answer_vi": "Test đã dẫn dắt lựa chọn nên không còn là đánh giá độc lập. Ghi rõ việc đã dùng test; tiếp tục phát triển bằng train/validation và cần một test mới chưa xem cho kết luận cuối.",
+          "answer_en": "Test results now guide selection and are no longer independent evaluation. Disclose that use; continue development with train/validation and obtain a new unseen test set for the final claim.",
+          "hint_vi": "Xem quyết định nào đã dựa vào test.",
+          "hint_en": "Trace decisions influenced by test."
         },
         {
           "id": "phase-03-classical-ml-evaluation-4-interview",
           "type": "interview",
-          "question_vi": "Bạn dùng kết quả nào từ bài “Điều chỉnh siêu tham số” để giải thích cách làm và giới hạn?",
-          "question_en": "In an interview, how would you explain a trade-off and one edge case of hyperparameter tuning?",
-          "answer_vi": "Bắt đầu từ nhiệm vụ “So sánh các giá trị siêu tham số theo cùng quy trình kiểm định”. Trình bày kết quả đã lưu, cách đối chiếu và một điều kiện có thể khiến kết luận thay đổi; không chỉ đọc lại định nghĩa.",
-          "answer_en": "The answer about hyperparameter tuning should cover assumptions, metrics/cost, limitations and how to reduce production risk (phase-03-classical-ml-evaluation-4).",
-          "hint_vi": "Dùng quyết định thật trong bài làm, tránh chỉ đọc định nghĩa.",
-          "hint_en": "Relate it to latency, quality, cost or observability where relevant."
+          "question_vi": "Vì sao không thể tuyên bố k=5 tốt nhất từ ví dụ này?",
+          "question_en": "Why can this example not establish that k=5 is best in general?",
+          "answer_vi": "Chỉ có ba ứng viên và hai dòng validation, nên nhiễu và cách chia ảnh hưởng lớn. Báo toàn bộ kết quả/ngân sách; kiểm định chéo phù hợp trên dữ liệu phát triển và test đại diện mới giúp đánh giá khả năng khái quát.",
+          "answer_en": "Only three candidates and two validation rows were used, so noise and the split matter greatly. Report all results and budget; suitable development cross-validation and representative testing help assess generalization.",
+          "hint_vi": "Nhớ kích thước dữ liệu và phạm vi tìm kiếm.",
+          "hint_en": "Remember sample size and search scope."
         }
+      ],
+      "completion_checklist_en": [
+        "Reproduce the validation table and selection of k=5.",
+        "Refit before testing; report test MAE 1 and baseline MAE 2.",
+        "Record three candidate fits, one refit and fixture limitations."
+      ],
+      "completion_criteria_en": [
+        "Reproduce the validation table and selection of k=5.",
+        "Refit before testing; report test MAE 1 and baseline MAE 2.",
+        "Record three candidate fits, one refit and fixture limitations."
+      ],
+      "common_mistakes_en": [
+        "Use test data to choose k or expand the grid.",
+        "Compare candidates using different splits or metrics.",
+        "Report the best validation score as independent performance evidence."
       ]
     },
     {

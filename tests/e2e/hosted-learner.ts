@@ -2,7 +2,12 @@ import type { Page } from '@playwright/test'
 
 export type Language = 'vi' | 'en'
 
-export async function mockAuthenticatedLearner(page: Page, origin: string, language: Language) {
+export async function mockAuthenticatedLearner(
+  page: Page,
+  origin: string,
+  language: Language,
+  options: { admin?: boolean } = {},
+) {
   const user = {
     id: '00000000-0000-4000-8000-000000000001',
     aud: 'authenticated',
@@ -47,7 +52,7 @@ export async function mockAuthenticatedLearner(page: Page, origin: string, langu
         } })
       }
       if (method === 'POST' && url.pathname === '/rest/v1/rpc/is_current_user_admin') {
-        return route.fulfill({ json: false })
+        return route.fulfill({ json: options.admin ?? false })
       }
       if (method === 'GET' && url.pathname === '/rest/v1/user_settings') {
         return route.fulfill({ json: {

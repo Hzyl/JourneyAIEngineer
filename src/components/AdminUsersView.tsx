@@ -1,9 +1,8 @@
 /* oxlint-disable react/set-state-in-effect */
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { mutateAdminUser, readAdminUsers, type AdminDirectoryPage } from '../platform/hosted/admin-client'
+import { useAdminBanClock } from './useAdminBanClock'
 import './admin-users.css'
-
-const renderNow = Date.now()
 
 function date(value: string | null, vi: boolean) {
   if (!value) return vi ? 'Chưa có' : 'Never'
@@ -45,28 +44,59 @@ export function AdminUsersView({ language }: { language: 'vi' | 'en' }) {
   const [page, setPage] = useState(1)
   const [result, setResult] = useState<AdminDirectoryPage | null>(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<unknown>(null)
   const [busy, setBusy] = useState<string | null>(null)
+  const requestId = useRef(0)
+  const mounted = useRef(true)
+  const actionPending = useRef(false)
+  useEffect(() => {
+    mounted.current = true
+    return () => { mounted.current = false }
+  }, [])
   const load = useCallback(async () => {
+    if (!mounted.current) return
+    const request = ++requestId.current
     setLoading(true)
     setError(null)
-    try { setResult(await readAdminUsers(page, 25, submitted)) }
-    catch (caught) { setError(adminErrorMessage(caught, vi)) }
-    finally { setLoading(false) }
-  }, [page, submitted, vi])
-  // oxlint-disable-next-line react/set-state-in-effect
-  useEffect(() => { void load() }, [load])
-  const banned = useMemo(() => result?.users.filter((user) => user.banned_until && Date.parse(user.banned_until) > renderNow).length ?? 0, [result])
+    setResult(null)
+    try {
+      const next = await readAdminUsers(page, 25, submitted)
+      if (mounted.current && request === requestId.current) setResult(next)
+    } catch (caught) {
+      if (mounted.current && request === requestId.current) setError(caught)
+    } finally {
+      if (mounted.current && request === requestId.current) setLoading(false)
+    }
+  }, [page, submitted])
+  useEffect(() => {
+    void load()
+    return () => { requestId.current += 1 }
+  }, [load])
+  const now = useAdminBanClock(result?.users)
+  const banned = result?.users.filter((user) => user.banned_until && Date.parse(user.banned_until) > now).length ?? 0
   const action = async (userId: string, kind: 'ban' | 'unban' | 'send_reset', duration?: string) => {
+    if (actionPending.current) return
     const confirmation = kind === 'ban' ? (vi ? 'Khoá tài khoản này 24 giờ?' : 'Ban this account for 24 hours?')
       : kind === 'unban' ? (vi ? 'Mở khoá tài khoản này?' : 'Unban this account?')
         : (vi ? 'Gửi email đặt lại mật khẩu?' : 'Send a password reset email?')
     if (!window.confirm(confirmation)) return
+    actionPending.current = true
     setBusy(`${kind}:${userId}`)
     setError(null)
-    try { await mutateAdminUser(kind, userId, duration); await load() }
-    catch (caught) { setError(adminErrorMessage(caught, vi)) }
-    finally { setBusy(null) }
+    try {
+      await mutateAdminUser(kind, userId, duration)
+      if (mounted.current) await load()
+    } catch (caught) {
+      if (mounted.current) {
+        setError(caught)
+        if (caught instanceof Error && ['admin_required', 'authentication_required'].includes(caught.message)) {
+          setResult(null)
+        }
+      }
+    } finally {
+      actionPending.current = false
+      if (mounted.current) setBusy(null)
+    }
   }
   return <section className="admin-users-view" aria-labelledby="admin-users-title">
     <div className="page-intro">
@@ -77,22 +107,22 @@ export function AdminUsersView({ language }: { language: 'vi' | 'en' }) {
     <div className="admin-stats" aria-label={vi ? 'Thống kê người dùng' : 'User statistics'}>
       <div><span>{vi ? 'Tổng tài khoản' : 'Total users'}</span><strong>{result?.total ?? '—'}</strong></div>
       <div><span>{vi ? 'Trong trang này' : 'On this page'}</span><strong>{result?.users.length ?? '—'}</strong></div>
-      <div><span>{vi ? 'Đang khoá' : 'Banned now'}</span><strong>{banned}</strong></div>
+      <div><span>{vi ? 'Đang khóa trong trang' : 'Banned on this page'}</span><strong>{banned}</strong></div>
     </div>
     <form className="admin-search" onSubmit={(event) => { event.preventDefault(); setPage(1); setSubmitted(query.trim()) }}>
       <label htmlFor="admin-user-search">{vi ? 'Tìm email hoặc ID' : 'Search email or ID'}</label>
-      <input id="admin-user-search" type="search" value={query} maxLength={200} onChange={(event) => setQuery(event.target.value)} />
-      <button className="primary-button" type="submit">{vi ? 'Tìm' : 'Search'}</button>
+      <input id="admin-user-search" type="search" value={query} maxLength={200} disabled={busy !== null} onChange={(event) => setQuery(event.target.value)} />
+      <button className="primary-button" type="submit" disabled={busy !== null}>{vi ? 'Tìm' : 'Search'}</button>
     </form>
-    {error && <p className="admin-error" role="alert">{error} <button className="text-button" onClick={() => void load()}>{vi ? 'Thử lại' : 'Retry'}</button></p>}
+    {error != null && <p className="admin-error" role="alert">{adminErrorMessage(error, vi)} <button className="text-button" disabled={busy !== null} onClick={() => void load()}>{vi ? 'Thử lại' : 'Retry'}</button></p>}
     {loading && <p role="status">{vi ? 'Đang tải…' : 'Loading…'}</p>}
     {!loading && result && <div className="admin-table-wrap"><table className="admin-table"><thead><tr>
       <th scope="col">{vi ? 'Email' : 'Email'}</th><th scope="col">ID</th><th scope="col">{vi ? 'Tạo lúc' : 'Created'}</th><th scope="col">{vi ? 'Xác nhận email' : 'Confirmed'}</th><th scope="col">{vi ? 'Đăng nhập cuối' : 'Last sign-in'}</th><th scope="col">{vi ? 'Trạng thái' : 'Status'}</th><th scope="col">{vi ? 'Thao tác' : 'Actions'}</th>
-    </tr></thead><tbody>{result.users.map((user) => { const bannedNow = Boolean(user.banned_until && Date.parse(user.banned_until) > renderNow); return <tr key={user.id}>
+    </tr></thead><tbody>{result.users.map((user) => { const bannedNow = Boolean(user.banned_until && Date.parse(user.banned_until) > now); return <tr key={user.id}>
       <td data-label="Email">{user.email ?? '—'}</td><td data-label="ID"><code>{user.id}</code></td><td data-label={vi ? 'Tạo lúc' : 'Created'}>{date(user.created_at ?? null, vi)}</td><td data-label={vi ? 'Xác nhận email' : 'Confirmed'}>{date(user.confirmed_at ?? null, vi)}</td><td data-label={vi ? 'Đăng nhập cuối' : 'Last sign-in'}>{date(user.last_sign_in_at ?? null, vi)}</td>
       <td data-label={vi ? 'Trạng thái' : 'Status'}><span className={bannedNow ? 'admin-badge banned' : 'admin-badge'}>{bannedNow ? (vi ? 'Đang khoá' : 'Banned') : (vi ? 'Hoạt động' : 'Active')}</span></td>
       <td data-label={vi ? 'Thao tác' : 'Actions'} className="admin-actions"><button className="secondary-button" disabled={busy !== null} onClick={() => void action(user.id, bannedNow ? 'unban' : 'ban', '24h')}>{busy === `${bannedNow ? 'unban' : 'ban'}:${user.id}` ? '…' : (bannedNow ? (vi ? 'Mở khoá' : 'Unban') : (vi ? 'Khoá 24h' : 'Ban 24h'))}</button><button className="text-button" disabled={busy !== null} onClick={() => void action(user.id, 'send_reset')}>{vi ? 'Đặt lại mật khẩu' : 'Reset password'}</button></td>
     </tr> })}</tbody></table></div>}
-    {!loading && result && <div className="admin-pagination"><button className="secondary-button" disabled={page <= 1 || loading} onClick={() => setPage((value) => value - 1)}>{vi ? '‹ Trước' : '‹ Previous'}</button><span>{page} / {result.pages}</span><button className="secondary-button" disabled={page >= result.pages || loading} onClick={() => setPage((value) => value + 1)}>{vi ? 'Sau ›' : 'Next ›'}</button></div>}
+    {!loading && result && <div className="admin-pagination"><button className="secondary-button" disabled={page <= 1 || busy !== null} onClick={() => setPage((value) => value - 1)}>{vi ? '‹ Trước' : '‹ Previous'}</button><span>{page} / {result.pages}</span><button className="secondary-button" disabled={page >= result.pages || busy !== null} onClick={() => setPage((value) => value + 1)}>{vi ? 'Sau ›' : 'Next ›'}</button></div>}
   </section>
 }
