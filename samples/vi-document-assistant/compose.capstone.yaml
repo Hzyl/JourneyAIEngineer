@@ -1,0 +1,35 @@
+name: journey-rag-capstone
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.capstone
+    ports:
+      - "127.0.0.1:8091:8080"
+    volumes:
+      - lab-state:/state
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    healthcheck:
+      test: [CMD, python, -c, "from urllib.request import urlopen; urlopen('http://127.0.0.1:8080/ready', timeout=2).read()"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+  probe:
+    profiles: [verify]
+    build:
+      context: .
+      dockerfile: Dockerfile.capstone
+    depends_on:
+      api:
+        condition: service_healthy
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    command: [python, -c, "from urllib.request import urlopen; print(urlopen('http://api:8080/ready', timeout=3).read().decode())"]
+volumes:
+  lab-state:

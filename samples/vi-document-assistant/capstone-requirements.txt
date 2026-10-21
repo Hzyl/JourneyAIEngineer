@@ -1,0 +1,3 @@
+# Teaching environment versions, tested natively; container runtime is a separate check.
+fastapi==0.141.1
+uvicorn==0.54.0

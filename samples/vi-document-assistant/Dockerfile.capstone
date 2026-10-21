@@ -1,0 +1,12 @@
+# Pin a digest too when freezing a published deployment; this tag can be rebuilt.
+FROM python:3.11.14-slim-bookworm
+WORKDIR /app
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 LAB_STATE_DIR=/state
+COPY capstone-requirements.txt ./
+RUN pip install --no-cache-dir -r capstone-requirements.txt
+RUN useradd --uid 10001 --create-home learner && mkdir /state && chown learner:learner /state
+COPY research_lab ./research_lab
+COPY capstone_api.py ./
+USER learner
+EXPOSE 8080
+CMD ["python", "-m", "uvicorn", "capstone_api:app", "--host", "0.0.0.0", "--port", "8080", "--no-access-log"]

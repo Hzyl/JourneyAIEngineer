@@ -177,7 +177,21 @@ def build(lab):
     bootstrap_index = next(i for i, cell in enumerate(cells) if cell["source"] == BOOTSTRAP)
     cells.insert(bootstrap_index + 1, code(SUMMARY))
     if lab == "a":
-        cells += [markdown("""## 4. Chỉ mở test sau khi chốt cách làm / Final test after freezing the approach
+        cells += [markdown("""## 4. Ablation và lỗi khó hơn / Ablation and harder failures
+
+Giữ baseline, BM25, vector, hybrid và rerank cùng corpus và câu hỏi. Mặc định vector là trigram ký tự, rerank là heuristic bigram; **không phải model neural**. Nếu đã chạy embedding thật ở trên, backend đó sẽ được dùng. RRF của lab dùng hạng từ 1 và hằng số 60. Năm probe mới chỉ thuộc dev riêng; hai lỗi trên baseline hiện tại là paraphrase và hỏi chi tiết không có trong nguồn. Đọc các ca sai, không gộp probe vào test.
+
+Compare methods on identical data. Default vectors are character trigrams and reranking is a bigram heuristic, not neural inference. A loaded embedding backend replaces only the vector retriever. Inspect separate dev stress failures; keep test unchanged.
+"""), code('from research_lab.experiments import run as run_ablation\nreport["ablation"] = run_ablation("dev", embedding_backend=globals().get("backend"))\nfor method, score in report["ablation"]["methods"].items():\n    print(method, score["retrieval"], score["latency_ms"], score["failures"])\nprint("Separate dev probes:", report["ablation"]["dev_probes"]["lexical"]["failures"])\n'),
+                  markdown("""## 5. Generation tùy chọn trên Colab / Optional hosted generation
+
+Mặc định **không tải model**. Chỉ đổi `RUN_GENERATION=True` khi muốn tải Qwen2.5-0.5B-Instruct vào runtime Colab; chạy ô cài package đã ghim ở phần 2 trước. CPU cần RAM và thời gian, Colab có thể giới hạn tài nguyên. Không chạy trên local runtime. Model/revision lấy từ [model card chính thức](https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct); đây là thí nghiệm, không phải model được chứng nhận phù hợp tiếng Việt.
+
+Hai câu dev dùng cùng lexical retriever: giờ mở thư viện và mức phạt trả muộn. Nguồn có giờ mở cửa nhưng không có phí phạt; câu thứ hai cần từ chối. Đầu ra model có thể sai hoặc thiếu citation; giữ kết quả thật, chấm từng claim `supported/unsupported/unclear` trong `human_claim_review`, không sửa output cho khớp đáp án. Citation ID hợp lệ không chứng minh groundedness. Chưa chạy model thì lưu `not_run`; không ghi metric giả. API Docker ở capstone vẫn là baseline trích xuất, không tự sử dụng model Colab này.
+
+The default downloads no generation model. Enable only in hosted Colab after pinned package setup. Review the actual outputs of two dev questions, including the unsupported fee. Keep errors, token counts and measured latency; manually assess every claim. Valid IDs are not semantic support. The Docker API remains an extractive baseline, separate from this optional generation experiment.
+"""), code('RUN_GENERATION = False\nreport["generation_experiment"] = {"status": "not_run"}\nif RUN_GENERATION:\n    from research_lab.generation import run_colab_generation\n    report["generation_experiment"] = run_colab_generation()\n    print(json.dumps(report["generation_experiment"], ensure_ascii=False, indent=2))\nelse:\n    print("Generation NOT RUN. No generation model downloaded.")\n'),
+                  markdown("""## 6. Chỉ mở test sau khi chốt cách làm / Final test after freezing the approach
 
 Đổi RUN_FINAL_TEST thành True khi đã ghi quyết định dựa trên dev. Không chỉnh thuật toán theo các lỗi test vừa xem; muốn đánh giá độc lập lần sau, cần bộ test mới chưa xem. Bộ câu hỏi công khai này chỉ minh họa quy trình đánh giá.
 
