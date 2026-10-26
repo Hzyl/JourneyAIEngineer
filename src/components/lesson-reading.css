@@ -89,6 +89,15 @@
   line-height: 1.6;
 }
 
+.lesson-detail .next-lesson-primary {
+  display: inline-flex;
+  max-width: 100%;
+  margin: 1rem 0 .75rem;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: start;
+}
+
 .lesson-detail .study-step-card pre,
 .lesson-detail .code-example pre {
   font-size: 1rem;

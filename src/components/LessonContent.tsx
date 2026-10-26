@@ -193,6 +193,11 @@ export function LessonRelated({ lesson, language, onOpenExercise, onOpenLesson, 
           {vi ? 'Xem lại lộ trình' : 'Review the roadmap'} <span aria-hidden="true">→</span>
         </button>}
       </>}
+      {nextLessons.length > 0 && <button type="button" className="primary-button next-lesson-primary"
+        onClick={() => onOpenLesson(nextLessons[0])}
+        aria-label={`${vi ? 'Học bài tiếp theo' : 'Continue to'}: ${nextLessonTitles[nextLessons[0]] ?? nextLessons[0]}`}>
+        {vi ? 'Học bài tiếp theo' : 'Continue to'}: {nextLessonTitles[nextLessons[0]] ?? nextLessons[0]} →
+      </button>}
       <div className="next-lesson-list">{nextLessons.map((slug) =>
         <button className="text-button" key={slug} onClick={() => onOpenLesson(slug)}>
           {nextLessonTitles[slug] ?? slug} →

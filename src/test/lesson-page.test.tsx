@@ -160,6 +160,22 @@ test('English lesson controls use localized labels and open the exact exercise a
   expect(onProgress).not.toHaveBeenCalled()
 })
 
+test.each(['vi', 'en'] as const)('%s exposes a quick action for the first next lesson', async (language) => {
+  await render(language)
+  const next = host.querySelector<HTMLButtonElement>('.next-lesson-primary')!
+  expect(next).not.toBeNull()
+  expect(next.textContent).toContain(language === 'vi' ? 'Học bài tiếp theo: Next topic' : 'Continue to: Next topic')
+  expect(next.getAttribute('aria-label')).toBe(language === 'vi'
+    ? 'Học bài tiếp theo: Next topic' : 'Continue to: Next topic')
+  await act(async () => next.click())
+  expect(onLesson).toHaveBeenCalledExactlyOnceWith('next-lesson')
+})
+
+test('the quick next action is hidden at the end of a lesson path', async () => {
+  await render('en', { ...lessonFixture, next_lessons: [] })
+  expect(host.querySelector('.next-lesson-primary')).toBeNull()
+})
+
 test('anchor navigation moves keyboard focus and direct fragment URLs restore the reading position', async () => {
   window.history.replaceState({}, '', '/lesson/lesson-one#notes')
   await render()
