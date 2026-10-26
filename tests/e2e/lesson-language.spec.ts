@@ -35,7 +35,7 @@ for (const language of ['vi', 'en'] as const) {
       await step.focus()
       await page.keyboard.press('Space')
       await expect(step).toHaveAttribute('aria-expanded', 'true')
-      await page.locator('.study-step-answer summary').click()
+      await expect(page.locator('.study-step-answer')).toHaveCount(0)
       expect(writes).toEqual([])
       for (const width of [1440, 390]) {
         await page.setViewportSize({ width, height: 900 })

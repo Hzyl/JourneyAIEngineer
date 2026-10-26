@@ -78,3 +78,38 @@ test('shows route metadata and filters core versus specialization phases', async
   expect(host.querySelectorAll('.lesson-row')).toHaveLength(0)
   expect(window.location.search).toContain('track=specialization')
 })
+
+test('survey RAG is collapsed beside foundations and old phase/search URLs reveal the original lessons', async () => {
+  const lesson = (slug: string, title: string) => ({
+    slug, title_vi: title, title_en: title, status: 'completed', estimated_minutes: 20,
+  })
+  const makePhase = (slug: string, module: string, lessons: ReturnType<typeof lesson>[]) => ({
+    slug, title_vi: slug, title_en: slug,
+    modules: [{ slug: module, title_vi: module, title_en: module, lessons }],
+  })
+  const data = { phases: [
+    makePhase('phase-06-llm-rag', 'rag', [lesson('phase-06-llm-rag-rag-1', 'Quy trình RAG')]),
+    makePhase('phase-07-capstone-career', 'capstone', [lesson('capstone', 'Portfolio')]),
+    makePhase('phase-12-genai-rag', 'rag-foundations', [lesson('rag-foundations', 'RAG foundations')]),
+    makePhase('phase-15-genai-agents', 'agents', [lesson('agents', 'Agent loop')]),
+    makePhase('phase-17-genai-evaluation', 'evaluation', [lesson('evaluation', 'Evaluation')]),
+  ] }
+  const draw = () => act(async () => root.render(<RoadmapView roadmap={data} language="vi"
+    showCompletedLessons onOpenLesson={open} />))
+  await draw()
+  expect(Array.from(host.querySelectorAll('[data-topic]')).map((node) => node.getAttribute('data-topic')))
+    .toEqual(['rag', 'production', 'agents', 'portfolio'])
+  const review = host.querySelector<HTMLDetailsElement>('[data-topic="rag"] details[data-section-kind="review"]')!
+  expect(review.open).toBe(false)
+  expect(review.querySelector('[data-lesson-id="phase-06-llm-rag-rag-1"]')).not.toBeNull()
+  await restore('/roadmap?phase=phase-06-llm-rag&status=completed')
+  expect(host.querySelectorAll('.lesson-row')).toHaveLength(1)
+  expect(host.querySelector<HTMLDetailsElement>('details')!.open).toBe(true)
+  await act(async () => host.querySelector<HTMLButtonElement>('.lesson-row')!.click())
+  expect(open).toHaveBeenCalledWith('phase-06-llm-rag-rag-1')
+  await restore('/roadmap?q=Quy+trình+RAG')
+  expect(host.querySelector<HTMLDetailsElement>('details')!.open).toBe(true)
+  expect(host.querySelector('.lesson-row')!.classList.contains('done')).toBe(true)
+  await restore('/roadmap?track=core')
+  expect(host.querySelector('[data-section-kind="review"]')).toBeNull()
+})

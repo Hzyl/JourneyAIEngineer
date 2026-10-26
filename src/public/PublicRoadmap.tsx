@@ -38,6 +38,18 @@ export function PublicRoadmap({ language, standalone, onStart }: Props) {
   const Heading = standalone ? 'h1' : 'h2'
 
   useEffect(() => {
+    const restore = () => {
+      const params = new URLSearchParams(window.location.search)
+      const requested = params.get('route')
+      setSelected(routes.routes.some((item) => item.id === requested) ? requested! : 'foundation')
+      const nextTrack = params.get('track')
+      setTrack(nextTrack === 'core' || nextTrack === 'specialization' ? nextTrack : 'all')
+    }
+    window.addEventListener('popstate', restore)
+    return () => window.removeEventListener('popstate', restore)
+  }, [])
+
+  useEffect(() => {
     let requested = false
     const requestCurriculum = () => {
       if (requested) return
@@ -93,8 +105,8 @@ export function PublicRoadmap({ language, standalone, onStart }: Props) {
           ? 'Bản đồ giúp bạn hình dung thứ tự học. Mỗi chặng bên dưới nêu kiến thức cần có và bài thực hành để tự kiểm tra trước khi học tiếp.'
           : 'The map shows the learning sequence. Each stage below lists prerequisites and a practical checkpoint to help you decide when to move on.'}</p>
         <p className="roadmap-overview-note">{vi
-          ? 'Ảnh tóm tắt các phase lõi; danh sách bên dưới thêm bước bắt đầu và portfolio. Hoàn thành một mốc không đồng nghĩa đã thành thạo: hãy lưu code, output, test và ghi chú giới hạn.'
-          : 'The image summarizes the core phases; the list below adds onboarding and portfolio. A checkpoint is not mastery: save code, output, tests and limitations as evidence.'}</p>
+          ? 'Ảnh minh họa các chủ đề, không quy định thứ tự hay phần bắt buộc. Hãy theo danh sách và hướng học bên dưới; đánh giá hệ thống trước khi thêm agent. Lưu code, output, test và giới hạn làm bằng chứng.'
+          : 'The image illustrates topics, not required steps or their order. Follow the list and selected path below; evaluate the system before adding agents. Save code, output, tests and limitations as evidence.'}</p>
         <p className="roadmap-sequence-note">{vi ? roadmapOverview.sequence_note_vi : roadmapOverview.sequence_note_en}</p>
         <a href="#roadmap-paths">{vi ? 'Chọn hướng học phù hợp' : 'Choose your learning path'} ↓</a>
       </div>
@@ -112,8 +124,8 @@ export function PublicRoadmap({ language, standalone, onStart }: Props) {
       <div className="roadmap-section-heading">
         <span className="eyebrow">01 · {vi ? 'ĐƯỜNG HỌC CHÍNH' : 'THE LEARNING ARC'}</span>
         <h3 id="roadmap-stage-title">{vi ? 'Học từ đâu tới đâu?' : 'Where do you start and where do you go?'}</h3>
-        <p>{vi ? 'Mở từng chặng để xem điều kiện bắt đầu và sản phẩm cần tạo.'
-          : 'Open each stage to see its starting point and the evidence you should create.'}</p>
+        <p>{vi ? 'Mở từng chủ đề để xem điều kiện và sản phẩm cần tạo. Cầu nối thay cho phần nền tảng đã biết; bài khảo sát cũ được đặt cạnh chủ đề tương ứng để ôn khi cần. Bộ lọc này áp dụng cho bản đồ tổng quan; hướng học cụ thể nằm bên dưới.'
+          : 'Open each topic for prerequisites and expected work. Bridges replace familiar foundations; earlier survey lessons sit beside their topics for optional review. This filter applies to the overview; the selected learning path is below.'}</p>
       </div>
       <div className="public-track-filter" role="group" aria-label={vi ? 'Lọc nền tảng và chuyên sâu' : 'Filter by track'}>
         {(['all', 'core', 'specialization'] as const).map((item) => <button key={item}
@@ -123,7 +135,7 @@ export function PublicRoadmap({ language, standalone, onStart }: Props) {
         </button>)}
       </div>
       <ol>
-        {stages.map((stage) => <li key={stage.id} className="roadmap-stage-card">
+        {stages.map((stage) => <li key={stage.id} className="roadmap-stage-card" data-topic={stage.id}>
           <div className="roadmap-stage-number">{stage.number}</div>
           <div className="roadmap-stage-body">
             <span className={`roadmap-stage-track ${stage.track}`}>{stage.track === 'core'
@@ -135,7 +147,10 @@ export function PublicRoadmap({ language, standalone, onStart }: Props) {
               <summary>{vi ? 'Xem điều kiện và bằng chứng' : 'See prerequisites and evidence'}</summary>
               <dl>
                 <dt>{vi ? 'Hướng bắt buộc' : 'Required for routes'}</dt>
-                <dd>{stage.required_for_routes.length ? stage.required_for_routes.join(', ') : (vi ? 'Mở rộng tùy chọn' : 'Optional extension')}</dd>
+                <dd>{stage.required_for_routes.length ? stage.required_for_routes.map((id) => {
+                  const requiredRoute = routes.routes.find((item) => item.id === id)!
+                  return vi ? requiredRoute.title_vi : requiredRoute.title_en
+                }).join(', ') : (vi ? 'Mở rộng tùy chọn' : 'Optional extension')}</dd>
                 <dt>{vi ? 'Điều kiện trước' : 'Prerequisites'}</dt>
                 <dd>{vi ? stage.prerequisites.vi : stage.prerequisites.en}</dd>
                 <dt>{vi ? 'Khối lượng ước tính' : 'Estimated workload'}</dt>
@@ -150,6 +165,12 @@ export function PublicRoadmap({ language, standalone, onStart }: Props) {
                   <dt>{vi ? 'Phần mở rộng' : 'Optional extensions'}</dt>
                   <dd><ul>{stage.optional_phase_ids.map((id) => <li key={id}>{phaseTitle(id)}</li>)}</ul></dd>
                 </> : null}
+                {stage.review_lesson_ids.length > 0 && <>
+                  <dt>{vi ? 'Ôn tập tùy chọn' : 'Optional review'}</dt>
+                  <dd>{stage.review_lesson_ids.length} {vi
+                    ? 'bài khảo sát cũ được gom vào chủ đề này trong màn hình học; không phải một chặng bắt buộc khác.'
+                    : 'earlier survey lessons are grouped here in the learning view, not a second required stage.'}</dd>
+                </>}
                 <dt>{vi ? 'Tiêu chí đầu ra' : 'Exit criteria'}</dt>
                 <dd>{vi ? stage.exit_criteria.vi : stage.exit_criteria.en}</dd>
                 <dt>{vi ? 'Bằng chứng cần có' : 'Evidence required'}</dt>

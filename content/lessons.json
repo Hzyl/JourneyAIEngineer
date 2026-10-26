@@ -14806,17 +14806,17 @@
       "module_id": "analysis",
       "title_vi": "Dữ liệu mất cân bằng lớp",
       "title_en": "Imbalanced data",
-      "summary_vi": "Khi số mẫu giữa các lớp chênh lệch lớn, accuracy có thể che giấu khả năng nhận diện lớp hiếm.",
-      "summary_en": "Learn Imbalanced data through an input → transformation → output model, then verify it with an edge-case exercise.",
+      "summary_vi": "Đo lớp hiếm, so baseline và chọn ngưỡng trên validation bằng chi phí FP/FN.",
+      "summary_en": "Measure rare-class performance, compare a baseline, and choose thresholds on validation using FP/FN costs.",
       "learning_objectives": [
-        "Đọc precision, recall của lớp hiếm và so sánh với mô hình luôn chọn lớp phổ biến.",
-        "Kiểm tra theo nhóm dữ liệu và nêu giới hạn của kết luận.",
-        "Giải thích kết quả và nêu một giới hạn của bài làm."
+        "Tính đúng baseline accuracy=0.8, recall=0 và precision=None.",
+        "Đối chiếu support, prevalence và TP/FP/TN/FN tại hai ngưỡng.",
+        "Chọn ngưỡng từ validation, ghi chi phí và không dùng test để chọn."
       ],
       "learning_objectives_en": [
-        "Explain imbalanced data with a concrete example.",
-        "Write or adapt a small code example applying imbalanced data.",
-        "Recognize its assumptions, limits and one common failure mode."
+        "Verify baseline accuracy=0.8, recall=0 and precision=None.",
+        "Check support, prevalence and TP/FP/TN/FN at both thresholds.",
+        "Select on validation, record costs, and keep test out of selection."
       ],
       "prerequisites": [
         "phase-03-classical-ml-evaluation-4",
@@ -14831,108 +14831,92 @@
         "evaluation",
         "analysis"
       ],
-      "concept_notes_vi": "Mất cân bằng lớp nghĩa là các nhãn xuất hiện với tần suất chênh lệch. Mô hình có thể đạt accuracy cao nhờ đoán lớp phổ biến mà gần như bỏ qua lớp hiếm; cần xem ma trận nhầm lẫn và kết quả từng lớp.\n\nThay ngưỡng quyết định, đặt trọng số lớp và lấy mẫu lại là các cách khác nhau. Thay ngưỡng đổi quyết định từ điểm số sẵn có; hai cách còn lại tác động quá trình học và không bảo đảm cải thiện mọi thước đo.\n\nTrong phát hiện lỗi máy, bỏ sót lỗi và báo động nhầm có chi phí khác nhau. Hãy chọn thước đo theo mục tiêu vận hành, chỉ lấy mẫu lại trong phần huấn luyện của mỗi lần chia.\n\nTự kiểm tra: cân bằng cả tập kiểm tra có phản ánh môi trường lỗi hiếm không? Không; đánh giá cần giữ phân bố phù hợp môi trường sử dụng.",
-      "concept_notes_en": "Class imbalance means labels occur at substantially different frequencies. A model can achieve high accuracy by predicting the common class while missing rare cases, so inspect the confusion matrix and per-class results.\n\nChanging the decision threshold, class weighting, and resampling are different interventions. Threshold changes alter decisions from existing scores; the others affect learning and do not guarantee improvements in every metric.\n\nIn machine fault detection, missed faults and false alarms have different costs. Choose metrics for the operational goal and resample only within each training split.\n\nSelf-check: does balancing the test set represent a rare-fault environment? No; evaluation should preserve a distribution appropriate to deployment.",
-      "why_it_matters_vi": "Phân tích lỗi theo nhóm để hiểu giới hạn trước khi lưu và chia sẻ mô hình.",
-      "why_it_matters_en": "Move from one aggregate score to error analysis, calibration, a model card, and reloadable artifacts.",
+      "concept_notes_vi": "Lớp 1 là lỗi máy. Có 2 lỗi trong 10 mẫu: support dương=2, support âm=8, prevalence=2/10=0.2. Baseline luôn đoán 0 có TN=8, FN=2, TP=FP=0: accuracy=0.8 nhưng recall=0. Precision không xác định vì không có dự đoán dương; bài này dùng None thay vì quy ước 0 của bài metrics trước.\n\nMa trận dùng hàng nhãn thật, cột dự đoán theo [0,1]: [[TN,FP],[FN,TP]]. Recall dùng số lỗi thật TP+FN; precision dùng số cảnh báo TP+FP. Luôn báo số đếm và mẫu số cùng tỉ lệ.\n\nVí dụ là validation tổng hợp, điểm số cố định. Ngưỡng 0.5 cho TP=1, FP=1, TN=7, FN=1; ngưỡng 0.3 cho TP=2, FP=2, TN=6, FN=0. Accuracy đều 0.8, precision đều 0.5 nhưng recall tăng từ 0.5 lên 1. Với chi phí bỏ sót 5 và báo nhầm 1, tổng chi phí giảm từ 6 xuống 2 trong fixture này.\n\nChọn ngưỡng trên validation rồi khóa trước khi đánh giá test. Đặt trọng số lớp thay đổi hàm mất mát khi huấn luyện; lấy mẫu lại thay đổi dữ liệu train; đổi ngưỡng chỉ đổi nhãn từ điểm số đã có. Chỉ resample trong train từng fold, không cân bằng test. Kết quả 10 mẫu không chứng minh lợi ích ngoài thực tế; phải kiểm tra độ ổn định và prevalence triển khai.",
+      "concept_notes_en": "Class 1 means machine failure. Two failures among ten observations give positive support=2, negative support=8 and prevalence=0.2. An always-zero baseline has TN=8, FN=2, TP=FP=0: accuracy=0.8 but recall=0. Precision is undefined because there are no predicted positives; this lesson uses None instead of the explicit zero convention in the earlier metrics lesson.\n\nWith true labels as rows and predictions as columns in [0,1] order, the matrix is [[TN,FP],[FN,TP]]. Recall divides by actual failures TP+FN; precision divides by alerts TP+FP. Report counts and denominators alongside rates.\n\nThe fixture is synthetic validation data with fixed scores. Threshold 0.5 gives TP=1, FP=1, TN=7, FN=1; threshold 0.3 gives TP=2, FP=2, TN=6, FN=0. Both have accuracy=0.8 and precision=0.5, while recall rises from 0.5 to 1. At missed-failure cost 5 and false-alert cost 1, total fixture cost falls from 6 to 2.\n\nChoose the threshold on validation, then freeze it before test evaluation. Class weighting changes the training loss, resampling changes training observations, and thresholding changes decisions from existing scores. Resample only inside training folds; do not rebalance test. Ten observations cannot establish a deployment improvement; check stability and deployment prevalence.",
+      "why_it_matters_vi": "Bỏ sót lỗi máy và báo nhầm có chi phí khác nhau; accuracy bằng nhau có thể dẫn tới quyết định khác.",
+      "why_it_matters_en": "Missed failures and false alerts have different costs; equal accuracy can conceal different decisions.",
       "study_steps_vi": [
-        "Đọc phần giải thích, xác định khái niệm và điều kiện cần dùng cho nhiệm vụ bên dưới.",
-        "Tìm mục tương ứng với “Imbalanced data” trong tài liệu tham khảo; đối chiếu với phần giải thích của bài.",
-        "Đọc precision, recall của lớp hiếm và so sánh với mô hình luôn chọn lớp phổ biến.",
-        "Kiểm tra theo nhóm dữ liệu và nêu giới hạn của kết luận. Ghi kết quả đối chiếu và điều bạn đã sửa nếu lần đầu chưa đúng.",
-        "Tự trả lời thẻ ôn tập, rồi kiểm tra các tiêu chí hoàn thành trước khi chuyển bài."
+        "Đếm 2 mẫu dương trong 10 mẫu và lập baseline toàn âm.",
+        "Đọc tài liệu precision/recall; ghi rõ quy ước None.",
+        "Chạy ví dụ ở Colab hoặc Python, đối chiếu output.",
+        "So chi phí 5*FN+FP trên validation tại 0.5 và 0.3.",
+        "Khóa ngưỡng, ghi cách đánh giá test đại diện và trả lời thẻ ôn tập."
       ],
       "study_steps_en": [
-        "Read the concept notes and answer: Move from one aggregate score to error analysis, calibration, a model card, and reloadable artifacts.",
-        "Open scikit-learn User Guide, read the section marked Read this lesson, and record one verified example or definition.",
-        "Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the test.",
-        "Complete the practice task: Slice errors by group, inspect a confusion matrix, save the model/pipeline, and write a model card with limits.",
-        "Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact."
+        "Count two positives among ten and construct an all-negative baseline.",
+        "Read precision/recall documentation and record the None convention.",
+        "Run in Colab or Python and compare stdout.",
+        "Compare validation cost 5*FN+FP at 0.5 and 0.3.",
+        "Freeze the threshold, describe representative test evaluation, and answer the review cards."
       ],
       "practice_plan": {
         "vi": {
-          "task": "Đọc precision, recall của lớp hiếm và so sánh với mô hình luôn chọn lớp phổ biến.\n\nSau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Đọc ma trận nhầm lẫn, chia lỗi theo nhóm, lưu mô hình cùng quy trình và viết thẻ mô tả giới hạn.",
+          "task": "Lập báo cáo validation cho baseline và hai ngưỡng; chọn theo chi phí bỏ sót 5, báo nhầm 1.",
           "deliverables": [
-            "Bảng phân tích kết quả hoặc bản lưu mô hình có cách nạp lại",
-            "Kết quả đối chiếu kèm dữ liệu hoặc điều kiện thực hiện",
-            "Một giới hạn và cách kiểm tra thêm"
+            "Mã và output của ba báo cáo",
+            "Bảng TP/FP/TN/FN, support, prevalence, precision, recall",
+            "Quyết định ngưỡng, quy ước None và kế hoạch test"
           ],
-          "checkpoint": "Kiểm tra theo nhóm dữ liệu và nêu giới hạn của kết luận.",
-          "stretch": "Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào."
+          "checkpoint": "Chi phí hai ngưỡng lần lượt 6 và 2; đây là lựa chọn validation.",
+          "stretch": "Đổi chi phí FP thành 10: chi phí là 15 và 20; giải thích quyết định đổi."
         },
         "en": {
-          "task": "Slice errors by group, inspect a confusion matrix, save the model/pipeline, and write a model card with limits.",
+          "task": "Report the baseline and two validation thresholds; select using miss cost 5 and false-alert cost 1.",
           "deliverables": [
-            "One executable code file",
-            "One test or expected output",
-            "One note describing an edge case and trade-off"
+            "Code and stdout for all three reports",
+            "TP/FP/TN/FN, support, prevalence, precision and recall table",
+            "Threshold decision, None convention and test plan"
           ],
-          "checkpoint": "You know where and for whom the model fails and do not use a high score to hide limitations.",
-          "stretch": "Add a failure test for imbalanced data and explain the result."
+          "checkpoint": "Threshold costs are 6 and 2; this is validation selection.",
+          "stretch": "Change FP cost to 10: costs become 15 and 20; explain the changed decision."
         }
       },
       "interview_questions": {
         "vi": [
-          "Bạn sẽ giải thích nội dung “Dữ liệu mất cân bằng lớp” bằng ví dụ nào?",
-          "Điều kiện nào cần kiểm tra trước khi áp dụng vào công việc thực tế?",
-          "Bạn dùng bằng chứng nào để kết luận bài làm đáp ứng yêu cầu?"
+          "Ngưỡng nào có chi phí thấp hơn khi FN giá 5, FP giá 1?",
+          "Recall=None có phải recall=0 không?",
+          "Đổi ngưỡng khác cân bằng lớp thế nào?"
         ],
         "en": [
-          "How would you explain imbalanced data to a new teammate?",
-          "Which assumption behind imbalanced data could fail in production?",
-          "Which metric or test would prove the result is trustworthy?"
+          "Which threshold costs less when FN costs 5 and FP costs 1?",
+          "Does recall=None mean recall=0?",
+          "How does thresholding differ from balancing classes?"
         ]
       },
-      "formulas": [],
+      "formulas": [
+        "prevalence = (TP+FN)/N",
+        "precision = TP/(TP+FP); recall = TP/(TP+FN); undefined -> None",
+        "validation cost = 5*FN + FP"
+      ],
       "code_examples": [
         {
           "language": "python",
-          "title": "Imbalanced data: inspect one complete path",
-          "code": "# Topic: Imbalanced data (phase-03-classical-ml-analysis-1)\nfrom dataclasses import dataclass\n\n@dataclass(frozen=True)\nclass Result:\n    value: str\n    valid: bool\n\nresult = Result(value='ready', valid=True)\nprint(result)",
+          "title": "Rare failures: validation thresholds and baseline",
+          "code": "from math import isfinite\n\n\ndef binary_report(labels, scores, threshold):\n    if not labels or len(labels) != len(scores):\n        raise ValueError(\"non-empty aligned inputs required\")\n    if any(type(label) is not int or label not in (0, 1) for label in labels):\n        raise ValueError(\"integer binary labels required\")\n    if any(type(value) not in (int, float) or not isfinite(value)\n           or not 0 <= value <= 1 for value in [*scores, threshold]):\n        raise ValueError(\"finite probabilities and threshold in [0, 1] required\")\n    counts = {\"tp\": 0, \"fp\": 0, \"tn\": 0, \"fn\": 0}\n    for label, score in zip(labels, scores):\n        predicted = int(score >= threshold)\n        key = {(1, 1): \"tp\", (0, 1): \"fp\", (0, 0): \"tn\", (1, 0): \"fn\"}\n        counts[key[label, predicted]] += 1\n    positives = counts[\"tp\"] + counts[\"fn\"]\n    alerts = counts[\"tp\"] + counts[\"fp\"]\n    return {\n        **counts,\n        \"support\": len(labels),\n        \"positives\": positives,\n        \"prevalence\": positives / len(labels),\n        \"accuracy\": (counts[\"tp\"] + counts[\"tn\"]) / len(labels),\n        \"precision\": counts[\"tp\"] / alerts if alerts else None,\n        \"recall\": counts[\"tp\"] / positives if positives else None,\n    }\n\n\nvalidation_labels = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]\nvalidation_scores = [0.8, 0.4, 0.7, 0.35, 0.2, 0.1, 0.1, 0.1, 0.1, 0.1]\nfor name, scores, threshold in [\n    (\"baseline\", [0.0] * 10, 0.5),\n    (\"threshold=0.5\", validation_scores, 0.5),\n    (\"threshold=0.3\", validation_scores, 0.3),\n]:\n    report = binary_report(validation_labels, scores, threshold)\n    print(name, report)\n    print(\"validation_cost:\", 5 * report[\"fn\"] + report[\"fp\"])\n",
           "status": "runnable",
-          "purpose_vi": "Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.",
-          "purpose_en": "Illustrate the input-to-output path for imbalanced data.",
-          "setup": "Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.",
-          "expected_output": "Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.",
-          "edge_case_vi": "Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.",
-          "edge_case_en": "Try an empty input, a wrong shape or missing data and record the failure.",
-          "explanation_vi": "Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần nội dung; cần hoàn thành riêng nhiệm vụ thực hành.",
-          "explanation_en": "Keep the boundary executable and inspectable; change one input and verify the expected output."
+          "purpose_vi": "Đối chiếu support, prevalence và TP/FP/TN/FN tại hai ngưỡng.",
+          "purpose_en": "Check support, prevalence and TP/FP/TN/FN at both thresholds.",
+          "setup": "Python 3.11+; standard library only; Colab or python imbalance.py.",
+          "expected_output": "baseline {'tp': 0, 'fp': 0, 'tn': 8, 'fn': 2, 'support': 10, 'positives': 2, 'prevalence': 0.2, 'accuracy': 0.8, 'precision': None, 'recall': 0.0}\nvalidation_cost: 10\nthreshold=0.5 {'tp': 1, 'fp': 1, 'tn': 7, 'fn': 1, 'support': 10, 'positives': 2, 'prevalence': 0.2, 'accuracy': 0.8, 'precision': 0.5, 'recall': 0.5}\nvalidation_cost: 6\nthreshold=0.3 {'tp': 2, 'fp': 2, 'tn': 6, 'fn': 0, 'support': 10, 'positives': 2, 'prevalence': 0.2, 'accuracy': 0.8, 'precision': 0.5, 'recall': 1.0}\nvalidation_cost: 2",
+          "edge_case_vi": "Nhãn [0], điểm [0.1], ngưỡng 0.5 trả precision=None, recall=None. Rỗng, lệch độ dài, nhãn 2 hoặc NaN gây ValueError.",
+          "edge_case_en": "Labels [0], scores [0.1], threshold 0.5 return precision=None and recall=None. Empty/misaligned inputs, label 2 or NaN raise ValueError.",
+          "explanation_vi": "Điểm bằng ngưỡng được xếp dương. Ví dụ không fit mô hình; chỉ chọn giữa hai ngưỡng trên validation tổng hợp.",
+          "explanation_en": "A score equal to the threshold is positive. This does not fit a model; it compares two thresholds on synthetic validation data.",
+          "setup_vi": "Dán toàn bộ mã vào một ô Colab hoặc lưu imbalance.py rồi chạy python imbalance.py bằng Python 3.11+. Không cần cài gói.",
+          "setup_en": "Paste into one Colab cell, or save imbalance.py and run python imbalance.py with Python 3.11+. No packages needed."
         }
       ],
       "resources": [
         {
           "language": "en",
-          "title": "scikit-learn User Guide",
-          "url": "https://scikit-learn.org/stable/user_guide.html",
-          "kind": "official",
-          "required": false,
-          "purpose_vi": "Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.",
-          "purpose_en": "Official reference to verify the lesson concept.",
-          "read_vi": "Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.",
-          "read_en": "Read the relevant section, run a small example, and record one verified insight."
-        },
-        {
-          "language": "en",
           "title": "scikit-learn Model Evaluation",
-          "url": "https://scikit-learn.org/stable/modules/model_evaluation.html",
+          "url": "https://scikit-learn.org/stable/modules/model_evaluation.html#precision-recall-f-measures-and-support",
           "kind": "official",
           "required": false,
           "purpose_vi": "Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.",
           "purpose_en": "Official reference to verify the lesson concept.",
-          "read_vi": "Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.",
-          "read_en": "Read the relevant section, run a small example, and record one verified insight."
-        },
-        {
-          "language": "en",
-          "title": "scikit-learn Pipelines",
-          "url": "https://scikit-learn.org/stable/modules/compose.html",
-          "kind": "official",
-          "required": false,
-          "purpose_vi": "Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.",
-          "purpose_en": "Official reference to verify the lesson concept.",
-          "read_vi": "Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.",
-          "read_en": "Read the relevant section, run a small example, and record one verified insight."
+          "read_vi": "Đọc precision, recall và support; đối chiếu mẫu số và quy ước zero_division.",
+          "read_en": "Read precision, recall and support; check denominators and zero_division conventions."
         },
         {
           "title": "Giải thích và hướng dẫn thực hành trong bài",
@@ -14957,69 +14941,84 @@
       ],
       "estimated_minutes": 60,
       "completion_checklist": [
-        "Đọc precision, recall của lớp hiếm và so sánh với mô hình luôn chọn lớp phổ biến.",
-        "Kiểm tra theo nhóm dữ liệu và nêu giới hạn của kết luận.",
-        "Lưu kết quả và giải thích được một giới hạn mà không nhìn lời giải."
+        "Tính đúng baseline accuracy=0.8, recall=0 và precision=None.",
+        "Đối chiếu support, prevalence và TP/FP/TN/FN tại hai ngưỡng.",
+        "Chọn ngưỡng từ validation, ghi chi phí và không dùng test để chọn."
       ],
       "completion_criteria": [
-        "Bài làm đáp ứng nhiệm vụ: Đọc precision, recall của lớp hiếm và so sánh với mô hình luôn chọn lớp phổ biến.",
-        "Có kết quả đối chiếu với tiêu chí hoặc dự đoán đã ghi trước.",
-        "Kiểm tra theo nhóm dữ liệu và nêu giới hạn của kết luận."
+        "Tính đúng baseline accuracy=0.8, recall=0 và precision=None.",
+        "Đối chiếu support, prevalence và TP/FP/TN/FN tại hai ngưỡng.",
+        "Chọn ngưỡng từ validation, ghi chi phí và không dùng test để chọn."
       ],
       "common_mistakes": [
-        "Dùng điểm tổng hợp để che khuất nhóm dự đoán kém.",
-        "Kết luận từ một kết quả thuận lợi mà chưa kiểm tra trường hợp khác.",
-        "Chép lời giải nhưng không giải thích được quyết định trong bài làm của mình."
+        "Dùng accuracy để che recall=0.",
+        "Đổi ngưỡng bằng test hoặc resample test.",
+        "Đồng nhất None với 0 và bỏ qua support."
       ],
       "next_lessons": [
         "phase-03-classical-ml-analysis-2",
         "phase-03-classical-ml-analysis-3"
       ],
-      "review_question_vi": "Nội dung cốt lõi của “Dữ liệu mất cân bằng lớp” là gì?",
-      "review_question_en": "Define imbalanced data in your own words. What are the input, transformation and output?",
-      "review_answer_vi": "Khi số mẫu giữa các lớp chênh lệch lớn, accuracy có thể che giấu khả năng nhận diện lớp hiếm. Cân nhắc thước đo, ngưỡng và cách lấy mẫu trong phạm vi tập huấn luyện.",
-      "review_answer_en": "A strong answer names the input, transformation, output and the context where imbalanced data is used. Relate it specifically to imbalanced data in lesson phase-03-classical-ml-analysis-1.",
+      "review_question_vi": "Vì sao accuracy=0.8 chưa đủ?",
+      "review_question_en": "Why is accuracy=0.8 insufficient?",
+      "review_answer_vi": "Baseline bỏ sót cả 2 lỗi: FN=2, recall=0; không có cảnh báo nên precision=None.",
+      "review_answer_en": "The baseline misses both failures: FN=2 and recall=0; no alerts means precision=None.",
       "review_cards": [
         {
           "id": "phase-03-classical-ml-analysis-1-recall",
           "type": "recall",
-          "question_vi": "Nội dung cốt lõi của “Dữ liệu mất cân bằng lớp” là gì?",
-          "question_en": "Define imbalanced data in your own words. What are the input, transformation and output?",
-          "answer_vi": "Khi số mẫu giữa các lớp chênh lệch lớn, accuracy có thể che giấu khả năng nhận diện lớp hiếm. Cân nhắc thước đo, ngưỡng và cách lấy mẫu trong phạm vi tập huấn luyện.",
-          "answer_en": "A strong answer names the input, transformation, output and the context where imbalanced data is used.",
-          "hint_vi": "Nêu ý chính, sau đó minh họa bằng tình huống cụ thể.",
-          "hint_en": "Start with a small example you can calculate by hand."
+          "question_vi": "Vì sao accuracy=0.8 chưa đủ?",
+          "question_en": "Why is accuracy=0.8 insufficient?",
+          "answer_vi": "Baseline bỏ sót cả 2 lỗi: FN=2, recall=0; không có cảnh báo nên precision=None.",
+          "answer_en": "The baseline misses both failures: FN=2 and recall=0; no alerts means precision=None.",
+          "hint_vi": "Đối chiếu số đếm và ranh giới validation/test.",
+          "hint_en": "Check counts and the validation/test boundary."
         },
         {
           "id": "phase-03-classical-ml-analysis-1-application",
           "type": "application",
-          "question_vi": "Đọc precision, recall của lớp hiếm và so sánh với mô hình luôn chọn lớp phổ biến.",
-          "question_en": "Write a small code example or design that applies imbalanced data to an AI engineering problem.",
-          "answer_vi": "Với nhiệm vụ “Đọc precision, recall của lớp hiếm và so sánh với mô hình luôn chọn lớp phổ biến”, cần lưu: bảng phân tích kết quả hoặc bản lưu mô hình có cách nạp lại. Kiểm tra theo nhóm dữ liệu và nêu giới hạn của kết luận.",
-          "answer_en": "The imbalanced data example should have an explicit input, expected output and a way to run or verify it (phase-03-classical-ml-analysis-1).",
-          "hint_vi": "Bắt đầu từ nhiệm vụ thực hành của bài.",
-          "hint_en": "Start from the lesson code example and change one assumption."
+          "question_vi": "Ngưỡng nào có chi phí thấp hơn khi FN giá 5, FP giá 1?",
+          "question_en": "Which threshold costs less when FN costs 5 and FP costs 1?",
+          "answer_vi": "Validation: 0.5 có chi phí 6; 0.3 có chi phí 2. Chọn 0.3 rồi khóa trước test.",
+          "answer_en": "On validation, 0.5 costs 6 and 0.3 costs 2. Choose 0.3, then freeze it before test.",
+          "hint_vi": "Đối chiếu số đếm và ranh giới validation/test.",
+          "hint_en": "Check counts and the validation/test boundary."
         },
         {
           "id": "phase-03-classical-ml-analysis-1-debug",
           "type": "debug",
-          "question_vi": "Khi làm bài “Dữ liệu mất cân bằng lớp”, bạn cần tránh lỗi nào và kiểm tra lại ra sao?",
-          "question_en": "If imbalanced data produces a wrong result or a metric drops, what would you debug first?",
-          "answer_vi": "Trong bài “Dữ liệu mất cân bằng lớp”, lỗi cần tránh là: dùng điểm tổng hợp để che khuất nhóm dự đoán kém. Kiểm tra theo nhóm dữ liệu và nêu giới hạn của kết luận. Dùng ví dụ nhỏ để tìm bước đầu tiên có kết quả khác dự kiến.",
-          "answer_en": "For imbalanced data, check inputs/shapes, preprocessing and the baseline first; then isolate the failure with a small test and error analysis (phase-03-classical-ml-analysis-1).",
-          "hint_vi": "Tìm bước đầu tiên xuất hiện khác biệt.",
-          "hint_en": "Do not start by changing the model or adding complexity."
+          "question_vi": "Recall=None có phải recall=0 không?",
+          "question_en": "Does recall=None mean recall=0?",
+          "answer_vi": "Không. None nghĩa không có nhãn dương nên mẫu số bằng 0; recall=0 nghĩa có mẫu dương nhưng không phát hiện được mẫu nào.",
+          "answer_en": "No. None means no positive labels and a zero denominator; zero recall means actual positives exist but none were detected.",
+          "hint_vi": "Đối chiếu số đếm và ranh giới validation/test.",
+          "hint_en": "Check counts and the validation/test boundary."
         },
         {
           "id": "phase-03-classical-ml-analysis-1-interview",
           "type": "interview",
-          "question_vi": "Bạn dùng kết quả nào từ bài “Dữ liệu mất cân bằng lớp” để giải thích cách làm và giới hạn?",
-          "question_en": "In an interview, how would you explain a trade-off and one edge case of imbalanced data?",
-          "answer_vi": "Bắt đầu từ nhiệm vụ “Đọc precision, recall của lớp hiếm và so sánh với mô hình luôn chọn lớp phổ biến”. Trình bày kết quả đã lưu, cách đối chiếu và một điều kiện có thể khiến kết luận thay đổi; không chỉ đọc lại định nghĩa.",
-          "answer_en": "The answer about imbalanced data should cover assumptions, metrics/cost, limitations and how to reduce production risk (phase-03-classical-ml-analysis-1).",
-          "hint_vi": "Dùng quyết định thật trong bài làm, tránh chỉ đọc định nghĩa.",
-          "hint_en": "Relate it to latency, quality, cost or observability where relevant."
+          "question_vi": "Đổi ngưỡng khác cân bằng lớp thế nào?",
+          "question_en": "How does thresholding differ from balancing classes?",
+          "answer_vi": "Ngưỡng đổi quyết định từ điểm cố định; trọng số đổi loss và resampling đổi train. Không thao tác test để chọn phương án.",
+          "answer_en": "A threshold changes decisions from fixed scores; weights change loss and resampling changes training data. Do not modify test to select an approach.",
+          "hint_vi": "Đối chiếu số đếm và ranh giới validation/test.",
+          "hint_en": "Check counts and the validation/test boundary."
         }
+      ],
+      "completion_checklist_en": [
+        "Verify baseline accuracy=0.8, recall=0 and precision=None.",
+        "Check support, prevalence and TP/FP/TN/FN at both thresholds.",
+        "Select on validation, record costs, and keep test out of selection."
+      ],
+      "completion_criteria_en": [
+        "Verify baseline accuracy=0.8, recall=0 and precision=None.",
+        "Check support, prevalence and TP/FP/TN/FN at both thresholds.",
+        "Select on validation, record costs, and keep test out of selection."
+      ],
+      "common_mistakes_en": [
+        "Use accuracy to hide recall=0.",
+        "Tune on test or resample test.",
+        "Treat None as zero and omit support."
       ]
     },
     {
@@ -15028,17 +15027,17 @@
       "module_id": "analysis",
       "title_vi": "Hiệu chỉnh xác suất dự đoán",
       "title_en": "Calibration",
-      "summary_vi": "Mô hình được hiệu chỉnh tốt có xác suất dự đoán phù hợp tần suất đúng quan sát được.",
-      "summary_en": "Learn Calibration through an input → transformation → output model, then verify it with an edge-case exercise.",
+      "summary_vi": "Hiệu chỉnh xác suất bằng hai bin, đối chiếu Brier và reliability trên test độc lập.",
+      "summary_en": "Calibrate probabilities with two bins and compare Brier loss and reliability on independent test data.",
       "learning_objectives": [
-        "Vẽ biểu đồ hiệu chỉnh và đối chiếu xác suất dự đoán với tần suất thực tế.",
-        "Kiểm tra theo nhóm dữ liệu và nêu giới hạn của kết luận.",
-        "Giải thích kết quả và nêu một giới hạn của bài làm."
+        "Tính Brier 0.4525 trước và 0.3125 sau trên test.",
+        "Báo support, mean probability và positive rate cho từng bin.",
+        "Chứng minh ánh xạ chỉ fit từ calibration, không từ test."
       ],
       "learning_objectives_en": [
-        "Explain calibration with a concrete example.",
-        "Write or adapt a small code example applying calibration.",
-        "Recognize its assumptions, limits and one common failure mode."
+        "Calculate test Brier 0.4525 before and 0.3125 after.",
+        "Report support, mean probability and positive rate per bin.",
+        "Show the mapping is fitted only on calibration, never test."
       ],
       "prerequisites": [
         "phase-03-classical-ml-analysis-1",
@@ -15052,108 +15051,92 @@
         "evaluation",
         "analysis"
       ],
-      "concept_notes_vi": "Hiệu chỉnh xác suất làm cho xác suất dự đoán phù hợp với tần suất kết quả quan sát trong các nhóm mẫu tương tự. Một mô hình dự đoán lớp đúng thường xuyên chưa chắc đưa ra xác suất đáng tin.\n\nKhả năng phân biệt là khả năng xếp mẫu dương cao hơn mẫu âm. Hiệu chỉnh quan tâm ý nghĩa của giá trị xác suất; một phép biến đổi điểm có thể giữ thứ hạng nhưng thay đổi mức phù hợp này.\n\nVới các giao dịch được dự đoán rủi ro tương tự, so sánh xác suất dự đoán với tần suất gian lận quan sát trên dữ liệu độc lập. Nhóm ít mẫu cho ước lượng thiếu ổn định; không học bộ hiệu chỉnh từ tập kiểm tra cuối.\n\nTự kiểm tra: AUC cao có bảo đảm xác suất chính xác không? Không; cần đánh giá hiệu chỉnh riêng và kiểm tra khi phân bố dữ liệu thay đổi.",
-      "concept_notes_en": "Probability calibration aligns predicted probabilities with observed outcome frequencies among comparable examples. A model that often predicts the correct class may still produce unreliable probabilities.\n\nDiscrimination concerns ranking positive examples above negative ones. Calibration concerns the meaning of probability values; transforming scores can preserve ranking while changing calibration.\n\nFor transactions assigned similar risks, compare predicted probabilities with observed fraud frequencies on independent data. Small groups yield unstable estimates. Do not fit the calibrator using the final test set.\n\nSelf-check: does high AUC guarantee accurate probabilities? No; assess calibration separately and check it again when the data distribution changes.",
-      "why_it_matters_vi": "Phân tích lỗi theo nhóm để hiểu giới hạn trước khi lưu và chia sẻ mô hình.",
-      "why_it_matters_en": "Move from one aggregate score to error analysis, calibration, a model card, and reloadable artifacts.",
+      "concept_notes_vi": "Xác suất 0.8 được hiệu chỉnh tốt khi trong nhiều trường hợp nhận điểm gần 0.8, khoảng 80% là dương. Accuracy chỉ xét nhãn sau ngưỡng; nó không cho biết xác suất có đáng tin. Brier nhị phân là trung bình (p-y)^2, nhỏ hơn là tốt hơn về dự đoán xác suất nhưng không riêng về calibration: còn phụ thuộc khả năng phân biệt và độ bất định.\n\nReliability chia điểm thành bin, báo support, trung bình p và tỉ lệ nhãn dương. Hai bin cố định ở đây là [0,0.5) và [0.5,1]. Biên 0.5 thuộc bin cao; 1 cũng hợp lệ. Bin ít mẫu có tỉ lệ rất nhiễu. Bin rỗng được báo support=0, mean=None, rate=None; không tự coi là xác suất 0.\n\nMô hình gốc đã được cố định từ train riêng, không minh họa huấn luyện trong bài. Fit histogram trên 8 mẫu calibration: bin thấp có 1/4 dương, bin cao có 3/4 dương, nên ánh xạ 0.05 thành 0.25 và 0.95 thành 0.75. Đánh giá trên 4 mẫu test khác, mỗi bin có 1/2 dương. Brier trước là (0.0025+0.9025+0.9025+0.0025)/4=0.4525; sau là (0.0625+0.5625+0.5625+0.0625)/4=0.3125.\n\nĐây là phép tính minh họa, không bảo đảm calibration luôn cải thiện test. Accuracy ở ngưỡng 0.5 vẫn là 0.5; các bin sau hiệu chỉnh vẫn lệch 0.25 so với tỉ lệ test 0.5. Không fit lại bằng nhãn test, không chọn số bin từ test; dùng validation hoặc cross-validation để chọn phương pháp. Sigmoid và isotonic trong scikit-learn là phương pháp khác; histogram đơn giản này không thay thế chúng.",
+      "concept_notes_en": "A probability of 0.8 is well calibrated when roughly 80% of many cases assigned scores near 0.8 are positive. Accuracy uses thresholded labels and cannot assess probability reliability. Binary Brier loss averages (p-y)^2; lower is better for probability prediction, but it also reflects discrimination and uncertainty, not calibration alone.\n\nReliability bins report support, mean probability and positive fraction. This example fixes bins [0,0.5) and [0.5,1]. The boundary 0.5 belongs to the upper bin; 1 is valid. Small bins have noisy rates. Empty bins report support=0, mean=None, rate=None rather than an invented zero probability.\n\nAssume a base model already frozen from separate training data; training is not demonstrated here. Fit a histogram on eight calibration cases: the lower bin has 1/4 positives and the upper has 3/4, mapping 0.05 to 0.25 and 0.95 to 0.75. Four different test cases have 1/2 positives in each bin. Original Brier is (0.0025+0.9025+0.9025+0.0025)/4=0.4525; calibrated Brier is (0.0625+0.5625+0.5625+0.0625)/4=0.3125.\n\nThis worked fixture does not guarantee test improvement. Accuracy at 0.5 remains 0.5, and the calibrated bins still differ by 0.25 from the test rate 0.5. Never refit using test labels or choose bin counts on test; use validation or cross-validation for method selection. The simple histogram illustrates a mechanism; it is distinct from scikit-learn sigmoid and isotonic calibration.",
+      "why_it_matters_vi": "Hai mô hình có cùng nhãn dự đoán vẫn có độ tin cậy xác suất khác nhau; quyết định dựa trên rủi ro cần kiểm tra cả hai.",
+      "why_it_matters_en": "Identical predicted labels can hide different probability reliability; risk-based decisions need both checks.",
       "study_steps_vi": [
-        "Đọc phần giải thích, xác định khái niệm và điều kiện cần dùng cho nhiệm vụ bên dưới.",
-        "Tìm mục tương ứng với “Calibration” trong tài liệu tham khảo; đối chiếu với phần giải thích của bài.",
-        "Vẽ biểu đồ hiệu chỉnh và đối chiếu xác suất dự đoán với tần suất thực tế.",
-        "Kiểm tra theo nhóm dữ liệu và nêu giới hạn của kết luận. Ghi kết quả đối chiếu và điều bạn đã sửa nếu lần đầu chưa đúng.",
-        "Tự trả lời thẻ ôn tập, rồi kiểm tra các tiêu chí hoàn thành trước khi chuyển bài."
+        "Đọc calibration curves và giới hạn Brier trong tài liệu.",
+        "Tính tay tỉ lệ 1/4, 3/4 trên calibration.",
+        "Chạy mã rồi so Brier và reliability trên test.",
+        "Thử bin rỗng, NaN và biên 0.5; ghi lỗi đúng.",
+        "Giải thích tại sao accuracy không đổi và không dùng nhãn test để fit."
       ],
       "study_steps_en": [
-        "Read the concept notes and answer: Move from one aggregate score to error analysis, calibration, a model card, and reloadable artifacts.",
-        "Open scikit-learn User Guide, read the section marked Read this lesson, and record one verified example or definition.",
-        "Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the test.",
-        "Complete the practice task: Slice errors by group, inspect a confusion matrix, save the model/pipeline, and write a model card with limits.",
-        "Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact."
+        "Read calibration curves and Brier limitations.",
+        "Calculate calibration fractions 1/4 and 3/4 by hand.",
+        "Run the code and compare test Brier and reliability.",
+        "Try an empty bin, NaN and the 0.5 boundary; record the expected behavior.",
+        "Explain unchanged accuracy and why test labels cannot fit the mapping."
       ],
       "practice_plan": {
         "vi": {
-          "task": "Vẽ biểu đồ hiệu chỉnh và đối chiếu xác suất dự đoán với tần suất thực tế.\n\nSau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Đọc ma trận nhầm lẫn, chia lỗi theo nhóm, lưu mô hình cùng quy trình và viết thẻ mô tả giới hạn.",
+          "task": "Fit hai bin trên calibration cố định rồi đánh giá test, lưu bảng trước/sau và giới hạn.",
           "deliverables": [
-            "Bảng phân tích kết quả hoặc bản lưu mô hình có cách nạp lại",
-            "Kết quả đối chiếu kèm dữ liệu hoặc điều kiện thực hiện",
-            "Một giới hạn và cách kiểm tra thêm"
+            "Mã và stdout",
+            "Bảng support/mean/rate và hai Brier",
+            "Sơ đồ train → calibration → test cùng danh sách ID rời nhau"
           ],
-          "checkpoint": "Kiểm tra theo nhóm dữ liệu và nêu giới hạn của kết luận.",
-          "stretch": "Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào."
+          "checkpoint": "Ánh xạ (0.25,0.75), test Brier 0.3125; không nói đã hiệu chỉnh hoàn hảo.",
+          "stretch": "Thử test nhãn [0,0,1,1]: Brier gốc 0.0025, sau 0.0625; giải thích hiệu chỉnh có thể tệ hơn."
         },
         "en": {
-          "task": "Slice errors by group, inspect a confusion matrix, save the model/pipeline, and write a model card with limits.",
+          "task": "Fit two fixed calibration bins and evaluate test; save before/after tables and limitations.",
           "deliverables": [
-            "One executable code file",
-            "One test or expected output",
-            "One note describing an edge case and trade-off"
+            "Code and stdout",
+            "Support/mean/rate table and both Brier losses",
+            "Train → calibration → test diagram with disjoint IDs"
           ],
-          "checkpoint": "You know where and for whom the model fails and do not use a high score to hide limitations.",
-          "stretch": "Add a failure test for calibration and explain the result."
+          "checkpoint": "Mapping (0.25,0.75), test Brier 0.3125; do not claim perfect calibration.",
+          "stretch": "Try test labels [0,0,1,1]: original Brier 0.0025 and calibrated 0.0625; explain possible deterioration."
         }
       },
       "interview_questions": {
         "vi": [
-          "Bạn sẽ giải thích nội dung “Hiệu chỉnh xác suất dự đoán” bằng ví dụ nào?",
-          "Điều kiện nào cần kiểm tra trước khi áp dụng vào công việc thực tế?",
-          "Bạn dùng bằng chứng nào để kết luận bài làm đáp ứng yêu cầu?"
+          "Hai bin fit được xác suất nào?",
+          "Bin calibration rỗng xử lý thế nào?",
+          "Vì sao không fit bằng nhãn test?"
         ],
         "en": [
-          "How would you explain calibration to a new teammate?",
-          "Which assumption behind calibration could fail in production?",
-          "Which metric or test would prove the result is trustworthy?"
+          "Which probabilities do the two fitted bins produce?",
+          "What happens with an empty calibration bin?",
+          "Why not fit using test labels?"
         ]
       },
-      "formulas": [],
+      "formulas": [
+        "binary Brier = sum((probability-label)**2)/N",
+        "bin positive rate = positive count / bin support",
+        "bin mean probability = sum(probabilities in bin) / bin support"
+      ],
       "code_examples": [
         {
           "language": "python",
-          "title": "Calibration: inspect one complete path",
-          "code": "# Topic: Calibration (phase-03-classical-ml-analysis-2)\ndef accuracy(y_true: list[int], y_pred: list[int]) -> float:\n    if len(y_true) != len(y_pred) or not y_true:\n        raise ValueError('non-empty aligned labels are required')\n    return sum(a == b for a, b in zip(y_true, y_pred)) / len(y_true)\n\nprint(accuracy([1, 0, 1], [1, 1, 1]))",
+          "title": "Two-bin calibration with independent test observations",
+          "code": "from math import isfinite\n\n\ndef validate_probabilities(probabilities):\n    if not probabilities or any(type(value) not in (int, float)\n                                or not isfinite(value) or not 0 <= value <= 1\n                                for value in probabilities):\n        raise ValueError(\"non-empty finite probabilities in [0, 1] required\")\n\n\ndef validate_pairs(labels, probabilities):\n    validate_probabilities(probabilities)\n    if len(labels) != len(probabilities) or any(\n        type(label) is not int or label not in (0, 1) for label in labels\n    ):\n        raise ValueError(\"aligned integer binary labels required\")\n\n\ndef reliability(labels, probabilities):\n    validate_pairs(labels, probabilities)\n    rows = []\n    for upper in [False, True]:\n        members = [(label, probability) for label, probability in zip(labels, probabilities)\n                   if (probability >= 0.5) == upper]\n        support = len(members)\n        rows.append({\n            \"support\": support,\n            \"mean\": sum(probability for _, probability in members) / support if support else None,\n            \"rate\": sum(label for label, _ in members) / support if support else None,\n        })\n    return rows\n\n\ndef fit_histogram(labels, probabilities):\n    rows = reliability(labels, probabilities)\n    if any(row[\"support\"] == 0 for row in rows):\n        raise ValueError(\"both calibration bins need observations\")\n    return tuple(row[\"rate\"] for row in rows)\n\n\ndef calibrate(probabilities, rates):\n    validate_probabilities(probabilities)\n    validate_probabilities(rates)\n    if len(rates) != 2:\n        raise ValueError(\"exactly two bin rates required\")\n    return [rates[int(probability >= 0.5)] for probability in probabilities]\n\n\ndef brier(labels, probabilities):\n    validate_pairs(labels, probabilities)\n    return sum((probability - label) ** 2\n               for label, probability in zip(labels, probabilities)) / len(labels)\n\n\ncalibration_ids = list(range(8))\ntest_ids = list(range(8, 12))\nassert set(calibration_ids).isdisjoint(test_ids)\ncalibration_labels = [0, 0, 0, 1, 0, 1, 1, 1]\ncalibration_probabilities = [0.05] * 4 + [0.95] * 4\nrates = fit_histogram(calibration_labels, calibration_probabilities)\ntest_labels = [0, 1, 0, 1]\ntest_probabilities = [0.05, 0.05, 0.95, 0.95]\nadjusted = calibrate(test_probabilities, rates)\nprint(\"calibration rates:\", rates)\nprint(\"test before:\", reliability(test_labels, test_probabilities))\nprint(\"test after:\", reliability(test_labels, adjusted))\nprint(f\"Brier before={brier(test_labels, test_probabilities):.4f}\")\nprint(f\"Brier after={brier(test_labels, adjusted):.4f}\")\n",
           "status": "runnable",
-          "purpose_vi": "Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.",
-          "purpose_en": "Illustrate the input-to-output path for calibration.",
-          "setup": "Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.",
-          "expected_output": "Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.",
-          "edge_case_vi": "Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.",
-          "edge_case_en": "Try an empty input, a wrong shape or missing data and record the failure.",
-          "explanation_vi": "Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần nội dung; cần hoàn thành riêng nhiệm vụ thực hành.",
-          "explanation_en": "Keep the boundary executable and inspectable; change one input and verify the expected output."
+          "purpose_vi": "Tính Brier 0.4525 trước và 0.3125 sau trên test.",
+          "purpose_en": "Calculate test Brier 0.4525 before and 0.3125 after.",
+          "setup": "Python 3.11+; standard library only; Colab or python calibration.py.",
+          "expected_output": "calibration rates: (0.25, 0.75)\ntest before: [{'support': 2, 'mean': 0.05, 'rate': 0.5}, {'support': 2, 'mean': 0.95, 'rate': 0.5}]\ntest after: [{'support': 2, 'mean': 0.25, 'rate': 0.5}, {'support': 2, 'mean': 0.75, 'rate': 0.5}]\nBrier before=0.4525\nBrier after=0.3125",
+          "edge_case_vi": "fit_histogram([0],[0.1]) gây ValueError do bin cao rỗng. reliability([0],[0.1]) vẫn báo bin rỗng bằng None. NaN, điểm >1, nhãn 2 bị từ chối.",
+          "edge_case_en": "fit_histogram([0],[0.1]) raises ValueError for an empty upper bin. reliability([0],[0.1]) reports that bin with None. NaN, probabilities >1 and label 2 are rejected.",
+          "explanation_vi": "Brier đổi nhưng nhãn ở ngưỡng 0.5 không đổi. Đây là histogram minh họa trên dữ liệu tổng hợp, không phải benchmark hoặc mô hình production.",
+          "explanation_en": "Brier changes while threshold-0.5 labels do not. This synthetic histogram demonstration is neither a benchmark nor a production model.",
+          "setup_vi": "Dán mã vào một ô Colab hoặc lưu calibration.py và chạy python calibration.py bằng Python 3.11+. Không cần cài gói.",
+          "setup_en": "Paste into one Colab cell, or save calibration.py and run python calibration.py with Python 3.11+. No packages needed."
         }
       ],
       "resources": [
         {
           "language": "en",
-          "title": "scikit-learn User Guide",
-          "url": "https://scikit-learn.org/stable/user_guide.html",
+          "title": "scikit-learn Probability calibration",
+          "url": "https://scikit-learn.org/stable/modules/calibration.html",
           "kind": "official",
           "required": false,
           "purpose_vi": "Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.",
           "purpose_en": "Official reference to verify the lesson concept.",
-          "read_vi": "Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.",
-          "read_en": "Read the relevant section, run a small example, and record one verified insight."
-        },
-        {
-          "language": "en",
-          "title": "scikit-learn Model Evaluation",
-          "url": "https://scikit-learn.org/stable/modules/model_evaluation.html",
-          "kind": "official",
-          "required": false,
-          "purpose_vi": "Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.",
-          "purpose_en": "Official reference to verify the lesson concept.",
-          "read_vi": "Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.",
-          "read_en": "Read the relevant section, run a small example, and record one verified insight."
-        },
-        {
-          "language": "en",
-          "title": "scikit-learn Pipelines",
-          "url": "https://scikit-learn.org/stable/modules/compose.html",
-          "kind": "official",
-          "required": false,
-          "purpose_vi": "Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.",
-          "purpose_en": "Official reference to verify the lesson concept.",
-          "read_vi": "Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.",
-          "read_en": "Read the relevant section, run a small example, and record one verified insight."
+          "read_vi": "Đọc Calibration curves, giới hạn Brier và dữ liệu độc lập để fit calibrator.",
+          "read_en": "Read Calibration curves, the Brier caveat, and independent data for fitting calibrators."
         },
         {
           "title": "Giải thích và hướng dẫn thực hành trong bài",
@@ -15178,69 +15161,84 @@
       ],
       "estimated_minutes": 60,
       "completion_checklist": [
-        "Vẽ biểu đồ hiệu chỉnh và đối chiếu xác suất dự đoán với tần suất thực tế.",
-        "Kiểm tra theo nhóm dữ liệu và nêu giới hạn của kết luận.",
-        "Lưu kết quả và giải thích được một giới hạn mà không nhìn lời giải."
+        "Tính Brier 0.4525 trước và 0.3125 sau trên test.",
+        "Báo support, mean probability và positive rate cho từng bin.",
+        "Chứng minh ánh xạ chỉ fit từ calibration, không từ test."
       ],
       "completion_criteria": [
-        "Bài làm đáp ứng nhiệm vụ: Vẽ biểu đồ hiệu chỉnh và đối chiếu xác suất dự đoán với tần suất thực tế.",
-        "Có kết quả đối chiếu với tiêu chí hoặc dự đoán đã ghi trước.",
-        "Kiểm tra theo nhóm dữ liệu và nêu giới hạn của kết luận."
+        "Tính Brier 0.4525 trước và 0.3125 sau trên test.",
+        "Báo support, mean probability và positive rate cho từng bin.",
+        "Chứng minh ánh xạ chỉ fit từ calibration, không từ test."
       ],
       "common_mistakes": [
-        "Dùng điểm tổng hợp để che khuất nhóm dự đoán kém.",
-        "Kết luận từ một kết quả thuận lợi mà chưa kiểm tra trường hợp khác.",
-        "Chép lời giải nhưng không giải thích được quyết định trong bài làm của mình."
+        "Dùng accuracy thay cho calibration.",
+        "Fit hoặc chọn số bin bằng test.",
+        "Bỏ qua support hoặc nói Brier giảm bảo đảm calibration tốt hơn."
       ],
       "next_lessons": [
         "phase-03-classical-ml-analysis-3",
         "phase-03-classical-ml-analysis-4"
       ],
-      "review_question_vi": "Nội dung cốt lõi của “Hiệu chỉnh xác suất dự đoán” là gì?",
-      "review_question_en": "Define calibration in your own words. What are the input, transformation and output?",
-      "review_answer_vi": "Mô hình được hiệu chỉnh tốt có xác suất dự đoán phù hợp tần suất đúng quan sát được. Xếp hạng mẫu tốt không bảo đảm xác suất chính xác.",
-      "review_answer_en": "A strong answer names the input, transformation, output and the context where calibration is used. Relate it specifically to calibration in lesson phase-03-classical-ml-analysis-2.",
+      "review_question_vi": "Brier nhỏ hơn có luôn nghĩa calibration tốt hơn?",
+      "review_question_en": "Does lower Brier always mean better calibration?",
+      "review_answer_vi": "Không. Brier còn phản ánh khả năng phân biệt và bất định; xem thêm mean/rate/support của reliability bins.",
+      "review_answer_en": "No. Brier also reflects discrimination and uncertainty; inspect reliability-bin means, rates and support.",
       "review_cards": [
         {
           "id": "phase-03-classical-ml-analysis-2-recall",
           "type": "recall",
-          "question_vi": "Nội dung cốt lõi của “Hiệu chỉnh xác suất dự đoán” là gì?",
-          "question_en": "Define calibration in your own words. What are the input, transformation and output?",
-          "answer_vi": "Mô hình được hiệu chỉnh tốt có xác suất dự đoán phù hợp tần suất đúng quan sát được. Xếp hạng mẫu tốt không bảo đảm xác suất chính xác.",
-          "answer_en": "A strong answer names the input, transformation, output and the context where calibration is used.",
-          "hint_vi": "Nêu ý chính, sau đó minh họa bằng tình huống cụ thể.",
-          "hint_en": "Start with a small example you can calculate by hand."
+          "question_vi": "Brier nhỏ hơn có luôn nghĩa calibration tốt hơn?",
+          "question_en": "Does lower Brier always mean better calibration?",
+          "answer_vi": "Không. Brier còn phản ánh khả năng phân biệt và bất định; xem thêm mean/rate/support của reliability bins.",
+          "answer_en": "No. Brier also reflects discrimination and uncertainty; inspect reliability-bin means, rates and support.",
+          "hint_vi": "So nguồn nhãn và mẫu số mỗi bin.",
+          "hint_en": "Check label provenance and each bin denominator."
         },
         {
           "id": "phase-03-classical-ml-analysis-2-application",
           "type": "application",
-          "question_vi": "Vẽ biểu đồ hiệu chỉnh và đối chiếu xác suất dự đoán với tần suất thực tế.",
-          "question_en": "Write a small code example or design that applies calibration to an AI engineering problem.",
-          "answer_vi": "Với nhiệm vụ “Vẽ biểu đồ hiệu chỉnh và đối chiếu xác suất dự đoán với tần suất thực tế”, cần lưu: bảng phân tích kết quả hoặc bản lưu mô hình có cách nạp lại. Kiểm tra theo nhóm dữ liệu và nêu giới hạn của kết luận.",
-          "answer_en": "The calibration example should have an explicit input, expected output and a way to run or verify it (phase-03-classical-ml-analysis-2).",
-          "hint_vi": "Bắt đầu từ nhiệm vụ thực hành của bài.",
-          "hint_en": "Start from the lesson code example and change one assumption."
+          "question_vi": "Hai bin fit được xác suất nào?",
+          "question_en": "Which probabilities do the two fitted bins produce?",
+          "answer_vi": "Calibration có 1/4 và 3/4 dương nên rates=(0.25,0.75). Dùng nguyên ánh xạ đó trên test cho Brier=0.3125.",
+          "answer_en": "Calibration has 1/4 and 3/4 positives, giving rates=(0.25,0.75). Reusing this mapping on test gives Brier=0.3125.",
+          "hint_vi": "So nguồn nhãn và mẫu số mỗi bin.",
+          "hint_en": "Check label provenance and each bin denominator."
         },
         {
           "id": "phase-03-classical-ml-analysis-2-debug",
           "type": "debug",
-          "question_vi": "Khi làm bài “Hiệu chỉnh xác suất dự đoán”, bạn cần tránh lỗi nào và kiểm tra lại ra sao?",
-          "question_en": "If calibration produces a wrong result or a metric drops, what would you debug first?",
-          "answer_vi": "Trong bài “Hiệu chỉnh xác suất dự đoán”, lỗi cần tránh là: dùng điểm tổng hợp để che khuất nhóm dự đoán kém. Kiểm tra theo nhóm dữ liệu và nêu giới hạn của kết luận. Dùng ví dụ nhỏ để tìm bước đầu tiên có kết quả khác dự kiến.",
-          "answer_en": "For calibration, check inputs/shapes, preprocessing and the baseline first; then isolate the failure with a small test and error analysis (phase-03-classical-ml-analysis-2).",
-          "hint_vi": "Tìm bước đầu tiên xuất hiện khác biệt.",
-          "hint_en": "Do not start by changing the model or adding complexity."
+          "question_vi": "Bin calibration rỗng xử lý thế nào?",
+          "question_en": "What happens with an empty calibration bin?",
+          "answer_vi": "Ví dụ báo ValueError, không tự gán 0. Có thể thiết kế bin rộng hơn bằng dữ liệu phát triển, sau đó đánh giá lại test riêng.",
+          "answer_en": "The example raises ValueError rather than inventing zero. A wider-bin policy may be designed using development data, then evaluated on separate test data.",
+          "hint_vi": "So nguồn nhãn và mẫu số mỗi bin.",
+          "hint_en": "Check label provenance and each bin denominator."
         },
         {
           "id": "phase-03-classical-ml-analysis-2-interview",
           "type": "interview",
-          "question_vi": "Bạn dùng kết quả nào từ bài “Hiệu chỉnh xác suất dự đoán” để giải thích cách làm và giới hạn?",
-          "question_en": "In an interview, how would you explain a trade-off and one edge case of calibration?",
-          "answer_vi": "Bắt đầu từ nhiệm vụ “Vẽ biểu đồ hiệu chỉnh và đối chiếu xác suất dự đoán với tần suất thực tế”. Trình bày kết quả đã lưu, cách đối chiếu và một điều kiện có thể khiến kết luận thay đổi; không chỉ đọc lại định nghĩa.",
-          "answer_en": "The answer about calibration should cover assumptions, metrics/cost, limitations and how to reduce production risk (phase-03-classical-ml-analysis-2).",
-          "hint_vi": "Dùng quyết định thật trong bài làm, tránh chỉ đọc định nghĩa.",
-          "hint_en": "Relate it to latency, quality, cost or observability where relevant."
+          "question_vi": "Vì sao không fit bằng nhãn test?",
+          "question_en": "Why not fit using test labels?",
+          "answer_vi": "Fit sẽ dùng đáp án của tập đánh giá, làm mất tính độc lập. Tách train/calibration/test, khóa phương pháp trước test và báo hạn chế vì mẫu nhỏ.",
+          "answer_en": "Fitting would use evaluation answers and destroy independence. Separate train/calibration/test, freeze the method before test and report small-sample limitations.",
+          "hint_vi": "So nguồn nhãn và mẫu số mỗi bin.",
+          "hint_en": "Check label provenance and each bin denominator."
         }
+      ],
+      "completion_checklist_en": [
+        "Calculate test Brier 0.4525 before and 0.3125 after.",
+        "Report support, mean probability and positive rate per bin.",
+        "Show the mapping is fitted only on calibration, never test."
+      ],
+      "completion_criteria_en": [
+        "Calculate test Brier 0.4525 before and 0.3125 after.",
+        "Report support, mean probability and positive rate per bin.",
+        "Show the mapping is fitted only on calibration, never test."
+      ],
+      "common_mistakes_en": [
+        "Use accuracy as calibration.",
+        "Fit or select bin counts on test.",
+        "Omit support or claim lower Brier guarantees better calibration."
       ]
     },
     {
@@ -15249,17 +15247,17 @@
       "module_id": "analysis",
       "title_vi": "Phân tích lỗi mô hình",
       "title_en": "Error analysis",
-      "summary_vi": "Phân tích lỗi chia dự đoán sai thành nhóm để tìm nguyên nhân và ưu tiên sửa.",
-      "summary_en": "Learn Error analysis through an input → transformation → output model, then verify it with an edge-case exercise.",
+      "summary_vi": "Chia lỗi validation theo nhóm, báo mẫu số và biến quan sát thành giả thuyết có thể kiểm tra.",
+      "summary_en": "Slice validation errors by group, report denominators, and turn observations into testable hypotheses.",
       "learning_objectives": [
-        "Phân loại dự đoán sai và đề xuất phép kiểm tra cho nguyên nhân nghi ngờ.",
-        "Kiểm tra theo nhóm dữ liệu và nêu giới hạn của kết luận.",
-        "Giải thích kết quả và nêu một giới hạn của bài làm."
+        "Đối chiếu số đếm từng nhóm và báo cả support lẫn số dương.",
+        "Xác nhận desktop/mobile có recall 1/0 và error rate 0.25/0.75.",
+        "Ghi một giả thuyết kiểm tra được, giới hạn mẫu nhỏ và quy tắc log tối thiểu."
       ],
       "learning_objectives_en": [
-        "Explain error analysis with a concrete example.",
-        "Write or adapt a small code example applying error analysis.",
-        "Recognize its assumptions, limits and one common failure mode."
+        "Verify group counts and report support and actual positives.",
+        "Confirm desktop/mobile recall 1/0 and error rate 0.25/0.75.",
+        "Record a testable hypothesis, tiny-slice limits and minimal logging rules."
       ],
       "prerequisites": [
         "phase-03-classical-ml-analysis-2",
@@ -15273,105 +15271,97 @@
         "baseline",
         "evaluation"
       ],
-      "concept_notes_vi": "Phân tích lỗi là đọc và phân nhóm các dự đoán sai để tìm hành động cải thiện cụ thể. Điểm số tổng hợp cho biết mức độ lỗi; các mẫu cụ thể giúp hiểu lỗi xảy ra ở đâu và trong điều kiện nào.\n\nCần phân biệt lỗi mô hình với lỗi dữ liệu. Nhãn sai, dữ liệu thiếu, khác biệt giữa nguồn thu thập và đầu vào ngoài phạm vi đều có thể tạo dự đoán không phù hợp dù thuật toán hoạt động đúng như thiết kế.\n\nMột bộ phân loại văn bản có thể nhầm câu phủ định và văn bản quá ngắn. Đếm số lỗi trong từng nhóm, đọc cả mẫu đúng để tránh kết luận từ vài trường hợp dễ nhớ, rồi kiểm định thay đổi trên dữ liệu độc lập.\n\nTự kiểm tra: sửa hết lỗi đã xem có bảo đảm điểm thật tăng không? Không; có thể quá khớp tập phân tích, nên cần một lần đánh giá độc lập.",
-      "concept_notes_en": "Error analysis groups and inspects incorrect predictions to identify concrete improvements. Aggregate scores show the extent of errors; individual examples reveal where and under what conditions they occur.\n\nDistinguish model errors from data problems. Incorrect labels, missing inputs, collection differences, and out-of-scope examples can cause unsuitable predictions even when the algorithm works as designed.\n\nA text classifier may struggle with negation and very short messages. Count errors in each group and inspect correct examples too, avoiding conclusions based on memorable failures. Evaluate changes on independent data.\n\nSelf-check: does fixing every inspected error guarantee better real performance? No; improvements can overfit the analysis set, so an independent evaluation is needed.",
-      "why_it_matters_vi": "Phân tích lỗi theo nhóm để hiểu giới hạn trước khi lưu và chia sẻ mô hình.",
-      "why_it_matters_en": "Move from one aggregate score to error analysis, calibration, a model card, and reloadable artifacts.",
+      "concept_notes_vi": "Một tỉ lệ lỗi tổng thể có thể che khác biệt giữa nhóm. Chọn lát cắt có lý do nghiệp vụ trước khi xem kết quả, như kênh desktop/mobile. Ghi nhãn dương=1, số mẫu N, số dương thật TP+FN, số cảnh báo TP+FP, TP/FP/TN/FN, precision, recall và error rate=(FP+FN)/N. Không so recall mà bỏ qua số dương thật.\n\nFixture validation có 8 mẫu. Desktop có N=4, dương=2, TP=2, FP=1, TN=1, FN=0: precision=2/3, recall=1, error rate=0.25. Mobile có N=4, dương=2, TP=0, FP=1, TN=1, FN=2: precision=0, recall=0, error rate=0.75. Tổng là TP=2, FP=2, TN=2, FN=2, precision=recall=0.5 và error rate=0.5.\n\nChênh lệch này chỉ là quan sát của fixture. Hai mẫu dương mỗi nhóm là mẫu số rất nhỏ; một FN đổi thành TP làm recall mobile tăng 0.5. Không kết luận kênh gây lỗi hay có phân biệt đối xử chỉ từ bảng. Kiểm tra chất lượng nhãn, thiếu dữ liệu, thời điểm, phân bố đặc trưng và độ bất định; nhiều lát cắt hậu nghiệm dễ tạo kết quả ngẫu nhiên.\n\nDùng lỗi validation để đề xuất sửa preprocessing hoặc thu thêm dữ liệu, kiểm tra trên holdout mới trước khi kết luận. Khi xem test cuối cùng mà quyết định sửa, cần test mới độc lập. Nhật ký chỉ lưu ID giả danh, nhóm được phép, nhãn/dự đoán và loại lỗi cần thiết; không ghi nội dung riêng tư, tên, email hoặc dữ liệu thô. Giới hạn truy cập và thời gian giữ log. None biểu diễn precision/recall không có mẫu số, không phải tỉ lệ 0.",
+      "concept_notes_en": "An aggregate error rate can hide group differences. Choose slices for an operational reason before inspecting outcomes, such as desktop/mobile channels. Declare positive label=1 and report N, actual positives TP+FN, alerts TP+FP, TP/FP/TN/FN, precision, recall and error rate=(FP+FN)/N. Do not compare recall without positive denominators.\n\nThis eight-case validation fixture has desktop N=4, positives=2, TP=2, FP=1, TN=1, FN=0: precision=2/3, recall=1 and error rate=0.25. Mobile has N=4, positives=2, TP=0, FP=1, TN=1, FN=2: precision=0, recall=0 and error rate=0.75. Overall TP=2, FP=2, TN=2, FN=2 gives precision=recall=0.5 and error rate=0.5.\n\nThe gap is only a fixture observation. Two positives per group is a tiny denominator; changing one mobile FN into TP raises its recall by 0.5. The table alone establishes neither channel causation nor discrimination. Investigate label quality, missingness, time, feature distributions and uncertainty; many post-hoc slices can produce chance findings.\n\nUse validation errors to propose preprocessing fixes or additional data, then verify on a fresh holdout. A change motivated by final test results needs a new independent test. Logs should contain only pseudonymous IDs, permitted groups, labels/predictions and necessary error categories; omit private text, names, emails and raw records. Limit access and retention. None means an undefined precision/recall denominator, not a measured zero rate.",
+      "why_it_matters_vi": "Bảng theo nhóm giúp chọn việc điều tra cụ thể; mẫu số và giới hạn tránh biến vài lỗi thành kết luận quá mức.",
+      "why_it_matters_en": "Group reports guide concrete investigation; denominators and limitations prevent overclaiming from a few errors.",
       "study_steps_vi": [
-        "Đọc phần giải thích, xác định khái niệm và điều kiện cần dùng cho nhiệm vụ bên dưới.",
-        "Tìm mục tương ứng với “Error analysis” trong tài liệu tham khảo; đối chiếu với phần giải thích của bài.",
-        "Phân loại dự đoán sai và đề xuất phép kiểm tra cho nguyên nhân nghi ngờ.",
-        "Kiểm tra theo nhóm dữ liệu và nêu giới hạn của kết luận. Ghi kết quả đối chiếu và điều bạn đã sửa nếu lần đầu chưa đúng.",
-        "Tự trả lời thẻ ôn tập, rồi kiểm tra các tiêu chí hoàn thành trước khi chuyển bài."
+        "Vẽ ma trận riêng cho desktop và mobile.",
+        "Đọc Fairlearn về giới hạn metric trong bối cảnh thực tế.",
+        "Chạy mã trên validation tổng hợp, so output với tính tay.",
+        "Đổi một FN mobile thành TP và đo mức thay đổi recall.",
+        "Viết giả thuyết thiếu dữ liệu cần kiểm tra, kế hoạch holdout và log không chứa dữ liệu riêng tư."
       ],
       "study_steps_en": [
-        "Read the concept notes and answer: Move from one aggregate score to error analysis, calibration, a model card, and reloadable artifacts.",
-        "Open scikit-learn User Guide, read the section marked Read this lesson, and record one verified example or definition.",
-        "Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the test.",
-        "Complete the practice task: Slice errors by group, inspect a confusion matrix, save the model/pipeline, and write a model card with limits.",
-        "Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact."
+        "Draw separate desktop and mobile confusion matrices.",
+        "Read Fairlearn on contextual limitations of metrics.",
+        "Run the synthetic validation fixture and compare hand calculations.",
+        "Change one mobile FN to TP and measure the recall change.",
+        "Write a missing-data hypothesis, holdout plan and privacy-conscious log policy."
       ],
       "practice_plan": {
         "vi": {
-          "task": "Phân loại dự đoán sai và đề xuất phép kiểm tra cho nguyên nhân nghi ngờ.\n\nSau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Đọc ma trận nhầm lẫn, chia lỗi theo nhóm, lưu mô hình cùng quy trình và viết thẻ mô tả giới hạn.",
+          "task": "Lập báo cáo lỗi theo kênh và đề xuất kiểm tra tỉ lệ thiếu đặc trưng trên mobile bằng validation.",
           "deliverables": [
-            "Bảng phân tích kết quả hoặc bản lưu mô hình có cách nạp lại",
-            "Kết quả đối chiếu kèm dữ liệu hoặc điều kiện thực hiện",
-            "Một giới hạn và cách kiểm tra thêm"
+            "Mã và bảng tổng/từng nhóm",
+            "Ba ID lỗi mobile giả danh và loại FP/FN",
+            "Giả thuyết, kiểm tra tiếp theo, giới hạn mẫu nhỏ và chính sách log"
           ],
-          "checkpoint": "Kiểm tra theo nhóm dữ liệu và nêu giới hạn của kết luận.",
-          "stretch": "Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào."
+          "checkpoint": "Mobile có 2 FN, 1 FP; chưa biết nguyên nhân và chưa chứng minh phân biệt đối xử.",
+          "stretch": "Thêm nhóm chỉ có nhãn âm: recall=None; giải thích vì sao không xếp nhóm này tốt nhất."
         },
         "en": {
-          "task": "Slice errors by group, inspect a confusion matrix, save the model/pipeline, and write a model card with limits.",
+          "task": "Report channel errors and propose checking mobile feature missingness on validation.",
           "deliverables": [
-            "One executable code file",
-            "One test or expected output",
-            "One note describing an edge case and trade-off"
+            "Code and overall/per-group tables",
+            "Three pseudonymous mobile error IDs with FP/FN types",
+            "Hypothesis, next check, tiny-slice limits and log policy"
           ],
-          "checkpoint": "You know where and for whom the model fails and do not use a high score to hide limitations.",
-          "stretch": "Add a failure test for error analysis and explain the result."
+          "checkpoint": "Mobile has 2 FN and 1 FP; the cause and discrimination have not been established.",
+          "stretch": "Add a group with only negative labels: recall=None; explain why it cannot be ranked as best."
         }
       },
       "interview_questions": {
         "vi": [
-          "Bạn sẽ giải thích nội dung “Phân tích lỗi mô hình” bằng ví dụ nào?",
-          "Điều kiện nào cần kiểm tra trước khi áp dụng vào công việc thực tế?",
-          "Bạn dùng bằng chứng nào để kết luận bài làm đáp ứng yêu cầu?"
+          "Ba lỗi mobile là gì?",
+          "Nhóm không có dương cho recall=None: sửa dữ liệu không?",
+          "Có thể nói mobile gây lỗi hoặc mô hình phân biệt đối xử không?"
         ],
         "en": [
-          "How would you explain error analysis to a new teammate?",
-          "Which assumption behind error analysis could fail in production?",
-          "Which metric or test would prove the result is trustworthy?"
+          "What are the three mobile errors?",
+          "A group without positives has recall=None: should its data be changed?",
+          "Can we claim mobile causes errors or that the model discriminates?"
         ]
       },
       "formulas": [
-        "risk(f) = E[L(y, f(x))]",
-        "score = metric(y_true, y_pred)"
+        "error rate = (FP+FN)/N",
+        "precision = TP/(TP+FP); recall = TP/(TP+FN)",
+        "one corrected FN changes recall by 1/(TP+FN)"
       ],
       "code_examples": [
         {
           "language": "python",
-          "title": "Error analysis: inspect one complete path",
-          "code": "# Topic: Error analysis (phase-03-classical-ml-analysis-3)\nfrom dataclasses import dataclass\n\n@dataclass(frozen=True)\nclass Result:\n    value: str\n    valid: bool\n\nresult = Result(value='ready', valid=True)\nprint(result)",
+          "title": "Validation error slices with explicit denominators",
+          "code": "def group_report(labels, predicted):\n    if not labels or len(labels) != len(predicted):\n        raise ValueError(\"non-empty aligned labels required\")\n    if any(type(label) is not int or label not in (0, 1)\n           for label in [*labels, *predicted]):\n        raise ValueError(\"integer binary labels required\")\n    counts = {\"tp\": 0, \"fp\": 0, \"tn\": 0, \"fn\": 0}\n    names = {(1, 1): \"tp\", (0, 1): \"fp\", (0, 0): \"tn\", (1, 0): \"fn\"}\n    for truth, guess in zip(labels, predicted):\n        counts[names[truth, guess]] += 1\n    positives = counts[\"tp\"] + counts[\"fn\"]\n    alerts = counts[\"tp\"] + counts[\"fp\"]\n    return {\n        **counts,\n        \"support\": len(labels),\n        \"positives\": positives,\n        \"alerts\": alerts,\n        \"precision\": counts[\"tp\"] / alerts if alerts else None,\n        \"recall\": counts[\"tp\"] / positives if positives else None,\n        \"error_rate\": (counts[\"fp\"] + counts[\"fn\"]) / len(labels),\n    }\n\n\ndef slice_reports(labels, predicted, groups):\n    overall = group_report(labels, predicted)\n    if len(groups) != len(labels) or any(type(group) is not str or not group.strip()\n                                        for group in groups):\n        raise ValueError(\"aligned non-empty group names required\")\n    reports = {}\n    for group in sorted(set(groups)):\n        indices = [index for index, value in enumerate(groups) if value == group]\n        reports[group] = group_report([labels[index] for index in indices],\n                                      [predicted[index] for index in indices])\n    return overall, reports\n\n\nvalidation_labels = [1, 1, 0, 0, 1, 1, 0, 0]\nvalidation_predictions = [1, 1, 1, 0, 0, 0, 1, 0]\ngroups = [\"desktop\"] * 4 + [\"mobile\"] * 4\noverall, reports = slice_reports(validation_labels, validation_predictions, groups)\nfor group, report in [(\"overall\", overall), *reports.items()]:\n    print(group, report)\n# Synthetic IDs only; do not copy raw private records into error logs.\nerror_log = [(f\"case-{index + 1}\", groups[index], \"FN\" if truth == 1 else \"FP\")\n             for index, (truth, guess) in enumerate(zip(validation_labels, validation_predictions))\n             if truth != guess]\nprint(\"errors:\", error_log)\n",
           "status": "runnable",
-          "purpose_vi": "Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.",
-          "purpose_en": "Illustrate the input-to-output path for error analysis.",
-          "setup": "Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.",
-          "expected_output": "Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.",
-          "edge_case_vi": "Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.",
-          "edge_case_en": "Try an empty input, a wrong shape or missing data and record the failure.",
-          "explanation_vi": "Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần nội dung; cần hoàn thành riêng nhiệm vụ thực hành.",
-          "explanation_en": "Keep the boundary executable and inspectable; change one input and verify the expected output."
+          "purpose_vi": "Đối chiếu số đếm từng nhóm và báo cả support lẫn số dương.",
+          "purpose_en": "Verify group counts and report support and actual positives.",
+          "setup": "Python 3.11+; standard library only; Colab or python errors.py.",
+          "expected_output": "overall {'tp': 2, 'fp': 2, 'tn': 2, 'fn': 2, 'support': 8, 'positives': 4, 'alerts': 4, 'precision': 0.5, 'recall': 0.5, 'error_rate': 0.5}\ndesktop {'tp': 2, 'fp': 1, 'tn': 1, 'fn': 0, 'support': 4, 'positives': 2, 'alerts': 3, 'precision': 0.6666666666666666, 'recall': 1.0, 'error_rate': 0.25}\nmobile {'tp': 0, 'fp': 1, 'tn': 1, 'fn': 2, 'support': 4, 'positives': 2, 'alerts': 1, 'precision': 0.0, 'recall': 0.0, 'error_rate': 0.75}\nerrors: [('case-3', 'desktop', 'FP'), ('case-5', 'mobile', 'FN'), ('case-6', 'mobile', 'FN'), ('case-7', 'mobile', 'FP')]",
+          "edge_case_vi": "group_report([0],[0]) trả precision=None, recall=None, error_rate=0. Nhóm thiếu/rỗng, lệch độ dài hoặc nhãn 2 gây ValueError.",
+          "edge_case_en": "group_report([0],[0]) returns precision=None, recall=None, error_rate=0. Missing/blank groups, unequal lengths or label 2 raise ValueError.",
+          "explanation_vi": "Nhóm trong ví dụ là kênh giả lập; không dùng dữ liệu người thật. Các tỉ lệ chỉ mô tả mẫu, chưa suy ra nguyên nhân hoặc fairness.",
+          "explanation_en": "Groups are synthetic channels; no personal data is used. Rates describe this sample and establish neither causes nor fairness.",
+          "setup_vi": "Dán mã vào một ô Colab hoặc lưu errors.py rồi chạy python errors.py bằng Python 3.11+. Không cần cài gói.",
+          "setup_en": "Paste into one Colab cell, or save errors.py and run python errors.py with Python 3.11+. No packages needed."
         }
       ],
       "resources": [
         {
           "language": "en",
-          "title": "scikit-learn User Guide",
-          "url": "https://scikit-learn.org/stable/user_guide.html",
+          "title": "Fairlearn: Common fairness metrics",
+          "url": "https://fairlearn.org/main/user_guide/assessment/common_fairness_metrics.html",
           "kind": "official",
           "required": false,
           "purpose_vi": "Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.",
           "purpose_en": "Official reference to verify the lesson concept.",
-          "read_vi": "Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.",
-          "read_en": "Read the relevant section, run a small example, and record one verified insight."
+          "read_vi": "Đọc các hạn chế khi diễn giải metric fairness và vai trò của bối cảnh.",
+          "read_en": "Read limitations of fairness-metric interpretations and the role of context."
         },
         {
           "language": "en",
           "title": "scikit-learn Model Evaluation",
           "url": "https://scikit-learn.org/stable/modules/model_evaluation.html",
-          "kind": "official",
-          "required": false,
-          "purpose_vi": "Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.",
-          "purpose_en": "Official reference to verify the lesson concept.",
-          "read_vi": "Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.",
-          "read_en": "Read the relevant section, run a small example, and record one verified insight."
-        },
-        {
-          "language": "en",
-          "title": "scikit-learn Pipelines",
-          "url": "https://scikit-learn.org/stable/modules/compose.html",
           "kind": "official",
           "required": false,
           "purpose_vi": "Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.",
@@ -15402,69 +15392,84 @@
       ],
       "estimated_minutes": 60,
       "completion_checklist": [
-        "Phân loại dự đoán sai và đề xuất phép kiểm tra cho nguyên nhân nghi ngờ.",
-        "Kiểm tra theo nhóm dữ liệu và nêu giới hạn của kết luận.",
-        "Lưu kết quả và giải thích được một giới hạn mà không nhìn lời giải."
+        "Đối chiếu số đếm từng nhóm và báo cả support lẫn số dương.",
+        "Xác nhận desktop/mobile có recall 1/0 và error rate 0.25/0.75.",
+        "Ghi một giả thuyết kiểm tra được, giới hạn mẫu nhỏ và quy tắc log tối thiểu."
       ],
       "completion_criteria": [
-        "Bài làm đáp ứng nhiệm vụ: Phân loại dự đoán sai và đề xuất phép kiểm tra cho nguyên nhân nghi ngờ.",
-        "Có kết quả đối chiếu với tiêu chí hoặc dự đoán đã ghi trước.",
-        "Kiểm tra theo nhóm dữ liệu và nêu giới hạn của kết luận."
+        "Đối chiếu số đếm từng nhóm và báo cả support lẫn số dương.",
+        "Xác nhận desktop/mobile có recall 1/0 và error rate 0.25/0.75.",
+        "Ghi một giả thuyết kiểm tra được, giới hạn mẫu nhỏ và quy tắc log tối thiểu."
       ],
       "common_mistakes": [
-        "Dùng điểm tổng hợp để che khuất nhóm dự đoán kém.",
-        "Kết luận từ một kết quả thuận lợi mà chưa kiểm tra trường hợp khác.",
-        "Chép lời giải nhưng không giải thích được quyết định trong bài làm của mình."
+        "Bỏ mẫu số khi so các nhóm nhỏ.",
+        "Kết luận nhân quả hoặc phân biệt đối xử từ một chênh lệch.",
+        "Chỉnh mô hình theo test rồi báo lại cùng test; log dữ liệu riêng tư."
       ],
       "next_lessons": [
         "phase-03-classical-ml-analysis-4",
         "phase-04-deep-learning-pytorch-core-1"
       ],
-      "review_question_vi": "Nội dung cốt lõi của “Phân tích lỗi mô hình” là gì?",
-      "review_question_en": "Define error analysis in your own words. What are the input, transformation and output?",
-      "review_answer_vi": "Phân tích lỗi chia dự đoán sai thành nhóm để tìm nguyên nhân và ưu tiên sửa. Xem mẫu cụ thể giúp phân biệt vấn đề nhãn, đặc trưng, phân bố dữ liệu hoặc mô hình.",
-      "review_answer_en": "A strong answer names the input, transformation, output and the context where error analysis is used. Relate it specifically to error analysis in lesson phase-03-classical-ml-analysis-3.",
+      "review_question_vi": "Vì sao phải báo số dương cùng recall?",
+      "review_question_en": "Why report actual positives alongside recall?",
+      "review_answer_vi": "Recall chia cho số dương thật. Mobile có 2 dương; chỉ một lỗi sửa đúng đã đổi recall 0.5, nên tỉ lệ rất không ổn định.",
+      "review_answer_en": "Recall divides by actual positives. Mobile has two; correcting just one miss changes recall by 0.5, making the rate unstable.",
       "review_cards": [
         {
           "id": "phase-03-classical-ml-analysis-3-recall",
           "type": "recall",
-          "question_vi": "Nội dung cốt lõi của “Phân tích lỗi mô hình” là gì?",
-          "question_en": "Define error analysis in your own words. What are the input, transformation and output?",
-          "answer_vi": "Phân tích lỗi chia dự đoán sai thành nhóm để tìm nguyên nhân và ưu tiên sửa. Xem mẫu cụ thể giúp phân biệt vấn đề nhãn, đặc trưng, phân bố dữ liệu hoặc mô hình.",
-          "answer_en": "A strong answer names the input, transformation, output and the context where error analysis is used.",
-          "hint_vi": "Nêu ý chính, sau đó minh họa bằng tình huống cụ thể.",
-          "hint_en": "Start with a small example you can calculate by hand."
+          "question_vi": "Vì sao phải báo số dương cùng recall?",
+          "question_en": "Why report actual positives alongside recall?",
+          "answer_vi": "Recall chia cho số dương thật. Mobile có 2 dương; chỉ một lỗi sửa đúng đã đổi recall 0.5, nên tỉ lệ rất không ổn định.",
+          "answer_en": "Recall divides by actual positives. Mobile has two; correcting just one miss changes recall by 0.5, making the rate unstable.",
+          "hint_vi": "Đếm lỗi, kiểm tra mẫu số và giới hạn suy luận.",
+          "hint_en": "Count errors and inspect denominators and inference limits."
         },
         {
           "id": "phase-03-classical-ml-analysis-3-application",
           "type": "application",
-          "question_vi": "Phân loại dự đoán sai và đề xuất phép kiểm tra cho nguyên nhân nghi ngờ.",
-          "question_en": "Write a small code example or design that applies error analysis to an AI engineering problem.",
-          "answer_vi": "Với nhiệm vụ “Phân loại dự đoán sai và đề xuất phép kiểm tra cho nguyên nhân nghi ngờ”, cần lưu: bảng phân tích kết quả hoặc bản lưu mô hình có cách nạp lại. Kiểm tra theo nhóm dữ liệu và nêu giới hạn của kết luận.",
-          "answer_en": "The error analysis example should have an explicit input, expected output and a way to run or verify it (phase-03-classical-ml-analysis-3).",
-          "hint_vi": "Bắt đầu từ nhiệm vụ thực hành của bài.",
-          "hint_en": "Start from the lesson code example and change one assumption."
+          "question_vi": "Ba lỗi mobile là gì?",
+          "question_en": "What are the three mobile errors?",
+          "answer_vi": "case-5 và case-6 là FN, case-7 là FP: error rate=3/4, precision=0/1, recall=0/2.",
+          "answer_en": "case-5 and case-6 are FN; case-7 is FP: error rate=3/4, precision=0/1 and recall=0/2.",
+          "hint_vi": "Đếm lỗi, kiểm tra mẫu số và giới hạn suy luận.",
+          "hint_en": "Count errors and inspect denominators and inference limits."
         },
         {
           "id": "phase-03-classical-ml-analysis-3-debug",
           "type": "debug",
-          "question_vi": "Khi làm bài “Phân tích lỗi mô hình”, bạn cần tránh lỗi nào và kiểm tra lại ra sao?",
-          "question_en": "If error analysis produces a wrong result or a metric drops, what would you debug first?",
-          "answer_vi": "Trong bài “Phân tích lỗi mô hình”, lỗi cần tránh là: dùng điểm tổng hợp để che khuất nhóm dự đoán kém. Kiểm tra theo nhóm dữ liệu và nêu giới hạn của kết luận. Dùng ví dụ nhỏ để tìm bước đầu tiên có kết quả khác dự kiến.",
-          "answer_en": "For error analysis, check inputs/shapes, preprocessing and the baseline first; then isolate the failure with a small test and error analysis (phase-03-classical-ml-analysis-3).",
-          "hint_vi": "Tìm bước đầu tiên xuất hiện khác biệt.",
-          "hint_en": "Do not start by changing the model or adding complexity."
+          "question_vi": "Nhóm không có dương cho recall=None: sửa dữ liệu không?",
+          "question_en": "A group without positives has recall=None: should its data be changed?",
+          "answer_vi": "Không sửa nhãn để tạo metric. Báo support và số dương 0, giữ None; thu thêm mẫu đại diện nếu cần đánh giá recall.",
+          "answer_en": "Do not alter labels to manufacture a metric. Report support and zero positives, keep None, and collect representative observations if recall assessment is needed.",
+          "hint_vi": "Đếm lỗi, kiểm tra mẫu số và giới hạn suy luận.",
+          "hint_en": "Count errors and inspect denominators and inference limits."
         },
         {
           "id": "phase-03-classical-ml-analysis-3-interview",
           "type": "interview",
-          "question_vi": "Bạn dùng kết quả nào từ bài “Phân tích lỗi mô hình” để giải thích cách làm và giới hạn?",
-          "question_en": "In an interview, how would you explain a trade-off and one edge case of error analysis?",
-          "answer_vi": "Bắt đầu từ nhiệm vụ “Phân loại dự đoán sai và đề xuất phép kiểm tra cho nguyên nhân nghi ngờ”. Trình bày kết quả đã lưu, cách đối chiếu và một điều kiện có thể khiến kết luận thay đổi; không chỉ đọc lại định nghĩa.",
-          "answer_en": "The answer about error analysis should cover assumptions, metrics/cost, limitations and how to reduce production risk (phase-03-classical-ml-analysis-3).",
-          "hint_vi": "Dùng quyết định thật trong bài làm, tránh chỉ đọc định nghĩa.",
-          "hint_en": "Relate it to latency, quality, cost or observability where relevant."
+          "question_vi": "Có thể nói mobile gây lỗi hoặc mô hình phân biệt đối xử không?",
+          "question_en": "Can we claim mobile causes errors or that the model discriminates?",
+          "answer_vi": "Không từ bảng này. Cần xem nhãn, dữ liệu thiếu, bối cảnh tác động và bất định; đề xuất kiểm tra validation rồi dùng holdout mới, tránh log thông tin riêng tư.",
+          "answer_en": "Not from this table. Inspect labels, missingness, impact context and uncertainty; test a validation hypothesis and then a fresh holdout while avoiding private logs.",
+          "hint_vi": "Đếm lỗi, kiểm tra mẫu số và giới hạn suy luận.",
+          "hint_en": "Count errors and inspect denominators and inference limits."
         }
+      ],
+      "completion_checklist_en": [
+        "Verify group counts and report support and actual positives.",
+        "Confirm desktop/mobile recall 1/0 and error rate 0.25/0.75.",
+        "Record a testable hypothesis, tiny-slice limits and minimal logging rules."
+      ],
+      "completion_criteria_en": [
+        "Verify group counts and report support and actual positives.",
+        "Confirm desktop/mobile recall 1/0 and error rate 0.25/0.75.",
+        "Record a testable hypothesis, tiny-slice limits and minimal logging rules."
+      ],
+      "common_mistakes_en": [
+        "Omit denominators when comparing tiny groups.",
+        "Infer causation or discrimination from one gap.",
+        "Tune from test and reuse that test; log private records."
       ]
     },
     {
@@ -15473,17 +15478,17 @@
       "module_id": "analysis",
       "title_vi": "Diễn giải và lưu mô hình",
       "title_en": "Model interpretation and serialization",
-      "summary_vi": "Diễn giải làm rõ thông tin ảnh hưởng tới dự đoán và giới hạn của kết luận.",
-      "summary_en": "Learn Model interpretation and serialization through an input → transformation → output model, then verify it with an edge-case exercise.",
+      "summary_vi": "Diễn giải hệ số theo thang đo và kiểm tra mô hình JSON cùng tiền xử lý sau khi nạp lại.",
+      "summary_en": "Interpret coefficients with feature scales and verify a JSON model plus preprocessing after reload.",
       "learning_objectives": [
-        "Nạp lại mô hình cùng bước tiền xử lý và đối chiếu dự đoán trên cùng dữ liệu.",
-        "Kiểm tra theo nhóm dữ liệu và nêu giới hạn của kết luận.",
-        "Giải thích kết quả và nêu một giới hạn của bài làm."
+        "Tính tay hai dự đoán 101 và 99 cùng đóng góp đặc trưng.",
+        "So dự đoán trước/sau JSON và kiểm tra phiên bản/thứ tự/scale.",
+        "Nêu giới hạn diễn giải và rủi ro nạp pickle không tin cậy."
       ],
       "learning_objectives_en": [
-        "Explain model interpretation and serialization with a concrete example.",
-        "Write or adapt a small code example applying model interpretation and serialization.",
-        "Recognize its assumptions, limits and one common failure mode."
+        "Calculate predictions 101 and 99 and their feature contributions.",
+        "Compare predictions across JSON and validate version/order/scales.",
+        "Explain interpretation limits and untrusted-pickle risks."
       ],
       "prerequisites": [
         "phase-03-classical-ml-analysis-3",
@@ -15499,108 +15504,103 @@
         "evaluation",
         "analysis"
       ],
-      "concept_notes_vi": "Diễn giải mô hình tìm hiểu đặc trưng và cấu trúc nào liên quan đến dự đoán. Giải thích toàn cục mô tả hành vi chung; giải thích cục bộ tập trung vào một mẫu và có thể không đại diện cho toàn bộ dữ liệu.\n\nMức quan trọng của đặc trưng không tự chứng minh quan hệ nhân quả. Các đặc trưng tương quan có thể chia sẻ thông tin, làm mức quan trọng phụ thuộc cách đo và tập dữ liệu dùng để đo.\n\nKhi lưu một mô hình dự đoán giá, lưu cả bộ điền dữ liệu thiếu, mã hóa, thứ tự cột và phiên bản thư viện. Nạp lại rồi so sánh dự đoán trên cùng đầu vào là cách kiểm tra chuỗi xử lý được giữ nguyên.\n\nTự kiểm tra: chỉ lưu trọng số có đủ tái tạo dự đoán không? Không nếu đầu vào còn cần bước tiền xử lý đã học từ dữ liệu.",
-      "concept_notes_en": "Model interpretation examines which features and structures relate to predictions. Global explanations describe broad behavior; local explanations concern one example and may not represent the full dataset.\n\nFeature importance does not establish causality. Correlated features can share information, making importance depend on the measurement method and evaluation data.\n\nWhen saving a price predictor, include fitted imputation, encoding, column order, and library versions. Reloading it and comparing predictions on identical inputs checks that the processing chain was preserved.\n\nSelf-check: are weights alone enough to reproduce predictions? No, if the inputs require preprocessing learned from training data.",
-      "why_it_matters_vi": "Phân tích lỗi theo nhóm để hiểu giới hạn trước khi lưu và chia sẻ mô hình.",
-      "why_it_matters_en": "Move from one aggregate score to error analysis, calibration, a model card, and reloadable artifacts.",
+      "concept_notes_vi": "Mô hình tuyến tính minh họa dùng z_size=(size-50)/10, z_age=(age-10)/5 và dự đoán 100+2*z_size-z_age. Với size=60, age=15, đóng góp là +2 và -1, kết quả 101. Với 40 và 5, kết quả 99. Đây là mô hình cố định để học, không được huấn luyện hoặc kiểm chứng dự báo giá thật.\n\nHệ số 2 và -1 tác động trên đặc trưng đã chuẩn hóa; không so trực tiếp với hệ số trên đơn vị gốc. Tăng size một đơn vị làm dự đoán tăng 2/10=0.2 khi age cố định; tăng age một đơn vị làm giảm 1/5=0.2. Đó là hành vi mô hình, không chứng minh can thiệp size hoặc age gây thay đổi kết quả thật. Đặc trưng tương quan làm diễn giải khó hơn; giải thích một hàng không đại diện toàn bộ dữ liệu.\n\nArtifact JSON lưu schema, version, danh sách đặc trưng có thứ tự, mean/scale đã fit, coefficients và intercept. Nạp lại phải xác nhận đúng khóa, phiên bản, thứ tự, kích thước và số hữu hạn; scale phải dương. Dữ liệu dự đoán là mapping theo tên để tránh đổi cột âm thầm. So hai dự đoán trước/sau round-trip và thử artifact sai; không chỉ kiểm tra tệp tồn tại.\n\nJSON ở đây chỉ chứa dữ liệu, không thực thi mã khi nạp. Nó không phải định dạng chung để lưu mọi estimator. JSON vẫn cần giới hạn kích thước từ bên ngoài và kiểm tra schema; không phải mọi nội dung JSON đều an toàn. Không nạp pickle/joblib từ nguồn không tin cậy vì có thể thực thi mã. Với scikit-learn, lưu toàn bộ pipeline đã fit từ nguồn tin cậy, thứ tự cột và phiên bản Python/thư viện; không giả định tương thích giữa phiên bản. Round-trip đúng chưa chứng minh chất lượng, fairness hoặc an toàn production.",
+      "concept_notes_en": "The illustrative linear model uses z_size=(size-50)/10, z_age=(age-10)/5 and prediction 100+2*z_size-z_age. At size=60, age=15 the contributions are +2 and -1, producing 101. At 40 and 5 the result is 99. This is a fixed teaching model, neither trained nor validated for real price prediction.\n\nCoefficients 2 and -1 act on standardized features; they cannot be compared directly with raw-unit coefficients. Increasing size by one raw unit raises prediction by 2/10=0.2 with age fixed; increasing age by one lowers it by 1/5=0.2. This describes model behavior, not causal effects on actual outcomes. Correlated features complicate interpretation; a local row explanation need not represent the whole dataset.\n\nThe JSON artifact stores schema, version, ordered features, fitted means/scales, coefficients and intercept. Reloading validates exact keys, version, order, dimensions and finite numbers; scales must be positive. Prediction inputs map names to values to prevent silent column swaps. Compare two predictions before/after a round trip and test invalid artifacts, rather than merely checking file existence.\n\nThis JSON contains data and does not execute code when loaded. It is not a general estimator persistence format. JSON still needs external size limits and schema checks; arbitrary JSON is not automatically safe. Never load untrusted pickle/joblib artifacts because loading can execute code. For scikit-learn, persist the complete fitted pipeline from a trusted source with column order and Python/library versions; do not assume cross-version compatibility. Round-trip equality proves neither quality, fairness nor production safety.",
+      "why_it_matters_vi": "Thiếu preprocessing hoặc đổi cột có thể làm dự đoán sai dù trọng số vẫn nguyên; giải thích hệ số cũng cần đúng đơn vị.",
+      "why_it_matters_en": "Missing preprocessing or reordered columns can corrupt predictions despite unchanged weights; interpretation also requires correct units.",
       "study_steps_vi": [
-        "Đọc phần giải thích, xác định khái niệm và điều kiện cần dùng cho nhiệm vụ bên dưới.",
-        "Tìm mục tương ứng với “Model interpretation and serialization” trong tài liệu tham khảo; đối chiếu với phần giải thích của bài.",
-        "Nạp lại mô hình cùng bước tiền xử lý và đối chiếu dự đoán trên cùng dữ liệu.",
-        "Kiểm tra theo nhóm dữ liệu và nêu giới hạn của kết luận. Ghi kết quả đối chiếu và điều bạn đã sửa nếu lần đầu chưa đúng.",
-        "Tự trả lời thẻ ôn tập, rồi kiểm tra các tiêu chí hoàn thành trước khi chuyển bài."
+        "Tính z_size và z_age của hai hàng.",
+        "Đọc tài liệu diễn giải hệ số và model persistence.",
+        "Chạy round-trip JSON ở Colab/Python, so 101 và 99.",
+        "Thử đổi thứ tự features, version và scale=0; phải gặp ValueError.",
+        "Viết model card nhỏ: mục tiêu minh họa, schema, môi trường, giới hạn và nguồn artifact tin cậy."
       ],
       "study_steps_en": [
-        "Read the concept notes and answer: Move from one aggregate score to error analysis, calibration, a model card, and reloadable artifacts.",
-        "Open scikit-learn User Guide, read the section marked Read this lesson, and record one verified example or definition.",
-        "Open Practice Lab, use Create & open VS Code, save with Ctrl+S, and change one parameter before rerunning the test.",
-        "Complete the practice task: Slice errors by group, inspect a confusion matrix, save the model/pipeline, and write a model card with limits.",
-        "Answer the review card without hints, finish the checklist, and save a GitHub-ready artifact."
+        "Calculate z_size and z_age for both rows.",
+        "Read coefficient interpretation and model persistence references.",
+        "Run the JSON round trip in Colab/Python and compare 101 and 99.",
+        "Change feature order, version and scale=0; expect ValueError.",
+        "Write a small model card: teaching purpose, schema, environment, limits and trusted artifact provenance."
       ],
       "practice_plan": {
         "vi": {
-          "task": "Nạp lại mô hình cùng bước tiền xử lý và đối chiếu dự đoán trên cùng dữ liệu.\n\nSau khi học xong các bài trong học phần, bạn có thể làm bài tổng hợp: Đọc ma trận nhầm lẫn, chia lỗi theo nhóm, lưu mô hình cùng quy trình và viết thẻ mô tả giới hạn.",
+          "task": "Lưu/nạp mô hình tuyến tính minh họa bằng JSON trong bộ nhớ, xác nhận dự đoán và thử artifact hỏng.",
           "deliverables": [
-            "Bảng phân tích kết quả hoặc bản lưu mô hình có cách nạp lại",
-            "Kết quả đối chiếu kèm dữ liệu hoặc điều kiện thực hiện",
-            "Một giới hạn và cách kiểm tra thêm"
+            "Mã, chuỗi JSON và stdout round-trip",
+            "Bảng hai dự đoán và đóng góp đặc trưng",
+            "Model card cùng kiểm tra version, scale=0, NaN và khóa thừa"
           ],
-          "checkpoint": "Kiểm tra theo nhóm dữ liệu và nêu giới hạn của kết luận.",
-          "stretch": "Thay một điều kiện trong bài làm và giải thích kết quả thay đổi như thế nào."
+          "checkpoint": "Trước/sau đều [101.0,99.0]; dữ liệu lỗi bị từ chối.",
+          "stretch": "Tăng size từ 60 lên 61 khi age=15: dự đoán 101.2; giải thích tại sao không phải tăng 2."
         },
         "en": {
-          "task": "Slice errors by group, inspect a confusion matrix, save the model/pipeline, and write a model card with limits.",
+          "task": "Serialize/reload the illustrative linear model as in-memory JSON; verify predictions and reject corrupt artifacts.",
           "deliverables": [
-            "One executable code file",
-            "One test or expected output",
-            "One note describing an edge case and trade-off"
+            "Code, JSON string and round-trip stdout",
+            "Two predictions and feature contributions",
+            "Model card and version, scale=0, NaN and extra-key tests"
           ],
-          "checkpoint": "You know where and for whom the model fails and do not use a high score to hide limitations.",
-          "stretch": "Add a failure test for model interpretation and serialization and explain the result."
+          "checkpoint": "Before/after both equal [101.0,99.0]; invalid data is rejected.",
+          "stretch": "Increase size from 60 to 61 with age=15: predict 101.2; explain why the increase is not 2."
         }
       },
       "interview_questions": {
         "vi": [
-          "Bạn sẽ giải thích nội dung “Diễn giải và lưu mô hình” bằng ví dụ nào?",
-          "Điều kiện nào cần kiểm tra trước khi áp dụng vào công việc thực tế?",
-          "Bạn dùng bằng chứng nào để kết luận bài làm đáp ứng yêu cầu?"
+          "Hàng size=60, age=15 cho dự đoán nào?",
+          "Nếu features bị đảo hoặc scale=0 thì sao?",
+          "Round-trip đúng đã đủ để dùng mô hình thật chưa?"
         ],
         "en": [
-          "How would you explain model interpretation and serialization to a new teammate?",
-          "Which assumption behind model interpretation and serialization could fail in production?",
-          "Which metric or test would prove the result is trustworthy?"
+          "What is predicted for size=60, age=15?",
+          "What if feature order changes or a scale becomes zero?",
+          "Is a successful round trip sufficient for real deployment?"
         ]
       },
-      "formulas": [],
+      "formulas": [
+        "standardized feature = (value - training mean) / training scale",
+        "prediction = intercept + sum(coefficient * standardized feature)",
+        "raw-unit sensitivity = coefficient / scale; not a causal effect"
+      ],
       "code_examples": [
         {
           "language": "python",
-          "title": "Model interpretation and serialization: inspect one complete path",
-          "code": "# Topic: Model interpretation and serialization (phase-03-classical-ml-analysis-4)\nfrom dataclasses import dataclass\n\n@dataclass(frozen=True)\nclass Result:\n    value: str\n    valid: bool\n\nresult = Result(value='ready', valid=True)\nprint(result)",
+          "title": "Validated linear-model JSON round trip",
+          "code": "import json\nfrom math import isfinite\n\n\nFEATURES = [\"size\", \"age\"]\n\n\ndef finite_number(value):\n    return type(value) in (int, float) and isfinite(value)\n\n\ndef validate_model(model):\n    keys = {\"schema\", \"version\", \"features\", \"preprocess\", \"coefficients\", \"intercept\"}\n    if type(model) is not dict or set(model) != keys:\n        raise ValueError(\"invalid model keys\")\n    if model[\"schema\"] != \"teaching-linear\" or type(model[\"version\"]) is not int or model[\"version\"] != 1:\n        raise ValueError(\"unsupported schema or version\")\n    if model[\"features\"] != FEATURES:\n        raise ValueError(\"ordered features must be size, age\")\n    preprocess = model[\"preprocess\"]\n    if type(preprocess) is not dict or set(preprocess) != {\"mean\", \"scale\"}:\n        raise ValueError(\"invalid preprocessing schema\")\n    for vector in [preprocess[\"mean\"], preprocess[\"scale\"], model[\"coefficients\"]]:\n        if type(vector) is not list or len(vector) != 2 or not all(map(finite_number, vector)):\n            raise ValueError(\"two finite numbers required per vector\")\n    if not finite_number(model[\"intercept\"]) or any(scale <= 0 for scale in preprocess[\"scale\"]):\n        raise ValueError(\"finite intercept and positive scales required\")\n\n\ndef predict(model, rows):\n    validate_model(model)\n    if not rows:\n        raise ValueError(\"non-empty rows required\")\n    predictions = []\n    for row in rows:\n        if type(row) is not dict or set(row) != set(FEATURES) or not all(map(finite_number, row.values())):\n            raise ValueError(\"row must contain exactly two finite named features\")\n        value = model[\"intercept\"]\n        for index, feature in enumerate(FEATURES):\n            standardized = (row[feature] - model[\"preprocess\"][\"mean\"][index]) / model[\"preprocess\"][\"scale\"][index]\n            value += model[\"coefficients\"][index] * standardized\n        if not isfinite(value):\n            raise ValueError(\"non-finite prediction\")\n        predictions.append(value)\n    return predictions\n\n\ndef reject_constant(value):\n    raise ValueError(\"non-standard JSON number: \" + value)\n\n\ndef unique_keys(pairs):\n    result = {}\n    for key, value in pairs:\n        if key in result:\n            raise ValueError(\"duplicate JSON key: \" + key)\n        result[key] = value\n    return result\n\n\ndef load_model(serialized):\n    model = json.loads(serialized, parse_constant=reject_constant, object_pairs_hook=unique_keys)\n    validate_model(model)\n    return model\n\n\nmodel = {\n    \"schema\": \"teaching-linear\",\n    \"version\": 1,\n    \"features\": [\"size\", \"age\"],\n    \"preprocess\": {\"mean\": [50.0, 10.0], \"scale\": [10.0, 5.0]},\n    \"coefficients\": [2.0, -1.0],\n    \"intercept\": 100.0,\n}\nrows = [{\"size\": 60.0, \"age\": 15.0}, {\"size\": 40.0, \"age\": 5.0}]\nbefore = predict(model, rows)\nserialized = json.dumps(model, allow_nan=False, sort_keys=True)\nreloaded = load_model(serialized)\nafter = predict(reloaded, rows)\nprint(\"before:\", before)\nprint(\"after:\", after)\nprint(\"round_trip_equal:\", before == after)\nprint(\"size_plus_one:\", predict(reloaded, [{\"size\": 61.0, \"age\": 15.0}]))\n",
           "status": "runnable",
-          "purpose_vi": "Chạy ví dụ để quan sát cấu trúc dữ liệu và kết quả trước khi liên hệ với nhiệm vụ của bài.",
-          "purpose_en": "Illustrate the input-to-output path for model interpretation and serialization.",
-          "setup": "Python 3.11; cài numpy/scikit-learn/torch/fastapi nếu ví dụ cần thư viện.",
-          "expected_output": "Một output nhỏ có thể kiểm tra bằng mắt hoặc bằng test.",
-          "edge_case_vi": "Chọn một đầu vào hoặc điều kiện khác phù hợp với ví dụ, rồi ghi kết quả và nguyên nhân.",
-          "edge_case_en": "Try an empty input, a wrong shape or missing data and record the failure.",
-          "explanation_vi": "Theo dõi từng phép xử lý và đối chiếu đầu ra với dự đoán. Ví dụ mã có thể chỉ minh họa một phần nội dung; cần hoàn thành riêng nhiệm vụ thực hành.",
-          "explanation_en": "Keep the boundary executable and inspectable; change one input and verify the expected output."
+          "purpose_vi": "Kiểm tra preprocessing, schema và dự đoán khi nạp lại.",
+          "purpose_en": "Verify preprocessing, schema and predictions across a reload.",
+          "setup": "Python 3.11+; standard library only; Colab or python persistence.py.",
+          "expected_output": "before: [101.0, 99.0]\nafter: [101.0, 99.0]\nround_trip_equal: True\nsize_plus_one: [101.2]",
+          "edge_case_vi": "Đổi version=2, features đảo thứ tự, scale=0, khóa thừa, NaN hoặc khóa JSON trùng: ValueError. Thiếu age ở hàng đầu vào cũng bị từ chối.",
+          "edge_case_en": "Version=2, reversed features, scale=0, extra keys, NaN or duplicate JSON keys raise ValueError. A row missing age is also rejected.",
+          "explanation_vi": "Mô hình cố định cho bài học; không train và không lưu estimator sklearn. Mean/scale giả định đã fit trước, không tính lại từ rows mới.",
+          "explanation_en": "A fixed teaching model, not training or sklearn estimator persistence. Means/scales are assumed fitted earlier and never refitted on new rows.",
+          "setup_vi": "Dán mã vào một ô Colab hoặc lưu persistence.py rồi chạy python persistence.py bằng Python 3.11+. Không cài gói; JSON nằm trong bộ nhớ, không cần tệp dữ liệu.",
+          "setup_en": "Paste into one Colab cell, or save persistence.py and run python persistence.py with Python 3.11+. No packages needed; JSON stays in memory and needs no data files."
         }
       ],
       "resources": [
         {
           "language": "en",
-          "title": "scikit-learn User Guide",
-          "url": "https://scikit-learn.org/stable/user_guide.html",
+          "title": "scikit-learn Model persistence",
+          "url": "https://scikit-learn.org/stable/model_persistence.html",
           "kind": "official",
           "required": false,
           "purpose_vi": "Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.",
           "purpose_en": "Official reference to verify the lesson concept.",
-          "read_vi": "Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.",
-          "read_en": "Read the relevant section, run a small example, and record one verified insight."
+          "read_vi": "Đọc rủi ro pickle/joblib, môi trường và giới hạn tương thích phiên bản.",
+          "read_en": "Read pickle/joblib risks, environment requirements and version compatibility limitations."
         },
         {
           "language": "en",
-          "title": "scikit-learn Model Evaluation",
-          "url": "https://scikit-learn.org/stable/modules/model_evaluation.html",
+          "title": "scikit-learn: Interpreting linear-model coefficients",
+          "url": "https://scikit-learn.org/stable/auto_examples/inspection/plot_linear_model_coefficient_interpretation.html",
           "kind": "official",
           "required": false,
           "purpose_vi": "Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.",
           "purpose_en": "Official reference to verify the lesson concept.",
-          "read_vi": "Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.",
-          "read_en": "Read the relevant section, run a small example, and record one verified insight."
-        },
-        {
-          "language": "en",
-          "title": "scikit-learn Pipelines",
-          "url": "https://scikit-learn.org/stable/modules/compose.html",
-          "kind": "official",
-          "required": false,
-          "purpose_vi": "Tài liệu tham khảo chính thức để kiểm chứng khái niệm trong bài học.",
-          "purpose_en": "Official reference to verify the lesson concept.",
-          "read_vi": "Đọc phần liên quan, chạy lại ví dụ nhỏ và ghi một điều bạn kiểm chứng được.",
-          "read_en": "Read the relevant section, run a small example, and record one verified insight."
+          "read_vi": "Đọc ảnh hưởng thang đo và đặc trưng tương quan đến hệ số.",
+          "read_en": "Read how feature scales and correlated features affect coefficients."
         },
         {
           "title": "Giải thích và hướng dẫn thực hành trong bài",
@@ -15625,69 +15625,84 @@
       ],
       "estimated_minutes": 60,
       "completion_checklist": [
-        "Nạp lại mô hình cùng bước tiền xử lý và đối chiếu dự đoán trên cùng dữ liệu.",
-        "Kiểm tra theo nhóm dữ liệu và nêu giới hạn của kết luận.",
-        "Lưu kết quả và giải thích được một giới hạn mà không nhìn lời giải."
+        "Tính tay hai dự đoán 101 và 99 cùng đóng góp đặc trưng.",
+        "So dự đoán trước/sau JSON và kiểm tra phiên bản/thứ tự/scale.",
+        "Nêu giới hạn diễn giải và rủi ro nạp pickle không tin cậy."
       ],
       "completion_criteria": [
-        "Bài làm đáp ứng nhiệm vụ: Nạp lại mô hình cùng bước tiền xử lý và đối chiếu dự đoán trên cùng dữ liệu.",
-        "Có kết quả đối chiếu với tiêu chí hoặc dự đoán đã ghi trước.",
-        "Kiểm tra theo nhóm dữ liệu và nêu giới hạn của kết luận."
+        "Tính tay hai dự đoán 101 và 99 cùng đóng góp đặc trưng.",
+        "So dự đoán trước/sau JSON và kiểm tra phiên bản/thứ tự/scale.",
+        "Nêu giới hạn diễn giải và rủi ro nạp pickle không tin cậy."
       ],
       "common_mistakes": [
-        "Dùng điểm tổng hợp để che khuất nhóm dự đoán kém.",
-        "Kết luận từ một kết quả thuận lợi mà chưa kiểm tra trường hợp khác.",
-        "Chép lời giải nhưng không giải thích được quyết định trong bài làm của mình."
+        "So hệ số mà quên thang đo hoặc suy ra nhân quả.",
+        "Chỉ lưu trọng số, bỏ preprocessing và thứ tự cột.",
+        "Nạp pickle lạ hoặc coi round-trip là bằng chứng chất lượng."
       ],
       "next_lessons": [
         "phase-04-deep-learning-pytorch-core-1",
         "phase-04-deep-learning-pytorch-core-2"
       ],
-      "review_question_vi": "Nội dung cốt lõi của “Diễn giải và lưu mô hình” là gì?",
-      "review_question_en": "Define model interpretation and serialization in your own words. What are the input, transformation and output?",
-      "review_answer_vi": "Diễn giải làm rõ thông tin ảnh hưởng tới dự đoán và giới hạn của kết luận. Khi lưu mô hình, cần giữ cả bước tiền xử lý và thông tin phiên bản để nạp lại đúng cách.",
-      "review_answer_en": "A strong answer names the input, transformation, output and the context where model interpretation and serialization is used. Relate it specifically to model interpretation and serialization in lesson phase-03-classical-ml-analysis-4.",
+      "review_question_vi": "Vì sao hệ số size=2 không nghĩa mỗi đơn vị size tăng dự đoán 2?",
+      "review_question_en": "Why does size coefficient 2 not mean a two-unit prediction increase per raw unit?",
+      "review_answer_vi": "size được chia scale=10: độ nhạy theo đơn vị gốc là 2/10=0.2 khi age cố định, chỉ là hành vi mô hình.",
+      "review_answer_en": "Size is divided by scale=10, so raw-unit sensitivity is 2/10=0.2 with age fixed; this describes model behavior only.",
       "review_cards": [
         {
           "id": "phase-03-classical-ml-analysis-4-recall",
           "type": "recall",
-          "question_vi": "Nội dung cốt lõi của “Diễn giải và lưu mô hình” là gì?",
-          "question_en": "Define model interpretation and serialization in your own words. What are the input, transformation and output?",
-          "answer_vi": "Diễn giải làm rõ thông tin ảnh hưởng tới dự đoán và giới hạn của kết luận. Khi lưu mô hình, cần giữ cả bước tiền xử lý và thông tin phiên bản để nạp lại đúng cách.",
-          "answer_en": "A strong answer names the input, transformation, output and the context where model interpretation and serialization is used.",
-          "hint_vi": "Nêu ý chính, sau đó minh họa bằng tình huống cụ thể.",
-          "hint_en": "Start with a small example you can calculate by hand."
+          "question_vi": "Vì sao hệ số size=2 không nghĩa mỗi đơn vị size tăng dự đoán 2?",
+          "question_en": "Why does size coefficient 2 not mean a two-unit prediction increase per raw unit?",
+          "answer_vi": "size được chia scale=10: độ nhạy theo đơn vị gốc là 2/10=0.2 khi age cố định, chỉ là hành vi mô hình.",
+          "answer_en": "Size is divided by scale=10, so raw-unit sensitivity is 2/10=0.2 with age fixed; this describes model behavior only.",
+          "hint_vi": "Đối chiếu đơn vị, schema và bằng chứng round-trip.",
+          "hint_en": "Check units, schema and round-trip evidence."
         },
         {
           "id": "phase-03-classical-ml-analysis-4-application",
           "type": "application",
-          "question_vi": "Nạp lại mô hình cùng bước tiền xử lý và đối chiếu dự đoán trên cùng dữ liệu.",
-          "question_en": "Write a small code example or design that applies model interpretation and serialization to an AI engineering problem.",
-          "answer_vi": "Với nhiệm vụ “Nạp lại mô hình cùng bước tiền xử lý và đối chiếu dự đoán trên cùng dữ liệu”, cần lưu: bảng phân tích kết quả hoặc bản lưu mô hình có cách nạp lại. Kiểm tra theo nhóm dữ liệu và nêu giới hạn của kết luận.",
-          "answer_en": "The model interpretation and serialization example should have an explicit input, expected output and a way to run or verify it (phase-03-classical-ml-analysis-4).",
-          "hint_vi": "Bắt đầu từ nhiệm vụ thực hành của bài.",
-          "hint_en": "Start from the lesson code example and change one assumption."
+          "question_vi": "Hàng size=60, age=15 cho dự đoán nào?",
+          "question_en": "What is predicted for size=60, age=15?",
+          "answer_vi": "z_size=z_age=1; 100+2*1-1*1=101. Nạp JSON đúng giữ nguyên kết quả này và 99 của hàng còn lại.",
+          "answer_en": "Both standardized values are 1; 100+2*1-1*1=101. Correct JSON reload preserves it and the other row prediction 99.",
+          "hint_vi": "Đối chiếu đơn vị, schema và bằng chứng round-trip.",
+          "hint_en": "Check units, schema and round-trip evidence."
         },
         {
           "id": "phase-03-classical-ml-analysis-4-debug",
           "type": "debug",
-          "question_vi": "Khi làm bài “Diễn giải và lưu mô hình”, bạn cần tránh lỗi nào và kiểm tra lại ra sao?",
-          "question_en": "If model interpretation and serialization produces a wrong result or a metric drops, what would you debug first?",
-          "answer_vi": "Trong bài “Diễn giải và lưu mô hình”, lỗi cần tránh là: dùng điểm tổng hợp để che khuất nhóm dự đoán kém. Kiểm tra theo nhóm dữ liệu và nêu giới hạn của kết luận. Dùng ví dụ nhỏ để tìm bước đầu tiên có kết quả khác dự kiến.",
-          "answer_en": "For model interpretation and serialization, check inputs/shapes, preprocessing and the baseline first; then isolate the failure with a small test and error analysis (phase-03-classical-ml-analysis-4).",
-          "hint_vi": "Tìm bước đầu tiên xuất hiện khác biệt.",
-          "hint_en": "Do not start by changing the model or adding complexity."
+          "question_vi": "Nếu features bị đảo hoặc scale=0 thì sao?",
+          "question_en": "What if feature order changes or a scale becomes zero?",
+          "answer_vi": "Validator báo ValueError trước dự đoán; không đoán lại thứ tự hoặc thay scale âm thầm. Kiểm tra schema, phiên bản và artifact nguồn.",
+          "answer_en": "The validator raises ValueError before prediction; do not guess order or silently replace the scale. Inspect schema, version and source artifact.",
+          "hint_vi": "Đối chiếu đơn vị, schema và bằng chứng round-trip.",
+          "hint_en": "Check units, schema and round-trip evidence."
         },
         {
           "id": "phase-03-classical-ml-analysis-4-interview",
           "type": "interview",
-          "question_vi": "Bạn dùng kết quả nào từ bài “Diễn giải và lưu mô hình” để giải thích cách làm và giới hạn?",
-          "question_en": "In an interview, how would you explain a trade-off and one edge case of model interpretation and serialization?",
-          "answer_vi": "Bắt đầu từ nhiệm vụ “Nạp lại mô hình cùng bước tiền xử lý và đối chiếu dự đoán trên cùng dữ liệu”. Trình bày kết quả đã lưu, cách đối chiếu và một điều kiện có thể khiến kết luận thay đổi; không chỉ đọc lại định nghĩa.",
-          "answer_en": "The answer about model interpretation and serialization should cover assumptions, metrics/cost, limitations and how to reduce production risk (phase-03-classical-ml-analysis-4).",
-          "hint_vi": "Dùng quyết định thật trong bài làm, tránh chỉ đọc định nghĩa.",
-          "hint_en": "Relate it to latency, quality, cost or observability where relevant."
+          "question_vi": "Round-trip đúng đã đủ để dùng mô hình thật chưa?",
+          "question_en": "Is a successful round trip sufficient for real deployment?",
+          "answer_vi": "Chưa. Cần dữ liệu đánh giá đại diện, giới hạn tác động, pipeline đầy đủ và môi trường tương thích. Không nạp pickle lạ; JSON này chỉ minh họa mô hình tuyến tính cố định.",
+          "answer_en": "No. Representative evaluation, impact limits, a complete pipeline and compatible environment are still needed. Never load unknown pickle; this JSON only illustrates a fixed linear model.",
+          "hint_vi": "Đối chiếu đơn vị, schema và bằng chứng round-trip.",
+          "hint_en": "Check units, schema and round-trip evidence."
         }
+      ],
+      "completion_checklist_en": [
+        "Calculate predictions 101 and 99 and their feature contributions.",
+        "Compare predictions across JSON and validate version/order/scales.",
+        "Explain interpretation limits and untrusted-pickle risks."
+      ],
+      "completion_criteria_en": [
+        "Calculate predictions 101 and 99 and their feature contributions.",
+        "Compare predictions across JSON and validate version/order/scales.",
+        "Explain interpretation limits and untrusted-pickle risks."
+      ],
+      "common_mistakes_en": [
+        "Compare coefficients without scales or infer causation.",
+        "Save only weights, omitting preprocessing and feature order.",
+        "Load unknown pickle or treat a round trip as quality evidence."
       ]
     },
     {

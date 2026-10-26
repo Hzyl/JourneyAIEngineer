@@ -42,7 +42,8 @@
         ]
       },
       "estimated_weeks": 1,
-      "project_slugs": []
+      "project_slugs": [],
+      "review_lesson_ids": []
     },
     {
       "id": "python",
@@ -61,7 +62,6 @@
       "track": "core",
       "required_for_routes": [
         "foundation",
-        "application",
         "deep-ml"
       ],
       "difficulty": "beginner",
@@ -86,7 +86,8 @@
         ]
       },
       "estimated_weeks": 3,
-      "project_slugs": []
+      "project_slugs": [],
+      "review_lesson_ids": []
     },
     {
       "id": "math",
@@ -129,7 +130,8 @@
         ]
       },
       "estimated_weeks": 3,
-      "project_slugs": []
+      "project_slugs": [],
+      "review_lesson_ids": []
     },
     {
       "id": "ml",
@@ -174,6 +176,14 @@
       "estimated_weeks": 4,
       "project_slugs": [
         "tabular-ml"
+      ],
+      "bridge_phase_ids": [
+        "phase-09-genai-ml-fundamentals"
+      ],
+      "note_vi": "Học máy cổ điển đi sâu vào dữ liệu, mô hình và kiểm định. Hướng ứng dụng AI dùng phần cầu nối ML/embedding cô đọng; chỉ ôn lại nội dung đã biết, vẫn cần hoàn thành phần embedding còn thiếu.",
+      "note_en": "Classical ML covers data, models and validation in depth. The application path uses a compact ML/embedding bridge; revisit familiar material and complete any missing embedding skills.",
+      "review_lesson_ids": [
+        "phase-06-llm-rag-nlp-foundations-2"
       ]
     },
     {
@@ -218,6 +228,15 @@
       "estimated_weeks": 5,
       "project_slugs": [
         "deep-learning"
+      ],
+      "bridge_phase_ids": [
+        "phase-10-genai-transformers"
+      ],
+      "note_vi": "PyTorch là phần thực hành học sâu đầy đủ. Cầu nối Transformer tập trung vào attention, kiến trúc và KV cache; học xong hướng nền tảng chưa có nghĩa đã biết phần này.",
+      "note_en": "PyTorch is the full deep-learning practice. The Transformer bridge focuses on attention, architecture and KV caches; completing the foundation path does not establish these skills.",
+      "review_lesson_ids": [
+        "phase-06-llm-rag-transformers-1",
+        "phase-06-llm-rag-transformers-2"
       ]
     },
     {
@@ -265,14 +284,13 @@
         "phase-08-genai-software"
       ],
       "note_vi": "Không học trùng: phase-05 là nền tảng MLOps đầy đủ cho route đào sâu ML; phase-08 là bản cầu nối cô đọng để route ứng dụng dựng dịch vụ GenAI.",
-      "note_en": "No duplicate study: phase-05 is the full MLOps foundation for the deep-ML route; phase-08 is a compact bridge for shipping a GenAI service on the application route."
+      "note_en": "No duplicate study: phase-05 is the full MLOps foundation for the deep-ML route; phase-08 is a compact bridge for shipping a GenAI service on the application route.",
+      "review_lesson_ids": []
     },
     {
       "id": "llm",
       "number": "06",
       "phase_ids": [
-        "phase-09-genai-ml-fundamentals",
-        "phase-10-genai-transformers",
         "phase-11-llm-application"
       ],
       "title_vi": "LLM và mô hình nền tảng",
@@ -312,11 +330,15 @@
       "project_slugs": [
         "llm-chat-api"
       ],
-      "optional_phase_ids": [
-        "phase-06-llm-rag"
-      ],
-      "note_vi": "Chuỗi chính dùng ba module tập trung về ML/embedding, Transformer và ứng dụng LLM. Phase-06 chỉ là bài khảo sát NLP/LLM để xem lại, không phải một chặng RAG thứ hai.",
-      "note_en": "The main sequence uses three focused modules for ML/embeddings, Transformers and LLM applications. Phase-06 is only an NLP/LLM survey, not a second RAG stage."
+      "optional_phase_ids": [],
+      "note_vi": "Học xây ứng dụng LLM sau phần ML/embedding và Transformer phù hợp. Bài khảo sát về token, ngữ cảnh và prompt được giữ làm tài liệu ôn tập ngay tại đây.",
+      "note_en": "Build LLM applications after the relevant ML/embedding and Transformer foundations. Survey lessons on tokens, context and prompting remain here as optional review.",
+      "review_lesson_ids": [
+        "phase-06-llm-rag-nlp-foundations-1",
+        "phase-06-llm-rag-nlp-foundations-3",
+        "phase-06-llm-rag-nlp-foundations-4",
+        "phase-06-llm-rag-transformers-3"
+      ]
     },
     {
       "id": "rag",
@@ -366,12 +388,73 @@
       "optional_phase_ids": [
         "phase-13-genai-advanced-rag"
       ],
-      "note_vi": "RAG nền tảng là mốc bắt buộc của route ứng dụng; RAG nâng cao là phần mở rộng sau khi có bộ đánh giá.",
-      "note_en": "RAG foundations is the application route checkpoint; advanced RAG is an extension after an evaluation set exists."
+      "note_vi": "Học RAG nền tảng trước. Bài khảo sát truy xuất/RAG cũ nằm ngay trong phần ôn tập của chặng này. Chỉ mở rộng sang hybrid search và reranking sau khi đã có baseline và bộ đánh giá ở chặng Đánh giá và vận hành.",
+      "note_en": "Start with RAG foundations. Earlier retrieval/RAG survey lessons are grouped here as review. Extend to hybrid search and reranking only after establishing a baseline and evaluation set in Evaluation and operations.",
+      "review_lesson_ids": [
+        "phase-06-llm-rag-retrieval-1",
+        "phase-06-llm-rag-retrieval-2",
+        "phase-06-llm-rag-retrieval-3",
+        "phase-06-llm-rag-retrieval-4",
+        "phase-06-llm-rag-rag-1",
+        "phase-06-llm-rag-rag-2",
+        "phase-06-llm-rag-rag-3",
+        "phase-06-llm-rag-rag-4"
+      ]
+    },
+    {
+      "id": "production",
+      "number": "08",
+      "phase_ids": [
+        "phase-17-genai-evaluation",
+        "phase-18-genai-observability",
+        "phase-19-genai-production"
+      ],
+      "title_vi": "Đánh giá và vận hành",
+      "title_en": "Evaluation and production",
+      "topics_vi": "Bộ đánh giá, log/trace, độ trễ, chi phí, an toàn, triển khai và rollback.",
+      "topics_en": "Evaluation sets, logs/traces, latency, cost, safety, deployment and rollback.",
+      "before_vi": "Đánh giá từ những ví dụ đầu, trước khi thêm agent; sau đó mở rộng theo rủi ro của ứng dụng. LLM-as-a-judge chỉ là một cách chấm.",
+      "before_en": "Evaluate early, before adding agents, then expand coverage with application risk. LLM-as-a-judge is only one grading method.",
+      "checkpoint_vi": "Có báo cáo đánh giá, tình huống lỗi, log vận hành và cách phục hồi khi một bản cập nhật làm hệ thống kém đi.",
+      "checkpoint_en": "Produce an evaluation report, failure cases, operational logs and a recovery plan for regressions.",
+      "track": "core",
+      "required_for_routes": [
+        "application"
+      ],
+      "difficulty": "advanced",
+      "purpose": {
+        "vi": "Bộ đánh giá, log/trace, độ trễ, chi phí, an toàn, triển khai và rollback.",
+        "en": "Evaluation sets, logs/traces, latency, cost, safety, deployment and rollback."
+      },
+      "prerequisites": {
+        "vi": "Đánh giá từ những ví dụ đầu, trước khi thêm agent; sau đó mở rộng theo rủi ro của ứng dụng. LLM-as-a-judge chỉ là một cách chấm.",
+        "en": "Evaluate early, before adding agents, then expand coverage with application risk. LLM-as-a-judge is only one grading method."
+      },
+      "exit_criteria": {
+        "vi": "Có báo cáo đánh giá, tình huống lỗi, log vận hành và cách phục hồi khi một bản cập nhật làm hệ thống kém đi.",
+        "en": "Produce an evaluation report, failure cases, operational logs and a recovery plan for regressions."
+      },
+      "evidence_required": {
+        "vi": [
+          "Có báo cáo đánh giá, tình huống lỗi, log vận hành và cách phục hồi khi một bản cập nhật làm hệ thống kém đi."
+        ],
+        "en": [
+          "Produce an evaluation report, failure cases, operational logs and a recovery plan for regressions."
+        ]
+      },
+      "estimated_weeks": 6,
+      "project_slugs": [],
+      "note_vi": "Đánh giá câu trả lời và truy xuất trước khi thêm công cụ hoặc agent. Phần này kiểm tra groundedness, chi phí, tracing và fallback; không thay thế bài đánh giá mô hình ML và MLOps ở các chặng trước.",
+      "note_en": "Evaluate answers and retrieval before adding tools or agents. This stage covers groundedness, costs, tracing and fallbacks; it does not replace ML model evaluation or MLOps.",
+      "review_lesson_ids": [
+        "phase-06-llm-rag-quality-safety-1",
+        "phase-06-llm-rag-quality-safety-2",
+        "phase-06-llm-rag-quality-safety-4"
+      ]
     },
     {
       "id": "agents",
-      "number": "08",
+      "number": "09",
       "phase_ids": [
         "phase-14-genai-tool-calling",
         "phase-15-genai-agents",
@@ -409,52 +492,14 @@
         ]
       },
       "estimated_weeks": 4,
-      "project_slugs": []
-    },
-    {
-      "id": "production",
-      "number": "09",
-      "phase_ids": [
-        "phase-17-genai-evaluation",
-        "phase-18-genai-observability",
-        "phase-19-genai-production"
-      ],
-      "title_vi": "Đánh giá và vận hành",
-      "title_en": "Evaluation and production",
-      "topics_vi": "Bộ đánh giá, log/trace, độ trễ, chi phí, an toàn, triển khai và rollback.",
-      "topics_en": "Evaluation sets, logs/traces, latency, cost, safety, deployment and rollback.",
-      "before_vi": "Đánh giá từ những ví dụ đầu, trước khi thêm agent; sau đó mở rộng theo rủi ro của ứng dụng. LLM-as-a-judge chỉ là một cách chấm.",
-      "before_en": "Evaluate early, before adding agents, then expand coverage with application risk. LLM-as-a-judge is only one grading method.",
-      "checkpoint_vi": "Có báo cáo đánh giá, tình huống lỗi, log vận hành và cách phục hồi khi một bản cập nhật làm hệ thống kém đi.",
-      "checkpoint_en": "Produce an evaluation report, failure cases, operational logs and a recovery plan for regressions.",
-      "track": "core",
-      "required_for_routes": [
-        "application",
-        "deep-ml"
-      ],
-      "difficulty": "advanced",
-      "purpose": {
-        "vi": "Bộ đánh giá, log/trace, độ trễ, chi phí, an toàn, triển khai và rollback.",
-        "en": "Evaluation sets, logs/traces, latency, cost, safety, deployment and rollback."
-      },
-      "prerequisites": {
-        "vi": "Đánh giá từ những ví dụ đầu, trước khi thêm agent; sau đó mở rộng theo rủi ro của ứng dụng. LLM-as-a-judge chỉ là một cách chấm.",
-        "en": "Evaluate early, before adding agents, then expand coverage with application risk. LLM-as-a-judge is only one grading method."
-      },
-      "exit_criteria": {
-        "vi": "Có báo cáo đánh giá, tình huống lỗi, log vận hành và cách phục hồi khi một bản cập nhật làm hệ thống kém đi.",
-        "en": "Produce an evaluation report, failure cases, operational logs and a recovery plan for regressions."
-      },
-      "evidence_required": {
-        "vi": [
-          "Có báo cáo đánh giá, tình huống lỗi, log vận hành và cách phục hồi khi một bản cập nhật làm hệ thống kém đi."
-        ],
-        "en": [
-          "Produce an evaluation report, failure cases, operational logs and a recovery plan for regressions."
-        ]
-      },
-      "estimated_weeks": 6,
-      "project_slugs": []
+      "project_slugs": [],
+      "note_vi": "Nhánh tùy chọn sau đánh giá: gọi công cụ → vòng lặp agent → tích hợp MCP. Schema ở đây bảo vệ hành động và quyền thực thi, khác với định dạng câu trả lời của ứng dụng LLM.",
+      "note_en": "Optional after evaluation: tool calling → agent loops → MCP integration. Schemas here protect actions and execution permissions, beyond the response formatting used in LLM applications.",
+      "review_lesson_ids": [
+        "phase-06-llm-rag-transformers-4",
+        "phase-06-llm-rag-quality-safety-3",
+        "phase-06-llm-rag-adaptation-4"
+      ]
     },
     {
       "id": "specialization",
@@ -501,8 +546,13 @@
       },
       "estimated_weeks": 6,
       "project_slugs": [],
-      "note_vi": "Fine-tuning, Local LLM và System Design là ba nhánh riêng; chọn theo mục tiêu công việc thay vì học tuần tự cả ba.",
-      "note_en": "Fine-tuning, Local LLM, and System Design are separate branches; choose based on your target role instead of taking all three in sequence."
+      "note_vi": "Fine-tuning, Local LLM và System Design là các nhánh riêng. Chạy mô hình local không bắt buộc học fine-tuning trước; bài khảo sát LoRA và lượng tử hóa nằm trong phần ôn tập.",
+      "note_en": "Fine-tuning, local LLMs and system design are independent branches. Local inference does not require fine-tuning first; survey lessons on LoRA and quantization remain available as review.",
+      "review_lesson_ids": [
+        "phase-06-llm-rag-adaptation-1",
+        "phase-06-llm-rag-adaptation-2",
+        "phase-06-llm-rag-adaptation-3"
+      ]
     },
     {
       "id": "portfolio",
@@ -548,7 +598,10 @@
       "estimated_weeks": 4,
       "project_slugs": [
         "capstone-ai-product"
-      ]
+      ],
+      "note_vi": "Tích lũy bằng chứng trong suốt quá trình học, rồi hoàn thiện đồ án theo hướng đã chọn. Không cần học hết mọi nhánh chuyên sâu mới được làm đồ án.",
+      "note_en": "Collect evidence throughout your learning, then complete a capstone for your chosen path. You do not need every specialization before starting it.",
+      "review_lesson_ids": []
     }
   ],
   "sequence_note_vi": "Chuỗi core: Python/kỹ thuật phần mềm → Toán và nền tảng ML/LLM phù hợp → ứng dụng LLM → RAG → đánh giá → quan sát và vận hành → portfolio. Tool calling, agent, MCP, fine-tuning, local model và system design là các nhánh chuyên sâu tùy mục tiêu; nếu học agent, hãy đánh giá hệ thống trước rồi mới thêm hành động.",

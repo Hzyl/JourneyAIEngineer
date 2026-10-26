@@ -136,7 +136,7 @@ export function LessonChecks({ lesson, language, checked, nudge, onToggle, onOpe
         <h3>{vi ? 'Câu hỏi phỏng vấn cần tự trả lời' : 'Interview questions to answer aloud'}</h3>
         <ul>{questions.map((question) => <li key={question}>{question}</li>)}</ul>
       </div>}
-      {lesson.reviews.length > 0 && <div className="lesson-review-list">
+      {lesson.reviews.length > 0 && <div id="self-check-questions" className="lesson-review-list">
         <h3>{vi ? 'Câu hỏi tự kiểm tra' : 'Self-check questions'}</h3>
         {lesson.reviews.map((review) => <div className="review-prompt" key={review.id}>
           <p>{vi ? review.question_vi : review.question_en}</p>

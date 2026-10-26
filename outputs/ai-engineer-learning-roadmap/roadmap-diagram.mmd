@@ -1,0 +1,142 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#2563eb', 'primaryTextColor': '#fff', 'primaryBorderColor': '#1d4ed8', 'lineColor': '#6b7280', 'secondaryColor': '#7c3aed', 'tertiaryColor': '#059669', 'noteTextColor': '#1f2937', 'noteBkgColor': '#fef3c7'}}}%%
+
+flowchart TD
+    START(["🚀 Bắt đầu<br/>Start here"])
+
+    subgraph STAGE0["CHẶNG 0 — Định hướng & Cách học<br/>Orientation & Learning System"]
+        direction LR
+        S0A["AI Engineer làm gì<br/>What does an AI Engineer do"]
+        S0B["Thiết lập môi trường<br/>Environment setup"]
+        S0C["Đánh giá đầu vào<br/>Baseline assessment"]
+        S0D["Cách ghi nhật ký học<br/>Learning system"]
+    end
+
+    subgraph STAGE1["CHẶNG 1 — Python & Công cụ<br/>Python & Tooling"]
+        direction LR
+        S1A["Python core<br/>Types, functions, OOP"]
+        S1B["Reliable code<br/>Modules, logging, pytest"]
+        S1C["Files & data<br/>CSV, JSON, argparse"]
+        S1D["Git, terminal, HTTP"]
+        S1E["SQL & data structures"]
+    end
+
+    subgraph STAGE3["CHẶNG 3 — Toán cho AI<br/>Math for AI"]
+        direction LR
+        S3A["Linear algebra<br/>Vector, matrix, cosine"]
+        S3B["Calculus<br/>Gradient, chain rule"]
+        S3C["Probability<br/>Distribution, sampling"]
+        S3D["Optimization<br/>SGD, Adam"]
+    end
+
+    subgraph STAGE4["CHẶNG 4 — Machine Learning<br/>Classical ML"]
+        direction LR
+        S4A["Problem framing<br/>Split, baseline, leakage"]
+        S4B["Models<br/>Linear, tree, boosting"]
+        S4C["Preprocessing<br/>Missing, encoding, scaling"]
+        S4D["Evaluation<br/>Metrics, cross-val, tuning"]
+        S4E["Analysis<br/>Error slices, model card"]
+    end
+
+    subgraph STAGE5["CHẶNG 5 — Deep Learning"]
+        direction LR
+        S5A["PyTorch core<br/>Tensor, DataLoader, autograd"]
+        S5B["Training loop<br/>Forward, loss, backward"]
+        S5C["Generalization<br/>Overfitting, dropout, BN"]
+        S5D["CNN, transfer learning<br/>Embedding, Transformer intro"]
+        S5E["Debugging<br/>Shape, NaN, GPU memory"]
+    end
+
+    subgraph STAGE6["CHẶNG 6 — Data & ML Engineering"]
+        direction LR
+        S6A["FastAPI & REST"]
+        S6B["Docker & CI"]
+        S6C["Experiment tracking<br/>MLflow, versioning"]
+        S6D["Observability<br/>Logs, p50/p95, drift"]
+        S6E["Security<br/>Secrets, input limits"]
+    end
+
+    subgraph STAGE7["CHẶNG 7 — LLM & NLP Engineering"]
+        direction LR
+        S7A["Tokenization<br/>Embedding, context window"]
+        S7B["Prompt design<br/>Structured output"]
+        S7C["Chat API<br/>Schema, streaming, retry"]
+        S7D["Cost & latency<br/>Token budget"]
+    end
+
+    subgraph STAGE8["CHẶNG 8 — RAG & Search"]
+        direction LR
+        S8A["Chunking<br/>Metadata, vector search"]
+        S8B["Hybrid retrieval<br/>BM25, reranking"]
+        S8C["Citation<br/>Abstention, failure analysis"]
+        S8D["Evaluation set<br/>Hallucination, injection"]
+    end
+
+    subgraph STAGE9["CHẶNG 9 — Agent & Evaluation"]
+        direction LR
+        S9A["Tool calling<br/>Schema, validation"]
+        S9B["Agent loop<br/>Stop conditions, budget"]
+        S9C["Permission<br/>Human approval"]
+        S9D["Evaluation<br/>Outcome vs transcript"]
+    end
+
+    subgraph STAGE10["CHẶNG 10 — Production & Portfolio"]
+        direction LR
+        S10A["Problem statement<br/>User, metric, architecture"]
+        S10B["Deploy<br/>Monitoring, error handling"]
+        S10C["Portfolio<br/>README, demo, diagram"]
+        S10D["Career prep<br/>CV, interview, system design"]
+    end
+
+    READY(["✅ Sẵn sàng chuẩn bị ứng tuyển<br/>Ready to prepare for applications"])
+
+    subgraph OPT["TÙY CHỌN — Chuyên sâu<br/>Optional Specializations"]
+        direction TB
+        OPT_A["🔷 Fine-tuning & PEFT<br/>LoRA, QLoRA, quantization"]
+        OPT_B["🔷 Local LLM<br/>vLLM, Ollama, GGUF"]
+        OPT_C["🔷 MCP Protocol<br/>Client/server, security"]
+        OPT_D["🔷 Advanced RAG<br/>Query rewriting, filters"]
+        OPT_E["🔷 System Design<br/>SLO, threat model, scaling"]
+    end
+
+    P0(["📦 Project 0<br/>Python package"])
+    P1(["📦 Project 1<br/>Tabular ML"])
+    P2(["📦 Project 2<br/>DL Classifier"])
+    P3(["📦 Project 3<br/>ML Service API"])
+    P4(["📦 Project 4<br/>Vietnamese RAG"])
+    P5(["📦 Project 5<br/>Research Agent"])
+    CAP(["🏆 Capstone<br/>AI Product"])
+
+    START --> STAGE0
+    STAGE0 --> STAGE1
+    STAGE1 --> P0
+    STAGE1 --> STAGE3
+    STAGE3 --> STAGE4
+    STAGE4 --> P1
+    STAGE4 --> STAGE5
+    STAGE5 --> P2
+    STAGE5 --> STAGE6
+    STAGE6 --> P3
+    STAGE6 --> STAGE7
+    STAGE7 --> STAGE8
+    STAGE8 --> P4
+    STAGE8 --> STAGE9
+    STAGE9 --> P5
+    STAGE9 --> STAGE10
+    STAGE10 --> CAP
+    CAP --> READY
+    READY -.-> OPT
+
+    style START fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style READY fill:#059669,stroke:#047857,color:#fff
+    style P0 fill:#f59e0b,stroke:#d97706,color:#1f2937
+    style P1 fill:#f59e0b,stroke:#d97706,color:#1f2937
+    style P2 fill:#f59e0b,stroke:#d97706,color:#1f2937
+    style P3 fill:#f59e0b,stroke:#d97706,color:#1f2937
+    style P4 fill:#f59e0b,stroke:#d97706,color:#1f2937
+    style P5 fill:#f59e0b,stroke:#d97706,color:#1f2937
+    style CAP fill:#dc2626,stroke:#b91c1c,color:#fff
+    style OPT_A fill:#ede9fe,stroke:#7c3aed,color:#4c1d95
+    style OPT_B fill:#ede9fe,stroke:#7c3aed,color:#4c1d95
+    style OPT_C fill:#ede9fe,stroke:#7c3aed,color:#4c1d95
+    style OPT_D fill:#ede9fe,stroke:#7c3aed,color:#4c1d95
+    style OPT_E fill:#ede9fe,stroke:#7c3aed,color:#4c1d95

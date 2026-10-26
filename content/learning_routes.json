@@ -94,8 +94,8 @@
         "phase-09-genai-ml-fundamentals",
         "phase-10-genai-transformers"
       ],
-      "bridge_note_vi": "Ba module cầu nối cô đọng cho route ứng dụng: phần mềm dịch vụ AI, ML/embedding và Transformer. Nếu đã học route nền tảng, hãy xem lại checkpoint thay vì học lại toàn bộ.",
-      "bridge_note_en": "Three compact bridge modules for the application route: AI service software, ML/embeddings, and Transformers. If you completed the foundation route, use the checkpoints instead of repeating everything."
+      "bridge_note_vi": "Ba phần cầu nối dành cho hướng ứng dụng: phần mềm dịch vụ AI, ML/embedding và Transformer. Dùng checkpoint để bỏ qua phần đã nắm vững. Học xong hướng nền tảng chưa thay thế được kỹ năng Docker/CI, embedding và Transformer; hãy học tiếp phần còn thiếu.",
+      "bridge_note_en": "Three bridges for the application path: AI service software, ML/embeddings and Transformers. Use each checkpoint to skip skills you already have. The foundation path alone does not establish Docker/CI, embedding or Transformer skills; complete any missing parts."
     },
     {
       "id": "deep-ml",

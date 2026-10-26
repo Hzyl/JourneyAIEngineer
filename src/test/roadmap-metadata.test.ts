@@ -65,12 +65,17 @@ describe('roadmap metadata contracts', () => {
     expect(overview.stages.find((stage) => stage.id === 'engineering')?.bridge_phase_ids).toEqual(['phase-08-genai-software'])
     expect(overview.stages.find((stage) => stage.id === 'production')?.project_slugs).toEqual([])
     const llm = overview.stages.find((stage) => stage.id === 'llm')!
-    expect(llm.phase_ids).toEqual([
-      'phase-09-genai-ml-fundamentals',
-      'phase-10-genai-transformers',
-      'phase-11-llm-application',
-    ])
-    expect(llm.optional_phase_ids).toEqual(['phase-06-llm-rag'])
+    expect(llm.phase_ids).toEqual(['phase-11-llm-application'])
+    expect(llm.optional_phase_ids).toEqual([])
+    expect(overview.stages.find((stage) => stage.id === 'ml')?.bridge_phase_ids)
+      .toEqual(['phase-09-genai-ml-fundamentals'])
+    expect(overview.stages.find((stage) => stage.id === 'dl')?.bridge_phase_ids)
+      .toEqual(['phase-10-genai-transformers'])
+    const surveyIds = curriculum.phases.find((phase) => phase.slug === 'phase-06-llm-rag')!.modules
+      .flatMap((module) => module.lessons.map((_, index) => `phase-06-llm-rag-${module.slug}-${index + 1}`))
+    const reviewIds = overview.stages.flatMap((stage) => stage.review_lesson_ids)
+    expect(new Set(reviewIds).size).toBe(surveyIds.length)
+    expect(reviewIds.toSorted()).toEqual(surveyIds.toSorted())
     expect(curriculum.phases.find((phase) => phase.slug === 'phase-06-llm-rag')?.title_vi).toBe('Khảo sát NLP và LLM')
     expect(overview.stages.find((stage) => stage.id === 'specialization')?.phase_ids).toEqual([
       'phase-20-genai-finetuning',

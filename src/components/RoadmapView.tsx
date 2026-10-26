@@ -1,12 +1,10 @@
-import { illustrationForLesson } from './learning-illustrations'
-import { LearningIllustration } from './LearningIllustration'
 import { useEffect, useState, type ReactNode } from 'react'
 import routes from '../../content/learning_routes.json'
+import { groupRoadmap, type RoadmapPhase } from './roadmap-organization'
+import { RoadmapTopic } from './RoadmapTopic'
 import './roadmap-routes.css'
 
-type LessonRow = { slug: string; title_vi: string; title_en: string; status: string; estimated_minutes: number }
-type Module = { slug: string; title_vi: string; title_en: string; lessons: LessonRow[] }
-type Phase = { slug: string; title_vi: string; title_en: string; modules: Module[] }
+type Phase = RoadmapPhase
 type Props = {
   roadmap: { phases: Phase[] } | null
   language: 'vi' | 'en'
@@ -53,21 +51,26 @@ export function RoadmapView({ roadmap, language, showCompletedLessons, onOpenLes
     const phase = roadmap.phases.find((item) => item.slug === id)
     return phase ? (vi ? phase.title_vi : phase.title_en) : id
   }
-  const ordered = route ? route.phase_ids.flatMap((id) => roadmap.phases.filter((phase) => phase.slug === id))
-    .concat(route.optional_phase_ids.flatMap((id) => roadmap.phases.filter((phase) => phase.slug === id)))
-    : roadmap.phases
+  const groups = groupRoadmap(roadmap.phases, route?.id)
+  const ordered = [...new Map(groups.flatMap((group) => group.sections)
+    .map(({ phase }) => [phase.slug, phase] as const)).values()]
   const corePhaseIds = new Set(route?.core_phase_ids ?? routes.routes.flatMap((item) => item.core_phase_ids))
   const phaseTrack = (phase: Phase): Exclude<TrackFilter, 'all'> => corePhaseIds.has(phase.slug) ? 'core' : 'specialization'
-  const phases = ordered.filter((phase) => filters.phase === 'all' || phase.slug === filters.phase)
-    .filter((phase) => filters.track === 'all' || phaseTrack(phase) === filters.track)
-    .map((phase) => ({ ...phase, modules: phase.modules.map((module) => ({
+  const filteredGroups = groups.map((group) => ({ ...group, sections: group.sections
+    .filter(({ phase }) => filters.phase === 'all' || phase.slug === filters.phase)
+    .filter(({ phase }) => filters.track === 'all' || phaseTrack(phase) === filters.track)
+    .map((section) => ({ ...section, phase: { ...section.phase, modules: section.phase.modules.map((module) => ({
       ...module, lessons: module.lessons.filter((lesson) => {
         if (!showCompletedLessons && filters.status !== 'completed' && lesson.status === 'completed') return false
         if (filters.status !== 'all' && lesson.status !== filters.status) return false
-        const text = `${phase.title_vi} ${phase.title_en} ${module.title_vi} ${module.title_en} ${lesson.title_vi} ${lesson.title_en}`
+        const phase = section.phase
+        const text = `${group.stage.title_vi} ${group.stage.title_en} ${phase.title_vi} ${phase.title_en} ${module.title_vi} ${module.title_en} ${lesson.title_vi} ${lesson.title_en}`
         return text.toLocaleLowerCase().includes(filters.q.trim().toLocaleLowerCase())
       }),
-    })).filter((module) => module.lessons.length) })).filter((phase) => phase.modules.length)
+    })).filter((module) => module.lessons.length) } }))
+    .filter(({ phase }) => phase.modules.length),
+  })).filter((group) => group.sections.length)
+  const phases = filteredGroups.flatMap((group) => group.sections.map(({ phase }) => phase))
   const count = phases.reduce((total, phase) => total + phase.modules.reduce((sum, module) => sum + module.lessons.length, 0), 0)
   return <div className="roadmap-layout"><div className="roadmap-list">
     <header className="roadmap-intro">
@@ -116,7 +119,9 @@ export function RoadmapView({ roadmap, language, showCompletedLessons, onOpenLes
         onChange={(event) => change({ phase: event.target.value })}>
         <option value="all">{vi ? 'Tất cả chặng' : 'All phases'}</option>
         {ordered.map((phase) => <option key={phase.slug} value={phase.slug}>
-          {vi ? phase.title_vi : phase.title_en}</option>)}
+          {phase.slug === 'phase-06-llm-rag'
+            ? (vi ? 'Bài khảo sát cũ · ôn tập theo chủ đề' : 'Earlier survey · review by topic')
+            : (vi ? phase.title_vi : phase.title_en)}</option>)}
       </select>
       <select aria-label={vi ? 'Lọc theo trạng thái' : 'Filter by status'} value={filters.status}
         onChange={(event) => change({ status: event.target.value })}>
@@ -140,24 +145,16 @@ export function RoadmapView({ roadmap, language, showCompletedLessons, onOpenLes
     </div>
     <p role="status">{count} {vi ? 'bài học' : 'lessons'} · {vi ? 'Thời lượng là thời gian đọc ước tính.'
       : 'Durations estimate reading time.'}</p>
+    <p className="muted">{vi
+      ? 'Danh sách được gom theo chủ đề, gồm cả bài trong mục thu gọn. Cầu nối là hướng học thay thế; ôn tập và chuyên sâu chỉ mở khi cần. Giữ nguyên bài học và tiến độ đã lưu.'
+      : 'Lessons are grouped by topic, including collapsed sections. Bridges offer an alternative path; review and specializations are available when needed. Saved lessons and progress stay intact.'}</p>
     {!showCompletedLessons && filters.status !== 'completed' && <p className="muted">{vi
       ? 'Bài hoàn thành đang được ẩn theo cài đặt. Chọn trạng thái “Hoàn thành” để xem lại.'
       : 'Completed lessons are hidden by your settings. Choose “Completed” to revisit them.'}</p>}
     {!count && <p>{vi ? 'Không có bài phù hợp bộ lọc này.' : 'No lessons match these filters.'}</p>}
-    {phases.map((phase, index) => <section className="phase-block" key={phase.slug} data-phase-track={phaseTrack(phase)}>
-      <header className="phase-header"><span className="phase-index">{String(index + 1).padStart(2, '0')}</span>
-        <LearningIllustration name={illustrationForLesson(phase.slug)} variant="thumbnail" />
-    <h3>{vi ? phase.title_vi : phase.title_en}</h3><span className="phase-track">{phaseTrack(phase) === 'core'
-      ? (vi ? 'Nền tảng' : 'Core') : (vi ? 'Chuyên sâu' : 'Specialization')}</span></header>
-      {phase.modules.map((module) => <div className="module-block" key={module.slug}>
-        <h4 className="module-title">{vi ? module.title_vi : module.title_en}</h4>
-        {module.lessons.map((lesson) => <button className={`lesson-row ${lesson.status === 'completed' ? 'done' : ''}`}
-          key={lesson.slug} onClick={() => onOpenLesson(lesson.slug)}>
-          <span className="lesson-check" aria-hidden="true">{lesson.status === 'completed' ? '✓' : '○'}</span>
-          <span>{vi ? lesson.title_vi : lesson.title_en}</span><small>{lesson.estimated_minutes}m</small>
-        </button>)}
-      </div>)}
-    </section>)}
+    {filteredGroups.map((group, index) => <RoadmapTopic key={group.stage.id} group={group} index={index}
+      language={language} coreIds={corePhaseIds} routeSelected={Boolean(route)} onOpenLesson={onOpenLesson}
+      revealMatches={Boolean(filters.q.trim() || filters.phase !== 'all' || filters.status !== 'all' || filters.track !== 'all')} />)}
     {children}
   </div></div>
 }

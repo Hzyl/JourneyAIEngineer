@@ -189,8 +189,22 @@ test('checklist reminders focus the check section and opening answers never comp
   expect(document.activeElement).toBe(host.querySelector('#check'))
   expect(host.textContent).toContain('Finish every checklist item')
   await act(async () => host.querySelector<HTMLButtonElement>('.study-step-toggle')!.click())
-  await act(async () => host.querySelector<HTMLElement>('.study-step-answer summary')!.click())
+  expect(host.querySelector('.study-step-answer')).toBeNull()
   expect(onProgress).not.toHaveBeenCalled()
+})
+
+test.each(['vi', 'en'] as const)('%s keeps the main concept and recall questions in one place', async (language) => {
+  await render(language)
+  const concept = host.querySelector('#concept')!
+  expect(concept.querySelectorAll('.concept-notes')).toHaveLength(1)
+  await act(async () => host.querySelector<HTMLButtonElement>('.study-step-toggle')!.click())
+  expect(host.querySelector('.study-step-detail .concept-notes')).toBeNull()
+  expect(host.querySelector('.study-step-detail')!.textContent).not.toContain(lessonFixture.concept_notes_en)
+  await act(async () => host.querySelectorAll<HTMLButtonElement>('.study-step-toggle')[4].click())
+  const recall = host.querySelectorAll('.study-step-detail')[4]
+  expect(recall.textContent).toContain(language === 'vi' ? 'Câu hỏi tự kiểm tra' : 'self-check questions')
+  expect(recall.querySelector('a[href="#self-check-questions"]')).not.toBeNull()
+  expect(recall.textContent).not.toContain(language === 'vi' ? lessonFixture.reviews[0].question_vi : lessonFixture.reviews[0].question_en)
 })
 
 test.each(['vi', 'en'] as const)('%s concept notes render separate paragraphs and escape markup', async (language) => {

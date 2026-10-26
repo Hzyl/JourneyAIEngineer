@@ -89,7 +89,79 @@
   text-transform: uppercase;
 }
 
+.roadmap-topic {
+  min-width: 0;
+  margin-block: 1.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.roadmap-topic-title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  font-size: clamp(1.3rem, 2vw, 1.65rem);
+  line-height: 1.4;
+}
+
+.roadmap-topic-note {
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.roadmap-supplement {
+  margin-block: 1rem;
+  padding: 1rem;
+  background: var(--surface-subtle);
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  overflow-wrap: anywhere;
+}
+
+.roadmap-supplement > summary {
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 650;
+  line-height: 1.6;
+  cursor: pointer;
+}
+
+.roadmap-supplement > summary:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 4px;
+}
+
+.roadmap-supplement .phase-header h3 {
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+
+.roadmap-topic .lesson-row > span:nth-child(2) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.roadmap-topic .lesson-row {
+  grid-template-columns: 1.5rem minmax(0, 1fr) 3rem;
+  font-size: 1rem;
+  line-height: 1.55;
+  min-height: 44px;
+}
+
+.roadmap-topic .lesson-row small {
+  font-size: 0.875rem;
+}
+
+.roadmap-topic .module-title {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
 @media (max-width: 760px) {
+  .roadmap-topic .module-block {
+    margin-left: 0;
+  }
+
   .route-choices {
     grid-template-columns: 1fr;
   }
