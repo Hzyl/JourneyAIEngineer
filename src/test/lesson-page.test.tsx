@@ -207,6 +207,25 @@ test.each(['vi', 'en'] as const)('%s keeps the main concept and recall questions
   expect(recall.textContent).not.toContain(language === 'vi' ? lessonFixture.reviews[0].question_vi : lessonFixture.reviews[0].question_en)
 })
 
+test.each(['vi', 'en'] as const)('%s keeps practice steps as pointers instead of copied sections', async (language) => {
+  await render(language)
+  const toggles = host.querySelectorAll<HTMLButtonElement>('.study-step-toggle')
+  await act(async () => toggles[1].click())
+  const reading = host.querySelectorAll('.study-step-detail')[1]
+  expect(reading.querySelector('.lesson-resource, .resource-link')).toBeNull()
+  expect(reading.querySelector('a[href="#resources"]')).not.toBeNull()
+  expect(reading.textContent).not.toContain('Python docs')
+  expect(reading.textContent).not.toContain(language === 'vi' ? 'Chạy không lỗi' : 'Run without errors')
+
+  await act(async () => toggles[2].click())
+  const coding = host.querySelectorAll('.study-step-detail')[2]
+  expect(coding.querySelector('pre, .code-example-guide, .linked-exercise')).toBeNull()
+  expect(coding.querySelector('a[href="#lesson-code-title"]')).not.toBeNull()
+  expect(coding.querySelector('a[href="#lesson-exercise-title"]')).not.toBeNull()
+  expect(coding.textContent).not.toContain('import sys')
+  expect(coding.textContent).not.toContain(language === 'vi' ? 'Kiểm tra Python đang chạy' : 'Inspect the Python environment')
+})
+
 test.each(['vi', 'en'] as const)('%s concept notes render separate paragraphs and escape markup', async (language) => {
   const paragraphs = [
     language === 'vi' ? 'Đoạn đầu giải thích khái niệm.' : 'The first paragraph explains the concept.',

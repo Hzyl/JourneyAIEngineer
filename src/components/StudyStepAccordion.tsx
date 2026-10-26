@@ -6,12 +6,6 @@ export function StudyStepAccordion({ step, index, lesson, language }:
   const [open, setOpen] = useState(false)
   const vi = language === 'vi'
   const stage = Math.min(index, 4)
-  // Explicit references win; fallback examples belong to their matching study stage.
-  const ref = lesson.study_step_refs?.[index]
-  const resource = typeof ref?.resource_index === 'number' ? lesson.resources[ref.resource_index]
-    : index === 1 ? lesson.resources[0] : undefined
-  const example = typeof ref?.code_example_index === 'number' ? lesson.code_examples[ref.code_example_index]
-    : index === 2 ? lesson.code_examples[0] : undefined
   const panelId = `study-step-${lesson.slug}-${index}`
   const headingId = `${panelId}-heading`
   const titles = vi
@@ -66,49 +60,42 @@ export function StudyStepAccordion({ step, index, lesson, language }:
           {stage === 1 && <>
             <div className="study-step-card">
               <span className="eyebrow">{vi ? 'ĐỌC CÓ MỤC TIÊU' : 'READ THIS'}</span>
-              {resource ? <>
-                <strong>{resource.title}</strong>
-                <p>{vi ? resource.purpose_vi : resource.purpose_en}</p>
-                <small>{vi ? resource.read_vi : resource.read_en}</small>
-                {resource.url && resource.kind !== 'in_app'
-                  && <a href={resource.url} target="_blank" rel="noreferrer">
-                    {vi ? 'Mở tài liệu' : 'Open resource'} ↗
-                  </a>}
-              </> : <p>{vi ? 'Bài học này chưa có tài liệu bổ sung.' : 'No additional resource is linked yet.'}</p>}
+              <p>{lesson.resources.length > 0
+                ? (vi ? `Bài này có ${lesson.resources.length} tài liệu được tuyển chọn. Đọc để trả lời một câu hỏi cụ thể, không đọc lại toàn bộ phần chính.`
+                  : `This lesson has ${lesson.resources.length} curated resource${lesson.resources.length === 1 ? '' : 's'}. Read it to answer one focused question instead of rereading the main lesson.`)
+                : (vi ? 'Bài học này chưa có tài liệu bổ sung; hãy chuyển thẳng sang ví dụ và bài tập.'
+                  : 'No additional resource is linked; move directly to the example and exercise.')}</p>
+              {lesson.resources.length > 0 && <a className="text-button" href="#resources">
+                {vi ? 'Mở mục Tài liệu có hướng dẫn đọc' : 'Open guided resources'} →
+              </a>}
             </div>
             <div className="study-step-card">
               <h4>{vi ? 'Cách biết mình đọc đúng hướng' : 'How to know you are on track'}</h4>
-              <ul>{lesson.completion_criteria.slice(0, 3).map((item) => <li key={item}>{item}</li>)}</ul>
+              <p>{vi ? 'Ghi lại một định nghĩa, một giả định hoặc một điểm còn mâu thuẫn cần kiểm tra. Tiêu chí hoàn thành đầy đủ nằm ở phần kiểm tra bên dưới.'
+                : 'Capture one definition, assumption or unresolved point to verify. The full completion criteria live in the check section below.'}</p>
+              <a className="text-button" href="#check">{vi ? 'Xem tiêu chí hoàn thành' : 'View completion criteria'} →</a>
             </div>
           </>}
           {stage === 2 && <>
             <div className="study-step-card">
-              {example ? <>
-                <span className="eyebrow">{vi ? 'VÍ DỤ' : 'EXAMPLE'} · {example.status === 'conceptual'
-                  ? (vi ? 'MINH HỌA KHÁI NIỆM' : 'CONCEPTUAL') : (vi ? 'CÓ THỂ CHẠY' : 'RUNNABLE')}</span>
-                <strong>{example.title}</strong>
-                {(example.purpose_vi || example.purpose_en)
-                  && <p className="muted">{vi ? example.purpose_vi : example.purpose_en}</p>}
-                <pre tabIndex={0} aria-label={example.title}><code>{example.code}</code></pre>
-                <p>{vi ? example.explanation_vi : example.explanation_en}</p>
-                <dl className="code-example-guide">
-                  {example.setup && <><dt>{vi ? 'Chuẩn bị' : 'Setup'}</dt><dd>{example.setup}</dd></>}
-                  {example.expected_output && <><dt>{vi ? 'Kết quả mong đợi' : 'Expected output'}</dt>
-                    <dd>{example.expected_output}</dd></>}
-                  {(example.edge_case_vi || example.edge_case_en) && <>
-                    <dt>{vi ? 'Trường hợp biên' : 'Edge case'}</dt>
-                    <dd>{vi ? example.edge_case_vi : example.edge_case_en}</dd>
-                  </>}
-                </dl>
-              </> : <p>{vi ? 'Chưa có ví dụ mã riêng. Dùng danh sách tự kiểm tra để tạo một ví dụ tối thiểu.'
-                : 'No code example is linked yet; use the checklist to create a minimal example.'}</p>}
+              <span className="eyebrow">{vi ? 'MỘT THAY ĐỔI NHỎ' : 'ONE SMALL CHANGE'}</span>
+              <p>{vi
+                ? 'Mở ví dụ mã nguồn bên dưới, chạy để có mốc ban đầu rồi thay đúng một đầu vào hoặc giả định. Ghi lại output trước và sau thay đổi.'
+                : 'Open the code example below, run it for a baseline, then change exactly one input or assumption. Record the output before and after.'}</p>
+              {lesson.code_examples.length > 0 && <a className="text-button" href="#lesson-code-title">
+                {vi ? 'Đi tới Ví dụ mã nguồn' : 'Go to code examples'} →
+              </a>}
             </div>
             <div className="study-step-card">
-              <h4>{vi ? 'Bài thực hành liên quan' : 'Related practice'}</h4>
-              {lesson.exercises.length ? <ul>{lesson.exercises.slice(0, 3).map((exercise) =>
-                <li key={exercise.slug}>{vi ? exercise.title_vi : exercise.title_en}
-                  {' · '}{exercise.estimated_minutes} {vi ? 'phút' : 'min'}</li>)}</ul>
-                : <p>{vi ? 'Chưa có bài tập riêng cho bài học này.' : 'No dedicated exercise is linked yet.'}</p>}
+              <h4>{vi ? 'Kiểm tra bằng bài tập' : 'Verify with the exercise'}</h4>
+              <p>{lesson.exercises.length > 0
+                ? (vi ? 'Làm bài tập liên quan sau khi đã có output nền. Nếu không đạt, quay lại đúng giả định vừa thay đổi.'
+                  : 'Do the related exercise after you have a baseline output. If it fails, return to the assumption you changed.')
+                : (vi ? 'Chưa có bài tập riêng; dùng checklist để tự tạo một ca kiểm tra nhỏ.'
+                  : 'No dedicated exercise is linked; use the checklist to create a small verification case.')}</p>
+              {lesson.exercises.length > 0 && <a className="text-button" href="#lesson-exercise-title">
+                {vi ? 'Đi tới Bài tập liên quan' : 'Go to related exercise'} →
+              </a>}
             </div>
           </>}
           {stage === 3 && <>
